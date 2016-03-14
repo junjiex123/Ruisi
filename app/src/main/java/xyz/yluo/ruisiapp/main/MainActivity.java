@@ -1,5 +1,6 @@
 package xyz.yluo.ruisiapp.main;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -33,6 +35,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.yluo.ruisiapp.ConfigClass;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.about.AboutActivity;
@@ -41,9 +44,13 @@ import xyz.yluo.ruisiapp.article.ArticleNormalActivity;
 import xyz.yluo.ruisiapp.article.NewArticleActivity;
 import xyz.yluo.ruisiapp.http.MyHttpConnection;
 import xyz.yluo.ruisiapp.login.Activity_Login;
+import xyz.yluo.ruisiapp.login.Login_Dialog_Fragment;
 import xyz.yluo.ruisiapp.setting.SettingActivity;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,RecyclerViewLoadMoreListener.OnLoadMoreListener{
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener,
+        RecyclerViewLoadMoreListener.OnLoadMoreListener,
+        Login_Dialog_Fragment.LoginDialogListener{
 
     //当前板块
     //TODO
@@ -56,8 +63,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FloatingActionMenu fabMenu;
     private FloatingActionButton fab1,fab2;
     private DrawerLayout drawer;
-    private View nav_header_login;
-    protected View nav_header_notlogin;
 
     //存储数据 需要填充的列表
     //TODO 动态获取
@@ -70,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         fabMenu = (FloatingActionMenu) findViewById(R.id.fab);
         fab1 = (FloatingActionButton) findViewById(R.id.fab1);
@@ -156,8 +160,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        nav_header_login = drawer.findViewById(R.id.nav_header_login);
-        nav_header_notlogin = drawer.findViewById(R.id.nav_header_notlogin);
+        View header = navigationView.getHeaderView(0);
+        View nav_header_login = header.findViewById(R.id.nav_header_login);
+        View nav_header_notlogin = header.findViewById(R.id.nav_header_notlogin);
         //判断是否登陆
         if(ConfigClass.CONFIG_ISLOGIN){
             nav_header_login.setVisibility(View.VISIBLE);
@@ -166,6 +171,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             nav_header_notlogin.setVisibility(View.VISIBLE);
             nav_header_login.setVisibility(View.GONE);
         }
+
+        CircleImageView userImge  = (CircleImageView) header.findViewById(R.id.profile_image);
+        userImge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ConfigClass.CONFIG_ISLOGIN){
+
+                }else{
+                    DialogFragment newFragment = new Login_Dialog_Fragment();
+                    newFragment.show(getFragmentManager(),"logindialog");
+                }
+            }
+        });
+
     }
 
     @Override
@@ -254,6 +273,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onLoadMore() {
 
     }
+
+
+    //注册弹窗点击事件
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        Toast.makeText(getApplicationContext(),"click",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+
+    }
+
+
+
+
     //获得一个普通板块文章列表数据
     public class GetListTask extends AsyncTask<Void, Void, String> {
         private String Baseurl = "http://rs.xidian.edu.cn/forum.php?mod=forumdisplay&fid=";
