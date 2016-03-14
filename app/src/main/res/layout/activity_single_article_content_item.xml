@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="4dp"
+    android:layout_marginBottom="6dp">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:paddingRight="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="6dp"
+                    android:layout_height="28sp"
+                    android:background="@android:color/holo_red_dark"
+                    android:layout_marginRight="10dp">
+                </LinearLayout>
+                <TextView
+                    android:layout_marginLeft="@dimen/dimen_4"
+                    android:layout_marginRight="@dimen/dimen_4"
+                    android:id="@+id/article_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:text="话题的标题" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/article_user_image"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:src="@drawable/image_placeholder" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="8dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/dimen_4"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/article_username"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginRight="8dp"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="16sp"
+                            android:text="TakWolf" />
+
+                        <TextView
+                            android:layout_gravity="center"
+                            android:id="@+id/title_usergroup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="3dp"
+                            android:paddingRight="3dp"
+                            android:textColor="@android:color/white"
+                            android:background="@color/colorAccent"
+                            android:textSize="13sp"
+                            android:text="置顶" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginRight="@dimen/dimen_4"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/article_post_time"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginRight="8dp"
+                            android:textColor="?android:attr/textColorSecondary"
+                            android:textSize="14sp"
+                            android:singleLine="true"
+                            android:text="发布于：2天前" />
+
+                        <TextView
+                            android:id="@+id/article_replaycount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:text="115次浏览" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+            <xyz.yluo.ruisiapp.article.MyWebView
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="12dp"
+                android:id="@+id/content_webView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </xyz.yluo.ruisiapp.article.MyWebView>
+
+            <LinearLayout
+                android:layout_marginTop="@dimen/dimen_16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="36dp"
+                    android:src="@drawable/ic_menu_share"
+                    android:layout_height="36dp"
+                    app:civ_border_width="1dp"
+                    app:civ_border_color="@android:color/holo_red_light"/>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_marginLeft="@dimen/dimen_16"
+                    android:layout_marginRight="@dimen/dimen_16"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/ic_menu_send"
+                    app:civ_border_width="1dp"
+                    app:civ_border_color="@android:color/holo_green_light"/>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/image_placeholder"
+                    app:civ_border_width="1dp"
+                    app:civ_border_color="@android:color/holo_blue_light"/>
+
+            </LinearLayout>
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/article_type"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="end"
+            android:layout_margin="16dp"
+            android:src="@drawable/tab_ic_good"
+            android:scaleType="fitEnd"
+            android:adjustViewBounds="true" />
+    </FrameLayout>
+</android.support.v7.widget.CardView>
+

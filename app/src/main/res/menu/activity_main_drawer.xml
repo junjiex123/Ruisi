@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_camera"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="测试" />
+        <item
+            android:id="@+id/nav_gallery"
+            android:icon="@drawable/nav_xdrs"
+            android:title="西电睿思灌水专区" />
+        <item
+            android:id="@+id/nav_slideshow"
+            android:icon="@drawable/nav_yjrs"
+            android:title="缘聚睿思" />
+        <item
+            android:id="@+id/nav_manage"
+            android:icon="@drawable/nav_jsbk"
+            android:title="技术博客" />
+        <item
+            android:id="@+id/nav_manage1"
+            android:icon="@drawable/nav_xyjy"
+            android:title="校园交易" />
+
+        <item
+            android:id="@+id/nav_sytd"
+            android:icon="@drawable/nav_sytd"
+            android:title="摄影天地" />
+        <item
+            android:id="@+id/nav_manage3"
+            android:icon="@drawable/nav_wztd"
+            android:title="文章天地" />
+        <item
+            android:id="@+id/nav_manag"
+            android:icon="@drawable/nav_wsns"
+            android:title="我是女生" />
+        <item
+            android:id="@+id/nav_man"
+            android:icon="@drawable/nav_xlhy"
+            android:title="心灵花园" />
+        <item
+            android:icon="@drawable/nav_xdbl"
+            android:title="西电版聊专区" />
+        <item
+            android:icon="@drawable/nav_swzl"
+            android:title="失物招领专区" />
+        <item
+            android:icon="@drawable/nav_xdwd"
+            android:title="西电问答" />
+        <item
+            android:icon="@drawable/nav_xyhd"
+            android:title="校园活动" />
+        <item
+            android:icon="@drawable/nav_wyby"
+            android:title="我要毕业啦" />
+        <item
+            android:icon="@drawable/nav_jyzp"
+            android:title="就业招聘" />
+        <item
+            android:icon="@drawable/nav_xxjl"
+            android:title="学习交流" />
+
+        <item
+            android:icon="@drawable/nav_rjjs"
+            android:title="软件技术交流区" />
+        <item
+            android:icon="@drawable/nav_qrsj"
+            android:title="嵌入式技术交流区" />
+        <item
+            android:icon="@drawable/nav_kyjl"
+            android:title="考研交流" />
+        <item
+            android:icon="@drawable/nav_xdhj"
+            android:title="西电后街" />
+    </group>
+
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Send" />
+            <item
+                android:id="@+id/nav_message"
+                android:icon="@drawable/ic_menu_send"
+                android:title="message" />
+
+            <item
+                android:id="@+id/nav_setting"
+                android:icon="@drawable/ic_menu_send"
+                android:title="setting" />
+
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_menu_send"
+                android:title="about" />
+
+            <item
+                android:id="@+id/nav_about1"
+                android:icon="@drawable/ic_menu_send"
+                android:title="我是女生 " />
+        </menu>
+    </item>
+
+</menu>
