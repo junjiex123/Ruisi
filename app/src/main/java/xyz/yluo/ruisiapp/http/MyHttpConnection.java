@@ -10,13 +10,13 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 
+import xyz.yluo.ruisiapp.ConfigClass;
+
 /**
  * Created by free2 on 16-3-10.
  *
  */
 public class MyHttpConnection {
-    public static String resPonseCookie ="";
-
     //GET
     public static String Http_get(String urlPath) {
         HttpURLConnection connection =null;
@@ -37,9 +37,9 @@ public class MyHttpConnection {
             connection.setDoInput(true);
             //设置是否从httpUrlConnection读入，默认情况下是true;
 
-            if(resPonseCookie!=""){
-                connection.setRequestProperty("Cookie",resPonseCookie);
-                System.out.print("i have set-coocie>>>>>>>>"+resPonseCookie);
+            if(ConfigClass.CONFIG_COOKIE!=""){
+                connection.setRequestProperty("Cookie",ConfigClass.CONFIG_COOKIE);
+                System.out.print("i have set-coocie>>>>>>>>"+ConfigClass.CONFIG_COOKIE);
             }
             connection.setRequestProperty("User-Agent","Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36 QQBrowser/9.3.6581.400");
 
@@ -61,7 +61,6 @@ public class MyHttpConnection {
         } finally {
             if (connection != null) {
                 connection.disconnect();
-                connection = null;
             }
             if (is != null) {
                 try {
@@ -74,6 +73,8 @@ public class MyHttpConnection {
         }
         return null;
     }
+
+
     //POST
     public static String Http_post(String urlPath, Map<String, String> params) {
         HttpURLConnection connection =null;
@@ -102,9 +103,9 @@ public class MyHttpConnection {
             connection.setDoOutput(true);
             //设置为true后才能写入参数
             connection.setInstanceFollowRedirects(true);
-            if(resPonseCookie!=""){
-                connection.setRequestProperty("Cookie",resPonseCookie);
-                System.out.print("i have set-coocie>>>>>>>>"+resPonseCookie);
+            if(ConfigClass.CONFIG_COOKIE!=""){
+                connection.setRequestProperty("Cookie",ConfigClass.CONFIG_COOKIE);
+                System.out.print("\ni have set-coocie in post>>>>>>>>"+ConfigClass.CONFIG_COOKIE);
             }
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             connection.setRequestProperty("Content-Length", String.valueOf(data.length));
@@ -120,18 +121,21 @@ public class MyHttpConnection {
                 //包装字节流为字符流
 
                 //获取Cookie
-                if(resPonseCookie=="") {
+                if(ConfigClass.CONFIG_COOKIE=="") {
+                    String temp_cookie = "";
                     String key =null;
                     String temp = "";
                     for(int i =1;(key=connection.getHeaderFieldKey(i))!=null;i++){
                         if(key.equalsIgnoreCase("Set-Cookie")){
                             temp = connection.getHeaderField(i);
                             temp = temp.substring(0,temp.indexOf(";"));
-                            resPonseCookie = resPonseCookie+temp+";";
+                            temp_cookie = temp_cookie+temp+";";
                         }
                     }
 
-                    System.out.print("i have get-cookie<>>>>>>>>>>>>>>>>>>.."+resPonseCookie);
+                    ConfigClass.CONFIG_COOKIE = temp_cookie;
+                    System.out.print("\ni have get-cookie in post>>>>>>>>>>>>>>>>>>.."+ConfigClass.CONFIG_COOKIE);
+
                 }
                 StringBuilder response = new StringBuilder();
                 String line;
@@ -160,7 +164,6 @@ public class MyHttpConnection {
             }
             if (connection != null) {
                 connection.disconnect();
-                connection = null;
             }
         }
         return null;

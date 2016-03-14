@@ -27,13 +27,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.net.URL;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.http.Http_client_post_get;
 
 public class UserDetailActivity extends AppCompatActivity {
 
@@ -134,7 +131,6 @@ public class UserDetailActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... urls) {
-            //Http_client_post_get http_client_post_get = new Http_client_post_get(urls[0],null);
             //return http_client_post_get.HttpURLConnection_GET();
             StringBuffer buffer=new StringBuffer();
             Document doc;

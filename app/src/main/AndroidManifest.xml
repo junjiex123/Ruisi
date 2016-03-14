@@ -46,7 +46,10 @@
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
-        <activity android:name=".login.Activity_Login">
+        <activity android:name=".login.TestActivity">
+
+        </activity>
+        <activity android:name=".login.LoginActivity">
 
         </activity>
     </application>

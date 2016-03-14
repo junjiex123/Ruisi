@@ -19,6 +19,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import xyz.yluo.ruisiapp.ConfigClass;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.api.ArticleListData;
 import xyz.yluo.ruisiapp.http.MyHttpConnection;
@@ -27,7 +28,7 @@ import xyz.yluo.ruisiapp.http.MyHttpConnection;
  * Created by free2 on 16-3-10.
  *
  */
-public class Activity_Login extends AppCompatActivity {
+public class TestActivity extends AppCompatActivity {
 
     private String formhash;
 
@@ -91,13 +92,13 @@ public class Activity_Login extends AppCompatActivity {
         getListTask.execute((Void) null);
     }
 
-    @OnClick(R.id.get_image)
-    protected void get_image() {
-        String url = "http://rs.xidian.edu.cn/forum.php?mod=forumdisplay&fid=561";
-
-        GetImageUrlList mAuthTask = new GetImageUrlList(url);
-        mAuthTask.execute((Void) null);
-
+    @OnClick(R.id.show_cookie)
+    protected void show_cookie_click(){
+        responseText.setText(ConfigClass.CONFIG_COOKIE);
+    }
+    @OnClick(R.id.show_hash)
+    protected void show_hash_click(){
+        responseText.setText(ConfigClass.CONFIG_FORMHASH);
     }
 
 

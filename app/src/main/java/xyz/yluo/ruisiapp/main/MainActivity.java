@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,11 +15,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -33,8 +31,6 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.yluo.ruisiapp.ConfigClass;
 import xyz.yluo.ruisiapp.R;
@@ -43,19 +39,19 @@ import xyz.yluo.ruisiapp.api.ArticleListData;
 import xyz.yluo.ruisiapp.article.ArticleNormalActivity;
 import xyz.yluo.ruisiapp.article.NewArticleActivity;
 import xyz.yluo.ruisiapp.http.MyHttpConnection;
-import xyz.yluo.ruisiapp.login.Activity_Login;
-import xyz.yluo.ruisiapp.login.Login_Dialog_Fragment;
+import xyz.yluo.ruisiapp.login.LoginActivity;
+import xyz.yluo.ruisiapp.login.TestActivity;
+import xyz.yluo.ruisiapp.input_Dialog_Fragment;
 import xyz.yluo.ruisiapp.setting.SettingActivity;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         RecyclerViewLoadMoreListener.OnLoadMoreListener,
-        Login_Dialog_Fragment.LoginDialogListener{
+        input_Dialog_Fragment.LoginDialogListener{
 
     //当前板块
     //TODO
     private final int INDEX = 0;
-
     private RecyclerView mRecyclerView;
     private RecycleViewAdapter mRecyleAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -70,6 +66,8 @@ public class MainActivity extends AppCompatActivity
     private List<ArticleListData> mydataset;
 
     private int position;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,13 +175,27 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 if(ConfigClass.CONFIG_ISLOGIN){
-
-                }else{
-                    DialogFragment newFragment = new Login_Dialog_Fragment();
+                    DialogFragment newFragment = new input_Dialog_Fragment();
                     newFragment.show(getFragmentManager(),"logindialog");
+                }else{
+                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivityForResult(i,1);
                 }
             }
         });
+
+    }
+
+    //登陆页面返回结果
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode==RESULT_OK){
+            String result = data.getExtras().getString("result");//得到新Activity 关闭后返回的数据
+            Toast.makeText(getApplicationContext(),"result"+result,Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 
@@ -226,7 +238,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            startActivity(new Intent( this,Activity_Login.class));
+            startActivity(new Intent( this,TestActivity.class));
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
@@ -277,16 +289,14 @@ public class MainActivity extends AppCompatActivity
 
     //注册弹窗点击事件
     @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
-        Toast.makeText(getApplicationContext(),"click",Toast.LENGTH_SHORT).show();
+    public void onDialogPositiveClick(DialogFragment dialog,String user,String pass) {
+        Toast.makeText(getApplicationContext(),"user"+user+"pass"+pass,Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onDialogNegativeClick(DialogFragment dialog) {
 
     }
-
-
 
 
     //获得一个普通板块文章列表数据

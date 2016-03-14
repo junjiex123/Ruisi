@@ -4,45 +4,62 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_8"
-        android:text="Login"
-        android:id="@+id/login_button"
-        android:layout_gravity="center_horizontal" />
+        android:orientation="horizontal">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_8"
-        android:text="Get FormHash"
-        android:id="@+id/get_formhash"
-        android:layout_gravity="center_horizontal" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_8"
+            android:text="Login"
+            android:id="@+id/login_button"
+            android:layout_gravity="center_horizontal" />
 
-    <Button
-        android:layout_marginTop="@dimen/dimen_8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="POST"
-        android:id="@+id/login_post"
-        android:layout_gravity="center_horizontal" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_8"
+            android:text="Get FormHash"
+            android:id="@+id/get_formhash"
+            android:layout_gravity="center_horizontal" />
 
-    <Button
-        android:layout_marginTop="@dimen/dimen_8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="get list"
-        android:id="@+id/btn_get_list"
-        android:layout_gravity="center_horizontal" />
+        <Button
+            android:layout_marginTop="@dimen/dimen_8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="POST"
+            android:id="@+id/login_post"
+            android:layout_gravity="center_horizontal" />
+        <Button
+            android:layout_marginTop="@dimen/dimen_8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="get list"
+            android:id="@+id/btn_get_list"
+            android:layout_gravity="center_horizontal" />
 
-    <Button
-        android:layout_width="wrap_content"
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="get image"
-        android:id="@+id/get_image"
-        android:layout_gravity="center_horizontal" />
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="show_cookie"
+            android:id="@+id/show_cookie"
+            android:layout_gravity="center_horizontal" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="show_hash"
+            android:id="@+id/show_hash"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"

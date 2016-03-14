@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.login;
+package xyz.yluo.ruisiapp;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -7,14 +7,16 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
-
-import xyz.yluo.ruisiapp.R;
+import android.widget.EditText;
 
 /**
  * Created by free2 on 16-3-14.
  *
  */
-public class Login_Dialog_Fragment extends DialogFragment{
+public class input_Dialog_Fragment extends DialogFragment{
+
+    private EditText username;
+    private EditText password;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -24,27 +26,39 @@ public class Login_Dialog_Fragment extends DialogFragment{
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        builder.setView(inflater.inflate(R.layout.login_dialog, null))
-                // Add action buttons
-                .setPositiveButton("登陆", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        // sign in the user ...
-                        loginDialogListener.onDialogPositiveClick(Login_Dialog_Fragment.this);
-                    }
-                })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        loginDialogListener.onDialogNegativeClick(Login_Dialog_Fragment.this);
-                        Login_Dialog_Fragment.this.getDialog().cancel();
-                    }
-                });
+        builder.setView(inflater.inflate(R.layout.inputdialog, null));
+        builder.setTitle("登陆");
+
+        // Add action buttons
+        builder.setPositiveButton("登陆", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+
+                username = (EditText) getDialog().findViewById(R.id.username);
+                password = (EditText) getDialog().findViewById(R.id.password);
+
+                String user = username.getText().toString();
+                String pass = password.getText().toString();
+
+                if(user!=""&&pass!=""){
+                    // sign in the user ...
+                    loginDialogListener.onDialogPositiveClick(input_Dialog_Fragment.this,user,pass);
+                }
+            }
+        });
+
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                loginDialogListener.onDialogNegativeClick(input_Dialog_Fragment.this);
+                input_Dialog_Fragment.this.getDialog().cancel();
+            }
+        });
         return builder.create();
     }
 
     public interface LoginDialogListener {
-        public void onDialogPositiveClick(DialogFragment dialog);
-        public void onDialogNegativeClick(DialogFragment dialog);
+        void onDialogPositiveClick(DialogFragment dialog,String username,String password);
+        void onDialogNegativeClick(DialogFragment dialog);
     }
 
     LoginDialogListener loginDialogListener;

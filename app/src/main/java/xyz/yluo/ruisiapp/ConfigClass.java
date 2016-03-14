@@ -13,16 +13,14 @@ import java.util.Map;
  */
 public class ConfigClass extends Application {
 
-    public String CONFIG_COOKIE;
-    public String CONFIG_FORMHASH;
-    public static boolean CONFIG_ISLOGIN = false;
-    public final Map<String,String> FORUM = new HashMap<>();
 
-    public ConfigClass() {
-        FORUM.put("549","文章天地");
-        FORUM.put("550","心灵花园");
-        FORUM.put("106","校园交易");
-        FORUM.put("108","我是女生");
-        FORUM.put("72","西电睿思灌水专区");
-    }
+
+    public static String CONFIG_COOKIE = "";
+    public static String CONFIG_FORMHASH = "";
+    public static boolean CONFIG_ISLOGIN = false;
+    public static String CONFIG_USER_NAME = "";
+
+    public static String BBS_BASE_URL = "http://rs.xidian.edu.cn/";
+
+
 }
