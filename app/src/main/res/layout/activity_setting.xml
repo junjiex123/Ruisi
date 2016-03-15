@@ -67,7 +67,7 @@
 
             </RelativeLayout>
 
-            <View style="@style/AppWidget.DeepLine" />
+            <View style="@style/DeepLine" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -120,7 +120,7 @@
 
             </RelativeLayout>
 
-            <View style="@style/AppWidget.DeepLine" />
+            <View style="@style/DeepLine" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -173,7 +173,7 @@
 
             </RelativeLayout>
 
-            <View style="@style/AppWidget.DeepLine" />
+            <View style="@style/DeepLine" />
 
 
         </LinearLayout>

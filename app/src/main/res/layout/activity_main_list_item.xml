@@ -173,7 +173,7 @@
         android:scaleType="centerInside"
         android:adjustViewBounds="true" />
 
-    <View style="@style/AppWidget.DeepLine"
+    <View style="@style/DeepLine"
         android:layout_gravity="bottom" />
 
 </FrameLayout>

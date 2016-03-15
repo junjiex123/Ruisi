@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="64dp"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:background="#eeeeee">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="0dp"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardElevation="3dp"
+    android:layout_marginTop="@dimen/dimen_8"
+    android:layout_marginBottom="@dimen/dimen_8">
 
     <TextView
-        android:id="@+id/load_more_text"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/dimen_16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="load_more"
-        android:textColor="?android:attr/textColorSecondary"
-        android:textSize="16sp" />
+        android:text="加载更多"/>
 
-</LinearLayout>
+</android.support.v7.widget.CardView>

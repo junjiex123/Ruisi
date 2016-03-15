@@ -106,6 +106,11 @@ public class MainActivity extends AppCompatActivity
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 refreshLayout.setRefreshing(true);
                 new GetListTask("72",0).execute((Void) null);
             }
@@ -191,8 +196,6 @@ public class MainActivity extends AppCompatActivity
             String result = data.getExtras().getString("result");//得到新Activity 关闭后返回的数据
             Toast.makeText(getApplicationContext(),"result"+result,Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
     @Override
