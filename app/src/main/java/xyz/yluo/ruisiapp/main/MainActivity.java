@@ -394,7 +394,7 @@ public class MainActivity extends AppCompatActivity
             //第二个参数是列数
             //mLayoutManager = new GridLayoutManager( getContext(),2);
             //加载更多实现
-            mRecyclerView.addOnScrollListener(new RecyclerViewLoadMoreListener((LinearLayoutManager) mLayoutManager,this,20));
+            mRecyclerView.addOnScrollListener(new RecyclerViewLoadMoreListener((LinearLayoutManager) mLayoutManager,this));
             new GetListTask(72,0).execute((Void) null);
         }else{
             //切换到摄影天地板块

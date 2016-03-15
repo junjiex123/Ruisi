@@ -91,12 +91,14 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
     public abstract class BaseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public BaseViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
         }
         abstract void setData(int position);
 
         @Override
         public void onClick(View v)
         {
+            //getItemCount()
             itemListener.recyclerViewListClicked(v, this.getLayoutPosition());
         }
     }
@@ -156,7 +158,6 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
         }
 
     }
-
 
     //评论列表ViewHolder 如果想创建别的样式还可以创建别的houlder继承自RecyclerView.ViewHolder
     public  class CommentViewHolder extends BaseViewHolder {

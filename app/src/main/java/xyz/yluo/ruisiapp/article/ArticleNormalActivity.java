@@ -45,14 +45,11 @@ import xyz.yluo.ruisiapp.main.RecyclerViewLoadMoreListener;
  *
  */
 public class ArticleNormalActivity extends AppCompatActivity
-        implements RecyclerViewLoadMoreListener.OnLoadMoreListener,
-        Reply_Dialog_Fragment.ReplyDialogListener,RecyclerViewClickListener{
+        implements Reply_Dialog_Fragment.ReplyDialogListener,RecyclerViewClickListener{
 
-    //当前页面
+    //当前评论第几页
     private int CurrentPage = 1;
-
     //存储数据 需要填充的列表
-    //TODO 动态获取
     private List<SingleArticleData> mydatalist = new ArrayList<>();
     private static String articleUrl;
     private static String articleTitle;
@@ -76,6 +73,8 @@ public class ArticleNormalActivity extends AppCompatActivity
         //System.out.print("articleUrl articleTitle replaycount articletype articleauthor>>\n"+articleUrl+articleTitle+replaycount+articletype+articleauthor);
         context.startActivity(intent);
     }
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,15 +104,12 @@ public class ArticleNormalActivity extends AppCompatActivity
 
         //TODO
         //以后实现，现在是静态的
-        mRecyleAdapter = new ArticleRecycleAdapter(this, mydatalist);
+        mRecyleAdapter = new ArticleRecycleAdapter(this, this, mydatalist);
         // Set MyRecyleAdapter as the adapter for RecyclerView.
         mRecyclerView.setAdapter(mRecyleAdapter);
 
         //设置Item增加、移除动画
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        //加载更多实现
-        mRecyclerView.addOnScrollListener(new RecyclerViewLoadMoreListener((LinearLayoutManager) mLayoutManager,this));
 
         refreshLayout.post(new Runnable() {
             @Override
@@ -134,8 +130,8 @@ public class ArticleNormalActivity extends AppCompatActivity
                 fab.hide();
             }
         });
-        //按钮监听
 
+        //按钮监听
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -168,7 +164,6 @@ public class ArticleNormalActivity extends AppCompatActivity
         if(resultCode==RESULT_OK){
             String result = data.getExtras().getString("result");//得到新Activity 关闭后返回的数据
             Toast.makeText(getApplicationContext(),"result"+result,Toast.LENGTH_SHORT).show();
-
         }
     }
 
@@ -197,18 +192,26 @@ public class ArticleNormalActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    //加载更多事件
+
     @Override
-    public void onLoadMore() {
-        Toast.makeText(getApplicationContext(),"加载更多被触发",Toast.LENGTH_SHORT).show();
-        GetSingleArticleData singleArticleData = new GetSingleArticleData(articleUrl,CurrentPage+1);
-        singleArticleData.execute((Void) null);
+    public void onDialogCancelClick(DialogFragment dialog) {
+
     }
 
-    //recyclerView item点击事件
+    //recyclerView item点击事件 加载更多事件
     @Override
     public void recyclerViewListClicked(View v, int position) {
-
+        //Toast.makeText(getApplicationContext(),"被电击"+position+"|"+mydatalist.size(),Toast.LENGTH_SHORT).show();
+        if(position==mydatalist.size()){
+            int num  = CurrentPage;
+            //加载更多 被电击
+            if(position%10==0){
+                //本页最后一个
+                //数据填充
+                num+=1;
+            }
+            new GetSingleArticleData(articleUrl,num).execute((Void) null);
+        }
     }
 
     //发帖框回掉函数
@@ -259,11 +262,6 @@ public class ArticleNormalActivity extends AppCompatActivity
 
     }
 
-    @Override
-    public void onDialogCancelClick(DialogFragment dialog) {
-
-    }
-
 
     //获得数据
     public class GetSingleArticleData extends AsyncTask<Void, Void, String> {
@@ -302,7 +300,6 @@ public class ArticleNormalActivity extends AppCompatActivity
                     if(temp!=null){
                         singledataslist.add(temp);
                     }
-                    //
                 }
             }
             return response;
@@ -310,15 +307,32 @@ public class ArticleNormalActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(final String res) {
 
-            if(CurrentPage==1){
-                mydatalist.clear();
+            if(CurrentPage==page){
+                //还在本页不用去另一页
+                //mydatalist.clear();
+                //本页多出num
+                int num = mydatalist.size()-(page-1)*10;
+                //没有新的
+                if (singledataslist.size()<=num){
+                    Toast.makeText(getApplicationContext(),"已无更多",Toast.LENGTH_SHORT).show();
+                }else{
+                    for (int tmp = num;tmp<singledataslist.size();tmp++){
+                        mydatalist.add(singledataslist.get(tmp));
+                    }
+                    mRecyleAdapter.notifyDataSetChanged();
+                }
+            }else{
+                //加载了新的一页
+                if(singledataslist.size()>0){
+                    CurrentPage+=1;
+                }
+                mydatalist.addAll(singledataslist);
             }
-            refreshLayout.setRefreshing(false);
-            mydatalist.addAll(singledataslist);
-            mRecyleAdapter.notifyDataSetChanged();
-            fab.show();
 
-            CurrentPage = page;
+            refreshLayout.setRefreshing(false);
+            mRecyleAdapter.notifyDataSetChanged();
+
+            fab.show();
         }
         @Override
         protected void onCancelled() {
