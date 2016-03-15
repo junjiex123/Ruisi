@@ -1,7 +1,9 @@
 package xyz.yluo.ruisiapp.article;
 
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SyncAdapterType;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,27 +19,35 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import xyz.yluo.ruisiapp.ConfigClass;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.api.GetLevel;
 import xyz.yluo.ruisiapp.api.SingleArticleData;
 import xyz.yluo.ruisiapp.http.MyHttpConnection;
+import xyz.yluo.ruisiapp.input_Dialog_Fragment;
+import xyz.yluo.ruisiapp.login.LoginActivity;
 import xyz.yluo.ruisiapp.main.RecyclerViewLoadMoreListener;
 
 /**
  * Created by free2 on 16-3-6.
  *
  */
-public class ArticleNormalActivity extends AppCompatActivity implements RecyclerViewLoadMoreListener.OnLoadMoreListener{
+public class ArticleNormalActivity extends AppCompatActivity implements RecyclerViewLoadMoreListener.OnLoadMoreListener,Reply_Dialog_Fragment.ReplyDialogListener{
     //存储数据 需要填充的列表
     //TODO 动态获取
     private List<SingleArticleData> mydatalist = new ArrayList<>();
@@ -57,15 +67,12 @@ public class ArticleNormalActivity extends AppCompatActivity implements Recycler
     public static void open(Context context, List<String> messagelist) {
         Intent intent = new Intent(context, ArticleNormalActivity.class);
         //url|标题|回复|类型|author
-
         articleUrl = messagelist.get(0);
         articleTitle =  messagelist.get(1);
         replaycount =  messagelist.get(2);
         articletype =  messagelist.get(3);
         articleauthor =  messagelist.get(4);
-
-        System.out.print("articleUrl articleTitle replaycount articletype articleauthor>>\n"+articleUrl+articleTitle+replaycount+articletype+articleauthor);
-
+        //System.out.print("articleUrl articleTitle replaycount articletype articleauthor>>\n"+articleUrl+articleTitle+replaycount+articletype+articleauthor);
         context.startActivity(intent);
     }
 
@@ -73,8 +80,6 @@ public class ArticleNormalActivity extends AppCompatActivity implements Recycler
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_article);
-
-
         myWebView = (MyWebView) findViewById(R.id.content_webView);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -88,7 +93,9 @@ public class ArticleNormalActivity extends AppCompatActivity implements Recycler
 
         mRecyclerView = (RecyclerView) findViewById(R.id.topic_recycler_view);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.topic_refresh_layout);
+
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.hide();
 
         //可以设置不同样式
         mLayoutManager = new LinearLayoutManager(this);
@@ -98,27 +105,27 @@ public class ArticleNormalActivity extends AppCompatActivity implements Recycler
 
         //TODO
         //以后实现，现在是静态的
-        //数据填充
-        System.out.print("???????????????????brfore exe\n");
-        new GetSingleArticleData(articleUrl).execute((Void) null);
-
         mRecyleAdapter = new ArticleRecycleAdapter(this, mydatalist);
         // Set MyRecyleAdapter as the adapter for RecyclerView.
         mRecyclerView.setAdapter(mRecyleAdapter);
 
-        refreshLayout.setRefreshing(true);
         //设置Item增加、移除动画
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         //加载更多实现
         mRecyclerView.addOnScrollListener(new RecyclerViewLoadMoreListener((LinearLayoutManager) mLayoutManager,this,20));
 
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+                new GetSingleArticleData(articleUrl).execute((Void) null);
+            }
+        });
         //下拉刷新
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
             @Override
             public void onRefresh() {
-
                 //数据填充
                 GetSingleArticleData singleArticleData = new GetSingleArticleData(articleUrl);
                 singleArticleData.execute((Void) null);
@@ -131,10 +138,37 @@ public class ArticleNormalActivity extends AppCompatActivity implements Recycler
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if(ConfigClass.CONFIG_ISLOGIN){
+                    //TODO  发帖逻辑
+                    Reply_Dialog_Fragment newFragment = new Reply_Dialog_Fragment();
+                    newFragment.show(getFragmentManager(),"replydialog");
+                }else {
+                    final Snackbar snackbar = Snackbar.make(view, "你好像还没有登陆!!!", Snackbar.LENGTH_LONG);
+                    snackbar.setAction("点我登陆", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                            startActivityForResult(i,1);
+                            //snackbar.dismiss();
+                        }
+                    });
+                    snackbar.show();
+                }
+
             }
         });
+    }
+
+    //登陆页面返回结果
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK){
+            String result = data.getExtras().getString("result");//得到新Activity 关闭后返回的数据
+            Toast.makeText(getApplicationContext(),"result"+result,Toast.LENGTH_SHORT).show();
+
+        }
     }
 
     @Override
@@ -164,6 +198,59 @@ public class ArticleNormalActivity extends AppCompatActivity implements Recycler
 
     @Override
     public void onLoadMore() {
+
+    }
+
+    //发帖框回掉函数
+    @Override
+    public void onDialogSendClick(DialogFragment dialog, String text) {
+        int len =0;
+       // Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
+        try {
+            len = text.getBytes("UTF-8").length;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        if(len<13){
+            Toast.makeText(getApplicationContext(),"字数不够",Toast.LENGTH_SHORT).show();
+            Reply_Dialog_Fragment newFragment = new Reply_Dialog_Fragment();
+            newFragment.show(getFragmentManager(),"replydialog");
+        }else {
+            //System.out.print("\n当前文章地址"+articleUrl+"\n");
+            //尝试回复
+            //articleUrl
+            //String str = "forum.php?mod=viewthread&tid=837479&extra=page%3D1";
+            Pattern pattern = Pattern.compile("[0-9]{3,}");
+            Matcher matcher = pattern.matcher(articleUrl);
+            String tid ="";
+            while (matcher.find()) {
+                tid = articleUrl.substring(matcher.start(),matcher.end());
+                //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
+            }
+            //System.out.print("\narticleUrl==============>>>>"+articleUrl);
+            String url =ConfigClass.BBS_BASE_URL+"forum.php?mod=post&infloat=yes&action=reply&fid=72&extra=&tid="+tid+"&replysubmit=yes&inajax=1";
+            Map<String, String> params = new HashMap<>();
+            /*
+            message:帮顶
+            posttime:1457620291
+            formhash:70af5bb6
+            usesig:1
+            subject:
+            */
+            params.put("formhash", ConfigClass.CONFIG_FORMHASH);
+            params.put("usesig", "1");
+            params.put("message", text);
+            params.put("subject", "");
+
+            UserPostTask mAuthTask = new UserPostTask(url, params);
+            mAuthTask.execute((Void) null);
+
+        }
+
+    }
+
+    @Override
+    public void onDialogCancelClick(DialogFragment dialog) {
 
     }
 
@@ -263,19 +350,37 @@ public class ArticleNormalActivity extends AppCompatActivity implements Recycler
             }
             //TODO 获得了内容 处理它
             Elements content= element.select("td[class=plc]").select("div[class=pcb]").select("td[class=t_f][id^=postmessage]");
+            //System.out.print("\n"+content.html());
+
+            //替换连续回车为1个
+            String newcontent = content.html().replaceAll("(<br>\\s*){2,}","<br>");
+            //(<br>){1,}
+            // <br />
+            //<br />
+            //<br />
+            //  (<br />\s*){2,}
+            //System.out.print("\n"+newcontent);
+
 
 
             if(username!=""&&content.html()!=""){
                 String time = element.select("div[class=pi]").select("div[class=authi]").select("em[id^=authorposton]").text().trim();
                 String userUrl = element.select("div[class=pi]").select("div[class=authi]").select("a[href^=home.php?mod=space][class=xi2]").attr("href").trim();
                 String imgurl = element.select("td[class=pls]").select("div[class=avatar]").select("img[src^=http://rs.xidian.edu.cn/ucenter/data/avatar]").attr("src").trim();
+
+                //获得用户积分
                 String usergroup = element.select("a[href$=profile][class=xi2]").text().trim();
+                if(usergroup.contains(" ")){
+                    usergroup = usergroup.split(" ")[0];
+                }
+
+                //System.out.print("\n用户积分——————————>>>>"+usergroup+"\n");
 
                 String level = GetLevel.getUserLevel(Integer.parseInt(usergroup));
                 System.out.print("\n>>>>>>>>>>>>>>>"+username+"||>>"+userUrl+"||>>"+time+"||>>"+imgurl+"||>>"+level+"<<<<<<<<<<<<<<<<<<\n");
                 // replaycount;String articleauthor;articletype;
 
-                listdata = new SingleArticleData(articleTitle,articletype,username,userUrl,imgurl,time,level,replaycount,content.html());
+                listdata = new SingleArticleData(articleTitle,articletype,username,userUrl,imgurl,time,level,replaycount,newcontent);
                 if(isGetgold){
                     listdata.isGetGold = true;
                     listdata.setGoldnum(gold);
@@ -291,4 +396,33 @@ public class ArticleNormalActivity extends AppCompatActivity implements Recycler
             return listdata;
         }
     }
+
+    //发帖
+    public class UserPostTask extends AsyncTask<Void, Void, String> {
+
+        private final String url;
+        private final Map<String, String> paramss;
+
+        UserPostTask(String url, Map<String, String> paramss) {
+            this.url = url;
+            this.paramss = paramss;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            String response = "";
+            response = MyHttpConnection.Http_post(url, paramss);
+
+            //System.out.print("post response>>>>>>>>>>\n" + response);
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(final String res) {
+            Toast.makeText(getApplicationContext(),"ok",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 }

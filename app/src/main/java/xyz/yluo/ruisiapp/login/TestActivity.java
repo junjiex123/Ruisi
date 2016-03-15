@@ -101,7 +101,6 @@ public class TestActivity extends AppCompatActivity {
         responseText.setText(ConfigClass.CONFIG_FORMHASH);
     }
 
-
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.

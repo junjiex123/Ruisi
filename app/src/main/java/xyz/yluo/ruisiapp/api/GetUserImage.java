@@ -1,7 +1,5 @@
 package xyz.yluo.ruisiapp.api;
 
-import javax.crypto.spec.DESedeKeySpec;
-
 /**
  * Created by free2 on 16-3-12.
  * 通过userUrl 获得头像URL

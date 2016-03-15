@@ -67,8 +67,6 @@ public class MainActivity extends AppCompatActivity
 
     private int position;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,15 +92,10 @@ public class MainActivity extends AppCompatActivity
         //获取数据以后实现，现在是静态的
         mydataset = new ArrayList<>();
 
-        GetListTask getListTask = new GetListTask("72",0);
-        getListTask.execute((Void) null);
-
         mRecyleAdapter = new RecycleViewAdapter(this,mydataset);
         // Set MyRecyleAdapter as the adapter for RecyclerView.
         mRecyclerView.setAdapter(mRecyleAdapter);
 
-        //开始刷新
-        refreshLayout.setRefreshing(true);
         //设置Item增加、移除动画
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
@@ -110,16 +103,20 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.addOnScrollListener(new RecyclerViewLoadMoreListener((LinearLayoutManager) mLayoutManager,this,20));
 
         //下拉刷新
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+                new GetListTask("72",0).execute((Void) null);
+            }
+        });
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 mydataset.clear();
-
+                //TODO 根据当前板块加载内容
                 fabMenu.hideMenu(true);
-
-                GetListTask getListTask = new GetListTask("72",0);
-                getListTask.execute((Void) null);
+                new GetListTask("72",0).execute((Void) null);
             }
         });
 
@@ -185,7 +182,6 @@ public class MainActivity extends AppCompatActivity
         });
 
     }
-
     //登陆页面返回结果
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -259,6 +255,15 @@ public class MainActivity extends AppCompatActivity
         }else if(id ==R.id.nav_about){
               startActivity(new Intent(this, AboutActivity.class));
         }else if(id==R.id.nav_sytd) {
+
+            //刷新
+            refreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(true);
+                }
+            });
+            mydataset.clear();
             //切换到摄影天地板块
             //TODO
             RecyclerView.LayoutManager mnewLayoutManager;
@@ -267,12 +272,7 @@ public class MainActivity extends AppCompatActivity
             mRecyclerView.setLayoutManager(mnewLayoutManager);
             //TDOO 改变数据
             //刷新
-            mydataset.clear();
-            GetImageUrlList getImageUrlList = new GetImageUrlList("http://rs.xidian.edu.cn/forum.php?mod=forumdisplay&fid=561");
-            getImageUrlList.execute((Void) null);
-
-            refreshLayout.setRefreshing(false);
-            mRecyleAdapter.notifyDataSetChanged();
+            new GetImageUrlList("http://rs.xidian.edu.cn/forum.php?mod=forumdisplay&fid=561").execute((Void) null);
 
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -406,7 +406,6 @@ public class MainActivity extends AppCompatActivity
                 Elements imagelist = list.select("li");
 
                 for(Element tmp:imagelist){
-
                     //链接不带前缀
                     //http://rs.xidian.edu.cn/
                     String  img= tmp.select("img").attr("src");
@@ -429,9 +428,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(final String res) {
-
             fabMenu.showMenu(true);
-
             refreshLayout.setRefreshing(false);
             mRecyleAdapter.notifyDataSetChanged();
         }

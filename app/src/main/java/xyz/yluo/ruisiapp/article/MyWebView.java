@@ -2,9 +2,7 @@ package xyz.yluo.ruisiapp.article;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 /**
  * Created by free2 on 16-3-8.

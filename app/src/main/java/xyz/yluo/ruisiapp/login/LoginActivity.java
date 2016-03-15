@@ -14,17 +14,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import xyz.yluo.ruisiapp.ConfigClass;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.api.Get_FORMHASH;
 import xyz.yluo.ruisiapp.http.MyHttpConnection;
 
 
@@ -70,6 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                     Map<String, String> params = new HashMap<>();
                     params.put("username", "谁用了FREEDOM");
                     params.put("cookietime", "2592000");
+                    //justice
                     params.put("password", "9345b4e983973212313e4c809b94f75d");
                     params.put("quickforward", "yes");
                     params.put("handlekey", "ls");
@@ -133,8 +131,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-
-
     private boolean checkInput() {
         return true;
     }
@@ -164,6 +160,9 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             if(response.contains("欢迎您回来")){
+                //继续获得 formhash
+                Get_FORMHASH.get_Hash(true);
+
                 return response;
             }
 

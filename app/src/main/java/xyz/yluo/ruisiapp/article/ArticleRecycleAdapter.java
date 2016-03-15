@@ -1,8 +1,6 @@
 package xyz.yluo.ruisiapp.article;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,16 +12,12 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
-
 import xyz.yluo.ruisiapp.api.SingleArticleData;
 import xyz.yluo.ruisiapp.user.UserDetailActivity;
 

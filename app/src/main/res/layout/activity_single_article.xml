@@ -42,8 +42,6 @@
         android:layout_margin="@dimen/dimen_16"
         app:layout_anchorGravity="bottom|end"
         app:layout_anchor="@+id/topic_recycler_view"
-        android:src="@android:drawable/ic_dialog_email" />
-
-
+        android:src="@android:drawable/ic_input_add" />
     
 </android.support.design.widget.CoordinatorLayout>
