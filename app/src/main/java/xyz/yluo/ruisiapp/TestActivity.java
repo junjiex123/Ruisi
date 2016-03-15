@@ -1,9 +1,10 @@
-package xyz.yluo.ruisiapp.login;
+package xyz.yluo.ruisiapp;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import org.jsoup.Jsoup;
@@ -34,6 +35,8 @@ public class TestActivity extends AppCompatActivity {
 
     @Bind(R.id.text_response)
     protected TextView responseText;
+    @Bind(R.id.webview)
+    protected WebView webview;
 
 
     @Override
@@ -101,6 +104,24 @@ public class TestActivity extends AppCompatActivity {
         responseText.setText(ConfigClass.CONFIG_FORMHASH);
     }
 
+    @OnClick(R.id.get_single)
+    protected void get_single_click(){
+        GetSingle getSingle = new GetSingle("http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=839311&extra=page%3D1");
+        getSingle.execute((Void) null);
+    }
+
+    @OnClick(R.id.get_image)
+    protected void get_image_click(){
+        //get
+        //<img id="aimg_dfzU4" onclick="zoom(this, this.src, 0, 0, 0)" class="zoom" width="249" height="356" file="http://rs.xidian.edu.cn/forum.php?mod=image&amp;aid=851820&amp;size=300x300&amp;key=2a3604eec0da779f&amp;nocache=yes&amp;type=fixnone" border="0" alt="" />
+        //ok
+        //String data = "<img id=\"aimg_I3N3u\" onclick=\"zoom(this, this.src, 0, 0, 0)\" class=\"zoom\" width=\"249\" height=\"356\" file=\"http://rs.xidian.edu.cn/forum.php?mod=image&amp;aid=851820&amp;size=300x300&amp;key=2a3604eec0da779f&amp;nocache=yes&amp;type=fixnone\" border=\"0\" alt=\"\" src=\"http://rs.xidian.edu.cn/forum.php?mod=image&amp;aid=851820&amp;size=300x300&amp;key=2a3604eec0da779f&amp;nocache=yes&amp;type=fixnone\" lazyloaded=\"true\">";
+        //not ok
+        //String data = "<img src=\"http://rs.xidian.edu.cn/forum.php?mod=image&aid=851820&size=300x300&key=2a3604eec0da779f&nocache=yes&type=fixnone\"";
+        String data = "<img src=\"./data/attachment/forum/201603/15/110909j3zlw4uoez7we5eq.jpg\">";
+
+        webview.loadDataWithBaseURL("http://rs.xidian.edu.cn/",data,"text/html","UTF-8",null);
+    }
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -143,8 +164,8 @@ public class TestActivity extends AppCompatActivity {
                 formhash = doc.select("input[name=formhash]").first().attr("value"); // 具有 formhash 属性的链接
             }
 
-            responseText.append("formhash:" + formhash + "\n");
-            responseText.append(res + "\n\n\n");
+            responseText.setText("formhash:" + formhash + "\n");
+            responseText.setText(res + "\n\n\n");
         }
 
         @Override
@@ -270,4 +291,45 @@ public class TestActivity extends AppCompatActivity {
             return null;
         }
     }
+
+    //response = MyHttpConnection.Http_get("http://rs.xidian.edu.cn/"+url);
+    //获得单篇文章
+    public class GetSingle extends AsyncTask<Void, Void, String> {
+
+        private final String Baseurl = "http://rs.xidian.edu.cn/forum.php?mod=forumdisplay&fid=";
+        private String fullurl = "";
+        private List<ArticleListData> dataset;
+
+        public GetSingle(String url) {
+
+            dataset = new ArrayList<>();
+            fullurl = url;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            String response = "";
+            try {
+                response = MyHttpConnection.Http_get(fullurl);
+            } catch (Exception e) {
+                return "error";
+            }
+
+            StringBuffer buffer = new StringBuffer();
+            if (response != "") {
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(final String res) {
+            responseText.setText("res:" + res + "\n");
+        }
+
+        @Override
+        protected void onCancelled() {
+
+        }
+    }
+
 }

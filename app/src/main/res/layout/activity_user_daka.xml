@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_margin="@dimen/dimen_8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="选择心情"
+            android:id="@+id/textView2" />
+
+            <LinearLayout
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <ImageButton
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/da_kx"
+                android:id="@+id/ImageButton3" />
+
+            <ImageButton
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/da_fd"
+                android:id="@+id/ImageButton2" />
+
+            <ImageButton
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/da_nu"
+                android:id="@+id/ImageButton5" />
+
+            <ImageButton
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:id="@+id/ImageButton"
+                android:background="@drawable/da_ch" />
+
+            <ImageButton
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/da_ng"
+                android:id="@+id/ImageButton4" />
+
+            <ImageButton
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/da_wl"
+                android:id="@+id/ImageButton7" />
+
+            <ImageButton
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:id="@+id/ImageButton6"
+                android:background="@drawable/da_shuai" />
+
+            <ImageButton
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/da_yl" />
+            <ImageButton
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/da_ym" />
+            </LinearLayout>
+            <RadioGroup
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/radiobtn_01"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp" />
+                <RadioButton
+                    android:id="@+id/radiobtn_02"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp" />
+                <RadioButton
+                    android:id="@+id/radiobtn_03"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp" />
+                <RadioButton
+                    android:id="@+id/radiobtn_04"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp" />
+                <RadioButton
+                    android:id="@+id/radiobtn_05"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp" />
+                <RadioButton
+                    android:id="@+id/radiobtn_06"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp" />
+                <RadioButton
+                    android:id="@+id/radiobtn_07"
+                android:layout_width="36dp"
+                android:layout_height="36dp" />
+                <RadioButton
+                    android:id="@+id/radiobtn_08"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp" />
+                <RadioButton
+                    android:id="@+id/radiobtn_09"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp" />
+
+            </RadioGroup>
+
+        <TextView
+            android:layout_marginTop="@dimen/dimen_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="今日最想说模式"
+            android:id="@+id/textView" />
+
+
+
+        <RadioGroup
+            android:layout_marginTop="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="自己填写"
+                android:id="@+id/radioButton9" />
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="快速回复"
+                android:id="@+id/radioButton10" />
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="不想填写"
+                android:id="@+id/radioButton11" />
+            </RadioGroup>
+
+        <EditText
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="输入你最想说的话"/>
+
+        <Spinner
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner"
+            android:layout_gravity="center_horizontal" />
+
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/dimen_16"
+        android:src="@drawable/ic_menu_send"/>
+</android.support.design.widget.CoordinatorLayout>

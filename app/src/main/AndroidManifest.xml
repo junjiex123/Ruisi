@@ -46,10 +46,15 @@
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
-        <activity android:name=".login.TestActivity">
+        <activity android:name=".TestActivity">
 
         </activity>
         <activity android:name=".login.LoginActivity">
+
+        </activity>
+
+        <activity android:name=".login.UserDakaActivity"
+            android:label="打卡">
 
         </activity>
     </application>

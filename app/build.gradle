@@ -5,8 +5,8 @@ android {
     buildToolsVersion '24.0.0 rc1'
     defaultConfig {
         applicationId "xyz.yluo.ruisiapp"
-        minSdkVersion 21
-        targetSdkVersion 23
+        minSdkVersion 19
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }

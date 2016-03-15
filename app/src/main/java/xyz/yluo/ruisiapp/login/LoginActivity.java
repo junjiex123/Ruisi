@@ -1,8 +1,10 @@
 package xyz.yluo.ruisiapp.login;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -120,11 +122,11 @@ public class LoginActivity extends AppCompatActivity {
 
                 //替换密码框图片
                 if(!TextUtils.isEmpty(ed_pass.getText())){
-                    imageViewl.setImageDrawable(getResources().getDrawable(R.drawable.ic_22_hide,null));
-                    imageViewr.setImageDrawable(getResources().getDrawable(R.drawable.ic_33_hide, null));
+                    imageViewl.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_22_hide));
+                    imageViewr.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_33_hide));
                 }else{
-                    imageViewl.setImageDrawable(getResources().getDrawable(R.drawable.ic_22,null));
-                    imageViewr.setImageDrawable(getResources().getDrawable(R.drawable.ic_33, null));
+                    imageViewl.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_22));
+                    imageViewr.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_33));
                 }
             }
         });

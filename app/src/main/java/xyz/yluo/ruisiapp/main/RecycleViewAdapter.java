@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -47,10 +46,10 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public int getItemViewType(int position) {
 
         //判断listItem类型
-        if(DataSet.get(position).isImageCard()) {
+        if(position!= getItemCount() - 1 && DataSet.get(position).isImageCard()) {
             return TYPE_IMAGE_CARD;
         }
-        else if (DataSet.size() >= 20 && position == getItemCount() - 1) {
+        else if (position>0&& position == getItemCount() - 1) {
             return TYPE_LOAD_MORE;
         } else {
             return TYPE_NORMAL;
@@ -63,7 +62,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public BaseViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         switch (viewType) {
             case TYPE_LOAD_MORE:
-                return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.load_more_list_item, viewGroup, false));
+                return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_main_load_more_list_item, viewGroup, false));
             case TYPE_IMAGE_CARD:
                 return new ImageCardViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_main_image_list_item, viewGroup, false));
             default: // TYPE_NORMAL
@@ -76,15 +75,16 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public void onBindViewHolder(BaseViewHolder holder, int position) {
         holder.setData(position);
     }
-
-
     //为了让 list item可以变化，我们可以重写这个方法
     //他的返回值是onCreateViewHolder 的参数viewType
     //这儿可以 知道position 和 data
 
     @Override
     public int getItemCount() {
-        return DataSet.size() >= 20 ? DataSet.size() + 1 : DataSet.size();
+        if (DataSet.size()==0){
+            return 0;
+        }
+        return DataSet.size() + 1;
     }
 
     public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
@@ -143,7 +143,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             //home.php?mod=space&uid=277268
             //http://rs.xidian.edu.cn/ucenter/data/avatar/000/29/84/87_avatar_small.jpg
             //298487
-            System.out.println("@@@@@@@@@@@@@@@user url>>\n"+DataSet.get(position).getAuthorUrl()+"\n@@@@@@@@userUID>>\n"+GetUserImage.getimageurl(DataSet.get(position).getAuthorUrl()));
+            //System.out.println("@@@@@@@@@@@@@@@user url>>\n"+DataSet.get(position).getAuthorUrl()+"\n@@@@@@@@userUID>>\n"+GetUserImage.getimageurl(DataSet.get(position).getAuthorUrl()));
 
             Picasso.with(activity).load(imageUrl).resize(36,36).centerCrop().placeholder(R.drawable.image_placeholder).into(author_img);
         }
@@ -167,7 +167,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             messagelist.add(single_data.getAuthor());
 
             ArticleNormalActivity.open(activity,messagelist);
-            System.out.print("$$$$$$$$$>>"+DataSet.get(getPosition()).getTitleUrl()+"|"+article_title.getText()+"|"+reply_count.getText()+"|"+article_type.getText()+"|"+author_name.getText()+"\n");
+            //System.out.print("$$$$$$$$$>>"+DataSet.get(getPosition()).getTitleUrl()+"|"+article_title.getText()+"|"+reply_count.getText()+"|"+article_type.getText()+"|"+author_name.getText()+"\n");
         }
     }
 

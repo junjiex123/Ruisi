@@ -3,7 +3,6 @@ package xyz.yluo.ruisiapp.article;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SyncAdapterType;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,7 +21,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -39,7 +37,6 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.api.GetLevel;
 import xyz.yluo.ruisiapp.api.SingleArticleData;
 import xyz.yluo.ruisiapp.http.MyHttpConnection;
-import xyz.yluo.ruisiapp.input_Dialog_Fragment;
 import xyz.yluo.ruisiapp.login.LoginActivity;
 import xyz.yluo.ruisiapp.main.RecyclerViewLoadMoreListener;
 
@@ -47,7 +44,11 @@ import xyz.yluo.ruisiapp.main.RecyclerViewLoadMoreListener;
  * Created by free2 on 16-3-6.
  *
  */
-public class ArticleNormalActivity extends AppCompatActivity implements RecyclerViewLoadMoreListener.OnLoadMoreListener,Reply_Dialog_Fragment.ReplyDialogListener{
+public class ArticleNormalActivity extends AppCompatActivity
+        implements RecyclerViewLoadMoreListener.OnLoadMoreListener,
+        Reply_Dialog_Fragment.ReplyDialogListener{
+
+
     //存储数据 需要填充的列表
     //TODO 动态获取
     private List<SingleArticleData> mydatalist = new ArrayList<>();
@@ -56,8 +57,6 @@ public class ArticleNormalActivity extends AppCompatActivity implements Recycler
     private static String replaycount;
     private static String articleauthor;
     private static String articletype;
-
-    private MyWebView myWebView;
     private RecyclerView mRecyclerView;
     private ArticleRecycleAdapter mRecyleAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -79,8 +78,7 @@ public class ArticleNormalActivity extends AppCompatActivity implements Recycler
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_single_article);
-        myWebView = (MyWebView) findViewById(R.id.content_webView);
+        setContentView(R.layout.activity_article);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -113,7 +111,7 @@ public class ArticleNormalActivity extends AppCompatActivity implements Recycler
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         //加载更多实现
-        mRecyclerView.addOnScrollListener(new RecyclerViewLoadMoreListener((LinearLayoutManager) mLayoutManager,this,20));
+        mRecyclerView.addOnScrollListener(new RecyclerViewLoadMoreListener((LinearLayoutManager) mLayoutManager,this,10));
 
         refreshLayout.post(new Runnable() {
             @Override
@@ -129,7 +127,7 @@ public class ArticleNormalActivity extends AppCompatActivity implements Recycler
                 //数据填充
                 GetSingleArticleData singleArticleData = new GetSingleArticleData(articleUrl);
                 singleArticleData.execute((Void) null);
-                mydatalist.clear();
+
                 fab.hide();
             }
         });
@@ -198,6 +196,7 @@ public class ArticleNormalActivity extends AppCompatActivity implements Recycler
 
     @Override
     public void onLoadMore() {
+        Toast.makeText(getApplicationContext(),"加载更多被触发",Toast.LENGTH_SHORT).show();
 
     }
 
@@ -272,7 +271,7 @@ public class ArticleNormalActivity extends AppCompatActivity implements Recycler
             System.out.print("???????????????????in exe\n");
             String response ="";
             try {
-                response = MyHttpConnection.Http_get("http://rs.xidian.edu.cn/"+url);
+                response = MyHttpConnection.Http_get(ConfigClass.BBS_BASE_URL+url);
                 //System.out.print(response);
             } catch (Exception e) {
                 return "error";
@@ -297,12 +296,9 @@ public class ArticleNormalActivity extends AppCompatActivity implements Recycler
         }
         @Override
         protected void onPostExecute(final String res) {
-
+            mydatalist.clear();
             refreshLayout.setRefreshing(false);
-            System.out.print(")))))))))))))))))"+mydatalist.size()+"\n");
-
             mydatalist.addAll(singledataslist);
-            System.out.print(")))))))))))))))))"+mydatalist.size()+"\n");
             mRecyleAdapter.notifyDataSetChanged();
             fab.show();
         }
@@ -320,6 +316,15 @@ public class ArticleNormalActivity extends AppCompatActivity implements Recycler
             String dianpin = "";
             SingleArticleData listdata =null;
 
+            //修改表情大小
+            for (Element temp : element.select("img[src^=static/image/smiley/]")) {
+                //System.out.print("replace before------>>>>>>>>>>>"+temp+"\n");
+                //String imgUrl = temp.attr("src");
+                //String newimgurl =  imgUrl.replace("static/image/smiley/tieba/","file:///android_asset/smiley/tieba/");
+                //System.out.print("replace------>>>>>>>>>>>"+imgUrl+newimgurl+"\n");
+                temp.attr("style", "width:30px;height: 30px;");
+            }
+
             //替换贴吧表情到本地
             //("static/image/smiley/tieba/","file:///android_asset/smiley/tieba/");
             for (Element temp : element.select("img[src^=static/image/smiley/tieba/]")) {
@@ -328,6 +333,32 @@ public class ArticleNormalActivity extends AppCompatActivity implements Recycler
                 String newimgurl =  imgUrl.replace("static/image/smiley/tieba/","file:///android_asset/smiley/tieba/");
                 //System.out.print("replace------>>>>>>>>>>>"+imgUrl+newimgurl+"\n");
                 temp.attr("src", newimgurl);
+            }
+            //http get 无法获得正确的图片地址
+            // get1-->><img id="aimg_dfzU4" onclick="zoom(this, this.src, 0, 0, 0)" class="zoom" width="249" height="356"
+            // file="http://rs.xidian.edu.cn/forum.php?mod=image&amp;aid=851820&amp;size=300x300&amp;key=2a3604eec0da779f&amp;nocache=yes&amp;type=fixnone"
+            // border="0" alt="" />
+            //正确的地址---->>>>
+            // <img src="http://rs.xidian.edu.cn/forum.php?mod=image&amp;aid=851820&amp;size=300x300&amp;key=2a3604eec0da779f&amp;nocache=yes&amp;type=fixnone" >;
+
+            //get2--->><img id="aimg_851787" aid="851787" src="static/image/common/none.gif"
+            // zoomfile="./data/attachment/forum/201603/15/110909j3zlw4uoez7we5eq.jpg"
+            // file="./data/attachment/forum/201603/15/110909j3zlw4uoez7we5eq.jpg"
+            // class="zoom" onclick="zoom(this, this.src, 0, 0, 0)" width="698" id="aimg_851787" inpost="1"
+            // onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+            //正确的地址2
+            // <img src="./data/attachment/forum/201603/15/110909j3zlw4uoez7we5eq.jpg">
+
+            // 修正图片链接地址
+            //[attr^=value], [attr$=value], [attr*=value]这三个语法分别代表，属性以 value 开头、结尾以及包含
+            for (Element temp : element.select("img[file^=http://rs.xidian.edu.cn/forum.php?mod=image],img[file^=./data/attachment/]")) {
+                //System.out.print("replace before------>>>>>>>>>>>"+temp+"\n");
+                String imgUrl = temp.attr("file");
+                temp.attr("src", imgUrl);
+                temp.attr("file","");
+                temp.attr("width","");
+                //img{display: inline; height: auto; max-width: 100%;}
+                //temp.attr("display: inline; height: auto; max-width: 100%;");
             }
 
             String username = element.select("div[class=pi]").select("div[class=authi]").select("a[href^=home.php?mod=space][class=xi2]").text().trim();
@@ -346,22 +377,25 @@ public class ArticleNormalActivity extends AppCompatActivity implements Recycler
                 //pinfenpeople = temppinfen.select("tr[id^=rate_]").text().trim();
                 //获得了金币 flag = true；
                 isGetpinfen = true;
-                System.out.print("\nyou get pinfen----->>>>>>\n"+pinfen+"<<<<<<-----\n");
+                //System.out.print("\nyou get pinfen----->>>>>>\n"+pinfen+"<<<<<<-----\n");
             }
             //TODO 获得了内容 处理它
             Elements content= element.select("td[class=plc]").select("div[class=pcb]").select("td[class=t_f][id^=postmessage]");
+            //TODO  有bug 不完整
+             //content= element.select("td[class=plc]").select("div[class=pcb]").select("div[class=t_fsz]");
             //System.out.print("\n"+content.html());
 
+            //替换影响webView宽度的标记
+            String contentbefore = content.html().replaceAll("(white-space:\\s*nowrap)","white-space:normal");
+
             //替换连续回车为1个
-            String newcontent = content.html().replaceAll("(<br>\\s*){2,}","<br>");
+            String newcontent = contentbefore.replaceAll("(\\s*<br>\\s*){2,}","<br>");
             //(<br>){1,}
             // <br />
             //<br />
             //<br />
             //  (<br />\s*){2,}
             //System.out.print("\n"+newcontent);
-
-
 
             if(username!=""&&content.html()!=""){
                 String time = element.select("div[class=pi]").select("div[class=authi]").select("em[id^=authorposton]").text().trim();
@@ -377,7 +411,7 @@ public class ArticleNormalActivity extends AppCompatActivity implements Recycler
                 //System.out.print("\n用户积分——————————>>>>"+usergroup+"\n");
 
                 String level = GetLevel.getUserLevel(Integer.parseInt(usergroup));
-                System.out.print("\n>>>>>>>>>>>>>>>"+username+"||>>"+userUrl+"||>>"+time+"||>>"+imgurl+"||>>"+level+"<<<<<<<<<<<<<<<<<<\n");
+                System.out.print("\n>>>>>>>>>>>>>>>"+username+"||>>"+userUrl+"||>>"+time+"||>>"+imgurl+"||>>"+level+"<<<<<<<<<<<<<<<<<<\n"+newcontent+"\n");
                 // replaycount;String articleauthor;articletype;
 
                 listdata = new SingleArticleData(articleTitle,articletype,username,userUrl,imgurl,time,level,replaycount,newcontent);

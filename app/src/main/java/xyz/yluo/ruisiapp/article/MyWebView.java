@@ -16,7 +16,7 @@ public class MyWebView extends WebView{
             "<html>\n" +
             "<head>\n" +
             "<link type=\"text/css\" rel=\"stylesheet\" href=\""+ FILE_CSS + "\">\n"+
-            "<style>img{display: inline; height: auto; max-width: 100%;}</style>\n"+
+            "<style type=\"text/css\">" +"img{display: inline;height: auto;max-width: 100%;}"+"</style>\n"+
             "<meta charset=\"UTF-8\">\n" +
             "<meta name=\"viewport\" content=\"width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1\">\n"+
             "</head>\n"+

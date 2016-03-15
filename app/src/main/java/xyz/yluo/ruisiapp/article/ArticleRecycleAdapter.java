@@ -48,7 +48,7 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
         //判断listItem类型
         if(position==0){
             return TYPE_CONTENT;
-        }else if (position!=datalist.size()+1) {
+        }else if (position!= getItemCount() - 1) {
             return TYPE_COMENT;
         } else {
             return TYPE_LOAD_MORE;
@@ -61,11 +61,11 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
     public BaseViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         switch (viewType) {
             case TYPE_CONTENT:
-                return new ArticleContentViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_single_article_content_item, viewGroup, false));
+                return new ArticleContentViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_article_content_item, viewGroup, false));
             case TYPE_LOAD_MORE:
-                return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.load_more_list_item, viewGroup, false));
+                return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_article_load_more, viewGroup, false));
             default: // TYPE_COMMENT
-                return new CommentViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_single_article_comment_item, viewGroup, false));
+                return new CommentViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_article_comment_item, viewGroup, false));
         }
     }
 
@@ -79,7 +79,10 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
     //这儿可以 知道position 和 data
     @Override
     public int getItemCount() {
-        return datalist.size();
+        if (datalist.size()==0){
+            return 0;
+        }
+        return datalist.size()+1;
     }
 
     public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
@@ -125,9 +128,8 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
         }
         @Override
         void setData(int position){
+
             article_title.setText(datalist.get(0).getTitle());
-            //Bitmap bitmap = getHttpBitmap(datalist.get(0).getImgUrl());
-            //article_user_image.setImageBitmap(bitmap);
 
             //normal zhidin gold:100
             if(datalist.get(0).getArticletype().equalsIgnoreCase("zhidin")){
@@ -238,11 +240,13 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
     //加载更多ViewHolder
     public class LoadMoreViewHolder extends BaseViewHolder{
 
-        protected EditText loadmoreText;
-
+        @Bind(R.id.aticle_load_more_text)
+        protected TextView aticle_load_more_text;
 
         public LoadMoreViewHolder(View itemView) {
             super(itemView);
+
+            ButterKnife.bind(this,itemView);
         }
 
         @Override

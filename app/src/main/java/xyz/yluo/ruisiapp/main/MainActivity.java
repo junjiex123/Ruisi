@@ -10,12 +10,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +29,8 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.yluo.ruisiapp.ConfigClass;
 import xyz.yluo.ruisiapp.R;
@@ -40,88 +40,57 @@ import xyz.yluo.ruisiapp.article.ArticleNormalActivity;
 import xyz.yluo.ruisiapp.article.NewArticleActivity;
 import xyz.yluo.ruisiapp.http.MyHttpConnection;
 import xyz.yluo.ruisiapp.login.LoginActivity;
-import xyz.yluo.ruisiapp.login.TestActivity;
-import xyz.yluo.ruisiapp.input_Dialog_Fragment;
+import xyz.yluo.ruisiapp.TestActivity;
+import xyz.yluo.ruisiapp.login.UserDakaActivity;
 import xyz.yluo.ruisiapp.setting.SettingActivity;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        RecyclerViewLoadMoreListener.OnLoadMoreListener,
-        input_Dialog_Fragment.LoginDialogListener{
+        RecyclerViewLoadMoreListener.OnLoadMoreListener{
 
-    //当前板块
+    @Bind(R.id.toolbar)
+    protected Toolbar toolbar;
+    @Bind(R.id.fab1)
+    protected FloatingActionButton fab1;
+    @Bind(R.id.fab2)
+    protected FloatingActionButton fab2;
+    @Bind(R.id.fab)
+    protected FloatingActionMenu fabMenu;
+    @Bind(R.id.main_recycler_view)
+    protected RecyclerView mRecyclerView;
+    @Bind(R.id.main_refresh_layout)
+    protected SwipeRefreshLayout refreshLayout;
+    @Bind(R.id.drawer_layout)
+    protected DrawerLayout drawer;
+    @Bind(R.id.nav_view)
+    protected NavigationView navigationView;
+
     //TODO
-    private final int INDEX = 0;
-    private RecyclerView mRecyclerView;
+    //当前板块
+    private int CurrentFid = 72;
+    //当前页数
+    private int CurrentPage = 0;
+    //列表数据填充
+    private List<ArticleListData> mydataset = new ArrayList<>();
     private RecycleViewAdapter mRecyleAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private SwipeRefreshLayout refreshLayout;
-    private FloatingActionMenu fabMenu;
-    private FloatingActionButton fab1,fab2;
-    private DrawerLayout drawer;
-
-    //存储数据 需要填充的列表
-    //TODO 动态获取
-    //普通文章列表
-    private List<ArticleListData> mydataset;
-
-    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        fabMenu = (FloatingActionMenu) findViewById(R.id.fab);
-        fab1 = (FloatingActionButton) findViewById(R.id.fab1);
-        fab2 = (FloatingActionButton) findViewById(R.id.fab2);
-
-        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.main_refresh_layout);
-
+        ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
-        //recylerView 用来替代listView
-        mRecyclerView = (RecyclerView)findViewById(R.id.main_recycler_view);
-        //可以设置不同样式
-        mLayoutManager = new LinearLayoutManager(this);
-        //第二个参数是列数
-        //mLayoutManager = new GridLayoutManager(getContext(),2);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        //初始化
+        init(CurrentFid);
 
-        //TODO
-        //获取数据以后实现，现在是静态的
-        mydataset = new ArrayList<>();
-
-        mRecyleAdapter = new RecycleViewAdapter(this,mydataset);
-        // Set MyRecyleAdapter as the adapter for RecyclerView.
-        mRecyclerView.setAdapter(mRecyleAdapter);
-
-        //设置Item增加、移除动画
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        //加载更多实现
-        mRecyclerView.addOnScrollListener(new RecyclerViewLoadMoreListener((LinearLayoutManager) mLayoutManager,this,20));
-
-        //下拉刷新
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                refreshLayout.setRefreshing(true);
-                new GetListTask("72",0).execute((Void) null);
-            }
-        });
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mydataset.clear();
                 //TODO 根据当前板块加载内容
                 fabMenu.hideMenu(true);
-                new GetListTask("72",0).execute((Void) null);
+                new GetListTask(CurrentFid,0).execute((Void) null);
             }
         });
 
@@ -150,15 +119,11 @@ public class MainActivity extends AppCompatActivity
         });
 
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
 
         View header = navigationView.getHeaderView(0);
         View nav_header_login = header.findViewById(R.id.nav_header_login);
@@ -177,8 +142,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 if(ConfigClass.CONFIG_ISLOGIN){
-                    DialogFragment newFragment = new input_Dialog_Fragment();
-                    newFragment.show(getFragmentManager(),"logindialog");
+                    startActivity(new Intent(getApplicationContext(), UserDakaActivity.class));
+
                 }else{
                     Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivityForResult(i,1);
@@ -207,7 +172,6 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -226,7 +190,6 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -244,7 +207,6 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent( this,NewArticleActivity.class));
             //drawer.closeDrawer(GravityCompat.START);
 
-
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
@@ -258,25 +220,8 @@ public class MainActivity extends AppCompatActivity
         }else if(id ==R.id.nav_about){
               startActivity(new Intent(this, AboutActivity.class));
         }else if(id==R.id.nav_sytd) {
-
-            //刷新
-            refreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    refreshLayout.setRefreshing(true);
-                }
-            });
-            mydataset.clear();
-            //切换到摄影天地板块
-            //TODO
-            RecyclerView.LayoutManager mnewLayoutManager;
-            //new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL)
-            mnewLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-            mRecyclerView.setLayoutManager(mnewLayoutManager);
-            //TDOO 改变数据
-            //刷新
-            new GetImageUrlList("http://rs.xidian.edu.cn/forum.php?mod=forumdisplay&fid=561").execute((Void) null);
-
+            //摄影天地
+              init(561);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -286,21 +231,9 @@ public class MainActivity extends AppCompatActivity
     //加载更多
     @Override
     public void onLoadMore() {
+        Toast.makeText(getApplicationContext(),"加载更多被触发",Toast.LENGTH_SHORT).show();
 
     }
-
-
-    //注册弹窗点击事件
-    @Override
-    public void onDialogPositiveClick(DialogFragment dialog,String user,String pass) {
-        Toast.makeText(getApplicationContext(),"user"+user+"pass"+pass,Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onDialogNegativeClick(DialogFragment dialog) {
-
-    }
-
 
     //获得一个普通板块文章列表数据
     public class GetListTask extends AsyncTask<Void, Void, String> {
@@ -308,7 +241,7 @@ public class MainActivity extends AppCompatActivity
         private String fullurl = "";
         private List<ArticleListData> dataset;
 
-        public GetListTask(String fid,int page) {
+        public GetListTask(int fid,int page) {
 
             dataset = new ArrayList<>();
 
@@ -373,6 +306,9 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(final String res) {
+
+            mydataset.clear();
+
             mydataset.addAll(dataset);
 
             fabMenu.showMenu(true);
@@ -389,10 +325,12 @@ public class MainActivity extends AppCompatActivity
 
     //获得图片板块数据 图片链接、标题等
     public class GetImageUrlList extends AsyncTask<Void, Void, String> {
-        private String url;
 
-        public GetImageUrlList(String url) {
-            this.url = url;
+        private String Baseurl = "http://rs.xidian.edu.cn/forum.php?mod=forumdisplay&fid=";
+        private int fid;
+
+        public GetImageUrlList(int fid) {
+            this.fid = fid;
         }
 
         @Override
@@ -400,7 +338,7 @@ public class MainActivity extends AppCompatActivity
 
             String response = "";
             try {
-                response = MyHttpConnection.Http_get(url);
+                response = MyHttpConnection.Http_get(Baseurl+fid);
             } catch (Exception e) {
                 return "error";
             }
@@ -435,5 +373,39 @@ public class MainActivity extends AppCompatActivity
             refreshLayout.setRefreshing(false);
             mRecyleAdapter.notifyDataSetChanged();
         }
+    }
+
+
+    //一系列初始化
+    private void init(int currentFid){
+        //刷新
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+            }
+        });
+        mydataset.clear();
+
+        if (currentFid==72){
+            //72灌水区
+            //可以设置不同样式
+            mLayoutManager = new LinearLayoutManager(this);
+            //第二个参数是列数
+            //mLayoutManager = new GridLayoutManager( getContext(),2);
+            //加载更多实现
+            mRecyclerView.addOnScrollListener(new RecyclerViewLoadMoreListener((LinearLayoutManager) mLayoutManager,this,20));
+            new GetListTask(72,0).execute((Void) null);
+        }else{
+            //切换到摄影天地板块
+            mLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+            new GetImageUrlList(561).execute((Void) null);
+        }
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyleAdapter = new RecycleViewAdapter(this,mydataset);
+        mRecyclerView.setAdapter(mRecyleAdapter);
+        //设置Item增加、移除动画
+
     }
 }
