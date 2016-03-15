@@ -17,6 +17,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import xyz.yluo.ruisiapp.ConfigClass;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.api.SingleArticleData;
 import xyz.yluo.ruisiapp.user.UserDetailActivity;
@@ -34,13 +35,15 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
     //数据
     private String articleUrl;
     private List<SingleArticleData> datalist;
-
+    private static RecyclerViewClickListener itemListener;
     //上下文
     private Activity activity;
-    public ArticleRecycleAdapter(Activity activity, List<SingleArticleData> datalist) {
+
+
+    public ArticleRecycleAdapter(Activity activity,RecyclerViewClickListener itemListener, List<SingleArticleData> datalist) {
         this.datalist = datalist;
         this.activity =activity;
-        System.out.print("((((())))"+datalist.size()+"\n");
+        this.itemListener = itemListener;
     }
 
     @Override
@@ -85,34 +88,35 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
         return datalist.size()+1;
     }
 
-    public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
+    public abstract class BaseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public BaseViewHolder(View itemView) {
             super(itemView);
         }
         abstract void setData(int position);
+
+        @Override
+        public void onClick(View v)
+        {
+            itemListener.recyclerViewListClicked(v, this.getLayoutPosition());
+        }
     }
 
     //文章内容ViewHolder
-    public class ArticleContentViewHolder extends BaseViewHolder{
+    public class ArticleContentViewHolder extends BaseViewHolder {
         @Bind(R.id.article_title)
         protected TextView article_title;
         @Bind(R.id.article_user_image)
         protected ImageView article_user_image;
-
         @Bind(R.id.article_type)
         protected ImageView article_type;
-
         @Bind(R.id.title_usergroup)
         protected TextView title_usergroup;
-
         @Bind(R.id.article_username)
         protected TextView article_username;
         @Bind(R.id.article_replaycount)
         protected TextView article_replaycount;
-
         @Bind(R.id.article_post_time)
         protected TextView article_post_time;
-
         @Bind(R.id.content_webView)
         protected MyWebView webView;
 
@@ -150,6 +154,7 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
             webView.loadDataWithBaseURL("http://rs.xidian.edu.cn/",datalist.get(0).getCotent(),"text/html","UTF-8",null);
             //webView.loadDataWithBaseURL("http://rs.xidian.edu.cn/",data,"text/html","UTF-8",null);
         }
+
     }
 
 
@@ -221,11 +226,11 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
             }else if(position==3){
                 replay_index.setText("地板");
             }else{
-                replay_index.setText("第"+position+"楼");
+                replay_index.setText("第"+(position+1)+"楼");
             }
 
             //String data ="<p><a href=\"http://www.ithome.com/\" target=\"_blank\">IT之家</a>讯&nbsp;&nbsp;3月8日,BioWare工作室的高级编辑Cameron Harris，近日通过推特宣布了自己将要离开这家备受好评的公司，并且宣布不再涉足于游戏领域。在推特上，Cameron Harris表示自己离开BioWare后会回到西雅图寻找一些全新的机会，对于老东家表达了自己的感谢。</p><p>Cameron Harris是BioWare的主要编辑，来到了BioWare之后，她参与开发了《质量效应：仙女座》、《龙腾世纪：审判》和《星球大战：旧共和国》这几款备受好评的游戏。之前在微软旗下也曾经开发了《战争机器3》和《神鬼寓言：旅程》这两款佳作。加上之前在任天堂的工作经历，Cameron Harris显然是游戏界中璀璨的明星。</p><p><img src=\"http://img.ithome.com/newsuploadfiles/2016/3/20160308_170543_608.jpg\" alt=\"质量效应前途未卜：重量级编剧离开BioWare\"></p><p>作为EA旗下为数不多的口碑良好的游戏工作室，BioWare与Bethesda共同被称为“最会讲故事的游戏公司”。只是最近BioWare饱受员工跳槽的困扰。据外媒gamespot的消息。此前已经有首席编辑Chris Schlerf和高级制作人Chris Wynn离开BioWare来到其他的游戏制作公司。</p><p><img class=\"lazy\" src=\"http://img.ithome.com/newsuploadfiles/2016/3/20160308_170559_583.jpg\" alt=\"质量效应前途未卜：重量级编剧离开BioWare\" data-original=\"http://img.ithome.com/newsuploadfiles/2016/3/20160308_170559_583.jpg\" style=\"display: inline;\"></p><p>之前<a href=\"http://www.ithome.com/html/game/209606.htm\" target=\"_blank\">IT之家曾经报道过《质量效应：仙女座》由于特殊原因推迟到2017年上市</a>，目前看来与员工的离职不无关系。即使《质量效应：仙女座》能够顺利地在2017年发行，随着骨干的离职，恐怕下一部的《质量效应》就前途未卜了。如果BioWare工作室为此而不得不解散，那么EA公司恐怕又要背上“北美最差游戏公司”的恶名了。</p><p class=\"yj_d\">微信搜索“<span>IT之家</span>”关注抢6s大礼！下载<span>IT之家</span>客户端（<a target=\"_blank\" href=\"http://m.ithome.com/ithome/download/\">戳这里</a>）也可参与评论抽楼层大奖！ </p>\n";
-            replay_webView.loadDataWithBaseURL("http://rs.xidian.edu.cn/",datalist.get(position).getCotent(),"text/html","UTF-8",null);
+            replay_webView.loadDataWithBaseURL(ConfigClass.BBS_BASE_URL,datalist.get(position).getCotent(),"text/html","UTF-8",null);
             //http://rs.xidian.edu.cn/data/attachment/forum/201301/03/220841sflvvzi8fuihbe78.png
             //webView.loadDataWithBaseURL("http://rs.xidian.edu.cn/",data,"text/html","UTF-8",null);
 
@@ -235,6 +240,7 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
             protected void onBtnAvatarClick() {
                 UserDetailActivity.openWithTransitionAnimation(activity, "name", replay_image,"222");
             }
+
     }
 
     //加载更多ViewHolder
@@ -253,8 +259,12 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
         void setData(int position) {
             //TODO
             //load more 现在没有数据填充
+            if(position==1){
+                aticle_load_more_text.setText("还没有人回复快来抢沙发吧！！");
+            }else{
+                aticle_load_more_text.setText("加载更多");
+            }
         }
+
     }
-
-
 }

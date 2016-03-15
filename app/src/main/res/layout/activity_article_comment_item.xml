@@ -76,13 +76,14 @@
 
                     <TextView
                         android:id="@+id/replay_index"
-                        android:layout_width="40dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
                         android:singleLine="true"
                         android:text="1楼" />
 
                     <TextView
+                        android:layout_marginLeft="@dimen/dimen_4"
                         android:id="@+id/replay_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

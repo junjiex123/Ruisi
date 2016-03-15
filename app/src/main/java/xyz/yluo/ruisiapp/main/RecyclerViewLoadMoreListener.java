@@ -8,19 +8,17 @@ public class RecyclerViewLoadMoreListener extends RecyclerView.OnScrollListener 
 
     private LinearLayoutManager linearLayoutManager;
     private OnLoadMoreListener onLoadMoreListener;
-    private int limit;
 
-    public RecyclerViewLoadMoreListener(@NonNull LinearLayoutManager linearLayoutManager, @NonNull OnLoadMoreListener onLoadMoreListener, int limit) {
+    public RecyclerViewLoadMoreListener(@NonNull LinearLayoutManager linearLayoutManager, @NonNull OnLoadMoreListener onLoadMoreListener) {
         super();
         this.linearLayoutManager = linearLayoutManager;
         this.onLoadMoreListener = onLoadMoreListener;
-        this.limit = limit;
     }
 
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-        if (
-                linearLayoutManager.getItemCount() >= limit && linearLayoutManager.findLastVisibleItemPosition() == linearLayoutManager.getItemCount() - 1) {
+        if (linearLayoutManager.findLastVisibleItemPosition() == linearLayoutManager.getItemCount() - 1) {
+
                 // 向下滑动，判断最后一个item是不是显示中
                 onLoadMoreListener.onLoadMore();
         }

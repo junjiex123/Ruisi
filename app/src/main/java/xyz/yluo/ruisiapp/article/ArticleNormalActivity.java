@@ -46,8 +46,10 @@ import xyz.yluo.ruisiapp.main.RecyclerViewLoadMoreListener;
  */
 public class ArticleNormalActivity extends AppCompatActivity
         implements RecyclerViewLoadMoreListener.OnLoadMoreListener,
-        Reply_Dialog_Fragment.ReplyDialogListener{
+        Reply_Dialog_Fragment.ReplyDialogListener,RecyclerViewClickListener{
 
+    //当前页面
+    private int CurrentPage = 1;
 
     //存储数据 需要填充的列表
     //TODO 动态获取
@@ -111,13 +113,14 @@ public class ArticleNormalActivity extends AppCompatActivity
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         //加载更多实现
-        mRecyclerView.addOnScrollListener(new RecyclerViewLoadMoreListener((LinearLayoutManager) mLayoutManager,this,10));
+        mRecyclerView.addOnScrollListener(new RecyclerViewLoadMoreListener((LinearLayoutManager) mLayoutManager,this));
 
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {
                 refreshLayout.setRefreshing(true);
-                new GetSingleArticleData(articleUrl).execute((Void) null);
+                new GetSingleArticleData(articleUrl,1).execute((Void) null);
+                System.out.print("\narticleUrl----->>>>>>>>>>>>>>"+articleUrl+"\n");
             }
         });
         //下拉刷新
@@ -125,7 +128,7 @@ public class ArticleNormalActivity extends AppCompatActivity
             @Override
             public void onRefresh() {
                 //数据填充
-                GetSingleArticleData singleArticleData = new GetSingleArticleData(articleUrl);
+                GetSingleArticleData singleArticleData = new GetSingleArticleData(articleUrl,CurrentPage);
                 singleArticleData.execute((Void) null);
 
                 fab.hide();
@@ -194,9 +197,17 @@ public class ArticleNormalActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    //加载更多事件
     @Override
     public void onLoadMore() {
         Toast.makeText(getApplicationContext(),"加载更多被触发",Toast.LENGTH_SHORT).show();
+        GetSingleArticleData singleArticleData = new GetSingleArticleData(articleUrl,CurrentPage+1);
+        singleArticleData.execute((Void) null);
+    }
+
+    //recyclerView item点击事件
+    @Override
+    public void recyclerViewListClicked(View v, int position) {
 
     }
 
@@ -259,10 +270,12 @@ public class ArticleNormalActivity extends AppCompatActivity
 
         private List<SingleArticleData> singledataslist;
         private String url;
+        private int page;
 
-        public GetSingleArticleData(String urlin) {
+        public GetSingleArticleData(String urlin,int page) {
             singledataslist = new ArrayList<>();
             this.url = urlin;
+            this.page = page;
             //this.url = "forum.php?mod=viewthread&tid=838333";
         }
 
@@ -271,7 +284,7 @@ public class ArticleNormalActivity extends AppCompatActivity
             System.out.print("???????????????????in exe\n");
             String response ="";
             try {
-                response = MyHttpConnection.Http_get(ConfigClass.BBS_BASE_URL+url);
+                response = MyHttpConnection.Http_get(ConfigClass.BBS_BASE_URL+url+"&page="+page);
                 //System.out.print(response);
             } catch (Exception e) {
                 return "error";
@@ -296,11 +309,16 @@ public class ArticleNormalActivity extends AppCompatActivity
         }
         @Override
         protected void onPostExecute(final String res) {
-            mydatalist.clear();
+
+            if(CurrentPage==1){
+                mydatalist.clear();
+            }
             refreshLayout.setRefreshing(false);
             mydatalist.addAll(singledataslist);
             mRecyleAdapter.notifyDataSetChanged();
             fab.show();
+
+            CurrentPage = page;
         }
         @Override
         protected void onCancelled() {
