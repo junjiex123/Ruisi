@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
-        android:paddingLeft="@dimen/dimen_16"
-        android:paddingRight="@dimen/dimen_16"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -129,6 +129,7 @@
         <xyz.yluo.ruisiapp.article.MyWebView
             android:layout_marginTop="16dp"
             android:layout_marginBottom="12dp"
+            android:layout_marginLeft="44dp"
             android:id="@+id/replay_webView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

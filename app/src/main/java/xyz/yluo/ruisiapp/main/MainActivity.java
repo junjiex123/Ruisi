@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -31,6 +32,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cz.msebera.android.httpclient.Header;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.yluo.ruisiapp.ConfigClass;
 import xyz.yluo.ruisiapp.R;
@@ -38,6 +40,7 @@ import xyz.yluo.ruisiapp.about.AboutActivity;
 import xyz.yluo.ruisiapp.api.ArticleListData;
 import xyz.yluo.ruisiapp.article.ArticleNormalActivity;
 import xyz.yluo.ruisiapp.article.NewArticleActivity;
+import xyz.yluo.ruisiapp.http.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.http.MyHttpConnection;
 import xyz.yluo.ruisiapp.login.LoginActivity;
 import xyz.yluo.ruisiapp.TestActivity;
@@ -90,7 +93,10 @@ public class MainActivity extends AppCompatActivity
             public void onRefresh() {
                 //TODO 根据当前板块加载内容
                 fabMenu.hideMenu(true);
-                new GetListTask(CurrentFid,0).execute((Void) null);
+                String url = "forum.php?mod=forumdisplay&fid=";
+
+                startGetData(72, 0);
+
             }
         });
 
@@ -221,7 +227,7 @@ public class MainActivity extends AppCompatActivity
               startActivity(new Intent(this, AboutActivity.class));
         }else if(id==R.id.nav_sytd) {
             //摄影天地
-              init(561);
+            init(561);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -235,39 +241,54 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    //获得一个普通板块文章列表数据
-    public class GetListTask extends AsyncTask<Void, Void, String> {
-        private String Baseurl = "http://rs.xidian.edu.cn/forum.php?mod=forumdisplay&fid=";
-        private String fullurl = "";
-        private List<ArticleListData> dataset;
 
-        public GetListTask(int fid,int page) {
+    private void startGetData(final int fid1,int page){
+        String url = "forum.php?mod=forumdisplay&fid=";
+        url = url+fid1+"&page="+page;
 
-            dataset = new ArrayList<>();
+        AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                //普通板块
+                if(fid1==72){
+                    new GetListTask(new String(responseBody)).execute();
+                }else{
+                    //TODO
+                    //图片板块
+                    new GetImageUrlList(new String(responseBody)).execute();
+                }
 
-            if(page==0){
-                fullurl = Baseurl+fid;
-            }else{
-                fullurl = Baseurl+fid+"&page="+page;
             }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(getApplicationContext(),"网络错误！！",Toast.LENGTH_SHORT).show();
+                fabMenu.showMenu(true);
+                refreshLayout.setRefreshing(false);
+                mRecyleAdapter.notifyDataSetChanged();
+            }
+        });
+
+    }
+
+
+    //
+    //获得一个普通板块文章列表数据 根据html获得数据
+    public class GetListTask extends AsyncTask<Void, Void, String> {
+
+        private List<ArticleListData> dataset = new ArrayList<>();
+        private String res;
+        public GetListTask(String res) {
+            this.res = res;
         }
 
         @Override
         protected String doInBackground(Void... params) {
-            String response ="";
-            try {
-                response = MyHttpConnection.Http_get(fullurl);
-            } catch (Exception e) {
-                return "error";
-            }
-
-            StringBuffer buffer=new StringBuffer();
-            if(response!=""){
-                Elements list = Jsoup.parse(response).select("div[id=threadlist]");
+            if(res!=""){
+                Elements list = Jsoup.parse(res).select("div[id=threadlist]");
                 Elements links = list.select("tbody");
 
                 //System.out.print(links);
-
                 ArticleListData temp;
                 for (Element src : links) {
                     if(src.getElementsByAttributeValue("class", "by").first()!=null) {
@@ -294,55 +315,40 @@ public class MainActivity extends AppCompatActivity
                             //新建对象
                             temp = new ArticleListData(title,titleUrl,type,author,authorUrl,time,viewcount,replaycount);
                             dataset.add(temp);
-                            buffer.append(type).append(title).append(titleUrl).append(author).append(authorUrl).append(time).append(viewcount).append("\n");
                         }
 
                     }
                 }
-                System.out.print(buffer);
             }
-            return response;
+            return "";
         }
 
         @Override
         protected void onPostExecute(final String res) {
 
             mydataset.clear();
-
             mydataset.addAll(dataset);
-
             fabMenu.showMenu(true);
-
             refreshLayout.setRefreshing(false);
             mRecyleAdapter.notifyDataSetChanged();
         }
-
-        @Override
-        protected void onCancelled() {
-
-        }
     }
 
-    //获得图片板块数据 图片链接、标题等
+    //
+    //获得图片板块数据 图片链接、标题等  根据html获得数据
     public class GetImageUrlList extends AsyncTask<Void, Void, String> {
 
-        private String Baseurl = "http://rs.xidian.edu.cn/forum.php?mod=forumdisplay&fid=";
-        private int fid;
+        private String response;
+        private List<ArticleListData> imgdatas = new ArrayList<>();
 
-        public GetImageUrlList(int fid) {
-            this.fid = fid;
+        public GetImageUrlList(String res) {
+            this.response = res;
         }
 
         @Override
         protected String doInBackground(Void... params) {
-
-            String response = "";
-            try {
-                response = MyHttpConnection.Http_get(Baseurl+fid);
-            } catch (Exception e) {
-                return "error";
-            }
             if (response != "") {
+
                 Elements list = Jsoup.parse(response).select("ul[id=waterfall]");
                 Elements imagelist = list.select("li");
 
@@ -355,13 +361,10 @@ public class MainActivity extends AppCompatActivity
                     String author = tmp.select("a[href^=home.php]").text();
                     String authorurl = tmp.select("a[href^=home.php]").attr("href");
                     String like = tmp.select("div.auth").select("a[href^=forum.php]").text();
-
-                    System.out.print("!!!!!!!!!!!!!!!!!!!!"+like);
                     //String title, String titleUrl, String image, String author, String authorUrl, String viewCount
                     ArticleListData tem = new ArticleListData(title,url,img,author,authorurl,like);
                     tem.setImageCard(true);
-
-                    mydataset.add(tem);
+                    imgdatas.add(tem);
                 }
             }
             return null;
@@ -369,15 +372,17 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(final String res) {
+
+            mydataset.clear();
+            mydataset.addAll(imgdatas);
             fabMenu.showMenu(true);
             refreshLayout.setRefreshing(false);
             mRecyleAdapter.notifyDataSetChanged();
         }
     }
 
-
     //一系列初始化
-    private void init(int currentFid){
+    private void init(int Fid){
         //刷新
         refreshLayout.post(new Runnable() {
             @Override
@@ -387,25 +392,25 @@ public class MainActivity extends AppCompatActivity
         });
         mydataset.clear();
 
-        if (currentFid==72){
+        if (Fid==72){
             //72灌水区
             //可以设置不同样式
             mLayoutManager = new LinearLayoutManager(this);
             //第二个参数是列数
             //mLayoutManager = new GridLayoutManager( getContext(),2);
             //加载更多实现
-            mRecyclerView.addOnScrollListener(new RecyclerViewLoadMoreListener((LinearLayoutManager) mLayoutManager,this));
-            new GetListTask(72,0).execute((Void) null);
+            mRecyclerView.addOnScrollListener(new RecyclerViewLoadMoreListener((LinearLayoutManager) mLayoutManager, this));
+
         }else{
             //切换到摄影天地板块
             mLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-            new GetImageUrlList(561).execute((Void) null);
         }
+
+        startGetData(Fid,0);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyleAdapter = new RecycleViewAdapter(this,mydataset);
         mRecyclerView.setAdapter(mRecyleAdapter);
-        //设置Item增加、移除动画
-
     }
+
 }

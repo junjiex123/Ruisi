@@ -6,6 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
 import android.widget.TextView;
+import com.loopj.android.http.*;
+
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -20,9 +23,10 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.ConfigClass;
-import xyz.yluo.ruisiapp.R;
+import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.api.ArticleListData;
+import xyz.yluo.ruisiapp.api.GetFormHash;
+import xyz.yluo.ruisiapp.http.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.http.MyHttpConnection;
 
 /**
@@ -120,7 +124,66 @@ public class TestActivity extends AppCompatActivity {
         //String data = "<img src=\"http://rs.xidian.edu.cn/forum.php?mod=image&aid=851820&size=300x300&key=2a3604eec0da779f&nocache=yes&type=fixnone\"";
         String data = "<img src=\"./data/attachment/forum/201603/15/110909j3zlw4uoez7we5eq.jpg\">";
 
-        webview.loadDataWithBaseURL("http://rs.xidian.edu.cn/",data,"text/html","UTF-8",null);
+        webview.loadDataWithBaseURL("http://rs.xidian.edu.cn/", data, "text/html", "UTF-8", null);
+    }
+
+    @OnClick(R.id.new_login)
+    protected void new_login_click(){
+
+        String url = "member.php?mod=logging&action=login&loginsubmit=yes&infloat=yes&lssubmit=yes&inajax=1";
+        RequestParams params = new RequestParams();
+        params.put("username", "谁用了FREEDOM");
+        params.put("cookietime", "2592000");
+        params.put("password", "9345b4e983973212313e4c809b94f75d");
+        params.put("quickforward", "yes");
+        params.put("handlekey", "ls");
+
+        AsyncHttpCilentUtil.post(this, url, params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                responseText.setText(new String(responseBody));
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+            }
+        });
+
+
+    }
+
+    @OnClick(R.id.new_get)
+    protected void new_get_click(){
+
+        AsyncHttpCilentUtil.get(this, "portal.php", null, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                responseText.setText(new String(responseBody));
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+            }
+        });
+    }
+
+    @OnClick(R.id.new_get_hash)
+    protected void new_get_hash_click(){
+        if(ConfigClass.CONFIG_FORMHASH==""){
+            GetFormHash.start_get_hash(getApplicationContext());
+
+        }else{
+
+            responseText.setText(ConfigClass.CONFIG_FORMHASH);
+        }
+    }
+    @OnClick(R.id.new_get_hash_again)
+    protected void new_get_hash_again_click(){
+
+        responseText.setText(ConfigClass.CONFIG_FORMHASH);
+
     }
     /**
      * Represents an asynchronous login/registration task used to authenticate
