@@ -35,18 +35,8 @@ public class NewArticleActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        Toolbar toolbar= (Toolbar) findViewById(R.id.control_toolbar);
-        //把toolbar当作actionbar处理
-        setSupportActionBar(toolbar);
-
-        // Show the Up button in the action bar.
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar!=null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
         mEditor.setEditorHeight(200);
-        mEditor.setEditorFontSize(22);
+        mEditor.setEditorFontSize(18);
         //mEditor.setEditorFontColor(Color.RED);
         //mEditor.setEditorBackgroundColor(Color.BLUE);
         //mEditor.setBackgroundColor(Color.BLUE);

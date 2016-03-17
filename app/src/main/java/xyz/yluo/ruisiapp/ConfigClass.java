@@ -15,6 +15,7 @@ public class ConfigClass extends Application {
 
 
 
+    public static boolean CONFIG_ISDAKA = true;
     public static String CONFIG_COOKIE = "";
     public static String CONFIG_FORMHASH = "";
     public static boolean CONFIG_ISLOGIN = false;
