@@ -20,6 +20,7 @@ import android.util.Xml;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -41,6 +42,10 @@ import java.util.regex.Pattern;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.FadeInDownAnimator;
+import jp.wasabeef.recyclerview.animators.ScaleInTopAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
 import xyz.yluo.ruisiapp.ConfigClass;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.api.GetLevel;
@@ -108,6 +113,12 @@ public class ArticleNormalActivity extends AppCompatActivity
         mRecyleAdapter = new ArticleRecycleAdapter(this, this, mydatalist);
         // Set MyRecyleAdapter as the adapter for RecyclerView.
         mRecyclerView.setAdapter(mRecyleAdapter);
+
+        //item 增加删除动画
+        mRecyclerView.setItemAnimator(new FadeInDownAnimator());
+        mRecyclerView.getItemAnimator().setAddDuration(100);
+        mRecyclerView.getItemAnimator().setRemoveDuration(10);
+        mRecyclerView.getItemAnimator().setChangeDuration(10);
 
         refreshLayout.post(new Runnable() {
             @Override
@@ -268,6 +279,9 @@ public class ArticleNormalActivity extends AppCompatActivity
         //* 传入一篇文章html
         //* 返回list<SingleArticleData>
 
+        //临时存储
+        List<SingleArticleData> templist = new ArrayList<>();
+
         private String htmlData;
         private int need;
 
@@ -280,6 +294,8 @@ public class ArticleNormalActivity extends AppCompatActivity
 
         @Override
         protected String doInBackground(Void... params) {
+
+
 
             //list 所有楼数据
             Elements list = Jsoup.parse(htmlData).select("div[id=postlist]").select("div[id^=post_]");
@@ -410,7 +426,7 @@ public class ArticleNormalActivity extends AppCompatActivity
                     }
 
                     if(listdata!=null){
-                        mydatalist.add(listdata);
+                        templist.add(listdata);
                     }
                 }
             }
@@ -427,7 +443,16 @@ public class ArticleNormalActivity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(),"暂无更多",Toast.LENGTH_SHORT).show();
                 CurrentPage--;
             }
-            mRecyleAdapter.notifyDataSetChanged();
+            //增加了多少个
+            int addnum = templist.size();
+
+            int staart = mydatalist.size();
+
+            //刷新全部
+            //mRecyleAdapter.notifyDataSetChanged();
+            //部分
+            mydatalist.addAll(templist);
+            mRecyleAdapter.notifyItemRangeInserted(staart,addnum);
             refreshLayout.setRefreshing(false);
             fab.show();
         }

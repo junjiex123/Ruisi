@@ -34,6 +34,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 import de.hdodenhof.circleimageview.CircleImageView;
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInLeftAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.FadeInDownAnimator;
 import xyz.yluo.ruisiapp.ConfigClass;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.about.AboutActivity;
@@ -265,7 +270,7 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(),"网络错误！！",Toast.LENGTH_SHORT).show();
                 fabMenu.showMenu(true);
                 refreshLayout.setRefreshing(false);
-                mRecyleAdapter.notifyDataSetChanged();
+
             }
         });
 
@@ -330,7 +335,8 @@ public class MainActivity extends AppCompatActivity
             mydataset.addAll(dataset);
             fabMenu.showMenu(true);
             refreshLayout.setRefreshing(false);
-            mRecyleAdapter.notifyDataSetChanged();
+
+            mRecyleAdapter.notifyItemRangeInserted(0, dataset.size());
         }
     }
 
@@ -406,11 +412,20 @@ public class MainActivity extends AppCompatActivity
             mLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         }
 
-        startGetData(Fid,0);
+        startGetData(Fid, 0);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyleAdapter = new RecycleViewAdapter(this,mydataset);
-        mRecyclerView.setAdapter(mRecyleAdapter);
+        //mRecyclerView.setAdapter(mRecyleAdapter);
+        /////动画效果 AlphaInAnimationAdapter ScaleInAnimationAdapter SlideInBottomAnimationAdapter SlideInRightAnimationAdapter
+        ScaleInAnimationAdapter animationAdapter = new ScaleInAnimationAdapter(mRecyleAdapter);
+        animationAdapter.setDuration(120);
+        //item 增加删除 改变动画
+        mRecyclerView.setItemAnimator(new FadeInDownAnimator());
+        mRecyclerView.getItemAnimator().setAddDuration(150);
+        mRecyclerView.getItemAnimator().setRemoveDuration(10);
+        mRecyclerView.getItemAnimator().setChangeDuration(10);
+        mRecyclerView.setAdapter(animationAdapter);
     }
 
 }

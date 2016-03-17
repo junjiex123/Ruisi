@@ -185,13 +185,20 @@
             android:visibility="gone"
             android:text="您今天已经签到过了或者签到时间还未开始"/>
 
+        <TextView
+            android:id="@+id/test"
+            android:layout_margin="@dimen/dimen_16"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="output"/>
+
     </LinearLayout>
 
-
-
-    <android.support.design.widget.FloatingActionButton
+    <Button
         android:id="@+id/btn_submit"
-        android:layout_width="wrap_content"
+        android:text="开始签到"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/dimen_16"

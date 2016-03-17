@@ -21,6 +21,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.awt.font.TextAttribute;
@@ -59,6 +60,9 @@ public class UserDakaActivity extends AppCompatActivity{
 
     @Bind(R.id.text_have_daka)
     protected TextView text_have_daka;
+
+    @Bind(R.id.test)
+    protected TextView testView;
 
     private int group1_select = 1;
     private int group2_select = 1;
@@ -191,12 +195,23 @@ public class UserDakaActivity extends AppCompatActivity{
             AsyncHttpCilentUtil.post(getApplicationContext(), url, params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    String res = new String(responseBody);
+                    if(res.contains("恭喜你签到成功")){
+                        Document doc = Jsoup.parse(res);
+                        String get = doc.select("div[class=c]").text();
+                        Toast.makeText(getApplicationContext(),get,Toast.LENGTH_SHORT).show();
+                        ConfigClass.CONFIG_ISDAKA = true;
 
+                        finish();
+                    }else{
+                        Toast.makeText(getApplicationContext(),"未知错误",Toast.LENGTH_SHORT).show();
+                    }
+                    //testView.setText(new String(responseBody));
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
+                    Toast.makeText(getApplicationContext(),"网络错误",Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -209,8 +224,6 @@ public class UserDakaActivity extends AppCompatActivity{
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String res = new String(responseBody);
-
-
 
                 if(res.contains("您今天已经签到过了或者签到时间还未开始")){
                     isdaka = true;

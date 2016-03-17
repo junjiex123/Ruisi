@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.WebSettings;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -46,6 +48,7 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
         this.itemListener = itemListener;
     }
 
+
     @Override
     public int getItemViewType(int position) {
         //判断listItem类型
@@ -80,6 +83,7 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
     //为了让 list item可以变化，我们可以重写这个方法
     //他的返回值是onCreateViewHolder 的参数viewType
     //这儿可以 知道position 和 data
+
     @Override
     public int getItemCount() {
         if (datalist.size()==0){
@@ -101,6 +105,7 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
             //getItemCount()
             itemListener.recyclerViewListClicked(v, this.getLayoutPosition());
         }
+
     }
 
     //文章内容ViewHolder
