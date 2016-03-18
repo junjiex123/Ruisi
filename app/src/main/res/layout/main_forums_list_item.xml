@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout
-
-    android:gravity="center"
+    android:gravity="center_vertical"
     android:layout_marginTop="@dimen/dimen_4"
     android:padding="@dimen/dimen_8"
     android:layout_width="match_parent"
@@ -14,14 +13,15 @@
 
         <ImageView
             android:layout_marginRight="@dimen/dimen_8"
-            android:id="@+id/author_img"
+            android:id="@+id/img"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/nav_abro"/>
 
         <TextView
-            android:id="@+id/article_title"
-            android:layout_width="wrap_content"
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
@@ -29,7 +29,7 @@
             android:text="话题的标题" />
         <TextView
             android:background="@drawable/shape_cornerradus"
-            android:id="@+id/article_new"
+            android:id="@+id/today_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="10sp"

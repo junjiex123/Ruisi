@@ -6,11 +6,29 @@ package xyz.yluo.ruisiapp.api;
  */
 public class MainListArticleDataHome {
     private String name; //or title
-    private String image;
+    private String image;//imgurl
     private String url;//or titleurl
-    private String todaypost;
-    private String totalarticle;
-    private String totalreplay;
+    private String todaypost; //todaypost
+    private String viewCount;
+    private String user;
+
+
+
+    //板块列表
+    public MainListArticleDataHome(String name, String image, String url, String todaypost) {
+        this.name = name;
+        this.image = image;
+        this.url = url;
+        this.todaypost = todaypost;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
 
     public String getName() {
         return name;
@@ -44,28 +62,22 @@ public class MainListArticleDataHome {
         this.todaypost = todaypost;
     }
 
-    public String getTotalarticle() {
-        return totalarticle;
+
+    public String getViewCount() {
+        return viewCount;
     }
 
-    public void setTotalarticle(String totalarticle) {
-        this.totalarticle = totalarticle;
+    public void setViewCount(String viewCount) {
+        this.viewCount = viewCount;
     }
 
-    public String getTotalreplay() {
-        return totalreplay;
-    }
-
-    public void setTotalreplay(String totalreplay) {
-        this.totalreplay = totalreplay;
-    }
-
-    public MainListArticleDataHome(String name, String image, String url, String todaypost, String totalarticle, String totalreplay) {
+    //热帖新帖
+    //title titleurl User ReplyCount ViewCount
+    public MainListArticleDataHome(String name, String url, String user, String replaycount, String viewcount) {
         this.name = name;
-        this.image = image;
         this.url = url;
-        this.todaypost = todaypost;
-        this.totalarticle = totalarticle;
-        this.totalreplay = totalreplay;
+        this.user = user;
+        this.todaypost = replaycount;
+        this.viewCount = viewcount;
     }
 }

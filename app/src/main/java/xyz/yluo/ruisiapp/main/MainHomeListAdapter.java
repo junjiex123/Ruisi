@@ -1,15 +1,20 @@
 package xyz.yluo.ruisiapp.main;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import xyz.yluo.ruisiapp.ConfigClass;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.api.MainListArticleDataHome;
 
@@ -24,12 +29,14 @@ public class MainHomeListAdapter extends RecyclerView.Adapter<MainHomeListAdapte
     private static final int TYPE_HOME_2 = 1;
     //数据
     private List<MainListArticleDataHome> DataSet;
+    private Activity activity;
     int type;
 
-    public MainHomeListAdapter(List<MainListArticleDataHome> dataSet,int type) {
+    public MainHomeListAdapter(Activity activity,List<MainListArticleDataHome> dataSet,int type) {
 
         DataSet = dataSet;
         this.type =type;
+        this.activity = activity;
     }
 
     @Override
@@ -60,10 +67,7 @@ public class MainHomeListAdapter extends RecyclerView.Adapter<MainHomeListAdapte
 
     @Override
     public int getItemCount() {
-        if(type==0){
-            return DataSet.size();
-        }
-        return 30;
+        return DataSet.size();
     }
 
     public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
@@ -77,14 +81,31 @@ public class MainHomeListAdapter extends RecyclerView.Adapter<MainHomeListAdapte
     //首页板块列表ViewHolder
     public class FroumsListViewHolder extends BaseViewHolder{
 
+        @Bind(R.id.img)
+        protected ImageView img;
+
+        @Bind(R.id.title)
+        protected TextView title;
+
+        @Bind(R.id.today_count)
+        protected TextView today_count;
+
         public FroumsListViewHolder(View itemView) {
             super(itemView);
 
             ButterKnife.bind(this, itemView);
+            today_count.setVisibility(View.GONE);
         }
 
         @Override
         void setData(int position) {
+            title.setText(DataSet.get(position).getName());
+            if(DataSet.get(position).getTodaypost()!=""){
+                today_count.setVisibility(View.VISIBLE);
+                today_count.setText(DataSet.get(position).getTodaypost());
+            }
+
+            Picasso.with(activity).load(ConfigClass.BBS_BASE_URL+DataSet.get(position).getImage()).placeholder(R.drawable.image_placeholder).into(img);
 
         }
 
@@ -114,9 +135,9 @@ public class MainHomeListAdapter extends RecyclerView.Adapter<MainHomeListAdapte
         @Override
         void setData(int position) {
             article_title.setText(DataSet.get(position).getName());
-            author_name.setText(DataSet.get(position).getName());
+            author_name.setText(DataSet.get(position).getUser());
             reply_count.setText(DataSet.get(position).getTodaypost());
-            view_count.setText(DataSet.get(position).getTotalreplay());
+            view_count.setText(DataSet.get(position).getViewCount());
         }
     }
 }

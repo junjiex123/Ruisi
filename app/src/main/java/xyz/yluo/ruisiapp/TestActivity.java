@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -212,6 +214,55 @@ public class TestActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @OnClick(R.id.get_forums)
+    protected void get_forums_onclick(){
+        String url  = "forum.php";
+
+        AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String res = new String(responseBody);
+
+                Elements list = Jsoup.parse(res).select("#category_89,#category_101,#category_71,category_97,category_11").select("td.fl_g");
+
+                for(Element tmp:list){
+                    String img = tmp.select("img[src^=./data/attachment]").attr("src").replace("./data","data");
+                    String url = tmp.select("a[href^=forum.php?mod=forumdisplay&fid]").attr("href");
+                    String title = tmp.select("a[href^=forum.php?mod=forumdisplay&fid]").text();
+
+                    String todaynew = tmp.select("em[title=今日]").text();
+                    String actualnew = "";
+                    if(todaynew!=""){
+                        Pattern pattern = Pattern.compile("[0-9]+");
+                        Matcher matcher = pattern.matcher(todaynew);
+                        String tid ="";
+                        while (matcher.find()) {
+                            actualnew = todaynew.substring(matcher.start(),matcher.end());
+                            //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
+                        }
+                    }
+
+                    responseText.append("\nimg>>"+img+"\nurl>>"+url+"\ntitle>>"+title+"\ntoday>>"+todaynew+"\nactual>>"+actualnew);
+
+
+                    //forum.php?mod=forumdisplay&fid
+
+                }
+
+
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(getApplicationContext(), "网络错误！！", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
     }
     /**
      * Represents an asynchronous login/registration task used to authenticate

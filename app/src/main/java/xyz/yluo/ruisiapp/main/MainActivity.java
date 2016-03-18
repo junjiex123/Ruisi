@@ -30,6 +30,8 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,7 +50,7 @@ import xyz.yluo.ruisiapp.login.UserDakaActivity;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        RecyclerViewLoadMoreListener.OnLoadMoreListener{
+        RecyclerViewLoadMoreListener.OnLoadMoreListener {
 
     @Bind(R.id.toolbar)
     protected Toolbar toolbar;
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity
     protected LinearLayout main_show_zhidin;
 
     //论坛列表
-    private List<ForumsData> forumses= ConfigClass.getBbsForum();
+    private List<ForumsData> forumses = ConfigClass.getBbsForum();
 
     //当前index
     //-1为首页 其余对应配置文件
@@ -107,13 +109,13 @@ public class MainActivity extends AppCompatActivity
         main_radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId){
+                switch (checkedId) {
                     case R.id.radio01:
-                        HomeCurrentPage =0;
+                        HomeCurrentPage = 0;
                         init();
                         break;
                     case R.id.radio02:
-                        HomeCurrentPage =1;
+                        HomeCurrentPage = 1;
                         init();
                         break;
                 }
@@ -144,13 +146,13 @@ public class MainActivity extends AppCompatActivity
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"fab1",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "fab1", Toast.LENGTH_SHORT).show();
             }
         });
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"fab2",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "fab2", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -165,24 +167,24 @@ public class MainActivity extends AppCompatActivity
         View nav_header_notlogin = header.findViewById(R.id.nav_header_notlogin);
 
         //判断是否登陆
-        if(ConfigClass.CONFIG_ISLOGIN){
+        if (ConfigClass.CONFIG_ISLOGIN) {
             nav_header_login.setVisibility(View.VISIBLE);
             nav_header_notlogin.setVisibility(View.GONE);
-        }else{
+        } else {
             nav_header_notlogin.setVisibility(View.VISIBLE);
             nav_header_login.setVisibility(View.GONE);
         }
 
-        CircleImageView userImge  = (CircleImageView) header.findViewById(R.id.profile_image);
+        CircleImageView userImge = (CircleImageView) header.findViewById(R.id.profile_image);
         userImge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ConfigClass.CONFIG_ISLOGIN){
+                if (ConfigClass.CONFIG_ISLOGIN) {
                     startActivity(new Intent(getApplicationContext(), UserDakaActivity.class));
 
-                }else{
+                } else {
                     Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivityForResult(i,1);
+                    startActivityForResult(i, 1);
                 }
             }
         });
@@ -193,9 +195,9 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode==RESULT_OK){
+        if (resultCode == RESULT_OK) {
             String result = data.getExtras().getString("result");//得到新Activity 关闭后返回的数据
-            Toast.makeText(getApplicationContext(),"result"+result,Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "result" + result, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -208,6 +210,7 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -236,7 +239,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_00) {
-            startActivity(new Intent( this,TestActivity.class));
+            startActivity(new Intent(this, TestActivity.class));
             // Handle the camera action
         } else if (id == R.id.nav_01) {
             CurrentIndex = 0;
@@ -258,9 +261,9 @@ public class MainActivity extends AppCompatActivity
             CurrentIndex = 4;
             init();
 
-        }else if(id ==R.id.nav_06){
+        } else if (id == R.id.nav_06) {
 
-        }else if(id==R.id.nav_07) {
+        } else if (id == R.id.nav_07) {
 
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -276,7 +279,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     //一系列初始化
-    private void init(){
+    private void init() {
+
         //刷新
         refreshLayout.post(new Runnable() {
             @Override
@@ -291,13 +295,13 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.getItemAnimator().setRemoveDuration(10);
         mRecyclerView.getItemAnimator().setChangeDuration(10);
 
-        if(CurrentIndex==-1){
+        if (CurrentIndex == -1) {
             CurrentFid = -1;
             CurrentName = "首页";
             CurrentType = -1;
             main_radiogroup.setVisibility(View.VISIBLE);
             main_show_zhidin.setVisibility(View.GONE);
-        }else{
+        } else {
             CurrentFid = forumses.get(CurrentIndex).getFid();
             CurrentName = forumses.get(CurrentIndex).getName();
             CurrentType = forumses.get(CurrentIndex).getType();
@@ -308,7 +312,7 @@ public class MainActivity extends AppCompatActivity
         toolbar.setTitle(CurrentName);
 
         //一般板块 和首页新帖
-        if (CurrentType==0||(CurrentType==-1&&HomeCurrentPage==0)){
+        if (CurrentType == 0 || (CurrentType == -1 && HomeCurrentPage == 0)) {
             //72灌水区
             //可以设置不同样式
             mLayoutManager = new LinearLayoutManager(this);
@@ -316,8 +320,7 @@ public class MainActivity extends AppCompatActivity
             //mLayoutManager = new GridLayoutManager( getContext(),2);
             //加载更多实现
             mRecyclerView.addOnScrollListener(new RecyclerViewLoadMoreListener((LinearLayoutManager) mLayoutManager, this));
-        }
-        else if(CurrentType ==1||(CurrentType==-1&&HomeCurrentPage==1)) {
+        } else if (CurrentType == 1 || (CurrentType == -1 && HomeCurrentPage == 1)) {
             //图片板 或者板块列表
             mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         }
@@ -326,8 +329,8 @@ public class MainActivity extends AppCompatActivity
         mydatasethome.clear();
 
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyleAdapter = new MainArticleListAdapter(this,mydatasetnormal);
-        mainHomeListAdapter = new MainHomeListAdapter(mydatasethome,0);
+        mRecyleAdapter = new MainArticleListAdapter(this, mydatasetnormal);
+        mainHomeListAdapter = new MainHomeListAdapter(MainActivity.this,mydatasethome, 0);
 
         startGetData();
 
@@ -335,40 +338,37 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void startGetData(){
+    private void startGetData() {
         String url = "";
-        if(CurrentType==-1){
+        if (CurrentType == -1) {
             url = "forum.php";
-        }
-        else{
+        } else {
             url = "forum.php?mod=forumdisplay&fid=";
-            url = url+CurrentFid+"&page="+CurrentPage;
+            url = url + CurrentFid + "&page=" + CurrentPage;
         }
 
         AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 //普通板块
-                if(CurrentType==0){
+                if (CurrentType == 0) {
                     new GetNormalListTask(new String(responseBody)).execute();
-                }else if(CurrentType==1){
+                } else if (CurrentType == 1) {
                     //TODO
                     //图片板块
                     new GetImageListTask(new String(responseBody)).execute();
-                }else if(CurrentType==-1&&HomeCurrentPage==0){
-                    System.out.print("\n>>>>in here>>>>>>>>>>>>>>>>>>>>>>>\n");
+                } else if (CurrentType == -1 && HomeCurrentPage == 0) {
                     new GetHomeListTask_1(new String(responseBody)).execute();
-                }else if(CurrentType==-1&&HomeCurrentPage==1){
-                    GetHomeListTask_2();
+                } else if (CurrentType == -1 && HomeCurrentPage == 1) {
+                    new GetHomeListTask_2(new String(responseBody)).execute();
                 }
 
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Toast.makeText(getApplicationContext(),"网络错误！！",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "网络错误！！", Toast.LENGTH_SHORT).show();
                 refreshLayout.setRefreshing(false);
-
             }
         });
 
@@ -380,6 +380,7 @@ public class MainActivity extends AppCompatActivity
 
         private List<MainListArticleData> dataset = new ArrayList<>();
         private String res;
+
         public GetNormalListTask(String res) {
             this.res = res;
         }
@@ -389,19 +390,18 @@ public class MainActivity extends AppCompatActivity
             if(res!=""){
                 Elements list = Jsoup.parse(res).select("div[id=threadlist]");
                 Elements links = list.select("tbody");
-
                 //System.out.print(links);
                 MainListArticleData temp;
                 for (Element src : links) {
-                    if(src.getElementsByAttributeValue("class", "by").first()!=null) {
+                    if (src.getElementsByAttributeValue("class", "by").first() != null) {
 
                         String type = "normal";
                         //金币
-                        if(src.select("th").select("strong").text()!=""){
-                            type = "gold:"+src.select("th").select("strong").text();
-                        }else if(src.attr("id").contains("stickthread")){
+                        if (src.select("th").select("strong").text() != "") {
+                            type = "gold:" + src.select("th").select("strong").text();
+                        } else if (src.attr("id").contains("stickthread")) {
                             type = "zhidin";
-                        }else{
+                        } else {
                             type = "normal";
                         }
                         String title = src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]").text();
@@ -410,12 +410,12 @@ public class MainActivity extends AppCompatActivity
                         String author = src.getElementsByAttributeValue("class", "by").first().select("a").text();
                         String authorUrl = src.getElementsByAttributeValue("class", "by").first().select("a").attr("href");
                         String time = src.getElementsByAttributeValue("class", "by").first().select("em").text().trim();
-                        String viewcount = src.getElementsByAttributeValue("class","num").select("em").text();
-                        String replaycount = src.getElementsByAttributeValue("class","num").select("a").text();
+                        String viewcount = src.getElementsByAttributeValue("class", "num").select("em").text();
+                        String replaycount = src.getElementsByAttributeValue("class", "num").select("a").text();
 
-                        if(title!=""&&author!=""&&viewcount!=""){
+                        if (title != "" && author != "" && viewcount != "") {
                             //新建对象
-                            temp = new MainListArticleData(title,titleUrl,type,author,authorUrl,time,viewcount,replaycount);
+                            temp = new MainListArticleData(title, titleUrl, type, author, authorUrl, time, viewcount, replaycount);
                             dataset.add(temp);
                         }
 
@@ -453,17 +453,17 @@ public class MainActivity extends AppCompatActivity
                 Elements list = Jsoup.parse(response).select("ul[id=waterfall]");
                 Elements imagelist = list.select("li");
 
-                for(Element tmp:imagelist){
+                for (Element tmp : imagelist) {
                     //链接不带前缀
                     //http://rs.xidian.edu.cn/
-                    String  img= tmp.select("img").attr("src");
+                    String img = tmp.select("img").attr("src");
                     String url = tmp.select("h3.xw0").select("a[href^=forum.php]").attr("href");
-                    String  title=tmp.select("h3.xw0").select("a[href^=forum.php]").text();
+                    String title = tmp.select("h3.xw0").select("a[href^=forum.php]").text();
                     String author = tmp.select("a[href^=home.php]").text();
                     String authorurl = tmp.select("a[href^=home.php]").attr("href");
                     String like = tmp.select("div.auth").select("a[href^=forum.php]").text();
                     //String title, String titleUrl, String image, String author, String authorUrl, String viewCount
-                    MainListArticleData tem = new MainListArticleData(title,url,img,author,authorurl,like);
+                    MainListArticleData tem = new MainListArticleData(title, url, img, author, authorurl, like);
                     tem.setImageCard(true);
                     imgdatas.add(tem);
                 }
@@ -482,7 +482,7 @@ public class MainActivity extends AppCompatActivity
 
 
     //获取首页板块数据 最新帖子
-    public class GetHomeListTask_1 extends AsyncTask<Void, Void, String>{
+    public class GetHomeListTask_1 extends AsyncTask<Void, Void, String> {
 
         private String response;
         private List<MainListArticleDataHome> simpledatas = new ArrayList<>();
@@ -496,7 +496,7 @@ public class MainActivity extends AppCompatActivity
             if (response != "") {
                 Elements list = Jsoup.parse(response).select("div[id=portal_block_314],div[id=portal_block_315]");
                 Elements links = list.select("li");
-                for(Element tmp:links){
+                for (Element tmp : links) {
 
                     MainListArticleDataHome tempdata;
                     String titleurl = tmp.select("a[href^=forum.php]").attr("href").trim();
@@ -511,22 +511,22 @@ public class MainActivity extends AppCompatActivity
                     //String userurl = tmp.select("em").select("a").attr("href");
 
                     //去重
-                    if(simpledatas.size()>0){
-                        int i =0;
-                        for (i =0;i<simpledatas.size();i++){
+                    if (simpledatas.size() > 0) {
+                        int i = 0;
+                        for (i = 0; i < simpledatas.size(); i++) {
                             String have_url = simpledatas.get(i).getUrl();
-                            if(have_url.equals(title)){
+                            if (have_url.equals(title)) {
                                 break;
                             }
                         }
-                        if(i==simpledatas.size()){
-                            //title,titleurl,User,ViewCount,ReplyCount
-                            tempdata = new MainListArticleDataHome(title,titleurl,User,ViewCount,ReplyCount,"100");
+                        if (i == simpledatas.size()) {
+                            //title titleurl User ReplyCount ViewCount
+                            tempdata = new MainListArticleDataHome(title, titleurl, User, ReplyCount, ViewCount);
                             simpledatas.add(tempdata);
                         }
                     }
-                    if(simpledatas.size()==0){
-                        tempdata = new MainListArticleDataHome(title,titleurl,User,ViewCount,ReplyCount,"200");
+                    if (simpledatas.size() == 0) {
+                        tempdata = new MainListArticleDataHome(title, titleurl, User, ReplyCount, ViewCount);
                         simpledatas.add(tempdata);
 
 
@@ -542,19 +542,66 @@ public class MainActivity extends AppCompatActivity
             mydatasethome.clear();
             mydatasethome.addAll(simpledatas);
             refreshLayout.setRefreshing(false);
-            mainHomeListAdapter = new MainHomeListAdapter(mydatasethome,0);
+            mainHomeListAdapter = new MainHomeListAdapter(MainActivity.this, mydatasethome, 0);
             mRecyclerView.setAdapter(mainHomeListAdapter);
-            mainHomeListAdapter.notifyItemRangeInserted(0,mydatasethome.size());
+            mainHomeListAdapter.notifyItemRangeInserted(0, mydatasethome.size());
         }
     }
 
-        //获取首页板块数据 板块列表
-    private void GetHomeListTask_2(){
 
-        mainHomeListAdapter = new MainHomeListAdapter(mydatasethome,1);
-        mRecyclerView.setAdapter(mainHomeListAdapter);
+    //获取首页板块数据 板块列表
+    public class GetHomeListTask_2 extends AsyncTask<Void, Void, String> {
+        private String response;
+        private List<MainListArticleDataHome> simpledatas = new ArrayList<>();
 
-        refreshLayout.setRefreshing(false);
+
+        public GetHomeListTask_2(String res) {
+            this.response = res;
+        }
+
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            if (response != "") {
+                Elements list = Jsoup.parse(response).select("#category_89,#category_101,#category_71,category_97,category_11").select("td.fl_g");
+                for (Element tmp : list) {
+                    MainListArticleDataHome datatmp;
+                    String img = tmp.select("img[src^=./data/attachment]").attr("src").replace("./data", "data");
+                    String url = tmp.select("a[href^=forum.php?mod=forumdisplay&fid]").attr("href");
+                    String title = tmp.select("a[href^=forum.php?mod=forumdisplay&fid]").text();
+
+                    String todaynew = tmp.select("em[title=今日]").text();
+                    String actualnew = "";
+                    if (todaynew != "") {
+                        Pattern pattern = Pattern.compile("[0-9]+");
+                        Matcher matcher = pattern.matcher(todaynew);
+                        String tid = "";
+                        while (matcher.find()) {
+                            actualnew = todaynew.substring(matcher.start(), matcher.end());
+                            //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
+                        }
+                    }
+                    //String name, String image, String url, String todaypost
+                    datatmp = new MainListArticleDataHome(title,img,url,actualnew);
+                    simpledatas.add(datatmp);
+
+                    //responseText.append("\nimg>>"+img+"\nurl>>"+url+"\ntitle>>"+title+"\ntoday>>"+todaynew+"\nactual>>"+actualnew);
+
+                }
+
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            mydatasethome.clear();
+            mydatasethome.addAll(simpledatas);
+            refreshLayout.setRefreshing(false);
+            mainHomeListAdapter = new MainHomeListAdapter(MainActivity.this, mydatasethome, 1);
+            mRecyclerView.setAdapter(mainHomeListAdapter);
+            mainHomeListAdapter.notifyItemRangeInserted(0, mydatasethome.size());
+        }
+
     }
-
 }
