@@ -17,9 +17,10 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import xyz.yluo.ruisiapp.ConfigClass;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.api.MainListArticleData;
 import xyz.yluo.ruisiapp.api.GetUserImage;
+import xyz.yluo.ruisiapp.api.MainListArticleData;
 import xyz.yluo.ruisiapp.article.ArticleNormalActivity;
 import xyz.yluo.ruisiapp.user.UserDetailActivity;
 
@@ -128,8 +129,18 @@ public class MainArticleListAdapter extends RecyclerView.Adapter<MainArticleList
         //设置listItem的数据
         @Override
         void setData(int position) {
-            article_type.setText(DataSet.get(position).getType());
-            if(DataSet.get(position).getType()=="zhidin"){
+            String type = DataSet.get(position).getType();
+            if(type.equals("zhidin")){
+                article_type.setText("置顶");
+            }else if(type.equals("normal")){
+                article_type.setText("水贴");
+            }else if(type.startsWith("gold")){
+                String gold = type.substring(5);
+                article_type.setText("金币:"+gold);
+            }
+
+
+            if(DataSet.get(position).getType().equals("zhidin")){
                 image_good.setVisibility(View.VISIBLE);
             }else {
                 image_good.setVisibility(View.INVISIBLE);
@@ -180,7 +191,6 @@ public class MainArticleListAdapter extends RecyclerView.Adapter<MainArticleList
 
         protected EditText loadmoreText;
 
-
         public LoadMoreViewHolder(View itemView) {
             super(itemView);
         }
@@ -219,7 +229,7 @@ public class MainArticleListAdapter extends RecyclerView.Adapter<MainArticleList
             img_card_title.setText(DataSet.get(position).getTitle());
             img_card_like.setText(DataSet.get(position).getViewCount());
             if(DataSet.get(position).getImage()!=""){
-                Picasso.with(activity).load("http://rs.xidian.edu.cn/"+DataSet.get(position).getImage()).placeholder(R.drawable.image_placeholder).into(img_card_image);
+                Picasso.with(activity).load(ConfigClass.BBS_BASE_URL+DataSet.get(position).getImage()).placeholder(R.drawable.image_placeholder).into(img_card_image);
             }else{
                 img_card_image.setImageResource(R.drawable.image_placeholder);
             }

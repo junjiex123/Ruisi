@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="colorNavBackground">#2E7D32</color>
+
     <color name="colorGrey">#ff999999</color>
 
     <color name="colorAuthor">#529ECC</color>

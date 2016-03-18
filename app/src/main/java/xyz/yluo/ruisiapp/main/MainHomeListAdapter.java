@@ -10,13 +10,19 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import xyz.yluo.ruisiapp.ConfigClass;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.api.MainListArticleData;
 import xyz.yluo.ruisiapp.api.MainListArticleDataHome;
+import xyz.yluo.ruisiapp.article.ArticleNormalActivity;
 
 /**
  * Created by free2 on 16-3-17.
@@ -29,7 +35,7 @@ public class MainHomeListAdapter extends RecyclerView.Adapter<MainHomeListAdapte
     private static final int TYPE_HOME_2 = 1;
     //数据
     private List<MainListArticleDataHome> DataSet;
-    private Activity activity;
+    protected Activity activity;
     int type;
 
     public MainHomeListAdapter(Activity activity,List<MainListArticleDataHome> dataSet,int type) {
@@ -97,6 +103,21 @@ public class MainHomeListAdapter extends RecyclerView.Adapter<MainHomeListAdapte
             today_count.setVisibility(View.GONE);
         }
 
+        @OnClick(R.id.forum_list_item)
+        protected void forum_list_item_click(){
+            String url = DataSet.get(getPosition()).getUrl();
+            Pattern pattern = Pattern.compile("[0-9]{2,}");
+            Matcher matcher = pattern.matcher(url);
+            String fid ="";
+            while (matcher.find()) {
+                fid = url.substring(matcher.start(),matcher.end());
+                //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
+            }
+            System.out.print("\ntitle>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+DataSet.get(getPosition()).getName());
+            MainActivity.open(activity,Integer.parseInt(fid),DataSet.get(getPosition()).getName());
+        }
+
+
         @Override
         void setData(int position) {
             title.setText(DataSet.get(position).getName());
@@ -138,6 +159,21 @@ public class MainHomeListAdapter extends RecyclerView.Adapter<MainHomeListAdapte
             author_name.setText(DataSet.get(position).getUser());
             reply_count.setText(DataSet.get(position).getTodaypost());
             view_count.setText(DataSet.get(position).getViewCount());
+        }
+
+        @OnClick(R.id.main_item_btn_item)
+        protected void main_item_btn_item_click(){
+            //传递一些参数过去 | 分割到时候分割   url|标题|回复|类型|author
+
+            List<String> messagelist = new ArrayList<>();
+            MainListArticleDataHome single_data =  DataSet.get(getPosition());
+            messagelist.add(single_data.getUrl());
+            messagelist.add(single_data.getName());
+            messagelist.add(single_data.getTodaypost());
+            messagelist.add("");
+            messagelist.add(single_data.getUser());
+
+            ArticleNormalActivity.open(activity, messagelist);
         }
     }
 }

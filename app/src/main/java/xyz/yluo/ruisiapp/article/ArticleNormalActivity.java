@@ -82,6 +82,7 @@ public class ArticleNormalActivity extends AppCompatActivity
         context.startActivity(intent);
     }
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +95,8 @@ public class ArticleNormalActivity extends AppCompatActivity
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        actionBar.setTitle(articleTitle);
 
         //mLayoutManager = new GridLayoutManager(getContext(),2);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));

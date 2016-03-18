@@ -1,5 +1,6 @@
 package xyz.yluo.ruisiapp.main;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +18,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -42,8 +47,8 @@ import xyz.yluo.ruisiapp.ConfigClass;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.TestActivity;
 import xyz.yluo.ruisiapp.api.MainListArticleData;
-import xyz.yluo.ruisiapp.api.ForumsData;
 import xyz.yluo.ruisiapp.api.MainListArticleDataHome;
+import xyz.yluo.ruisiapp.article.ArticleNormalActivity;
 import xyz.yluo.ruisiapp.http.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.login.LoginActivity;
 import xyz.yluo.ruisiapp.login.UserDakaActivity;
@@ -70,21 +75,20 @@ public class MainActivity extends AppCompatActivity
     protected NavigationView navigationView;
     @Bind(R.id.main_radiogroup)
     protected RadioGroup main_radiogroup;
-    @Bind(R.id.main_show_zhidin)
-    protected LinearLayout main_show_zhidin;
+    @Bind(R.id.radio01)
+    protected RadioButton radio01;
+    @Bind(R.id.radio02)
+    protected RadioButton radio02;
 
-    //论坛列表
-    private List<ForumsData> forumses = ConfigClass.getBbsForum();
+    private CheckBox show_zhidin;
 
-    //当前index
-    //-1为首页 其余对应配置文件
-    private int CurrentIndex = -1;
-    private int CurrentFid;
-    private String CurrentName;
-    private int CurrentType;
+
+    //-1 为首页
+    private static int CurrentFid =-1;
+    private static String CurrentTitle = "首页";
+    private int CurrentType = -1;
     //当前页数
     private int CurrentPage = 0;
-
     //在home界面时 0 代表第一页 1 代表板块列表
     private int HomeCurrentPage = 0;
 
@@ -96,6 +100,14 @@ public class MainActivity extends AppCompatActivity
     private MainHomeListAdapter mainHomeListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    public static void open(Context context, int fid,String title){
+        Intent intent = new Intent(context, MainActivity.class);
+        CurrentFid = fid;
+        CurrentTitle = title;
+        System.out.print("\n>>>>>>>>>fid: "+CurrentFid+"title: "+CurrentTitle+"<<<<<<<<<<<\n");
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +116,8 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         //初始化
-        init();
+        init(CurrentFid, CurrentTitle);
+
 
         main_radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -112,11 +125,11 @@ public class MainActivity extends AppCompatActivity
                 switch (checkedId) {
                     case R.id.radio01:
                         HomeCurrentPage = 0;
-                        init();
+                        init(-1, "首页");
                         break;
                     case R.id.radio02:
                         HomeCurrentPage = 1;
-                        init();
+                        init(-1, "首页");
                         break;
                 }
 
@@ -127,8 +140,7 @@ public class MainActivity extends AppCompatActivity
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                init();
-
+                init(CurrentFid,CurrentTitle);
             }
         });
 
@@ -165,6 +177,23 @@ public class MainActivity extends AppCompatActivity
         View header = navigationView.getHeaderView(0);
         View nav_header_login = header.findViewById(R.id.nav_header_login);
         View nav_header_notlogin = header.findViewById(R.id.nav_header_notlogin);
+        show_zhidin = (CheckBox) header.findViewById(R.id.show_zhidin);
+
+        show_zhidin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    show_zhidin.setText("不显示置顶");
+                    ConfigClass.CONFIG_ISSHOW_ZHIDIN = true;
+
+                }else{
+                    show_zhidin.setText("显示置顶帖");
+                    ConfigClass.CONFIG_ISSHOW_ZHIDIN = false;
+                }
+                drawer.closeDrawer(GravityCompat.START);
+                init(CurrentFid,CurrentTitle);
+            }
+        });
 
         //判断是否登陆
         if (ConfigClass.CONFIG_ISLOGIN) {
@@ -238,35 +267,35 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_00) {
-            startActivity(new Intent(this, TestActivity.class));
-            // Handle the camera action
-        } else if (id == R.id.nav_01) {
-            CurrentIndex = 0;
-            init();
-
+        if (id == R.id.nav_home) {
+            init(-1, "首页");
+        }
+        else if (id == R.id.nav_01) {
+            init(72,"西电睿思灌水专区");
         } else if (id == R.id.nav_02) {
-            CurrentIndex = 1;
-            init();
+            //106->110
+            init(110,"校园交易");
 
         } else if (id == R.id.nav_03) {
-            CurrentIndex = 2;
-            init();
-
+            init(551,"西电问答");
         } else if (id == R.id.nav_04) {
-            CurrentIndex = 3;
-            init();
+            init(91,"考研交流");
 
         } else if (id == R.id.nav_05) {
-            CurrentIndex = 4;
-            init();
+            init(108,"我是女生");
 
         } else if (id == R.id.nav_06) {
+            init(560,"技术博客");
 
         } else if (id == R.id.nav_07) {
-
+            init(561,"摄影天地");
+        }else if(id == R.id.nav_08){
+            init(549, "文章天地");
+        }else if(id == R.id.nav_test){
+            startActivity(new Intent(this, TestActivity.class));
+            // Handle the camera action
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -279,7 +308,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     //一系列初始化
-    private void init() {
+    private void init(int fid,String title) {
 
         //刷新
         refreshLayout.post(new Runnable() {
@@ -295,21 +324,28 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.getItemAnimator().setRemoveDuration(10);
         mRecyclerView.getItemAnimator().setChangeDuration(10);
 
-        if (CurrentIndex == -1) {
-            CurrentFid = -1;
-            CurrentName = "首页";
+        if (fid == -1) {
+            CurrentFid=-1;
+            CurrentTitle = "首页";
             CurrentType = -1;
             main_radiogroup.setVisibility(View.VISIBLE);
-            main_show_zhidin.setVisibility(View.GONE);
         } else {
-            CurrentFid = forumses.get(CurrentIndex).getFid();
-            CurrentName = forumses.get(CurrentIndex).getName();
-            CurrentType = forumses.get(CurrentIndex).getType();
+            CurrentType =0;
+            CurrentFid = fid;
+            CurrentTitle = title;
             main_radiogroup.setVisibility(View.GONE);
-            main_show_zhidin.setVisibility(View.VISIBLE);
+
+            //摄影板块
+            if(CurrentFid==561){
+                CurrentType =1;
+            }
         }
 
-        toolbar.setTitle(CurrentName);
+        // Show the Up button in the action bar.
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar!=null){
+            actionBar.setTitle(CurrentTitle);
+        }
 
         //一般板块 和首页新帖
         if (CurrentType == 0 || (CurrentType == -1 && HomeCurrentPage == 0)) {
@@ -398,7 +434,7 @@ public class MainActivity extends AppCompatActivity
                         String type = "normal";
                         //金币
                         if (src.select("th").select("strong").text() != "") {
-                            type = "gold:" + src.select("th").select("strong").text();
+                            type = "gold:" + src.select("th").select("strong").text().trim();
                         } else if (src.attr("id").contains("stickthread")) {
                             type = "zhidin";
                         } else {
@@ -413,10 +449,14 @@ public class MainActivity extends AppCompatActivity
                         String viewcount = src.getElementsByAttributeValue("class", "num").select("em").text();
                         String replaycount = src.getElementsByAttributeValue("class", "num").select("a").text();
 
-                        if (title != "" && author != "" && viewcount != "") {
-                            //新建对象
-                            temp = new MainListArticleData(title, titleUrl, type, author, authorUrl, time, viewcount, replaycount);
-                            dataset.add(temp);
+                        if(!ConfigClass.CONFIG_ISSHOW_ZHIDIN&&type.equals("zhidin")){
+                            //do no thing
+                        }else{
+                            if (title != "" && author != "" && viewcount != "") {
+                                //新建对象
+                                temp = new MainListArticleData(title, titleUrl, type, author, authorUrl, time, viewcount, replaycount);
+                                dataset.add(temp);
+                            }
                         }
 
                     }

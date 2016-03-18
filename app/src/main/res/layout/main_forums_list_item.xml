@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout
+    android:id="@+id/forum_list_item"
     android:gravity="center_vertical"
     android:layout_marginTop="@dimen/dimen_4"
     android:padding="@dimen/dimen_8"
@@ -16,7 +17,7 @@
             android:id="@+id/img"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/nav_abro"/>
+            android:src="@drawable/image_placeholder"/>
 
         <TextView
             android:id="@+id/title"
