@@ -27,7 +27,7 @@ import xyz.yluo.ruisiapp.user.UserDetailActivity;
  * Created by free2 on 16-3-5.
  *
  */
-public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.BaseViewHolder>{
+public class MainArticleListAdapter extends RecyclerView.Adapter<MainArticleListAdapter.BaseViewHolder>{
 
     private static final int TYPE_NORMAL = 0;
     private static final int TYPE_LOAD_MORE = 1;
@@ -37,7 +37,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     //上下文
     private Activity activity;
-    public RecycleViewAdapter(Activity activity,List<ArticleListData> data) {
+    public MainArticleListAdapter(Activity activity, List<ArticleListData> data) {
         DataSet = data;
         this.activity =activity;
     }

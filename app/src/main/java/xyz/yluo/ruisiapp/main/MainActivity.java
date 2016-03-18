@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity
 
     //一般板块/图片板块数据列表
     private List<ArticleListData> mydataset = new ArrayList<>();
-    private RecycleViewAdapter mRecyleAdapter;
+    private MainArticleListAdapter mRecyleAdapter;
     private MainHomeListAdapter mainHomeListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -335,7 +335,7 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.getItemAnimator().setRemoveDuration(10);
         mRecyclerView.getItemAnimator().setChangeDuration(10);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyleAdapter = new RecycleViewAdapter(this,mydataset);
+        mRecyleAdapter = new MainArticleListAdapter(this,mydataset);
         mRecyclerView.setAdapter(mRecyleAdapter);
     }
 
@@ -507,7 +507,6 @@ public class MainActivity extends AppCompatActivity
                 Elements links = list.select("li");
                 for(Element tmp:links){
 
-                    System.out.print("\nin>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
                     MainHomeListData tempdata;
                     String titleurl = tmp.select("a[href^=forum.php]").attr("href").trim();
                     String title = tmp.select("a[href^=forum.php]").text();
@@ -553,7 +552,7 @@ public class MainActivity extends AppCompatActivity
             mainHomeListDataList.addAll(simpledatas);
             mLayoutManager = new LinearLayoutManager(getApplicationContext());
             mRecyclerView.setLayoutManager(mLayoutManager);
-            mainHomeListAdapter = new MainHomeListAdapter(mainHomeListDataList);
+            mainHomeListAdapter = new MainHomeListAdapter(mainHomeListDataList,0);
             mRecyclerView.setAdapter(mainHomeListAdapter);
             mRecyleAdapter.notifyItemRangeInserted(0, simpledatas.size());
         }
@@ -565,7 +564,7 @@ public class MainActivity extends AppCompatActivity
         fabMenu.showMenu(true);
         mLayoutManager = new GridLayoutManager(getApplicationContext(),2);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mainHomeListAdapter = new MainHomeListAdapter(mainHomeListDataList);
+        mainHomeListAdapter = new MainHomeListAdapter(mainHomeListDataList,1);
         mRecyclerView.setAdapter(mainHomeListAdapter);
     }
 

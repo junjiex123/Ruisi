@@ -24,15 +24,21 @@ public class MainHomeListAdapter extends RecyclerView.Adapter<MainHomeListAdapte
     private static final int TYPE_HOME_2 = 1;
     //数据
     private List<MainHomeListData> DataSet;
+    int type;
 
-    public MainHomeListAdapter(List<MainHomeListData> dataSet) {
+    public MainHomeListAdapter(List<MainHomeListData> dataSet,int type) {
 
         DataSet = dataSet;
+        this.type =type;
     }
 
     @Override
     public int getItemViewType(int position) {
+        if(type==0){
             return TYPE_HOME_1;
+        }else{
+            return TYPE_HOME_2;
+        }
     }
 
     @Override
@@ -54,6 +60,9 @@ public class MainHomeListAdapter extends RecyclerView.Adapter<MainHomeListAdapte
 
     @Override
     public int getItemCount() {
+        if(type==0){
+            return DataSet.size();
+        }
         return 30;
     }
 
@@ -68,19 +77,6 @@ public class MainHomeListAdapter extends RecyclerView.Adapter<MainHomeListAdapte
     //首页板块列表ViewHolder
     public class FroumsListViewHolder extends BaseViewHolder{
 
-//        @Bind(R.id.article_title)
-//        protected TextView article_title;
-//
-//        @Bind(R.id.author_name)
-//        protected TextView author_name;
-//
-//        @Bind(R.id.reply_count)
-//        protected TextView reply_count;
-//
-//        @Bind(R.id.view_count)
-//        protected TextView view_count;
-
-        //url
         public FroumsListViewHolder(View itemView) {
             super(itemView);
 
