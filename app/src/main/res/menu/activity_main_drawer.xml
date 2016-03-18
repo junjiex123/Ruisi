@@ -3,36 +3,36 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_00"
             android:icon="@drawable/ic_menu_camera"
             android:title="测试" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_01"
             android:icon="@drawable/nav_xdrs"
             android:title="西电睿思灌水专区" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_02"
             android:icon="@drawable/nav_yjrs"
             android:title="缘聚睿思" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_03"
             android:icon="@drawable/nav_jsbk"
             android:title="技术博客" />
         <item
-            android:id="@+id/nav_manage1"
+            android:id="@+id/nav_04"
             android:icon="@drawable/nav_xyjy"
             android:title="校园交易" />
 
         <item
-            android:id="@+id/nav_sytd"
+            android:id="@+id/nav_05"
             android:icon="@drawable/nav_sytd"
             android:title="摄影天地" />
         <item
-            android:id="@+id/nav_manage3"
+            android:id="@+id/nav_06"
             android:icon="@drawable/nav_wztd"
             android:title="文章天地" />
         <item
-            android:id="@+id/nav_manag"
+            android:id="@+id/nav_07"
             android:icon="@drawable/nav_wsns"
             android:title="我是女生" />
         <item

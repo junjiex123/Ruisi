@@ -46,12 +46,17 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public int getItemViewType(int position) {
 
         //判断listItem类型
+        //图片列表
         if(position!= getItemCount() - 1 && DataSet.get(position).isImageCard()) {
             return TYPE_IMAGE_CARD;
         }
+
+        //加载更多
         else if (position>0&& position == getItemCount() - 1) {
             return TYPE_LOAD_MORE;
-        } else {
+        }
+        //普通列表
+        else {
             return TYPE_NORMAL;
         }
         //TODO 普通文章类型再分类
@@ -92,7 +97,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         public BaseViewHolder(View itemView) {
             super(itemView);
         }
-
         abstract void setData(int position);
     }
 
@@ -222,4 +226,5 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
         }
     }
+
 }

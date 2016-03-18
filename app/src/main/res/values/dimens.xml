@@ -10,4 +10,14 @@
     <dimen name="dimen_16">16dp</dimen>
     <dimen name="dimen_8">8dp</dimen>
     <dimen name="dimen_4">4dp</dimen>
+    <dimen name="fab_button_press">12dp</dimen>
+    <dimen name="fab_button">6dp</dimen>
+    <dimen name="button">2dp</dimen>
+    <dimen name="button_raise">8dp</dimen>
+    <dimen name="Snackbar">6dp</dimen>
+    <dimen name="AppBar">4dp</dimen>
+    <dimen name="Searchbar">3dp</dimen>
+    <dimen name="Card">2dp</dimen>
+    <dimen name="Card_pick_up">8dp</dimen>
+    <dimen name="Switch">1dp</dimen>
 </resources>

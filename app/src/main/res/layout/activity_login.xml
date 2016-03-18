@@ -81,30 +81,40 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="login"
+            android:text="log"
             android:id="@+id/new_login"
             android:layout_gravity="center_horizontal" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="check"
+            android:text="chec"
             android:id="@+id/new_get"
             android:layout_gravity="center_horizontal" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="hash"
+            android:text="has"
             android:id="@+id/new_get_hash" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="hash>>"
+            android:text="hash"
             android:id="@+id/new_get_hash_again" />
 
-    </LinearLayout>
 
+    </LinearLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="md5"
+        android:id="@+id/pass_md5" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="get hot"
+        android:id="@+id/get_hot" />
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

@@ -15,14 +15,14 @@
                 android:layout_height="40dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_format_bold_black_24dp" />
+                android:src="@drawable/ic_edit_bold_24dp" />
             <ImageButton
                 android:id="@+id/action_italic"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_format_italic_black_24dp" />
+                android:src="@drawable/ic_edit_italic_24dp" />
 
             <ImageButton
                 android:id="@+id/action_color_text"
@@ -30,7 +30,7 @@
                 android:layout_height="40dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_format_color_text_black_24dp"
+                android:src="@drawable/ic_edit_color_text_24dp"
                 />
 
             <ImageButton
@@ -39,7 +39,7 @@
                 android:layout_height="40dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_format_list_bulleted_black_24dp" />
+                android:src="@drawable/ic_edit_list_bulleted_24dp" />
 
             <ImageButton
                 android:id="@+id/action_list_n"
@@ -47,14 +47,14 @@
                 android:layout_height="40dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_format_list_numbered_black_24dp" />
+                android:src="@drawable/ic_edit_list_numbered_24dp" />
             <ImageButton
                 android:id="@+id/action_biaoqin"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_insert_emoticon_black_24dp" />
+                android:src="@drawable/ic_edit_emoticon_24dp" />
 
             <ImageButton
                 android:id="@+id/action_image"
@@ -62,7 +62,7 @@
                 android:layout_height="40dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_insert_photo_black_24dp"
+                android:src="@drawable/ic_edit_image_24dp"
                 />
 
             <ImageButton
@@ -71,7 +71,7 @@
                 android:layout_height="40dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_insert_link_black_24dp" />
+                android:src="@drawable/ic_edit_link_24dp" />
         </LinearLayout>
 
 

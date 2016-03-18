@@ -7,10 +7,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.ConfigClass;
 
 /**

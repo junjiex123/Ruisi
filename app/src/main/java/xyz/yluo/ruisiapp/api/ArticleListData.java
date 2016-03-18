@@ -27,6 +27,7 @@ public class ArticleListData {
         this.image = image;
     }
 
+
     private String image;//图片文章特有
 
     private String type;// normal zhidin gold:100
@@ -38,6 +39,7 @@ public class ArticleListData {
     private String viewCount;
     private String replayCount;
 
+    //图片列表特有
     public void setImageCard(boolean imageCard) {
         isImageCard = imageCard;
     }

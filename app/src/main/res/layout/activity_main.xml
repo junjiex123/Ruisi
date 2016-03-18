@@ -17,6 +17,7 @@
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:elevation="@dimen/AppBar"
             android:theme="@style/AppTheme.AppBarOverlay">
 
             <android.support.v7.widget.Toolbar
@@ -24,15 +25,63 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                android:title="@string/app_name"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                app:popupTheme="@style/AppTheme.PopupOverlay" >
+
+                <RadioGroup
+                    android:id="@+id/main_radiogroup"
+                    android:padding="1dp"
+                    android:checkedButton="@+id/radio01"
+                    android:background="@android:color/holo_red_dark"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <RadioButton
+                        android:id="@+id/radio01"
+                        tools:checked="true"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:background="@drawable/selector_button_background"
+                        android:layout_width="50dp"
+                        android:layout_height="25dp"
+                        android:text="新帖"/>
+                    <RadioButton
+                        android:id="@+id/radio02"
+                        android:background="@drawable/selector_button_background"
+                        android:gravity="center"
+                        android:button="@null"
+                        android:layout_width="50dp"
+                        android:layout_height="25dp"
+                        android:text="板块"/>
+                </RadioGroup>
+                <LinearLayout
+                    android:id="@+id/main_show_zhidin"
+                    android:padding="1dp"
+                    android:background="@android:color/holo_red_dark"
+                    android:layout_gravity="end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <CheckBox
+                        android:checked="false"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
+                        android:background="@drawable/selector_button_background"
+                        android:button="@null"
+                        android:text="显示置顶"
+                        android:layout_width="wrap_content"
+                        android:layout_height="22dp"
+                        android:layout_gravity="end"/>
+                </LinearLayout>
+
+
+
+            </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.AppBarLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
 
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/main_refresh_layout"

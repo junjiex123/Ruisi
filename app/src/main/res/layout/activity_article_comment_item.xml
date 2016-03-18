@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="0dp"
+    android:background="@android:color/white"
+    app:cardCornerRadius="1dp"
     android:clickable="true"
+    android:layout_marginStart="3dp"
+    android:layout_marginEnd="3dp"
+    android:layout_marginTop="3dp"
     android:foreground="?android:attr/selectableItemBackground"
-    app:cardElevation="1dp">
+    app:cardElevation="0.5dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="16dp"
+        android:paddingTop="12dp"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
         android:orientation="vertical">
@@ -41,7 +44,7 @@
                         android:id="@+id/replay_author"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="?android:attr/textColorPrimary"
+                        android:textColor="@color/colorAuthor"
                         android:textSize="14sp"
                         android:text="TakWolf" />
                     <TextView
@@ -64,7 +67,7 @@
                         android:paddingLeft="3dp"
                         android:paddingRight="3dp"
                         android:textColor="#F26C4F"
-                        android:background="#FFF4DD"
+                        android:background="#f9f2f4"
                         android:textSize="12sp"
                         android:text="金币+30" />
                 </LinearLayout>
@@ -112,15 +115,18 @@
                     android:textColor="?android:attr/textColorSecondary"
                     android:textSize="14sp"
                     android:gravity="center"
-                    tools:text="12" />
+                    android:text="12" />
 
-                <ImageView
-                    android:visibility="gone"
+                <TextView
+                    android:clickable="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:drawableRight="@drawable/ic_reply_accent_24dp"
                     android:id="@+id/replay_btn_02"
+                    android:text="回复"
                     android:layout_width="wrap_content"
-                    android:layout_height="36dp"
+                    android:layout_height="40dp"
                     android:padding="8dp"
-                    android:src="@drawable/ic_menu_send"
                     android:scaleType="center" />
 
             </LinearLayout>
@@ -129,7 +135,6 @@
         <xyz.yluo.ruisiapp.article.MyWebView
             android:layout_marginTop="16dp"
             android:layout_marginBottom="12dp"
-            android:layout_marginLeft="44dp"
             android:id="@+id/replay_webView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -143,11 +148,9 @@
             android:paddingLeft="3dp"
             android:paddingRight="3dp"
             android:textColor="#F26C4F"
-            android:background="#FFF4DD"
+            android:background="#f9f2f4"
             android:textSize="12sp"
             android:text="评分:"
-            android:layout_marginBottom="12dp"/>
+            android:layout_marginBottom="8dp"/>
     </LinearLayout>
-    <View style="@style/DeepLine"
-        android:layout_gravity="bottom" />
 </android.support.v7.widget.CardView>

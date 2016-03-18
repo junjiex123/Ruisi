@@ -6,9 +6,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
 import android.widget.TextView;
-import com.loopj.android.http.*;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,6 +27,7 @@ import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.api.ArticleListData;
 import xyz.yluo.ruisiapp.api.GetFormHash;
+import xyz.yluo.ruisiapp.api.getMd5Pass;
 import xyz.yluo.ruisiapp.http.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.http.MyHttpConnection;
 
@@ -184,6 +186,32 @@ public class TestActivity extends AppCompatActivity {
 
         responseText.setText(ConfigClass.CONFIG_FORMHASH);
 
+    }
+
+    @OnClick(R.id.pass_md5)
+    protected void pass_md5_click(){
+        String pass = getMd5Pass.getMD5("justice");
+        responseText.setText(pass);
+
+    }
+
+    @OnClick(R.id.get_hot)
+    protected void get_hot_click(){
+        String url = "forum.php";
+        AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String res = new String(responseBody);
+
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(getApplicationContext(), "网络错误！！", Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
     /**
      * Represents an asynchronous login/registration task used to authenticate

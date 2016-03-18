@@ -1,19 +1,15 @@
 package xyz.yluo.ruisiapp.login;
 
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,9 +18,7 @@ import com.loopj.android.http.RequestParams;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
-import java.awt.font.TextAttribute;
 import java.io.UnsupportedEncodingException;
 
 import butterknife.Bind;
@@ -53,7 +47,7 @@ public class UserDakaActivity extends AppCompatActivity{
     @Bind(R.id.spinner_select)
     protected Spinner spinner_select;
     @Bind(R.id.btn_submit)
-    protected FloatingActionButton btn_submit;
+    protected Button btn_submit;
 
     @Bind(R.id.ll_daka)
     protected LinearLayout ll_daka;
@@ -79,9 +73,7 @@ public class UserDakaActivity extends AppCompatActivity{
 
         ll_daka.setVisibility(View.GONE);
         text_have_daka.setVisibility(View.GONE);
-
         isHaveDaka();
-
         group_2.check(R.id.btn1);
         group_1.check(R.id.radiobtn_01);
         spinner_select.setVisibility(View.GONE);

@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_margin="@dimen/dimen_16">
-            <EditText android:id="@+id/login_con_ip"
+            <EditText android:id="@+id/login_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="用户名"
@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_marginLeft="@dimen/dimen_16"
             android:layout_marginRight="@dimen/dimen_16">
-            <EditText android:id="@+id/login_con_pas"
+            <EditText android:id="@+id/login_pas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="密码"
