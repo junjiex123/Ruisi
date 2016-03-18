@@ -14,6 +14,7 @@ import xyz.yluo.ruisiapp.http.AsyncHttpCilentUtil;
 /**
  * Created by free2 on 16-3-16.
  *
+ * 获得论坛FormHash
  */
 public class GetFormHash {
 

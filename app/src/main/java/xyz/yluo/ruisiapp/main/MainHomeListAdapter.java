@@ -11,7 +11,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.api.MainHomeListData;
+import xyz.yluo.ruisiapp.api.MainListArticleDataHome;
 
 /**
  * Created by free2 on 16-3-17.
@@ -23,10 +23,10 @@ public class MainHomeListAdapter extends RecyclerView.Adapter<MainHomeListAdapte
     private static final int TYPE_HOME_1 = 0;
     private static final int TYPE_HOME_2 = 1;
     //数据
-    private List<MainHomeListData> DataSet;
+    private List<MainListArticleDataHome> DataSet;
     int type;
 
-    public MainHomeListAdapter(List<MainHomeListData> dataSet,int type) {
+    public MainHomeListAdapter(List<MainListArticleDataHome> dataSet,int type) {
 
         DataSet = dataSet;
         this.type =type;
@@ -113,14 +113,10 @@ public class MainHomeListAdapter extends RecyclerView.Adapter<MainHomeListAdapte
 
         @Override
         void setData(int position) {
-            if(position==0){
-
-            }else {
-                article_title.setText(DataSet.get(position).getName());
-                author_name.setText(DataSet.get(position).getName());
-                reply_count.setText(DataSet.get(position).getTodaypost());
-                view_count.setText(DataSet.get(position).getTotalreplay());
-            }
+            article_title.setText(DataSet.get(position).getName());
+            author_name.setText(DataSet.get(position).getName());
+            reply_count.setText(DataSet.get(position).getTodaypost());
+            view_count.setText(DataSet.get(position).getTotalreplay());
         }
     }
 }

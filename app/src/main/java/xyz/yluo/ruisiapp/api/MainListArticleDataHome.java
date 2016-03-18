@@ -2,13 +2,15 @@ package xyz.yluo.ruisiapp.api;
 
 /**
  * Created by free2 on 16-3-17.
- * 首页数据类型
+ * 首页数据类型 板块列表和最新贴
  */
-public class MainHomeListData {
-    private String name;
+public class MainListArticleDataHome {
+    private String name; //or title
     private String image;
-    private String url;
+    private String url;//or titleurl
     private String todaypost;
+    private String totalarticle;
+    private String totalreplay;
 
     public String getName() {
         return name;
@@ -58,10 +60,7 @@ public class MainHomeListData {
         this.totalreplay = totalreplay;
     }
 
-    private String totalarticle;
-    private String totalreplay;
-
-    public MainHomeListData(String name, String image, String url, String todaypost, String totalarticle, String totalreplay) {
+    public MainListArticleDataHome(String name, String image, String url, String todaypost, String totalarticle, String totalreplay) {
         this.name = name;
         this.image = image;
         this.url = url;

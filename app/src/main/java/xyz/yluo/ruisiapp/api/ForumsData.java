@@ -4,7 +4,7 @@ package xyz.yluo.ruisiapp.api;
  * Created by free2 on 16-3-17.
  * 论坛版块 名称 fid type
  */
-public class Forums {
+public class ForumsData {
     private   String name;
     private   int fid;
 
@@ -34,7 +34,7 @@ public class Forums {
 
     private   int type;
 
-    public Forums(String name, int fid, int type) {
+    public ForumsData(String name, int fid, int type) {
         this.name = name;
         this.fid = fid;
         this.type = type;

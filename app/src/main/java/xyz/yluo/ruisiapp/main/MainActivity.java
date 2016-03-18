@@ -9,7 +9,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -40,9 +39,9 @@ import jp.wasabeef.recyclerview.animators.FadeInDownAnimator;
 import xyz.yluo.ruisiapp.ConfigClass;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.TestActivity;
-import xyz.yluo.ruisiapp.api.ArticleListData;
-import xyz.yluo.ruisiapp.api.Forums;
-import xyz.yluo.ruisiapp.api.MainHomeListData;
+import xyz.yluo.ruisiapp.api.MainListArticleData;
+import xyz.yluo.ruisiapp.api.ForumsData;
+import xyz.yluo.ruisiapp.api.MainListArticleDataHome;
 import xyz.yluo.ruisiapp.http.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.login.LoginActivity;
 import xyz.yluo.ruisiapp.login.UserDakaActivity;
@@ -73,7 +72,7 @@ public class MainActivity extends AppCompatActivity
     protected LinearLayout main_show_zhidin;
 
     //论坛列表
-    private List<Forums> forumses= ConfigClass.getBbsForum();
+    private List<ForumsData> forumses= ConfigClass.getBbsForum();
 
     //当前index
     //-1为首页 其余对应配置文件
@@ -88,7 +87,9 @@ public class MainActivity extends AppCompatActivity
     private int HomeCurrentPage = 0;
 
     //一般板块/图片板块数据列表
-    private List<ArticleListData> mydataset = new ArrayList<>();
+    private List<MainListArticleData> mydatasetnormal = new ArrayList<>();
+    private List<MainListArticleDataHome> mydatasethome = new ArrayList<>();
+
     private MainArticleListAdapter mRecyleAdapter;
     private MainHomeListAdapter mainHomeListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -108,10 +109,12 @@ public class MainActivity extends AppCompatActivity
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId){
                     case R.id.radio01:
+                        HomeCurrentPage =0;
                         init();
                         break;
                     case R.id.radio02:
-                        GetHomeListTask_2();
+                        HomeCurrentPage =1;
+                        init();
                         break;
                 }
 
@@ -122,7 +125,6 @@ public class MainActivity extends AppCompatActivity
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                fabMenu.hideMenu(true);
                 init();
 
             }
@@ -275,6 +277,19 @@ public class MainActivity extends AppCompatActivity
 
     //一系列初始化
     private void init(){
+        //刷新
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+            }
+        });
+
+        //item 增加删除 改变动画
+        mRecyclerView.setItemAnimator(new FadeInDownAnimator());
+        mRecyclerView.getItemAnimator().setAddDuration(150);
+        mRecyclerView.getItemAnimator().setRemoveDuration(10);
+        mRecyclerView.getItemAnimator().setChangeDuration(10);
 
         if(CurrentIndex==-1){
             CurrentFid = -1;
@@ -282,7 +297,6 @@ public class MainActivity extends AppCompatActivity
             CurrentType = -1;
             main_radiogroup.setVisibility(View.VISIBLE);
             main_show_zhidin.setVisibility(View.GONE);
-
         }else{
             CurrentFid = forumses.get(CurrentIndex).getFid();
             CurrentName = forumses.get(CurrentIndex).getName();
@@ -293,16 +307,8 @@ public class MainActivity extends AppCompatActivity
 
         toolbar.setTitle(CurrentName);
 
-        //刷新
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        });
-
-        //一般板块
-        if (CurrentType==0){
+        //一般板块 和首页新帖
+        if (CurrentType==0||(CurrentType==-1&&HomeCurrentPage==0)){
             //72灌水区
             //可以设置不同样式
             mLayoutManager = new LinearLayoutManager(this);
@@ -310,43 +316,29 @@ public class MainActivity extends AppCompatActivity
             //mLayoutManager = new GridLayoutManager( getContext(),2);
             //加载更多实现
             mRecyclerView.addOnScrollListener(new RecyclerViewLoadMoreListener((LinearLayoutManager) mLayoutManager, this));
-        }else if(CurrentType ==1){
-            //图片板块
-            //切换到摄影天地板块
-            mLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-
-            //首页
-        }else if(CurrentType==-1){
-            if(HomeCurrentPage==0){
-                mLayoutManager = new LinearLayoutManager(this);
-            }else{
-                mLayoutManager = new GridLayoutManager(this,2);
-            }
-
+        }
+        else if(CurrentType ==1||(CurrentType==-1&&HomeCurrentPage==1)) {
+            //图片板 或者板块列表
+            mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         }
 
-        mydataset.clear();
+        mydatasetnormal.clear();
+        mydatasethome.clear();
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyleAdapter = new MainArticleListAdapter(this,mydatasetnormal);
+        mainHomeListAdapter = new MainHomeListAdapter(mydatasethome,0);
 
         startGetData();
 
-        //item 增加删除 改变动画
-        mRecyclerView.setItemAnimator(new FadeInDownAnimator());
-        mRecyclerView.getItemAnimator().setAddDuration(150);
-        mRecyclerView.getItemAnimator().setRemoveDuration(10);
-        mRecyclerView.getItemAnimator().setChangeDuration(10);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyleAdapter = new MainArticleListAdapter(this,mydataset);
         mRecyclerView.setAdapter(mRecyleAdapter);
-    }
 
+    }
 
     private void startGetData(){
         String url = "";
-
-        if(CurrentType==-1&&HomeCurrentPage==0){
+        if(CurrentType==-1){
             url = "forum.php";
-        }else if(CurrentType==-1&&HomeCurrentPage==1){
-            GetHomeListTask_2();
         }
         else{
             url = "forum.php?mod=forumdisplay&fid=";
@@ -363,9 +355,11 @@ public class MainActivity extends AppCompatActivity
                     //TODO
                     //图片板块
                     new GetImageListTask(new String(responseBody)).execute();
-                }else if(CurrentType==-1){
+                }else if(CurrentType==-1&&HomeCurrentPage==0){
                     System.out.print("\n>>>>in here>>>>>>>>>>>>>>>>>>>>>>>\n");
                     new GetHomeListTask_1(new String(responseBody)).execute();
+                }else if(CurrentType==-1&&HomeCurrentPage==1){
+                    GetHomeListTask_2();
                 }
 
             }
@@ -373,7 +367,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 Toast.makeText(getApplicationContext(),"网络错误！！",Toast.LENGTH_SHORT).show();
-                fabMenu.showMenu(true);
                 refreshLayout.setRefreshing(false);
 
             }
@@ -385,7 +378,7 @@ public class MainActivity extends AppCompatActivity
     //获得一个普通板块文章列表数据 根据html获得数据
     public class GetNormalListTask extends AsyncTask<Void, Void, String> {
 
-        private List<ArticleListData> dataset = new ArrayList<>();
+        private List<MainListArticleData> dataset = new ArrayList<>();
         private String res;
         public GetNormalListTask(String res) {
             this.res = res;
@@ -398,7 +391,7 @@ public class MainActivity extends AppCompatActivity
                 Elements links = list.select("tbody");
 
                 //System.out.print(links);
-                ArticleListData temp;
+                MainListArticleData temp;
                 for (Element src : links) {
                     if(src.getElementsByAttributeValue("class", "by").first()!=null) {
 
@@ -422,7 +415,7 @@ public class MainActivity extends AppCompatActivity
 
                         if(title!=""&&author!=""&&viewcount!=""){
                             //新建对象
-                            temp = new ArticleListData(title,titleUrl,type,author,authorUrl,time,viewcount,replaycount);
+                            temp = new MainListArticleData(title,titleUrl,type,author,authorUrl,time,viewcount,replaycount);
                             dataset.add(temp);
                         }
 
@@ -435,9 +428,8 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(final String res) {
 
-            mydataset.clear();
-            mydataset.addAll(dataset);
-            fabMenu.showMenu(true);
+            mydatasetnormal.clear();
+            mydatasetnormal.addAll(dataset);
             refreshLayout.setRefreshing(false);
             mRecyleAdapter.notifyItemRangeInserted(0, dataset.size());
         }
@@ -448,7 +440,7 @@ public class MainActivity extends AppCompatActivity
     public class GetImageListTask extends AsyncTask<Void, Void, String> {
 
         private String response;
-        private List<ArticleListData> imgdatas = new ArrayList<>();
+        private List<MainListArticleData> imgdatas = new ArrayList<>();
 
         public GetImageListTask(String res) {
             this.response = res;
@@ -471,7 +463,7 @@ public class MainActivity extends AppCompatActivity
                     String authorurl = tmp.select("a[href^=home.php]").attr("href");
                     String like = tmp.select("div.auth").select("a[href^=forum.php]").text();
                     //String title, String titleUrl, String image, String author, String authorUrl, String viewCount
-                    ArticleListData tem = new ArticleListData(title,url,img,author,authorurl,like);
+                    MainListArticleData tem = new MainListArticleData(title,url,img,author,authorurl,like);
                     tem.setImageCard(true);
                     imgdatas.add(tem);
                 }
@@ -481,9 +473,8 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(final String res) {
-            mydataset.clear();
-            mydataset.addAll(imgdatas);
-            fabMenu.showMenu(true);
+            mydatasetnormal.clear();
+            mydatasetnormal.addAll(imgdatas);
             refreshLayout.setRefreshing(false);
             mRecyleAdapter.notifyItemRangeInserted(0, imgdatas.size());
         }
@@ -494,7 +485,7 @@ public class MainActivity extends AppCompatActivity
     public class GetHomeListTask_1 extends AsyncTask<Void, Void, String>{
 
         private String response;
-        private List<MainHomeListData> simpledatas = new ArrayList<>();
+        private List<MainListArticleDataHome> simpledatas = new ArrayList<>();
 
         public GetHomeListTask_1(String res) {
             this.response = res;
@@ -507,7 +498,7 @@ public class MainActivity extends AppCompatActivity
                 Elements links = list.select("li");
                 for(Element tmp:links){
 
-                    MainHomeListData tempdata;
+                    MainListArticleDataHome tempdata;
                     String titleurl = tmp.select("a[href^=forum.php]").attr("href").trim();
                     String title = tmp.select("a[href^=forum.php]").text();
                     //title="楼主：ansonzhang0123 回复数：0 总浏览数：0"
@@ -530,13 +521,15 @@ public class MainActivity extends AppCompatActivity
                         }
                         if(i==simpledatas.size()){
                             //title,titleurl,User,ViewCount,ReplyCount
-                            tempdata = new MainHomeListData(title,titleurl,User,ViewCount,ReplyCount,"100");
+                            tempdata = new MainListArticleDataHome(title,titleurl,User,ViewCount,ReplyCount,"100");
                             simpledatas.add(tempdata);
                         }
                     }
                     if(simpledatas.size()==0){
-                        tempdata = new MainHomeListData(title,titleurl,User,ViewCount,ReplyCount,"200");
+                        tempdata = new MainListArticleDataHome(title,titleurl,User,ViewCount,ReplyCount,"200");
                         simpledatas.add(tempdata);
+
+
                     }
                 }
 
@@ -546,26 +539,22 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(final String res) {
-            List<MainHomeListData> mainHomeListDataList = new ArrayList<>();
-            fabMenu.showMenu(true);
+            mydatasethome.clear();
+            mydatasethome.addAll(simpledatas);
             refreshLayout.setRefreshing(false);
-            mainHomeListDataList.addAll(simpledatas);
-            mLayoutManager = new LinearLayoutManager(getApplicationContext());
-            mRecyclerView.setLayoutManager(mLayoutManager);
-            mainHomeListAdapter = new MainHomeListAdapter(mainHomeListDataList,0);
+            mainHomeListAdapter = new MainHomeListAdapter(mydatasethome,0);
             mRecyclerView.setAdapter(mainHomeListAdapter);
-            mRecyleAdapter.notifyItemRangeInserted(0, simpledatas.size());
+            mainHomeListAdapter.notifyItemRangeInserted(0,mydatasethome.size());
         }
     }
 
-    //获取首页板块数据 板块列表
+        //获取首页板块数据 板块列表
     private void GetHomeListTask_2(){
-        List<MainHomeListData> mainHomeListDataList = new ArrayList<>();
-        fabMenu.showMenu(true);
-        mLayoutManager = new GridLayoutManager(getApplicationContext(),2);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mainHomeListAdapter = new MainHomeListAdapter(mainHomeListDataList,1);
+
+        mainHomeListAdapter = new MainHomeListAdapter(mydatasethome,1);
         mRecyclerView.setAdapter(mainHomeListAdapter);
+
+        refreshLayout.setRefreshing(false);
     }
 
 }

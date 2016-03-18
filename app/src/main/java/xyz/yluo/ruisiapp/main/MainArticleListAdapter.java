@@ -18,7 +18,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.api.ArticleListData;
+import xyz.yluo.ruisiapp.api.MainListArticleData;
 import xyz.yluo.ruisiapp.api.GetUserImage;
 import xyz.yluo.ruisiapp.article.ArticleNormalActivity;
 import xyz.yluo.ruisiapp.user.UserDetailActivity;
@@ -33,11 +33,11 @@ public class MainArticleListAdapter extends RecyclerView.Adapter<MainArticleList
     private static final int TYPE_LOAD_MORE = 1;
     private static final int TYPE_IMAGE_CARD = 2;
     //数据
-    private List<ArticleListData> DataSet;
+    private List<MainListArticleData> DataSet;
 
     //上下文
     private Activity activity;
-    public MainArticleListAdapter(Activity activity, List<ArticleListData> data) {
+    public MainArticleListAdapter(Activity activity, List<MainListArticleData> data) {
         DataSet = data;
         this.activity =activity;
     }
@@ -163,7 +163,7 @@ public class MainArticleListAdapter extends RecyclerView.Adapter<MainArticleList
             //传递一些参数过去 | 分割到时候分割   url|标题|回复|类型|author
 
             List<String> messagelist = new ArrayList<>();
-            ArticleListData single_data =  DataSet.get(getPosition());
+            MainListArticleData single_data =  DataSet.get(getPosition());
             messagelist.add(single_data.getTitleUrl());
             messagelist.add(single_data.getTitle());
             messagelist.add(single_data.getReplayCount());

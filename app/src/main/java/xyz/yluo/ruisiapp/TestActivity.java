@@ -25,7 +25,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
-import xyz.yluo.ruisiapp.api.ArticleListData;
+import xyz.yluo.ruisiapp.api.MainListArticleData;
 import xyz.yluo.ruisiapp.api.GetFormHash;
 import xyz.yluo.ruisiapp.api.getMd5Pass;
 import xyz.yluo.ruisiapp.http.AsyncHttpCilentUtil;
@@ -269,7 +269,7 @@ public class TestActivity extends AppCompatActivity {
 
         private final String Baseurl = "http://rs.xidian.edu.cn/forum.php?mod=forumdisplay&fid=";
         private String fullurl = "";
-        private List<ArticleListData> dataset;
+        private List<MainListArticleData> dataset;
 
         public GetListTask(String fid, int page) {
 
@@ -298,7 +298,7 @@ public class TestActivity extends AppCompatActivity {
 
                 //System.out.print(links);
 
-                ArticleListData temp;
+                MainListArticleData temp;
                 for (Element src : links) {
                     if (src.getElementsByAttributeValue("class", "by").first() != null) {
 
@@ -325,7 +325,7 @@ public class TestActivity extends AppCompatActivity {
 
                         if (title != "" && author != "" && viewcount != "") {
                             //新建对象
-                            temp = new ArticleListData(title, titleUrl, type, author, authorUrl, time, viewcount, replaycount);
+                            temp = new MainListArticleData(title, titleUrl, type, author, authorUrl, time, viewcount, replaycount);
                             dataset.add(temp);
                             buffer.append(type).append(title).append(titleUrl).append(author).append(authorUrl).append(time).append(viewcount).append("\n");
                         }
@@ -389,7 +389,7 @@ public class TestActivity extends AppCompatActivity {
 
         private final String Baseurl = "http://rs.xidian.edu.cn/forum.php?mod=forumdisplay&fid=";
         private String fullurl = "";
-        private List<ArticleListData> dataset;
+        private List<MainListArticleData> dataset;
 
         public GetSingle(String url) {
 
