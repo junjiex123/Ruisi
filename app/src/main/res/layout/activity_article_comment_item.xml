@@ -132,13 +132,13 @@
             </LinearLayout>
 
         </LinearLayout>
-        <xyz.yluo.ruisiapp.article.MyWebView
+        <xyz.yluo.ruisiapp.utils.MyWebView
             android:layout_marginTop="16dp"
             android:layout_marginBottom="12dp"
             android:id="@+id/replay_webView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        </xyz.yluo.ruisiapp.article.MyWebView>
+        </xyz.yluo.ruisiapp.utils.MyWebView>
 
         <TextView
             android:visibility="gone"

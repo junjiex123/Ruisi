@@ -27,11 +27,12 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
-import xyz.yluo.ruisiapp.api.ArticleListData;
-import xyz.yluo.ruisiapp.api.GetFormHash;
-import xyz.yluo.ruisiapp.api.getMd5Pass;
-import xyz.yluo.ruisiapp.http.AsyncHttpCilentUtil;
-import xyz.yluo.ruisiapp.http.MyHttpConnection;
+import xyz.yluo.ruisiapp.data.ArticleListData;
+import xyz.yluo.ruisiapp.utils.GetFormHash;
+import xyz.yluo.ruisiapp.utils.getMd5Pass;
+import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
+import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.utils.MyHttpConnection;
 
 /**
  * Created by free2 on 16-3-10.

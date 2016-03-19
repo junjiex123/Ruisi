@@ -11,9 +11,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name="xyz.yluo.ruisiapp.ConfigClass">
+        android:name=".utils.ConfigClass">
         <activity
-            android:name=".LaunchActivity"
+            android:name=".activity.LaunchActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -23,48 +23,48 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".main.HomeActivity"
+        <activity android:name=".activity.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
 
-        <activity android:name=".main.ArticleListActivity"
+        <activity android:name=".activity.ArticleListActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
 
-        <activity android:name=".setting.AboutActivity"
+        <activity android:name=".activity.AboutActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
 
-        <activity android:name=".article.ArticleNormalActivity"
+        <activity android:name=".activity.ArticleNormalActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize">
 
         </activity>
 
-        <activity android:name=".article.NewArticleActivity"
+        <activity android:name=".activity.NewArticleActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
 
-        <activity android:name=".setting.SettingActivity">
+        <activity android:name=".activity.SettingActivity">
 
         </activity>
 
-        <activity android:name=".setting.UserDetailActivity"
+        <activity android:name=".activity.UserDetailActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
         <activity android:name=".TestActivity">
 
         </activity>
-        <activity android:name=".login.LoginActivity">
+        <activity android:name=".activity.LoginActivity">
 
         </activity>
 
-        <activity android:name=".login.UserDakaActivity"
+        <activity android:name=".activity.UserDakaActivity"
             android:label="打卡">
 
         </activity>

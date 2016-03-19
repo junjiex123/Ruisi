@@ -117,13 +117,13 @@
                 </LinearLayout>
 
             </LinearLayout>
-            <xyz.yluo.ruisiapp.article.MyWebView
+            <xyz.yluo.ruisiapp.utils.MyWebView
                 android:layout_marginTop="12dp"
                 android:layout_marginLeft="12dp"
                 android:id="@+id/content_webView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            </xyz.yluo.ruisiapp.article.MyWebView>
+            </xyz.yluo.ruisiapp.utils.MyWebView>
 
             <LinearLayout
                 android:layout_marginTop="@dimen/dimen_8"
