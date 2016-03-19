@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -34,6 +37,7 @@ import jp.wasabeef.recyclerview.animators.FadeInDownAnimator;
 import xyz.yluo.ruisiapp.ConfigClass;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.api.ArticleListData;
+import xyz.yluo.ruisiapp.article.HidingScrollListener;
 import xyz.yluo.ruisiapp.article.NewArticleActivity;
 import xyz.yluo.ruisiapp.http.AsyncHttpCilentUtil;
 
@@ -82,12 +86,27 @@ public class ArticleListActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_article_list);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
         //初始化
         init(CurrentFid, CurrentTitle);
+
+        mRecyclerView.addOnScrollListener(new HidingScrollListener() {
+            @Override
+            public void onHide() {
+                CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) fabMenu.getLayoutParams();
+                int bottomMargin = lp.bottomMargin;
+                int distanceToScroll = fabMenu.getHeight() + bottomMargin;
+                fabMenu.animate().translationY(distanceToScroll).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(500);
+            }
+
+            @Override
+            public void onShow() {
+                fabMenu.animate().translationY(0).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(500);
+            }
+        });
 
 
         //TODO 根据当前板块加载内容

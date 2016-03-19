@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.about;
+package xyz.yluo.ruisiapp.setting;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;

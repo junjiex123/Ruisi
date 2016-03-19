@@ -28,13 +28,14 @@
 
         </activity>
 
-        <activity android:name=".about.AboutActivity"
+        <activity android:name=".setting.AboutActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
 
         <activity android:name=".article.ArticleNormalActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize">
 
         </activity>
 
@@ -47,7 +48,7 @@
 
         </activity>
 
-        <activity android:name=".user.UserDetailActivity"
+        <activity android:name=".setting.UserDetailActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>

@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.user;
+package xyz.yluo.ruisiapp.setting;
 
 import android.app.Activity;
 import android.content.Context;

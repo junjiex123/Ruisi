@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,6 +18,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -58,6 +61,8 @@ public class ArticleNormalActivity extends AppCompatActivity
     protected FloatingActionButton fab;
     @Bind(R.id.toolbar)
     protected Toolbar toolbar;
+    @Bind(R.id.replay_bar)
+    protected LinearLayout replay_bar;
 
     //当前评论第几页
     private int CurrentPage = 1;
@@ -94,9 +99,10 @@ public class ArticleNormalActivity extends AppCompatActivity
         ActionBar actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(articleTitle);
         }
 
-        actionBar.setTitle(articleTitle);
+
 
         //mLayoutManager = new GridLayoutManager(getContext(),2);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -109,6 +115,22 @@ public class ArticleNormalActivity extends AppCompatActivity
         mRecyclerView.getItemAnimator().setAddDuration(100);
         mRecyclerView.getItemAnimator().setRemoveDuration(10);
         mRecyclerView.getItemAnimator().setChangeDuration(10);
+
+
+        mRecyclerView.addOnScrollListener(new HidingScrollListener() {
+            @Override
+            public void onHide() {
+                CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) replay_bar.getLayoutParams();
+                int bottomMargin = lp.bottomMargin;
+                int distanceToScroll = replay_bar.getHeight() + bottomMargin;
+                replay_bar.animate().translationY(distanceToScroll).setInterpolator(new AccelerateInterpolator(5));
+            }
+
+            @Override
+            public void onShow() {
+                replay_bar.animate().translationY(0).setInterpolator(new AccelerateInterpolator(5));
+            }
+        });
 
         refreshLayout.post(new Runnable() {
             @Override
@@ -151,6 +173,7 @@ public class ArticleNormalActivity extends AppCompatActivity
             }
         });
     }
+
 
     //登陆页面返回结果
     @Override
@@ -242,7 +265,7 @@ public class ArticleNormalActivity extends AppCompatActivity
 
 
     //文章一页的html 根据页数 url
-    private void getArticleData(String url,final int page){
+    private void getArticleData(String url, final int page) {
         //"forum.php?mod=viewthread&tid=838333";
 
         AsyncHttpCilentUtil.get(this, url + "&page=" + page, null, new AsyncHttpResponseHandler() {
@@ -263,6 +286,7 @@ public class ArticleNormalActivity extends AppCompatActivity
         });
 
     }
+
 
     public class DealWithArticleData extends AsyncTask<Void,Void,String>{
 

@@ -22,7 +22,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.api.ArticleListData;
 import xyz.yluo.ruisiapp.api.GetUserImage;
 import xyz.yluo.ruisiapp.article.ArticleNormalActivity;
-import xyz.yluo.ruisiapp.user.UserDetailActivity;
+import xyz.yluo.ruisiapp.setting.UserDetailActivity;
 
 /**
  * Created by free2 on 16-3-5.

@@ -19,7 +19,7 @@ import butterknife.OnClick;
 import xyz.yluo.ruisiapp.ConfigClass;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.api.SingleArticleData;
-import xyz.yluo.ruisiapp.user.UserDetailActivity;
+import xyz.yluo.ruisiapp.setting.UserDetailActivity;
 
 /**
  * Created by free2 on 16-3-7.
