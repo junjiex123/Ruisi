@@ -19,6 +19,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -60,12 +62,16 @@ public class ArticleNormalActivity extends AppCompatActivity
     protected RecyclerView mRecyclerView;
     @Bind(R.id.topic_refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
-    @Bind(R.id.fab)
-    protected FloatingActionButton fab;
     @Bind(R.id.toolbar)
     protected Toolbar toolbar;
     @Bind(R.id.replay_bar)
     protected LinearLayout replay_bar;
+    @Bind(R.id.input_aera)
+    protected EditText input_aera;
+    @Bind(R.id.action_send)
+    protected ImageButton action_send;
+    @Bind(R.id.action_smiley)
+    protected ImageButton action_smiley;
 
     //当前评论第几页
     private int CurrentPage = 1;
@@ -135,27 +141,10 @@ public class ArticleNormalActivity extends AppCompatActivity
             }
         });
 
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-                getArticleData(articleUrl, 1);
-            }
-        });
-        //下拉刷新
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                fab.hide();
-                //数据填充
-                getArticleData(articleUrl, CurrentPage);
-            }
-        });
-
-        //按钮监听
-        fab.setOnClickListener(new View.OnClickListener() {
+        action_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //按钮监听
                 if(ConfigClass.CONFIG_ISLOGIN){
                     //TODO  发帖逻辑
                     Reply_Dialog_Fragment newFragment = new Reply_Dialog_Fragment();
@@ -172,9 +161,25 @@ public class ArticleNormalActivity extends AppCompatActivity
                     });
                     snackbar.show();
                 }
-
             }
         });
+
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+                getArticleData(articleUrl, 1);
+            }
+        });
+        //下拉刷新
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //数据填充
+                getArticleData(articleUrl, CurrentPage);
+            }
+        });
+
     }
 
 
@@ -469,9 +474,8 @@ public class ArticleNormalActivity extends AppCompatActivity
             //mRecyleAdapter.notifyDataSetChanged();
             //部分
             mydatalist.addAll(templist);
-            mRecyleAdapter.notifyItemRangeInserted(staart,addnum);
+            mRecyleAdapter.notifyItemRangeInserted(staart, addnum);
             refreshLayout.setRefreshing(false);
-            fab.show();
         }
 
     }
