@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
@@ -17,6 +19,7 @@ import xyz.yluo.ruisiapp.main.HomeActivity;
 public class LaunchActivity extends AppCompatActivity implements Runnable{
 
     private SharedPreferences perPreferences;
+    private static final Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,17 +33,18 @@ public class LaunchActivity extends AppCompatActivity implements Runnable{
         //editor = perPreferences.edit();
         //isFirstIn = perPreferences.getBoolean("isFirstIn", true);
         //isAutoLogin = perPreferences.getBoolean("ISAUTO", false);
+        postDelayed(this,1000);
     }
 
     @Override
     public void run() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         startActivity(new Intent(getApplicationContext(), HomeActivity.class));
         finish();
+    }
+
+
+    public static boolean postDelayed(Runnable r, long delayMillis) {
+        return handler.postDelayed(r, delayMillis);
     }
 }

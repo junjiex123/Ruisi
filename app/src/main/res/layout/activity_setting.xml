@@ -20,7 +20,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                android:text="notice"
+                android:text="一般设置"
                 android:textSize="14sp" />
 
             <RelativeLayout
@@ -41,7 +41,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="receive_notification"
+                        android:text="是否显示置顶帖"
                         android:textColor="?android:attr/textColorPrimary"
                         android:textSize="16sp" />
 
@@ -49,7 +49,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="receive_notification_summary"
+                        android:text="不显示"
                         android:textColor="?android:attr/textColorSecondary"
                         android:textSize="14sp" />
 
@@ -69,15 +69,6 @@
 
             <View style="@style/DeepLine" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:text="notice"
-                android:textSize="14sp" />
-
             <RelativeLayout
                 android:id="@+id/setting_btn_notification1"
                 android:layout_width="match_parent"
@@ -94,7 +85,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="receive_notification"
+                        android:text="是否接受消息提醒"
                         android:textColor="?android:attr/textColorPrimary"
                         android:textSize="16sp" />
 
@@ -102,7 +93,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="receive_notification_summary"
+                        android:text="目前还没做"
                         android:textColor="?android:attr/textColorSecondary"
                         android:textSize="14sp" />
 
@@ -128,7 +119,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                android:text="notice"
+                android:text="主题设置"
                 android:textSize="14sp" />
 
             <RelativeLayout
@@ -147,7 +138,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="receive_notification"
+                        android:text="切换主题"
                         android:textColor="?android:attr/textColorPrimary"
                         android:textSize="16sp" />
 
@@ -155,7 +146,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="receive_notification_summary"
+                        android:text="偷懒不做"
                         android:textColor="?android:attr/textColorSecondary"
                         android:textSize="14sp" />
 
@@ -170,6 +161,39 @@
                     android:layout_centerVertical="true"
                     android:background="@null"
                     android:clickable="false" />
+
+            </RelativeLayout>
+
+            <View style="@style/DeepLine" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:clickable="true"
+                android:background="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="字体大小"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="我是来打酱油的"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
 
             </RelativeLayout>
 

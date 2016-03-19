@@ -29,6 +29,8 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.TestActivity;
 import xyz.yluo.ruisiapp.login.LoginActivity;
 import xyz.yluo.ruisiapp.login.UserDakaActivity;
+import xyz.yluo.ruisiapp.setting.AboutActivity;
+import xyz.yluo.ruisiapp.setting.SettingActivity;
 
 /**
  * Created by free2 on 16-3-17.
@@ -169,8 +171,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if(id == R.id.nav_test){
             startActivity(new Intent(this, TestActivity.class));
             // Handle the camera action
-        }else if(id==R.id.nav_about1){
-            startActivity(new Intent(this,HomeActivity.class));
+        }else if(id==R.id.nav_about){
+            startActivity(new Intent(this,AboutActivity.class));
+        }else if(id==R.id.nav_setting){
+            startActivity(new Intent(getApplicationContext(), SettingActivity.class));
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
