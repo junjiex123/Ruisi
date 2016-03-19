@@ -3,9 +3,9 @@ package xyz.yluo.ruisiapp.api;
 /**
  * Created by free2 on 16-3-7.
  *
- *  各个板块文章列表 当个数据
+ *  各个板块列表数据 当个数据
  */
-public class MainListArticleData {
+public class ArticleListData {
 
     //主页面文章列表item
 
@@ -110,7 +110,7 @@ public class MainListArticleData {
     }
 
     //一般文章构造器
-    public MainListArticleData(String title, String titleUrl, String type, String author, String authorUrl, String postTime, String viewCount, String replayCount) {
+    public ArticleListData(String title, String titleUrl, String type, String author, String authorUrl, String postTime, String viewCount, String replayCount) {
         this.title = title;
         this.titleUrl = titleUrl;
         this.type = type;
@@ -121,7 +121,7 @@ public class MainListArticleData {
         this.replayCount = replayCount;
     }
     //图片文章构造
-    public MainListArticleData(String title, String titleUrl, String image, String author, String authorUrl, String viewCount) {
+    public ArticleListData(String title, String titleUrl, String image, String author, String authorUrl, String viewCount) {
         this.title = title;
         this.titleUrl = titleUrl;
         this.image = image;

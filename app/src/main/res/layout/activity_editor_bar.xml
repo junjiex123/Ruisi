@@ -1,81 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:background="@color/colorPrimary"
+    android:padding="@dimen/dimen_4"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+        <CheckBox
+            android:layout_margin="@dimen/dimen_8"
+            android:button="@null"
+            android:id="@+id/action_bold"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/selector_edit_bold_background"
+            android:checked="false" />
+        <CheckBox
+            android:button="@null"
+            android:layout_margin="@dimen/dimen_8"
+            android:id="@+id/action_italic"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/selector_edit_italic_background" />
 
-    <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageButton
-                android:id="@+id/action_bold"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_edit_bold_24dp" />
-            <ImageButton
-                android:id="@+id/action_italic"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_edit_italic_24dp" />
+        <CheckBox
+            android:layout_margin="@dimen/dimen_8"
+            android:button="@null"
+            android:id="@+id/action_color_text"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/selector_edit_color_background" />
 
-            <ImageButton
-                android:id="@+id/action_color_text"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_edit_color_text_24dp"
-                />
+        <CheckBox
+            android:clickable="true"
+            android:layout_margin="@dimen/dimen_8"
+            android:button="@null"
+            android:id="@+id/action_list_c"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/ic_edit_list_bulleted_24dp" />
 
-            <ImageButton
-                android:id="@+id/action_list_c"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_edit_list_bulleted_24dp" />
+        <CheckBox
+            android:clickable="true"
+            android:layout_margin="@dimen/dimen_8"
+            android:button="@null"
+            android:id="@+id/action_list_n"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/ic_edit_list_numbered_24dp" />
+        <CheckBox
+            android:clickable="true"
+            android:layout_margin="@dimen/dimen_8"
+            android:button="@null"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/ic_edit_emoticon_24dp" />
 
-            <ImageButton
-                android:id="@+id/action_list_n"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_edit_list_numbered_24dp" />
-            <ImageButton
-                android:id="@+id/action_biaoqin"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_edit_emoticon_24dp" />
+        <CheckBox
+            android:clickable="true"
+            android:layout_margin="@dimen/dimen_8"
+            android:button="@null"
+            android:id="@+id/action_image"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/ic_edit_image_24dp" />
 
-            <ImageButton
-                android:id="@+id/action_image"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_edit_image_24dp"
-                />
+        <CheckBox
+            android:clickable="true"
+            android:layout_margin="@dimen/dimen_8"
+            android:button="@null"
+            android:id="@+id/action_link"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/ic_edit_link_24dp" />
+    </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/action_link"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_edit_link_24dp" />
-        </LinearLayout>
-
-
-
-</LinearLayout>
 
 

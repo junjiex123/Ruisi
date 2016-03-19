@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/activity_editor_bar" />
+    <include layout="@layout/activity_editor_bar"/>
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scrollView"
@@ -20,6 +20,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+            <EditText
+                android:id="@+id/edit_input"
+                android:lines="5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <jp.wasabeef.richeditor.RichEditor
                 android:id="@+id/editor"

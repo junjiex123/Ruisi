@@ -2,9 +2,9 @@ package xyz.yluo.ruisiapp.api;
 
 /**
  * Created by free2 on 16-3-17.
- * 首页数据类型 板块列表和最新贴
+ * 首页最新贴最热帖数据
  */
-public class MainListArticleDataHome {
+public class ArticleListDataHome {
     private String name; //or title
     private String image;//imgurl
     private String url;//or titleurl
@@ -15,7 +15,7 @@ public class MainListArticleDataHome {
 
 
     //板块列表
-    public MainListArticleDataHome(String name, String image, String url, String todaypost) {
+    public ArticleListDataHome(String name, String image, String url, String todaypost) {
         this.name = name;
         this.image = image;
         this.url = url;
@@ -73,7 +73,7 @@ public class MainListArticleDataHome {
 
     //热帖新帖
     //title titleurl User ReplyCount ViewCount
-    public MainListArticleDataHome(String name, String url, String user, String replaycount, String viewcount) {
+    public ArticleListDataHome(String name, String url, String user, String replaycount, String viewcount) {
         this.name = name;
         this.url = url;
         this.user = user;

@@ -4,12 +4,12 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-public class RecyclerViewLoadMoreListener extends RecyclerView.OnScrollListener {
+public class LoadMoreListener extends RecyclerView.OnScrollListener {
 
     private LinearLayoutManager linearLayoutManager;
     private OnLoadMoreListener onLoadMoreListener;
 
-    public RecyclerViewLoadMoreListener(@NonNull LinearLayoutManager linearLayoutManager, @NonNull OnLoadMoreListener onLoadMoreListener) {
+    public LoadMoreListener(@NonNull LinearLayoutManager linearLayoutManager, @NonNull OnLoadMoreListener onLoadMoreListener) {
         super();
         this.linearLayoutManager = linearLayoutManager;
         this.onLoadMoreListener = onLoadMoreListener;
