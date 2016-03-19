@@ -1,6 +1,8 @@
 package xyz.yluo.ruisiapp.fragment;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -60,7 +62,13 @@ public class HomeFragement_1 extends Fragment{
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //TODO
+                Fragment currentFragment = getActivity().getFragmentManager().findFragmentById(R.id.fragment_container);
+                if (currentFragment instanceof HomeFragement_1) {
+                    FragmentTransaction fragTransaction =   (getActivity()).getFragmentManager().beginTransaction();
+                    fragTransaction.detach(currentFragment);
+                    fragTransaction.attach(currentFragment);
+                    fragTransaction.commit();
+                }
             }
         });
 
@@ -88,6 +96,9 @@ public class HomeFragement_1 extends Fragment{
 
         return view;
     }
+
+
+
     //获取首页板块数据 板块列表
     public class GetForumList extends AsyncTask<Void, Void, String> {
         private String response;

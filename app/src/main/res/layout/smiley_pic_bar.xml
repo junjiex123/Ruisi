@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/smiley_pick_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bluegrey300">
+
+    <HorizontalScrollView
+        android:padding="@dimen/dimen_4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb001" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb002" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb003" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb004" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb005" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb006" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb007" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb008" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb009" />
+
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb010" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb011" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb012" />
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <HorizontalScrollView
+        android:padding="@dimen/dimen_4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb013" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb014" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb015" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb016" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb017" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb018" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb019" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb020" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb021" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb022" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb023" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb024" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <HorizontalScrollView
+        android:padding="@dimen/dimen_4"
+        android:scrollbars="none"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb025" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb026" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb027" />
+
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb028" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb029" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb030" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb031" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb032" />
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:src="@drawable/tb033" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+</LinearLayout>

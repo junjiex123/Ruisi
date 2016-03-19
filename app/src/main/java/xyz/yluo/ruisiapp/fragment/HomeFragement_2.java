@@ -1,6 +1,7 @@
 package xyz.yluo.ruisiapp.fragment;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -58,7 +59,13 @@ public class HomeFragement_2 extends Fragment{
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //TODO
+                Fragment currentFragment = getActivity().getFragmentManager().findFragmentById(R.id.fragment_container);
+                if (currentFragment instanceof HomeFragement_1) {
+                    FragmentTransaction fragTransaction =   (getActivity()).getFragmentManager().beginTransaction();
+                    fragTransaction.detach(currentFragment);
+                    fragTransaction.attach(currentFragment);
+                    fragTransaction.commit();
+                }
             }
         });
 

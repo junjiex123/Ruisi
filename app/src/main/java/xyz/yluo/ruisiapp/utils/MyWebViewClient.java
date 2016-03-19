@@ -5,7 +5,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import xyz.yluo.ruisiapp.activity.ArticleNormalActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
+import xyz.yluo.ruisiapp.data.ArticleListData;
 
 
 public class MyWebViewClient extends WebViewClient {
@@ -34,10 +39,21 @@ public class MyWebViewClient extends WebViewClient {
     public boolean shouldOverrideUrlLoading(WebView webView, String url) {
         //TODO 处理不同的链接点击事件
 
-        if (url.startsWith("https://cnodejs.org/user/")) { // 用户主页协议
-            UserDetailActivity.open(context, url.substring(25));
-        } else if (url.startsWith("https://cnodejs.org/topic/")) { // 话题主页协议
+
+        //http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=840272&extra=
+        if (url.startsWith("http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=")) { // 帖子
+            //TODO 传入参数太多
+            List<String> messagelist = new ArrayList<>();
+            messagelist.add(url);
+            messagelist.add("title");
+            messagelist.add("");
+            messagelist.add(" ");
+            messagelist.add("");
+            ArticleNormalActivity.open(context,messagelist);
+
+        } else if (url.startsWith("http://rs.xidian.edu.cn/home.php?mod=space&uid=")) { // 用户
             //ArticleNormalActivity.open(context, url.substring(26));
+            UserDetailActivity.open(context, "todo");
         } else { // 其他连接
             //todo
             Toast.makeText(context,"链接被电击",Toast.LENGTH_SHORT).show();

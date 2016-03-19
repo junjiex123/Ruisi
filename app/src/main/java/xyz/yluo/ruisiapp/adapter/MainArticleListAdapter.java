@@ -235,6 +235,22 @@ public class MainArticleListAdapter extends RecyclerView.Adapter<MainArticleList
             }
 
         }
+
+        @OnClick(R.id.card_list_item)
+        protected void card_list_item() {
+            //传递一些参数过去 | 分割到时候分割   url|标题|回复|类型|author
+
+            List<String> messagelist = new ArrayList<>();
+            ArticleListData single_data =  DataSet.get(getPosition());
+            messagelist.add(single_data.getTitleUrl());
+            messagelist.add(single_data.getTitle());
+            messagelist.add(single_data.getReplayCount());
+            messagelist.add(" ");
+            messagelist.add(single_data.getAuthor());
+
+            ArticleNormalActivity.open(activity, messagelist);
+            //System.out.print("$$$$$$$$$>>"+DataSet.get(getPosition()).getTitleUrl()+"|"+article_title.getText()+"|"+reply_count.getText()+"|"+article_type.getText()+"|"+author_name.getText()+"\n");
+        }
     }
 
 }

@@ -1,38 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
+    android:elevation="8dp"
     android:layout_gravity="bottom"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bluegrey500"
-    android:elevation="8dp"
-    android:padding="@dimen/dimen_4"
-    android:orientation="horizontal"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
 
-    <ImageButton
-        android:layout_gravity="bottom|start"
-        android:id="@+id/action_smiley"
-        android:layout_width="44dp"
-        android:layout_height="match_parent"
-        android:background="?android:attr/selectableItemBackground"
-        android:contentDescription="@null"
-        android:src="@drawable/ic_edit_emoticon_24dp" />
-    <EditText
-        android:id="@+id/input_aera"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@drawable/reply_edittext_background"
-        android:maxLines="3"/>
+        android:background="@color/bluegrey500"
+        android:padding="@dimen/dimen_4"
+        android:orientation="horizontal"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+        <ImageButton
+            android:layout_gravity="bottom|start"
+            android:id="@+id/action_smiley"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_edit_emoticon_24dp" />
+        <EditText
+            android:id="@+id/input_aera"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/reply_edittext_background"
+            android:maxLines="3"/>
 
-    <ImageButton
-        android:layout_gravity="bottom|end"
-        android:id="@+id/action_send"
-        android:layout_width="44dp"
-        android:layout_height="match_parent"
-        android:background="?android:attr/selectableItemBackground"
-        android:contentDescription="@null"
-        android:src="@drawable/ic_menu_send" />
+        <ImageButton
+            android:layout_gravity="bottom|end"
+            android:id="@+id/action_send"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_menu_send" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/smiley_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include layout="@layout/smiley_pic_bar" />
+    </LinearLayout>
 
 </LinearLayout>
+
+

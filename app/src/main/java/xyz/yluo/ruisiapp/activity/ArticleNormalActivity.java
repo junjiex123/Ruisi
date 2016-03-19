@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -72,6 +73,8 @@ public class ArticleNormalActivity extends AppCompatActivity
     protected ImageButton action_send;
     @Bind(R.id.action_smiley)
     protected ImageButton action_smiley;
+    @Bind(R.id.smiley_container)
+    protected LinearLayout smiley_container;
 
     //当前评论第几页
     private int CurrentPage = 1;
@@ -145,22 +148,39 @@ public class ArticleNormalActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 //按钮监听
-                if(ConfigClass.CONFIG_ISLOGIN){
+                if (ConfigClass.CONFIG_ISLOGIN) {
                     //TODO  发帖逻辑
-                    Reply_Dialog_Fragment newFragment = new Reply_Dialog_Fragment();
-                    newFragment.show(getFragmentManager(),"replydialog");
-                }else {
+                    //Reply_Dialog_Fragment newFragment = new Reply_Dialog_Fragment();
+                    //newFragment.show(getFragmentManager(), "replydialog");
+
+                    post_reply(input_aera.getText().toString());
+
+                } else {
                     final Snackbar snackbar = Snackbar.make(view, "你好像还没有登陆!!!", Snackbar.LENGTH_LONG);
                     snackbar.setAction("点我登陆", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                            startActivityForResult(i,1);
+                            startActivityForResult(i, 1);
                             //snackbar.dismiss();
                         }
                     });
                     snackbar.show();
                 }
+            }
+        });
+
+        action_smiley.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                smiley_container.setVisibility(View.VISIBLE);
+            }
+        });
+
+        input_aera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                smiley_container.setVisibility(View.GONE);
             }
         });
 
@@ -219,55 +239,6 @@ public class ArticleNormalActivity extends AppCompatActivity
     //发帖框回掉函数
     @Override
     public void onDialogSendClick(DialogFragment dialog, String text) {
-        int len =0;
-       // Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
-        try {
-            len = text.getBytes("UTF-8").length;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        if(len<13){
-            Toast.makeText(getApplicationContext(),"字数不够",Toast.LENGTH_SHORT).show();
-            Reply_Dialog_Fragment newFragment = new Reply_Dialog_Fragment();
-            newFragment.show(getFragmentManager(),"replydialog");
-        }else {
-            //System.out.print("\n当前文章地址"+articleUrl+"\n");
-            //尝试回复
-            //articleUrl
-            //String str = "forum.php?mod=viewthread&tid=837479&extra=page%3D1";
-            Pattern pattern = Pattern.compile("[0-9]{3,}");
-            Matcher matcher = pattern.matcher(articleUrl);
-            String tid ="";
-            while (matcher.find()) {
-                tid = articleUrl.substring(matcher.start(),matcher.end());
-                //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
-            }
-            String url ="forum.php?mod=post&infloat=yes&action=reply&fid=72&extra=&tid="+tid+"&replysubmit=yes&inajax=1";
-            /*
-            message:帮顶
-            posttime:1457620291
-            formhash:70af5bb6
-            usesig:1
-            subject:
-            */
-            RequestParams params = new RequestParams();
-            params.put("formhash", ConfigClass.CONFIG_FORMHASH);
-            params.put("usesig", "1");
-            params.put("message", text);
-            params.put("subject", "");
-
-            AsyncHttpCilentUtil.post(getApplicationContext(), url, params, new AsyncHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                    Toast.makeText(getApplicationContext(), "ok", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
-                }
-            });
-        }
 
     }
 
@@ -505,4 +476,85 @@ public class ArticleNormalActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        if(smiley_container.getVisibility()==View.VISIBLE){
+            smiley_container.setVisibility(View.GONE);
+        }else{
+            super.onBackPressed();
+        }
+
+
+    }
+
+    private void post_reply(String text){
+        int len =0;
+        // Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
+        try {
+            len = text.getBytes("UTF-8").length;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        if(len<13){
+            Toast.makeText(getApplicationContext(),"字数不够",Toast.LENGTH_SHORT).show();
+            //Reply_Dialog_Fragment newFragment = new Reply_Dialog_Fragment();
+            //newFragment.show(getFragmentManager(),"replydialog");
+        }else {
+            //System.out.print("\n当前文章地址"+articleUrl+"\n");
+            //尝试回复
+            //articleUrl
+            //String str = "forum.php?mod=viewthread&tid=837479&extra=page%3D1";
+            Pattern pattern = Pattern.compile("[0-9]{3,}");
+            Matcher matcher = pattern.matcher(articleUrl);
+            String tid ="";
+            while (matcher.find()) {
+                tid = articleUrl.substring(matcher.start(),matcher.end());
+                //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
+            }
+            String url ="forum.php?mod=post&infloat=yes&action=reply&fid=72&extra=&tid="+tid+"&replysubmit=yes&inajax=1";
+            /*
+            message:帮顶
+            posttime:1457620291
+            formhash:70af5bb6
+            usesig:1
+            subject:
+            */
+            RequestParams params = new RequestParams();
+            params.put("formhash", ConfigClass.CONFIG_FORMHASH);
+            params.put("usesig", "1");
+            params.put("message", text);
+            params.put("subject", "");
+
+            AsyncHttpCilentUtil.post(getApplicationContext(), url, params, new AsyncHttpResponseHandler() {
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    String res = new String(responseBody);
+                    if (res.contains("回复发布成功")){
+                        Toast.makeText(getApplicationContext(), "回复发表成功", Toast.LENGTH_SHORT).show();
+                        input_aera.setText("");
+                        hide_ime();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "发表失败", Toast.LENGTH_SHORT).show();
+                    }
+
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Toast.makeText(getApplicationContext(), "网络错误！！！", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void hide_ime(){
+        // Check if no view has focus:
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
 }

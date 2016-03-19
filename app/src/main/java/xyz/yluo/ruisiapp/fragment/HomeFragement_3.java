@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import xyz.yluo.ruisiapp.R;
+
 /**
  * Created by free2 on 16-3-19.
  *
@@ -16,6 +18,9 @@ public class HomeFragement_3 extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_home_3, container, false);
+
+
+        return view;
     }
 }
