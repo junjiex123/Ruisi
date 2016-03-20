@@ -2,6 +2,7 @@ package xyz.yluo.ruisiapp.utils;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.webkit.WebView;
 
 /**
@@ -9,7 +10,8 @@ import android.webkit.WebView;
  * 自定义WebView
  */
 public class MyWebView extends WebView{
-    private static final String FILE_CSS = "file:///android_asset/style.css";
+    //private static final String FILE_CSS = "file:///android_asset/style.css";
+    private static final String FILE_CSS = "file:///android_asset/bootstrap.css";
 
     private static final String HTML_HEADER = "" +
             "<!DOCTYPE html>\n" +
@@ -29,6 +31,7 @@ public class MyWebView extends WebView{
 
     public MyWebView(Context context) {
         super(context);
+
         setWebViewClient(MyWebViewClient.with(context));
     }
 
@@ -51,6 +54,7 @@ public class MyWebView extends WebView{
     @Override
     public void loadDataWithBaseURL(String baseUrl, String data, String mimeType, String encoding, String historyUrl) {
         String newData = HTML_HEADER+data+HTML_REAR;
+
 
         super.loadDataWithBaseURL(baseUrl, newData, mimeType, encoding, historyUrl);
     }

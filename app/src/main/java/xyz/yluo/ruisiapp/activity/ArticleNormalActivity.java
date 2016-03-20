@@ -29,6 +29,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -288,10 +289,14 @@ public class ArticleNormalActivity extends AppCompatActivity
         @Override
         protected String doInBackground(Void... params) {
 
-
-
             //list 所有楼数据
-            Elements list = Jsoup.parse(htmlData).select("div[id=postlist]").select("div[id^=post_]");
+            Document doc = Jsoup.parse(htmlData);
+
+            //移除所有style
+            doc.getElementsByTag("style").remove();
+            doc.select("[style]").removeAttr("style");
+
+            Elements list = doc.select("div[id=postlist]").select("div[id^=post_]");
 
             for (Element element : list) {
                 //每层楼数据
@@ -306,6 +311,7 @@ public class ArticleNormalActivity extends AppCompatActivity
                     boolean isGetdianpin  = false;
                     String dianpin = "";
                     SingleArticleData listdata =null;
+
 
                     //修改表情大小
                     for (Element temp : element.select("img[src^=static/image/smiley/]")) {
@@ -375,6 +381,11 @@ public class ArticleNormalActivity extends AppCompatActivity
                     //TODO  有bug 不完整
                     //content= element.select("td[class=plc]").select("div[class=pcb]").select("div[class=t_fsz]");
                     //System.out.print("\n"+content.html());
+                    //移除图片tip
+                    for( Element ele : content.select(".tip.tip_4"))
+                    {
+                        ele.remove();
+                    }
 
                     //替换影响webView宽度的标记
                     String contentbefore = content.html().replaceAll("(white-space:\\s*nowrap)","white-space:normal");
