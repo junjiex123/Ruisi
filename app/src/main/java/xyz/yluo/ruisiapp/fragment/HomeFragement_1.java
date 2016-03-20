@@ -29,6 +29,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator;
+import jp.wasabeef.recyclerview.animators.FadeInUpAnimator;
+import jp.wasabeef.recyclerview.animators.LandingAnimator;
+import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.FragmentForumListAdapter;
 import xyz.yluo.ruisiapp.data.FroumListData;
@@ -44,6 +48,8 @@ public class HomeFragement_1 extends Fragment{
     protected RecyclerView recycler_view;
     @Bind(R.id.main_refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
+    private FragmentForumListAdapter fragmentForumListAdapter;
+    private List<FroumListData> datas = new ArrayList<>();
 
     @Nullable
     @Override
@@ -73,9 +79,9 @@ public class HomeFragement_1 extends Fragment{
         });
 
         //item 增加删除 改变动画
-        recycler_view.setItemAnimator(new FadeInDownAnimator());
-        recycler_view.getItemAnimator().setAddDuration(50);
-        recycler_view.getItemAnimator().setRemoveDuration(10);
+        recycler_view.setItemAnimator(new ScaleInBottomAnimator());
+        recycler_view.getItemAnimator().setAddDuration(100);
+        recycler_view.getItemAnimator().setRemoveDuration(100);
         recycler_view.getItemAnimator().setChangeDuration(10);
 
 
@@ -96,7 +102,6 @@ public class HomeFragement_1 extends Fragment{
 
         return view;
     }
-
 
 
     //获取首页板块数据 板块列表
@@ -142,7 +147,9 @@ public class HomeFragement_1 extends Fragment{
         protected void onPostExecute(String s) {
             refreshLayout.setRefreshing(false);
 
-            FragmentForumListAdapter fragmentForumListAdapter = new FragmentForumListAdapter(getActivity(),simpledatas, 0);
+            datas.clear();
+            datas.addAll(simpledatas);
+            fragmentForumListAdapter = new FragmentForumListAdapter(getActivity(),datas, 0);
             RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
             recycler_view.setLayoutManager(mLayoutManager);
             recycler_view.setAdapter(fragmentForumListAdapter);

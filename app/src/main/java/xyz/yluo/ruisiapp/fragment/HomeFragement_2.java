@@ -26,6 +26,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator;
+import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.FragmentNewTopAdapter;
 import xyz.yluo.ruisiapp.data.NewAndTopListData;
@@ -70,8 +71,8 @@ public class HomeFragement_2 extends Fragment{
         });
 
         //item 增加删除 改变动画
-        recycler_view.setItemAnimator(new FadeInDownAnimator());
-        recycler_view.getItemAnimator().setAddDuration(50);
+        recycler_view.setItemAnimator(new OvershootInLeftAnimator());
+        recycler_view.getItemAnimator().setAddDuration(250);
         recycler_view.getItemAnimator().setRemoveDuration(10);
         recycler_view.getItemAnimator().setChangeDuration(10);
 
