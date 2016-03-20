@@ -39,5 +39,5 @@
         android:id="@+id/replay_bar"
         app:layout_anchorGravity="bottom"
         app:layout_anchor="@+id/topic_recycler_view" />
-    
+
 </android.support.design.widget.CoordinatorLayout>

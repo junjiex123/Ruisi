@@ -41,6 +41,7 @@ import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator;
 import xyz.yluo.ruisiapp.adapter.ArticleRecycleAdapter;
@@ -52,6 +53,7 @@ import xyz.yluo.ruisiapp.data.SingleArticleData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.listener.HidingScrollListener;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
+import xyz.yluo.ruisiapp.utils.PostHander;
 
 /**
  * Created by free2 on 16-3-6.
@@ -76,6 +78,8 @@ public class ArticleNormalActivity extends AppCompatActivity
     protected ImageButton action_smiley;
     @Bind(R.id.smiley_container)
     protected LinearLayout smiley_container;
+    @Bind(R.id.topic_layout_root)
+    protected CoordinatorLayout topic_layout_root;
 
     //当前评论第几页
     private int CurrentPage = 1;
@@ -146,8 +150,11 @@ public class ArticleNormalActivity extends AppCompatActivity
         });
 
         action_send.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
+                smiley_container.setVisibility(View.GONE);
+                hide_ime();
                 //按钮监听
                 if (ConfigClass.CONFIG_ISLOGIN) {
                     //TODO  发帖逻辑
@@ -157,7 +164,7 @@ public class ArticleNormalActivity extends AppCompatActivity
                     post_reply(input_aera.getText().toString());
 
                 } else {
-                    final Snackbar snackbar = Snackbar.make(view, "你好像还没有登陆!!!", Snackbar.LENGTH_LONG);
+                    final Snackbar snackbar = Snackbar.make(topic_layout_root, "你好像还没有登陆!!!", Snackbar.LENGTH_LONG);
                     snackbar.setAction("点我登陆", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -201,6 +208,24 @@ public class ArticleNormalActivity extends AppCompatActivity
             }
         });
 
+    }
+
+    @OnClick({R.id._1000, R.id._1001,R.id._1002,R.id._1003,R.id._1005,
+            R.id._1006,R.id._1007,R.id._1008,R.id._1009,R.id._1010,
+            R.id._1011,R.id._1012,R.id._1013,R.id._1014,R.id._1015,
+            R.id._1016,R.id._1017,R.id._1018,R.id._1019,R.id._1020,
+            R.id._1021,R.id._1022,R.id._1023,R.id._1024,R.id._1025,
+            R.id._1027,R.id._1028,R.id._1029,R.id._1030, R.id._998,
+            R.id._999,R.id._9998,R.id._9999
+    })
+    protected void smiley_click(ImageButton btn){
+        //插入表情
+        //{:16_1021:}
+        //_1021
+        //input_aera.append(btn.getTag().toString());
+        String tmp = btn.getTag().toString();
+        PostHander hander = new PostHander(getApplicationContext(),input_aera);
+        hander.insertSmiley("{:16" + tmp + ":}", btn.getDrawable());
     }
 
 
@@ -568,4 +593,5 @@ public class ArticleNormalActivity extends AppCompatActivity
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+
 }
