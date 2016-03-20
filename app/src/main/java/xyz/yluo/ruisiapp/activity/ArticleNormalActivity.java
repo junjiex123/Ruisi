@@ -1,6 +1,7 @@
 package xyz.yluo.ruisiapp.activity;
 
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -45,6 +46,7 @@ import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator;
 import xyz.yluo.ruisiapp.adapter.ArticleRecycleAdapter;
+import xyz.yluo.ruisiapp.fragment.NeedLoginDialogFragment;
 import xyz.yluo.ruisiapp.fragment.Reply_Dialog_Fragment;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
 import xyz.yluo.ruisiapp.R;
@@ -60,7 +62,7 @@ import xyz.yluo.ruisiapp.utils.PostHander;
  *
  */
 public class ArticleNormalActivity extends AppCompatActivity
-        implements Reply_Dialog_Fragment.ReplyDialogListener,RecyclerViewClickListener {
+        implements RecyclerViewClickListener {
 
     @Bind(R.id.topic_recycler_view)
     protected RecyclerView mRecyclerView;
@@ -119,8 +121,6 @@ public class ArticleNormalActivity extends AppCompatActivity
             actionBar.setTitle(articleTitle);
         }
 
-
-
         //mLayoutManager = new GridLayoutManager(getContext(),2);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyleAdapter = new ArticleRecycleAdapter(this, this, mydatalist);
@@ -160,20 +160,11 @@ public class ArticleNormalActivity extends AppCompatActivity
                     //TODO  发帖逻辑
                     //Reply_Dialog_Fragment newFragment = new Reply_Dialog_Fragment();
                     //newFragment.show(getFragmentManager(), "replydialog");
-
                     post_reply(input_aera.getText().toString());
 
                 } else {
-                    final Snackbar snackbar = Snackbar.make(topic_layout_root, "你好像还没有登陆!!!", Snackbar.LENGTH_LONG);
-                    snackbar.setAction("点我登陆", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                            startActivityForResult(i, 1);
-                            //snackbar.dismiss();
-                        }
-                    });
-                    snackbar.show();
+                    NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();
+                    dialogFragment.show(getFragmentManager(), "needlogin");
                 }
             }
         });
@@ -228,7 +219,6 @@ public class ArticleNormalActivity extends AppCompatActivity
         hander.insertSmiley("{:16" + tmp + ":}", btn.getDrawable());
     }
 
-
     //登陆页面返回结果
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -239,11 +229,6 @@ public class ArticleNormalActivity extends AppCompatActivity
         }
     }
 
-
-    @Override
-    public void onDialogCancelClick(DialogFragment dialog) {
-
-    }
 
     //recyclerView item点击事件 加载更多事件
     @Override
@@ -260,12 +245,6 @@ public class ArticleNormalActivity extends AppCompatActivity
             }
             getArticleData(articleUrl, newpage);
         }
-    }
-
-    //发帖框回掉函数
-    @Override
-    public void onDialogSendClick(DialogFragment dialog, String text) {
-
     }
 
 
@@ -317,9 +296,14 @@ public class ArticleNormalActivity extends AppCompatActivity
             //list 所有楼数据
             Document doc = Jsoup.parse(htmlData);
 
-            //移除所有style
-            doc.getElementsByTag("style").remove();
-            doc.select("[style]").removeAttr("style");
+            //加个开关
+            if(ConfigClass.CONFIG_SHOW_PLAIN_TEXT){
+                //移除所有style
+                //移除font所有样式
+                doc.select("[style]").removeAttr("style");
+                doc.select("font").removeAttr("color").removeAttr("size").removeAttr("face");
+            }
+            //todo 不能移除 有bug 文字为白色
 
             Elements list = doc.select("div[id=postlist]").select("div[id^=post_]");
 
@@ -524,6 +508,9 @@ public class ArticleNormalActivity extends AppCompatActivity
     }
 
     private void post_reply(String text){
+        final ProgressDialog progress;
+        progress = ProgressDialog.show(this, "dialog title",
+                "dialog message", true);
         int len =0;
         // Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
         try {
@@ -532,7 +519,7 @@ public class ArticleNormalActivity extends AppCompatActivity
             e.printStackTrace();
         }
         if(len<13){
-            Toast.makeText(getApplicationContext(),"字数不够",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"字数不够要13个字节！！",Toast.LENGTH_SHORT).show();
             //Reply_Dialog_Fragment newFragment = new Reply_Dialog_Fragment();
             //newFragment.show(getFragmentManager(),"replydialog");
         }else {
@@ -565,21 +552,24 @@ public class ArticleNormalActivity extends AppCompatActivity
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
                     String res = new String(responseBody);
                     if (res.contains("回复发布成功")){
+                        progress.dismiss();
                         Toast.makeText(getApplicationContext(), "回复发表成功", Toast.LENGTH_SHORT).show();
                         input_aera.setText("");
                         hide_ime();
                     }else{
-                        Toast.makeText(getApplicationContext(), "发表失败", Toast.LENGTH_SHORT).show();
+                        progress.dismiss();
+                        Toast.makeText(getApplicationContext(), "由于位置原因发表失败", Toast.LENGTH_SHORT).show();
                     }
-
-
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    progress.dismiss();
                     Toast.makeText(getApplicationContext(), "网络错误！！！", Toast.LENGTH_SHORT).show();
+
                 }
             });
         }

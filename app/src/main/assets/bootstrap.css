@@ -145,6 +145,9 @@ blockquote {
   font-size: 16px;
   border-left: 4px solid #eeeeee;
 }
+ blockquote a{
+    color:#999999;
+ }
 blockquote p:last-child,
 blockquote ul:last-child,
 blockquote ol:last-child {
