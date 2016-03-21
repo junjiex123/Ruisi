@@ -53,7 +53,6 @@
 
         </android.support.v7.widget.CardView>
 
-
         <android.support.design.widget.TabLayout
             android:layout_marginLeft="@dimen/dimen_16"
             android:layout_marginRight="@dimen/dimen_16"
@@ -66,9 +65,19 @@
             app:tabIndicatorColor="@color/colorAccent"/>
     </LinearLayout>
 
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

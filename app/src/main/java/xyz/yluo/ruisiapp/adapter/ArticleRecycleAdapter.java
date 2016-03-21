@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-
 import java.util.List;
 
 import butterknife.Bind;

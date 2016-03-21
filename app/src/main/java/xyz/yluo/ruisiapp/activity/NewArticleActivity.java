@@ -5,8 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Html;
-import android.text.TextWatcher;
-import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;

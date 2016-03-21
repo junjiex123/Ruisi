@@ -34,7 +34,7 @@ public class Home3RecylerAdapter extends RecyclerView.Adapter<Home3RecylerAdapte
 
     @Override
     public GetListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new GetListHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_home3_pager_window_02_03_list_item, parent, false));
+        return new GetListHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_home3_list_item, parent, false));
 
     }
 
