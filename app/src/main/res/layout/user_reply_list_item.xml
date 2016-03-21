@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:paddingTop="@dimen/dimen_16"
+    android:paddingRight="@dimen/dimen_16"
+    android:paddingLeft="@dimen/dimen_16"
+    android:id="@+id/main_item_btn_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:background="?android:attr/selectableItemBackground"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/article_title"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="16sp"
+            android:singleLine="true"
+            android:text="python发送邮件" />
+        <TextView
+            android:id="@+id/froun_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="西电灌水专区"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" / "/>
+        <TextView
+            android:id="@+id/author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="author"/>
+
+    </LinearLayout>
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <xyz.yluo.ruisiapp.utils.ArrowTextView
+            android:id="@+id/reply_content"
+            android:layout_margin="@dimen/dimen_4"
+            android:padding="@dimen/dimen_8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1111\n测试呵呵哈哈哈。。。"/>
+
+    </LinearLayout>
+
+    <View style="@style/DeepLine"
+        android:layout_marginTop="12dp"
+        android:layout_gravity="bottom" />
+
+    </LinearLayout>
+
+

@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     android:id="@+id/main_item_btn_item"
+    android:clickable="true"
+    android:background="?attr/selectableItemBackground"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
-    android:background="?attr/selectableItemBackground"
-    android:padding="@dimen/dimen_16">
+    android:paddingLeft="@dimen/dimen_16"
+    android:paddingBottom="@dimen/dimen_16"
+    android:paddingRight="@dimen/dimen_16">
+    <View style="@style/DeepLine"
+        android:layout_marginBottom="@dimen/dimen_16"
+        android:layout_gravity="bottom" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +25,6 @@
             android:text="金币："/>
 
         <TextView
-            android:layout_marginLeft="@dimen/dimen_8"
             android:id="@+id/value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

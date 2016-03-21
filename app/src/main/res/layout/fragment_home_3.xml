@@ -39,14 +39,14 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="18sp"
-                        android:text="username"/>
+                        android:textSize="17sp"
+                        android:text="点击头像登陆"/>
                     <TextView
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="1dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:text="username"/>
+                        android:textSize="15sp"
+                        android:text="你还没有登陆"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -66,6 +66,7 @@
     </LinearLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_marginTop="@dimen/dimen_4"
         android:id="@+id/refresh_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -73,6 +74,7 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
+
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

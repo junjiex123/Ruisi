@@ -11,8 +11,6 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
-import xyz.yluo.ruisiapp.R;
-
 /**
  * Created by free2 on 16-3-20.
  *

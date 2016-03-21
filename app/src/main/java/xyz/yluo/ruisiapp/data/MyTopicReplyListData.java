@@ -6,14 +6,16 @@ package xyz.yluo.ruisiapp.data;
  * 我的回复 list data
  */
 public class MyTopicReplyListData {
-    private int type =0;//0 我的帖子 1我的回复 2我的信息
+    private int type =0;//0 我的主题 1我的回复
     private String title;
     private String titleUrl;
     private String author;
-    private String time;
+    private String time;  //在我的回复当作内容
+    private String froumName;
+    private String view_count;
+    private String replycount;
 
-    private String froumName;//板块 我的帖子特有
-
+    //我的回复
     public MyTopicReplyListData(int type, String title, String titleUrl, String author, String time, String froumName) {
         this.type = type;
         this.title = title;
@@ -21,6 +23,33 @@ public class MyTopicReplyListData {
         this.author = author;
         this.time = time;
         this.froumName = froumName;
+    }
+
+    //我的主题
+    public MyTopicReplyListData(int type, String title, String titleUrl, String time, String froumName, String view_count, String replycount) {
+        this.type = type;
+        this.title = title;
+        this.titleUrl = titleUrl;
+        this.time = time;
+        this.froumName = froumName;
+        this.view_count = view_count;
+        this.replycount = replycount;
+    }
+
+    public String getView_count() {
+        return view_count;
+    }
+
+    public void setView_count(String view_count) {
+        this.view_count = view_count;
+    }
+
+    public String getReplycount() {
+        return replycount;
+    }
+
+    public void setReplycount(String replycount) {
+        this.replycount = replycount;
     }
 
     public int getType() {
