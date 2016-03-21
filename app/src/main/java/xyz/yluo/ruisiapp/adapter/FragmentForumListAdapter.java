@@ -17,10 +17,10 @@ import java.util.regex.Pattern;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.data.FroumListData;
 import xyz.yluo.ruisiapp.activity.ArticleListActivity;
+import xyz.yluo.ruisiapp.data.FroumListData;
+import xyz.yluo.ruisiapp.utils.ConfigClass;
 
 /**
  * Created by free2 on 16-3-19.

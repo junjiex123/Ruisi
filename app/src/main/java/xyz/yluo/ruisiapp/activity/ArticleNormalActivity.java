@@ -1,6 +1,5 @@
 package xyz.yluo.ruisiapp.activity;
 
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -8,8 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -45,16 +42,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator;
-import xyz.yluo.ruisiapp.adapter.ArticleRecycleAdapter;
-import xyz.yluo.ruisiapp.fragment.NeedLoginDialogFragment;
-import xyz.yluo.ruisiapp.fragment.Reply_Dialog_Fragment;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.utils.GetLevel;
+import xyz.yluo.ruisiapp.adapter.ArticleRecycleAdapter;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
-import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
+import xyz.yluo.ruisiapp.fragment.NeedLoginDialogFragment;
 import xyz.yluo.ruisiapp.listener.HidingScrollListener;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
+import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
+import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.utils.GetLevel;
 import xyz.yluo.ruisiapp.utils.PostHander;
 
 /**

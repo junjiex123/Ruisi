@@ -10,7 +10,6 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.activity.ArticleNormalActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
-import xyz.yluo.ruisiapp.data.ArticleListData;
 
 
 public class MyWebViewClient extends WebViewClient {

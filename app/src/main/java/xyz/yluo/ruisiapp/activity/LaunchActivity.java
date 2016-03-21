@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.activity.HomeActivity;
 
 /**
  * Created by free2 on 16-3-19.

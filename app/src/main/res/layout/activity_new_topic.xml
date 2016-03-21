@@ -1,57 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/activity_editor_bar"/>
+    <LinearLayout
+        android:elevation="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <include layout="@layout/activity_editor_bar"/>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/emotion_container">
+            <include layout="@layout/smiley_pic_bar"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:scrollbars="vertical"
         android:scrollbarSize="2dp"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp">
-
+        android:layout_height="match_parent"
+        android:padding="@dimen/dimen_4">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <EditText
-                android:id="@+id/edit_input"
-                android:lines="5"
+                android:layout_margin="@dimen/dimen_4"
+                android:hint="标题"
+                android:maxLines="2"
+                android:id="@+id/edit_input_title"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <jp.wasabeef.richeditor.RichEditor
-                android:id="@+id/editor"
+                android:layout_height="wrap_content"
+                android:background="@drawable/post_edittext_title"/>
+            <EditText
+                android:layout_margin="@dimen/dimen_4"
+                android:gravity="top|start"
+                android:hint="内容"
+                android:lines="25"
+                android:id="@+id/edit_input_content"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:background="@drawable/post_edittext_title"/>
         </LinearLayout>
+
+
+
     </android.support.v4.widget.NestedScrollView>
-
-    <LinearLayout
-        app:layout_anchorGravity="bottom|end"
-        app:layout_anchor="@+id/scrollView"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:id="@+id/ll_biaoqin"
-        android:background="#eeeeee"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:gravity="bottom"
-            android:id="@+id/preview"
-            android:layout_width="match_parent"
-            android:layout_height="80dp" />
-
-        <include layout="@layout/smiley_pic_bar"/>
-
-
-    </LinearLayout>
 
 </LinearLayout>

@@ -8,8 +8,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import cz.msebera.android.httpclient.Header;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
-import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 
 /**
  * Created by free2 on 16-3-16.

@@ -1,7 +1,6 @@
 package xyz.yluo.ruisiapp.fragment;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,11 +27,7 @@ import java.util.regex.Pattern;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
-import jp.wasabeef.recyclerview.animators.FadeInDownAnimator;
-import jp.wasabeef.recyclerview.animators.FadeInUpAnimator;
-import jp.wasabeef.recyclerview.animators.LandingAnimator;
-import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator;
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.FragmentForumListAdapter;
 import xyz.yluo.ruisiapp.data.FroumListData;
@@ -77,13 +72,6 @@ public class HomeFragement_1 extends Fragment{
                 }
             }
         });
-
-        //item 增加删除 改变动画
-        recycler_view.setItemAnimator(new ScaleInBottomAnimator());
-        recycler_view.getItemAnimator().setAddDuration(100);
-        recycler_view.getItemAnimator().setRemoveDuration(100);
-        recycler_view.getItemAnimator().setChangeDuration(10);
-
 
         String url = "forum.php";
 
@@ -152,8 +140,10 @@ public class HomeFragement_1 extends Fragment{
             fragmentForumListAdapter = new FragmentForumListAdapter(getActivity(),datas, 0);
             RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
             recycler_view.setLayoutManager(mLayoutManager);
-            recycler_view.setAdapter(fragmentForumListAdapter);
 
+            ScaleInAnimationAdapter alphaAdapter = new ScaleInAnimationAdapter(fragmentForumListAdapter);
+            alphaAdapter.setDuration(150);
+            recycler_view.setAdapter(alphaAdapter);
             fragmentForumListAdapter.notifyItemRangeInserted(0, simpledatas.size());
         }
 
