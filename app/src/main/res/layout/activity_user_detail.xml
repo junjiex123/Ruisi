@@ -36,14 +36,11 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="80dp"
                 android:gravity="center_horizontal">
-
-                <ImageView
-                    android:layout_marginLeft="16dp"
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/user_detail_img_avatar"
                     android:layout_width="96dp"
                     android:layout_height="96dp"
-                    android:src="@drawable/image_placeholder"
-                    android:scaleType="centerCrop" />
+                    android:src="@drawable/image_placeholder"/>
 
                 <LinearLayout
                     android:layout_marginRight="32dp"
@@ -72,7 +69,6 @@
                 </LinearLayout>
 
             </LinearLayout>
-
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"

@@ -33,6 +33,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator;
+import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.MainArticleListAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
@@ -192,8 +193,8 @@ public class ArticleListActivity extends AppCompatActivity
         });
 
         //item 增加删除 改变动画
-        mRecyclerView.setItemAnimator(new FadeInDownAnimator());
-        mRecyclerView.getItemAnimator().setAddDuration(150);
+        mRecyclerView.setItemAnimator(new OvershootInLeftAnimator());
+        mRecyclerView.getItemAnimator().setAddDuration(250);
         mRecyclerView.getItemAnimator().setRemoveDuration(10);
         mRecyclerView.getItemAnimator().setChangeDuration(10);
 

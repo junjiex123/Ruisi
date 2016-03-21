@@ -37,7 +37,7 @@ import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
  * Created by free2 on 16-3-19.
  *
  */
-public class HomeFragement_1 extends Fragment{
+public class HomeFragement_1 extends Fragment {
 
     @Bind(R.id.recycler_view)
     protected RecyclerView recycler_view;

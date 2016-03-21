@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:paddingTop="@dimen/dimen_16"
+    android:paddingRight="@dimen/dimen_16"
+    android:paddingLeft="@dimen/dimen_16"
     android:id="@+id/main_item_btn_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,18 +11,34 @@
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <TextView
-            android:layout_marginTop="@dimen/dimen_16"
-            android:layout_marginStart="@dimen/dimen_16"
-            android:layout_marginEnd="@dimen/dimen_16"
             android:id="@+id/article_title"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
             android:singleLine="true"
             android:text="话题的标题" />
+
+        <TextView
+            android:id="@+id/article_from"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:background="@color/colorAccent"
+            android:text="西电灌水专区" />
+    </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -30,9 +49,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/dimen_8"
-                    android:layout_marginEnd="@dimen/dimen_16"
-                    android:layout_marginStart="@dimen/dimen_16">
+                    android:layout_marginTop="@dimen/dimen_8">
                     <TextView
                         android:id="@+id/author_name"
                         android:layout_width="0dp"
@@ -45,32 +62,12 @@
                         android:text="TakWolf" />
 
                     <TextView
-                        android:id="@+id/reply_count"
+                        android:id="@+id/article_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
                         android:text="111"
                         android:singleLine="true" />
-
-                    <TextView
-                        android:id="@+id/main_item_icon_slash"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp"
-                        android:layout_marginRight="4dp"
-                        android:text="/"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:textSize="12sp"
-                        android:singleLine="true" />
-
-                    <TextView
-                        android:id="@+id/view_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:textSize="12sp"
-                        android:singleLine="true"
-                        android:text="222"/>
 
                 </LinearLayout>
 

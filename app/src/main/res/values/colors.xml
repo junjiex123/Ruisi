@@ -5,6 +5,7 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="colorNavBackground">#2E7D32</color>
+    <color name="lightPrimary">@color/bluegrey200</color>
 
     <color name="colorGrey">#ff999999</color>
 

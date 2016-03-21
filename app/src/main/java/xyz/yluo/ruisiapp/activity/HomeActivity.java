@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -57,12 +58,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected RadioButton radio02;
 
     private CheckBox show_zhidin;
+    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        // Show the Up button in the action bar.
+        actionBar = getSupportActionBar();
+
 
         btn_1_click();
 
@@ -128,7 +134,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @OnClick(R.id.btn_1)
-    protected void btn_1_click(){
+        protected void btn_1_click(){
+        if(actionBar!=null){
+            actionBar.setTitle("板块");
+        }
         Fragment fragment1 = new HomeFragement_1();
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -137,6 +146,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
     @OnClick(R.id.btn_2)
     protected void btn_2_click(){
+        if(actionBar!=null){
+            actionBar.setTitle("新帖");
+        }
         Fragment fragment2 = new HomeFragement_2();
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -147,6 +159,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @OnClick(R.id.btn_3)
     protected void btn_3_click(){
+        if(actionBar!=null){
+            actionBar.setTitle("我");
+        }
         Fragment fragment3 = new HomeFragement_3();
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();

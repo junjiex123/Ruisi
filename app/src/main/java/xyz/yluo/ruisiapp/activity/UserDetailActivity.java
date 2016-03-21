@@ -30,12 +30,13 @@ import java.io.IOException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.yluo.ruisiapp.R;
 
 public class UserDetailActivity extends AppCompatActivity {
 
     @Bind(R.id.user_detail_img_avatar)
-    protected ImageView imageView;
+    protected CircleImageView imageView;
 
     @Bind(R.id.user_detail_tv_login_name)
     protected TextView textView;
