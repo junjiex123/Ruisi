@@ -175,7 +175,7 @@ public class MainArticleListAdapter extends RecyclerView.Adapter<MainArticleList
             //传递一些参数过去 | 分割到时候分割   url|标题|回复|类型|author
 
             List<String> messagelist = new ArrayList<>();
-            ArticleListData single_data =  DataSet.get(getPosition());
+            ArticleListData single_data =  DataSet.get(getAdapterPosition());
             messagelist.add(single_data.getTitleUrl());
             messagelist.add(single_data.getTitle());
             messagelist.add(single_data.getReplayCount());
@@ -242,7 +242,7 @@ public class MainArticleListAdapter extends RecyclerView.Adapter<MainArticleList
             //传递一些参数过去 | 分割到时候分割   url|标题|回复|类型|author
 
             List<String> messagelist = new ArrayList<>();
-            ArticleListData single_data =  DataSet.get(getPosition());
+            ArticleListData single_data =  DataSet.get(getAdapterPosition());
             messagelist.add(single_data.getTitleUrl());
             messagelist.add(single_data.getTitle());
             messagelist.add(single_data.getReplayCount());

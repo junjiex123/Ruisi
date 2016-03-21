@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,6 +34,10 @@ public class HomeFragement_3 extends Fragment {
     @Bind(R.id.recycler_view)
     protected RecyclerView recyclerView;
 
+    @Bind(R.id.refresh_view)
+    protected SwipeRefreshLayout refresh_view;
+
+
     RecyclerView.LayoutManager layoutManager ;
     private List<MyTopicReplyListData> datas = new ArrayList<>();
 
@@ -41,6 +46,15 @@ public class HomeFragement_3 extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home_3, container, false);
 
         ButterKnife.bind(this, view);
+
+        //刷新
+        refresh_view.post(new Runnable() {
+            @Override
+            public void run() {
+                refresh_view.setRefreshing(true);
+            }
+        });
+
         layoutManager =new LinearLayoutManager(getActivity());
         Home3RecylerAdapter adapter = new Home3RecylerAdapter(getActivity(),datas);
 
@@ -52,9 +66,9 @@ public class HomeFragement_3 extends Fragment {
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
-        mytab.addTab(mytab.newTab().setText("Tab 1"));
-        mytab.addTab(mytab.newTab().setText("Tab 2"));
-        mytab.addTab(mytab.newTab().setText("Tab 3"));
+        mytab.addTab(mytab.newTab().setText("个人信息"));
+        mytab.addTab(mytab.newTab().setText("我的帖子"));
+        mytab.addTab(mytab.newTab().setText("我的主题"));
 
         mytab.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

@@ -77,7 +77,7 @@ public class FragmentForumListAdapter extends RecyclerView.Adapter<FragmentForum
 
         @OnClick(R.id.forum_list_item)
         protected void forum_list_item_click(){
-            String url = DataSet.get(getPosition()).getTitleUrl();
+            String url = DataSet.get(getAdapterPosition()).getTitleUrl();
             Pattern pattern = Pattern.compile("[0-9]{2,}");
             Matcher matcher = pattern.matcher(url);
             String fid ="";
@@ -85,8 +85,8 @@ public class FragmentForumListAdapter extends RecyclerView.Adapter<FragmentForum
                 fid = url.substring(matcher.start(),matcher.end());
                 //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
             }
-            System.out.print("\ntitle>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+DataSet.get(getPosition()).getTitle());
-            ArticleListActivity.open(activity, Integer.parseInt(fid), DataSet.get(getPosition()).getTitle());
+            System.out.print("\ntitle>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+DataSet.get(getAdapterPosition()).getTitle());
+            ArticleListActivity.open(activity, Integer.parseInt(fid), DataSet.get(getAdapterPosition()).getTitle());
         }
 
         void setData(int position) {

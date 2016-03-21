@@ -21,8 +21,12 @@ import xyz.yluo.ruisiapp.data.MyTopicReplyListData;
  * Created by free2 on 16-3-21.
  * 首页第三页的第二和第三小页
  */
-public class Home3RecylerAdapter extends RecyclerView.Adapter<Home3RecylerAdapter.GetListHolder>{
+public class Home3RecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
+
+    private final int TYPE_MY_ARTICLE =0;
+    private final int TYPE_MY_REPLY = 1;
+    private final int TYPE_USER_INFO =2;
     //数据
     private List<MyTopicReplyListData> DataSet;
     protected Activity activity;
@@ -33,15 +37,29 @@ public class Home3RecylerAdapter extends RecyclerView.Adapter<Home3RecylerAdapte
     }
 
     @Override
-    public GetListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType==TYPE_USER_INFO){
+            return new UserInfoListHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_home3_list_item, parent, false));
+        }
         return new GetListHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_home3_list_item, parent, false));
 
     }
 
     @Override
-    public void onBindViewHolder(GetListHolder holder, int position) {
-        //set data here
-        holder.setData(position);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        switch (DataSet.get(position).getType()){
+            case 0:
+                return TYPE_MY_ARTICLE;
+            case 1:
+                return TYPE_MY_REPLY;
+            default:
+                return TYPE_USER_INFO;
+        }
     }
 
     @Override
@@ -49,7 +67,7 @@ public class Home3RecylerAdapter extends RecyclerView.Adapter<Home3RecylerAdapte
         return DataSet.size();
     }
 
-    //首页新帖列表ViewHolder
+    //用户的帖子的回复holder
     public class GetListHolder extends RecyclerView.ViewHolder{
 
         @Bind(R.id.article_title)
@@ -68,6 +86,7 @@ public class Home3RecylerAdapter extends RecyclerView.Adapter<Home3RecylerAdapte
         public GetListHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            setData(getAdapterPosition());
         }
 
         void setData(int position) {
@@ -87,7 +106,7 @@ public class Home3RecylerAdapter extends RecyclerView.Adapter<Home3RecylerAdapte
             //传递一些参数过去 | 分割到时候分割   url|标题|回复|类型|author
 
             List<String> messagelist = new ArrayList<>();
-            MyTopicReplyListData single_data =  DataSet.get(getPosition());
+            MyTopicReplyListData single_data =  DataSet.get(getAdapterPosition());
             //
             messagelist.add(single_data.getTitleUrl());
             messagelist.add(single_data.getTitle());
@@ -95,6 +114,34 @@ public class Home3RecylerAdapter extends RecyclerView.Adapter<Home3RecylerAdapte
             messagelist.add(" ");
             messagelist.add(single_data.getAuthor());
             ArticleNormalActivity.open(activity, messagelist);
+        }
+    }
+
+    //用户信息的holder
+    public class UserInfoListHolder extends RecyclerView.ViewHolder{
+
+        @Bind(R.id.key)
+        protected TextView key;
+
+        @Bind(R.id.value)
+        protected TextView value;
+
+
+        public UserInfoListHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+            setData(getAdapterPosition());
+        }
+
+        void setData(int position) {
+            key.setText(DataSet.get(position).getTitle());
+            value.setText(DataSet.get(position).getAuthor());
+        }
+
+        @OnClick(R.id.main_item_btn_item)
+        protected void main_item_btn_item_click(){
+            //TODO
+            //处理
         }
     }
 }
