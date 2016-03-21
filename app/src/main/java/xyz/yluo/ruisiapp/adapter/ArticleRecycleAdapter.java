@@ -11,11 +11,13 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
@@ -112,7 +114,7 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
         @Bind(R.id.article_title)
         protected TextView article_title;
         @Bind(R.id.article_user_image)
-        protected ImageView article_user_image;
+        protected CircleImageView article_user_image;
         @Bind(R.id.article_type)
         protected ImageView article_type;
         @Bind(R.id.title_usergroup)
@@ -167,7 +169,7 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
     public  class CommentViewHolder extends BaseViewHolder {
         //protected ImageView good;
 
-        @Bind(R.id.replay_image)
+        @Bind(R.id.article_user_image)
         protected ImageView replay_image;
 
         @Bind(R.id.replay_author)
@@ -245,7 +247,7 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
 
         }
 
-        @OnClick(R.id.replay_image)
+        @OnClick(R.id.article_user_image)
             protected void onBtnAvatarClick() {
                 UserDetailActivity.openWithTransitionAnimation(activity, "name", replay_image,"222");
             }

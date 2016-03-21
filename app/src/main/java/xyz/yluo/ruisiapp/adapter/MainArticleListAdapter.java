@@ -17,6 +17,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.ArticleNormalActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
@@ -110,7 +111,7 @@ public class MainArticleListAdapter extends RecyclerView.Adapter<MainArticleList
         @Bind(R.id.article_title)
         protected TextView article_title;
         @Bind(R.id.author_img)
-        protected ImageView author_img;
+        protected CircleImageView author_img;
         @Bind(R.id.author_name)
         protected TextView author_name;
         @Bind(R.id.post_time)
