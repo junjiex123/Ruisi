@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.adapter.FragmentForumListAdapter;
+import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
 import xyz.yluo.ruisiapp.data.FroumListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 
@@ -43,7 +43,7 @@ public class HomeFragement_1 extends Fragment {
     protected RecyclerView recycler_view;
     @Bind(R.id.main_refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
-    private FragmentForumListAdapter fragmentForumListAdapter;
+    private ForumListAdapter forumListAdapter;
     private List<FroumListData> datas = new ArrayList<>();
 
     @Nullable
@@ -137,14 +137,14 @@ public class HomeFragement_1 extends Fragment {
 
             datas.clear();
             datas.addAll(simpledatas);
-            fragmentForumListAdapter = new FragmentForumListAdapter(getActivity(),datas, 0);
+            forumListAdapter = new ForumListAdapter(getActivity(),datas, 0);
             RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
             recycler_view.setLayoutManager(mLayoutManager);
 
-            ScaleInAnimationAdapter alphaAdapter = new ScaleInAnimationAdapter(fragmentForumListAdapter);
+            ScaleInAnimationAdapter alphaAdapter = new ScaleInAnimationAdapter(forumListAdapter);
             alphaAdapter.setDuration(150);
             recycler_view.setAdapter(alphaAdapter);
-            fragmentForumListAdapter.notifyItemRangeInserted(0, simpledatas.size());
+            forumListAdapter.notifyItemRangeInserted(0, simpledatas.size());
         }
 
     }

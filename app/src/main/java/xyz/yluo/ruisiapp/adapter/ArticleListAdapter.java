@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -30,7 +29,7 @@ import xyz.yluo.ruisiapp.utils.getThreadTid;
  * Created by free2 on 16-3-5.
  *
  */
-public class MainArticleListAdapter extends RecyclerView.Adapter<MainArticleListAdapter.BaseViewHolder>{
+public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.BaseViewHolder>{
 
     private static final int TYPE_NORMAL = 0;
     private static final int TYPE_LOAD_MORE = 1;
@@ -40,7 +39,7 @@ public class MainArticleListAdapter extends RecyclerView.Adapter<MainArticleList
 
     //上下文
     private Activity activity;
-    public MainArticleListAdapter(Activity activity, List<ArticleListData> data) {
+    public ArticleListAdapter(Activity activity, List<ArticleListData> data) {
         DataSet = data;
         this.activity =activity;
     }
@@ -68,13 +67,18 @@ public class MainArticleListAdapter extends RecyclerView.Adapter<MainArticleList
     //设置view
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        //校外网
+        if(!ConfigClass.CONFIG_IS_INNER){
+            return new NormalViewHolderMe(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_main_list_item_me, viewGroup, false));
+
+        }
         switch (viewType) {
             case TYPE_LOAD_MORE:
                 return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_main_load_more_list_item, viewGroup, false));
             case TYPE_IMAGE_CARD:
                 return new ImageCardViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_main_image_list_item, viewGroup, false));
             default: // TYPE_NORMAL
-                return new CardViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_main_list_item, viewGroup, false));
+                return new NormalViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_main_list_item, viewGroup, false));
         }
     }
 
@@ -104,7 +108,7 @@ public class MainArticleListAdapter extends RecyclerView.Adapter<MainArticleList
     }
 
     //文章列表ViewHolder 如果想创建别的样式还可以创建别的houlder继承自RecyclerView.ViewHolder
-    public  class CardViewHolder extends BaseViewHolder {
+    public  class NormalViewHolder extends BaseViewHolder {
         @Bind(R.id.image_good)
         protected ImageView image_good;
         @Bind(R.id.article_type)
@@ -122,7 +126,7 @@ public class MainArticleListAdapter extends RecyclerView.Adapter<MainArticleList
         @Bind(R.id.view_count)
         protected TextView view_count;
         //构造
-        public CardViewHolder(View v) {
+        public NormalViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
             //imageView = (ImageView) v.findViewById(R.id.main_item_icon_good);
@@ -132,37 +136,30 @@ public class MainArticleListAdapter extends RecyclerView.Adapter<MainArticleList
         @Override
         void setData(int position) {
             String type = DataSet.get(position).getType();
-            if(type.equals("zhidin")){
+            if (type.equals("zhidin")) {
                 article_type.setText("置顶");
-            }else if(type.equals("normal")){
+            } else if (type.equals("normal")) {
                 article_type.setText("水贴");
-            }else if(type.startsWith("gold")){
+            } else if (type.startsWith("gold")) {
                 String gold = type.substring(5);
-                article_type.setText("金币:"+gold);
+                article_type.setText("金币:" + gold);
             }
-
 
             if(DataSet.get(position).getType().equals("zhidin")){
                 image_good.setVisibility(View.VISIBLE);
             }else {
                 image_good.setVisibility(View.INVISIBLE);
             }
+
+            post_time.setText(DataSet.get(position).getPostTime());
+            view_count.setText(DataSet.get(position).getViewCount());
+            String imageUrl = ConfigClass.BBS_BASE_URL+"ucenter/data/avatar/000/"+GetUserImage.getimageurl(DataSet.get(position).getAuthorUrl())+"_avatar_small.jpg";
+            Picasso.with(activity).load(imageUrl).resize(36,36).centerCrop().placeholder(R.drawable.image_placeholder).into(author_img);
+
             article_title.setText(DataSet.get(position).getTitle());
             author_name.setText(DataSet.get(position).getAuthor());
-            post_time.setText(DataSet.get(position).getPostTime());
             reply_count.setText(DataSet.get(position).getReplayCount());
-            view_count.setText(DataSet.get(position).getViewCount());
 
-            String imageUrl = "http://rs.xidian.edu.cn/ucenter/data/avatar/000/"+GetUserImage.getimageurl(DataSet.get(position).getAuthorUrl())+"_avatar_small.jpg";
-            //if(userUID.length())
-            // 00/00/00
-
-            //home.php?mod=space&uid=277268
-            //http://rs.xidian.edu.cn/ucenter/data/avatar/000/29/84/87_avatar_small.jpg
-            //298487
-            //System.out.println("@@@@@@@@@@@@@@@user url>>\n"+DataSet.get(position).getAuthorUrl()+"\n@@@@@@@@userUID>>\n"+GetUserImage.getimageurl(DataSet.get(position).getAuthorUrl()));
-
-            Picasso.with(activity).load(imageUrl).resize(36,36).centerCrop().placeholder(R.drawable.image_placeholder).into(author_img);
         }
 
         @OnClick(R.id.author_img)
@@ -237,6 +234,46 @@ public class MainArticleListAdapter extends RecyclerView.Adapter<MainArticleList
             ////Context context, String tid,String title,String replycount,String type
             ArticleNormalActivity.open(activity, getThreadTid.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplayCount(),single_data.getType());
             //System.out.print("$$$$$$$$$>>"+DataSet.get(getPosition()).getTitleUrl()+"|"+article_title.getText()+"|"+reply_count.getText()+"|"+article_type.getText()+"|"+author_name.getText()+"\n");
+        }
+    }
+
+    //手机版文章列表
+    public  class NormalViewHolderMe extends BaseViewHolder {
+
+        @Bind(R.id.article_title)
+        protected TextView article_title;
+
+        @Bind(R.id.author_name)
+        protected TextView author_name;
+
+        @Bind(R.id.is_image)
+        protected TextView is_image;
+        @Bind(R.id.reply_count)
+        protected TextView reply_count;
+
+        //构造
+        public NormalViewHolderMe(View v) {
+            super(v);
+            ButterKnife.bind(this, v);
+        }
+        //设置listItem的数据
+        @Override
+        void setData(int position) {
+                article_title.setText(DataSet.get(position).getTitle());
+                author_name.setText(DataSet.get(position).getAuthor());
+                reply_count.setText(DataSet.get(position).getReplayCount());
+            if(DataSet.get(position).getImage()!=""){
+                is_image.setText("有图");
+            }else {
+                is_image.setText("一般");
+            }
+
+        }
+        @OnClick(R.id.main_item_btn_item)
+        protected void onBtnItemClick() {
+            ArticleListData single_data =  DataSet.get(getAdapterPosition());
+            //Context context, String tid,String title,String replycount,String type
+            ArticleNormalActivity.open(activity, getThreadTid.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplayCount(),single_data.getType());
         }
     }
 

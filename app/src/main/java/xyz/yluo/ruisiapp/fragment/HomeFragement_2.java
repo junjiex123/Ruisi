@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.adapter.FragmentNewTopAdapter;
+import xyz.yluo.ruisiapp.adapter.NewArticleListAdapter;
 import xyz.yluo.ruisiapp.data.NewAndTopListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 
@@ -152,7 +152,7 @@ public class HomeFragement_2 extends Fragment{
         @Override
         protected void onPostExecute(final String res) {
             refreshLayout.setRefreshing(false);
-            FragmentNewTopAdapter adapter= new FragmentNewTopAdapter(getActivity(), simpledatas, 0);
+            NewArticleListAdapter adapter= new NewArticleListAdapter(getActivity(), simpledatas, 0);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
             recycler_view.setLayoutManager(mLayoutManager);
             recycler_view.setAdapter(adapter);

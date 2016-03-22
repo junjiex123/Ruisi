@@ -29,7 +29,7 @@ import xyz.yluo.ruisiapp.utils.MyWebView;
  * 单篇文章adapter
  */
 
-public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAdapter.BaseViewHolder>{
+public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdapter.BaseViewHolder>{
 
     private static final int TYPE_COMENT = 1;
     private static final int TYPE_LOAD_MORE = 2;
@@ -42,7 +42,7 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
     private Activity activity;
 
 
-    public ArticleRecycleAdapter(Activity activity,RecyclerViewClickListener itemListener, List<SingleArticleData> datalist) {
+    public SingleArticleAdapter(Activity activity, RecyclerViewClickListener itemListener, List<SingleArticleData> datalist) {
         this.datalist = datalist;
         this.activity =activity;
         this.itemListener = itemListener;

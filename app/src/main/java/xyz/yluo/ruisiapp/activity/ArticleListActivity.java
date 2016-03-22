@@ -23,6 +23,7 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -34,7 +35,7 @@ import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.adapter.MainArticleListAdapter;
+import xyz.yluo.ruisiapp.adapter.ArticleListAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.listener.HidingScrollListener;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
@@ -72,7 +73,7 @@ public class ArticleListActivity extends AppCompatActivity
 
     //一般板块/图片板块数据列表
     private List<ArticleListData> mydatasetnormal = new ArrayList<>();
-    private MainArticleListAdapter mRecyleAdapter;
+    private ArticleListAdapter mRecyleAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     public static void open(Context context, int fid,String title){
@@ -228,7 +229,7 @@ public class ArticleListActivity extends AppCompatActivity
 
         mydatasetnormal.clear();
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyleAdapter = new MainArticleListAdapter(this, mydatasetnormal);
+        mRecyleAdapter = new ArticleListAdapter(this, mydatasetnormal);
 
         startGetData();
 
@@ -237,23 +238,35 @@ public class ArticleListActivity extends AppCompatActivity
     }
 
     private void startGetData() {
-        String url = url = "forum.php?mod=forumdisplay&fid=";
-            url = url + CurrentFid + "&page=" + CurrentPage;
+
+        String url = "forum.php?mod=forumdisplay&fid="+CurrentFid+"&page="+CurrentPage;
+        //电路板
+        //forum.php?mod=forumdisplay&fid=72&page=2
+        //手机版
+        //forum.php?mod=forumdisplay&fid=72&page=2&mobile=2
+        //外网
+        if(!ConfigClass.CONFIG_IS_INNER){
+            url = url + "&mobile=2";
+        }
 
         AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                //普通板块
-                if (CurrentType == 0) {
-                    new GetNormalListTaskRs(new String(responseBody)).execute();
-                } else if (CurrentType == 1) {
-                    //TODO
-                    //图片板块
-                    new GetImageListTaskRS(new String(responseBody)).execute();
+
+                if(ConfigClass.CONFIG_IS_INNER){
+                    //普通板块
+                    if (CurrentType == 0) {
+                        new GetNormalArticleListTaskRs(new String(responseBody)).execute();
+                    } else if (CurrentType == 1) {
+                        //TODO
+                        //图片板块
+                        new GetImageArticleListTaskRS(new String(responseBody)).execute();
+                    }
+                }else{
+                    //外网
+                       new GetArticleListTaskMe(new String(responseBody)).execute();
                 }
-
             }
-
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 Toast.makeText(getApplicationContext(), "网络错误！！", Toast.LENGTH_SHORT).show();
@@ -263,14 +276,13 @@ public class ArticleListActivity extends AppCompatActivity
 
     }
 
-
     //校园网状态下获得一个普通板块文章列表数据 根据html获得数据
-    public class GetNormalListTaskRs extends AsyncTask<Void, Void, String> {
+    public class GetNormalArticleListTaskRs extends AsyncTask<Void, Void, String> {
 
         private List<ArticleListData> dataset = new ArrayList<>();
         private String res;
 
-        public GetNormalListTaskRs(String res) {
+        public GetNormalArticleListTaskRs(String res) {
             this.res = res;
         }
 
@@ -329,12 +341,12 @@ public class ArticleListActivity extends AppCompatActivity
     }
 
     //校园网状态下获得图片板块数据 图片链接、标题等  根据html获得数据
-    public class GetImageListTaskRS extends AsyncTask<Void, Void, String> {
+    public class GetImageArticleListTaskRS extends AsyncTask<Void, Void, String> {
 
         private String response;
         private List<ArticleListData> imgdatas = new ArrayList<>();
 
-        public GetImageListTaskRS(String res) {
+        public GetImageArticleListTaskRS(String res) {
             this.response = res;
         }
 
@@ -369,6 +381,54 @@ public class ArticleListActivity extends AppCompatActivity
             mydatasetnormal.addAll(imgdatas);
             refreshLayout.setRefreshing(false);
             mRecyleAdapter.notifyItemRangeInserted(0, imgdatas.size());
+        }
+    }
+
+    //非校园网状态下获得一个板块文章列表数据
+    //根据html获得数据
+    //调用的手机版
+    public class GetArticleListTaskMe extends AsyncTask<Void, Void, String> {
+
+        private List<ArticleListData> dataset = new ArrayList<>();
+        private String res;
+
+        public GetArticleListTaskMe(String res) {
+            this.res = res;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            if(res!=""){
+                //chiphell
+                Document doc = Jsoup.parse(res);
+                Elements body = doc.select("div[class=threadlist]"); // 具有 href 属性的链接
+
+                ArticleListData temp;
+                Elements links = body.select("li");
+                System.out.print(links);
+                for (Element src : links) {
+                    String url = src.select("a").attr("href");
+                    String author = src.select(".by").text();
+                    src.select("span.by").remove();
+                    String title = src.select("a").text();
+                    String replyCount = src.select("span.num").text();
+                    String img = src.select("img").text();
+
+                    //String title, String titleUrl, String image, String author, String replayCount
+                    temp = new ArticleListData(title, url, img, author, replyCount);
+                    dataset.add(temp);
+                }
+            }
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(final String res) {
+
+            mydatasetnormal.clear();
+            mydatasetnormal.addAll(dataset);
+            refreshLayout.setRefreshing(false);
+            mRecyleAdapter.notifyItemRangeInserted(0, dataset.size());
         }
     }
 

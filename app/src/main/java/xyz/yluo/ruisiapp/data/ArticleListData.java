@@ -29,7 +29,7 @@ public class ArticleListData {
     }
 
 
-    private String image;//图片文章特有
+    private String image;//图片文章特有 手机版有么有图
 
     private String type;// normal zhidin gold:100
     private String author;
@@ -128,5 +128,14 @@ public class ArticleListData {
         this.author = author;
         this.authorUrl = authorUrl;
         this.viewCount = viewCount;
+    }
+
+    //手机版构造器
+    public ArticleListData(String title, String titleUrl, String image, String author, String replayCount) {
+        this.title = title;
+        this.titleUrl = titleUrl;
+        this.image = image;
+        this.author = author;
+        this.replayCount = replayCount;
     }
 }

@@ -132,42 +132,8 @@ public class UserDetailActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... urls) {
-            //return http_client_post_get.HttpURLConnection_GET();
-            StringBuffer buffer=new StringBuffer();
-            Document doc;
-            try {
-                doc = Jsoup.connect(urls[0]).get();
 
-                //chiphell
-                Elements body = doc.select("div[class=threadlist]"); // 具有 href 属性的链接
-                //Elements body = doc.select("body");
-                System.out.print(body);
-                //
-                //这是手机版的
-                //"a[class=title]"
-                //pcbeta
-                //Elements links = doc.select("li[class=thread_item]");
-
-                //chiphell
-                Elements links = body.select("li");
-                System.out.print(links);
-                for (Element src : links) {
-                    buffer.append("img:  "+src.getElementsByTag("img").attr("src")+"\n");
-                    buffer.append("title:  "+src.getElementsByTag("a").text()+"\n");
-                    buffer.append("url:  "+src.getElementsByTag("a").attr("href")+"\n");
-                    //buffer.append("num:   "+src.getElementsByTag("span").text()+"\n");
-
-                    //chiphell
-                    buffer.append("num:   "+src.getElementsByAttributeValue("class", "num").text()+"\n");
-                    buffer.append("author:   "+src.getElementsByAttributeValue("class", "by").text()+"\n");
-                }
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            System.out.print(buffer.toString());
-            return buffer.toString();
-
+            return "'";
         }
 
         @Override

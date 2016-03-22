@@ -13,9 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.util.Pair;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -36,8 +33,6 @@ import org.jsoup.select.Elements;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,14 +40,13 @@ import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.adapter.ArticleRecycleAdapter;
+import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
 import xyz.yluo.ruisiapp.fragment.NeedLoginDialogFragment;
 import xyz.yluo.ruisiapp.listener.HidingScrollListener;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
-import xyz.yluo.ruisiapp.utils.GetLevel;
 import xyz.yluo.ruisiapp.utils.PostHander;
 
 /**
@@ -91,7 +85,7 @@ public class ArticleNormalActivity extends AppCompatActivity
     private static String ARTICLE_TYPE;
     //当前回复链接
     private String replyUrl = "";
-    private ArticleRecycleAdapter mRecyleAdapter;
+    private SingleArticleAdapter mRecyleAdapter;
 
     //约定好要就收的数据
     public static void open(Context context, String tid,String title,String replycount,String type) {
@@ -118,7 +112,7 @@ public class ArticleNormalActivity extends AppCompatActivity
         }
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyleAdapter = new ArticleRecycleAdapter(this, this, mydatalist);
+        mRecyleAdapter = new SingleArticleAdapter(this, this, mydatalist);
         mRecyclerView.setAdapter(mRecyleAdapter);
 
         //item 增加删除动画

@@ -26,14 +26,14 @@ import xyz.yluo.ruisiapp.utils.ConfigClass;
  * Created by free2 on 16-3-19.
  *
  */
-public class FragmentForumListAdapter extends RecyclerView.Adapter<FragmentForumListAdapter.FroumsListViewHolder>{
+public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.FroumsListViewHolder>{
 
     //数据
     private List<FroumListData> DataSet;
     protected Activity activity;
     int type;
 
-    public FragmentForumListAdapter(Activity activity, List<FroumListData> dataSet, int type) {
+    public ForumListAdapter(Activity activity, List<FroumListData> dataSet, int type) {
         DataSet = dataSet;
         this.activity = activity;
         this.type = type;

@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -22,14 +21,14 @@ import xyz.yluo.ruisiapp.utils.getThreadTid;
  * Created by free2 on 16-3-19.
  *首页获取新帖 热帖
  */
-public class FragmentNewTopAdapter extends RecyclerView.Adapter<FragmentNewTopAdapter.NewAndTopViewHolder>{
+public class NewArticleListAdapter extends RecyclerView.Adapter<NewArticleListAdapter.NewAndTopViewHolder>{
 
     //数据
     private List<NewAndTopListData> DataSet;
     protected Activity activity;
     int type;
 
-    public FragmentNewTopAdapter(Activity activity, List<NewAndTopListData> dataSet, int type) {
+    public NewArticleListAdapter(Activity activity, List<NewAndTopListData> dataSet, int type) {
         DataSet = dataSet;
         this.activity = activity;
         this.type = type;
