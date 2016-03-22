@@ -6,79 +6,41 @@ package xyz.yluo.ruisiapp.data;
  * 0-文章
  * >0评论
  */
+//单层楼数据 0 楼主 > 0 回复
 public class SingleArticleData {
+
+    //作者的内容特有 0 位置特有
+    private String title;
+    private String type;
+    private String replyCount;
+
+    //通用
     private String username;
     private String userUrl;
-    private String imgUrl;
-    private String title;
+    private String userImgUrl;
     private String postTime;
-    private String userGroup;
     private String cotent;
-    private String articletype;//normal zhidin gold:100
-    private String replayCount;
-
-    public boolean isGetGold;
-    //金币贴获得了金币
-    private String goldnum;
-
-    public boolean isGetpingfen;
-    private String pingfen;
-
-    public boolean isGetDianpin;
-    private String dianpin;
-
-    public String getPingfen() {
-        return pingfen;
-    }
-
-    public void setPingfen(String pingfen) {
-        this.pingfen = pingfen;
-    }
 
 
-    public String getDianpin() {
-        return dianpin;
-    }
-
-    public void setDianpin(String dianpin) {
-        this.dianpin = dianpin;
-    }
-
-    public String getGoldnum() {
-        return goldnum;
-    }
-
-    public void setGoldnum(String goldnum) {
-        this.goldnum = goldnum;
-    }
-
-
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getArticletype() {
-        return articletype;
-    }
-
-    public String getReplayCount() {
-        return replayCount;
-    }
-
-    //goldnum 不是金币贴可以设置为null
-    public SingleArticleData(String title, String type , String username, String userUrl, String imgUrl, String postTime, String userGroup, String replaycount , String cotent) {
-        this.title = title;
-        articletype = type;
-        this.replayCount = replaycount;
+    //index>0 的数据也就是评论
+    public SingleArticleData(String username, String userUrl, String userImgUrl, String postTime,String cotent) {
         this.username = username;
-
         this.userUrl = userUrl;
-        this.imgUrl = imgUrl;
+        this.userImgUrl = userImgUrl;
         this.postTime = postTime;
-        this.userGroup = userGroup;
         this.cotent = cotent;
-        this.goldnum = goldnum;
+    }
+
+    //index==0 内容
+    public SingleArticleData(String title, String type, String replyCount, String username, String userUrl, String userImgUrl, String postTime, String cotent) {
+        this.title = title;
+        this.type = type;
+        this.replyCount = replyCount;
+        this.username = username;
+        this.userUrl = userUrl;
+        this.userImgUrl = userImgUrl;
+        this.postTime = postTime;
+        this.cotent = cotent;
     }
 
     public String getUsername() {
@@ -89,19 +51,59 @@ public class SingleArticleData {
         return userUrl;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public String getUserImgUrl() {
+        return userImgUrl;
     }
 
     public String getPostTime() {
         return postTime;
     }
 
-    public String getUserGroup() {
-        return userGroup;
-    }
-
     public String getCotent() {
         return cotent;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getReplyCount() {
+        return replyCount;
+    }
+
+    public void setReplyCount(String replyCount) {
+        this.replyCount = replyCount;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setUserUrl(String userUrl) {
+        this.userUrl = userUrl;
+    }
+
+    public void setUserImgUrl(String userImgUrl) {
+        this.userImgUrl = userImgUrl;
+    }
+
+    public void setPostTime(String postTime) {
+        this.postTime = postTime;
+    }
+
+    public void setCotent(String cotent) {
+        this.cotent = cotent;
     }
 }

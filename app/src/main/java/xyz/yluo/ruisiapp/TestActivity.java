@@ -17,11 +17,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,10 +25,6 @@ import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
-import xyz.yluo.ruisiapp.utils.GetFormHash;
-import xyz.yluo.ruisiapp.utils.MyHttpConnection;
-import xyz.yluo.ruisiapp.utils.getMd5Pass;
 
 /**
  * Created by free2 on 16-3-10.
@@ -40,8 +32,8 @@ import xyz.yluo.ruisiapp.utils.getMd5Pass;
  */
 public class TestActivity extends AppCompatActivity {
 
-    private String formhash;
-
+    private String congig_formhash;
+    private String config_url;
     @Bind(R.id.text_response)
     protected TextView responseText;
     @Bind(R.id.webview)
@@ -58,65 +50,116 @@ public class TestActivity extends AppCompatActivity {
 
     @OnClick(R.id.login_button)
     protected void login_button_click() {
-        String url = "http://rs.xidian.edu.cn/member.php?mod=logging&action=login&loginsubmit=yes&infloat=yes&lssubmit=yes&inajax=1";
-        Map<String, String> params = new HashMap<>();
-        params.put("username", "谁用了FREEDOM");
+        String url = config_url;
+        RequestParams params = new RequestParams();
+        //params.put("formhash",congig_formhash);
+        params.put("fastloginfield","username");
         params.put("cookietime", "2592000");
-        params.put("password", "9345b4e983973212313e4c809b94f75d");
-        params.put("quickforward", "yes");
-        params.put("handlekey", "ls");
+        params.put("username", "谁用了FREEDOM");
+        params.put("password", "justice");
+        params.put("questionid", "0");
+        params.put("answer", "");
 
-        UserLoginTask mAuthTask = new UserLoginTask(url, params, "post");
-        mAuthTask.execute((Void) null);
+        AsyncHttpCilentUtil.post(getApplicationContext(), url, params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String res = new String(responseBody);
+                if (res.contains("欢迎您回来")) {
+                    //开始获取formhash
+                    responseText.setText(new String(responseBody));
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "用户名或者密码错误登陆失败！！", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(getApplicationContext(), "网络异常！！", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
     @OnClick(R.id.get_formhash)
     protected void get_formHash_click() {
-        String url = "http://rs.xidian.edu.cn/forum.php";
-        UserLoginTask mAuthTask = new UserLoginTask(url, null, "get");
-        mAuthTask.execute((Void) null);
+        //
+        String url = "member.php?mod=logging&action=login&mobile=2";
+
+        AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String res = new String(responseBody);
+
+                Document doc = Jsoup.parse(res);
+                if (doc.select("input[name=formhash]").first() != null) {
+                    congig_formhash = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
+                }
+                if (doc.select("form#loginform").attr("action") != "") {
+                    config_url = doc.select("form#loginform").attr("action");
+                    responseText.append("\nurl:" + config_url + "\n");
+                }
+                responseText.append("\nformhash:" + congig_formhash + "\n");
+                responseText.append(res + "\n\n\n");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(getApplicationContext(), "网络异常！！", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @OnClick(R.id.login_post)
     protected void login_post_click() {
-        String url = "http://rs.xidian.edu.cn/forum.php?mod=post&infloat=yes&action=reply&fid=72&extra=&tid=837982&replysubmit=yes&inajax=1";
-        Map<String, String> params = new HashMap<>();
-        /*
-        message:帮顶
-        posttime:1457620291
-        formhash:70af5bb6
-        usesig:1
-        subject:
-        */
-        params.put("formhash", formhash);
-        params.put("usesig", "1");
-        params.put("message", "来了                 ");
-        params.put("subject", "");
+        RequestParams params = new RequestParams();
+        String url =  "forum.php?mod=post&action=reply&fid=72&tid=841200&extra=&replysubmit=yes&mobile=2&handlekey=fastpost&loc=1&inajax=1";
+        params.put("formhash", congig_formhash);
+        params.put("message", "来我帮你免费///。。。。。");
 
-        UserLoginTask mAuthTask = new UserLoginTask(url, params, "post");
-        mAuthTask.execute((Void) null);
+        AsyncHttpCilentUtil.post(getApplicationContext(), url, params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String res = new String(responseBody);
+                responseText.append(res + "\n\n\n");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(getApplicationContext(), "网络异常！！", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @OnClick(R.id.btn_get_list)
     protected void get_list_click() {
+        //http://rs.xidian.edu.cn/forum.php?mod=forumdisplay&fid=72&mobile=2
         GetListTask getListTask = new GetListTask("72", 0);
         getListTask.execute((Void) null);
     }
 
-    @OnClick(R.id.show_cookie)
-    protected void show_cookie_click(){
-        responseText.setText(ConfigClass.CONFIG_COOKIE);
-    }
-    @OnClick(R.id.show_hash)
-    protected void show_hash_click(){
-        responseText.setText(ConfigClass.CONFIG_FORMHASH);
-    }
-
     @OnClick(R.id.get_single)
     protected void get_single_click(){
-        GetSingle getSingle = new GetSingle("http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=839311&extra=page%3D1");
-        getSingle.execute((Void) null);
+
+        String url =  "forum.php?mod=viewthread&tid=841200&fromguid=hot&extra=&mobile=2";
+
+        AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String res = new String(responseBody);
+                responseText.setText(res + "\n\n\n");
+                Document doc = Jsoup.parse(res);
+                if (doc.select("input[name=formhash]").first() != null) {
+                    congig_formhash = doc.select("input[name=formhash]").attr("value");
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(getApplicationContext(), "网络异常！！", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @OnClick(R.id.get_image)
@@ -132,193 +175,11 @@ public class TestActivity extends AppCompatActivity {
         webview.loadDataWithBaseURL("http://rs.xidian.edu.cn/", data, "text/html", "UTF-8", null);
     }
 
-    @OnClick(R.id.new_login)
-    protected void new_login_click(){
-
-        String url = "member.php?mod=logging&action=login&loginsubmit=yes&infloat=yes&lssubmit=yes&inajax=1";
-        RequestParams params = new RequestParams();
-        params.put("username", "谁用了FREEDOM");
-        params.put("cookietime", "2592000");
-        params.put("password", "9345b4e983973212313e4c809b94f75d");
-        params.put("quickforward", "yes");
-        params.put("handlekey", "ls");
-
-        AsyncHttpCilentUtil.post(this, url, params, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                responseText.setText(new String(responseBody));
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
-            }
-        });
-
-
-    }
-
-    @OnClick(R.id.new_get)
-    protected void new_get_click(){
-
-        AsyncHttpCilentUtil.get(this, "portal.php", null, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                responseText.setText(new String(responseBody));
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
-            }
-        });
-    }
-
-    @OnClick(R.id.new_get_hash)
-    protected void new_get_hash_click(){
-        if(ConfigClass.CONFIG_FORMHASH==""){
-            GetFormHash.start_get_hash(getApplicationContext());
-
-        }else{
-
-            responseText.setText(ConfigClass.CONFIG_FORMHASH);
-        }
-    }
-    @OnClick(R.id.new_get_hash_again)
-    protected void new_get_hash_again_click(){
-
-        responseText.setText(ConfigClass.CONFIG_FORMHASH);
-
-    }
-
-    @OnClick(R.id.pass_md5)
-    protected void pass_md5_click(){
-        String pass = getMd5Pass.getMD5("justice");
-        responseText.setText(pass);
-
-    }
-
-    @OnClick(R.id.get_hot)
-    protected void get_hot_click(){
-        String url = "forum.php";
-        AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                String res = new String(responseBody);
-
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Toast.makeText(getApplicationContext(), "网络错误！！", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-    }
-
-    @OnClick(R.id.get_forums)
-    protected void get_forums_onclick(){
-        String url  = "forum.php";
-
-        AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                String res = new String(responseBody);
-
-                Elements list = Jsoup.parse(res).select("#category_89,#category_101,#category_71,category_97,category_11").select("td.fl_g");
-
-                for(Element tmp:list){
-                    String img = tmp.select("img[src^=./data/attachment]").attr("src").replace("./data","data");
-                    String url = tmp.select("a[href^=forum.php?mod=forumdisplay&fid]").attr("href");
-                    String title = tmp.select("a[href^=forum.php?mod=forumdisplay&fid]").text();
-
-                    String todaynew = tmp.select("em[title=今日]").text();
-                    String actualnew = "";
-                    if(todaynew!=""){
-                        Pattern pattern = Pattern.compile("[0-9]+");
-                        Matcher matcher = pattern.matcher(todaynew);
-                        String tid ="";
-                        while (matcher.find()) {
-                            actualnew = todaynew.substring(matcher.start(),matcher.end());
-                            //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
-                        }
-                    }
-
-                    responseText.append("\nimg>>"+img+"\nurl>>"+url+"\ntitle>>"+title+"\ntoday>>"+todaynew+"\nactual>>"+actualnew);
-
-
-                    //forum.php?mod=forumdisplay&fid
-
-                }
-
-
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Toast.makeText(getApplicationContext(), "网络错误！！", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-
-    }
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, String> {
-
-        private final String url;
-        private final Map<String, String> paramss;
-        String method;
-
-        UserLoginTask(String url, Map<String, String> paramss, String method) {
-            this.url = url;
-            this.paramss = paramss;
-            this.method = method;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            String response = "";
-            try {
-                if (method == "get") {
-                    response = MyHttpConnection.Http_get(url);
-                    System.out.print("get response>>>>>>>>>>>\n" + response);
-                } else {
-                    response = MyHttpConnection.Http_post(url, paramss);
-                    System.out.print("post response>>>>>>>>>>\n" + response);
-                }
-            } catch (Exception e) {
-                return "error";
-            }
-            return response;
-        }
-
-        @Override
-        protected void onPostExecute(final String res) {
-            //临时保存 解析FormHash
-            Document doc;
-            doc = Jsoup.parse(res);
-            if (doc.select("input[name=formhash]").first() != null) {
-                formhash = doc.select("input[name=formhash]").first().attr("value"); // 具有 formhash 属性的链接
-            }
-
-            responseText.setText("formhash:" + formhash + "\n");
-            responseText.setText(res + "\n\n\n");
-        }
-
-        @Override
-        protected void onCancelled() {
-        }
-    }
 
     //获得数据
     public class GetListTask extends AsyncTask<Void, Void, String> {
 
+        //http://rs.xidian.edu.cn/forum.php?mod=forumdisplay&fid=72&mobile=2
         private final String Baseurl = "http://rs.xidian.edu.cn/forum.php?mod=forumdisplay&fid=";
         private String fullurl = "";
         private List<ArticleListData> dataset;
@@ -328,7 +189,7 @@ public class TestActivity extends AppCompatActivity {
             dataset = new ArrayList<>();
 
             if (page == 0) {
-                fullurl = Baseurl + fid;
+                fullurl = Baseurl + fid+"&mobile=2";
             } else {
                 fullurl = Baseurl + fid + "&page=" + page;
             }
@@ -338,53 +199,53 @@ public class TestActivity extends AppCompatActivity {
         protected String doInBackground(Void... params) {
             String response = "";
             try {
-                response = MyHttpConnection.Http_get(fullurl);
             } catch (Exception e) {
                 return "error";
             }
-
             StringBuffer buffer = new StringBuffer();
             if (response != "") {
-                Elements list = Jsoup.parse(response).select("div[id=threadlist]");
-                Elements links = list.select("tbody");
+                Elements list = Jsoup.parse(response).select("div[class=threadlist]").select("li");
+                //Elements links = list.select("tbody");
 
                 //System.out.print(links);
 
                 ArticleListData temp;
-                for (Element src : links) {
-                    if (src.getElementsByAttributeValue("class", "by").first() != null) {
+                for (Element src : list) {
 
-                        String type = "normal";
-                        //金币
-                        if (src.select("th").select("strong").text() != "") {
-                            type = "gold:" + src.select("th").select("strong").text();
-                        }
-                        //置顶 正常
-                        if (src.attr("id").contains("normalthread")) {
-                            type = "normal";
-                        } else if (src.attr("id").contains("stickthread")) {
-                            type = "zhidin";
-                        }
-                        String title = src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]").text();
-                        String titleUrl = src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]").attr("href");
-                        //http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=836820&extra=page%3D1
-                        String author = src.getElementsByAttributeValue("class", "by").first().select("a").text();
-                        String authorUrl = src.getElementsByAttributeValue("class", "by").first().select("a").attr("href");
-                        String time = src.getElementsByAttributeValue("class", "by").first().select("em").text().trim();
-                        String viewcount = src.getElementsByAttributeValue("class", "num").select("em").text();
-                        String replaycount = src.getElementsByAttributeValue("class", "num").select("a").text();
+                    System.out.print("\n"+src.html());
+                    //if (src.getElementsByAttributeValue("class", "by").first() != null) {
+
+//                        String type = "normal";
+//                        //金币
+//                        if (src.select("th").select("strong").text() != "") {
+//                            type = "gold:" + src.select("th").select("strong").text();
+//                        }
+//                        //置顶 正常
+//                        if (src.attr("id").contains("normalthread")) {
+//                            type = "normal";
+//                        } else if (src.attr("id").contains("stickthread")) {
+//                            type = "zhidin";
+//                        }
+//                        String title = src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]").text();
+//                        String titleUrl = src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]").attr("href");
+//                        //http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=836820&extra=page%3D1
+//                        String author = src.getElementsByAttributeValue("class", "by").first().select("a").text();
+//                        String authorUrl = src.getElementsByAttributeValue("class", "by").first().select("a").attr("href");
+//                        String time = src.getElementsByAttributeValue("class", "by").first().select("em").text().trim();
+//                        String viewcount = src.getElementsByAttributeValue("class", "num").select("em").text();
+//                        String replaycount = src.getElementsByAttributeValue("class", "num").select("a").text();
 
 
-                        if (title != "" && author != "" && viewcount != "") {
-                            //新建对象
-                            temp = new ArticleListData(title, titleUrl, type, author, authorUrl, time, viewcount, replaycount);
-                            dataset.add(temp);
-                            buffer.append(type).append(title).append(titleUrl).append(author).append(authorUrl).append(time).append(viewcount).append("\n");
-                        }
+//                        if (title != "" && author != "" && viewcount != "") {
+//                            //新建对象
+//                            temp = new ArticleListData(title, titleUrl, type, author, authorUrl, time, viewcount, replaycount);
+//                            dataset.add(temp);
+//                            buffer.append(type).append(title).append(titleUrl).append(author).append(authorUrl).append(time).append(viewcount).append("\n");
+//                        }
 
-                    }
+                   // }
                 }
-                System.out.print(buffer);
+                //System.out.print(buffer);
             }
             return response;
         }
@@ -413,7 +274,7 @@ public class TestActivity extends AppCompatActivity {
 
             String response = "";
             try {
-                response = MyHttpConnection.Http_get(url);
+                //response =
             } catch (Exception e) {
                 return "error";
             }
@@ -434,45 +295,4 @@ public class TestActivity extends AppCompatActivity {
             return null;
         }
     }
-
-    //response = MyHttpConnection.Http_get("http://rs.xidian.edu.cn/"+url);
-    //获得单篇文章
-    public class GetSingle extends AsyncTask<Void, Void, String> {
-
-        private final String Baseurl = "http://rs.xidian.edu.cn/forum.php?mod=forumdisplay&fid=";
-        private String fullurl = "";
-        private List<ArticleListData> dataset;
-
-        public GetSingle(String url) {
-
-            dataset = new ArrayList<>();
-            fullurl = url;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            String response = "";
-            try {
-                response = MyHttpConnection.Http_get(fullurl);
-            } catch (Exception e) {
-                return "error";
-            }
-
-            StringBuffer buffer = new StringBuffer();
-            if (response != "") {
-            }
-            return response;
-        }
-
-        @Override
-        protected void onPostExecute(final String res) {
-            responseText.setText("res:" + res + "\n");
-        }
-
-        @Override
-        protected void onCancelled() {
-
-        }
-    }
-
 }

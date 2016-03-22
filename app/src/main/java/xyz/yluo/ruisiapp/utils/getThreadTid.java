@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  */
 public class getThreadTid {
 
-    public static int getTid(String url){
+    public static String getTid(String url){
         //http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=840272&extra=
 
         Pattern pattern = Pattern.compile("[0-9]{3,}");
@@ -20,6 +20,6 @@ public class getThreadTid {
             break;
             //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
         }
-        return Integer.parseInt(tid);
+        return tid;
     }
 }

@@ -129,7 +129,7 @@ public class UserDakaActivity extends AppCompatActivity{
     protected void btn_submit_click(){
         boolean isok = false;
         getGroup1_select();
-        Toast.makeText(getApplicationContext(),"group1:"+group1_select+"group2:"+group2_select+"spin:"+spinner__select,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(),"group1:"+group1_select+"group2:"+group2_select+"spin:"+spinner__select,Toast.LENGTH_SHORT).show();
 
         String formhash = ConfigClass.CONFIG_FORMHASH;
         qdxq = "ng";
@@ -191,7 +191,7 @@ public class UserDakaActivity extends AppCompatActivity{
                     if(res.contains("恭喜你签到成功")){
                         Document doc = Jsoup.parse(res);
                         String get = doc.select("div[class=c]").text();
-                        Toast.makeText(getApplicationContext(),get,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),get,Toast.LENGTH_SHORT).show();
                         ConfigClass.CONFIG_ISDAKA = true;
 
                         finish();
@@ -229,8 +229,6 @@ public class UserDakaActivity extends AppCompatActivity{
                     ConfigClass.CONFIG_ISDAKA = false;
                     text_have_daka.setVisibility(View.GONE);
                 }
-
-                Toast.makeText(getApplicationContext(),"      "+isdaka,Toast.LENGTH_SHORT).show();
             }
 
             @Override

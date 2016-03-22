@@ -9,13 +9,21 @@ import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
+import xyz.yluo.ruisiapp.utils.ConfigClass;
 
 /**
  * Created by free2 on 16-3-19.
  *
  */
-public class LaunchActivity extends AppCompatActivity implements Runnable{
+public class LaunchActivity extends AppCompatActivity{
 
     private SharedPreferences perPreferences;
     private static final Handler handler = new Handler(Looper.getMainLooper());
@@ -32,18 +40,32 @@ public class LaunchActivity extends AppCompatActivity implements Runnable{
         //editor = perPreferences.edit();
         //isFirstIn = perPreferences.getBoolean("isFirstIn", true);
         //isAutoLogin = perPreferences.getBoolean("ISAUTO", false);
-        postDelayed(this,1000);
+        checklogin();
     }
 
-    @Override
-    public void run() {
+    private void checklogin(){
+        String url = "member.php?mod=logging&action=login&mobile=2";
+        ConfigClass.CONFIG_ISLOGIN = false;
+        AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String res = new String(responseBody);
+                if (res.contains("loginbox")) {
+                    ConfigClass.CONFIG_ISLOGIN = false;
+                } else {
+                    Document doc = Jsoup.parse(res);
+                    ConfigClass.CONFIG_USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
+                    ConfigClass.CONFIG_ISLOGIN = true;
+                }
 
-        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-        finish();
-    }
+                startActivity(new Intent(getApplicationContext(),HomeActivity.class));
+                finish();
+            }
 
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
 
-    public static boolean postDelayed(Runnable r, long delayMillis) {
-        return handler.postDelayed(r, delayMillis);
+            }
+        });
     }
 }

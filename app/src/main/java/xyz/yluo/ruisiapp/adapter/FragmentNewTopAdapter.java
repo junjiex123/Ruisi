@@ -16,6 +16,7 @@ import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.ArticleNormalActivity;
 import xyz.yluo.ruisiapp.data.NewAndTopListData;
+import xyz.yluo.ruisiapp.utils.getThreadTid;
 
 /**
  * Created by free2 on 16-3-19.
@@ -81,17 +82,11 @@ public class FragmentNewTopAdapter extends RecyclerView.Adapter<FragmentNewTopAd
 
         @OnClick(R.id.main_item_btn_item)
         protected void main_item_btn_item_click(){
-            //传递一些参数过去 | 分割到时候分割   url|标题|回复|类型|author
 
-            List<String> messagelist = new ArrayList<>();
             NewAndTopListData single_data =  DataSet.get(getAdapterPosition());
-            messagelist.add(single_data.getTitleUrl());
-            messagelist.add(single_data.getTitle());
-            messagelist.add(single_data.getReplyCount());
-            messagelist.add("");
-            messagelist.add(single_data.getUser());
 
-            ArticleNormalActivity.open(activity, messagelist);
+            ArticleNormalActivity.open(activity, getThreadTid.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplyCount()," ");
+
         }
     }
 }

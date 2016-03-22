@@ -41,14 +41,7 @@ public class MyWebViewClient extends WebViewClient {
 
         //http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=840272&extra=
         if (url.startsWith("http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=")) { // 帖子
-            //TODO 传入参数太多
-            List<String> messagelist = new ArrayList<>();
-            messagelist.add(url);
-            messagelist.add("title");
-            messagelist.add("");
-            messagelist.add(" ");
-            messagelist.add("");
-            ArticleNormalActivity.open(context,messagelist);
+
 
         } else if (url.startsWith("http://rs.xidian.edu.cn/home.php?mod=space&uid=")) { // 用户
             //ArticleNormalActivity.open(context, url.substring(26));

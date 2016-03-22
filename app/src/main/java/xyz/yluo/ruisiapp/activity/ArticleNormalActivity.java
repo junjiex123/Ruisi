@@ -13,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -80,28 +82,26 @@ public class ArticleNormalActivity extends AppCompatActivity
     protected CoordinatorLayout topic_layout_root;
 
     //当前评论第几页
-    private int CurrentPage = 1;
+    private int ARTICLE_CURRENT_PAGE = 1;
     //存储数据 需要填充的列表
     private List<SingleArticleData> mydatalist = new ArrayList<>();
-    private static String articleUrl;
-    private static String articleTitle;
-    private static String replaycount;
-    private static String articleauthor;
-    private static String articletype;
+    private static String ARTICLE_TID;
+    private static String ARTICLE_TITLE = "";
+    private static String ARTICLE_REPLY_COUNT;
+    private static String ARTICLE_TYPE;
+    //当前回复链接
+    private String replyUrl = "";
     private ArticleRecycleAdapter mRecyleAdapter;
 
-
-    public static void open(Context context, List<String> messagelist) {
+    //约定好要就收的数据
+    public static void open(Context context, String tid,String title,String replycount,String type) {
         Intent intent = new Intent(context, ArticleNormalActivity.class);
-        //url|标题|回复|类型|author
-        articleUrl = messagelist.get(0);
-        articleTitle =  messagelist.get(1);
-        replaycount =  messagelist.get(2);
-        articletype =  messagelist.get(3);
-        articleauthor =  messagelist.get(4);
+        ARTICLE_TID = tid;
+        ARTICLE_TITLE = title;
+        ARTICLE_REPLY_COUNT = replycount;
+        ARTICLE_TYPE = type;
         context.startActivity(intent);
     }
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -114,13 +114,11 @@ public class ArticleNormalActivity extends AppCompatActivity
         ActionBar actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(articleTitle);
+            actionBar.setTitle(ARTICLE_TITLE);
         }
 
-        //mLayoutManager = new GridLayoutManager(getContext(),2);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyleAdapter = new ArticleRecycleAdapter(this, this, mydatalist);
-        // Set MyRecyleAdapter as the adapter for RecyclerView.
         mRecyclerView.setAdapter(mRecyleAdapter);
 
         //item 增加删除动画
@@ -145,30 +143,17 @@ public class ArticleNormalActivity extends AppCompatActivity
             }
         });
 
-        action_send.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View view) {
-                smiley_container.setVisibility(View.GONE);
-                hide_ime();
-                //按钮监听
-                if (ConfigClass.CONFIG_ISLOGIN) {
-                    //TODO  发帖逻辑
-                    //Reply_Dialog_Fragment newFragment = new Reply_Dialog_Fragment();
-                    //newFragment.show(getFragmentManager(), "replydialog");
-                    post_reply(input_aera.getText().toString());
-
-                } else {
-                    NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();
-                    dialogFragment.show(getFragmentManager(), "needlogin");
-                }
-            }
-        });
 
         action_smiley.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                smiley_container.setVisibility(View.VISIBLE);
+                if(smiley_container.getVisibility()==View.VISIBLE){
+                    smiley_container.setVisibility(View.GONE);
+                }else{
+                    smiley_container.setVisibility(View.VISIBLE);
+                }
+
             }
         });
 
@@ -183,7 +168,7 @@ public class ArticleNormalActivity extends AppCompatActivity
             @Override
             public void run() {
                 refreshLayout.setRefreshing(true);
-                getArticleData(articleUrl, 1);
+                getArticleData(ARTICLE_TID, 1);
             }
         });
         //下拉刷新
@@ -191,9 +176,26 @@ public class ArticleNormalActivity extends AppCompatActivity
             @Override
             public void onRefresh() {
                 //数据填充
-                getArticleData(articleUrl, CurrentPage);
+                getArticleData(ARTICLE_TID, ARTICLE_CURRENT_PAGE);
             }
         });
+
+    }
+
+    @OnClick(R.id.action_send)
+    protected void action_send_click(){
+
+        smiley_container.setVisibility(View.GONE);
+        hide_ime();
+        //按钮监听
+        if (ConfigClass.CONFIG_ISLOGIN) {
+            post_reply(input_aera.getText().toString());
+
+        } else {
+            NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();
+            dialogFragment.show(getFragmentManager(), "needlogin");
+        }
+
 
     }
 
@@ -225,38 +227,35 @@ public class ArticleNormalActivity extends AppCompatActivity
         }
     }
 
-
     //recyclerView item点击事件 加载更多事件
     @Override
     public void recyclerViewListClicked(View v, int position) {
         Toast.makeText(getApplicationContext(),"被电击"+position+"|"+mydatalist.size(),Toast.LENGTH_SHORT).show();
         if(position==mydatalist.size()){
-            int newpage  = CurrentPage;
+            int newpage  = ARTICLE_CURRENT_PAGE;
             //加载更多 被电击
             if(position%10==0){
                 //本页最后一个
                 //到下一页去数据填充
-                CurrentPage++;
+                ARTICLE_CURRENT_PAGE++;
                 newpage+=1;
             }
-            getArticleData(articleUrl, newpage);
+            getArticleData(ARTICLE_TID, newpage);
         }
     }
 
 
-    //文章一页的html 根据页数 url
-    private void getArticleData(String url, final int page) {
-        //"forum.php?mod=viewthread&tid=838333";
+    //文章一页的html 根据页数 tid
+    private void getArticleData(String tid, final int page) {
 
-        AsyncHttpCilentUtil.get(this, url + "&page=" + page, null, new AsyncHttpResponseHandler() {
+        String url = "forum.php?mod=viewthread&tid="+ARTICLE_TID+"&page="+ARTICLE_CURRENT_PAGE+"&mobile=2";
+
+        System.out.print("\nurl"+url);
+        AsyncHttpCilentUtil.get(this, url, null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String res = new String(responseBody);
-                //neednum需要的个数 page在哪一页
-
-                int neednum = mydatalist.size() - (page - 1) * 10;
-                //Toast.makeText(getApplicationContext(),"success"+res,Toast.LENGTH_LONG).show();
-                new DealWithArticleData(res, neednum).execute((Void) null);
+                new DealWithArticleData(res).execute((Void) null);
             }
 
             @Override
@@ -269,177 +268,118 @@ public class ArticleNormalActivity extends AppCompatActivity
 
 
     public class DealWithArticleData extends AsyncTask<Void,Void,String>{
-
         //* 传入一篇文章html
         //* 返回list<SingleArticleData>
 
-        //临时存储
-        List<SingleArticleData> templist = new ArrayList<>();
-
         private String htmlData;
-        private int need;
 
-        private int index =0;
+        //目前有多少数据
+        private int start =0;
 
-        public DealWithArticleData(String htmlData,int need) {
+        public DealWithArticleData(String htmlData) {
             this.htmlData = htmlData;
-            this.need = need;
+            start = mydatalist.size()-1;
         }
 
         @Override
         protected String doInBackground(Void... params) {
+            //title, type, replyCount, username, userUrl, userImgUrl, postTime, cotent
+            String content = "未能获取数据";
+            String userimg = "";
+            String userurl = "";
+            String username = "";
+            String posttime = "";
 
             //list 所有楼数据
             Document doc = Jsoup.parse(htmlData);
 
-            //加个开关
-            if(ConfigClass.CONFIG_SHOW_PLAIN_TEXT){
-                //移除所有style
-                //移除font所有样式
-                doc.select("[style]").removeAttr("style");
-                doc.select("font").removeAttr("color").removeAttr("size").removeAttr("face");
+
+            //获取回复/hash
+            if (doc.select("input[name=formhash]").first() != null) {
+                replyUrl = doc.select("form#fastpostform").attr("action");
+                ConfigClass.CONFIG_FORMHASH = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
             }
-            //todo 不能移除 有bug 文字为白色
+            Elements elements = doc.select(".postlist");
+            if(elements!=null){
+                System.out.print("\n"+elements.html()+"\n");
 
-            Elements list = doc.select("div[id=postlist]").select("div[id^=post_]");
+                SingleArticleData data;
+                //获取标题
+                if(ARTICLE_TITLE.equals("")){
+                    ARTICLE_TITLE = elements.select("h2").first().text().trim();
+                }
 
-            for (Element element : list) {
-                //每层楼数据
-                if(index<need){
-                    index++;
-                }else{
-                    index++;
-                    boolean isGetpinfen = false;
-                    String pinfen = "";
-                    boolean isGetgold = false;
-                    String gold = "";
-                    boolean isGetdianpin  = false;
-                    String dianpin = "";
-                    SingleArticleData listdata =null;
+                Elements postlist = elements.select("div[id^=pid]");
 
+                for(Element temp:postlist){
+                    userimg = temp.select("span[class=avatar]").select("img").attr("src");
+                    Elements userInfo = temp.select("ul.authi");
+                    userurl = userInfo.select("a[href^=home.php?mod=space&uid=]").attr("href");
+                    username = userInfo.select("a[href^=home.php?mod=space&uid=]").text();
+                    posttime = userInfo.select("li.grey.rela").text();
 
-                    //修改表情大小
-                    for (Element temp : element.select("img[src^=static/image/smiley/]")) {
-                        //System.out.print("replace before------>>>>>>>>>>>"+temp+"\n");
-                        //String imgUrl = temp.attr("src");
-                        //String newimgurl =  imgUrl.replace("static/image/smiley/tieba/","file:///android_asset/smiley/tieba/");
-                        //System.out.print("replace------>>>>>>>>>>>"+imgUrl+newimgurl+"\n");
-                        temp.attr("style", "width:30px;height: 30px;");
-                    }
-
-                    //替换贴吧表情到本地
-                    //("static/image/smiley/tieba/","file:///android_asset/smiley/tieba/");
-                    for (Element temp : element.select("img[src^=static/image/smiley/tieba/]")) {
-                        //System.out.print("replace before------>>>>>>>>>>>"+temp+"\n");
-                        String imgUrl = temp.attr("src");
-                        String newimgurl =  imgUrl.replace("static/image/smiley/tieba/","file:///android_asset/smiley/tieba/");
-                        //System.out.print("replace------>>>>>>>>>>>"+imgUrl+newimgurl+"\n");
-                        temp.attr("src", newimgurl);
-                    }
-                    //http get 无法获得正确的图片地址
-                    // get1-->><img id="aimg_dfzU4" onclick="zoom(this, this.src, 0, 0, 0)" class="zoom" width="249" height="356"
-                    // file="http://rs.xidian.edu.cn/forum.php?mod=image&amp;aid=851820&amp;size=300x300&amp;key=2a3604eec0da779f&amp;nocache=yes&amp;type=fixnone"
-                    // border="0" alt="" />
-                    //正确的地址---->>>>
-                    // <img src="http://rs.xidian.edu.cn/forum.php?mod=image&amp;aid=851820&amp;size=300x300&amp;key=2a3604eec0da779f&amp;nocache=yes&amp;type=fixnone" >;
-
-                    //get2--->><img id="aimg_851787" aid="851787" src="static/image/common/none.gif"
-                    // zoomfile="./data/attachment/forum/201603/15/110909j3zlw4uoez7we5eq.jpg"
-                    // file="./data/attachment/forum/201603/15/110909j3zlw4uoez7we5eq.jpg"
-                    // class="zoom" onclick="zoom(this, this.src, 0, 0, 0)" width="698" id="aimg_851787" inpost="1"
-                    // onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
-                    //正确的地址2
-                    // <img src="./data/attachment/forum/201603/15/110909j3zlw4uoez7we5eq.jpg">
-
+//                    //替换贴吧表情到本地 可有可无
+//                    //("static/image/smiley/tieba/","file:///android_asset/smiley/tieba/");
+//                    for (Element imagetemp : temp.select("img[src^=static/image/smiley/tieba/]")) {
+//                        String imgUrl = imagetemp.attr("src");
+//                        String newimgurl =  imgUrl.replace("static/image/smiley/tieba/","file:///android_asset/smiley/tieba/");
+//                        temp.attr("src", newimgurl);
+//                    }
                     // 修正图片链接地址
                     //[attr^=value], [attr$=value], [attr*=value]这三个语法分别代表，属性以 value 开头、结尾以及包含
-                    for (Element temp : element.select("img[file^=http://rs.xidian.edu.cn/forum.php?mod=image],img[file^=./data/attachment/]")) {
-                        //System.out.print("replace before------>>>>>>>>>>>"+temp+"\n");
-                        String imgUrl = temp.attr("file");
-                        temp.attr("src", imgUrl);
-                        temp.attr("file","");
-                        temp.attr("width","");
-                        //img{display: inline; height: auto; max-width: 100%;}
-                        //temp.attr("display: inline; height: auto; max-width: 100%;");
-                    }
-
-                    String username = element.select("div[class=pi]").select("div[class=authi]").select("a[href^=home.php?mod=space][class=xi2]").text().trim();
-
-                    //金币贴获得了金币
-                    gold = element.select("td[class=plc]").select("div[class=cm]").select("h3.psth.xs1").select("span").text();
-                    if(gold !=""){
-                        //获得了金币 flag = true；
-                        isGetgold = true;
-                        //System.out.print("\nyou get gold----->>>>>>\n"+gold+"<<<<<<-----\n");
-                    }
-
-                    //TODO 简单评分 以后加强
-                    pinfen = element.select("td[class=plc]").select("div.pcb").select("dl.rate").select("table").select("th.xw1").text().trim();
-                    if(pinfen !=""){
-                        //pinfenpeople = temppinfen.select("tr[id^=rate_]").text().trim();
-                        //获得了金币 flag = true；
-                        isGetpinfen = true;
-                        //System.out.print("\nyou get pinfen----->>>>>>\n"+pinfen+"<<<<<<-----\n");
-                    }
-                    //TODO 获得了内容 处理它
-                    Elements content= element.select("td[class=plc]").select("div[class=pcb]").select("td[class=t_f][id^=postmessage]");
-                    //TODO  有bug 不完整
-                    //content= element.select("td[class=plc]").select("div[class=pcb]").select("div[class=t_fsz]");
-                    //System.out.print("\n"+content.html());
-                    //移除图片tip
-                    for( Element ele : content.select(".tip.tip_4"))
+                    //"img[file^=http://rs.xidian.edu.cn/forum.php?mod=image],img[file^=./data/attachment/]"
+                    //forum.php?mod=image&aid=853465&size=140x140&key=a10bc9320c15d379&type=fixnone
+                    //http://rs.xidian.edu.cn/data/attachment/image/000/85/34/65_2000_550.jpg?mobile=2
+                    for (Element tempp : temp.select("img[id^=aimg]"))
                     {
-                        ele.remove();
+                        //aimg_850863
+                        String imgid1 = tempp.attr("id");
+                        tempp.attr("src", "http://rs.xidian.edu.cn/data/attachment/image/000/"+
+                                imgid1.substring(5,7)+"/"+imgid1.substring(7,9)+"/"+imgid1.substring(9,11)+
+                                "_2000_550.jpg?mobile=2");
                     }
 
-                    //替换影响webView宽度的标记
-                    String contentbefore = content.html().replaceAll("(white-space:\\s*nowrap)","white-space:normal");
-
-                    //替换连续回车为1个
-                    String newcontent = contentbefore.replaceAll("(\\s*<br>\\s*){2,}","<br>");
-                    //(<br>){1,}
-                    // <br />
-                    //<br />
-                    //<br />
-                    //  (<br />\s*){2,}
-                    //System.out.print("\n"+newcontent);
-
-                    if(username!=""&&content.html()!=""){
-                        String time = element.select("div[class=pi]").select("div[class=authi]").select("em[id^=authorposton]").text().trim();
-                        String userUrl = element.select("div[class=pi]").select("div[class=authi]").select("a[href^=home.php?mod=space][class=xi2]").attr("href").trim();
-                        String imgurl = element.select("td[class=pls]").select("div[class=avatar]").select("img[src^=http://rs.xidian.edu.cn/ucenter/data/avatar]").attr("src").trim();
-
-                        //获得用户积分
-                        String usergroup = element.select("a[href$=profile][class=xi2]").text().trim();
-                        if(usergroup.contains(" ")){
-                            usergroup = usergroup.split(" ")[0];
-                        }
-
-                        //System.out.print("\n用户积分——————————>>>>"+usergroup+"\n");
-
-                        String level = GetLevel.getUserLevel(Integer.parseInt(usergroup));
-                        System.out.print("\n>>>>>>>\n>>>>>>>>\nusername :"+username+"\nuserUrl :"+userUrl+"\ntime :"+time+"\nimgurl :"+imgurl+"\nlevel  :"+level+"\ncontent: "+newcontent+"\n");
-                        // replaycount;String articleauthor;articletype;
-
-                        listdata = new SingleArticleData(articleTitle,articletype,username,userUrl,imgurl,time,level,replaycount,newcontent);
-                        if(isGetgold){
-                            listdata.isGetGold = true;
-                            listdata.setGoldnum(gold);
-                        }if(isGetdianpin){
-                            listdata.isGetDianpin =true;
-                            listdata.setDianpin(dianpin);
-                        }if(isGetpinfen){
-                            listdata.isGetpingfen = true;
-                            listdata.setPingfen(pinfen);
-                        }
+                    //是否移除所有样式
+                    if(ConfigClass.CONFIG_SHOW_PLAIN_TEXT){
+                        //移除所有style
+                        //移除font所有样式
+                        temp.select("[style]").removeAttr("style");
+                        temp.select("font").removeAttr("color").removeAttr("size").removeAttr("face");
                     }
 
-                    if(listdata!=null){
-                        templist.add(listdata);
+                    //修改表情大小
+                    for (Element tempp : temp.select("img[src^=static/image/smiley/]")) {
+
+                        tempp.attr("style", "width:30px;height: 30px;");
+                    }
+                    //替换贴吧表情到本地
+                    //可有无
+//                    //("static/image/smiley/tieba/","file:///android_asset/smiley/tieba/");
+//                    for (Element temp : element.select("img[src^=static/image/smiley/tieba/]")) {
+//                        //System.out.print("replace before------>>>>>>>>>>>"+temp+"\n");
+//                        String imgUrl = temp.attr("src");
+//                        String newimgurl =  imgUrl.replace("static/image/smiley/tieba/","file:///android_asset/smiley/tieba/");
+//                        //System.out.print("replace------>>>>>>>>>>>"+imgUrl+newimgurl+"\n");
+//                        temp.attr("src", newimgurl);
+//                    }
+
+                    //替换无意义的 br
+                    content = temp.select(".message").html().replaceAll("(\\s*<br>\\s*){2,}","");
+
+                    //文章内容
+                    if(mydatalist.size()==0){
+                        String newtime = posttime.replace("收藏","");
+                        //title, type, replyCount,username,userUrl,userImgUrl,postTime,cotent
+                        data = new SingleArticleData(ARTICLE_TITLE,ARTICLE_TYPE,ARTICLE_REPLY_COUNT,username,userurl,userimg,newtime,content);
+                        mydatalist.add(data);
+                    }else{
+                        //评论
+                        //String username, String userUrl, String userImgUrl, String postTime,String cotent
+                        data = new SingleArticleData(username,userurl,userimg,posttime,content);
+                        mydatalist.add(data);
                     }
                 }
             }
-
             return null;
         }
 
@@ -447,49 +387,17 @@ public class ArticleNormalActivity extends AppCompatActivity
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            if(index==0){
+            //没有获取到数据
+            if(start==mydatalist.size()-1){
                 //没有加载到数据
                 Toast.makeText(getApplicationContext(),"暂无更多",Toast.LENGTH_SHORT).show();
-                CurrentPage--;
+                ARTICLE_CURRENT_PAGE--;
             }
-            //增加了多少个
-            int addnum = templist.size();
 
-            int staart = mydatalist.size();
-
-            //刷新全部
-            //mRecyleAdapter.notifyDataSetChanged();
-            //部分
-            mydatalist.addAll(templist);
-            mRecyleAdapter.notifyItemRangeInserted(staart, addnum);
+            mRecyleAdapter.notifyItemRangeInserted(start, mydatalist.size()-start);
             refreshLayout.setRefreshing(false);
         }
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }else //返回按钮
-            if (id == android.R.id.home) {
-                finish();
-                return true;
-            }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -500,13 +408,12 @@ public class ArticleNormalActivity extends AppCompatActivity
             super.onBackPressed();
         }
 
-
     }
 
     private void post_reply(String text){
         final ProgressDialog progress;
-        progress = ProgressDialog.show(this, "dialog title",
-                "dialog message", true);
+        progress = ProgressDialog.show(this, "正在发送",
+                "请等待", true);
         int len =0;
         // Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
         try {
@@ -516,56 +423,37 @@ public class ArticleNormalActivity extends AppCompatActivity
         }
         if(len<13){
             Toast.makeText(getApplicationContext(),"字数不够要13个字节！！",Toast.LENGTH_SHORT).show();
-            //Reply_Dialog_Fragment newFragment = new Reply_Dialog_Fragment();
-            //newFragment.show(getFragmentManager(),"replydialog");
         }else {
-            //System.out.print("\n当前文章地址"+articleUrl+"\n");
             //尝试回复
-            //articleUrl
-            //String str = "forum.php?mod=viewthread&tid=837479&extra=page%3D1";
-            Pattern pattern = Pattern.compile("[0-9]{3,}");
-            Matcher matcher = pattern.matcher(articleUrl);
-            String tid ="";
-            while (matcher.find()) {
-                tid = articleUrl.substring(matcher.start(),matcher.end());
-                //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
-            }
-            String url ="forum.php?mod=post&infloat=yes&action=reply&fid=72&extra=&tid="+tid+"&replysubmit=yes&inajax=1";
             /*
             message:帮顶
-            posttime:1457620291
             formhash:70af5bb6
-            usesig:1
-            subject:
             */
             RequestParams params = new RequestParams();
             params.put("formhash", ConfigClass.CONFIG_FORMHASH);
-            params.put("usesig", "1");
             params.put("message", text);
-            params.put("subject", "");
 
-            AsyncHttpCilentUtil.post(getApplicationContext(), url, params, new AsyncHttpResponseHandler() {
+            //forum.php?mod=post&action=reply&fid=72&tid=841526&extra=&replysubmit=yes&mobile=2
+            //forum.php?mod=post&action=reply&fid=72&tid=841526&extra=&replysubmit=yes&mobile=2&handlekey=fastpost&loc=1&inajax=1
 
+            AsyncHttpCilentUtil.post(getApplicationContext(), replyUrl+"&handlekey=fastpost&loc=1&inajax=1", params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
                     String res = new String(responseBody);
-                    if (res.contains("回复发布成功")){
+                    if (res.contains("回复发布成功")) {
                         progress.dismiss();
                         Toast.makeText(getApplicationContext(), "回复发表成功", Toast.LENGTH_SHORT).show();
                         input_aera.setText("");
                         hide_ime();
-                    }else{
+                    } else {
                         progress.dismiss();
-                        Toast.makeText(getApplicationContext(), "由于位置原因发表失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "由于未知原因发表失败", Toast.LENGTH_SHORT).show();
                     }
                 }
-
                 @Override
                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                     progress.dismiss();
                     Toast.makeText(getApplicationContext(), "网络错误！！！", Toast.LENGTH_SHORT).show();
-
                 }
             });
         }
@@ -578,6 +466,17 @@ public class ArticleNormalActivity extends AppCompatActivity
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

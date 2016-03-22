@@ -24,6 +24,7 @@ import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
 import xyz.yluo.ruisiapp.utils.GetUserImage;
+import xyz.yluo.ruisiapp.utils.getThreadTid;
 
 /**
  * Created by free2 on 16-3-5.
@@ -172,17 +173,10 @@ public class MainArticleListAdapter extends RecyclerView.Adapter<MainArticleList
 
         @OnClick(R.id.main_item_btn_item)
         protected void onBtnItemClick() {
-            //传递一些参数过去 | 分割到时候分割   url|标题|回复|类型|author
-
-            List<String> messagelist = new ArrayList<>();
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
-            messagelist.add(single_data.getTitleUrl());
-            messagelist.add(single_data.getTitle());
-            messagelist.add(single_data.getReplayCount());
-            messagelist.add(single_data.getType());
-            messagelist.add(single_data.getAuthor());
 
-            ArticleNormalActivity.open(activity,messagelist);
+            //Context context, String tid,String title,String replycount,String type
+            ArticleNormalActivity.open(activity, getThreadTid.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplayCount(),single_data.getType());
             //System.out.print("$$$$$$$$$>>"+DataSet.get(getPosition()).getTitleUrl()+"|"+article_title.getText()+"|"+reply_count.getText()+"|"+article_type.getText()+"|"+author_name.getText()+"\n");
         }
     }
@@ -239,17 +233,9 @@ public class MainArticleListAdapter extends RecyclerView.Adapter<MainArticleList
 
         @OnClick(R.id.card_list_item)
         protected void card_list_item() {
-            //传递一些参数过去 | 分割到时候分割   url|标题|回复|类型|author
-
-            List<String> messagelist = new ArrayList<>();
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
-            messagelist.add(single_data.getTitleUrl());
-            messagelist.add(single_data.getTitle());
-            messagelist.add(single_data.getReplayCount());
-            messagelist.add(" ");
-            messagelist.add(single_data.getAuthor());
-
-            ArticleNormalActivity.open(activity, messagelist);
+            ////Context context, String tid,String title,String replycount,String type
+            ArticleNormalActivity.open(activity, getThreadTid.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplayCount(),single_data.getType());
             //System.out.print("$$$$$$$$$>>"+DataSet.get(getPosition()).getTitleUrl()+"|"+article_title.getText()+"|"+reply_count.getText()+"|"+article_type.getText()+"|"+author_name.getText()+"\n");
         }
     }

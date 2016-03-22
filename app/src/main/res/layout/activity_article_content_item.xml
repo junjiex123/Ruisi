@@ -73,18 +73,6 @@
                             android:textSize="16sp"
                             android:text="TakWolf" />
 
-                        <TextView
-                            android:layout_gravity="center"
-                            android:id="@+id/title_usergroup"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="3dp"
-                            android:paddingRight="3dp"
-                            android:textColor="@android:color/white"
-                            android:background="@color/colorAccent"
-                            android:textSize="13sp"
-                            android:text="置顶" />
-
                     </LinearLayout>
 
                     <LinearLayout

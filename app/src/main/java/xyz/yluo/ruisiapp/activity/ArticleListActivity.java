@@ -245,11 +245,11 @@ public class ArticleListActivity extends AppCompatActivity
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 //普通板块
                 if (CurrentType == 0) {
-                    new GetNormalListTask(new String(responseBody)).execute();
+                    new GetNormalListTaskRs(new String(responseBody)).execute();
                 } else if (CurrentType == 1) {
                     //TODO
                     //图片板块
-                    new GetImageListTask(new String(responseBody)).execute();
+                    new GetImageListTaskRS(new String(responseBody)).execute();
                 }
 
             }
@@ -263,13 +263,14 @@ public class ArticleListActivity extends AppCompatActivity
 
     }
 
-    //获得一个普通板块文章列表数据 根据html获得数据
-    public class GetNormalListTask extends AsyncTask<Void, Void, String> {
+
+    //校园网状态下获得一个普通板块文章列表数据 根据html获得数据
+    public class GetNormalListTaskRs extends AsyncTask<Void, Void, String> {
 
         private List<ArticleListData> dataset = new ArrayList<>();
         private String res;
 
-        public GetNormalListTask(String res) {
+        public GetNormalListTaskRs(String res) {
             this.res = res;
         }
 
@@ -327,14 +328,13 @@ public class ArticleListActivity extends AppCompatActivity
         }
     }
 
-    //
-    //获得图片板块数据 图片链接、标题等  根据html获得数据
-    public class GetImageListTask extends AsyncTask<Void, Void, String> {
+    //校园网状态下获得图片板块数据 图片链接、标题等  根据html获得数据
+    public class GetImageListTaskRS extends AsyncTask<Void, Void, String> {
 
         private String response;
         private List<ArticleListData> imgdatas = new ArrayList<>();
 
-        public GetImageListTask(String res) {
+        public GetImageListTaskRS(String res) {
             this.response = res;
         }
 

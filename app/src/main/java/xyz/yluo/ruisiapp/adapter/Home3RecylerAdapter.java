@@ -16,6 +16,7 @@ import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.ArticleNormalActivity;
 import xyz.yluo.ruisiapp.data.MyTopicReplyListData;
+import xyz.yluo.ruisiapp.utils.getThreadTid;
 
 /**
  * Created by free2 on 16-3-21.
@@ -105,17 +106,9 @@ public class Home3RecylerAdapter extends RecyclerView.Adapter<Home3RecylerAdapte
 
         @OnClick(R.id.main_item_btn_item)
         protected void main_item_btn_item_click(){
-            //传递一些参数过去 | 分割到时候分割   url|标题|回复|类型|author
 
-            List<String> messagelist = new ArrayList<>();
             MyTopicReplyListData single_data =  DataSet.get(getAdapterPosition());
-            //
-            messagelist.add(single_data.getTitleUrl());
-            messagelist.add(single_data.getTitle());
-            messagelist.add(" ");
-            messagelist.add(" ");
-            messagelist.add(single_data.getAuthor());
-            ArticleNormalActivity.open(activity, messagelist);
+            ArticleNormalActivity.open(activity, getThreadTid.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplycount()," ");
         }
     }
 
@@ -151,17 +144,10 @@ public class Home3RecylerAdapter extends RecyclerView.Adapter<Home3RecylerAdapte
 
         @OnClick(R.id.main_item_btn_item)
         protected void main_item_btn_item_click(){
-            //传递一些参数过去 | 分割到时候分割   url|标题|回复|类型|author
 
-            List<String> messagelist = new ArrayList<>();
             MyTopicReplyListData single_data =  DataSet.get(getAdapterPosition());
-            //
-            messagelist.add(single_data.getTitleUrl());
-            messagelist.add(single_data.getTitle());
-            messagelist.add(" ");
-            messagelist.add(" ");
-            messagelist.add(single_data.getAuthor());
-            ArticleNormalActivity.open(activity, messagelist);
+            ArticleNormalActivity.open(activity, getThreadTid.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplycount()," ");
+
         }
     }
 }
