@@ -34,10 +34,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
-import jp.wasabeef.recyclerview.animators.FadeInAnimator;
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator;
 import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
-import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ArticleListAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
@@ -155,8 +153,6 @@ public class ArticleListActivity extends AppCompatActivity
             }
         });
 
-
-
         //隐藏按钮
         mRecyclerView.addOnScrollListener(new HidingScrollListener() {
             @Override
@@ -208,14 +204,14 @@ public class ArticleListActivity extends AppCompatActivity
             //72灌水区
             mLayoutManager = new LinearLayoutManager(this);
             //加载更多
-            mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this));
+            mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this,8));
         } else if (CurrentType == TYPE_IMAGE ) {
             //图片板 或者板块列表
             mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         }
 
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyleAdapter = new ArticleListAdapter(this, mydatasetnormal);
+        mRecyleAdapter = new ArticleListAdapter(this, mydatasetnormal,0);
         mRecyclerView.setAdapter(mRecyleAdapter);
     }
 

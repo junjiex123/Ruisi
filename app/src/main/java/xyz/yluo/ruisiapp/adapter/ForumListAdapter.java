@@ -9,11 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,7 +17,6 @@ import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.ArticleListActivity;
 import xyz.yluo.ruisiapp.data.FroumListData;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
 import xyz.yluo.ruisiapp.utils.GetFroumLogo;
 import xyz.yluo.ruisiapp.utils.getFroumFid;
 

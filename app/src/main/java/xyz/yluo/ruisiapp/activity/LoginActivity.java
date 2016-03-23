@@ -2,7 +2,6 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.renderscript.Element;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -20,7 +19,6 @@ import com.loopj.android.http.RequestParams;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,7 +27,6 @@ import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
-import xyz.yluo.ruisiapp.utils.GetFormHash;
 import xyz.yluo.ruisiapp.utils.getMd5Pass;
 
 

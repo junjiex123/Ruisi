@@ -1,13 +1,11 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,11 +39,14 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
     //数据
     private List<ArticleListData> DataSet;
 
+
+    private int type =3;
     //上下文
     private Activity activity;
-    public ArticleListAdapter(Activity activity, List<ArticleListData> data) {
+    public ArticleListAdapter(Activity activity, List<ArticleListData> data,int type) {
         DataSet = data;
         this.activity =activity;
+        this.type = type;
     }
 
     @Override
@@ -54,13 +55,12 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         if (position>0&& position == getItemCount() - 1) {
             return TYPE_LOAD_MORE;
         }
-
         //手机版
-        if(!ConfigClass.CONFIG_IS_INNER){
+        if(!ConfigClass.CONFIG_IS_INNER||type==TYPE_NORMAL_MOBILE){
             return TYPE_NORMAL_MOBILE;
         }else{
             //图片列表
-            if(position!= getItemCount() - 1 && DataSet.get(position).isImageCard()) {
+            if(DataSet.get(position).isImageCard()) {
                 return TYPE_IMAGE_CARD;
             }
             else {

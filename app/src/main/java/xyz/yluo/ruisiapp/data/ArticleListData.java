@@ -28,7 +28,6 @@ public class ArticleListData {
         this.image = image;
     }
 
-
     private String image;//图片文章特有 手机版有么有图
 
     private String type;// normal zhidin gold:100

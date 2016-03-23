@@ -1,14 +1,8 @@
 package xyz.yluo.ruisiapp.utils;
 
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
-import android.provider.Telephony;
 import android.support.v4.content.ContextCompat;
-import android.view.View;
 
 import java.io.IOException;
 import java.io.InputStream;

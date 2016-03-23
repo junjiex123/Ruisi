@@ -5,10 +5,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import xyz.yluo.ruisiapp.activity.ArticleNormalActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 
 
