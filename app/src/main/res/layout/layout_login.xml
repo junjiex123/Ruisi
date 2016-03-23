@@ -71,8 +71,6 @@
 
         </LinearLayout>
 
-
-
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
@@ -89,4 +87,7 @@
             android:text="New Button"
             android:enabled="false"
             android:id="@+id/login_test_button" />
+
+
+
     </LinearLayout>

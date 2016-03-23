@@ -1,7 +1,12 @@
 package xyz.yluo.ruisiapp.activity;
 
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Html;
@@ -12,11 +17,21 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.fragment.ColorPickerDialog;
+import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
+import xyz.yluo.ruisiapp.utils.ConfigClass;
 import xyz.yluo.ruisiapp.utils.PostHander;
 
 /**
@@ -51,16 +66,41 @@ public class NewArticleActivity extends AppCompatActivity {
     protected CheckBox action_image;
     @Bind(R.id.action_link)
     protected CheckBox action_link;
+    @Bind(R.id.btn_send)
+    protected FloatingActionButton btn_send;
+    @Bind(R.id.main_window)
+    protected CoordinatorLayout main_window;
 
     private int index =0;
     private String color = "#ff0000";
+
+    String hash = ConfigClass.CONFIG_FORMHASH;
+    String time = "1458743743";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_topic);
         ButterKnife.bind(this);
 
+        String url = "forum.php?mod=post&action=newthread&fid=72&mobile=2";
+        AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                Document doc  = Jsoup.parse(new String(responseBody));
 
+                hash = doc.select("input#formhash").attr("value");
+                time = doc.select("input#posttime").attr("value");
+
+                edit_input_content.append("hash:"+hash+"\ntime:"+time);
+
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+            }
+        });
 
         action_bold.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -161,5 +201,28 @@ public class NewArticleActivity extends AppCompatActivity {
 
         PostHander hander = new PostHander(getApplicationContext(),(EditText)getCurrentFocus());
         hander.insertSmiley("{:16" + tmp + ":}", btn.getDrawable());
+    }
+
+    @OnClick(R.id.btn_send)
+    protected void btn_send_click(){
+        Snackbar.make(main_window,"不能为空",Snackbar.LENGTH_SHORT).show();
+        String url = "forum.php?mod=post&action=newthread&fid=72&extra=&topicsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
+        RequestParams params = new RequestParams();
+        params.add("formhash",hash);
+        params.add("posttime",time);
+        params.add("topicsubmit","yes");
+        params.add("subject",edit_input_title.getText().toString());
+        params.add("message",edit_input_content.getText().toString());
+        AsyncHttpCilentUtil.get(getApplicationContext(), url, params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+            }
+        });
     }
 }

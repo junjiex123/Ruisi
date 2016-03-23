@@ -38,6 +38,7 @@
                         android:textSize="14sp"
                         android:text="TakWolf" />
                     <TextView
+                        android:visibility="gone"
                         android:layout_marginLeft="@dimen/dimen_4"
                         android:id="@+id/replay_user_gold"
                         android:layout_width="wrap_content"
@@ -93,18 +94,6 @@
                     android:textSize="14sp"
                     android:gravity="center"
                     android:text="12" />
-
-                <TextView
-                    android:clickable="true"
-                    android:background="?attr/selectableItemBackground"
-                    android:gravity="center"
-                    android:drawableRight="@drawable/ic_reply_accent_24dp"
-                    android:id="@+id/replay_btn_02"
-                    android:text="回复"
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:padding="8dp"
-                    android:scaleType="center" />
 
             </LinearLayout>
 

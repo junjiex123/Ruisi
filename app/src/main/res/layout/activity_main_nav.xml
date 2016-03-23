@@ -24,31 +24,6 @@
             android:src="@drawable/image_placeholder"
             app:civ_border_width="1dp"
             app:civ_border_color="@android:color/white"/>
-        <View
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="1dp">
-        </View>
-
-        <LinearLayout
-            android:layout_marginRight="16dp"
-            android:layout_gravity="center_vertical"
-            android:padding="1dp"
-            android:background="@android:color/holo_red_dark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <CheckBox
-                android:id="@+id/show_zhidin"
-                android:checked="false"
-                android:paddingLeft="2dp"
-                android:paddingRight="2dp"
-                android:background="@drawable/selector_checkbox_background"
-                android:button="@null"
-                android:text="显示置顶贴"
-                android:layout_width="wrap_content"
-                android:layout_height="22dp"
-                android:layout_gravity="end"/>
-        </LinearLayout>
     </LinearLayout>
 
 
@@ -58,23 +33,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <Button
-            android:id="@+id/btn_daka"
-            android:layout_marginTop="@dimen/dimen_8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="打卡"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
-            android:text="Android Studio"
+            android:text="用户名"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="android.studio@android.com" />
+            android:text="some thing" />
     </LinearLayout>
 
     <LinearLayout

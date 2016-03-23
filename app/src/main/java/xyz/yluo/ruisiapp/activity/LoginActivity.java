@@ -109,7 +109,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     @OnClick(R.id.login_test_button)
@@ -130,14 +129,12 @@ public class LoginActivity extends AppCompatActivity {
 
                 String res = new String(responseBody);
                 Document doc = Jsoup.parse(res);
+
                 if(res.contains("欢迎您回来")){
                     ConfigClass.CONFIG_USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
                     login_ok();
                     //home.php?mod=space&uid=252553&do=profile&mycenter=1&mobile=2
-
                 }
-
-
 
                 if (doc.select("input[name=formhash]").first() != null) {
                     ConfigClass.CONFIG_FORMHASH = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
@@ -171,7 +168,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String res = new String(responseBody);
+
                 if (res.contains("欢迎您回来")) {
+                    Document document = Jsoup.parse(res);
+                    ConfigClass.CONFIG_USER_NAME = document.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
                     login_ok();
                 } else {
                     progressBar.setVisibility(View.INVISIBLE);

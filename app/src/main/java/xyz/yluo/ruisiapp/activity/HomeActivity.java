@@ -16,9 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import butterknife.Bind;
@@ -50,12 +47,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected DrawerLayout drawer;
     @Bind(R.id.nav_view)
     protected NavigationView navigationView;
-    @Bind(R.id.main_radiogroup)
-    protected RadioGroup main_radiogroup;
-    @Bind(R.id.radio01)
-    protected RadioButton radio01;
-    @Bind(R.id.radio02)
-    protected RadioButton radio02;
 
     private CheckBox show_zhidin;
     private ActionBar actionBar;
@@ -80,21 +71,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         View header = navigationView.getHeaderView(0);
         View nav_header_login = header.findViewById(R.id.nav_header_login);
         View nav_header_notlogin = header.findViewById(R.id.nav_header_notlogin);
-        show_zhidin = (CheckBox) header.findViewById(R.id.show_zhidin);
-        show_zhidin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
-                    show_zhidin.setText("不显示置顶");
-                    ConfigClass.CONFIG_ISSHOW_ZHIDIN = true;
-
-                }else{
-                    show_zhidin.setText("显示置顶帖");
-                    ConfigClass.CONFIG_ISSHOW_ZHIDIN = false;
-                }
-                drawer.closeDrawer(GravityCompat.START);
-            }
-        });
 
         //判断是否登陆
         if (ConfigClass.CONFIG_ISLOGIN) {

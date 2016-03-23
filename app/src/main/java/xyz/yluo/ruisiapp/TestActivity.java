@@ -142,7 +142,7 @@ public class TestActivity extends AppCompatActivity {
     @OnClick(R.id.get_single)
     protected void get_single_click(){
 
-        String url =  "forum.php?mod=viewthread&tid=841200&fromguid=hot&extra=&mobile=2";
+        String url =  "forum.php?mod=viewthread&tid=841441&extra=&page=14&mobile=2";
 
         AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
             @Override
@@ -153,6 +153,7 @@ public class TestActivity extends AppCompatActivity {
                 if (doc.select("input[name=formhash]").first() != null) {
                     congig_formhash = doc.select("input[name=formhash]").attr("value");
                 }
+                responseText.setText(doc.select(".pg").select("a.nxt").attr("href"));
             }
 
             @Override

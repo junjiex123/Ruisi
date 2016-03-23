@@ -72,20 +72,24 @@ public class ArticleNormalActivity extends AppCompatActivity
     protected ImageButton action_smiley;
     @Bind(R.id.smiley_container)
     protected LinearLayout smiley_container;
-    @Bind(R.id.topic_layout_root)
-    protected CoordinatorLayout topic_layout_root;
 
     //当前评论第几页
-    private int ARTICLE_CURRENT_PAGE = 1;
+    private int CURRENT_PAGE = 1;
     //存储数据 需要填充的列表
     private List<SingleArticleData> mydatalist = new ArrayList<>();
     private static String ARTICLE_TID;
     private static String ARTICLE_TITLE = "";
     private static String ARTICLE_REPLY_COUNT;
     private static String ARTICLE_TYPE;
+    //TODO 金币贴/精华。。。
     //当前回复链接
+    private boolean isEnableLoadMore = false;
+    //回复楼主的链接
     private String replyUrl = "";
+    //下一页链接
+    private String nextPageUrl = "";
     private SingleArticleAdapter mRecyleAdapter;
+    private boolean isfirst = true;
 
     //约定好要就收的数据
     public static void open(Context context, String tid,String title,String replycount,String type) {
@@ -114,12 +118,6 @@ public class ArticleNormalActivity extends AppCompatActivity
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyleAdapter = new SingleArticleAdapter(this, this, mydatalist);
         mRecyclerView.setAdapter(mRecyleAdapter);
-
-        //item 增加删除动画
-        mRecyclerView.setItemAnimator(new FadeInDownAnimator());
-        mRecyclerView.getItemAnimator().setAddDuration(100);
-        mRecyclerView.getItemAnimator().setRemoveDuration(10);
-        mRecyclerView.getItemAnimator().setChangeDuration(10);
 
 
         mRecyclerView.addOnScrollListener(new HidingScrollListener() {
@@ -162,7 +160,8 @@ public class ArticleNormalActivity extends AppCompatActivity
             @Override
             public void run() {
                 refreshLayout.setRefreshing(true);
-                getArticleData(ARTICLE_TID, 1);
+                getArticleData();
+
             }
         });
         //下拉刷新
@@ -170,10 +169,13 @@ public class ArticleNormalActivity extends AppCompatActivity
             @Override
             public void onRefresh() {
                 //数据填充
-                getArticleData(ARTICLE_TID, ARTICLE_CURRENT_PAGE);
+                CURRENT_PAGE = 1;
+                nextPageUrl = "";
+                mydatalist.clear();
+                mRecyleAdapter.notifyDataSetChanged();
+                getArticleData();
             }
         });
-
     }
 
     @OnClick(R.id.action_send)
@@ -189,8 +191,6 @@ public class ArticleNormalActivity extends AppCompatActivity
             NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();
             dialogFragment.show(getFragmentManager(), "needlogin");
         }
-
-
     }
 
     @OnClick({R.id._1000, R.id._1001,R.id._1002,R.id._1003,R.id._1005,
@@ -217,34 +217,41 @@ public class ArticleNormalActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK){
             String result = data.getExtras().getString("result");//得到新Activity 关闭后返回的数据
-            Toast.makeText(getApplicationContext(),"result"+result,Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(),"result"+result,Toast.LENGTH_SHORT).show();
         }
     }
-
     //recyclerView item点击事件 加载更多事件
     @Override
     public void recyclerViewListClicked(View v, int position) {
-        Toast.makeText(getApplicationContext(),"被电击"+position+"|"+mydatalist.size(),Toast.LENGTH_SHORT).show();
+
+        //todo 以后回复层主写在这儿
+        //Toast.makeText(getApplicationContext(),"被电击"+position+"|"+mydatalist.size(),Toast.LENGTH_SHORT).show();
         if(position==mydatalist.size()){
-            int newpage  = ARTICLE_CURRENT_PAGE;
-            //加载更多 被电击
-            if(position%10==0){
-                //本页最后一个
-                //到下一页去数据填充
-                ARTICLE_CURRENT_PAGE++;
-                newpage+=1;
+            //加载更多被电击
+            if(isEnableLoadMore){
+                isEnableLoadMore = false;
+                if(nextPageUrl!=""){
+                    CURRENT_PAGE++;
+                }
+                getArticleData();
             }
-            getArticleData(ARTICLE_TID, newpage);
         }
+            //getArticleData();
     }
 
 
     //文章一页的html 根据页数 tid
-    private void getArticleData(String tid, final int page) {
+    private void getArticleData() {
+        //到哪一页去加载
+        if(mydatalist.size()==0){
+            CURRENT_PAGE =1;
+        }
 
-        String url = "forum.php?mod=viewthread&tid="+ARTICLE_TID+"&page="+ARTICLE_CURRENT_PAGE+"&mobile=2";
+        String url = "forum.php?mod=viewthread&tid="+ARTICLE_TID+"&page="+CURRENT_PAGE+"&mobile=2";
+        if(nextPageUrl!=""){
+            url = nextPageUrl;
+        }
 
-        System.out.print("\nurl"+url);
         AsyncHttpCilentUtil.get(this, url, null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -257,22 +264,17 @@ public class ArticleNormalActivity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(), "网络错误", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
-
 
     public class DealWithArticleData extends AsyncTask<Void,Void,String>{
         //* 传入一篇文章html
         //* 返回list<SingleArticleData>
+        private List<SingleArticleData> tepdata = new ArrayList<>();
 
         private String htmlData;
 
-        //目前有多少数据
-        private int start =0;
-
         public DealWithArticleData(String htmlData) {
             this.htmlData = htmlData;
-            start = mydatalist.size()-1;
         }
 
         @Override
@@ -286,17 +288,20 @@ public class ArticleNormalActivity extends AppCompatActivity
 
             //list 所有楼数据
             Document doc = Jsoup.parse(htmlData);
-
-
             //获取回复/hash
             if (doc.select("input[name=formhash]").first() != null) {
                 replyUrl = doc.select("form#fastpostform").attr("action");
                 ConfigClass.CONFIG_FORMHASH = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
             }
+
+            String url = doc.select(".pg").select("a.nxt").attr("href");
+            if(url.contains("forum.php")){
+                nextPageUrl = url;
+            }else{
+                nextPageUrl = "";
+            }
             Elements elements = doc.select(".postlist");
             if(elements!=null){
-                System.out.print("\n"+elements.html()+"\n");
-
                 SingleArticleData data;
                 //获取标题
                 if(ARTICLE_TITLE.equals("")){
@@ -312,6 +317,8 @@ public class ArticleNormalActivity extends AppCompatActivity
                     username = userInfo.select("a[href^=home.php?mod=space&uid=]").text();
                     posttime = userInfo.select("li.grey.rela").text();
 
+                    String bridge = userInfo.select("a[href^=home.php?mod=spacecp&ac=favorite").text();
+
 //                    //替换贴吧表情到本地 可有可无
 //                    //("static/image/smiley/tieba/","file:///android_asset/smiley/tieba/");
 //                    for (Element imagetemp : temp.select("img[src^=static/image/smiley/tieba/]")) {
@@ -320,18 +327,16 @@ public class ArticleNormalActivity extends AppCompatActivity
 //                        temp.attr("src", newimgurl);
 //                    }
                     // 修正图片链接地址
+                    //TODO 现在图片太小
                     //[attr^=value], [attr$=value], [attr*=value]这三个语法分别代表，属性以 value 开头、结尾以及包含
-                    //"img[file^=http://rs.xidian.edu.cn/forum.php?mod=image],img[file^=./data/attachment/]"
-                    //forum.php?mod=image&aid=853465&size=140x140&key=a10bc9320c15d379&type=fixnone
-                    //http://rs.xidian.edu.cn/data/attachment/image/000/85/34/65_2000_550.jpg?mobile=2
-                    for (Element tempp : temp.select("img[id^=aimg]"))
-                    {
-                        //aimg_850863
-                        String imgid1 = tempp.attr("id");
-                        tempp.attr("src", "http://rs.xidian.edu.cn/data/attachment/image/000/"+
-                                imgid1.substring(5,7)+"/"+imgid1.substring(7,9)+"/"+imgid1.substring(9,11)+
-                                "_2000_550.jpg?mobile=2");
-                    }
+//                    for (Element tempp : temp.select("img[id^=aimg]"))
+//                    {
+//                        //aimg_850863
+//                        String imgid1 = tempp.attr("id");
+//                        tempp.attr("src", "http://rs.xidian.edu.cn/data/attachment/image/000/"+
+//                                imgid1.substring(5,7)+"/"+imgid1.substring(7,9)+"/"+imgid1.substring(9,11)+
+//                                "_2000_550.jpg?mobile=2");
+//                    }
 
                     //是否移除所有样式
                     if(ConfigClass.CONFIG_SHOW_PLAIN_TEXT){
@@ -341,7 +346,7 @@ public class ArticleNormalActivity extends AppCompatActivity
                         temp.select("font").removeAttr("color").removeAttr("size").removeAttr("face");
                     }
 
-                    //修改表情大小
+                    //修改表情大小 30x30
                     for (Element tempp : temp.select("img[src^=static/image/smiley/]")) {
 
                         tempp.attr("style", "width:30px;height: 30px;");
@@ -361,16 +366,20 @@ public class ArticleNormalActivity extends AppCompatActivity
                     content = temp.select(".message").html().replaceAll("(\\s*<br>\\s*){2,}","");
 
                     //文章内容
-                    if(mydatalist.size()==0){
+                    if(mydatalist.size()==0&&tepdata.size()==0){
                         String newtime = posttime.replace("收藏","");
                         //title, type, replyCount,username,userUrl,userImgUrl,postTime,cotent
                         data = new SingleArticleData(ARTICLE_TITLE,ARTICLE_TYPE,ARTICLE_REPLY_COUNT,username,userurl,userimg,newtime,content);
-                        mydatalist.add(data);
+                        tepdata.add(data);
                     }else{
+                        //又回到了1楼
+                        if(bridge.equals("收藏")&&tepdata.size()==0){
+                            break;
+                        }
                         //评论
                         //String username, String userUrl, String userImgUrl, String postTime,String cotent
                         data = new SingleArticleData(username,userurl,userimg,posttime,content);
-                        mydatalist.add(data);
+                        tepdata.add(data);
                     }
                 }
             }
@@ -380,15 +389,25 @@ public class ArticleNormalActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            isEnableLoadMore = true;
 
-            //没有获取到数据
-            if(start==mydatalist.size()-1){
-                //没有加载到数据
-                Toast.makeText(getApplicationContext(),"暂无更多",Toast.LENGTH_SHORT).show();
-                ARTICLE_CURRENT_PAGE--;
+            int start = mydatalist.size();
+
+            int add = 0;
+            if(nextPageUrl!=""||mydatalist.size()==0){
+                mydatalist.addAll(tepdata);
+                add = tepdata.size();
+            }else if(tepdata.size()==0){
+                CURRENT_PAGE--;
+                add =0 ;
+            }else if(tepdata.size()>0){
+                for(int i=(mydatalist.size()%10);i<tepdata.size();i++){
+                    mydatalist.add(tepdata.get(i));
+                    add++;
+                }
             }
 
-            mRecyleAdapter.notifyItemRangeInserted(start, mydatalist.size()-start);
+            mRecyleAdapter.notifyItemRangeInserted(start, add);
             refreshLayout.setRefreshing(false);
         }
 
@@ -435,6 +454,11 @@ public class ArticleNormalActivity extends AppCompatActivity
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     String res = new String(responseBody);
                     if (res.contains("回复发布成功")) {
+                        //修正页数
+                        if(nextPageUrl==""&&mydatalist.size()%10==0){
+                            nextPageUrl = "mm";
+                        }
+
                         progress.dismiss();
                         Toast.makeText(getApplicationContext(), "回复发表成功", Toast.LENGTH_SHORT).show();
                         input_aera.setText("");

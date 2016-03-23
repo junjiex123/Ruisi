@@ -170,12 +170,6 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         @Bind(R.id.replay_time)
         protected TextView replay_time;
 
-        @Bind(R.id.replay_btn_01)
-        protected TextView replay_btn_01;
-
-        @Bind(R.id.replay_btn_02)
-        protected TextView replay_btn_02;
-
         @Bind(R.id.replay_webView)
         protected MyWebView replay_webView;
 

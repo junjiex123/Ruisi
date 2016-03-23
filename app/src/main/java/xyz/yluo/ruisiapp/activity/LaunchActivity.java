@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -56,6 +57,7 @@ public class LaunchActivity extends AppCompatActivity{
                     Document doc = Jsoup.parse(res);
                     ConfigClass.CONFIG_USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
                     ConfigClass.CONFIG_ISLOGIN = true;
+                    Toast.makeText(getApplication(),"欢迎你："+ConfigClass.CONFIG_USER_NAME,Toast.LENGTH_SHORT).show();
                 }
 
                 startActivity(new Intent(getApplicationContext(),HomeActivity.class));
