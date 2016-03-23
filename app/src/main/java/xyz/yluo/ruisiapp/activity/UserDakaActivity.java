@@ -1,5 +1,6 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -188,17 +189,16 @@ public class UserDakaActivity extends AppCompatActivity{
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     String res = new String(responseBody);
+
                     if(res.contains("恭喜你签到成功")){
                         Document doc = Jsoup.parse(res);
                         String get = doc.select("div[class=c]").text();
-                            Toast.makeText(getApplicationContext(),get,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),get,Toast.LENGTH_SHORT).show();
                         ConfigClass.CONFIG_ISDAKA = true;
-
                         finish();
                     }else{
                         Toast.makeText(getApplicationContext(),"未知错误",Toast.LENGTH_SHORT).show();
                     }
-                    //testView.setText(new String(responseBody));
                 }
 
                 @Override
@@ -216,6 +216,13 @@ public class UserDakaActivity extends AppCompatActivity{
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String res = new String(responseBody);
+
+                System.out.print("\nres" + res);
+
+                Document doc = Jsoup.parse(res);
+                if (doc.select("input[name=formhash]").first() != null) {
+                    ConfigClass.CONFIG_FORMHASH = doc.select("input[name=formhash]").attr("value");
+                }
 
                 if(res.contains("您今天已经签到过了或者签到时间还未开始")){
                     isdaka = true;

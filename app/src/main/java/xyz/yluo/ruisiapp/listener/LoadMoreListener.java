@@ -17,7 +17,7 @@ public class LoadMoreListener extends RecyclerView.OnScrollListener {
 
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-        if (linearLayoutManager.findLastVisibleItemPosition() == linearLayoutManager.getItemCount() - 1) {
+        if (linearLayoutManager.findLastVisibleItemPosition()>8&&linearLayoutManager.findLastVisibleItemPosition() == linearLayoutManager.getItemCount() - 1) {
 
                 // 向下滑动，判断最后一个item是不是显示中
                 onLoadMoreListener.onLoadMore();

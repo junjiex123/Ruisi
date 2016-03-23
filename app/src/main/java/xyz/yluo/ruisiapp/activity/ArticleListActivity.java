@@ -8,6 +8,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -33,7 +34,10 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
+import jp.wasabeef.recyclerview.animators.FadeInAnimator;
+import jp.wasabeef.recyclerview.animators.FadeInDownAnimator;
 import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ArticleListAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
@@ -46,7 +50,6 @@ import xyz.yluo.ruisiapp.utils.ConfigClass;
  *帖子列表activity
  *
  */
-
 public class ArticleListActivity extends AppCompatActivity
         implements LoadMoreListener.OnLoadMoreListener {
 
@@ -63,15 +66,19 @@ public class ArticleListActivity extends AppCompatActivity
     @Bind(R.id.main_refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
 
-
-    //-1 为首页
+    private static final int TYPE_NOMAL = 0;
+    private static final int TYPE_IMAGE = 1;
+    private static final int TYPA_MOBILE = 2;
     private static int CurrentFid =72;
     private static String CurrentTitle = "首页";
-    private int CurrentType = -1;
-    //当前页数
-    private int CurrentPage = 0;
+    private int CurrentType = TYPE_NOMAL;
 
-    //一般板块/图片板块数据列表
+    //
+    private boolean isEnableLoadMore = false;
+
+    //当前页数
+    private int CurrentPage = 1;
+    //一般板块/图片板块/手机板块数据列表
     private List<ArticleListData> mydatasetnormal = new ArrayList<>();
     private ArticleListAdapter mRecyleAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -80,7 +87,6 @@ public class ArticleListActivity extends AppCompatActivity
         Intent intent = new Intent(context, ArticleListActivity.class);
         CurrentFid = fid;
         CurrentTitle = title;
-        System.out.print("\n>>>>>>>>>fid: "+CurrentFid+"title: "+CurrentTitle+"<<<<<<<<<<<\n");
         context.startActivity(intent);
     }
 
@@ -91,9 +97,67 @@ public class ArticleListActivity extends AppCompatActivity
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
+        if(!ConfigClass.CONFIG_IS_INNER){
+            CurrentType = TYPA_MOBILE;
+            //这三个板块自由电脑板
+        }else if(CurrentFid==561||CurrentFid==157||CurrentFid==13){
+            CurrentType =TYPE_IMAGE;
+        }else{
+            CurrentType =TYPE_NOMAL;
+        }
+        // Show the Up button in the action bar.
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar!=null){
+            actionBar.setTitle(CurrentTitle);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         //初始化
-        init(CurrentFid, CurrentTitle);
+        init();
+        startGetData();
+    }
 
+
+
+    //加载更多
+    @Override
+    public void onLoadMore() {
+        if(isEnableLoadMore){
+            Toast.makeText(getApplicationContext(),"加载更多被触发",Toast.LENGTH_SHORT).show();
+            CurrentPage++;
+            startGetData();
+            isEnableLoadMore = false;
+        }
+    }
+
+    //一系列初始化
+    private void init() {
+        //刷新
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+            }
+        });
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshLayout.setRefreshing(true);
+                    }
+                });
+                CurrentPage = 1;
+                mydatasetnormal.clear();
+                mRecyleAdapter.notifyDataSetChanged();
+                startGetData();
+            }
+        });
+
+
+
+        //隐藏按钮
         mRecyclerView.addOnScrollListener(new HidingScrollListener() {
             @Override
             public void onHide() {
@@ -109,16 +173,7 @@ public class ArticleListActivity extends AppCompatActivity
             }
         });
 
-
-        //TODO 根据当前板块加载内容
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                init(CurrentFid,CurrentTitle);
-            }
-        });
-
-//        //按钮监听
+        //按钮监听
         fabMenu.setOnMenuButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,108 +198,31 @@ public class ArticleListActivity extends AppCompatActivity
             public void onClick(View v) {
                 //Toast.makeText(getApplicationContext(), "fab2", Toast.LENGTH_SHORT).show();
                 fabMenu.toggle(true);
-                init(CurrentFid,CurrentTitle);
-
+                //TODO
             }
         });
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        if (id == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    //加载更多
-    @Override
-    public void onLoadMore() {
-        //Toast.makeText(getApplicationContext(),"加载更多被触发",Toast.LENGTH_SHORT).show();
-    }
-
-    //一系列初始化
-    private void init(int fid,String title) {
-
-        //刷新
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        });
-
-        //item 增加删除 改变动画
-        mRecyclerView.setItemAnimator(new OvershootInLeftAnimator());
-        mRecyclerView.getItemAnimator().setAddDuration(250);
-        mRecyclerView.getItemAnimator().setRemoveDuration(10);
-        mRecyclerView.getItemAnimator().setChangeDuration(10);
-
-        CurrentType =0;
-        CurrentFid = fid;
-        CurrentTitle = title;
-        //摄影板块
-        if(CurrentFid==561){
-            CurrentType =1;
-        }
-
-        // Show the Up button in the action bar.
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar!=null){
-            actionBar.setTitle(CurrentTitle);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         //一般板块 和首页新帖
-        if (CurrentType == 0) {
+        if (CurrentType == TYPE_NOMAL||CurrentType == TYPA_MOBILE) {
             //72灌水区
-            //可以设置不同样式
             mLayoutManager = new LinearLayoutManager(this);
-            //第二个参数是列数
-            //mLayoutManager = new GridLayoutManager( getContext(),2);
-            //加载更多实现
+            //加载更多
             mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this));
-        } else if (CurrentType == 1 ) {
+        } else if (CurrentType == TYPE_IMAGE ) {
             //图片板 或者板块列表
             mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         }
 
-        mydatasetnormal.clear();
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyleAdapter = new ArticleListAdapter(this, mydatasetnormal);
-
-        startGetData();
-
         mRecyclerView.setAdapter(mRecyleAdapter);
-
     }
 
+    //获取数据
     private void startGetData() {
 
         String url = "forum.php?mod=forumdisplay&fid="+CurrentFid+"&page="+CurrentPage;
-        //电路板
-        //forum.php?mod=forumdisplay&fid=72&page=2
-        //手机版
-        //forum.php?mod=forumdisplay&fid=72&page=2&mobile=2
-        //外网
         if(!ConfigClass.CONFIG_IS_INNER){
             url = url + "&mobile=2";
         }
@@ -253,18 +231,13 @@ public class ArticleListActivity extends AppCompatActivity
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
-                if(ConfigClass.CONFIG_IS_INNER){
-                    //普通板块
-                    if (CurrentType == 0) {
-                        new GetNormalArticleListTaskRs(new String(responseBody)).execute();
-                    } else if (CurrentType == 1) {
-                        //TODO
-                        //图片板块
-                        new GetImageArticleListTaskRS(new String(responseBody)).execute();
-                    }
+                if(CurrentType==TYPE_NOMAL){
+                    new GetNormalArticleListTaskRs(new String(responseBody)).execute();
+                }else if(CurrentType==TYPE_IMAGE){
+                    new GetImageArticleListTaskRS(new String(responseBody)).execute();
                 }else{
                     //外网
-                       new GetArticleListTaskMe(new String(responseBody)).execute();
+                    new GetArticleListTaskMe(new String(responseBody)).execute();
                 }
             }
             @Override
@@ -332,11 +305,21 @@ public class ArticleListActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(final String res) {
-
-            mydatasetnormal.clear();
+            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+            mRecyclerView.getItemAnimator().setAddDuration(0);
+            if(CurrentPage==1){
+                //item 增加删除 改变动画
+                mRecyclerView.setItemAnimator(new OvershootInLeftAnimator());
+                mRecyclerView.getItemAnimator().setAddDuration(250);
+                mRecyclerView.getItemAnimator().setRemoveDuration(10);
+                mRecyclerView.getItemAnimator().setChangeDuration(10);
+                mydatasetnormal.clear();
+            }
             mydatasetnormal.addAll(dataset);
+            mRecyclerView.setLayoutManager(mLayoutManager);
             refreshLayout.setRefreshing(false);
-            mRecyleAdapter.notifyItemRangeInserted(0, dataset.size());
+            mRecyleAdapter.notifyItemRangeInserted(mydatasetnormal.size() - dataset.size(), dataset.size());
+            isEnableLoadMore = true;
         }
     }
 
@@ -377,10 +360,22 @@ public class ArticleListActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(final String res) {
-            mydatasetnormal.clear();
+
+            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+            mRecyclerView.getItemAnimator().setAddDuration(0);
+            if(CurrentPage==1){
+                //item 增加删除 改变动画
+                mRecyclerView.setItemAnimator(new FadeInDownAnimator());
+                mRecyclerView.getItemAnimator().setAddDuration(250);
+                mRecyclerView.getItemAnimator().setRemoveDuration(10);
+                mRecyclerView.getItemAnimator().setChangeDuration(10);
+                mydatasetnormal.clear();
+            }
             mydatasetnormal.addAll(imgdatas);
+            mRecyclerView.setLayoutManager(mLayoutManager);
             refreshLayout.setRefreshing(false);
-            mRecyleAdapter.notifyItemRangeInserted(0, imgdatas.size());
+            mRecyleAdapter.notifyItemRangeInserted(mydatasetnormal.size()-imgdatas.size(), imgdatas.size());
+            isEnableLoadMore = true;
         }
     }
 
@@ -412,10 +407,19 @@ public class ArticleListActivity extends AppCompatActivity
                     src.select("span.by").remove();
                     String title = src.select("a").text();
                     String replyCount = src.select("span.num").text();
-                    String img = src.select("img").text();
 
+                    String img = src.select("img").attr("src");
+
+                    System.out.print("\nimg>>>>>>>>>>>>>>>>>>>>>>\n"+img);
+                    boolean hasImage = false;
+                    if(img.contains("icon_tu.png")){
+                        hasImage = true;
+                    }
+                    else{
+                        hasImage = false;
+                    }
                     //String title, String titleUrl, String image, String author, String replayCount
-                    temp = new ArticleListData(title, url, img, author, replyCount);
+                    temp = new ArticleListData(hasImage,title, url, author, replyCount);
                     dataset.add(temp);
                 }
             }
@@ -425,11 +429,47 @@ public class ArticleListActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(final String res) {
 
-            mydatasetnormal.clear();
+            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+            mRecyclerView.getItemAnimator().setAddDuration(0);
+
+            if(CurrentPage==1){
+                //item 增加删除 改变动画
+                mRecyclerView.setItemAnimator(new OvershootInLeftAnimator());
+                mRecyclerView.getItemAnimator().setAddDuration(250);
+                mRecyclerView.getItemAnimator().setRemoveDuration(10);
+                mRecyclerView.getItemAnimator().setChangeDuration(10);
+                mydatasetnormal.clear();
+            }
+
             mydatasetnormal.addAll(dataset);
+            mRecyclerView.setLayoutManager(mLayoutManager);
             refreshLayout.setRefreshing(false);
-            mRecyleAdapter.notifyItemRangeInserted(0, dataset.size());
+            mRecyleAdapter.notifyItemRangeInserted(mydatasetnormal.size() - dataset.size(), dataset.size());
+            isEnableLoadMore = true;
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

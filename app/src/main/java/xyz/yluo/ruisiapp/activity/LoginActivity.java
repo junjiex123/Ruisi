@@ -174,7 +174,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String res = new String(responseBody);
-                Toast.makeText(getApplicationContext(), res, Toast.LENGTH_LONG).show();
                 if (res.contains("欢迎您回来")) {
                     login_ok();
                 } else {

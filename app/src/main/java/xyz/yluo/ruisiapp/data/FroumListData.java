@@ -7,15 +7,32 @@ package xyz.yluo.ruisiapp.data;
 public class FroumListData {
     //title,img,url,actualnew
     private String title;
-    private String imgUrl;
     private String titleUrl;
     private String todayNew;
 
-    public FroumListData(String title, String todayNew, String imgUrl, String titleUrl) {
+    //是不是头
+    private boolean isheader;
+
+    public FroumListData(boolean isheader,String title, String todayNew, String titleUrl) {
         this.title = title;
         this.todayNew = todayNew;
-        this.imgUrl = imgUrl;
         this.titleUrl = titleUrl;
+
+        this.isheader = isheader;
+    }
+
+    //板块分类头
+    public FroumListData(boolean isheader,String title) {
+        this.title = title;
+        this.isheader = isheader;
+    }
+
+    public boolean isheader() {
+        return isheader;
+    }
+
+    public void setIsheader(boolean isheader) {
+        this.isheader = isheader;
     }
 
     public String getTitle() {
@@ -26,13 +43,6 @@ public class FroumListData {
         this.title = title;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
 
     public String getTitleUrl() {
         return titleUrl;

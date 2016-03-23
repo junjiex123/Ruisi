@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -32,6 +33,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
 import xyz.yluo.ruisiapp.data.FroumListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
+import xyz.yluo.ruisiapp.utils.ConfigClass;
 
 /**
  * Created by free2 on 16-3-19.
@@ -50,7 +52,7 @@ public class HomeFragement_1 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_1, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
 
         //刷新
         refreshLayout.post(new Runnable() {
@@ -65,7 +67,7 @@ public class HomeFragement_1 extends Fragment {
             public void onRefresh() {
                 Fragment currentFragment = getActivity().getFragmentManager().findFragmentById(R.id.fragment_container);
                 if (currentFragment instanceof HomeFragement_1) {
-                    FragmentTransaction fragTransaction =   (getActivity()).getFragmentManager().beginTransaction();
+                    FragmentTransaction fragTransaction = (getActivity()).getFragmentManager().beginTransaction();
                     fragTransaction.detach(currentFragment);
                     fragTransaction.attach(currentFragment);
                     fragTransaction.commit();
@@ -73,7 +75,7 @@ public class HomeFragement_1 extends Fragment {
             }
         });
 
-        String url = "forum.php";
+        String url = "forum.php?forumlist=1&mobile=2";
 
         AsyncHttpCilentUtil.get(getActivity(), url, null, new AsyncHttpResponseHandler() {
             @Override
@@ -100,33 +102,43 @@ public class HomeFragement_1 extends Fragment {
         public GetForumList(String res) {
             this.response = res;
         }
-
         @Override
         protected String doInBackground(Void... voids) {
-            if (response != "") {
-                Elements list = Jsoup.parse(response).select("#category_89,#category_101,#category_71,category_97,category_11").select("td.fl_g");
-                for (Element tmp : list) {
-                    FroumListData datatmp;
-                    String img = tmp.select("img[src^=./data/attachment]").attr("src").replace("./data", "data");
-                    String url = tmp.select("a[href^=forum.php?mod=forumdisplay&fid]").attr("href");
-                    String title = tmp.select("a[href^=forum.php?mod=forumdisplay&fid]").text();
 
-                    String todaynew = tmp.select("em[title=今日]").text();
-                    String actualnew = "";
-                    if (todaynew != "") {
-                        Pattern pattern = Pattern.compile("[0-9]+");
-                        Matcher matcher = pattern.matcher(todaynew);
-                        String tid = "";
-                        while (matcher.find()) {
-                            actualnew = todaynew.substring(matcher.start(), matcher.end());
-                            //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
+            System.out.println("\n"+response);
+            Document document = Jsoup.parse(response);
+
+            Elements elements = document.select("div#wp.wp.wm").select("div.bm.bmw.fl");
+
+            for(Element ele:elements){
+                String header = ele.select("h2").text();
+                simpledatas.add(new FroumListData(true,header));
+
+                for(Element tmp:ele.select("li")){
+                    String todayNew = tmp.select("span.num").text();
+                    tmp.select("span.num").remove();
+                    String title = tmp.text();
+                    String titleUrl = tmp.select("a").attr("href");
+
+                    //如果是校园网
+                    if(ConfigClass.CONFIG_IS_INNER){
+                        //boolean isheader,String title, String todayNew,  String titleUrl
+                        simpledatas.add(new FroumListData(false,title,todayNew,titleUrl));
+
+                        }else{
+
+                        //摄影天地 //校园活动 //电影
+                        //这三个分区只有校园网才能上
+                        if(title.equals("摄影天地")|title.equals("校园活动")|title.equals("电影")){
+                        }else{
+                            //boolean isheader,String title, String todayNew,  String titleUrl
+                            simpledatas.add(new FroumListData(false,title,todayNew,titleUrl));
                         }
-                    }
-                    //String title, String todayNew, String imgUrl, String titleUrl
-                    datatmp = new FroumListData(title,actualnew,img,url);
-                    simpledatas.add(datatmp);
-                }
 
+                    }
+
+
+                }
             }
             return null;
         }
@@ -137,7 +149,7 @@ public class HomeFragement_1 extends Fragment {
 
             datas.clear();
             datas.addAll(simpledatas);
-            forumListAdapter = new ForumListAdapter(getActivity(),datas, 0);
+            forumListAdapter = new ForumListAdapter(getActivity(),datas);
             RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
             recycler_view.setLayoutManager(mLayoutManager);
 

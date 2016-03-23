@@ -131,10 +131,10 @@ public class ArticleListData {
     }
 
     //手机版构造器
-    public ArticleListData(String title, String titleUrl, String image, String author, String replayCount) {
+    public ArticleListData(boolean isImageCard,String title, String titleUrl, String author, String replayCount) {
+        this.isImageCard = isImageCard;
         this.title = title;
         this.titleUrl = titleUrl;
-        this.image = image;
         this.author = author;
         this.replayCount = replayCount;
     }

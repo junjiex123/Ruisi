@@ -1,11 +1,13 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,6 +36,8 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
     private static final int TYPE_NORMAL = 0;
     private static final int TYPE_LOAD_MORE = 1;
     private static final int TYPE_IMAGE_CARD = 2;
+    //校外网 手机版
+    private static final int TYPE_NORMAL_MOBILE = 3;
     //数据
     private List<ArticleListData> DataSet;
 
@@ -47,32 +51,37 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
     @Override
     public int getItemViewType(int position) {
 
-        //判断listItem类型
-        //图片列表
-        if(position!= getItemCount() - 1 && DataSet.get(position).isImageCard()) {
-            return TYPE_IMAGE_CARD;
-        }
-
-        //加载更多
-        else if (position>0&& position == getItemCount() - 1) {
+        if (position>0&& position == getItemCount() - 1) {
             return TYPE_LOAD_MORE;
         }
-        //普通列表
-        else {
-            return TYPE_NORMAL;
+
+        //手机版
+        if(!ConfigClass.CONFIG_IS_INNER){
+            return TYPE_NORMAL_MOBILE;
+        }else{
+            //图片列表
+            if(position!= getItemCount() - 1 && DataSet.get(position).isImageCard()) {
+                return TYPE_IMAGE_CARD;
+            }
+            else {
+                //一般板块
+                return TYPE_NORMAL;
+            }
+
         }
+
+
+        //判断listItem类型
+
         //TODO 普通文章类型再分类
         //int type   =  DataSet.get(position).getType();
     }
     //设置view
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        //校外网
-        if(!ConfigClass.CONFIG_IS_INNER){
-            return new NormalViewHolderMe(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_main_list_item_me, viewGroup, false));
-
-        }
         switch (viewType) {
+            case TYPE_NORMAL_MOBILE:
+                return new NormalViewHolderMe(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_main_list_item_me, viewGroup, false));
             case TYPE_LOAD_MORE:
                 return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_main_load_more_list_item, viewGroup, false));
             case TYPE_IMAGE_CARD:
@@ -194,7 +203,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         }
     }
 
-    //图片刘ViewHolder
+    //图片板块ViewHolder
     public class ImageCardViewHolder extends BaseViewHolder{
 
         @Bind(R.id.img_card_image)
@@ -231,9 +240,11 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         @OnClick(R.id.card_list_item)
         protected void card_list_item() {
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
-            ////Context context, String tid,String title,String replycount,String type
-            ArticleNormalActivity.open(activity, getThreadTid.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplayCount(),single_data.getType());
-            //System.out.print("$$$$$$$$$>>"+DataSet.get(getPosition()).getTitleUrl()+"|"+article_title.getText()+"|"+reply_count.getText()+"|"+article_type.getText()+"|"+author_name.getText()+"\n");
+            String tid = getThreadTid.getTid(single_data.getTitleUrl());
+            //Context context, String tid,String title,String replycount,String type
+            //String title, String titleUrl, String image, String author, String authorUrl, String viewCount
+
+            ArticleNormalActivity.open(activity,tid,single_data.getTitle(),single_data.getViewCount(),"");
         }
     }
 
@@ -247,7 +258,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         protected TextView author_name;
 
         @Bind(R.id.is_image)
-        protected TextView is_image;
+        protected ImageView is_image;
         @Bind(R.id.reply_count)
         protected TextView reply_count;
 
@@ -259,21 +270,26 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         //设置listItem的数据
         @Override
         void setData(int position) {
-                article_title.setText(DataSet.get(position).getTitle());
-                author_name.setText(DataSet.get(position).getAuthor());
-                reply_count.setText(DataSet.get(position).getReplayCount());
-            if(DataSet.get(position).getImage()!=""){
-                is_image.setText("有图");
-            }else {
-                is_image.setText("一般");
-            }
+            article_title.setText(DataSet.get(position).getTitle());
+            author_name.setText(DataSet.get(position).getAuthor());
+            reply_count.setText(DataSet.get(position).getReplayCount());
 
+            if(DataSet.get(position).isImageCard()){
+                is_image.setVisibility(View.VISIBLE);
+            }else {
+                is_image.setVisibility(View.GONE);
+            }
         }
         @OnClick(R.id.main_item_btn_item)
         protected void onBtnItemClick() {
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
+            String tid = getThreadTid.getTid(single_data.getTitleUrl());
+            String title = single_data.getTitle();
+            String replyCount = single_data.getReplayCount();
+
+            System.out.print("\ntid"+tid);
             //Context context, String tid,String title,String replycount,String type
-            ArticleNormalActivity.open(activity, getThreadTid.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplayCount(),single_data.getType());
+            ArticleNormalActivity.open(activity,tid,title,replyCount,"");
         }
     }
 
