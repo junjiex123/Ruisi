@@ -1,9 +1,7 @@
 package xyz.yluo.ruisiapp.activity;
 
 import android.os.Bundle;
-import android.provider.DocumentsContract;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringDef;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,7 +16,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.jsoup.Jsoup;

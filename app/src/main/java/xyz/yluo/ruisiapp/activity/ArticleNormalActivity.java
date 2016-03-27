@@ -38,7 +38,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
-import jp.wasabeef.recyclerview.animators.FadeInDownAnimator;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
