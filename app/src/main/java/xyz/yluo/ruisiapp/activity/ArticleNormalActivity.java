@@ -350,16 +350,6 @@ public class ArticleNormalActivity extends AppCompatActivity
 
                         tempp.attr("style", "width:30px;height: 30px;");
                     }
-                    //替换贴吧表情到本地
-                    //可有无
-//                    //("static/image/smiley/tieba/","file:///android_asset/smiley/tieba/");
-//                    for (Element temp : element.select("img[src^=static/image/smiley/tieba/]")) {
-//                        //System.out.print("replace before------>>>>>>>>>>>"+temp+"\n");
-//                        String imgUrl = temp.attr("src");
-//                        String newimgurl =  imgUrl.replace("static/image/smiley/tieba/","file:///android_asset/smiley/tieba/");
-//                        //System.out.print("replace------>>>>>>>>>>>"+imgUrl+newimgurl+"\n");
-//                        temp.attr("src", newimgurl);
-//                    }
 
                     //替换无意义的 br
                     content = temp.select(".message").html().replaceAll("(\\s*<br>\\s*){2,}","");

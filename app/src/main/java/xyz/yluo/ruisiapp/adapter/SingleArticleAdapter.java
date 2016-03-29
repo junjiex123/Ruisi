@@ -1,9 +1,15 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LevelListDrawable;
+import android.media.Image;
+import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +20,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
@@ -21,11 +30,13 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import pl.droidsonroids.gif.GifDrawable;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.utils.DensityUtil;
 import xyz.yluo.ruisiapp.utils.MyWebView;
 
 /**
@@ -158,7 +169,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
     }
 
     //评论列表ViewHolder 如果想创建别的样式还可以创建别的houlder继承自RecyclerView.ViewHolder
-    public  class CommentViewHolder extends BaseViewHolder {
+    public  class CommentViewHolder extends BaseViewHolder implements Html.ImageGetter{
         //protected ImageView good;
 
         @Bind(R.id.article_user_image)
@@ -206,31 +217,49 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
                 replay_index.setText("第"+(position+1)+"楼");
             }
 
-            Html.ImageGetter imgGetter = new Html.ImageGetter() {
-                public Drawable getDrawable(String source) {
-                    Drawable drawable = null;
-                    URL url;
-                    try {
-                        url = new URL(ConfigClass.BBS_BASE_URL+source);
-                        System.err.print("full url >>>>>>>>>>>>>>>>>>>>"+source);
-                        drawable = Drawable.createFromStream(url.openStream(), "");  //获取网路图片
-                    } catch (Exception e) {
-                        return null;
-                    }
-                    drawable.setBounds(0, 0, drawable.getIntrinsicWidth()*3, drawable.getIntrinsicHeight()*3);
-                    return drawable;
-                }
-            };
-
             // loads html from string and displays http://www.example.com/cat_pic.png from the Internet
-            htmlTextView.setText(Html.fromHtml(datalist.get(position).getCotent(), imgGetter,null));
+            htmlTextView.setText(Html.fromHtml(datalist.get(position).getCotent(), this,null));
         }
 
         @OnClick(R.id.article_user_image)
             protected void onBtnAvatarClick() {
+
                 UserDetailActivity.openWithTransitionAnimation(activity, "name", replay_image,"222");
             }
 
+        //image getter 这是html.fromHtml的处理图片函数
+        @Override
+        public Drawable getDrawable(String source) {
+            Drawable drawable = null;
+            try {
+                //替换表情到本地
+                if(source.startsWith("static/image/smiley/")&&(source.contains(".gif")||source.contains(".GIF"))){
+                    //asset file
+                    GifDrawable gifFromAssets = new GifDrawable(activity.getAssets(), source);
+                    gifFromAssets.setBounds(0,0,80,80);
+                    return  gifFromAssets;
+//                    InputStream  ims = activity.getAssets().open(source);
+//                    drawable = Drawable.createFromStream(ims, null);
+                }else if(source.startsWith("static/image/smiley/")){
+                      InputStream  ims = activity.getAssets().open(source);
+                      drawable = Drawable.createFromStream(ims, null);
+                        drawable.setBounds(0,0,80,80);
+                    return drawable;
+                }
+                else{
+                    URL url = new URL(ConfigClass.BBS_BASE_URL+source);
+                    drawable = Drawable.createFromStream(url.openStream(), "src");  //获取网路图片
+                }
+            } catch (Exception e) {
+//                        drawable = ContextCompat.getDrawable(activity,R.drawable.image_placeholder);
+                return null;
+            }
+
+            drawable.setBounds(0, 0,
+                    DensityUtil.dip2px(activity,drawable.getIntrinsicWidth()*2),
+                    DensityUtil.dip2px(activity,drawable.getIntrinsicHeight())*2);
+            return drawable;
+        }
     }
 
     //加载更多ViewHolder
