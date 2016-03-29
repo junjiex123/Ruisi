@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.UserArticleReplyStarAdapter;
-import xyz.yluo.ruisiapp.adapter.UserInfoAdapter;
+import xyz.yluo.ruisiapp.adapter.UserInfoStarAdapter;
 import xyz.yluo.ruisiapp.data.MyTopicReplyListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 
@@ -41,15 +41,15 @@ public class HomeFragement_3 extends Fragment {
     protected TabLayout mytab;
     @Bind(R.id.recycler_view)
     protected RecyclerView recyclerView;
-
     @Bind(R.id.refresh_view)
     protected SwipeRefreshLayout refresh_view;
-    private int CurrentIndex = 0;
+
     private List<MyTopicReplyListData> datasArticleReply = new ArrayList<>();
-    private UserArticleReplyStarAdapter adapterArtilceReply;
-    private RecyclerView.LayoutManager layoutManager;
-    private UserInfoAdapter myadapterUserInfo;
     private List<Pair<String,String>> datasUserInfo = new ArrayList<>();
+    private UserArticleReplyStarAdapter adapterArtilceReply;
+    private UserInfoStarAdapter myadapterUserInfo;
+
+    private int currentIndex =0;
 
 
     @Override
@@ -57,10 +57,10 @@ public class HomeFragement_3 extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home_3_me, container, false);
 
         ButterKnife.bind(this, view);
-        layoutManager =new LinearLayoutManager(getActivity());
-        adapterArtilceReply = new UserArticleReplyStarAdapter(getActivity(),datasArticleReply);
-        myadapterUserInfo = new UserInfoAdapter(datasUserInfo);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+
         recyclerView.setLayoutManager(layoutManager);
+
 
         mytab.addTab(mytab.newTab().setText("信息"));
         mytab.addTab(mytab.newTab().setText("主题"));
@@ -78,10 +78,18 @@ public class HomeFragement_3 extends Fragment {
             public void onTabReselected(TabLayout.Tab tab) {}
         });
 
-        //自己的页面home.php?mod=space&do=profile
-        ////用户个人信息home.php?mod=space&uid=252553&do=profile&mobile=2
-        String url = "home.php?mod=space&uid=252553&do=profile&mobile=2";
-        getStringFromInternet(0,url);
+        refresh_view.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                changeRecyclerViewData(currentIndex);
+            }
+        });
+
+
+        adapterArtilceReply = new UserArticleReplyStarAdapter(getActivity(),datasArticleReply);
+        myadapterUserInfo = new UserInfoStarAdapter(getActivity(),datasUserInfo,0);
+        changeRecyclerViewData(0);
+
         return view;
     }
 
@@ -92,31 +100,33 @@ public class HomeFragement_3 extends Fragment {
         adapterArtilceReply.notifyDataSetChanged();
         myadapterUserInfo.notifyDataSetChanged();
 
-
         //TODO 所有链接重写
         switch (position){
+            case 0:
+                //0 用户信息
+                String url0= "home.php?mod=space&uid=252553&do=profile&mobile=2";
+                getStringFromInternet(0,url0);
+                currentIndex = 0;
+                break;
             case 1:
                 //我回主题
                 //http://rs.xidian.edu.cn/home.php?mod=space&uid=252553&do=thread&view=me&mobile=2
                 String url1 = "home.php?mod=space&uid=252553&do=thread&view=me&mobile=2";
-                CurrentIndex =1;
                 getStringFromInternet(1,url1);
+                currentIndex =1;
                 break;
             case 2:
                 //我的消息
                 String url2 = "home.php?mod=space&do=pm&mobile=2";
                 getStringFromInternet(2,url2);
-                CurrentIndex =2 ;
-                //我的主题
+                currentIndex = 2;
                 break;
             case 3:
                 //我的收藏
-
-            default:
-                String url0= "home.php?mod=space&uid=50545&do=profile";
-                getStringFromInternet(0,url0);
-                CurrentIndex = 0;
-                //0 用户信息
+                String url3 = "home.php?mod=space&uid=252553&do=favorite&view=me&type=thread&mobile=2";
+                getStringFromInternet(3,url3);
+                currentIndex = 3;
+                break;
         }
     }
 
@@ -141,12 +151,12 @@ public class HomeFragement_3 extends Fragment {
                     new GetUserMessageTask(new String(responseBody)).execute();
                 }
                 else if(type==3){
-                    //TODO
+                    //我的收藏
+                    new GetUserStarTask(new String(responseBody)).execute();
                 }else {
                     //获得用户信息
                     new GetUserInfoTask(new String(responseBody)).execute();
                 }
-
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
@@ -188,10 +198,9 @@ public class HomeFragement_3 extends Fragment {
         protected void onPostExecute(final String res) {
 
             refresh_view.setRefreshing(false);
-            myadapterUserInfo = new UserInfoAdapter(datasUserInfo);
+            myadapterUserInfo = new UserInfoStarAdapter(getActivity(),datasUserInfo,0);
             recyclerView.setAdapter(myadapterUserInfo);
             myadapterUserInfo.notifyItemRangeInserted(0, datasUserInfo.size());
-
         }
     }
 
@@ -266,4 +275,42 @@ public class HomeFragement_3 extends Fragment {
 
         }
     }
+
+    //获得用户收藏
+    public class GetUserStarTask extends AsyncTask<Void, Void, String> {
+
+        private String res;
+        public GetUserStarTask(String res) {
+            this.res = res;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            if(res!=""){
+                Elements lists = Jsoup.parse(res).select(".threadlist").select("ul").select("li");
+                if(lists!=null){
+                    Pair<String,String> temp;
+                    for(Element tmp:lists){
+
+                        String key = tmp.select("a").text();
+                        String value = tmp.select("a").attr("href");
+                        temp = new Pair<>(key,value);
+                        datasUserInfo.add(temp);
+                    }
+                }
+            }
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(final String res) {
+
+            refresh_view.setRefreshing(false);
+            myadapterUserInfo = new UserInfoStarAdapter(getActivity(),datasUserInfo,1);
+            recyclerView.setAdapter(myadapterUserInfo);
+            myadapterUserInfo.notifyItemRangeInserted(0, datasUserInfo.size());
+
+        }
+    }
+
 }

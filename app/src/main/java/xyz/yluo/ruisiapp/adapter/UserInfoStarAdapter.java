@@ -1,5 +1,6 @@
 package xyz.yluo.ruisiapp.adapter;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -12,17 +13,28 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.activity.ArticleNormalActivity;
+import xyz.yluo.ruisiapp.data.ArticleListData;
+import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-3-21.
  *
  */
-public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.UserInfoViewHolder>{
+public class UserInfoStarAdapter extends RecyclerView.Adapter<UserInfoStarAdapter.UserInfoViewHolder>{
 
     List<Pair<String,String >> datas = new ArrayList<Pair<String,String >>();
-    public UserInfoAdapter(List<Pair<String,String >> datas) {
+    private int type;
+    private Activity activity;
+    //0---用户信息
+    //1---用户收藏
+    //当为收藏时 url 在value里
+    public UserInfoStarAdapter(Activity activity, List<Pair<String,String >> datas, int type) {
         this.datas =datas;
+        this.type =type;
+        this.activity =activity;
     }
 
     @Override
@@ -55,7 +67,22 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.UserIn
 
         private void setData(int position){
             key.setText(datas.get(position).first);
-            value.setText(datas.get(position).second);
+            if(type==0){
+                value.setText(datas.get(position).second);
+            }else{
+                value.setVisibility(View.GONE);
+            }
+
+        }
+
+        @OnClick(R.id.main_item_btn_item)
+        protected void main_container_click(){
+            if(type==1){
+                Pair<String,String > single_data =  datas.get(getAdapterPosition());
+
+                String tid = GetId.getTid(single_data.second);
+                ArticleNormalActivity.open(activity,tid,single_data.first,"","");
+            }
         }
     }
 }
