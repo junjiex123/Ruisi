@@ -26,13 +26,10 @@ public class MyTopicReplyListData {
     }
 
     //我的主题
-    public MyTopicReplyListData(int type, String title, String titleUrl, String time, String froumName, String view_count, String replycount) {
+    public MyTopicReplyListData(int type, String title, String titleUrl, String replycount) {
         this.type = type;
         this.title = title;
         this.titleUrl = titleUrl;
-        this.time = time;
-        this.froumName = froumName;
-        this.view_count = view_count;
         this.replycount = replycount;
     }
 

@@ -26,7 +26,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.adapter.Home3RecylerAdapter;
+import xyz.yluo.ruisiapp.adapter.UserArticleReplyStarAdapter;
 import xyz.yluo.ruisiapp.adapter.UserInfoAdapter;
 import xyz.yluo.ruisiapp.data.MyTopicReplyListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
@@ -46,7 +46,7 @@ public class HomeFragement_3 extends Fragment {
     protected SwipeRefreshLayout refresh_view;
     private int CurrentIndex = 0;
     private List<MyTopicReplyListData> datasArticleReply = new ArrayList<>();
-    private Home3RecylerAdapter adapterArtilceReply;
+    private UserArticleReplyStarAdapter adapterArtilceReply;
     private RecyclerView.LayoutManager layoutManager;
     private UserInfoAdapter myadapterUserInfo;
     private List<Pair<String,String>> datasUserInfo = new ArrayList<>();
@@ -54,38 +54,33 @@ public class HomeFragement_3 extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home_3, container, false);
+        View view = inflater.inflate(R.layout.fragment_home_3_me, container, false);
 
         ButterKnife.bind(this, view);
         layoutManager =new LinearLayoutManager(getActivity());
-        adapterArtilceReply = new Home3RecylerAdapter(getActivity(),datasArticleReply);
+        adapterArtilceReply = new UserArticleReplyStarAdapter(getActivity(),datasArticleReply);
         myadapterUserInfo = new UserInfoAdapter(datasUserInfo);
         recyclerView.setLayoutManager(layoutManager);
 
-        mytab.addTab(mytab.newTab().setText("个人信息"));
-        mytab.addTab(mytab.newTab().setText("我回复的"));
-        mytab.addTab(mytab.newTab().setText("我的主题"));
+        mytab.addTab(mytab.newTab().setText("信息"));
+        mytab.addTab(mytab.newTab().setText("主题"));
+        mytab.addTab(mytab.newTab().setText("消息"));
+        mytab.addTab(mytab.newTab().setText("收藏"));
 
         mytab.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 changeRecyclerViewData(mytab.getSelectedTabPosition());
             }
-
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
+            public void onTabUnselected(TabLayout.Tab tab) {}
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabReselected(TabLayout.Tab tab) {}
         });
 
         //自己的页面home.php?mod=space&do=profile
-        ////用户个人信息home.php?mod=space&uid=50545&do=profile
-        String url = "home.php?mod=space&uid=50545&do=profile";
+        ////用户个人信息home.php?mod=space&uid=252553&do=profile&mobile=2
+        String url = "home.php?mod=space&uid=252553&do=profile&mobile=2";
         getStringFromInternet(0,url);
         return view;
     }
@@ -99,18 +94,22 @@ public class HomeFragement_3 extends Fragment {
 
         switch (position){
             case 1:
-                //我的回复
-                //home.php?mod=space&do=thread&view=me&type=reply&from=space
-                String url1 = "home.php?mod=space&do=thread&view=me&type=reply&from=space";
+                //我回主题
+                //http://rs.xidian.edu.cn/home.php?mod=space&uid=252553&do=thread&view=me&mobile=2
+                String url1 = "home.php?mod=space&uid=252553&do=thread&view=me&mobile=2";
                 CurrentIndex =1;
                 getStringFromInternet(1,url1);
                 break;
             case 2:
+                //我的消息
                 String url2 = "home.php?mod=space&do=thread&view=me&type=thread&from=space";
                 getStringFromInternet(2,url2);
                 CurrentIndex =2 ;
                 //我的主题
                 break;
+            case 3:
+                //我的收藏
+
             default:
                 String url0= "home.php?mod=space&uid=50545&do=profile";
                 getStringFromInternet(0,url0);
@@ -133,14 +132,19 @@ public class HomeFragement_3 extends Fragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 if (type == 1) {
-                    //获得回复 1
-                    new GetUserReplayTask(new String(responseBody)).execute();
+                    //我的主题
+                    new GetUserArticleask(new String(responseBody)).execute();
 
                 } else if (type == 2) {
                     //获得主题 0
-                    new GetUserArticleask(new String(responseBody)).execute();
+                    new GetUserReplayTask(new String(responseBody)).execute();
 
-                } else {
+
+                }
+                else if(type==3){
+                    //TODO
+
+                }else {
                     //获得用户信息
                     new GetUserInfoTask(new String(responseBody)).execute();
                 }
@@ -166,28 +170,18 @@ public class HomeFragement_3 extends Fragment {
         @Override
         protected String doInBackground(Void... params) {
             if(res!=""){
-                Elements lists = Jsoup.parse(res).select("div[id=ct]").select(".mn").select(".bm").select(".bm_c");
+                Elements lists = Jsoup.parse(res).select(".user_box").select("ul").select("li");
                 if(lists!=null){
                     Pair<String,String> temp;
-                    Elements datas1 = lists.select(".pbm.mbm.bbda.cl").select("li");
-                    Elements datas2 = lists.select("#psts").select("li");
-                    for(Element tmp:datas1){
-                        String txt = tmp.text();
-                        if(txt.startsWith("用户组")||txt.startsWith("空间访问量")){
-                            temp = new Pair<>(tmp.text()," ");
-                            //System.out.print("\nli"+tmp.text());
-                            datasUserInfo.add(temp);
-                        }
-                    }
-                    for(Element tmp:datas2){
-                        String txt = tmp.text();
+                    for(Element tmp:lists){
+                        String value = tmp.select("span").text();
+                        tmp.select("span").remove();
+                        String key = tmp.text();
 
-                        temp = new Pair<>(txt,"");
-
+                        temp = new Pair<>(key,value);
                         datasUserInfo.add(temp);
                     }
                 }
-
             }
             return "";
         }
@@ -219,14 +213,13 @@ public class HomeFragement_3 extends Fragment {
                 //int type, String title, String titleUrl, String author, String time, String froumName
                 datasArticleReply.add(new MyTopicReplyListData(1,"","","","",""));
             }
-
             return "";
         }
 
         @Override
         protected void onPostExecute(final String res) {
             refresh_view.setRefreshing(false);
-            adapterArtilceReply = new Home3RecylerAdapter(getActivity(),datasArticleReply);
+            adapterArtilceReply = new UserArticleReplyStarAdapter(getActivity(),datasArticleReply);
             recyclerView.setAdapter(adapterArtilceReply);
             adapterArtilceReply.notifyItemRangeInserted(0, datasArticleReply.size());
 
@@ -246,9 +239,17 @@ public class HomeFragement_3 extends Fragment {
         @Override
         protected String doInBackground(Void... params) {
 
-            for(int i =0;i<20;i++){
-                //int type, String title, String titleUrl, String author, String time, String froumName
-                datasArticleReply.add(new MyTopicReplyListData(0,"","","","",""));
+            Elements lists = Jsoup.parse(res).select(".threadlist").select("ul").select("li");
+            if(lists!=null){
+                for(Element tmp:lists){
+                    String title = tmp.select("a").text();
+                    String titleUrl =tmp.select("a").attr("href");
+                    String num = tmp.select(".num").text();
+                    //int type, String title, String titleUrl, String replycount
+                    datasArticleReply.add(new MyTopicReplyListData(0,title,titleUrl,num));
+                }
+            }else{
+                datasArticleReply.add(new MyTopicReplyListData(0,"你还没有回复，或者你还未登录","",""));
             }
             return "";
         }
@@ -256,7 +257,7 @@ public class HomeFragement_3 extends Fragment {
         @Override
         protected void onPostExecute(final String res) {
             refresh_view.setRefreshing(false);
-            adapterArtilceReply = new Home3RecylerAdapter(getActivity(),datasArticleReply);
+            adapterArtilceReply = new UserArticleReplyStarAdapter(getActivity(),datasArticleReply);
             recyclerView.setAdapter(adapterArtilceReply);
             adapterArtilceReply.notifyItemRangeInserted(0, datasArticleReply.size());
 

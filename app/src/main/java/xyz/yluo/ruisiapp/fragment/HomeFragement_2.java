@@ -54,7 +54,7 @@ public class HomeFragement_2 extends Fragment implements LoadMoreListener.OnLoad
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home_2, container, false);
+        View view = inflater.inflate(R.layout.fragment_home_2_new, container, false);
         ButterKnife.bind(this, view);
 
 
