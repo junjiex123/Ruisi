@@ -1,14 +1,7 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LevelListDrawable;
-import android.media.Image;
-import android.os.AsyncTask;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -20,8 +13,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
@@ -238,8 +229,6 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
                     GifDrawable gifFromAssets = new GifDrawable(activity.getAssets(), source);
                     gifFromAssets.setBounds(0,0,80,80);
                     return  gifFromAssets;
-//                    InputStream  ims = activity.getAssets().open(source);
-//                    drawable = Drawable.createFromStream(ims, null);
                 }else if(source.startsWith("static/image/smiley/")){
                       InputStream  ims = activity.getAssets().open(source);
                       drawable = Drawable.createFromStream(ims, null);

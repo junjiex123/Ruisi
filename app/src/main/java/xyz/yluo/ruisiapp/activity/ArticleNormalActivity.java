@@ -318,13 +318,6 @@ public class ArticleNormalActivity extends AppCompatActivity
 
                     String bridge = userInfo.select("a[href^=home.php?mod=spacecp&ac=favorite").text();
 
-//                    //替换贴吧表情到本地 可有可无
-//                    //("static/image/smiley/tieba/","file:///android_asset/smiley/tieba/");
-//                    for (Element imagetemp : temp.select("img[src^=static/image/smiley/tieba/]")) {
-//                        String imgUrl = imagetemp.attr("src");
-//                        String newimgurl =  imgUrl.replace("static/image/smiley/tieba/","file:///android_asset/smiley/tieba/");
-//                        temp.attr("src", newimgurl);
-//                    }
                     // 修正图片链接地址
                     //TODO 现在图片太小
                     //[attr^=value], [attr$=value], [attr*=value]这三个语法分别代表，属性以 value 开头、结尾以及包含
