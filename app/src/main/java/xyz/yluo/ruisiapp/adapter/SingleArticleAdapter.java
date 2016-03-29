@@ -1,7 +1,10 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.net.URL;
 import java.util.List;
 
 import butterknife.Bind;
@@ -35,7 +39,6 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
     private static final int TYPE_LOAD_MORE = 2;
     private static final int TYPE_CONTENT=0;
     //数据
-    private String articleUrl;
     private List<SingleArticleData> datalist;
     private static RecyclerViewClickListener itemListener;
     //上下文
@@ -170,11 +173,11 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         @Bind(R.id.replay_time)
         protected TextView replay_time;
 
-        @Bind(R.id.replay_webView)
-        protected MyWebView replay_webView;
-
         @Bind(R.id.replay_user_gold)
         protected TextView replay_user_gold;
+
+        @Bind(R.id.html_text)
+        protected TextView htmlTextView;
 
 
         public CommentViewHolder(View itemView) {
@@ -202,8 +205,25 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             }else{
                 replay_index.setText("第"+(position+1)+"楼");
             }
-            replay_webView.getSettings().setLoadsImagesAutomatically(true);
-            replay_webView.loadDataWithBaseURL(ConfigClass.BBS_BASE_URL,datalist.get(position).getCotent(),"text/html","UTF-8",null);
+
+            Html.ImageGetter imgGetter = new Html.ImageGetter() {
+                public Drawable getDrawable(String source) {
+                    Drawable drawable = null;
+                    URL url;
+                    try {
+                        url = new URL(ConfigClass.BBS_BASE_URL+source);
+                        System.err.print("full url >>>>>>>>>>>>>>>>>>>>"+source);
+                        drawable = Drawable.createFromStream(url.openStream(), "");  //获取网路图片
+                    } catch (Exception e) {
+                        return null;
+                    }
+                    drawable.setBounds(0, 0, drawable.getIntrinsicWidth()*3, drawable.getIntrinsicHeight()*3);
+                    return drawable;
+                }
+            };
+
+            // loads html from string and displays http://www.example.com/cat_pic.png from the Internet
+            htmlTextView.setText(Html.fromHtml(datalist.get(position).getCotent(), imgGetter,null));
         }
 
         @OnClick(R.id.article_user_image)
