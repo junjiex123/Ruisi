@@ -6,23 +6,25 @@ package xyz.yluo.ruisiapp.data;
  * 我的回复 list data
  */
 public class MyTopicReplyListData {
-    private int type =0;//0 我的主题 1我的回复
+    private int type =0;//0 我的主题 1我的消息
+
     private String title;
     private String titleUrl;
-    private String author;
+    private String authorImage;
     private String time;  //在我的回复当作内容
-    private String froumName;
-    private String view_count;
+
+    private String content;
     private String replycount;
 
-    //我的回复
-    public MyTopicReplyListData(int type, String title, String titleUrl, String author, String time, String froumName) {
+    //我的消息
+    public MyTopicReplyListData(int type, String title, String titleUrl, String authorImage, String time,String content) {
         this.type = type;
         this.title = title;
         this.titleUrl = titleUrl;
-        this.author = author;
+        this.authorImage = authorImage;
         this.time = time;
-        this.froumName = froumName;
+        this.content = content;
+
     }
 
     //我的主题
@@ -33,12 +35,12 @@ public class MyTopicReplyListData {
         this.replycount = replycount;
     }
 
-    public String getView_count() {
-        return view_count;
+    public String getcontent() {
+        return content;
     }
 
-    public void setView_count(String view_count) {
-        this.view_count = view_count;
+    public void setcontent(String content) {
+        this.content = content;
     }
 
     public String getReplycount() {
@@ -73,12 +75,12 @@ public class MyTopicReplyListData {
         this.titleUrl = titleUrl;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getauthorImage() {
+        return authorImage;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setauthorImage(String authorImage) {
+        this.authorImage = authorImage;
     }
 
     public String getTime() {
@@ -89,11 +91,4 @@ public class MyTopicReplyListData {
         this.time = time;
     }
 
-    public String getFroumName() {
-        return froumName;
-    }
-
-    public void setFroumName(String froumName) {
-        this.froumName = froumName;
-    }
 }

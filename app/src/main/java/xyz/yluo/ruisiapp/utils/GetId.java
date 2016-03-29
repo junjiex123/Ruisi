@@ -6,8 +6,10 @@ import java.util.regex.Pattern;
 /**
  * Created by free2 on 16-3-19.
  * 通过链接获得tid
+ * uid
+ * 各种id
  */
-public class getThreadTid {
+public class GetId {
 
     public static String getTid(String url){
         //http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=840272&extra=
@@ -21,5 +23,19 @@ public class getThreadTid {
             //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
         }
         return tid;
+    }
+
+    public static String getUid(String url){
+        //http://rs.xidian.edu.cn/ucenter/avatar.php?uid=284747&size=small
+
+        Pattern pattern = Pattern.compile("[0-9]{3,}");
+        Matcher matcher = pattern.matcher(url);
+        String uid ="";
+        while (matcher.find()) {
+            uid = url.substring(matcher.start(),matcher.end());
+            break;
+            //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
+        }
+        return uid;
     }
 }

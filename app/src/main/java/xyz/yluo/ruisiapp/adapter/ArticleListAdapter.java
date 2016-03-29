@@ -22,8 +22,8 @@ import xyz.yluo.ruisiapp.activity.ArticleNormalActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.GetUserImage;
-import xyz.yluo.ruisiapp.utils.getThreadTid;
 
 /**
  * Created by free2 on 16-3-5.
@@ -182,7 +182,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
 
             //Context context, String tid,String title,String replycount,String type
-            ArticleNormalActivity.open(activity, getThreadTid.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplayCount(),single_data.getType());
+            ArticleNormalActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplayCount(),single_data.getType());
             //System.out.print("$$$$$$$$$>>"+DataSet.get(getPosition()).getTitleUrl()+"|"+article_title.getText()+"|"+reply_count.getText()+"|"+article_type.getText()+"|"+author_name.getText()+"\n");
         }
     }
@@ -240,7 +240,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         @OnClick(R.id.card_list_item)
         protected void card_list_item() {
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
-            String tid = getThreadTid.getTid(single_data.getTitleUrl());
+            String tid = GetId.getTid(single_data.getTitleUrl());
             //Context context, String tid,String title,String replycount,String type
             //String title, String titleUrl, String image, String author, String authorUrl, String viewCount
 
@@ -283,7 +283,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         @OnClick(R.id.main_item_btn_item)
         protected void onBtnItemClick() {
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
-            String tid = getThreadTid.getTid(single_data.getTitleUrl());
+            String tid = GetId.getTid(single_data.getTitleUrl());
             String title = single_data.getTitle();
             String replyCount = single_data.getReplayCount();
 

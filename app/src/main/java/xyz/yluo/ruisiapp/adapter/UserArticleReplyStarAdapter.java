@@ -8,15 +8,20 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.ArticleNormalActivity;
+import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.MyTopicReplyListData;
-import xyz.yluo.ruisiapp.utils.getThreadTid;
+import xyz.yluo.ruisiapp.utils.ArrowTextView;
+import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-3-21.
@@ -25,7 +30,7 @@ import xyz.yluo.ruisiapp.utils.getThreadTid;
 public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticleReplyStarAdapter.BaseViewHolder>{
 
     private final int TYPE_MY_ARTICLE =0;
-    private final int TYPE_MY_REPLY = 1;
+    private final int TYPE_MY_MESSAGE = 1;
     //数据
     private List<MyTopicReplyListData> DataSet;
     protected Activity activity;
@@ -41,8 +46,8 @@ public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticl
             //我的主题
             return new GetListArticleHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.userinfo_article_list_item, parent, false));
         }else{
-            //我的回复
-            return new GetListReplyHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.user_reply_list_item, parent, false));
+            //我的消息
+            return new GetMessageListHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.user_message_list_item, parent, false));
         }
     }
 
@@ -55,10 +60,11 @@ public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticl
     public int getItemViewType(int position) {
         switch (DataSet.get(position).getType()){
             case 0:
+                //我的主题
                 return TYPE_MY_ARTICLE;
             default:
-                return TYPE_MY_REPLY;
-
+                //我的消息
+                return TYPE_MY_MESSAGE;
         }
     }
 
@@ -76,37 +82,44 @@ public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticl
 
     }
 
-    //用户的帖子的回复holder
-    public class GetListReplyHolder extends BaseViewHolder{
 
-        @Bind(R.id.article_title)
-        protected TextView article_title;
+    //用户消息holder
+    public class GetMessageListHolder extends BaseViewHolder{
 
-        @Bind(R.id.author)
-        protected TextView author_name;
-
+        @Bind(R.id.title)
+        protected TextView title;
+        @Bind(R.id.time)
+        protected TextView time;
+        @Bind(R.id.article_user_image)
+        protected CircleImageView article_user_image;
         @Bind(R.id.reply_content)
-        protected TextView reply_content;
-
-        @Bind(R.id.froun_name)
-        protected TextView froun_name;
+        protected ArrowTextView reply_content;
 
         //url
-        public GetListReplyHolder(View itemView) {
+        public GetMessageListHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
-
         void setData(int position) {
-
+            MyTopicReplyListData single_data = DataSet.get(position);
+            title.setText(single_data.getTitle());
+            time.setText(single_data.getTime());
+            String imageUrl = single_data.getauthorImage();
+            Picasso.with(activity).load(imageUrl).resize(40,40).centerCrop().placeholder(R.drawable.image_placeholder).into(article_user_image);
+            reply_content.setText(single_data.getcontent());
         }
 
         @OnClick(R.id.main_item_btn_item)
         protected void main_item_btn_item_click(){
-
             MyTopicReplyListData single_data =  DataSet.get(getAdapterPosition());
-            ArticleNormalActivity.open(activity, getThreadTid.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplycount()," ");
+            //ArticleNormalActivity.open(activity, GetTid.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplycount()," ");
+            //TODO 类似qq聊天页面
+        }
+        @OnClick(R.id.article_user_image)
+        protected void article_user_image_click(){
+            //TODO
+            UserDetailActivity.openWithTransitionAnimation(activity, "name", article_user_image,"222");
         }
     }
 
@@ -138,7 +151,7 @@ public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticl
         protected void main_item_btn_item_click(){
             MyTopicReplyListData single_data =  DataSet.get(getAdapterPosition());
             if(single_data.getTitleUrl()!=""){
-                ArticleNormalActivity.open(activity, getThreadTid.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplycount()," ");
+                ArticleNormalActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplycount()," ");
             }
 
         }

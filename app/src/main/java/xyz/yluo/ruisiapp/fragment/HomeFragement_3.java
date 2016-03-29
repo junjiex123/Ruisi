@@ -92,6 +92,8 @@ public class HomeFragement_3 extends Fragment {
         adapterArtilceReply.notifyDataSetChanged();
         myadapterUserInfo.notifyDataSetChanged();
 
+
+        //TODO 所有链接重写
         switch (position){
             case 1:
                 //我回主题
@@ -102,7 +104,7 @@ public class HomeFragement_3 extends Fragment {
                 break;
             case 2:
                 //我的消息
-                String url2 = "home.php?mod=space&do=thread&view=me&type=thread&from=space";
+                String url2 = "home.php?mod=space&do=pm&mobile=2";
                 getStringFromInternet(2,url2);
                 CurrentIndex =2 ;
                 //我的主题
@@ -134,16 +136,12 @@ public class HomeFragement_3 extends Fragment {
                 if (type == 1) {
                     //我的主题
                     new GetUserArticleask(new String(responseBody)).execute();
-
                 } else if (type == 2) {
-                    //获得主题 0
-                    new GetUserReplayTask(new String(responseBody)).execute();
-
-
+                    //我的消息
+                    new GetUserMessageTask(new String(responseBody)).execute();
                 }
                 else if(type==3){
                     //TODO
-
                 }else {
                     //获得用户信息
                     new GetUserInfoTask(new String(responseBody)).execute();
@@ -197,21 +195,31 @@ public class HomeFragement_3 extends Fragment {
         }
     }
 
-    //获得回复
-    public class GetUserReplayTask extends AsyncTask<Void, Void, String> {
+    //获得消息
+    public class GetUserMessageTask extends AsyncTask<Void, Void, String> {
 
         private String res;
 
-        public GetUserReplayTask(String res) {
+        public GetUserMessageTask(String res) {
             this.res = res;
         }
-
         @Override
         protected String doInBackground(Void... params) {
+            //pmbox
+            Elements lists = Jsoup.parse(res).select(".pmbox").select("ul").select("li");
+            if(lists!=null){
+                for(Element tmp:lists){
+                    String title = tmp.select(".cl").select(".name").text();
+                    String time = tmp.select(".cl.grey").select(".time").text();
+                    tmp.select(".cl.grey").select(".time").remove();
 
-            for(int i =0;i<20;i++){
-                //int type, String title, String titleUrl, String author, String time, String froumName
-                datasArticleReply.add(new MyTopicReplyListData(1,"","","","",""));
+                    String content = tmp.select(".cl.grey").text();
+                    String authorImage = tmp.select("img").attr("src");
+                    String titleUrl =tmp.select("a").attr("href");
+
+                    //int type, String title, String titleUrl, String authorImage, String time,String content
+                    datasArticleReply.add(new MyTopicReplyListData(1,title,titleUrl,authorImage,time,content));
+                }
             }
             return "";
         }
@@ -222,23 +230,18 @@ public class HomeFragement_3 extends Fragment {
             adapterArtilceReply = new UserArticleReplyStarAdapter(getActivity(),datasArticleReply);
             recyclerView.setAdapter(adapterArtilceReply);
             adapterArtilceReply.notifyItemRangeInserted(0, datasArticleReply.size());
-
         }
     }
 
-
     //获得主题
     public class GetUserArticleask extends AsyncTask<Void, Void, String> {
-
         private String res;
-
         public GetUserArticleask(String res) {
             this.res = res;
         }
 
         @Override
         protected String doInBackground(Void... params) {
-
             Elements lists = Jsoup.parse(res).select(".threadlist").select("ul").select("li");
             if(lists!=null){
                 for(Element tmp:lists){
