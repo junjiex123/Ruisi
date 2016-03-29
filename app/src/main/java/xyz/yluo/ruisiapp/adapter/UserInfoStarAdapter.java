@@ -16,7 +16,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.ArticleNormalActivity;
-import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.utils.GetId;
 
 /**

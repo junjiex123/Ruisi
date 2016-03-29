@@ -1,0 +1,70 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="一般设置">
+
+        <ListPreference
+            android:key="setting_forums_url"
+            android:defaultValue="0"
+            android:entries="@array/setting_switch_url"
+            android:entryValues="@array/setting_switch_url_value"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="切换论坛地址"
+            android:summary="选择论坛地址"/>
+
+        <SwitchPreference
+            android:key="setting_show_zhidin"
+            android:defaultValue="false"
+            android:title="是否显示置顶帖"
+            android:summaryOn="显示置顶帖,注意只对校园网环境有效"
+            android:summaryOff="不显示置顶帖,注意只对校园网环境有效">
+        </SwitchPreference>
+        <EditTextPreference
+            android:key="setting_user_tail"
+            android:defaultValue="无"
+            android:capitalize="words"
+            android:title="自定义小尾巴"
+            android:summary="自定义你的小尾巴"
+            android:inputType="textCapWords"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="主题设置">
+        <SwitchPreference
+            android:key="setting_swich_theme"
+            android:defaultValue="true"
+            android:summary="日间主题"
+            android:summaryOff="夜间主题"
+            android:title="切换主题" />
+
+        <SwitchPreference
+            android:key="setting_show_style"
+            android:defaultValue="false"
+            android:title="是否显示文章样式"
+            android:summary="选中将删除文章样式,例如字体大小,颜色等"
+            android:summaryOn="显示所有样式"
+            android:summaryOff="删除文章字体颜色大小等其余样式">
+
+        </SwitchPreference>
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="其他信息">
+        <Preference
+            android:key="about_this"
+            android:title="关于本程序"
+            android:summary="当前版本1.0">
+
+        </Preference>
+        <Preference
+            android:key="open_sourse"
+            android:title="开源信息"
+            android:summary="开放源代码信息">
+
+        </Preference>
+    </PreferenceCategory>
+
+
+</PreferenceScreen>
