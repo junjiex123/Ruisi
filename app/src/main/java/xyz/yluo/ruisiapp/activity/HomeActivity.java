@@ -12,10 +12,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import butterknife.Bind;
@@ -27,6 +29,7 @@ import xyz.yluo.ruisiapp.TestActivity;
 import xyz.yluo.ruisiapp.fragment.HomeFragement_1;
 import xyz.yluo.ruisiapp.fragment.HomeFragement_2;
 import xyz.yluo.ruisiapp.fragment.HomeFragement_3;
+import xyz.yluo.ruisiapp.fragment.NeedLoginDialogFragment;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
 
 /**
@@ -68,19 +71,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
-        View header = navigationView.getHeaderView(0);
-        View nav_header_login = header.findViewById(R.id.nav_header_login);
-        View nav_header_notlogin = header.findViewById(R.id.nav_header_notlogin);
 
-        //判断是否登陆
-        if (ConfigClass.CONFIG_ISLOGIN) {
-            nav_header_login.setVisibility(View.VISIBLE);
-            nav_header_notlogin.setVisibility(View.GONE);
-        } else {
-            nav_header_notlogin.setVisibility(View.VISIBLE);
-            nav_header_login.setVisibility(View.GONE);
-        }
+        checkIsLogin();
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {}
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                checkIsLogin();
+            }
+            @Override
+            public void onDrawerClosed(View drawerView) {}
+            @Override
+            public void onDrawerStateChanged(int newState) {}
+        });
 
+        final View header = navigationView.getHeaderView(0);
         CircleImageView userImge = (CircleImageView) header.findViewById(R.id.profile_image);
         userImge.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +101,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-
     }
 
     //登陆页面返回结果
@@ -107,6 +112,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             String result = data.getExtras().getString("result");//得到新Activity 关闭后返回的数据
             Toast.makeText(getApplicationContext(), "result" + result, Toast.LENGTH_SHORT).show();
         }
+        checkIsLogin();
     }
 
     @OnClick(R.id.btn_1)
@@ -156,9 +162,30 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.new_topic) {
+
+            if(islogin_dialog()){
+                startActivity(new Intent(getApplicationContext(),NewArticleActivity.class));
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
+
 
         if(id == R.id.nav_test){
             startActivity(new Intent(this, TestActivity.class));
@@ -167,8 +194,50 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             startActivity(new Intent(this,AboutActivity.class));
         }else if(id==R.id.nav_setting){
             startActivity(new Intent(getApplicationContext(), SettingActivity.class));
+        }else if(id==R.id.nav_sign){
+            if(ConfigClass.CONFIG_IS_INNER){
+                if(islogin_dialog()){
+                    startActivity(new Intent(getApplicationContext(),UserDakaActivity.class));
+                }
+            }else{
+                Toast.makeText(getApplicationContext(),"你现在不是校园网无法签到",Toast.LENGTH_SHORT).show();
+            }
+
+        }else if(id==R.id.nav_post){
+            if(islogin_dialog()){
+                startActivity(new Intent(getApplicationContext(),NewArticleActivity.class));
+            }
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void checkIsLogin(){
+        final View header = navigationView.getHeaderView(0);
+        final View nav_header_login = header.findViewById(R.id.nav_header_login);
+        final View nav_header_notlogin = header.findViewById(R.id.nav_header_notlogin);
+        //判断是否登陆
+        if (ConfigClass.CONFIG_ISLOGIN) {
+            TextView text1 = (TextView) header.findViewById(R.id.header_user_name);
+            text1.setText(ConfigClass.CONFIG_USER_NAME);
+            nav_header_login.setVisibility(View.VISIBLE);
+            nav_header_notlogin.setVisibility(View.GONE);
+        } else {
+            nav_header_notlogin.setVisibility(View.VISIBLE);
+            nav_header_login.setVisibility(View.GONE);
+        }
+    }
+
+    //判断是否需要弹出登录dialog
+    private boolean islogin_dialog(){
+
+        if(ConfigClass.CONFIG_ISLOGIN){
+            return true;
+        }else{
+            NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();
+            dialogFragment.show(getFragmentManager(), "needlogin");
+        }
+        return false;
+
     }
 }

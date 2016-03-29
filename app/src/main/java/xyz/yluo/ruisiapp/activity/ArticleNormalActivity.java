@@ -134,8 +134,6 @@ public class ArticleNormalActivity extends AppCompatActivity
             }
         });
 
-
-
         action_smiley.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

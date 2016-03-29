@@ -190,6 +190,7 @@ public class LoginActivity extends AppCompatActivity {
     private void login_ok(){
         //开始获取formhash
         progressBar.setVisibility(View.INVISIBLE);
+        ConfigClass.CONFIG_ISLOGIN = true;
         Toast.makeText(getApplicationContext(), "欢迎你"+ConfigClass.CONFIG_USER_NAME+"登陆成功", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
         //把返回数据存入Intent

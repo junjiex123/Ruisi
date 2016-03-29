@@ -8,43 +8,25 @@
             android:icon="@drawable/ic_home_24dp"
             android:title="首页" />
         <item
-            android:id="@+id/nav_01"
+            android:id="@+id/nav_new"
             android:icon="@drawable/ic_chat_24dp"
-            android:title="西电睿思灌水专区" />
-        <item
-            android:id="@+id/nav_02"
-            android:icon="@drawable/ic_shopping_24dp"
-            android:title="校园交易" />
+            android:title="新帖" />
         <item
             android:id="@+id/nav_03"
-            android:icon="@drawable/ic_help_24dp"
-            android:title="西电问答" />
-        <item
-            android:id="@+id/nav_04"
-            android:icon="@drawable/ic_communicate_24dp"
-            android:title="考研交流" />
-
-        <item
-            android:id="@+id/nav_05"
-            android:icon="@drawable/ic_woman_24dp"
-            android:title="我是女生" />
-        <item
-            android:id="@+id/nav_06"
-            android:icon="@drawable/ic_tool_24dp"
-            android:title="技术博客" />
-        <item
-            android:id="@+id/nav_07"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="摄影天地" />
-        <item
-            android:id="@+id/nav_08"
-            android:icon="@drawable/ic_books_24dp"
-            android:title="文章天地" />
+            android:icon="@drawable/ic_person_24dp"
+            android:title="我" />
     </group>
 
-
-    <item android:title="Communicate">
+    <item android:title="相关设置">
         <menu>
+            <item
+                android:id="@+id/nav_sign"
+                android:icon="@drawable/ic_autorenew_black_24dp"
+                android:title="签到" />
+            <item
+                android:id="@+id/nav_post"
+                android:icon="@drawable/ic_edit"
+                android:title="发帖" />
             <item
                 android:id="@+id/nav_about"
                 android:icon="@drawable/ic_info_24dp"
@@ -53,7 +35,6 @@
                 android:id="@+id/nav_test"
                 android:icon="@drawable/ic_bug_24dp"
                 android:title="测试" />
-
             <item
                 android:id="@+id/nav_setting"
                 android:icon="@drawable/ic_settings_24dp"
