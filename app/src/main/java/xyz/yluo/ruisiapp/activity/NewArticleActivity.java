@@ -1,5 +1,6 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -14,6 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -26,27 +28,24 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.fragment.ColorPickerDialog;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
 import xyz.yluo.ruisiapp.utils.PostHander;
 
 /**
  * Created by free2 on 16-3-6.
- *
+ * 发帖activity
  */
 public class NewArticleActivity extends AppCompatActivity {
 
     @Bind(R.id.edit_bar)
     protected LinearLayout edit_bar;
-
     @Bind(R.id.emotion_container)
     protected LinearLayout emotion_container;
     @Bind(R.id.edit_input_title)
     protected EditText edit_input_title;
     @Bind(R.id.edit_input_content)
     protected EditText edit_input_content;
-
     @Bind(R.id.action_bold)
     protected CheckBox action_bold;
     @Bind(R.id.action_italic)
@@ -63,51 +62,26 @@ public class NewArticleActivity extends AppCompatActivity {
     protected CheckBox action_image;
     @Bind(R.id.action_link)
     protected CheckBox action_link;
-    @Bind(R.id.btn_send)
-    protected FloatingActionButton btn_send;
     @Bind(R.id.main_window)
     protected CoordinatorLayout main_window;
 
-    private int index =0;
-    private String color = "#ff0000";
+    private String CURRENT_FID = "72";
+    private ProgressDialog progress;
 
-    String hash = ConfigClass.CONFIG_FORMHASH;
-    String time = "1458743743";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_topic);
         ButterKnife.bind(this);
 
-        String url = "forum.php?mod=post&action=newthread&fid=72&mobile=2";
-        AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Document doc  = Jsoup.parse(new String(responseBody));
-
-                hash = doc.select("input#formhash").attr("value");
-                time = doc.select("input#posttime").attr("value");
-
-                edit_input_content.append("hash:"+hash+"\ntime:"+time);
-
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
-            }
-        });
-
         action_bold.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    edit_input_content.append("<b>");
-
+                    edit_input_content.append("[b]");
                 } else {
-                    edit_input_content.append("</b>");
-
+                    edit_input_content.append("[/b]");
                 }
             }
         });
@@ -116,58 +90,16 @@ public class NewArticleActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    edit_input_content.append("<i>");
+                    edit_input_content.append("[i]");
 
                 } else {
-                    edit_input_content.append("</i>");
+                    edit_input_content.append("[/i]");
 
                 }
-            }
-        });
-
-        action_list_c.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                ColorPickerDialog dialog = new ColorPickerDialog(
-                        getApplicationContext(),
-                        new ColorPickerDialog.OnColorChangedListener() {
-                            @Override
-                            public void colorChanged(String key, int color) {
-                                System.out.print("\n>>>"+color);
-                            }
-                        },"111",0,0);
-
-                dialog.show();
-            }
-        });
-
-        action_color_text.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    edit_input_content.append("<font color=\""+color+"\">");
-
-                } else {
-                    edit_input_content.append("</font>");
-
-                }
-            }
-        });
-
-
-        //TODO
-        //now preview
-        action_image.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                Editable message = edit_input_content.getEditableText();
-                message.replace(0,edit_input_content.getSelectionEnd(), Html.fromHtml(edit_input_content.getText().toString()));
             }
         });
 
     }
-    //
-    //message.replace(index, ,edit_input_content.getText().subSequence(index,edit_input_content.getSelectionEnd()));
 
     @OnClick(R.id.action_emotion)
     protected void action_emotion(){
@@ -177,8 +109,6 @@ public class NewArticleActivity extends AppCompatActivity {
         }else{
             emotion_container.setVisibility(View.VISIBLE);
         }
-
-
     }
 
     @OnClick({R.id._1000, R.id._1001,R.id._1002,R.id._1003,R.id._1005,
@@ -195,31 +125,87 @@ public class NewArticleActivity extends AppCompatActivity {
         //_1021
         //input_aera.append(btn.getTag().toString());
         String tmp = btn.getTag().toString();
-
         PostHander hander = new PostHander(getApplicationContext(),(EditText)getCurrentFocus());
         hander.insertSmiley("{:16" + tmp + ":}", btn.getDrawable());
     }
 
+    //发帖按钮
     @OnClick(R.id.btn_send)
     protected void btn_send_click(){
-        Snackbar.make(main_window,"不能为空",Snackbar.LENGTH_SHORT).show();
-        String url = "forum.php?mod=post&action=newthread&fid=72&extra=&topicsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
+        if(checkPostInput()){
+            preparePost(CURRENT_FID);
+        }
+    }
+
+    private boolean checkPostInput(){
+        if (edit_input_title.getText().toString()==""){
+            postFail("标题不能为空啊");
+            return false;
+        }else if(edit_input_content.getText().toString()==""){
+            postFail("内容不能为空啊");
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    //准备发帖需要的东西
+    private void preparePost(final String fid){
+        progress = ProgressDialog.show(this, "正在发送", "请等待", true);
+        String url = "forum.php?mod=post&action=newthread&fid="+fid+"&mobile=2";
+        AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                Document doc  = Jsoup.parse(new String(responseBody));
+                String hash = doc.select("input#formhash").attr("value");
+                String time = doc.select("input#posttime").attr("value");
+                begainPost(fid,hash,time);
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                postFail("网络错误");
+            }
+        });
+    }
+
+    //开始发帖
+    private void begainPost(String fid,String hash,String time){
+        String url = "forum.php?mod=post&action=newthread&fid="+fid+"&extra=&topicsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
         RequestParams params = new RequestParams();
         params.add("formhash",hash);
         params.add("posttime",time);
         params.add("topicsubmit","yes");
         params.add("subject",edit_input_title.getText().toString());
         params.add("message",edit_input_content.getText().toString());
-        AsyncHttpCilentUtil.get(getApplicationContext(), url, params, new AsyncHttpResponseHandler() {
+        AsyncHttpCilentUtil.post(getApplicationContext(), url, params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String res = new String(responseBody);
+                edit_input_content.setText(new String(responseBody));
 
+                if(res.contains("非常感谢")){
+                    postSuccess();
+                }else{
+                    postFail("由于未知原因发帖失败");
+                }
             }
-
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
+                postFail("由于未知原因发帖失败");
             }
         });
+    }
+
+    //发帖成功执行
+    private void postSuccess(){
+        progress.dismiss();
+        Toast.makeText(getApplicationContext(),"主题发表成功",Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+    //发帖失败执行
+    private void postFail(String str){
+        progress.dismiss();
+        Snackbar.make(main_window,str,Snackbar.LENGTH_SHORT).show();
     }
 }

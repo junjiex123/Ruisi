@@ -6,10 +6,14 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.R;
 
 
@@ -19,11 +23,18 @@ import xyz.yluo.ruisiapp.R;
  */
 public class AboutActivity extends AppCompatActivity {
 
+    @Bind(R.id.text_1)
+    protected TextView textView1;
+
+    @Bind(R.id.text_2)
+    protected TextView textView2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
+        ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -34,6 +45,7 @@ public class AboutActivity extends AppCompatActivity {
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -41,7 +53,12 @@ public class AboutActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+
+        String ss = "西电睿思手机客户端\n目前可见bug很多，最近比较忙我也不会去修复他。。。\nbug反馈点击按钮给我发邮件吧\n或者 <a href=\"http://rs.xidian.edu.cn/home.php?mod=space&uid=252553&do=profile&mobile=2\">@谁用了FREEDOM</a>";
+        textView1.setText(Html.fromHtml(ss));
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

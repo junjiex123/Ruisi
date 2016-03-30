@@ -184,9 +184,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-
-
         if(id == R.id.nav_test){
             startActivity(new Intent(this, TestActivity.class));
             // Handle the camera action

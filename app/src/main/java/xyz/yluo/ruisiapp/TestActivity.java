@@ -4,12 +4,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.ResponseHandlerInterface;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,6 +28,7 @@ import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
+import xyz.yluo.ruisiapp.utils.ConfigClass;
 
 /**
  * Created by free2 on 16-3-10.
@@ -39,6 +43,8 @@ public class TestActivity extends AppCompatActivity {
     @Bind(R.id.webview)
     protected WebView webview;
 
+    final AsyncHttpClient client = new AsyncHttpClient();
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,35 +56,64 @@ public class TestActivity extends AppCompatActivity {
 
     @OnClick(R.id.login_button)
     protected void login_button_click() {
-        String url = config_url;
+
         RequestParams params = new RequestParams();
-        //params.put("formhash",congig_formhash);
-        params.put("fastloginfield","username");
+        params.put("fastloginfield", "username");
         params.put("cookietime", "2592000");
-        params.put("username", "谁用了FREEDOM");
+        params.put("username", "admin");
         params.put("password", "justice");
         params.put("questionid", "0");
         params.put("answer", "");
 
-        AsyncHttpCilentUtil.post(getApplicationContext(), url, params, new AsyncHttpResponseHandler() {
+
+        client.get("http://104.236.65.81/bbs/member.php?mod=logging&action=login&mobile=2", params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String res = new String(responseBody);
-                if (res.contains("欢迎您回来")) {
-                    //开始获取formhash
-                    responseText.setText(new String(responseBody));
+                Document doc = Jsoup.parse(res);
 
-                } else {
-                    Toast.makeText(getApplicationContext(), "用户名或者密码错误登陆失败！！", Toast.LENGTH_SHORT).show();
+                if (doc.select("form#loginform").attr("action") != "") {
+                    String loginUrl = "";
+                    loginUrl = doc.select("form#loginform").attr("action");
 
+                    responseText.setText(loginUrl);
+                    RequestParams params = new RequestParams();
+                    params.put("fastloginfield", "username");
+                    params.put("cookietime", "2592000");
+                    params.put("username", "admin");
+                    params.put("password", "justice");
+                    params.put("questionid", "0");
+                    params.put("answer", "");
+
+                    client.post("http://104.236.65.81/bbs/"+loginUrl, params, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            String res = new String(responseBody);
+
+                            responseText.setText(res);
+
+                            if (res.contains("欢迎您回来")) {
+                                Document document = Jsoup.parse(res);
+                            } else {
+                                Toast.makeText(getApplicationContext(), "用户名或者密码错误登陆失败！！", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                        }
+                    });
                 }
+
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Toast.makeText(getApplicationContext(), "网络异常！！", Toast.LENGTH_SHORT).show();
+                responseText.setText("error");
             }
         });
+
 
     }
 
@@ -113,21 +148,45 @@ public class TestActivity extends AppCompatActivity {
 
     @OnClick(R.id.login_post)
     protected void login_post_click() {
-        RequestParams params = new RequestParams();
-        String url =  "forum.php?mod=post&action=reply&fid=72&tid=841200&extra=&replysubmit=yes&mobile=2&handlekey=fastpost&loc=1&inajax=1";
-        params.put("formhash", congig_formhash);
-        params.put("message", "来我帮你免费///。。。。。");
 
-        AsyncHttpCilentUtil.post(getApplicationContext(), url, params, new AsyncHttpResponseHandler() {
+        String url = "http://104.236.65.81/bbs/forum.php?mod=post&action=newthread&fid=36&extra=&topicsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
+
+
+        client.get(getApplicationContext(), "http://104.236.65.81/bbs/forum.php?mod=post&action=newthread&fid=36&mobile=2", null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                String res = new String(responseBody);
-                responseText.append(res + "\n\n\n");
+                Document doc  = Jsoup.parse(new String(responseBody));
+
+                String  hash = doc.select("input#formhash").attr("value");
+                String  time = doc.select("input#posttime").attr("value");
+
+                RequestParams params = new RequestParams();
+                params.add("formhash",hash);
+                //params.add("posttime",time);
+                params.add("topicsubmit","yes");
+                params.add("subject","测试标题。。。。。");
+                params.add("message","这是一个测试内容。。。。。。。[b]jbajbcdjwabdjawbdj[/b]");
+
+                String url = "http://104.236.65.81/bbs/forum.php?mod=post&action=newthread&fid=36&extra=&topicsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
+
+
+                client.post(getApplicationContext(), url, params, new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        String res = new String(responseBody);
+                        responseText.setText(res + "\n\n\n");
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        Toast.makeText(getApplicationContext(), "网络异常！！", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Toast.makeText(getApplicationContext(), "网络异常！！", Toast.LENGTH_SHORT).show();
+
             }
         });
     }

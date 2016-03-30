@@ -17,6 +17,8 @@ import xyz.yluo.ruisiapp.R;
  *
  */
 public class ArrowTextView extends TextView{
+
+
     public ArrowTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -30,8 +32,7 @@ public class ArrowTextView extends TextView{
     }
 
 
-    private float arrowInHeight = 10;
-    private int color = ContextCompat.getColor(getContext(), R.color.bluegrey100);;
+    private int color = ContextCompat.getColor(getContext(), R.color.bluegrey50);;
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -40,6 +41,7 @@ public class ArrowTextView extends TextView{
         paint.setAntiAlias(true);
 
 
+        float arrowInHeight = 10;
         canvas.drawRoundRect(new RectF(0, arrowInHeight, getWidth(),getHeight()), 4, 4, paint);
 
         //画三角形

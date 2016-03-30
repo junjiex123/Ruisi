@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -88,7 +89,6 @@ public class ArticleNormalActivity extends AppCompatActivity
     //下一页链接
     private String nextPageUrl = "";
     private SingleArticleAdapter mRecyleAdapter;
-    private boolean isfirst = true;
 
     //约定好要就收的数据
     public static void open(Context context, String tid,String title,String replycount,String type) {
@@ -233,9 +233,7 @@ public class ArticleNormalActivity extends AppCompatActivity
                 getArticleData();
             }
         }
-            //getArticleData();
     }
-
 
     //文章一页的html 根据页数 tid
     private void getArticleData() {
@@ -464,6 +462,12 @@ public class ArticleNormalActivity extends AppCompatActivity
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_article_normal, menu);
+        return true;
     }
 
     @Override
