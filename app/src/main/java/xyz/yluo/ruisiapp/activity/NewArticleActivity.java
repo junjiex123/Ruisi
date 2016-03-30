@@ -157,9 +157,11 @@ public class NewArticleActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Document doc  = Jsoup.parse(new String(responseBody));
+                String url  = doc.select("#postform").attr("action");
                 String hash = doc.select("input#formhash").attr("value");
                 String time = doc.select("input#posttime").attr("value");
-                begainPost(fid,hash,time);
+
+                begainPost(url,hash,time);
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
@@ -169,8 +171,8 @@ public class NewArticleActivity extends AppCompatActivity {
     }
 
     //开始发帖
-    private void begainPost(String fid,String hash,String time){
-        String url = "forum.php?mod=post&action=newthread&fid="+fid+"&extra=&topicsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
+    private void begainPost(String url,String hash,String time){
+
         RequestParams params = new RequestParams();
         params.add("formhash",hash);
         params.add("posttime",time);

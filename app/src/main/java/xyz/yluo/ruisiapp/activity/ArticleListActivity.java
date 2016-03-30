@@ -157,6 +157,9 @@ public class ArticleListActivity extends AppCompatActivity
         mRecyclerView.addOnScrollListener(new HidingScrollListener() {
             @Override
             public void onHide() {
+                if (fabMenu.isOpened()){
+                    fabMenu.close(true);
+                }
                 CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) fabMenu.getLayoutParams();
                 int bottomMargin = lp.bottomMargin;
                 int distanceToScroll = fabMenu.getHeight() + bottomMargin;
