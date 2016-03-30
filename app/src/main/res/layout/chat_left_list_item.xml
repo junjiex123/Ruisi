@@ -20,6 +20,8 @@
 
         <TextView
             android:id="@+id/content"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
             android:layout_gravity="start"
             android:text="11sefsefseffdhafhafvdha11"
             android:layout_width="wrap_content"

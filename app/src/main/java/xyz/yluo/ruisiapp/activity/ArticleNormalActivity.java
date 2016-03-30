@@ -402,9 +402,7 @@ public class ArticleNormalActivity extends AppCompatActivity
     }
 
     private void post_reply(String text){
-        final ProgressDialog progress;
-        progress = ProgressDialog.show(this, "正在发送",
-                "请等待", true);
+
         int len =0;
         // Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
         try {
@@ -415,6 +413,10 @@ public class ArticleNormalActivity extends AppCompatActivity
         if(len<13){
             Toast.makeText(getApplicationContext(),"字数不够要13个字节！！",Toast.LENGTH_SHORT).show();
         }else {
+
+            final ProgressDialog progress;
+            progress = ProgressDialog.show(this, "正在发送",
+                    "请等待", true);
             //尝试回复
             /*
             message:帮顶

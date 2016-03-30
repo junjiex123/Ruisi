@@ -18,6 +18,7 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.ArticleNormalActivity;
+import xyz.yluo.ruisiapp.activity.ChatActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.MyTopicReplyListData;
 import xyz.yluo.ruisiapp.utils.ArrowTextView;
@@ -113,8 +114,8 @@ public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticl
         @OnClick(R.id.main_item_btn_item)
         protected void main_item_btn_item_click(){
             MyTopicReplyListData single_data =  DataSet.get(getAdapterPosition());
-            //ArticleNormalActivity.open(activity, GetTid.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplycount()," ");
-            //TODO 类似qq聊天页面
+            String username = single_data.getTitle().replace("我对 ","").replace("说:","").replace(" 对我","");
+            ChatActivity.open(activity,username,single_data.getTitleUrl());
         }
         @OnClick(R.id.article_user_image)
         protected void article_user_image_click(){

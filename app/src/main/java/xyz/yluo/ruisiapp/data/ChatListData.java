@@ -7,15 +7,13 @@ package xyz.yluo.ruisiapp.data;
 public class ChatListData {
 
     private int type;//left or right
-    private String userUrl;
     private String UserImage;
 
     private String content;
     private String time;
 
-    public ChatListData(int type, String userUrl, String userImage, String content, String time) {
+    public ChatListData(int type,String userImage, String content, String time) {
         this.type = type;
-        this.userUrl = userUrl;
         UserImage = userImage;
         this.content = content;
         this.time = time;
@@ -23,10 +21,6 @@ public class ChatListData {
 
     public void setType(int type) {
         this.type = type;
-    }
-
-    public void setUserUrl(String userUrl) {
-        this.userUrl = userUrl;
     }
 
     public void setUserImage(String userImage) {
@@ -43,10 +37,6 @@ public class ChatListData {
 
     public int getType() {
         return type;
-    }
-
-    public String getUserUrl() {
-        return userUrl;
     }
 
     public String getUserImage() {

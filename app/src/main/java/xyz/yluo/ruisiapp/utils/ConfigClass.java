@@ -25,5 +25,7 @@ public class ConfigClass extends Application {
     //是否将文章页面的样式删除
     public static boolean CONFIG_SHOW_PLAIN_TEXT = true;
 
+    public static String CONFIG_USER_UID = "252553";
+
 
 }
