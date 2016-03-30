@@ -69,6 +69,11 @@
             android:label="打卡">
 
         </activity>
+
+        <activity android:name=".activity.ChatActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
     </application>
 
 </manifest>

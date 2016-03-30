@@ -4,11 +4,8 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.Html;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -29,7 +26,6 @@ import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
 import xyz.yluo.ruisiapp.utils.PostHander;
 
 /**
@@ -157,6 +153,7 @@ public class NewArticleActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Document doc  = Jsoup.parse(new String(responseBody));
+
                 String url  = doc.select("#postform").attr("action");
                 String hash = doc.select("input#formhash").attr("value");
                 String time = doc.select("input#posttime").attr("value");
@@ -173,13 +170,15 @@ public class NewArticleActivity extends AppCompatActivity {
     //开始发帖
     private void begainPost(String url,String hash,String time){
 
+        String url3 = "forum.php?mod=post&action=newthread&fid=72&extra=&topicsubmit=yes&mobile=yes";
+        String url2 = "forum.php?mod=post&action=newthread&fid=72&extra=&topicsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
         RequestParams params = new RequestParams();
         params.add("formhash",hash);
         params.add("posttime",time);
         params.add("topicsubmit","yes");
         params.add("subject",edit_input_title.getText().toString());
         params.add("message",edit_input_content.getText().toString());
-        AsyncHttpCilentUtil.post(getApplicationContext(), url, params, new AsyncHttpResponseHandler() {
+        AsyncHttpCilentUtil.post(getApplicationContext(), url3, params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String res = new String(responseBody);
@@ -202,7 +201,7 @@ public class NewArticleActivity extends AppCompatActivity {
     private void postSuccess(){
         progress.dismiss();
         Toast.makeText(getApplicationContext(),"主题发表成功",Toast.LENGTH_SHORT).show();
-        finish();
+        //finish();
     }
 
     //发帖失败执行
