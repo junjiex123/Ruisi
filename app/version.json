@@ -1,0 +1,10 @@
+{
+  "version_code":1,
+  "version_name":"1.0",
+  "des":
+  [
+    {"index":"1","info":"bug修复"},
+    {"index":"2","info":"bug修复2"},
+    {"index":"3","info":"bug修复3"}
+  ]
+}

@@ -1,6 +1,8 @@
 package xyz.yluo.ruisiapp.activity;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -12,7 +14,11 @@ import android.support.v7.app.AppCompatDelegate;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 
 /**
  * Created by free2 on 16-3-6.
@@ -67,7 +73,33 @@ public class SettingActivity extends PreferenceActivity {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
 
-                    Toast.makeText(getActivity(),"被电击",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"正在检查更新",Toast.LENGTH_SHORT).show();
+                    PackageManager manager;
+                    PackageInfo info = null;
+                    manager = getActivity().getPackageManager();
+                    try {
+                        info = manager.getPackageInfo(getActivity().getPackageName(), 0);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    int version_code = 1;
+                    String version_name = "1.0";
+                    if(info!=null){
+                        version_code = info.versionCode;
+                        version_name =  info.versionName;
+                    }
+
+                    AsyncHttpCilentUtil.get(getActivity(), "", null, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody) {
+
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody, Throwable error) {
+
+                        }
+                    });
                     return false;
                 }
             });
