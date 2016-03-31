@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.adapter.ArticleListAdapter;
+import xyz.yluo.ruisiapp.adapter.ArticleListNormalAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
@@ -45,7 +45,7 @@ public class HomeFragement_2 extends Fragment implements LoadMoreListener.OnLoad
     @Bind(R.id.main_refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
     private List<ArticleListData> mydatasetnormal =new ArrayList<>();
-    private ArticleListAdapter adapter;
+    private ArticleListNormalAdapter adapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     private boolean isEnableLoadMore = false;
@@ -59,7 +59,7 @@ public class HomeFragement_2 extends Fragment implements LoadMoreListener.OnLoad
 
 
         mLayoutManager = new LinearLayoutManager(getActivity());
-        adapter = new ArticleListAdapter(getActivity(),mydatasetnormal,3);
+        adapter = new ArticleListNormalAdapter(getActivity(),mydatasetnormal,3);
         recycler_view.setAdapter(adapter);
         recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 10));
 

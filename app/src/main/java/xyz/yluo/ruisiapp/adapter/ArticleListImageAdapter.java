@@ -25,11 +25,11 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * Created by free2 on 16-3-31.
  *
  */
-public class ImagListAdapter extends RecyclerView.Adapter<ImagListAdapter.ImageCardViewHolder> {
+public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListImageAdapter.ImageCardViewHolder> {
     private List<ImageArticleListData> DataSet;
     private Activity activity;
 
-    public ImagListAdapter(Activity activity,List<ImageArticleListData> dataSet) {
+    public ArticleListImageAdapter(Activity activity, List<ImageArticleListData> dataSet) {
         DataSet = dataSet;
         this.activity = activity;
     }
@@ -46,7 +46,7 @@ public class ImagListAdapter extends RecyclerView.Adapter<ImagListAdapter.ImageC
 
     @Override
     public int getItemCount() {
-        return 0;
+        return DataSet.size();
     }
 
 

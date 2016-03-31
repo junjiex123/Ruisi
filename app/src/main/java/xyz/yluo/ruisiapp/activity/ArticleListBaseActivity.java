@@ -24,7 +24,9 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 
 /**
  * Created by free2 on 16-3-31.
- *
+ * 文章列表基类
+ * 一般文章列表
+ * 图片文章列表都继承这个类
  */
 public abstract class ArticleListBaseActivity extends AppCompatActivity
         implements LoadMoreListener.OnLoadMoreListener{
@@ -48,6 +50,7 @@ public abstract class ArticleListBaseActivity extends AppCompatActivity
     protected int CurrentPage = 1;
     protected boolean isEnableLoadMore = false;
     protected RecyclerView.LayoutManager mLayoutManager;
+    protected ActionBar actionBar;
 
 
     @Override
@@ -56,13 +59,20 @@ public abstract class ArticleListBaseActivity extends AppCompatActivity
         setContentView(R.layout.activity_article_list);
         ButterKnife.bind(this);
         init();
+        //子类实现获取数据
         getData();
     }
 
 
     private void init(){
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+            }
+        });
         setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
+        actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -126,6 +136,7 @@ public abstract class ArticleListBaseActivity extends AppCompatActivity
             }
         });
     }
+
     protected abstract void refresh();
     protected abstract void getData();
 

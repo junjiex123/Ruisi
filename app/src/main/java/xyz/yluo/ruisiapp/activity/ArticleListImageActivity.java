@@ -6,33 +6,30 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.widget.Toast;
-
 import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
-import xyz.yluo.ruisiapp.adapter.ImagListAdapter;
+import xyz.yluo.ruisiapp.adapter.ArticleListImageAdapter;
 import xyz.yluo.ruisiapp.data.ImageArticleListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
 
 /**
  * Created by free2 on 16-3-31.
+ * 图片文章列表activity
  *
  */
 public class ArticleListImageActivity extends ArticleListBaseActivity{
 
     private List<ImageArticleListData> mydatasetnormal;
-    private ImagListAdapter adapter;
-
+    private ArticleListImageAdapter adapter;
     public static void open(Context context, int fid, String title){
-        Intent intent = new Intent(context, ArticleListNormalActivity.class);
+        Intent intent = new Intent(context, ArticleListImageActivity.class);
         CurrentFid = fid;
         CurrentTitle = title;
         context.startActivity(intent);
@@ -42,11 +39,13 @@ public class ArticleListImageActivity extends ArticleListBaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        actionBar.setTitle(CurrentTitle);
         mydatasetnormal =  new ArrayList<>();
         mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        adapter = new ImagListAdapter(getParent(),mydatasetnormal);
+        adapter = new ArticleListImageAdapter(this,mydatasetnormal);
         mRecyclerView.setAdapter(adapter);
+
     }
 
 
@@ -76,15 +75,12 @@ public class ArticleListImageActivity extends ArticleListBaseActivity{
 
     @Override
     public void onLoadMore() {
-
     }
 
     //校园网状态下获得图片板块数据 图片链接、标题等  根据html获得数据
     public class GetImageArticleListTaskRS extends AsyncTask<Void, Void, String> {
 
         private String response;
-        private List<ImageArticleListData> imgdatas = new ArrayList<>();
-
         public GetImageArticleListTaskRS(String res) {
             this.response = res;
         }
@@ -107,7 +103,7 @@ public class ArticleListImageActivity extends ArticleListBaseActivity{
                     String like = tmp.select("div.auth").select("a[href^=forum.php]").text();
                     //String title, String titleUrl, String image, String author, String authorUrl, String likeCount, String replyCount
                     ImageArticleListData tem = new ImageArticleListData(title, url, img, author, authorurl, like,"");
-                    imgdatas.add(tem);
+                    mydatasetnormal.add(tem);
                 }
             }
             return null;
@@ -115,10 +111,8 @@ public class ArticleListImageActivity extends ArticleListBaseActivity{
 
         @Override
         protected void onPostExecute(final String res) {
-
-            mydatasetnormal.addAll(imgdatas);
             refreshLayout.setRefreshing(false);
-            adapter.notifyItemRangeInserted(mydatasetnormal.size()-imgdatas.size(), imgdatas.size());
+            adapter.notifyDataSetChanged();
         }
     }
 }

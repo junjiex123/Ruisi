@@ -20,7 +20,7 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
-import xyz.yluo.ruisiapp.adapter.ArticleListAdapter;
+import xyz.yluo.ruisiapp.adapter.ArticleListNormalAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
@@ -34,7 +34,7 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity {
 
     //一般板块/图片板块/手机板块数据列表
     private List<ArticleListData> mydatasetnormal;
-    private ArticleListAdapter mRecyleAdapter;
+    private ArticleListNormalAdapter mRecyleAdapter;
 
     public static void open(Context context, int fid,String title){
         Intent intent = new Intent(context, ArticleListNormalActivity.class);
@@ -47,14 +47,22 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        actionBar.setTitle(CurrentTitle);
         mydatasetnormal = new ArrayList<>();
         mLayoutManager = new LinearLayoutManager(this);
-        mRecyleAdapter = new ArticleListAdapter(this, mydatasetnormal,0);
+        mRecyleAdapter = new ArticleListNormalAdapter(this, mydatasetnormal,0);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mRecyleAdapter);
         //加载更多
         mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this,8));
-    }
+
+        //item 增加删除 改变动画
+        mRecyclerView.setItemAnimator(new OvershootInLeftAnimator());
+        mRecyclerView.getItemAnimator().setAddDuration(250);
+        mRecyclerView.getItemAnimator().setRemoveDuration(10);
+        mRecyclerView.getItemAnimator().setChangeDuration(10);
+        mydatasetnormal.clear();
+}
 
 
     @Override
@@ -159,18 +167,8 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity {
 
         @Override
         protected void onPostExecute(final String res) {
-            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-            mRecyclerView.getItemAnimator().setAddDuration(0);
-            if(CurrentPage==1){
-                //item 增加删除 改变动画
-                mRecyclerView.setItemAnimator(new OvershootInLeftAnimator());
-                mRecyclerView.getItemAnimator().setAddDuration(250);
-                mRecyclerView.getItemAnimator().setRemoveDuration(10);
-                mRecyclerView.getItemAnimator().setChangeDuration(10);
-                mydatasetnormal.clear();
-            }
+
             mydatasetnormal.addAll(dataset);
-            mRecyclerView.setLayoutManager(mLayoutManager);
             refreshLayout.setRefreshing(false);
             mRecyleAdapter.notifyItemRangeInserted(mydatasetnormal.size() - dataset.size(), dataset.size());
             isEnableLoadMore = true;
@@ -222,20 +220,7 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity {
         @Override
         protected void onPostExecute(final String res) {
 
-            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-            mRecyclerView.getItemAnimator().setAddDuration(0);
-
-            if(CurrentPage==1){
-                //item 增加删除 改变动画
-                mRecyclerView.setItemAnimator(new OvershootInLeftAnimator());
-                mRecyclerView.getItemAnimator().setAddDuration(250);
-                mRecyclerView.getItemAnimator().setRemoveDuration(10);
-                mRecyclerView.getItemAnimator().setChangeDuration(10);
-                mydatasetnormal.clear();
-            }
-
             mydatasetnormal.addAll(dataset);
-            mRecyclerView.setLayoutManager(mLayoutManager);
             refreshLayout.setRefreshing(false);
             mRecyleAdapter.notifyItemRangeInserted(mydatasetnormal.size() - dataset.size(), dataset.size());
             isEnableLoadMore = true;

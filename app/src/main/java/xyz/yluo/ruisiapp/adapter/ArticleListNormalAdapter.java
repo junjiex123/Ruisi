@@ -29,7 +29,7 @@ import xyz.yluo.ruisiapp.utils.GetUserImage;
  * Created by free2 on 16-3-5.
  *
  */
-public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.BaseViewHolder>{
+public class ArticleListNormalAdapter extends RecyclerView.Adapter<ArticleListNormalAdapter.BaseViewHolder>{
 
     private static final int TYPE_NORMAL = 0;
     private static final int TYPE_LOAD_MORE = 1;
@@ -41,7 +41,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
 
     //上下文
     private Activity activity;
-    public ArticleListAdapter(Activity activity, List<ArticleListData> data,int type) {
+    public ArticleListNormalAdapter(Activity activity, List<ArticleListData> data, int type) {
         DataSet = data;
         this.activity =activity;
         this.type = type;
