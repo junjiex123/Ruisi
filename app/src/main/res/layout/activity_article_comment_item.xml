@@ -100,7 +100,7 @@
 </LinearLayout>
 
 
-    <TextView
+    <xyz.yluo.ruisiapp.utils.MyHtmlTextView
         android:layout_marginLeft="44dp"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp"
