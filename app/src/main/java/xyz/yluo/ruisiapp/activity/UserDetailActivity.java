@@ -45,6 +45,7 @@ import xyz.yluo.ruisiapp.adapter.UserInfoStarAdapter;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
 import xyz.yluo.ruisiapp.utils.GetId;
+import xyz.yluo.ruisiapp.utils.GetLevel;
 
 public class UserDetailActivity extends AppCompatActivity {
 
@@ -151,7 +152,7 @@ public class UserDetailActivity extends AppCompatActivity {
             String url = "home.php?mod=space&do=pm&subop=view&touid="+userUid+"&mobile=2";
             ChatActivity.open(this,username,url);
         }else{
-            Snackbar.make(layout, "你还没有登陆，无法撒送消息", Snackbar.LENGTH_LONG)
+            Snackbar.make(layout, "你还没有登陆，无法发送消息", Snackbar.LENGTH_LONG)
                     .setAction("点我登陆", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -167,6 +168,8 @@ public class UserDetailActivity extends AppCompatActivity {
     public class GetUserInfoTask extends AsyncTask<Void, Void, String> {
 
         private String res;
+        //用户积分
+        String userjifen = "0";
 
         public GetUserInfoTask(String res) {
             this.res = res;
@@ -182,7 +185,9 @@ public class UserDetailActivity extends AppCompatActivity {
                         String value = tmp.select("span").text();
                         tmp.select("span").remove();
                         String key = tmp.text();
-
+                        if(key.contains("积分")){
+                            userjifen = value;
+                        }
                         temp = new Pair<>(key,value);
                         datasUserInfo.add(temp);
                     }
@@ -193,7 +198,7 @@ public class UserDetailActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final String res) {
-            datasUserInfo.addAll(datasUserInfo);
+            usergrade.setText(GetLevel.getUserLevel(Integer.parseInt(userjifen)));
             myadapterUserInfo.notifyItemRangeInserted(0, datasUserInfo.size());
         }
     }
