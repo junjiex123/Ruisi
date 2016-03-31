@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
+        <xyz.yluo.ruisiapp.utils.MyHtmlTextView
             android:id="@+id/content"
             android:textColor="@android:color/white"
             android:textSize="16sp"

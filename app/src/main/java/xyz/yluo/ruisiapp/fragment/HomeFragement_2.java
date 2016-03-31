@@ -98,7 +98,6 @@ public class HomeFragement_2 extends Fragment implements LoadMoreListener.OnLoad
     @Override
     public void onLoadMore() {
         if(isEnableLoadMore){
-            Toast.makeText(getActivity(),"加载更多被触发",Toast.LENGTH_SHORT).show();
             CurrentPage++;
             getData();
             isEnableLoadMore = false;
@@ -147,21 +146,14 @@ public class HomeFragement_2 extends Fragment implements LoadMoreListener.OnLoad
                     String url = src.select("a").attr("href");
                     String author = src.select(".by").text();
                     src.select("span.by").remove();
-                    String title = src.select("a").text();
                     String replyCount = src.select("span.num").text();
-
+                    src.select("span.num").remove();
+                    String title = src.select("a").text();
                     String img = src.select("img").attr("src");
+                    boolean hasImage = img.contains("icon_tu.png");
 
-                    System.out.print("\nimg>>>>>>>>>>>>>>>>>>>>>>\n"+img);
-                    boolean hasImage = false;
-                    if(img.contains("icon_tu.png")){
-                        hasImage = true;
-                    }
-                    else{
-                        hasImage = false;
-                    }
                     //String title, String titleUrl, String image, String author, String replayCount
-                    temp = new ArticleListData(hasImage,title, url, author, replyCount);
+                    temp = new ArticleListData("",title, url, author, replyCount);
                     dataset.add(temp);
                 }
             }

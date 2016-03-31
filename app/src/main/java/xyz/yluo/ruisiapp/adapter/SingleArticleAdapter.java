@@ -1,9 +1,7 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,21 +11,17 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-import pl.droidsonroids.gif.GifDrawable;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
-import xyz.yluo.ruisiapp.utils.DensityUtil;
 import xyz.yluo.ruisiapp.utils.MyHtmlTextView;
 import xyz.yluo.ruisiapp.utils.MyWebView;
 
@@ -191,7 +185,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
 
         //设置listItem的数据
         @Override
-        void setData(int position) {
+        void setData(final int position) {
 
             replay_author.setText(datalist.get(position).getUsername());
             Picasso.with(activity).load(datalist.get(position).getUserImgUrl()).resize(36,36).centerCrop().placeholder(R.drawable.image_placeholder).into(replay_image);
@@ -208,8 +202,9 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             }else{
                 replay_index.setText("第"+(position+1)+"楼");
             }
-            // loads html from string and displays http://www.example.com/cat_pic.png from the Internet
-            htmlTextView.mySetText(activity,datalist.get(position).getCotent());
+
+            htmlTextView.mySetText(activity, datalist.get(position).getCotent());
+
         }
 
         @OnClick(R.id.article_user_image)

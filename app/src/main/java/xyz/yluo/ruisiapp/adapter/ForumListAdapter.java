@@ -15,7 +15,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.activity.ArticleListActivity;
+import xyz.yluo.ruisiapp.activity.ArticleListNormalActivity;
+import xyz.yluo.ruisiapp.activity.ArticleListImageActivity;
 import xyz.yluo.ruisiapp.data.FroumListData;
 import xyz.yluo.ruisiapp.utils.GetFroumLogo;
 import xyz.yluo.ruisiapp.utils.getFroumFid;
@@ -96,7 +97,12 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.Base
         @OnClick(R.id.forum_list_item)
         protected void forum_list_item_click(){
             String fid =getFroumFid.getFid(DataSet.get(getAdapterPosition()).getTitleUrl());
-            ArticleListActivity.open(activity, Integer.parseInt(fid), DataSet.get(getAdapterPosition()).getTitle());
+            if(fid.equals("561")||fid.equals("157")){
+                ArticleListImageActivity.open(activity,Integer.parseInt(fid),DataSet.get(getAdapterPosition()).getTitle());
+            }else{
+                ArticleListNormalActivity.open(activity, Integer.parseInt(fid), DataSet.get(getAdapterPosition()).getTitle());
+            }
+
         }
         void setData(int position) {
             title.setText(DataSet.get(position).getTitle());

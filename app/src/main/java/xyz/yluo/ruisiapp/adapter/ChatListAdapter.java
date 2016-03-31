@@ -2,11 +2,9 @@ package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -19,6 +17,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ChatListData;
+import xyz.yluo.ruisiapp.utils.MyHtmlTextView;
 
 /**
  * Created by free2 on 16-3-30.
@@ -73,7 +72,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
         @Bind(R.id.content)
-        protected TextView content;
+        protected MyHtmlTextView content;
         @Bind(R.id.user_image)
         protected CircleImageView user_image;
 
@@ -82,10 +81,9 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
             ButterKnife.bind(this,itemView);
         }
 
-        private void setData(int position){
-            content.setText(Html.fromHtml(DataSets.get(position).getContent()));
+        private void setData(final int position){
             Picasso.with(context).load(DataSets.get(position).getUserImage()).into(user_image);
-
+            content.mySetText(context, DataSets.get(position).getContent());
         }
 
         @OnClick(R.id.user_image)

@@ -33,14 +33,12 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
 
     private static final int TYPE_NORMAL = 0;
     private static final int TYPE_LOAD_MORE = 1;
-    private static final int TYPE_IMAGE_CARD = 2;
     //校外网 手机版
     private static final int TYPE_NORMAL_MOBILE = 3;
     //数据
     private List<ArticleListData> DataSet;
-
-
     private int type =3;
+
     //上下文
     private Activity activity;
     public ArticleListAdapter(Activity activity, List<ArticleListData> data,int type) {
@@ -59,22 +57,9 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         if(!ConfigClass.CONFIG_IS_INNER||type==TYPE_NORMAL_MOBILE){
             return TYPE_NORMAL_MOBILE;
         }else{
-            //图片列表
-            if(DataSet.get(position).isImageCard()) {
-                return TYPE_IMAGE_CARD;
-            }
-            else {
-                //一般板块
-                return TYPE_NORMAL;
-            }
-
+            //一般板块
+            return TYPE_NORMAL;
         }
-
-
-        //判断listItem类型
-
-        //TODO 普通文章类型再分类
-        //int type   =  DataSet.get(position).getType();
     }
     //设置view
     @Override
@@ -84,8 +69,6 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
                 return new NormalViewHolderMe(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_main_list_item_me, viewGroup, false));
             case TYPE_LOAD_MORE:
                 return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_main_load_more_list_item, viewGroup, false));
-            case TYPE_IMAGE_CARD:
-                return new ImageCardViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_main_image_list_item, viewGroup, false));
             default: // TYPE_NORMAL
                 return new NormalViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_main_list_item, viewGroup, false));
         }
@@ -203,50 +186,6 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         }
     }
 
-    //图片板块ViewHolder
-    public class ImageCardViewHolder extends BaseViewHolder{
-
-        @Bind(R.id.img_card_image)
-        protected ImageView img_card_image;
-
-        @Bind(R.id.img_card_title)
-        protected TextView img_card_title;
-
-        @Bind(R.id.img_card_author)
-        protected TextView img_card_author;
-
-        @Bind(R.id.img_card_like)
-        protected TextView img_card_like;
-
-        public ImageCardViewHolder(View itemView) {
-            super(itemView);
-
-            ButterKnife.bind(this, itemView);
-        }
-
-        @Override
-        void setData(int position) {
-            img_card_author.setText(DataSet.get(position).getAuthor());
-            img_card_title.setText(DataSet.get(position).getTitle());
-            img_card_like.setText(DataSet.get(position).getViewCount());
-            if(DataSet.get(position).getImage()!=""){
-                Picasso.with(activity).load(ConfigClass.BBS_BASE_URL+DataSet.get(position).getImage()).placeholder(R.drawable.image_placeholder).into(img_card_image);
-            }else{
-                img_card_image.setImageResource(R.drawable.image_placeholder);
-            }
-
-        }
-
-        @OnClick(R.id.card_list_item)
-        protected void card_list_item() {
-            ArticleListData single_data =  DataSet.get(getAdapterPosition());
-            String tid = GetId.getTid(single_data.getTitleUrl());
-            //Context context, String tid,String title,String replycount,String type
-            //String title, String titleUrl, String image, String author, String authorUrl, String viewCount
-
-            ArticleNormalActivity.open(activity,tid,single_data.getTitle(),single_data.getViewCount(),"");
-        }
-    }
 
     //手机版文章列表
     public  class NormalViewHolderMe extends BaseViewHolder {
@@ -274,7 +213,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
             author_name.setText(DataSet.get(position).getAuthor());
             reply_count.setText(DataSet.get(position).getReplayCount());
 
-            if(DataSet.get(position).isImageCard()){
+            if(DataSet.get(position).getType()=="0"){
                 is_image.setVisibility(View.VISIBLE);
             }else {
                 is_image.setVisibility(View.GONE);

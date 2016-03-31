@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 /**
  * Created by free2 on 16-3-23.
- *
+ * 一些地址在这儿修正
  */
 public class getFroumFid {
     public static String getFid(String url){
