@@ -103,17 +103,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    //登陆页面返回结果
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK) {
-            String result = data.getExtras().getString("result");//得到新Activity 关闭后返回的数据
-            Toast.makeText(getApplicationContext(), "result" + result, Toast.LENGTH_SHORT).show();
-        }
-        checkIsLogin();
-    }
 
     @OnClick(R.id.btn_1)
         protected void btn_1_click(){
@@ -141,14 +131,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @OnClick(R.id.btn_3)
     protected void btn_3_click(){
-        if(actionBar!=null){
-            actionBar.setTitle("我");
+        if(islogin_dialog()){
+            if(actionBar!=null){
+                actionBar.setTitle(ConfigClass.CONFIG_USER_NAME);
+            }
+            Fragment fragment3 = new HomeFragement_3();
+            FragmentManager manager = getFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.fragment_container, fragment3);
+            transaction.commit();
         }
-        Fragment fragment3 = new HomeFragement_3();
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment3);
-        transaction.commit();
+
     }
 
     @Override
@@ -236,5 +229,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
         return false;
 
+    }
+
+    //登陆页面返回结果
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            String result = data.getExtras().getString("result");//得到新Activity 关闭后返回的数据
+            Toast.makeText(getApplicationContext(), "result" + result, Toast.LENGTH_SHORT).show();
+        }
+        checkIsLogin();
     }
 }

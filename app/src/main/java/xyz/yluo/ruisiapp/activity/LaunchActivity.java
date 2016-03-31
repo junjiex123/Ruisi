@@ -19,6 +19,7 @@ import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-3-19.
@@ -56,10 +57,10 @@ public class LaunchActivity extends AppCompatActivity{
                 } else {
                     Document doc = Jsoup.parse(res);
                     ConfigClass.CONFIG_USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
+                    String url = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").attr("href");
+                    ConfigClass.CONFIG_USER_UID = GetId.getUid(url);
                     ConfigClass.CONFIG_ISLOGIN = true;
-                    Toast.makeText(getApplication(),"欢迎你："+ConfigClass.CONFIG_USER_NAME,Toast.LENGTH_SHORT).show();
                 }
-
                 startActivity(new Intent(getApplicationContext(),HomeActivity.class));
                 finish();
             }

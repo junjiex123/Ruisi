@@ -27,6 +27,7 @@ import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.getMd5Pass;
 
 
@@ -115,51 +116,36 @@ public class LoginActivity extends AppCompatActivity {
     protected void login_test_button_click() {
         //启动登陆Thread
         progressBar.setVisibility(View.VISIBLE);
-
         final String username = ed_ip.getText().toString().trim();
         final String passNo = ed_pass.getText().toString().trim();
-
-        //加密过后的密码
-        String passYes = getMd5Pass.getMD5(passNo);
-
         String url = "member.php?mod=logging&action=login&mobile=2";
         AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
                 String res = new String(responseBody);
-                Document doc = Jsoup.parse(res);
-
                 if(res.contains("欢迎您回来")){
-                    ConfigClass.CONFIG_USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
-                    login_ok();
+                    login_ok(res);
                     //home.php?mod=space&uid=252553&do=profile&mycenter=1&mobile=2
                 }
-
+                Document doc = Jsoup.parse(res);
                 if (doc.select("input[name=formhash]").first() != null) {
                     ConfigClass.CONFIG_FORMHASH = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
                 }
-                if (doc.select("form#loginform").attr("action") != "") {
-                    loginUrl = doc.select("form#loginform").attr("action");
-                    RequestParams params = new RequestParams();
-                    params.put("fastloginfield", "username");
-                    params.put("cookietime", "2592000");
-                    params.put("username", username);
-                    params.put("password", passNo);
-                    params.put("questionid", "0");
-                    params.put("answer", "");
-
-                    begain_login(params);
-                }
+                loginUrl = doc.select("form#loginform").attr("action");
+                RequestParams params = new RequestParams();
+                params.put("fastloginfield", "username");
+                params.put("cookietime", "2592000");
+                params.put("username", username);
+                params.put("password", passNo);
+                params.put("questionid", "0");
+                params.put("answer", "");
+                begain_login(params);
             }
-
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                progressBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(getApplicationContext(), "网络异常！！", Toast.LENGTH_SHORT).show();
+                login_fail(new String(responseBody) );
             }
         });
-
     }
 
     private void begain_login(RequestParams params){
@@ -168,26 +154,26 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String res = new String(responseBody);
-
                 if (res.contains("欢迎您回来")) {
-                    Document document = Jsoup.parse(res);
-                    ConfigClass.CONFIG_USER_NAME = document.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
-                    login_ok();
+                    login_ok(res);
                 } else {
-                    progressBar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(getApplicationContext(), "用户名或者密码错误登陆失败！！", Toast.LENGTH_SHORT).show();
+                    login_fail(res);
                 }
             }
-
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                progressBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(getApplicationContext(), "网络异常！！", Toast.LENGTH_SHORT).show();
+                login_fail(new String(responseBody));
             }
         });
     }
 
-    private void login_ok(){
+    private void login_ok(String res){
+
+        Document doc = Jsoup.parse(res);
+        ConfigClass.CONFIG_USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
+        String url = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").attr("href");
+        ConfigClass.CONFIG_USER_UID = GetId.getUid(url);
+
         //开始获取formhash
         progressBar.setVisibility(View.INVISIBLE);
         ConfigClass.CONFIG_ISLOGIN = true;
@@ -199,6 +185,11 @@ public class LoginActivity extends AppCompatActivity {
         LoginActivity.this.setResult(RESULT_OK, intent);
         //关闭Activity
         finish();
+    }
+
+    private void login_fail(String res){
+        progressBar.setVisibility(View.INVISIBLE);
+        Toast.makeText(getApplicationContext(), "网络异常！！", Toast.LENGTH_SHORT).show();
     }
 }
 

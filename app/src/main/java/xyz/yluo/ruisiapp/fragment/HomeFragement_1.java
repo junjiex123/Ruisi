@@ -52,6 +52,14 @@ public class HomeFragement_1 extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home_1_list, container, false);
         ButterKnife.bind(this, view);
 
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
+        recycler_view.setLayoutManager(mLayoutManager);
+        forumListAdapter = new ForumListAdapter(getActivity(),datas);
+        ScaleInAnimationAdapter alphaAdapter = new ScaleInAnimationAdapter(forumListAdapter);
+        alphaAdapter.setDuration(150);
+        recycler_view.setAdapter(alphaAdapter);
+
+
         //刷新
         refreshLayout.post(new Runnable() {
             @Override
@@ -144,16 +152,8 @@ public class HomeFragement_1 extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             refreshLayout.setRefreshing(false);
-
             datas.clear();
             datas.addAll(simpledatas);
-            forumListAdapter = new ForumListAdapter(getActivity(),datas);
-            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
-            recycler_view.setLayoutManager(mLayoutManager);
-
-            ScaleInAnimationAdapter alphaAdapter = new ScaleInAnimationAdapter(forumListAdapter);
-            alphaAdapter.setDuration(150);
-            recycler_view.setAdapter(alphaAdapter);
             forumListAdapter.notifyItemRangeInserted(0, simpledatas.size());
         }
 

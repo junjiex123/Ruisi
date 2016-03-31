@@ -7,11 +7,13 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 
+import cz.msebera.android.httpclient.Header;
+
 /**
  * Created by free2 on 16-3-16.
  *
  */
-public class AsyncHttpCilentUtil {
+public abstract class AsyncHttpCilentUtil {
 
     private static AsyncHttpClient client = new AsyncHttpClient();
 

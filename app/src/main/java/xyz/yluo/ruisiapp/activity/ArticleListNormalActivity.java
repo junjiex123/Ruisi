@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.widget.Toast;
 
@@ -30,7 +29,7 @@ import xyz.yluo.ruisiapp.utils.ConfigClass;
  *帖子列表activity
  *
  */
-public class ArticleListNormalActivity extends ArticleListBaseActivity {
+public class ArticleListNormalActivity extends ArticleListBaseActivity{
 
     //一般板块/图片板块/手机板块数据列表
     private List<ArticleListData> mydatasetnormal;
@@ -79,6 +78,7 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity {
         if(!ConfigClass.CONFIG_IS_INNER){
             url = url + "&mobile=2";
         }
+
 
         AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
             @Override

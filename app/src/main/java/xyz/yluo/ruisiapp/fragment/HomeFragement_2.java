@@ -59,6 +59,7 @@ public class HomeFragement_2 extends Fragment implements LoadMoreListener.OnLoad
 
 
         mLayoutManager = new LinearLayoutManager(getActivity());
+        recycler_view.setLayoutManager(mLayoutManager);
         adapter = new ArticleListNormalAdapter(getActivity(),mydatasetnormal,3);
         recycler_view.setAdapter(adapter);
         recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 10));
@@ -177,7 +178,7 @@ public class HomeFragement_2 extends Fragment implements LoadMoreListener.OnLoad
                 mydatasetnormal.clear();
             }
 
-            recycler_view.setLayoutManager(mLayoutManager);
+
             mydatasetnormal.addAll(dataset);
             refreshLayout.setRefreshing(false);
 

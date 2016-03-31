@@ -30,6 +30,7 @@ import xyz.yluo.ruisiapp.adapter.UserArticleReplyStarAdapter;
 import xyz.yluo.ruisiapp.adapter.UserInfoStarAdapter;
 import xyz.yluo.ruisiapp.data.MyTopicReplyListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
+import xyz.yluo.ruisiapp.utils.ConfigClass;
 
 /**
  * Created by free2 on 16-3-19.
@@ -50,6 +51,7 @@ public class HomeFragement_3 extends Fragment {
     private UserInfoStarAdapter myadapterUserInfo;
 
     private int currentIndex =0;
+    private String uid = ConfigClass.CONFIG_USER_UID;
 
 
     @Override
@@ -104,14 +106,14 @@ public class HomeFragement_3 extends Fragment {
         switch (position){
             case 0:
                 //0 用户信息
-                String url0= "home.php?mod=space&uid=252553&do=profile&mobile=2";
+                String url0= "home.php?mod=space&uid="+uid+"&do=profile&mobile=2";
                 getStringFromInternet(0,url0);
                 currentIndex = 0;
                 break;
             case 1:
                 //我回主题
                 //http://rs.xidian.edu.cn/home.php?mod=space&uid=252553&do=thread&view=me&mobile=2
-                String url1 = "home.php?mod=space&uid=252553&do=thread&view=me&mobile=2";
+                String url1 = "home.php?mod=space&uid="+uid+"&do=thread&view=me&mobile=2";
                 getStringFromInternet(1,url1);
                 currentIndex =1;
                 break;
@@ -123,7 +125,7 @@ public class HomeFragement_3 extends Fragment {
                 break;
             case 3:
                 //我的收藏
-                String url3 = "home.php?mod=space&uid=252553&do=favorite&view=me&type=thread&mobile=2";
+                String url3 = "home.php?mod=space&uid="+uid+"&do=favorite&view=me&type=thread&mobile=2";
                 getStringFromInternet(3,url3);
                 currentIndex = 3;
                 break;
