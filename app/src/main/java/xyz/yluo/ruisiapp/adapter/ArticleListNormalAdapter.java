@@ -213,7 +213,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<ArticleListNo
             author_name.setText(DataSet.get(position).getAuthor());
             reply_count.setText(DataSet.get(position).getReplayCount());
 
-            if(DataSet.get(position).getType()=="0"){
+            if(DataSet.get(position).getType().equals("0")){
                 is_image.setVisibility(View.VISIBLE);
             }else {
                 is_image.setVisibility(View.GONE);

@@ -104,7 +104,6 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity {
     @Override
     public void onLoadMore() {
         if(isEnableLoadMore){
-            Toast.makeText(getApplicationContext(),"加载更多被触发",Toast.LENGTH_SHORT).show();
             CurrentPage++;
             getData();
             isEnableLoadMore = false;
@@ -205,12 +204,13 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity {
                     String replyCount = src.select("span.num").text();
 
                     String img = src.select("img").attr("src");
-
-                    boolean hasImage = false;
-                    hasImage = img.contains("icon_tu.png");
+                    String hasImage = "";
+                    if(img.contains("icon_tu.png")){
+                        hasImage = "0";
+                    }
 
                     //String type,String title, String titleUrl, String author, String replayCount
-                    temp = new ArticleListData("",title, url, author, replyCount);
+                    temp = new ArticleListData(hasImage,title, url, author, replyCount);
                     dataset.add(temp);
                 }
             }

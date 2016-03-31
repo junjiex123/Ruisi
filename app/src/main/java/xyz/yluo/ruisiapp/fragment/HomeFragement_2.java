@@ -150,10 +150,12 @@ public class HomeFragement_2 extends Fragment implements LoadMoreListener.OnLoad
                     src.select("span.num").remove();
                     String title = src.select("a").text();
                     String img = src.select("img").attr("src");
-                    boolean hasImage = img.contains("icon_tu.png");
-
+                    String hasImage = "";
+                    if(img.contains("icon_tu.png")){
+                        hasImage = "0";
+                    }
                     //String title, String titleUrl, String image, String author, String replayCount
-                    temp = new ArticleListData("",title, url, author, replyCount);
+                    temp = new ArticleListData(hasImage,title, url, author, replyCount);
                     dataset.add(temp);
                 }
             }

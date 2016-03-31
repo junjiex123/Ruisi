@@ -98,7 +98,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.Base
         @OnClick(R.id.forum_list_item)
         protected void forum_list_item_click(){
             String fid =getFroumFid.getFid(DataSet.get(getAdapterPosition()).getTitleUrl());
-            if(fid.equals("561")||fid.equals("157")){
+            if(fid.equals("561")||fid.equals("157")||fid.equals("13")){
                 ArticleListImageActivity.open(activity,Integer.parseInt(fid),DataSet.get(getAdapterPosition()).getTitle());
             }else{
                 ArticleListNormalActivity.open(activity, Integer.parseInt(fid), DataSet.get(getAdapterPosition()).getTitle());
