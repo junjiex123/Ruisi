@@ -119,8 +119,9 @@ public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticl
         }
         @OnClick(R.id.article_user_image)
         protected void article_user_image_click(){
-            //TODO
-            UserDetailActivity.openWithTransitionAnimation(activity, "name", article_user_image,"222");
+            MyTopicReplyListData single_data =  DataSet.get(getAdapterPosition());
+            String username = single_data.getTitle().replace("我对 ","").replace("说:","").replace(" 对我","");
+            UserDetailActivity.openWithTransitionAnimation(activity, username, article_user_image,DataSet.get(getAdapterPosition()).getauthorImage());
         }
     }
 

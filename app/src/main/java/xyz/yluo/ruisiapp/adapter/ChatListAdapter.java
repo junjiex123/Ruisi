@@ -88,7 +88,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
 
         @OnClick(R.id.user_image)
         protected void user_image_click(){
-            UserDetailActivity.openWithTransitionAnimation(context, "name", user_image,"222");
+            String imageUrl = DataSets.get(getAdapterPosition()).getUserImage();
+            UserDetailActivity.openWithTransitionAnimation(context, "username", user_image,imageUrl);
         }
     }
 

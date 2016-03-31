@@ -145,18 +145,19 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<ArticleListNo
 
             post_time.setText(DataSet.get(position).getPostTime());
             view_count.setText(DataSet.get(position).getViewCount());
-            String imageUrl = ConfigClass.BBS_BASE_URL+"ucenter/data/avatar/000/"+GetUserImage.getimageurl(DataSet.get(position).getAuthorUrl())+"_avatar_small.jpg";
+            String imageUrl = GetUserImage.getimageurl(DataSet.get(position).getAuthorUrl());
             Picasso.with(activity).load(imageUrl).resize(36,36).centerCrop().placeholder(R.drawable.image_placeholder).into(author_img);
 
             article_title.setText(DataSet.get(position).getTitle());
             author_name.setText(DataSet.get(position).getAuthor());
             reply_count.setText(DataSet.get(position).getReplayCount());
-
         }
 
         @OnClick(R.id.author_img)
         protected void onBtnAvatarClick() {
-            UserDetailActivity.openWithTransitionAnimation(activity, "name", author_img,"222");
+            //Activity activity, String loginName, ImageView imgAvatar, String avatarUrl
+            String imageUrl = GetUserImage.getimageurl(DataSet.get(getAdapterPosition()).getAuthorUrl());
+            UserDetailActivity.openWithTransitionAnimation(activity, DataSet.get(getAdapterPosition()).getAuthor(), author_img,imageUrl);
             //ArticleNormalActivity.open(activity, "id12345");
         }
 

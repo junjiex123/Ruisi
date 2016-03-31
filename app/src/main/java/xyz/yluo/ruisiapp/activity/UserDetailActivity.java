@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -12,34 +13,61 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.squareup.picasso.Picasso;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import cz.msebera.android.httpclient.Header;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.adapter.UserInfoStarAdapter;
+import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
+import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.utils.GetId;
 
 public class UserDetailActivity extends AppCompatActivity {
 
+    @Bind(R.id.recycler_view)
+    protected RecyclerView recycler_view;
     @Bind(R.id.user_detail_img_avatar)
     protected CircleImageView imageView;
-
-    @Bind(R.id.user_detail_tv_login_name)
-    protected TextView textView;
-
+    @Bind(R.id.username)
+    protected TextView usernameView;
+    @Bind(R.id.usergrade)
+    protected TextView usergrade;
+    @Bind(R.id.main_window)
+    protected CoordinatorLayout layout;
+    private List<Pair<String,String>> datasUserInfo = new ArrayList<>();
+    private UserInfoStarAdapter myadapterUserInfo;
     private static final String NAME_IMG_AVATAR = "imgAvatar";
+    private String userUid = "";
+    private String username = "";
 
     public static void openWithTransitionAnimation(Activity activity, String loginName, ImageView imgAvatar, String avatarUrl) {
         Intent intent = new Intent(activity, UserDetailActivity.class);
         intent.putExtra("loginName", loginName);
         intent.putExtra("avatarUrl", avatarUrl);
-
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, imgAvatar, NAME_IMG_AVATAR);
         ActivityCompat.startActivity(activity, intent, options.toBundle());
     }
@@ -51,8 +79,6 @@ public class UserDetailActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
-    private String loginName;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,10 +86,11 @@ public class UserDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         ViewCompat.setTransitionName(imageView, NAME_IMG_AVATAR);
 
-        loginName = getIntent().getStringExtra("loginName");
-        if (!TextUtils.isEmpty(loginName)) {
-            textView.setText(loginName);
-        }
+        username = getIntent().getStringExtra("loginName");
+        usernameView.setText(username);
+        String imageUrl = getIntent().getStringExtra("avatarUrl");
+
+        Picasso.with(getApplicationContext()).load(imageUrl).placeholder(R.drawable.image_placeholder).into(imageView);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -74,18 +101,15 @@ public class UserDetailActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle("");
         }
+        myadapterUserInfo = new UserInfoStarAdapter(this,datasUserInfo,0);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recycler_view.setLayoutManager(layoutManager);
+        recycler_view.setAdapter(myadapterUserInfo);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        userUid = GetId.getUid(imageUrl);
+        String url0= "home.php?mod=space&uid="+userUid+"&do=profile&mobile=2";
 
-
-        loadcontent();
+        getdata(url0);
     }
 
     @Override
@@ -103,24 +127,74 @@ public class UserDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void loadcontent(){
-        //new DownloadTask().execute("http://bbs.pcbeta.com/forum-win10-1.html");
-        new DownloadTask().execute("https://www.chiphell.com/forum-36-1.html");
+    private void getdata(String url){
+        AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                new GetUserInfoTask(new String(responseBody)).execute();
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(getApplicationContext(), "网络错误！！", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    @OnClick(R.id.fab)
+    protected void fab_click(){
+
+        if(ConfigClass.CONFIG_ISLOGIN){
+            //TODO
+            //home.php?mod=space&do=pm&subop=view&touid=269448&mobile=2
+            //Context context, String username,String url
+            String url = "home.php?mod=space&do=pm&subop=view&touid="+userUid+"&mobile=2";
+            ChatActivity.open(this,username,url);
+        }else{
+            Snackbar.make(layout, "你还没有登陆，无法撒送消息", Snackbar.LENGTH_LONG)
+                    .setAction("点我登陆", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+                        }
+                    }).show();
+        }
 
     }
 
-    private class DownloadTask extends AsyncTask<String, Void, String> {
 
-        @Override
-        protected String doInBackground(String... urls) {
+    //获得用户个人信息
+    public class GetUserInfoTask extends AsyncTask<Void, Void, String> {
 
-            return "'";
+        private String res;
+
+        public GetUserInfoTask(String res) {
+            this.res = res;
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            Log.i("111", result);
-            textView.setText(result);
+        protected String doInBackground(Void... params) {
+            if(res!=""){
+                Elements lists = Jsoup.parse(res).select(".user_box").select("ul").select("li");
+                if(lists!=null){
+                    Pair<String,String> temp;
+                    for(Element tmp:lists){
+                        String value = tmp.select("span").text();
+                        tmp.select("span").remove();
+                        String key = tmp.text();
+
+                        temp = new Pair<>(key,value);
+                        datasUserInfo.add(temp);
+                    }
+                }
+            }
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(final String res) {
+            datasUserInfo.addAll(datasUserInfo);
+            myadapterUserInfo.notifyItemRangeInserted(0, datasUserInfo.size());
         }
     }
 }

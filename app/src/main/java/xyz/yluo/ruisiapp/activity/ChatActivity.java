@@ -40,7 +40,10 @@ import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
 import xyz.yluo.ruisiapp.data.ChatListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.utils.GetId;
+import xyz.yluo.ruisiapp.utils.GetUserImage;
 import xyz.yluo.ruisiapp.utils.PostHander;
+import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 
 /**
  * Created by free2 on 16-3-30.
@@ -212,8 +215,12 @@ public class ChatActivity extends AppCompatActivity{
 
         @Override
         protected void onPostExecute(String s) {
-
             super.onPostExecute(s);
+            if (datas.size()==0){
+                String imageUrl = GetUserImage.getimageurl(url);
+
+                datas.add(new ChatListData(0,imageUrl,"给我发消息吧","刚刚"));
+            }
             adapter.notifyDataSetChanged();
             load_View.setVisibility(View.GONE);
 
@@ -236,6 +243,8 @@ public class ChatActivity extends AppCompatActivity{
             return true;
         }else if(id==R.id.menu_refresh){
             refresh();
+        }else if(id==R.id.menu_broswer){
+            RequestOpenBrowser.openBroswer(this,ConfigClass.BBS_BASE_URL+url);
         }
         return super.onOptionsItemSelected(item);
     }

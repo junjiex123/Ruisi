@@ -132,7 +132,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         }
         @OnClick(R.id.article_user_image)
         protected void authorClick(){
-            UserDetailActivity.openWithTransitionAnimation(activity, "name", article_user_image,"222");
+            UserDetailActivity.openWithTransitionAnimation(activity, datalist.get(0).getUsername(), article_user_image,datalist.get(0).getUserImgUrl());
             //ArticleNormalActivity.open(activity, "id12345");
         }
         @Override
@@ -209,7 +209,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
 
         @OnClick(R.id.article_user_image)
             protected void onBtnAvatarClick() {
-                UserDetailActivity.openWithTransitionAnimation(activity, "name", replay_image,"222");
+                UserDetailActivity.openWithTransitionAnimation(activity, datalist.get(getAdapterPosition()).getUsername(), replay_image,datalist.get(getAdapterPosition()).getUserImgUrl());
             }
     }
 
