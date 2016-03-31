@@ -101,7 +101,7 @@ public abstract class ArticleListBaseActivity extends AppCompatActivity
             public void onClick(View v) {
                 //Toast.makeText(getApplicationContext(), "fab2", Toast.LENGTH_SHORT).show();
                 fabMenu.toggle(true);
-                refresh();
+                prerefresh();
             }
         });
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -113,7 +113,7 @@ public abstract class ArticleListBaseActivity extends AppCompatActivity
                         refreshLayout.setRefreshing(true);
                     }
                 });
-                refresh();
+                prerefresh();
             }
         });
 
@@ -137,13 +137,22 @@ public abstract class ArticleListBaseActivity extends AppCompatActivity
         });
     }
 
+    private void prerefresh(){
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+            }
+        });
+        refresh();
+    }
     protected abstract void refresh();
     protected abstract void getData();
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
     }
     @Override
@@ -154,12 +163,16 @@ public abstract class ArticleListBaseActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.menu_setting) {
+            startActivity(new Intent(getApplicationContext(),SettingActivity.class));
             return true;
         }
         if (id == android.R.id.home) {
             finish();
             return true;
+        }
+        if (id==R.id.new_topic){
+            startActivity(new Intent(getApplicationContext(),NewArticleActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

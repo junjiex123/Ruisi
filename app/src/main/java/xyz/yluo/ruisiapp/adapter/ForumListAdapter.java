@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -16,8 +15,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.activity.ArticleListNormalActivity;
 import xyz.yluo.ruisiapp.activity.ArticleListImageActivity;
+import xyz.yluo.ruisiapp.activity.ArticleListNormalActivity;
 import xyz.yluo.ruisiapp.data.FroumListData;
 import xyz.yluo.ruisiapp.utils.GetFroumLogo;
 import xyz.yluo.ruisiapp.utils.getFroumFid;

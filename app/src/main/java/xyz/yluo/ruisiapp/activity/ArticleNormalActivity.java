@@ -48,6 +48,7 @@ import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
 import xyz.yluo.ruisiapp.utils.PostHander;
+import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 
 /**
  * Created by free2 on 16-3-6.
@@ -479,6 +480,9 @@ public class ArticleNormalActivity extends AppCompatActivity
         if (id == android.R.id.home) {
             finish();
             return true;
+        }else if(id==R.id.menu_broswer){
+            String url = ConfigClass.BBS_BASE_URL+"forum.php?mod=viewthread&tid="+ARTICLE_TID+"&page="+CURRENT_PAGE+"&mobile=2";
+            RequestOpenBrowser.openBroswer(this,url);
         }
         return super.onOptionsItemSelected(item);
     }

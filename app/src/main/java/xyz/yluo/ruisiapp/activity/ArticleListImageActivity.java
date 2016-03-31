@@ -6,10 +6,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.widget.Toast;
+
 import com.loopj.android.http.AsyncHttpResponseHandler;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +20,6 @@ import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.adapter.ArticleListImageAdapter;
 import xyz.yluo.ruisiapp.data.ImageArticleListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
 
 /**
  * Created by free2 on 16-3-31.

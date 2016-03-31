@@ -169,6 +169,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(getApplicationContext(),NewArticleActivity.class));
             }
             return true;
+        }else if(id==R.id.menu_setting){
+            startActivity(new Intent(getApplicationContext(),SettingActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
