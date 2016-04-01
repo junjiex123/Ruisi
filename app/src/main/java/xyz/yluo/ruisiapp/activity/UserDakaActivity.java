@@ -203,7 +203,6 @@ public class UserDakaActivity extends AppCompatActivity{
                         Document doc = Jsoup.parse(res);
                         String get = doc.select("div[class=c]").text();
                         Toast.makeText(getApplicationContext(),get,Toast.LENGTH_SHORT).show();
-                        ConfigClass.CONFIG_ISDAKA = true;
                         finish();
                     }else{
                         Toast.makeText(getApplicationContext(),"未知错误",Toast.LENGTH_SHORT).show();
@@ -230,19 +229,21 @@ public class UserDakaActivity extends AppCompatActivity{
 
                 Document doc = Jsoup.parse(res);
                 if (doc.select("input[name=formhash]").first() != null) {
-                    ConfigClass.CONFIG_FORMHASH = doc.select("input[name=formhash]").attr("value");
+                    String temphash = doc.select("input[name=formhash]").attr("value");
+                    if(!temphash.isEmpty()){
+                        ConfigClass.CONFIG_FORMHASH = temphash;
+                    }
+
                 }
 
                 if(res.contains("您今天已经签到过了或者签到时间还未开始")){
                     isdaka = true;
                     ll_daka.setVisibility(View.GONE);
-                    ConfigClass.CONFIG_ISDAKA = true;
                     text_have_daka.setVisibility(View.VISIBLE);
 
                 }else{
                     isdaka = false;
                     ll_daka.setVisibility(View.VISIBLE);
-                    ConfigClass.CONFIG_ISDAKA = false;
                     text_have_daka.setVisibility(View.GONE);
                 }
             }

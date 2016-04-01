@@ -115,7 +115,7 @@ public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticl
         protected void main_item_btn_item_click(){
             MyTopicReplyListData single_data =  DataSet.get(getAdapterPosition());
             String username = single_data.getTitle().replace("我对 ","").replace("说:","").replace(" 对我","");
-            ChatActivity.open(activity,username,single_data.getTitleUrl());
+            ChatActivity.open(activity,username,single_data.getTitleUrl(),false);
         }
         @OnClick(R.id.article_user_image)
         protected void article_user_image_click(){
@@ -152,7 +152,7 @@ public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticl
         @OnClick(R.id.main_item_btn_item)
         protected void main_item_btn_item_click(){
             MyTopicReplyListData single_data =  DataSet.get(getAdapterPosition());
-            if(single_data.getTitleUrl()!=""){
+            if(!single_data.getTitleUrl().isEmpty()){
                 ArticleNormalActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplycount()," ");
             }
 

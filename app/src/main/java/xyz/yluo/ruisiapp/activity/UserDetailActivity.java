@@ -41,6 +41,7 @@ import cz.msebera.android.httpclient.Header;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.UserInfoStarAdapter;
+import xyz.yluo.ruisiapp.fragment.ExitLoginDialogFragment;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
 import xyz.yluo.ruisiapp.utils.GetId;
@@ -69,7 +70,7 @@ public class UserDetailActivity extends AppCompatActivity {
     private List<Pair<String,String>> datasUserInfo = new ArrayList<>();
     private UserInfoStarAdapter myadapterUserInfo;
     private static final String NAME_IMG_AVATAR = "imgAvatar";
-    private String userUid = "";
+    private static String userUid = "";
     private String username = "";
 
     public static void openWithTransitionAnimation(Activity activity, String loginName, ImageView imgAvatar, String avatarUrl) {
@@ -80,10 +81,11 @@ public class UserDetailActivity extends AppCompatActivity {
         ActivityCompat.startActivity(activity, intent, options.toBundle());
     }
 
-    public static void open(Context context, String loginName) {
+    public static void open(Context context, String loginName,String avatarUrl) {
         Intent intent = new Intent(context, UserDetailActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("loginName", loginName);
+        intent.putExtra("avatarUrl", avatarUrl);
         context.startActivity(intent);
     }
 
@@ -147,14 +149,16 @@ public class UserDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.fab)
     protected void fab_click(){
-
         //如果是自己
         if (userUid.equals(ConfigClass.CONFIG_USER_UID)){
-            //TODO
-            //退出登录
+            ExitLoginDialogFragment dialogFragment = new ExitLoginDialogFragment();
+            dialogFragment.show(getFragmentManager(), "exit");
+
         }else if(ConfigClass.CONFIG_ISLOGIN){
-            String url = UrlUtils.getUserPmUrl(userUid,false);
-            ChatActivity.open(this,username,url);
+            //home.php?mod=spacecp&ac=pm&op=send&pmid=450602&daterange=0&pmsubmit=yes&mobile=2
+            //home.php?mod=space&do=pm&subop=view&touid=261098&mobile=2
+            String url = "home.php?mod=spacecp&ac=pm&op=send&pmid="+userUid+"&daterange=0&pmsubmit=yes&mobile=2";
+            ChatActivity.open(this,username,url,true);
         }else{
             Snackbar.make(layout, "你还没有登陆，无法发送消息", Snackbar.LENGTH_LONG)
                     .setAction("点我登陆", new View.OnClickListener() {
@@ -176,10 +180,9 @@ public class UserDetailActivity extends AppCompatActivity {
             this.res = res;
         }
 
-
-
         @Override
         protected String doInBackground(Void... voids) {
+            username = Jsoup.parse(res).select(".user_avatar").select(".name").text();
             Elements lists = Jsoup.parse(res).select(".user_box").select("ul").select("li");
             if(lists!=null){
                 Pair<String,String> temp;
@@ -202,6 +205,7 @@ public class UserDetailActivity extends AppCompatActivity {
                     usergrade.setText(GetLevel.getUserLevel(Integer.parseInt(userjifen)));
                 }
             }
+            usernameView.setText(username);
             progressBar.setVisibility(View.GONE);
             myadapterUserInfo.notifyItemRangeInserted(0, datasUserInfo.size());
         }

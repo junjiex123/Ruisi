@@ -40,6 +40,8 @@ import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
 import xyz.yluo.ruisiapp.data.ChatListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.utils.GetFormHash;
+import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.PostHander;
 import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -70,21 +72,23 @@ public class ChatActivity extends AppCompatActivity{
     private String replyUrl = "";
     private String username = "消息";
     private String url = "";
-    private String hash = ConfigClass.CONFIG_FORMHASH;
     private String touid = "";
+    private boolean  isOpenFromOut = false;
 
-    public static void open(Context context, String username,String url) {
+    public static void open(Context context, String username,String url,boolean isOpenFromWebView) {
+        //isopenfromwebview 是从webview打开的是新疆的回话
         Intent intent = new Intent(context, ChatActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("username", username);
         intent.putExtra("url",url);
+        //是否从特殊链接进入
+        intent.putExtra("isOpenFromOut",isOpenFromWebView);
         context.startActivity(intent);
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_chat);
         ButterKnife.bind(this);
 
@@ -92,6 +96,17 @@ public class ChatActivity extends AppCompatActivity{
             Bundle bundle = this.getIntent().getExtras();
             username = bundle.getString("username");
             url = bundle.getString("url");
+            isOpenFromOut = bundle.getBoolean("isOpenFromOut");
+            //从webview链接点击进来的
+
+            if(isOpenFromOut){
+                replyUrl = url;
+                touid = GetId.getUid(url);
+                //home.php?mod=space&do=pm&subop=view&touid=261098&mobile=2
+                url = "home.php?mod=space&do=pm&subop=view&touid="+touid+"&mobile=2";
+                GetFormHash.start_get_hash(getApplicationContext(),true);
+            }
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -109,18 +124,6 @@ public class ChatActivity extends AppCompatActivity{
 
         recycler_view.setLayoutManager(layoutManager);
         recycler_view.setAdapter(adapter);
-
-        action_smiley.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(smiley_container.getVisibility()==View.VISIBLE){
-                    smiley_container.setVisibility(View.GONE);
-                }else{
-                    smiley_container.setVisibility(View.VISIBLE);
-                }
-
-            }
-        });
 
         getData();
 
@@ -140,6 +143,15 @@ public class ChatActivity extends AppCompatActivity{
 
             }
         });
+    }
+
+    @OnClick(R.id.action_smiley)
+    protected void action_smiley_click(){
+        if(smiley_container.getVisibility()==View.VISIBLE){
+            smiley_container.setVisibility(View.GONE);
+        }else{
+            smiley_container.setVisibility(View.VISIBLE);
+        }
     }
 
     @OnClick(R.id.action_send)
@@ -185,9 +197,13 @@ public class ChatActivity extends AppCompatActivity{
             //list 所有楼数据
             Document doc = Jsoup.parse(htmlData);
             //获取回复/hash
-            if (doc.select("#pmform")!= null) {
+            if (doc.select("#pmform")!= null&&!isOpenFromOut) {
                 replyUrl = doc.select("form#pmform").attr("action");
-                hash = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
+
+                String temp_hash= doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
+                if(!temp_hash.isEmpty()){
+                    ConfigClass.CONFIG_FORMHASH = temp_hash;
+                }
                 touid = doc.select("input[name=touid]").attr("value");
             }
             Elements elements = doc.select(".msgbox.b_m");
@@ -275,10 +291,10 @@ public class ChatActivity extends AppCompatActivity{
             formhash:70af5bb6
             */
             RequestParams params = new RequestParams();
-            params.put("formhash", hash);
+            params.put("formhash", ConfigClass.CONFIG_FORMHASH);
             params.put("touid",touid);
             params.put("message", text);
-
+            System.out.print(">>>>>>>>>>>>>>>>>>>>>>.replyurl"+replyUrl);
             AsyncHttpCilentUtil.post(getApplicationContext(), replyUrl, params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -292,7 +308,7 @@ public class ChatActivity extends AppCompatActivity{
                         if(res.contains("两次发送短消息太快")){
                             Toast.makeText(getApplicationContext(),"两次发送短消息太快，请稍候再发送",Toast.LENGTH_SHORT).show();
                         }else{
-                            Toast.makeText(getApplicationContext(), "由于未知原因发表失败"+res, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "由于未知原因发表失败", Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -315,4 +331,5 @@ public class ChatActivity extends AppCompatActivity{
         smiley_container.setVisibility(View.GONE);
         Toast.makeText(getApplicationContext(),"发布成功",Toast.LENGTH_SHORT).show();
     }
+
 }

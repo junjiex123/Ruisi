@@ -14,7 +14,7 @@ import com.loopj.android.http.RequestParams;
 public abstract class AsyncHttpCilentUtil {
 
     private static AsyncHttpClient client = new AsyncHttpClient();
-
+    private static PersistentCookieStore myCookieStore;
 
     public static void get(Context context,String url, AsyncHttpResponseHandler responseHandler) {
         init(context);
@@ -28,7 +28,11 @@ public abstract class AsyncHttpCilentUtil {
 
     private static void init(Context context){
         client.setTimeout(1000*5);
-        PersistentCookieStore myCookieStore = new PersistentCookieStore(context);
+        myCookieStore = new PersistentCookieStore(context);
         client.setCookieStore(myCookieStore);
+    }
+
+    public static void exit(){
+        myCookieStore.clear();
     }
 }

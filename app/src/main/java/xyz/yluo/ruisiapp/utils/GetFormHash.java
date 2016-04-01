@@ -34,4 +34,22 @@ public class GetFormHash {
             }
         });
     }
+
+    public static void start_get_hash(Context context,boolean isMobile){
+        if(isMobile){
+            String url = "forum.php?mod=post&action=newthread&fid=72&mobile=2";
+            AsyncHttpCilentUtil.get(context, url, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    Document doc = Jsoup.parse(new String(responseBody));
+                    ConfigClass.CONFIG_FORMHASH = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                }
+            });
+        }
+    }
 }

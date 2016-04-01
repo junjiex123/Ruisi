@@ -309,7 +309,12 @@ public class ArticleNormalActivity extends AppCompatActivity
             //获取回复/hash
             if (doc.select("input[name=formhash]").first() != null) {
                 replyUrl = doc.select("form#fastpostform").attr("action");
-                ConfigClass.CONFIG_FORMHASH = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
+                String hash = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
+                if (!hash.isEmpty()){
+                    ConfigClass.CONFIG_FORMHASH =hash;
+                }
+
+
             }
 
             String url = doc.select(".pg").select("a.nxt").attr("href");

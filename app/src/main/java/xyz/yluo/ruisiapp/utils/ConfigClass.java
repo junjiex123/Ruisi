@@ -13,10 +13,6 @@ public class ConfigClass extends Application {
     public static String BBS_BASE_URL = "http://rs.xidian.edu.cn/";
     //是否为校园网
     public static boolean CONFIG_IS_INNER = false;
-
-
-    //是否已经打卡
-    public static boolean CONFIG_ISDAKA = true;
     //论坛FORMHASH
     public static String CONFIG_FORMHASH = "";
     //是否登陆
@@ -28,7 +24,7 @@ public class ConfigClass extends Application {
     //是否将文章页面的样式删除
     public static boolean CONFIG_SHOW_PLAIN_TEXT = true;
     //user uid
-    public static String CONFIG_USER_UID = "252553";
+    public static String CONFIG_USER_UID = "";
 
 
 }

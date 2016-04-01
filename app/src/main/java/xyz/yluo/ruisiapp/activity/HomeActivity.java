@@ -50,6 +50,7 @@ public class HomeActivity extends AppCompatActivity
     private ActionBar actionBar;
     private ActionBarDrawerToggle toggle;
     private int clickId = 0;
+    private CircleImageView userImge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +114,7 @@ public class HomeActivity extends AppCompatActivity
         };
 
         final View header = navigationView.getHeaderView(0);
-        final CircleImageView userImge = (CircleImageView) header.findViewById(R.id.profile_image);
+        userImge = (CircleImageView) header.findViewById(R.id.profile_image);
         final String url = UrlUtils.getimageurl(ConfigClass.CONFIG_USER_UID,true);
         Picasso.with(getApplicationContext()).load(url).placeholder(R.drawable.image_placeholder).resize(80,80).into(userImge);
         userImge.setOnClickListener(new View.OnClickListener() {
@@ -219,6 +220,7 @@ public class HomeActivity extends AppCompatActivity
             nav_header_login.setVisibility(View.VISIBLE);
             nav_header_notlogin.setVisibility(View.GONE);
         } else {
+            userImge.setImageResource(R.drawable.image_placeholder);
             nav_header_notlogin.setVisibility(View.VISIBLE);
             nav_header_login.setVisibility(View.GONE);
         }

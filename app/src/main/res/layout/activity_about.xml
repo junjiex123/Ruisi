@@ -36,18 +36,18 @@
     <!---->
 
     <RelativeLayout
+        android:background="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:id="@+id/text_1"
-            android:padding="@dimen/dimen_16"
+        <xyz.yluo.ruisiapp.utils.MyWebView
+            android:layout_margin="@dimen/dimen_16"
+            android:background="@android:color/white"
+            android:id="@+id/mywebview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:text="西电睿思手机客户端"/>
+            android:layout_height="wrap_content" />
 
         <TextView
             android:layout_width="wrap_content"

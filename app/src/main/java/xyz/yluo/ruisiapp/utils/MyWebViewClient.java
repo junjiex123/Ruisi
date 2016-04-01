@@ -35,12 +35,12 @@ public class MyWebViewClient extends WebViewClient {
         //TODO 处理不同的链接点击事件
 
         //http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=840272&extra=
-        if (url.startsWith("http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=")) { // 帖子
+        if (url.startsWith("forum.php?mod=viewthread&tid=")) { // 帖子
 
 
-        } else if (url.startsWith("http://rs.xidian.edu.cn/home.php?mod=space&uid=")) { // 用户
-            //ArticleNormalActivity.open(context, url.substring(26));
-            UserDetailActivity.open(context, "todo");
+        } else if (url.contains("home.php?mod=space&uid=")) { // 用户
+            String imageUrl = UrlUtils.getimageurl(url,true);
+            UserDetailActivity.open(context,"name",imageUrl);
         } else { // 其他连接
             Toast.makeText(context,"链接被电击",Toast.LENGTH_SHORT).show();
         }

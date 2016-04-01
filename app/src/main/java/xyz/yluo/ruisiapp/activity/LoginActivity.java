@@ -80,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
             rem_user.setChecked(true);
             ed_username.setText(perPreferences.getString("USERNAME",""));
             ed_pass.setText(perPreferences.getString("PASSWORD",""));
+            test_btn.setEnabled(true);
         }
 
         ed_username.addTextChangedListener(new TextWatcher() {
@@ -166,7 +167,11 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 Document doc = Jsoup.parse(res);
                 if (doc.select("input[name=formhash]").first() != null) {
-                    ConfigClass.CONFIG_FORMHASH = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
+                    String temphash = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
+                    if(!temphash.isEmpty()){
+                        ConfigClass.CONFIG_FORMHASH = temphash;
+                    }
+
                 }
                 loginUrl = doc.select("form#loginform").attr("action");
                 RequestParams params = new RequestParams();
