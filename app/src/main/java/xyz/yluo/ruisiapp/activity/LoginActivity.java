@@ -1,6 +1,8 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +11,8 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -38,7 +42,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
 public class LoginActivity extends AppCompatActivity {
 
     @Bind(R.id.login_name)
-    protected EditText ed_ip;
+    protected EditText ed_username;
     @Bind(R.id.login_pas)
     protected EditText ed_pass;
     @Bind(R.id.login_progressBar)
@@ -49,6 +53,11 @@ public class LoginActivity extends AppCompatActivity {
     protected ImageView imageViewl;
     @Bind(R.id.iv_login_r)
     protected ImageView imageViewr;
+    @Bind(R.id.rem_user)
+    protected CheckBox rem_user;
+    @Bind(R.id.rem_pass)
+    protected CheckBox rem_pass;
+    private SharedPreferences perPreferences;
 
     private String loginUrl;
 
@@ -58,8 +67,21 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.layout_login);
         ButterKnife.bind(this);
 
+        perPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        boolean isRemUser = perPreferences.getBoolean("ISREMUSER", false);
+        boolean isRemberPass = perPreferences.getBoolean("ISREMPASS",false);
+        if(isRemUser){
+            rem_user.setChecked(true);
+            ed_username.setText(perPreferences.getString("USERNAME",""));
+        }
+        if (isRemberPass){
+            rem_pass.setChecked(true);
+            rem_user.setChecked(true);
+            ed_username.setText(perPreferences.getString("USERNAME",""));
+            ed_pass.setText(perPreferences.getString("PASSWORD",""));
+        }
 
-        ed_ip.addTextChangedListener(new TextWatcher() {
+        ed_username.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -72,14 +94,13 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (!TextUtils.isEmpty(ed_ip.getText()) && !TextUtils.isEmpty(ed_pass.getText())) {
+                if (!TextUtils.isEmpty(ed_username.getText()) && !TextUtils.isEmpty(ed_pass.getText())) {
                     test_btn.setEnabled(true);
                 } else {
                     test_btn.setEnabled(false);
                 }
             }
         });
-
         ed_pass.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -93,7 +114,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (!TextUtils.isEmpty(ed_ip.getText()) && !TextUtils.isEmpty(ed_pass.getText())) {
+                if (!TextUtils.isEmpty(ed_username.getText()) && !TextUtils.isEmpty(ed_pass.getText())) {
                     test_btn.setEnabled(true);
                 } else {
                     test_btn.setEnabled(false);
@@ -109,13 +130,30 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+        rem_pass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    rem_user.setChecked(true);
+                }
+            }
+        });
+
+        rem_user.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(!b){
+                    rem_pass.setChecked(false);
+                }
+            }
+        });
     }
 
     @OnClick(R.id.login_test_button)
     protected void login_test_button_click() {
         //启动登陆Thread
         progressBar.setVisibility(View.VISIBLE);
-        final String username = ed_ip.getText().toString().trim();
+        final String username = ed_username.getText().toString().trim();
         final String passNo = ed_pass.getText().toString().trim();
         String url = "member.php?mod=logging&action=login&mobile=2";
         AsyncHttpCilentUtil.get(getApplicationContext(), url, new AsyncHttpResponseHandler() {
@@ -124,7 +162,6 @@ public class LoginActivity extends AppCompatActivity {
                 String res = new String(responseBody);
                 if(res.contains("欢迎您回来")){
                     login_ok(res);
-                    //home.php?mod=space&uid=252553&do=profile&mycenter=1&mobile=2
                 }
                 Document doc = Jsoup.parse(res);
                 if (doc.select("input[name=formhash]").first() != null) {
@@ -167,6 +204,25 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login_ok(String res){
+
+        //写入到首选项
+        SharedPreferences.Editor editor = perPreferences.edit();
+        if(rem_pass.isChecked()){
+            editor.putBoolean("ISREMUSER",true);
+            editor.putBoolean("ISREMPASS",true);
+            editor.putString("USERNAME", ed_username.getText().toString().trim());
+            editor.putString("PASSWORD",ed_pass.getText().toString().trim());
+        }else{
+            editor.putBoolean("ISREMUSER",false);
+            editor.putBoolean("ISREMPASS",false);
+        }
+        if(rem_user.isChecked()){
+            editor.putBoolean("ISREMUSER",true);
+            editor.putString("USERNAME", ed_username.getText().toString().trim());
+        }else {
+            editor.putBoolean("ISREMUSER",false);
+        }
+        editor.apply();
 
         Document doc = Jsoup.parse(res);
         ConfigClass.CONFIG_USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();

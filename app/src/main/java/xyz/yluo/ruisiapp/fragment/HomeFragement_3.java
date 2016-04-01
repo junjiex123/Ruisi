@@ -162,7 +162,7 @@ public class HomeFragement_3 extends Fragment {
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Toast.makeText(getActivity(), "网络错误！！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), "网络错误！！", Toast.LENGTH_SHORT).show();
                 refresh_view.setRefreshing(false);
             }
         });
@@ -187,7 +187,6 @@ public class HomeFragement_3 extends Fragment {
                         String value = tmp.select("span").text();
                         tmp.select("span").remove();
                         String key = tmp.text();
-
                         temp = new Pair<>(key,value);
                         datasUserInfo.add(temp);
                     }

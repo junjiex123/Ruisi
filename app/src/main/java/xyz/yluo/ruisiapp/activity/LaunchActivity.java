@@ -42,7 +42,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
  */
 public class LaunchActivity extends AppCompatActivity{
 
-    private SharedPreferences perPreferences;
+
     @Bind(R.id.progressBar)
     protected ProgressBar progressBar;
     private final int TYPE_INNER = 0;
@@ -53,14 +53,8 @@ public class LaunchActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
         ButterKnife.bind(this);
-
-        //TODO  perPreferences
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        perPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        //TODO
-        //editor = perPreferences.edit();
-        //isFirstIn = perPreferences.getBoolean("isFirstIn", true);
-        //isAutoLogin = perPreferences.getBoolean("ISAUTO", false);
+
 
         checkNetWork();
     }
