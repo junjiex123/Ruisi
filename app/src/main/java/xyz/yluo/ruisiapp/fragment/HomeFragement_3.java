@@ -142,7 +142,7 @@ public class HomeFragement_3 extends Fragment {
             }
         });
 
-        AsyncHttpCilentUtil.get(getActivity(), url, null, new AsyncHttpResponseHandler() {
+        AsyncHttpCilentUtil.get(getActivity(), url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 if (type == 1) {

@@ -80,10 +80,9 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
         }
 
 
-        AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
+        AsyncHttpCilentUtil.get(getApplicationContext(), url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
                 if(ConfigClass.CONFIG_IS_INNER){
                     new GetNormalArticleListTaskRs(new String(responseBody)).execute();
                 }else{

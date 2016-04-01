@@ -220,7 +220,7 @@ public class UserDakaActivity extends AppCompatActivity{
 
     private void isHaveDaka(){
         String urlget =   "plugin.php?id=dsu_paulsign:sign";
-        AsyncHttpCilentUtil.get(getApplicationContext(), urlget, null, new AsyncHttpResponseHandler() {
+        AsyncHttpCilentUtil.get(getApplicationContext(), urlget, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String res = new String(responseBody);

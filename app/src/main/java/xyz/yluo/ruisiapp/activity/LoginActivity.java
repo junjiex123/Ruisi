@@ -118,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
         final String username = ed_ip.getText().toString().trim();
         final String passNo = ed_pass.getText().toString().trim();
         String url = "member.php?mod=logging&action=login&mobile=2";
-        AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
+        AsyncHttpCilentUtil.get(getApplicationContext(), url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String res = new String(responseBody);

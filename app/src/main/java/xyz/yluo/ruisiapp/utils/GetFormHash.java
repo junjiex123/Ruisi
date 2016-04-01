@@ -18,7 +18,7 @@ public class GetFormHash {
 
     public static void start_get_hash(Context context){
 
-        AsyncHttpCilentUtil.get(context, "portal.php", null, new AsyncHttpResponseHandler() {
+        AsyncHttpCilentUtil.get(context, "portal.php", new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 

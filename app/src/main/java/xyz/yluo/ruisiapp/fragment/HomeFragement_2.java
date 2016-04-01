@@ -110,7 +110,7 @@ public class HomeFragement_2 extends Fragment implements LoadMoreListener.OnLoad
 
         String url = "forum.php?mod=guide&view=hot&page="+CurrentPage+"&mobile=2";
 
-        AsyncHttpCilentUtil.get(getActivity(), url, null, new AsyncHttpResponseHandler() {
+        AsyncHttpCilentUtil.get(getActivity(), url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 new GetNewArticleListTaskMe(new String(responseBody)).execute();

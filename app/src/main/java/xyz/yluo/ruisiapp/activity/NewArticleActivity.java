@@ -149,7 +149,7 @@ public class NewArticleActivity extends AppCompatActivity {
     private void preparePost(final String fid){
         progress = ProgressDialog.show(this, "正在发送", "请等待", true);
         String url = "forum.php?mod=post&action=newthread&fid="+fid+"&mobile=2";
-        AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
+        AsyncHttpCilentUtil.get(getApplicationContext(), url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Document doc  = Jsoup.parse(new String(responseBody));

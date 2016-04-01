@@ -129,7 +129,7 @@ public class ChatActivity extends AppCompatActivity{
     private void getData(){
 
         load_View.setVisibility(View.VISIBLE);
-        AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
+        AsyncHttpCilentUtil.get(getApplicationContext(), url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 new GetDataTask(new String(responseBody)).execute();

@@ -83,7 +83,7 @@ public class HomeFragement_1 extends Fragment {
 
         String url = "forum.php?forumlist=1&mobile=2";
 
-        AsyncHttpCilentUtil.get(getActivity(), url, null, new AsyncHttpResponseHandler() {
+        AsyncHttpCilentUtil.get(getActivity(), url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 new GetForumList(new String(responseBody)).execute();

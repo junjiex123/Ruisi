@@ -55,7 +55,7 @@ public class ArticleListImageActivity extends ArticleListBaseActivity{
     protected void getData() {
         String url = "forum.php?mod=forumdisplay&fid="+CurrentFid+"&page="+CurrentPage;
 
-        AsyncHttpCilentUtil.get(getApplicationContext(), url, null, new AsyncHttpResponseHandler() {
+        AsyncHttpCilentUtil.get(getApplicationContext(), url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 new GetImageArticleListTaskRS(new String(responseBody)).execute();

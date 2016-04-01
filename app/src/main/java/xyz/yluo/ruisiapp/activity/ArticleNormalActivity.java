@@ -248,7 +248,7 @@ public class ArticleNormalActivity extends AppCompatActivity
             url = nextPageUrl;
         }
 
-        AsyncHttpCilentUtil.get(this, url, null, new AsyncHttpResponseHandler() {
+        AsyncHttpCilentUtil.get(this, url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String res = new String(responseBody);
