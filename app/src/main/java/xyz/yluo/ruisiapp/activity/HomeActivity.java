@@ -15,10 +15,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -31,27 +31,22 @@ import xyz.yluo.ruisiapp.fragment.HomeFragement_2;
 import xyz.yluo.ruisiapp.fragment.HomeFragement_3;
 import xyz.yluo.ruisiapp.fragment.NeedLoginDialogFragment;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-17.
  *
  */
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class HomeActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener{
 
     @Bind(R.id.toolbar)
     protected Toolbar toolbar;
-    @Bind(R.id.btn_1)
-    protected Button btn1;
-    @Bind(R.id.btn_2)
-    protected Button btn2;
-    @Bind(R.id.btn_3)
-    protected Button btn3;
     @Bind(R.id.drawer_layout)
     protected DrawerLayout drawer;
     @Bind(R.id.nav_view)
     protected NavigationView navigationView;
 
-    private CheckBox show_zhidin;
     private ActionBar actionBar;
 
     @Override
@@ -60,18 +55,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        // Show the Up button in the action bar.
         actionBar = getSupportActionBar();
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
+                drawer, toolbar, R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
 
 
         btn_1_click();
-
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        navigationView.setNavigationItemSelectedListener(this);
-
         checkIsLogin();
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -87,13 +81,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         });
 
         final View header = navigationView.getHeaderView(0);
-        CircleImageView userImge = (CircleImageView) header.findViewById(R.id.profile_image);
+        final CircleImageView userImge = (CircleImageView) header.findViewById(R.id.profile_image);
+        final String url = UrlUtils.getimageurl(ConfigClass.CONFIG_USER_UID,true);
+        Picasso.with(getApplicationContext()).load(url).placeholder(R.drawable.image_placeholder).resize(80,80).into(userImge);
         userImge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (ConfigClass.CONFIG_ISLOGIN) {
-                    startActivity(new Intent(getApplicationContext(), UserDakaActivity.class));
-
+                    UserDetailActivity.openWithTransitionAnimation(HomeActivity.this,ConfigClass.CONFIG_USER_NAME,userImge,url);
                 } else {
                     Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivityForResult(i, 1);
@@ -146,7 +141,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -230,7 +224,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             dialogFragment.show(getFragmentManager(), "needlogin");
         }
         return false;
-
     }
 
     //登陆页面返回结果

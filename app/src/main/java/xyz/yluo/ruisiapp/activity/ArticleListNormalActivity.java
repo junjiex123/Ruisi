@@ -24,6 +24,7 @@ import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /*
  *帖子列表activity
@@ -74,11 +75,10 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
 
     @Override
     protected void getData() {
-        String url = "forum.php?mod=forumdisplay&fid="+CurrentFid+"&page="+CurrentPage;
+        String url = UrlUtils.getArticleListUrl(CurrentFid,CurrentPage,true);
         if(!ConfigClass.CONFIG_IS_INNER){
-            url = url + "&mobile=2";
+            url = url + UrlUtils.getArticleListUrl(CurrentFid,CurrentPage,false);
         }
-
 
         AsyncHttpCilentUtil.get(getApplicationContext(), url, new AsyncHttpResponseHandler() {
             @Override

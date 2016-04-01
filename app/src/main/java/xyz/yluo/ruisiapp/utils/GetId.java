@@ -38,4 +38,22 @@ public class GetId {
         }
         return uid;
     }
+
+    public static String getFroumFid(String url){
+
+        //fid=[0-9]+
+        Pattern pattern = Pattern.compile("fid=[0-9]+");
+        Matcher matcher = pattern.matcher(url);
+        String fid ="";
+        if (matcher.find()) {
+            fid = url.substring(matcher.start()+4,matcher.end());
+        }
+        if(fid.equals("106")){
+            fid="110";
+        }else if(fid.equals("553")){
+            fid="554";
+        }
+        return fid;
+
+    }
 }

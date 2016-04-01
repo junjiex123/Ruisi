@@ -40,9 +40,9 @@ import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
 import xyz.yluo.ruisiapp.data.ChatListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
-import xyz.yluo.ruisiapp.utils.GetUserImage;
 import xyz.yluo.ruisiapp.utils.PostHander;
 import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
+import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-30.
@@ -75,6 +75,7 @@ public class ChatActivity extends AppCompatActivity{
 
     public static void open(Context context, String username,String url) {
         Intent intent = new Intent(context, ChatActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("username", username);
         intent.putExtra("url",url);
         context.startActivity(intent);
@@ -92,7 +93,7 @@ public class ChatActivity extends AppCompatActivity{
             username = bundle.getString("username");
             url = bundle.getString("url");
         }catch (Exception e){
-            System.out.print(e);
+            e.printStackTrace();
         }
 
         setSupportActionBar(toolbar);
@@ -179,12 +180,8 @@ public class ChatActivity extends AppCompatActivity{
 
         @Override
         protected String doInBackground(Void... params) {
-            //int type String userImage, String content, String time
-            String content = "未能获取数据";
-            String userimg = "";
-            String posttime = "";
-            int type = 0;
 
+            int type = 0;
             //list 所有楼数据
             Document doc = Jsoup.parse(htmlData);
             //获取回复/hash
@@ -203,9 +200,9 @@ public class ChatActivity extends AppCompatActivity{
                 }else{//右边
                     type = 1;
                 }
-                userimg = temp.select(".avat").select("img").attr("src");
-                content = temp.select(".dialog_t").html();
-                posttime = temp.select(".date").text();
+                String userimg = temp.select(".avat").select("img").attr("src");
+                String content = temp.select(".dialog_t").html();
+                String posttime = temp.select(".date").text();
 
                 datas.add(new ChatListData(type,userimg,content,posttime));
             }
@@ -216,7 +213,7 @@ public class ChatActivity extends AppCompatActivity{
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             if (datas.size()==0){
-                String imageUrl = GetUserImage.getimageurl(url);
+                String imageUrl = UrlUtils.getimageurl(url);
 
                 datas.add(new ChatListData(0,imageUrl,"给我发消息吧","刚刚"));
             }
@@ -265,7 +262,7 @@ public class ChatActivity extends AppCompatActivity{
 
     private void post_reply(String text){
 
-        if(text==""){
+        if(text.isEmpty()){
             Toast.makeText(getApplicationContext(),"你还没有输入内容！！！",Toast.LENGTH_SHORT).show();
         }else {
 

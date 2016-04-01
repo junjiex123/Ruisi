@@ -63,11 +63,9 @@ public class HomeFragement_3 extends Fragment {
 
         recyclerView.setLayoutManager(layoutManager);
 
-
-        mytab.addTab(mytab.newTab().setText("信息"));
-        mytab.addTab(mytab.newTab().setText("主题"));
-        mytab.addTab(mytab.newTab().setText("消息"));
-        mytab.addTab(mytab.newTab().setText("收藏"));
+        mytab.addTab(mytab.newTab().setText("我的主题"));
+        mytab.addTab(mytab.newTab().setText("我的消息"));
+        mytab.addTab(mytab.newTab().setText("我的收藏"));
 
         mytab.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -105,25 +103,18 @@ public class HomeFragement_3 extends Fragment {
         //TODO 所有链接重写
         switch (position){
             case 0:
-                //0 用户信息
-                String url0= "home.php?mod=space&uid="+uid+"&do=profile&mobile=2";
-                getStringFromInternet(0,url0);
-                currentIndex = 0;
-                break;
-            case 1:
                 //我回主题
-                //http://rs.xidian.edu.cn/home.php?mod=space&uid=252553&do=thread&view=me&mobile=2
                 String url1 = "home.php?mod=space&uid="+uid+"&do=thread&view=me&mobile=2";
                 getStringFromInternet(1,url1);
                 currentIndex =1;
                 break;
-            case 2:
+            case 1:
                 //我的消息
                 String url2 = "home.php?mod=space&do=pm&mobile=2";
                 getStringFromInternet(2,url2);
                 currentIndex = 2;
                 break;
-            case 3:
+            case 2:
                 //我的收藏
                 String url3 = "home.php?mod=space&uid="+uid+"&do=favorite&view=me&type=thread&mobile=2";
                 getStringFromInternet(3,url3);
@@ -155,9 +146,6 @@ public class HomeFragement_3 extends Fragment {
                 else if(type==3){
                     //我的收藏
                     new GetUserStarTask(new String(responseBody)).execute();
-                }else {
-                    //获得用户信息
-                    new GetUserInfoTask(new String(responseBody)).execute();
                 }
             }
             @Override
@@ -166,43 +154,6 @@ public class HomeFragement_3 extends Fragment {
                 refresh_view.setRefreshing(false);
             }
         });
-    }
-
-    //获得用户个人信息
-    public class GetUserInfoTask extends AsyncTask<Void, Void, String> {
-
-        private String res;
-
-        public GetUserInfoTask(String res) {
-            this.res = res;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            if(res!=""){
-                Elements lists = Jsoup.parse(res).select(".user_box").select("ul").select("li");
-                if(lists!=null){
-                    Pair<String,String> temp;
-                    for(Element tmp:lists){
-                        String value = tmp.select("span").text();
-                        tmp.select("span").remove();
-                        String key = tmp.text();
-                        temp = new Pair<>(key,value);
-                        datasUserInfo.add(temp);
-                    }
-                }
-            }
-            return "";
-        }
-
-        @Override
-        protected void onPostExecute(final String res) {
-
-            refresh_view.setRefreshing(false);
-            myadapterUserInfo = new UserInfoStarAdapter(getActivity(),datasUserInfo,0);
-            recyclerView.setAdapter(myadapterUserInfo);
-            myadapterUserInfo.notifyItemRangeInserted(0, datasUserInfo.size());
-        }
     }
 
     //获得消息
@@ -287,17 +238,15 @@ public class HomeFragement_3 extends Fragment {
 
         @Override
         protected String doInBackground(Void... params) {
-            if(res!=""){
-                Elements lists = Jsoup.parse(res).select(".threadlist").select("ul").select("li");
-                if(lists!=null){
-                    Pair<String,String> temp;
-                    for(Element tmp:lists){
+            Elements lists = Jsoup.parse(res).select(".threadlist").select("ul").select("li");
+            if(lists!=null){
+                Pair<String,String> temp;
+                for(Element tmp:lists){
 
-                        String key = tmp.select("a").text();
-                        String value = tmp.select("a").attr("href");
-                        temp = new Pair<>(key,value);
-                        datasUserInfo.add(temp);
-                    }
+                    String key = tmp.select("a").text();
+                    String value = tmp.select("a").attr("href");
+                    temp = new Pair<>(key,value);
+                    datasUserInfo.add(temp);
                 }
             }
             return "";

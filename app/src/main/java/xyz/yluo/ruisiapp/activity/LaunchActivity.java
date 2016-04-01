@@ -23,6 +23,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
 import xyz.yluo.ruisiapp.utils.GetId;
+import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-19.
@@ -42,8 +43,6 @@ public class LaunchActivity extends AppCompatActivity{
         setContentView(R.layout.activity_launch);
         ButterKnife.bind(this);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-
         checkNetWork();
     }
 
@@ -55,10 +54,10 @@ public class LaunchActivity extends AppCompatActivity{
         ConnectivityManager conMgr = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();
         if (activeNetwork != null && activeNetwork.isConnected()) {
-            final String url = "member.php?mod=logging&action=login&mobile=2";
+            final String url = UrlUtils.getLoginUrl(false);
             //wifi 先检查校园网
             if(activeNetwork.getType()==ConnectivityManager.TYPE_WIFI) {
-                ConfigClass.BBS_BASE_URL = "http://rs.xidian.edu.cn/";
+                ConfigClass.BBS_BASE_URL = UrlUtils.getBaseUrl(true);
                 AsyncHttpCilentUtil.get(getApplicationContext(),
                         url, new AsyncHttpResponseHandler() {
                             @Override
@@ -71,7 +70,7 @@ public class LaunchActivity extends AppCompatActivity{
                             }
                         });
             }else {
-                ConfigClass.BBS_BASE_URL = "http://bbs.rs.xidian.me/";
+                ConfigClass.BBS_BASE_URL = UrlUtils.getBaseUrl(false);
                 AsyncHttpCilentUtil.get(getApplicationContext(),
                         url, new AsyncHttpResponseHandler() {
                             @Override
@@ -94,11 +93,11 @@ public class LaunchActivity extends AppCompatActivity{
         if(type==TYPE_INNER){
             ConfigClass.CONFIG_IS_INNER = true;
             Toast.makeText(getApplicationContext(),"校园网",Toast.LENGTH_SHORT).show();
-            ConfigClass.BBS_BASE_URL="http://rs.xidian.edu.cn/";
+            ConfigClass.BBS_BASE_URL= UrlUtils.getBaseUrl(true);
             checklogin(res);
         }else{
             Toast.makeText(getApplicationContext(),"校外网",Toast.LENGTH_SHORT).show();
-            ConfigClass.BBS_BASE_URL = "http://bbs.rs.xidian.me/";
+            ConfigClass.BBS_BASE_URL = UrlUtils.getBaseUrl(false);
             ConfigClass.CONFIG_IS_INNER = false;
             checklogin(res);
         }

@@ -18,16 +18,15 @@ public class GetFroumLogo {
     public static Drawable getlogo(Context contex,String url){
         try {
 
-            String fid = getFroumFid.getFid(url);
+            String fid = GetId.getFroumFid(url);
             //./data/attachment/common/32/common_72_icon.gif
             //forum.php?mod=forumdisplay&fid=72
             // get input stream
             //file:///android_asset/forumlogo/xxx.png
             InputStream ims = contex.getAssets().open("forumlogo/common_"+fid+"_icon.gif");
             // load image as Drawable
-            Drawable d = Drawable.createFromStream(ims, null);
 
-            return d;
+            return Drawable.createFromStream(ims, null);
         }
         catch(IOException ex) {
           //nothing

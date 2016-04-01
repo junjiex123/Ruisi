@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -43,6 +44,7 @@ import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.GetLevel;
+import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 public class UserDetailActivity extends AppCompatActivity {
 
@@ -56,6 +58,11 @@ public class UserDetailActivity extends AppCompatActivity {
     protected TextView usergrade;
     @Bind(R.id.main_window)
     protected CoordinatorLayout layout;
+    @Bind(R.id.toolbar)
+    protected Toolbar toolbar;
+    @Bind(R.id.fab)
+    protected FloatingActionButton fab;
+
     private List<Pair<String,String>> datasUserInfo = new ArrayList<>();
     private UserInfoStarAdapter myadapterUserInfo;
     private static final String NAME_IMG_AVATAR = "imgAvatar";
@@ -82,41 +89,36 @@ public class UserDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_detail);
         ButterKnife.bind(this);
-        ViewCompat.setTransitionName(imageView, NAME_IMG_AVATAR);
 
+        ViewCompat.setTransitionName(imageView, NAME_IMG_AVATAR);
         username = getIntent().getStringExtra("loginName");
         usernameView.setText(username);
         String imageUrl = getIntent().getStringExtra("avatarUrl");
-
         Picasso.with(getApplicationContext()).load(imageUrl).placeholder(R.drawable.image_placeholder).into(imageView);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle("");
         }
+
         myadapterUserInfo = new UserInfoStarAdapter(this,datasUserInfo,0);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recycler_view.setLayoutManager(layoutManager);
         recycler_view.setAdapter(myadapterUserInfo);
-
         userUid = GetId.getUid(imageUrl);
-        String url0= "home.php?mod=space&uid="+userUid+"&do=profile&mobile=2";
-
+        //如果是自己
+        if (userUid.equals(ConfigClass.CONFIG_USER_UID)){
+            fab.setImageResource(R.drawable.ic_exit_24dp);
+        }
+        String url0= UrlUtils.getUserHomeUrl(userUid,false);
         getdata(url0);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //返回按钮
         if (id == android.R.id.home) {
             finish();
@@ -142,11 +144,12 @@ public class UserDetailActivity extends AppCompatActivity {
     @OnClick(R.id.fab)
     protected void fab_click(){
 
-        if(ConfigClass.CONFIG_ISLOGIN){
+        //如果是自己
+        if (userUid.equals(ConfigClass.CONFIG_USER_UID)){
             //TODO
-            //home.php?mod=space&do=pm&subop=view&touid=269448&mobile=2
-            //Context context, String username,String url
-            String url = "home.php?mod=space&do=pm&subop=view&touid="+userUid+"&mobile=2";
+            //退出登录
+        }else if(ConfigClass.CONFIG_ISLOGIN){
+            String url = UrlUtils.getUserPmUrl(userUid,false);
             ChatActivity.open(this,username,url);
         }else{
             Snackbar.make(layout, "你还没有登陆，无法发送消息", Snackbar.LENGTH_LONG)
@@ -162,41 +165,38 @@ public class UserDetailActivity extends AppCompatActivity {
 
 
     //获得用户个人信息
-    public class GetUserInfoTask extends AsyncTask<Void, Void, String> {
+    public class GetUserInfoTask extends AsyncTask<Void, Void, Void> {
 
         private String res;
         //用户积分
         String userjifen = "0";
-
         public GetUserInfoTask(String res) {
             this.res = res;
         }
-
         @Override
-        protected String doInBackground(Void... params) {
-            if(res!=""){
-                Elements lists = Jsoup.parse(res).select(".user_box").select("ul").select("li");
-                if(lists!=null){
-                    Pair<String,String> temp;
-                    for(Element tmp:lists){
-                        String value = tmp.select("span").text();
-                        tmp.select("span").remove();
-                        String key = tmp.text();
-                        if(key.contains("积分")){
-                            userjifen = value;
-                        }
-                        temp = new Pair<>(key,value);
-                        datasUserInfo.add(temp);
+        protected Void doInBackground(Void... voids) {
+            Elements lists = Jsoup.parse(res).select(".user_box").select("ul").select("li");
+            if(lists!=null){
+                Pair<String,String> temp;
+                for(Element tmp:lists){
+                    String value = tmp.select("span").text();
+                    tmp.select("span").remove();
+                    String key = tmp.text();
+                    if(key.contains("积分")){
+                        userjifen = value;
                     }
+                    temp = new Pair<>(key,value);
+                    datasUserInfo.add(temp);
                 }
             }
-            return "";
+            return null;
         }
 
         @Override
-        protected void onPostExecute(final String res) {
+        protected void onPreExecute() {
             usergrade.setText(GetLevel.getUserLevel(Integer.parseInt(userjifen)));
             myadapterUserInfo.notifyItemRangeInserted(0, datasUserInfo.size());
+
         }
     }
 }

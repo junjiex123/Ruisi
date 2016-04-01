@@ -30,6 +30,7 @@ import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-15.
@@ -80,18 +81,22 @@ public class UserDakaActivity extends AppCompatActivity{
             actionBar.setTitle("签到");
         }
 
-        ll_daka.setVisibility(View.GONE);
-        text_have_daka.setVisibility(View.GONE);
+        init();
         isHaveDaka();
-        group_2.check(R.id.btn1);
-        group_1.check(R.id.radiobtn_01);
-        spinner_select.setVisibility(View.GONE);
-
-
         final String[] mItems = {"新的一天，新的开始~","今天要更加努力哦~~","我要成为BT大神~~~","今天要怒冲水神榜！！","有点小忧伤~","每天的太阳都是新的！","我又回来了！！！","来吧骚年，战个痛快！！"};
         ArrayAdapter<String> adapter=new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, mItems);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_select.setAdapter(adapter);
+
+    }
+
+    private void init(){
+        ll_daka.setVisibility(View.GONE);
+        text_have_daka.setVisibility(View.GONE);
+        group_2.check(R.id.btn1);
+        group_1.check(R.id.radiobtn_01);
+        spinner_select.setVisibility(View.GONE);
+
         spinner_select.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
@@ -106,9 +111,6 @@ public class UserDakaActivity extends AppCompatActivity{
             }
         });
 
-
-        //RadioButton radioButton = (RadioButton)findViewById(group_1.getCheckedRadioButtonId());
-
         group_2.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -117,35 +119,34 @@ public class UserDakaActivity extends AppCompatActivity{
                         input.setVisibility(View.VISIBLE);
                         spinner_select.setVisibility(View.GONE);
                         group2_select = 1;
-                    break;
+                        break;
                     case R.id.btn2:
                         input.setVisibility(View.GONE);
                         spinner_select.setVisibility(View.VISIBLE);
                         group2_select = 2;
-                    break;
+                        break;
                     case R.id.btn3:
                         input.setVisibility(View.GONE);
                         spinner_select.setVisibility(View.GONE);
                         group2_select = 3;
-                    break;
+                        break;
                 }
 
             }
         });
+
     }
+
 
     @OnClick(R.id.btn_submit)
     protected void btn_submit_click(){
         boolean isok = false;
         getGroup1_select();
-        //Toast.makeText(getApplicationContext(),"group1:"+group1_select+"group2:"+group2_select+"spin:"+spinner__select,Toast.LENGTH_SHORT).show();
-
         String formhash = ConfigClass.CONFIG_FORMHASH;
         qdxq = "ng";
         String qdmode = "1";
         String todaysay = "";
         String fastreplay = "0";
-
 
         switch (group2_select){
             case 1:
@@ -192,7 +193,7 @@ public class UserDakaActivity extends AppCompatActivity{
             params.add("qdmode",qdmode);
             params.add("todaysay",todaysay);
             params.add("fastreplay",fastreplay);
-            String url = "plugin.php?id=dsu_paulsign:sign&operation=qiandao&infloat=1&inajax=1";
+            String url = UrlUtils.getSignUrl();
             AsyncHttpCilentUtil.post(getApplicationContext(), url, params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

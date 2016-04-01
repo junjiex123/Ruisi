@@ -20,6 +20,8 @@ import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.adapter.ArticleListImageAdapter;
 import xyz.yluo.ruisiapp.data.ImageArticleListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
+import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-31.
@@ -53,8 +55,7 @@ public class ArticleListImageActivity extends ArticleListBaseActivity{
 
     @Override
     protected void getData() {
-        String url = "forum.php?mod=forumdisplay&fid="+CurrentFid+"&page="+CurrentPage;
-
+        String url = UrlUtils.getArticleListUrl(CurrentFid,CurrentPage,true);
         AsyncHttpCilentUtil.get(getApplicationContext(), url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -86,27 +87,24 @@ public class ArticleListImageActivity extends ArticleListBaseActivity{
 
         @Override
         protected String doInBackground(Void... params) {
-            if (response != "") {
+            Elements list = Jsoup.parse(response).select("ul[id=waterfall]");
+            Elements imagelist = list.select("li");
 
-                Elements list = Jsoup.parse(response).select("ul[id=waterfall]");
-                Elements imagelist = list.select("li");
+            for (Element tmp : imagelist) {
+                //链接不带前缀
+                //http://rs.xidian.edu.cn/
+                String img = tmp.select("img").attr("src");
+                String url = tmp.select("h3.xw0").select("a[href^=forum.php]").attr("href");
+                String title = tmp.select("h3.xw0").select("a[href^=forum.php]").text();
+                String author = tmp.select("a[href^=home.php]").text();
+                String authorurl = tmp.select("a[href^=home.php]").attr("href");
+                String replyCount = tmp.select(".xg1.y").select("a[href^=forum.php]").text();
+                tmp.select(".xg1.y").select("a[href^=forum.php]").remove();
+                String likecount = tmp.select(".xg1.y").text().replace("回复: ","");
 
-                for (Element tmp : imagelist) {
-                    //链接不带前缀
-                    //http://rs.xidian.edu.cn/
-                    String img = tmp.select("img").attr("src");
-                    String url = tmp.select("h3.xw0").select("a[href^=forum.php]").attr("href");
-                    String title = tmp.select("h3.xw0").select("a[href^=forum.php]").text();
-                    String author = tmp.select("a[href^=home.php]").text();
-                    String authorurl = tmp.select("a[href^=home.php]").attr("href");
-                    String replyCount = tmp.select(".xg1.y").select("a[href^=forum.php]").text();
-                    tmp.select(".xg1.y").select("a[href^=forum.php]").remove();
-                    String likecount = tmp.select(".xg1.y").text().replace("回复: ","");
-
-                    //String title, String titleUrl, String image, String author, String authorUrl, String likeCount, String replyCount
-                    ImageArticleListData tem = new ImageArticleListData(title, url, img, author, authorurl, likecount,replyCount);
-                    mydatasetnormal.add(tem);
-                }
+                //String title, String titleUrl, String image, String author, String authorUrl, String likeCount, String replyCount
+                ImageArticleListData tem = new ImageArticleListData(title, url, img, author, authorurl, likecount,replyCount);
+                mydatasetnormal.add(tem);
             }
             return null;
         }

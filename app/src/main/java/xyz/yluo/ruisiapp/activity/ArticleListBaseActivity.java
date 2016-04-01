@@ -18,6 +18,7 @@ import com.github.clans.fab.FloatingActionMenu;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.listener.HidingScrollListener;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
@@ -58,11 +59,16 @@ public abstract class ArticleListBaseActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+        if(actionBar!=null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         init();
         //子类实现获取数据
         getData();
     }
-
 
     private void init(){
         refreshLayout.post(new Runnable() {
@@ -71,39 +77,7 @@ public abstract class ArticleListBaseActivity extends AppCompatActivity
                 refreshLayout.setRefreshing(true);
             }
         });
-        setSupportActionBar(toolbar);
-        actionBar = getSupportActionBar();
-        if(actionBar!=null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-        //按钮监听
-        fabMenu.setOnMenuButtonClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (fabMenu.isOpened()) {
-                    //Snackbar.make(v, fabMenu.getMenuButtonLabelText(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                }
-                fabMenu.toggle(true);
-            }
-        });
 
-        fab_post.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Toast.makeText(getApplicationContext(), "fab", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(), NewArticleActivity.class));
-                fabMenu.toggle(true);
-
-            }
-        });
-        fab_refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Toast.makeText(getApplicationContext(), "fab2", Toast.LENGTH_SHORT).show();
-                fabMenu.toggle(true);
-                prerefresh();
-            }
-        });
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -129,7 +103,6 @@ public abstract class ArticleListBaseActivity extends AppCompatActivity
                 int distanceToScroll = fabMenu.getHeight() + bottomMargin;
                 fabMenu.animate().translationY(distanceToScroll).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(500);
             }
-
             @Override
             public void onShow() {
                 fabMenu.animate().translationY(0).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(500);
@@ -149,20 +122,31 @@ public abstract class ArticleListBaseActivity extends AppCompatActivity
     protected abstract void refresh();
     protected abstract void getData();
 
+    @OnClick(R.id.fab)
+    protected void fab_menu_click(){
+        if (fabMenu.isOpened()) {
+            //Snackbar.make(v, fabMenu.getMenuButtonLabelText(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        }
+        fabMenu.toggle(true);
+    }
+    @OnClick(R.id.fab_post)
+    protected void fab_post_click(){
+        startActivity(new Intent(getApplicationContext(), NewArticleActivity.class));
+        fabMenu.toggle(true);
+    }
+    @OnClick(R.id.fab_refresh)
+    protected void fab_refresh_click(){
+        fabMenu.toggle(true);
+        prerefresh();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.menu_setting) {
             startActivity(new Intent(getApplicationContext(),SettingActivity.class));
             return true;

@@ -23,7 +23,7 @@ import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
 import xyz.yluo.ruisiapp.utils.GetId;
-import xyz.yluo.ruisiapp.utils.GetUserImage;
+import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-5.
@@ -145,7 +145,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<ArticleListNo
 
             post_time.setText(DataSet.get(position).getPostTime());
             view_count.setText(DataSet.get(position).getViewCount());
-            String imageUrl = GetUserImage.getimageurl(DataSet.get(position).getAuthorUrl());
+            String imageUrl = UrlUtils.getimageurl(DataSet.get(position).getAuthorUrl());
             Picasso.with(activity).load(imageUrl).resize(36,36).centerCrop().placeholder(R.drawable.image_placeholder).into(author_img);
 
             article_title.setText(DataSet.get(position).getTitle());
@@ -156,7 +156,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<ArticleListNo
         @OnClick(R.id.author_img)
         protected void onBtnAvatarClick() {
             //Activity activity, String loginName, ImageView imgAvatar, String avatarUrl
-            String imageUrl = GetUserImage.getimageurl(DataSet.get(getAdapterPosition()).getAuthorUrl());
+            String imageUrl = UrlUtils.getimageurl(DataSet.get(getAdapterPosition()).getAuthorUrl());
             UserDetailActivity.openWithTransitionAnimation(activity, DataSet.get(getAdapterPosition()).getAuthor(), author_img,imageUrl);
             //ArticleNormalActivity.open(activity, "id12345");
         }

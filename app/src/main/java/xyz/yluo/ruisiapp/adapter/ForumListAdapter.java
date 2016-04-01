@@ -19,7 +19,7 @@ import xyz.yluo.ruisiapp.activity.ArticleListImageActivity;
 import xyz.yluo.ruisiapp.activity.ArticleListNormalActivity;
 import xyz.yluo.ruisiapp.data.FroumListData;
 import xyz.yluo.ruisiapp.utils.GetFroumLogo;
-import xyz.yluo.ruisiapp.utils.getFroumFid;
+import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-3-19.
@@ -96,7 +96,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.Base
         }
         @OnClick(R.id.forum_list_item)
         protected void forum_list_item_click(){
-            String fid =getFroumFid.getFid(DataSet.get(getAdapterPosition()).getTitleUrl());
+            String fid = GetId.getFroumFid(DataSet.get(getAdapterPosition()).getTitleUrl());
             if(fid.equals("561")||fid.equals("157")||fid.equals("13")){
                 ArticleListImageActivity.open(activity,Integer.parseInt(fid),DataSet.get(getAdapterPosition()).getTitle());
             }else{
@@ -106,7 +106,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.Base
         }
         void setData(int position) {
             title.setText(DataSet.get(position).getTitle());
-            if(DataSet.get(position).getTodayNew()!=""){
+            if(!DataSet.get(position).getTodayNew().isEmpty()){
                 today_count.setVisibility(View.VISIBLE);
                 today_count.setText(DataSet.get(position).getTodayNew());
             }

@@ -49,6 +49,7 @@ import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
 import xyz.yluo.ruisiapp.utils.PostHander;
 import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
+import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-6.
@@ -115,10 +116,21 @@ public class ArticleNormalActivity extends AppCompatActivity
             actionBar.setTitle(ARTICLE_TITLE);
         }
 
+        init();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyleAdapter = new SingleArticleAdapter(this, this, mydatalist);
         mRecyclerView.setAdapter(mRecyleAdapter);
+        getArticleData();
 
+    }
+
+    private void init(){
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+            }
+        });
 
         mRecyclerView.addOnScrollListener(new HidingScrollListener() {
             @Override
@@ -135,33 +147,6 @@ public class ArticleNormalActivity extends AppCompatActivity
             }
         });
 
-        action_smiley.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(smiley_container.getVisibility()==View.VISIBLE){
-                    smiley_container.setVisibility(View.GONE);
-                }else{
-                    smiley_container.setVisibility(View.VISIBLE);
-                }
-
-            }
-        });
-
-        input_aera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                smiley_container.setVisibility(View.GONE);
-            }
-        });
-
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-                getArticleData();
-
-            }
-        });
         //下拉刷新
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -176,6 +161,20 @@ public class ArticleNormalActivity extends AppCompatActivity
         });
     }
 
+    @OnClick(R.id.input_aera)
+    protected void input_aera_click(){
+        smiley_container.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.action_smiley)
+    protected void action_smiey_click(){
+        if(smiley_container.getVisibility()==View.VISIBLE){
+            smiley_container.setVisibility(View.GONE);
+        }else{
+            smiley_container.setVisibility(View.VISIBLE);
+        }
+
+    }
     @OnClick(R.id.action_send)
     protected void action_send_click(){
 
@@ -215,7 +214,6 @@ public class ArticleNormalActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK){
             String result = data.getExtras().getString("result");//得到新Activity 关闭后返回的数据
-            //Toast.makeText(getApplicationContext(),"result"+result,Toast.LENGTH_SHORT).show();
         }
     }
     //recyclerView item点击事件 加载更多事件
@@ -228,7 +226,7 @@ public class ArticleNormalActivity extends AppCompatActivity
             //加载更多被电击
             if(isEnableLoadMore){
                 isEnableLoadMore = false;
-                if(nextPageUrl!=""){
+                if(nextPageUrl.isEmpty()){
                     CURRENT_PAGE++;
                 }
                 getArticleData();
@@ -242,9 +240,8 @@ public class ArticleNormalActivity extends AppCompatActivity
         if(mydatalist.size()==0){
             CURRENT_PAGE =1;
         }
-
-        String url = "forum.php?mod=viewthread&tid="+ARTICLE_TID+"&page="+CURRENT_PAGE+"&mobile=2";
-        if(nextPageUrl!=""){
+        String url = UrlUtils.getSingleArticleUrl(ARTICLE_TID,CURRENT_PAGE,false);
+        if(nextPageUrl.isEmpty()){
             url = nextPageUrl;
         }
 
@@ -275,12 +272,6 @@ public class ArticleNormalActivity extends AppCompatActivity
 
         @Override
         protected String doInBackground(Void... params) {
-            //title, type, replyCount, username, userUrl, userImgUrl, postTime, cotent
-            String content = "未能获取数据";
-            String userimg = "";
-            String userurl = "";
-            String username = "";
-            String posttime = "";
 
             //list 所有楼数据
             Document doc = Jsoup.parse(htmlData);
@@ -307,16 +298,16 @@ public class ArticleNormalActivity extends AppCompatActivity
                 Elements postlist = elements.select("div[id^=pid]");
 
                 for(Element temp:postlist){
-                    userimg = temp.select("span[class=avatar]").select("img").attr("src");
+                    String userimg = temp.select("span[class=avatar]").select("img").attr("src");
                     Elements userInfo = temp.select("ul.authi");
-                    userurl = userInfo.select("a[href^=home.php?mod=space&uid=]").attr("href");
-                    username = userInfo.select("a[href^=home.php?mod=space&uid=]").text();
-                    posttime = userInfo.select("li.grey.rela").text();
+                    String userurl = userInfo.select("a[href^=home.php?mod=space&uid=]").attr("href");
+                    String username = userInfo.select("a[href^=home.php?mod=space&uid=]").text();
+                    String posttime = userInfo.select("li.grey.rela").text();
 
                     String bridge = userInfo.select("a[href^=home.php?mod=spacecp&ac=favorite").text();
 
                     // 修正图片链接地址
-                    //TODO 现在图片太小
+                    //TODO 现在图片太小 还有很多图片不能显示
                     //[attr^=value], [attr$=value], [attr*=value]这三个语法分别代表，属性以 value 开头、结尾以及包含
 //                    for (Element tempp : temp.select("img[id^=aimg]"))
 //                    {
@@ -342,7 +333,7 @@ public class ArticleNormalActivity extends AppCompatActivity
                     }
 
                     //替换无意义的 br
-                    content = temp.select(".message").html().replaceAll("(\\s*<br>\\s*){2,}","");
+                    String content = temp.select(".message").html().replaceAll("(\\s*<br>\\s*){2,}","");
 
                     //文章内容
                     if(mydatalist.size()==0&&tepdata.size()==0){
@@ -373,7 +364,7 @@ public class ArticleNormalActivity extends AppCompatActivity
             int start = mydatalist.size();
 
             int add = 0;
-            if(nextPageUrl!=""||mydatalist.size()==0){
+            if(nextPageUrl.isEmpty()||mydatalist.size()==0){
                 mydatalist.addAll(tepdata);
                 add = tepdata.size();
             }else if(tepdata.size()==0){
@@ -426,20 +417,15 @@ public class ArticleNormalActivity extends AppCompatActivity
             RequestParams params = new RequestParams();
             params.put("formhash", ConfigClass.CONFIG_FORMHASH);
             params.put("message", text);
-
-            //forum.php?mod=post&action=reply&fid=72&tid=841526&extra=&replysubmit=yes&mobile=2
-            //forum.php?mod=post&action=reply&fid=72&tid=841526&extra=&replysubmit=yes&mobile=2&handlekey=fastpost&loc=1&inajax=1
-
             AsyncHttpCilentUtil.post(getApplicationContext(), replyUrl+"&handlekey=fastpost&loc=1&inajax=1", params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     String res = new String(responseBody);
                     if (res.contains("回复发布成功")) {
                         //修正页数
-                        if(nextPageUrl==""&&mydatalist.size()%10==0){
+                        if(nextPageUrl.isEmpty()&&mydatalist.size()%10==0){
                             nextPageUrl = "mm";
                         }
-
                         progress.dismiss();
                         Toast.makeText(getApplicationContext(), "回复发表成功", Toast.LENGTH_SHORT).show();
                         input_aera.setText("");
@@ -481,7 +467,7 @@ public class ArticleNormalActivity extends AppCompatActivity
             finish();
             return true;
         }else if(id==R.id.menu_broswer){
-            String url = ConfigClass.BBS_BASE_URL+"forum.php?mod=viewthread&tid="+ARTICLE_TID+"&page="+CURRENT_PAGE+"&mobile=2";
+            String url = ConfigClass.BBS_BASE_URL+UrlUtils.getSingleArticleUrl(ARTICLE_TID,CURRENT_PAGE,false);
             RequestOpenBrowser.openBroswer(this,url);
         }
         return super.onOptionsItemSelected(item);

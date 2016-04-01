@@ -46,18 +46,6 @@ public class NewArticleActivity extends AppCompatActivity {
     protected CheckBox action_bold;
     @Bind(R.id.action_italic)
     protected CheckBox action_italic;
-    @Bind(R.id.action_color_text)
-    protected CheckBox action_color_text;
-    @Bind(R.id.action_list_c)
-    protected CheckBox action_list_c;
-    @Bind(R.id.action_list_n)
-    protected CheckBox action_list_n;
-    @Bind(R.id.action_emotion)
-    protected CheckBox action_emotion;
-    @Bind(R.id.action_image)
-    protected CheckBox action_image;
-    @Bind(R.id.action_link)
-    protected CheckBox action_link;
     @Bind(R.id.main_window)
     protected CoordinatorLayout main_window;
 
@@ -71,6 +59,10 @@ public class NewArticleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_topic);
         ButterKnife.bind(this);
 
+        init();
+    }
+
+    private void init(){
         action_bold.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -94,7 +86,6 @@ public class NewArticleActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     @OnClick(R.id.action_emotion)

@@ -34,7 +34,6 @@ public class MyWebViewClient extends WebViewClient {
     public boolean shouldOverrideUrlLoading(WebView webView, String url) {
         //TODO 处理不同的链接点击事件
 
-
         //http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=840272&extra=
         if (url.startsWith("http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=")) { // 帖子
 
@@ -43,7 +42,6 @@ public class MyWebViewClient extends WebViewClient {
             //ArticleNormalActivity.open(context, url.substring(26));
             UserDetailActivity.open(context, "todo");
         } else { // 其他连接
-            //todo
             Toast.makeText(context,"链接被电击",Toast.LENGTH_SHORT).show();
         }
         return true;
