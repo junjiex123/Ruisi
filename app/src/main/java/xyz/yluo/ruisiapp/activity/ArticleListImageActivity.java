@@ -20,7 +20,6 @@ import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.adapter.ArticleListImageAdapter;
 import xyz.yluo.ruisiapp.data.ImageArticleListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**

@@ -48,6 +48,8 @@ public class HomeActivity extends AppCompatActivity
     protected NavigationView navigationView;
 
     private ActionBar actionBar;
+    private ActionBarDrawerToggle toggle;
+    private int clickId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,28 +59,58 @@ public class HomeActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
-                drawer, toolbar, R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close);
+        init();
+
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
-
         btn_1_click();
         checkIsLogin();
-        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {}
+
+    }
+
+    private void init(){
+        toggle = new ActionBarDrawerToggle(this,
+                drawer, toolbar, R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close){
             @Override
             public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                clickId = 0;
                 checkIsLogin();
             }
+
             @Override
-            public void onDrawerClosed(View drawerView) {}
-            @Override
-            public void onDrawerStateChanged(int newState) {}
-        });
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                switch (clickId){
+                    case R.id.nav_test:
+                        startActivity(new Intent(getApplicationContext(), TestActivity.class));
+                        break;
+                    case R.id.nav_about:
+                        startActivity(new Intent(getApplicationContext(),AboutActivity.class));
+                        break;
+                    case R.id.nav_setting:
+                        startActivity(new Intent(getApplicationContext(), SettingActivity.class));
+                        break;
+                    case R.id.nav_sign:
+                        if(ConfigClass.CONFIG_IS_INNER){
+                            if(islogin_dialog()){
+                                startActivity(new Intent(getApplicationContext(),UserDakaActivity.class));
+                            }
+                        }else{
+                            Toast.makeText(getApplicationContext(),"你现在不是校园网无法签到",Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case R.id.nav_post:
+                        if(islogin_dialog()){
+                            startActivity(new Intent(getApplicationContext(),NewArticleActivity.class));
+                        }
+                        break;
+                }
+            }
+        };
 
         final View header = navigationView.getHeaderView(0);
         final CircleImageView userImge = (CircleImageView) header.findViewById(R.id.profile_image);
@@ -95,9 +127,7 @@ public class HomeActivity extends AppCompatActivity
                 }
             }
         });
-
     }
-
 
 
     @OnClick(R.id.btn_1)
@@ -172,28 +202,8 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        if(id == R.id.nav_test){
-            startActivity(new Intent(this, TestActivity.class));
-            // Handle the camera action
-        }else if(id==R.id.nav_about){
-            startActivity(new Intent(this,AboutActivity.class));
-        }else if(id==R.id.nav_setting){
-            startActivity(new Intent(getApplicationContext(), SettingActivity.class));
-        }else if(id==R.id.nav_sign){
-            if(ConfigClass.CONFIG_IS_INNER){
-                if(islogin_dialog()){
-                    startActivity(new Intent(getApplicationContext(),UserDakaActivity.class));
-                }
-            }else{
-                Toast.makeText(getApplicationContext(),"你现在不是校园网无法签到",Toast.LENGTH_SHORT).show();
-            }
+        clickId = item.getItemId();
 
-        }else if(id==R.id.nav_post){
-            if(islogin_dialog()){
-                startActivity(new Intent(getApplicationContext(),NewArticleActivity.class));
-            }
-        }
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -233,7 +243,6 @@ public class HomeActivity extends AppCompatActivity
 
         if (resultCode == RESULT_OK) {
             String result = data.getExtras().getString("result");//得到新Activity 关闭后返回的数据
-            Toast.makeText(getApplicationContext(), "result" + result, Toast.LENGTH_SHORT).show();
         }
         checkIsLogin();
     }

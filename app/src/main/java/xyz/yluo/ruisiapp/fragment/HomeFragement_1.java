@@ -1,7 +1,6 @@
 package xyz.yluo.ruisiapp.fragment;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;

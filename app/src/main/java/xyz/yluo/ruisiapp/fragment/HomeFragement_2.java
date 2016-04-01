@@ -1,7 +1,6 @@
 package xyz.yluo.ruisiapp.fragment;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -134,28 +133,26 @@ public class HomeFragement_2 extends Fragment implements LoadMoreListener.OnLoad
 
         @Override
         protected String doInBackground(Void... params) {
-            if(res!=""){
-                Document doc = Jsoup.parse(res);
-                Elements body = doc.select("div[class=threadlist]"); // 具有 href 属性的链接
-                ArticleListData temp;
-                Elements links = body.select("li");
-                System.out.print(links);
-                for (Element src : links) {
-                    String url = src.select("a").attr("href");
-                    String author = src.select(".by").text();
-                    src.select("span.by").remove();
-                    String replyCount = src.select("span.num").text();
-                    src.select("span.num").remove();
-                    String title = src.select("a").text();
-                    String img = src.select("img").attr("src");
-                    String hasImage = "";
-                    if(img.contains("icon_tu.png")){
-                        hasImage = "0";
-                    }
-                    //String title, String titleUrl, String image, String author, String replayCount
-                    temp = new ArticleListData(hasImage,title, url, author, replyCount);
-                    dataset.add(temp);
+            Document doc = Jsoup.parse(res);
+            Elements body = doc.select("div[class=threadlist]"); // 具有 href 属性的链接
+            ArticleListData temp;
+            Elements links = body.select("li");
+            System.out.print(links);
+            for (Element src : links) {
+                String url = src.select("a").attr("href");
+                String author = src.select(".by").text();
+                src.select("span.by").remove();
+                String replyCount = src.select("span.num").text();
+                src.select("span.num").remove();
+                String title = src.select("a").text();
+                String img = src.select("img").attr("src");
+                String hasImage = "";
+                if(img.contains("icon_tu.png")){
+                    hasImage = "0";
                 }
+                //String title, String titleUrl, String image, String author, String replayCount
+                temp = new ArticleListData(hasImage,title, url, author, replyCount);
+                dataset.add(temp);
             }
             return "";
         }
