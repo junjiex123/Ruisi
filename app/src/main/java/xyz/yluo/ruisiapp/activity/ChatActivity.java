@@ -40,7 +40,6 @@ import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
 import xyz.yluo.ruisiapp.data.ChatListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
-import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.GetUserImage;
 import xyz.yluo.ruisiapp.utils.PostHander;
 import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
