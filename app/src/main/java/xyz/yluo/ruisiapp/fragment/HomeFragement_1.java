@@ -68,21 +68,22 @@ public class HomeFragement_1 extends Fragment {
             }
         });
 
+        getData();
+
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Fragment currentFragment = getActivity().getFragmentManager().findFragmentById(R.id.fragment_container);
-                if (currentFragment instanceof HomeFragement_1) {
-                    FragmentTransaction fragTransaction = (getActivity()).getFragmentManager().beginTransaction();
-                    fragTransaction.detach(currentFragment);
-                    fragTransaction.attach(currentFragment);
-                    fragTransaction.commit();
-                }
+                datas.clear();
+                forumListAdapter.notifyDataSetChanged();
+                getData();
             }
         });
 
-        String url = "forum.php?forumlist=1&mobile=2";
+        return view;
+    }
 
+    private void getData(){
+        String url = "forum.php?forumlist=1&mobile=2";
         AsyncHttpCilentUtil.get(getActivity(), url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -95,8 +96,6 @@ public class HomeFragement_1 extends Fragment {
                 refreshLayout.setRefreshing(false);
             }
         });
-
-        return view;
     }
 
 

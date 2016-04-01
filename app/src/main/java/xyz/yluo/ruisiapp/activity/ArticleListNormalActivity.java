@@ -168,8 +168,12 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
 
             mydatasetnormal.addAll(dataset);
             refreshLayout.setRefreshing(false);
+            if(CurrentPage!=1){
+                mRecyclerView.getItemAnimator().setAddDuration(0);
+            }
             mRecyleAdapter.notifyItemRangeInserted(mydatasetnormal.size() - dataset.size(), dataset.size());
             isEnableLoadMore = true;
+
         }
     }
 
@@ -221,8 +225,13 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
 
             mydatasetnormal.addAll(dataset);
             refreshLayout.setRefreshing(false);
+            if(CurrentPage!=1){
+                mRecyclerView.getItemAnimator().setAddDuration(0);
+            }
+
             mRecyleAdapter.notifyItemRangeInserted(mydatasetnormal.size() - dataset.size(), dataset.size());
             isEnableLoadMore = true;
+
         }
     }
 

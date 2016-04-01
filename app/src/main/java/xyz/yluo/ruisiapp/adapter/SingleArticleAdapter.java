@@ -1,13 +1,16 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -33,7 +36,7 @@ import xyz.yluo.ruisiapp.utils.MyWebView;
 public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdapter.BaseViewHolder>{
 
     private static final int TYPE_COMENT = 1;
-    private static final int TYPE_LOAD_MORE = 2;
+    private static final int TYPE_LOAD_MORE_N = 2;
     private static final int TYPE_CONTENT=0;
     //数据
     private List<SingleArticleData> datalist;
@@ -45,7 +48,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
     public SingleArticleAdapter(Activity activity, RecyclerViewClickListener itemListener, List<SingleArticleData> datalist) {
         this.datalist = datalist;
         this.activity =activity;
-        this.itemListener = itemListener;
+        SingleArticleAdapter.itemListener = itemListener;
     }
 
 
@@ -57,7 +60,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         }else if (position!= getItemCount() - 1) {
             return TYPE_COMENT;
         } else {
-            return TYPE_LOAD_MORE;
+            return TYPE_LOAD_MORE_N;
         }
         //TODO 普通文章类型再分类
         //int type   =  DataSet.get(position).getType();
@@ -68,7 +71,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         switch (viewType) {
             case TYPE_CONTENT:
                 return new ArticleContentViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_article_content_item, viewGroup, false));
-            case TYPE_LOAD_MORE:
+            case TYPE_LOAD_MORE_N:
                 return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_article_load_more, viewGroup, false));
             default: // TYPE_COMMENT
                 return new CommentViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_article_comment_item, viewGroup, false));
@@ -86,7 +89,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
 
     @Override
     public int getItemCount() {
-        if (datalist.size()==0){
+        if(datalist.size()==0){
             return 0;
         }
         return datalist.size()+1;
@@ -128,7 +131,27 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         public ArticleContentViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            WebSettings ws = webView.getSettings();
+        }
+
+
+        @OnClick(R.id.btn_star)
+        protected void btn_star_click(View v){
+            itemListener.recyclerViewListClicked(v, this.getLayoutPosition());
+        }
+
+        @OnClick(R.id.btn_reply)
+        protected void btn_reply_click(View v){
+            itemListener.recyclerViewListClicked(v, this.getLayoutPosition());
+        }
+
+        @OnClick(R.id.btn_share)
+        protected void btn_share_click(){
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, datalist.get(getAdapterPosition()).getCotent());
+            shareIntent.setType("text/plain");
+            //设置分享列表的标题，并且每次都显示分享列表
+            activity.startActivity(Intent.createChooser(shareIntent, "分享到文章到:"));
         }
         @OnClick(R.id.article_user_image)
         protected void authorClick(){

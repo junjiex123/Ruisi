@@ -82,28 +82,4 @@ public class SingleArticleData {
     public String getReplyCount() {
         return replyCount;
     }
-
-    public void setReplyCount(String replyCount) {
-        this.replyCount = replyCount;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setUserUrl(String userUrl) {
-        this.userUrl = userUrl;
-    }
-
-    public void setUserImgUrl(String userImgUrl) {
-        this.userImgUrl = userImgUrl;
-    }
-
-    public void setPostTime(String postTime) {
-        this.postTime = postTime;
-    }
-
-    public void setCotent(String cotent) {
-        this.cotent = cotent;
-    }
 }

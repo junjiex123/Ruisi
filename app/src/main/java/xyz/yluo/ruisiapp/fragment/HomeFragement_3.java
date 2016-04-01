@@ -105,20 +105,20 @@ public class HomeFragement_3 extends Fragment {
             case 0:
                 //我回主题
                 String url1 = "home.php?mod=space&uid="+uid+"&do=thread&view=me&mobile=2";
-                getStringFromInternet(1,url1);
-                currentIndex =1;
+                getStringFromInternet(0,url1);
+                currentIndex =0;
                 break;
             case 1:
                 //我的消息
                 String url2 = "home.php?mod=space&do=pm&mobile=2";
-                getStringFromInternet(2,url2);
-                currentIndex = 2;
+                getStringFromInternet(1,url2);
+                currentIndex = 1;
                 break;
             case 2:
                 //我的收藏
                 String url3 = "home.php?mod=space&uid="+uid+"&do=favorite&view=me&type=thread&mobile=2";
-                getStringFromInternet(3,url3);
-                currentIndex = 3;
+                getStringFromInternet(2,url3);
+                currentIndex = 2;
                 break;
         }
     }
@@ -136,14 +136,14 @@ public class HomeFragement_3 extends Fragment {
         AsyncHttpCilentUtil.get(getActivity(), url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                if (type == 1) {
+                if (type == 0) {
                     //我的主题
                     new GetUserArticleask(new String(responseBody)).execute();
-                } else if (type == 2) {
+                } else if (type == 1) {
                     //我的消息
                     new GetUserMessageTask(new String(responseBody)).execute();
                 }
-                else if(type==3){
+                else if(type==2){
                     //我的收藏
                     new GetUserStarTask(new String(responseBody)).execute();
                 }
@@ -242,7 +242,6 @@ public class HomeFragement_3 extends Fragment {
             if(lists!=null){
                 Pair<String,String> temp;
                 for(Element tmp:lists){
-
                     String key = tmp.select("a").text();
                     String value = tmp.select("a").attr("href");
                     temp = new Pair<>(key,value);

@@ -7,12 +7,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.media.VolumeProviderCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,6 +46,7 @@ import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
 import xyz.yluo.ruisiapp.fragment.NeedLoginDialogFragment;
 import xyz.yluo.ruisiapp.listener.HidingScrollListener;
+import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
@@ -56,7 +59,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  *
  */
 public class ArticleNormalActivity extends AppCompatActivity
-        implements RecyclerViewClickListener {
+        implements RecyclerViewClickListener,LoadMoreListener.OnLoadMoreListener {
 
     @Bind(R.id.topic_recycler_view)
     protected RecyclerView mRecyclerView;
@@ -68,10 +71,6 @@ public class ArticleNormalActivity extends AppCompatActivity
     protected LinearLayout replay_bar;
     @Bind(R.id.input_aera)
     protected EditText input_aera;
-    @Bind(R.id.action_send)
-    protected ImageButton action_send;
-    @Bind(R.id.action_smiley)
-    protected ImageButton action_smiley;
     @Bind(R.id.smiley_container)
     protected LinearLayout smiley_container;
 
@@ -117,9 +116,11 @@ public class ArticleNormalActivity extends AppCompatActivity
         }
 
         init();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyleAdapter = new SingleArticleAdapter(this, this, mydatalist);
         mRecyclerView.setAdapter(mRecyleAdapter);
+        mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this,8));
         getArticleData();
 
     }
@@ -181,13 +182,10 @@ public class ArticleNormalActivity extends AppCompatActivity
         smiley_container.setVisibility(View.GONE);
         hide_ime();
         //按钮监听
-        if (ConfigClass.CONFIG_ISLOGIN) {
+        if(isNeedLoginDialog()){
             post_reply(input_aera.getText().toString());
-
-        } else {
-            NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();
-            dialogFragment.show(getFragmentManager(), "needlogin");
         }
+
     }
 
     @OnClick({R.id._1000, R.id._1001,R.id._1002,R.id._1003,R.id._1005,
@@ -219,19 +217,42 @@ public class ArticleNormalActivity extends AppCompatActivity
     //recyclerView item点击事件 加载更多事件
     @Override
     public void recyclerViewListClicked(View v, int position) {
-
         //todo 以后回复层主写在这儿
-        //Toast.makeText(getApplicationContext(),"被电击"+position+"|"+mydatalist.size(),Toast.LENGTH_SHORT).show();
+
+        if(v.getId()==R.id.btn_star){
+            if(isNeedLoginDialog()){
+                Toast.makeText(getApplicationContext(),"正在收藏......",Toast.LENGTH_SHORT).show();
+                starTask();
+            }
+
+        }else if(v.getId()==R.id.btn_reply){
+            if(isNeedLoginDialog()){
+                replay_bar.animate().translationY(0).setInterpolator(new AccelerateInterpolator(5));
+                show_ime();
+            }
+
+        }
+
         if(position==mydatalist.size()){
             //加载更多被电击
             if(isEnableLoadMore){
                 isEnableLoadMore = false;
-                if(nextPageUrl.isEmpty()){
+                if(!nextPageUrl.isEmpty()){
                     CURRENT_PAGE++;
                 }
                 getArticleData();
             }
         }
+    }
+
+    private boolean isNeedLoginDialog(){
+        if (ConfigClass.CONFIG_ISLOGIN) {
+            return true;
+        } else {
+            NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();
+            dialogFragment.show(getFragmentManager(), "needlogin");
+        }
+        return false;
     }
 
     //文章一页的html 根据页数 tid
@@ -241,7 +262,7 @@ public class ArticleNormalActivity extends AppCompatActivity
             CURRENT_PAGE =1;
         }
         String url = UrlUtils.getSingleArticleUrl(ARTICLE_TID,CURRENT_PAGE,false);
-        if(nextPageUrl.isEmpty()){
+        if(!nextPageUrl.isEmpty()){
             url = nextPageUrl;
         }
 
@@ -257,6 +278,18 @@ public class ArticleNormalActivity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(), "网络错误", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onLoadMore() {
+        //加载更多被电击
+        if(isEnableLoadMore){
+            isEnableLoadMore = false;
+            if(!nextPageUrl.isEmpty()){
+                CURRENT_PAGE++;
+            }
+            getArticleData();
+        }
     }
 
     public class DealWithArticleData extends AsyncTask<Void,Void,String>{
@@ -359,12 +392,10 @@ public class ArticleNormalActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            isEnableLoadMore = true;
-
             int start = mydatalist.size();
 
             int add = 0;
-            if(nextPageUrl.isEmpty()||mydatalist.size()==0){
+            if(!nextPageUrl.isEmpty()||mydatalist.size()==0){
                 mydatalist.addAll(tepdata);
                 add = tepdata.size();
             }else if(tepdata.size()==0){
@@ -376,11 +407,43 @@ public class ArticleNormalActivity extends AppCompatActivity
                     add++;
                 }
             }
-
+            if(add==0){
+                Toast.makeText(getApplicationContext(),"暂无更多",Toast.LENGTH_SHORT).show();
+            }
             mRecyleAdapter.notifyItemRangeInserted(start, add);
+            isEnableLoadMore = true;
             refreshLayout.setRefreshing(false);
         }
 
+    }
+
+
+    //收藏 任务
+    private void starTask(){
+        final String url = UrlUtils.getStarUrl(ARTICLE_TID);
+        RequestParams params = new RequestParams();
+        //favoritesubmit:true
+        //formhash:b6ba5839
+        params.add("favoritesubmit","true");
+        params.add("formhash",ConfigClass.CONFIG_FORMHASH);
+
+        AsyncHttpCilentUtil.post(getApplicationContext(), url, params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String res = new String(responseBody);
+
+                if(res.contains("成功")){
+                    Toast.makeText(getApplicationContext(),"收藏成功",Toast.LENGTH_SHORT).show();
+                }else if(res.contains("您已收藏")){
+                    Toast.makeText(getApplicationContext(),"您已收藏请勿重复收藏",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(getApplicationContext(),"网络错误",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -450,6 +513,14 @@ public class ArticleNormalActivity extends AppCompatActivity
         if (view != null) {
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    private void show_ime(){
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(view,1);
         }
     }
 

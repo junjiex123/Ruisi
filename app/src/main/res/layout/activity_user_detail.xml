@@ -79,13 +79,28 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <FrameLayout
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+        </android.support.v7.widget.RecyclerView>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_margin="@dimen/dimen_8"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_horizontal|top" />
+
+
+    </FrameLayout>
+
 
 
     <android.support.design.widget.FloatingActionButton

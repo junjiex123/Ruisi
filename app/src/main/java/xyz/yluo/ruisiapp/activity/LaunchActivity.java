@@ -54,34 +54,11 @@ public class LaunchActivity extends AppCompatActivity{
         ConnectivityManager conMgr = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();
         if (activeNetwork != null && activeNetwork.isConnected()) {
-            final String url = UrlUtils.getLoginUrl(false);
             //wifi 先检查校园网
-            if(activeNetwork.getType()==ConnectivityManager.TYPE_WIFI) {
-                ConfigClass.BBS_BASE_URL = UrlUtils.getBaseUrl(true);
-                AsyncHttpCilentUtil.get(getApplicationContext(),
-                        url, new AsyncHttpResponseHandler() {
-                            @Override
-                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                                canGetRs(TYPE_INNER, new String(responseBody));
-                            }
-                            @Override
-                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                                canGetRs(TYPE_OUTER, new String(responseBody));
-                            }
-                        });
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                checkInner();
             }else {
-                ConfigClass.BBS_BASE_URL = UrlUtils.getBaseUrl(false);
-                AsyncHttpCilentUtil.get(getApplicationContext(),
-                        url, new AsyncHttpResponseHandler() {
-                            @Override
-                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                                canGetRs(TYPE_OUTER,new String(responseBody));
-                            }
-                            @Override
-                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                                rsError();
-                            }
-                        });
+                checkOuter();
             }
         }
         else {
@@ -127,5 +104,38 @@ public class LaunchActivity extends AppCompatActivity{
 
         startActivity(new Intent(getApplicationContext(),HomeActivity.class));
         finish();
+    }
+
+    private void checkOuter(){
+        final String url = UrlUtils.getLoginUrl(false);
+        ConfigClass.BBS_BASE_URL = UrlUtils.getBaseUrl(false);
+        AsyncHttpCilentUtil.get(getApplicationContext(),
+                url, new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        canGetRs(TYPE_OUTER,new String(responseBody));
+                    }
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        rsError();
+                    }
+                });
+    }
+
+    private void checkInner(){
+        final String url = UrlUtils.getLoginUrl(false);
+        ConfigClass.BBS_BASE_URL = UrlUtils.getBaseUrl(true);
+        AsyncHttpCilentUtil.get(getApplicationContext(),
+                url, new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        canGetRs(TYPE_INNER, new String(responseBody));
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        checkOuter();
+                    }
+                });
     }
 }

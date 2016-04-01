@@ -46,7 +46,6 @@ public class HomeFragement_2 extends Fragment implements LoadMoreListener.OnLoad
     protected SwipeRefreshLayout refreshLayout;
     private List<ArticleListData> mydatasetnormal =new ArrayList<>();
     private ArticleListNormalAdapter adapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
     private boolean isEnableLoadMore = false;
     private int CurrentPage = 1;
@@ -58,7 +57,7 @@ public class HomeFragement_2 extends Fragment implements LoadMoreListener.OnLoad
         ButterKnife.bind(this, view);
 
 
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recycler_view.setLayoutManager(mLayoutManager);
         adapter = new ArticleListNormalAdapter(getActivity(),mydatasetnormal,3);
         recycler_view.setAdapter(adapter);
@@ -81,13 +80,11 @@ public class HomeFragement_2 extends Fragment implements LoadMoreListener.OnLoad
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Fragment currentFragment = getActivity().getFragmentManager().findFragmentById(R.id.fragment_container);
-                if (currentFragment instanceof HomeFragement_1) {
-                    FragmentTransaction fragTransaction =   (getActivity()).getFragmentManager().beginTransaction();
-                    fragTransaction.detach(currentFragment);
-                    fragTransaction.attach(currentFragment);
-                    fragTransaction.commit();
-                }
+                mydatasetnormal.clear();
+                adapter.notifyDataSetChanged();
+                CurrentPage= 1 ;
+                isEnableLoadMore = false;
+                getData();
             }
         });
 

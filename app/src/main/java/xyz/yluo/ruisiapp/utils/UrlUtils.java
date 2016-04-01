@@ -68,4 +68,8 @@ public class UrlUtils {
         }
         return "";
     }
+
+    public static String getStarUrl(String id){
+        return "home.php?mod=spacecp&ac=favorite&type=thread&id="+id+"&mobile=2&handlekey=favbtn&inajax=1";
+    }
 }

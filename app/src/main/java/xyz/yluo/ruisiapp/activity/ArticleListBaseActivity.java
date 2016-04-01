@@ -122,13 +122,6 @@ public abstract class ArticleListBaseActivity extends AppCompatActivity
     protected abstract void refresh();
     protected abstract void getData();
 
-    @OnClick(R.id.fab)
-    protected void fab_menu_click(){
-        if (fabMenu.isOpened()) {
-            //Snackbar.make(v, fabMenu.getMenuButtonLabelText(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
-        }
-        fabMenu.toggle(true);
-    }
     @OnClick(R.id.fab_post)
     protected void fab_post_click(){
         startActivity(new Intent(getApplicationContext(), NewArticleActivity.class));

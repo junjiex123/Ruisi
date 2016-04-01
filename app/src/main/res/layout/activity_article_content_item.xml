@@ -121,6 +121,7 @@
                 android:gravity="right">
 
                 <ImageView
+                    android:id="@+id/btn_share"
                     android:clickable="true"
                     android:background="?attr/selectableItemBackground"
                     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -129,6 +130,7 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp" />
                 <ImageView
+                    android:id="@+id/btn_star"
                     android:clickable="true"
                     android:background="?attr/selectableItemBackground"
                     android:layout_marginLeft="@dimen/dimen_8"
@@ -138,6 +140,7 @@
                     android:padding="@dimen/dimen_4"
                     android:src="@drawable/ic_stars_accent_24dp" />
                 <ImageView
+                    android:id="@+id/btn_reply"
                     android:clickable="true"
                     android:background="?attr/selectableItemBackground"
                     android:layout_width="32dp"

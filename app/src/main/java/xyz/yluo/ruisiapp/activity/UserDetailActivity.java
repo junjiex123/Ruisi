@@ -20,6 +20,7 @@ import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +63,8 @@ public class UserDetailActivity extends AppCompatActivity {
     protected Toolbar toolbar;
     @Bind(R.id.fab)
     protected FloatingActionButton fab;
+    @Bind(R.id.progressBar)
+    protected ProgressBar progressBar;
 
     private List<Pair<String,String>> datasUserInfo = new ArrayList<>();
     private UserInfoStarAdapter myadapterUserInfo;
@@ -136,6 +139,7 @@ public class UserDetailActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 Toast.makeText(getApplicationContext(), "网络错误！！", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
             }
         });
     }
@@ -165,16 +169,17 @@ public class UserDetailActivity extends AppCompatActivity {
 
 
     //获得用户个人信息
-    public class GetUserInfoTask extends AsyncTask<Void, Void, Void> {
+    public class GetUserInfoTask extends AsyncTask<Void, Void, String> {
 
         private String res;
-        //用户积分
-        String userjifen = "0";
         public GetUserInfoTask(String res) {
             this.res = res;
         }
+
+
+
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected String doInBackground(Void... voids) {
             Elements lists = Jsoup.parse(res).select(".user_box").select("ul").select("li");
             if(lists!=null){
                 Pair<String,String> temp;
@@ -182,9 +187,6 @@ public class UserDetailActivity extends AppCompatActivity {
                     String value = tmp.select("span").text();
                     tmp.select("span").remove();
                     String key = tmp.text();
-                    if(key.contains("积分")){
-                        userjifen = value;
-                    }
                     temp = new Pair<>(key,value);
                     datasUserInfo.add(temp);
                 }
@@ -193,10 +195,17 @@ public class UserDetailActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPreExecute() {
-            usergrade.setText(GetLevel.getUserLevel(Integer.parseInt(userjifen)));
+        protected void onPostExecute(String s) {
+            if(datasUserInfo.size()>0){
+                if(datasUserInfo.get(0).first.contains("积分")){
+                    String userjifen = datasUserInfo.get(0).second;
+                    usergrade.setText(GetLevel.getUserLevel(Integer.parseInt(userjifen)));
+                }
+            }
+            progressBar.setVisibility(View.GONE);
             myadapterUserInfo.notifyItemRangeInserted(0, datasUserInfo.size());
-
         }
+
+
     }
 }
