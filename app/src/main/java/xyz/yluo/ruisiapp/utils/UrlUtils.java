@@ -74,6 +74,6 @@ public class UrlUtils {
     }
 
     public static String getBtListUrl(String id,int page){
-        return "bt.php?mod=browse&t="+id+"&page="+page;
+        return "bt.php?mod=browse&"+id+"&page="+page;
     }
 }

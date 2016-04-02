@@ -106,8 +106,8 @@ public class UserDakaActivity extends AppCompatActivity{
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Another interface callback
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
 
