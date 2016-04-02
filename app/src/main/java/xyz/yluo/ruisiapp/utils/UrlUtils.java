@@ -72,4 +72,8 @@ public class UrlUtils {
     public static String getStarUrl(String id){
         return "home.php?mod=spacecp&ac=favorite&type=thread&id="+id+"&mobile=2&handlekey=favbtn&inajax=1";
     }
+
+    public static String getBtListUrl(String id,int page){
+        return "bt.php?mod=browse&t="+id+"&page="+page;
+    }
 }

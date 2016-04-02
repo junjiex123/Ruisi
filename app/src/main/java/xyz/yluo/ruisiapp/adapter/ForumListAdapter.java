@@ -18,7 +18,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.ArticleListImageActivity;
 import xyz.yluo.ruisiapp.activity.ArticleListNormalActivity;
 import xyz.yluo.ruisiapp.data.FroumListData;
-import xyz.yluo.ruisiapp.utils.GetFroumLogo;
+import xyz.yluo.ruisiapp.utils.GetLogoUtils;
 import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
@@ -112,7 +112,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.Base
             }
 
             String url = DataSet.get(position).getTitleUrl();
-            Drawable dra = GetFroumLogo.getlogo(activity, url);
+            Drawable dra = GetLogoUtils.getlogo(activity, url);
             img.setImageDrawable(dra);
         }
 

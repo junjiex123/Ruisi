@@ -313,8 +313,6 @@ public class ArticleNormalActivity extends AppCompatActivity
                 if (!hash.isEmpty()){
                     ConfigClass.CONFIG_FORMHASH =hash;
                 }
-
-
             }
 
             String url = doc.select(".pg").select("a.nxt").attr("href");
@@ -366,6 +364,11 @@ public class ArticleNormalActivity extends AppCompatActivity
                     for (Element tempp : temp.select("img[src^=static/image/smiley/]")) {
 
                         tempp.attr("style", "width:30px;height: 30px;");
+                    }
+
+                    //替换代码块里面的br
+                    for(Element tempp:temp.select(".blockcode")){
+                        tempp.select("br").remove();
                     }
 
                     //替换无意义的 br

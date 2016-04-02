@@ -16,6 +16,12 @@
                 android:icon="@drawable/ic_autorenew_black_24dp"
                 android:title="签到" />
             <item
+                android:id="@+id/nav_bt_list"
+                android:title="种子列表"
+                android:icon="@drawable/ic_shopping_24dp">
+
+            </item>
+            <item
                 android:id="@+id/nav_post"
                 android:icon="@drawable/ic_edit"
                 android:title="发帖" />

@@ -26,6 +26,7 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.TestActivity;
+import xyz.yluo.ruisiapp.adapter.ArticleListBtAdapter;
 import xyz.yluo.ruisiapp.fragment.HomeFragement_1;
 import xyz.yluo.ruisiapp.fragment.HomeFragement_2;
 import xyz.yluo.ruisiapp.fragment.HomeFragement_3;
@@ -94,6 +95,15 @@ public class HomeActivity extends AppCompatActivity
                         break;
                     case R.id.nav_setting:
                         startActivity(new Intent(getApplicationContext(), SettingActivity.class));
+                        break;
+                    case R.id.nav_bt_list:
+                        if(ConfigClass.CONFIG_IS_INNER){
+                            if(islogin_dialog()){
+                                startActivity(new Intent(getApplicationContext(),ArticleListBtActivity.class));
+                            }
+                        }else{
+                            Toast.makeText(getApplicationContext(),"你现在不是校园网,无法查看",Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     case R.id.nav_sign:
                         if(ConfigClass.CONFIG_IS_INNER){

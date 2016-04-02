@@ -32,6 +32,10 @@
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
+        <activity android:name=".activity.ArticleListBtActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
         <activity android:name=".activity.ArticleListImageActivity"
             android:theme="@style/AppTheme.NoActionBar">
 

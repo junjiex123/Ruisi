@@ -1,33 +1,16 @@
-html {
-  font-family: sans-serif;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-  word-break:break-all;
-  font-size: 10px;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
 *{
   margin:0;
   padding:0
 }
-* {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-*:before,
-*:after {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
 
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 17px;
-  line-height: 1.5;
-  color: #333333;
-  background-color: #ffffff;
+	word-break: break-all;
+	word-wrap: break-word;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 17px;
+      line-height: 1.5;
+      color: #333333;
+      background-color: #ffffff;
 }
 b,strong {
   font-weight: bold;
@@ -162,20 +145,30 @@ i.pstatus{
  }
 
  .blockcode{
-    padding:0px;
-    margin:0px;
-   line-height:0.8em;
-   color: #c7254e;
+ 	 margin:6px 0px;
+ 	 padding: 10px;
+   line-height:1.2em;
+   color: #F8F8D4;
    font-size: 80%;
-   border: 1px solid #dddddd;
-   background:#f9f2f4;
+   background:#4A4A4A;
    border-radius: 4px;
-   word-break: normal;
-   white-space: pre;
+   white-space:nowrap;  
    overflow: auto;
+   border: none;
  }
- div[id^="code_"], div[id^="code_"] ol,div[id^="code_"] li{
-    margin:0px;
-   padding:0px;
-   display:inline;
+ 
+ .blockcode br{
+ 	display: none;
+ }
+
+ .blockcode ol{
+ 	list-style:none;;
+  margin :0;
+  padding :0;
+ }
+
+ .blockcode li{
+    margin:0;
+    padding:0;
+    display: list-item;
  }
