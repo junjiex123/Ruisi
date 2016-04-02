@@ -91,7 +91,7 @@ public class HomeFragement_1 extends Fragment {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Toast.makeText(getActivity(), "网络错误！！", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "网络错误！！", Toast.LENGTH_SHORT).show();
                 refreshLayout.setRefreshing(false);
             }
         });

@@ -3,7 +3,6 @@ package xyz.yluo.ruisiapp.utils;
 import android.content.Context;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 
@@ -37,14 +36,19 @@ public class MyWebViewClient extends WebViewClient {
         //http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=840272&extra=
         if (url.startsWith("forum.php?mod=viewthread&tid=")) { // 帖子
 
-
+            return true;
         } else if (url.contains("home.php?mod=space&uid=")) { // 用户
             String imageUrl = UrlUtils.getimageurl(url,true);
             UserDetailActivity.open(context,"name",imageUrl);
-        } else { // 其他连接
-            Toast.makeText(context,"链接被电击",Toast.LENGTH_SHORT).show();
+            return true;
+            //http://bbs.rs.xidian.me/forum.php?mod=post&action=newthread&fid=72&mobile=2
+            //发帖链接
+        } else if(url.contains("forum.php?mod=post&action=newthread")){
+            return false;
+        }else {
+            // 其他连接
+            return true;
         }
-        return true;
     }
 
 }

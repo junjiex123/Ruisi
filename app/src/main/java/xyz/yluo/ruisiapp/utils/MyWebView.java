@@ -2,7 +2,15 @@ package xyz.yluo.ruisiapp.utils;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.webkit.CookieManager;
 import android.webkit.WebView;
+
+import com.loopj.android.http.PersistentCookieStore;
+
+import java.util.List;
+
+import cz.msebera.android.httpclient.cookie.Cookie;
 
 /**
  * Created by free2 on 16-3-8.
@@ -32,16 +40,19 @@ public class MyWebView extends WebView{
         super(context);
 
         setWebViewClient(MyWebViewClient.with(context));
+        setCookie(context);
     }
 
     public MyWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setWebViewClient(MyWebViewClient.with(context));
+        setCookie(context);
     }
 
     public MyWebView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setWebViewClient(MyWebViewClient.with(context));
+        setCookie(context);
     }
 
     @Override
@@ -56,6 +67,22 @@ public class MyWebView extends WebView{
 
 
         super.loadDataWithBaseURL(baseUrl, newData, mimeType, encoding, historyUrl);
+    }
+
+    private void setCookie(Context context){
+        CookieManager cookieManager = CookieManager.getInstance();
+        PersistentCookieStore cookieStore = AsyncHttpCilentUtil.getMyCookieStore(context);
+
+        List<Cookie> cookies = cookieStore.getCookies();
+        for (int i = 0; i < cookies.size(); i++) {
+            Cookie eachCookie = cookies.get(i);
+            String cookieString = eachCookie.getName() + "=" + eachCookie.getValue();
+            cookieManager.setCookie(ConfigClass.BBS_BASE_URL, cookieString);
+            Log.i(">>>>>", "cookie : " + cookieString);
+        }
+
+        cookieManager.setAcceptCookie(true);
+        //CookieSyncManager.getInstance().sync();
     }
 
 

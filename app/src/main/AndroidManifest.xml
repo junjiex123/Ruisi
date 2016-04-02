@@ -81,6 +81,9 @@
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
+        <activity android:name=".activity.NewArticleActivity_2">
+
+        </activity>
     </application>
 
 </manifest>

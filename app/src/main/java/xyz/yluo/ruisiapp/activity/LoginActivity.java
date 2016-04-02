@@ -185,7 +185,7 @@ public class LoginActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                login_fail(new String(responseBody) );
+                login_fail("网络异常！！！");
             }
         });
     }
@@ -199,12 +199,12 @@ public class LoginActivity extends AppCompatActivity {
                 if (res.contains("欢迎您回来")) {
                     login_ok(res);
                 } else {
-                    login_fail(res);
+                    login_fail("账号或者密码错误");
                 }
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                login_fail(new String(responseBody));
+                login_fail("网络异常");
             }
         });
     }
@@ -231,8 +231,8 @@ public class LoginActivity extends AppCompatActivity {
         editor.apply();
 
         Document doc = Jsoup.parse(res);
-        ConfigClass.CONFIG_USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
-        String url = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").attr("href");
+        ConfigClass.CONFIG_USER_NAME = ed_username.getText().toString().trim();
+        String url = doc.select("a[href^=home.php?mod=space&uid=]").attr("href");
         ConfigClass.CONFIG_USER_UID = GetId.getUid(url);
 
         //开始获取formhash
@@ -250,7 +250,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void login_fail(String res){
         progressBar.setVisibility(View.INVISIBLE);
-        Toast.makeText(getApplicationContext(), "网络异常！！", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), res, Toast.LENGTH_SHORT).show();
     }
 }
 

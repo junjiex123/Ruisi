@@ -128,7 +128,8 @@ public class HomeActivity extends AppCompatActivity
         Picasso.with(getApplicationContext()).load(url).placeholder(R.drawable.image_placeholder).resize(80,80).into(userImge);
         userImge.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
+
                 if (ConfigClass.CONFIG_ISLOGIN) {
                     UserDetailActivity.openWithTransitionAnimation(HomeActivity.this,ConfigClass.CONFIG_USER_NAME,userImge,url);
                 } else {

@@ -398,8 +398,11 @@ public class ArticleNormalActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            int start = mydatalist.size();
 
+            if(!ARTICLE_TITLE.isEmpty()){
+                getSupportActionBar().setTitle(ARTICLE_TITLE);
+            }
+            int start = mydatalist.size();
             int add = 0;
             if(!nextPageUrl.isEmpty()||mydatalist.size()==0){
                 mydatalist.addAll(tepdata);

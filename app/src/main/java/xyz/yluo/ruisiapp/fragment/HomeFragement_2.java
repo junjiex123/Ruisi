@@ -11,8 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.jsoup.Jsoup;
@@ -104,7 +102,8 @@ public class HomeFragement_2 extends Fragment implements LoadMoreListener.OnLoad
 
     private void getData(){
 
-        String url = "forum.php?mod=guide&view=hot&page="+CurrentPage+"&mobile=2";
+        //TODO hot
+        String url = "forum.php?mod=guide&view=new&page="+CurrentPage+"&mobile=2";
 
         AsyncHttpCilentUtil.get(getActivity(), url, new AsyncHttpResponseHandler() {
             @Override
@@ -114,7 +113,7 @@ public class HomeFragement_2 extends Fragment implements LoadMoreListener.OnLoad
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Toast.makeText(getActivity(), "网络错误！！", Toast.LENGTH_SHORT).show();
+                //st.makeText(getActivity(), "网络错误！！", Toast.LENGTH_SHORT).show();
                 refreshLayout.setRefreshing(false);
             }
         });

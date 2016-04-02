@@ -35,4 +35,9 @@ public abstract class AsyncHttpCilentUtil {
     public static void exit(){
         myCookieStore.clear();
     }
+
+    public static PersistentCookieStore getMyCookieStore(Context context){
+        myCookieStore = new PersistentCookieStore(context);
+        return myCookieStore;
+    }
 }

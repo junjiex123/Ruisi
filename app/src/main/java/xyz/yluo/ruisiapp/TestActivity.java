@@ -27,6 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.activity.ChatActivity;
+import xyz.yluo.ruisiapp.activity.NewArticleActivity_2;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.utils.ConfigClass;
 
@@ -158,6 +159,10 @@ public class TestActivity extends AppCompatActivity {
         });
     }
 
+    @OnClick(R.id.start_test)
+    protected void start_test_click(){
+        startActivity(new Intent(getApplicationContext(), NewArticleActivity_2.class));
+    }
 
     @OnClick(R.id.start_chat)
     protected void start_chat_click(){
