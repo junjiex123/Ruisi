@@ -18,8 +18,8 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.ArticleListImageActivity;
 import xyz.yluo.ruisiapp.activity.ArticleListNormalActivity;
 import xyz.yluo.ruisiapp.data.FroumListData;
-import xyz.yluo.ruisiapp.utils.GetLogoUtils;
 import xyz.yluo.ruisiapp.utils.GetId;
+import xyz.yluo.ruisiapp.utils.GetLogoUtils;
 
 /**
  * Created by free2 on 16-3-19.

@@ -26,7 +26,6 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.TestActivity;
-import xyz.yluo.ruisiapp.adapter.ArticleListBtAdapter;
 import xyz.yluo.ruisiapp.fragment.HomeFragement_1;
 import xyz.yluo.ruisiapp.fragment.HomeFragement_2;
 import xyz.yluo.ruisiapp.fragment.HomeFragement_3;

@@ -2,8 +2,6 @@ package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +19,6 @@ import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.ArticleNormalActivity;
 import xyz.yluo.ruisiapp.data.ArticleListBtData;
-import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.GetLogoUtils;
 
@@ -29,10 +26,13 @@ import xyz.yluo.ruisiapp.utils.GetLogoUtils;
  * Created by free2 on 16-4-2.
  *
  */
-public class ArticleListBtAdapter extends RecyclerView.Adapter<ArticleListBtAdapter.MyBtViewHolder>{
+public class ArticleListBtAdapter extends RecyclerView.Adapter<ArticleListBtAdapter.BaseViewHoler>{
 
     private List<ArticleListBtData> Datas;
     private Activity activity;
+
+    private final int TYPE_LOAD_MORE = 1;
+    private final int TYPE_NORMAL = 0;
 
     public ArticleListBtAdapter(Activity activity,List<ArticleListBtData> datas ) {
         Datas = datas;
@@ -40,22 +40,49 @@ public class ArticleListBtAdapter extends RecyclerView.Adapter<ArticleListBtAdap
     }
 
     @Override
-    public MyBtViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new MyBtViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.bt_list_item, parent, false));
+    public int getItemViewType(int position) {
+        if (position>0&& position == getItemCount() - 1) {
+            return TYPE_LOAD_MORE;
+        }else {
+            return TYPE_NORMAL;
+        }
     }
 
     @Override
-    public void onBindViewHolder(MyBtViewHolder holder, int position) {
+    public BaseViewHoler onCreateViewHolder(ViewGroup parent, int viewType) {
+        switch (viewType){
+            case TYPE_LOAD_MORE:
+                return new LoadMoreViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_main_load_more_list_item, parent, false));
+            default:
+                return new MyBtNormalViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.bt_list_item, parent, false));
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(BaseViewHoler holder, int position) {
         holder.setData(position);
     }
 
     @Override
     public int getItemCount() {
-        return Datas.size();
+        if(Datas.size()==0){
+            return 0;
+        }else {
+            return Datas.size()+1;
+        }
+    }
+
+    protected abstract class BaseViewHoler extends RecyclerView.ViewHolder{
+
+        public BaseViewHoler(View itemView) {
+            super(itemView);
+        }
+
+        protected abstract void setData(int position);
     }
 
 
-    protected class MyBtViewHolder extends RecyclerView.ViewHolder{
+    protected class MyBtNormalViewHolder extends BaseViewHoler{
 
         @Bind(R.id.bt_isfree)
         protected TextView bt_isfree;
@@ -76,12 +103,13 @@ public class ArticleListBtAdapter extends RecyclerView.Adapter<ArticleListBtAdap
         @Bind(R.id.bt_time)
         protected TextView bt_time;
 
-        public MyBtViewHolder(View itemView) {
+        public MyBtNormalViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
         }
 
-        private void setData(int position){
+        @Override
+        protected void setData(int position) {
             ArticleListBtData single = Datas.get(position);
             if(single.isFree()){
                 bt_isfree.setVisibility(View.VISIBLE);
@@ -111,8 +139,8 @@ public class ArticleListBtAdapter extends RecyclerView.Adapter<ArticleListBtAdap
 
             Drawable dra = GetLogoUtils.getBtLogo(activity, single.getLogoUrl());
             bt_logo.setImageDrawable(dra);
-
         }
+
 
         @OnClick(R.id.main_item_btn_item)
         protected void item_click(){
@@ -122,5 +150,17 @@ public class ArticleListBtAdapter extends RecyclerView.Adapter<ArticleListBtAdap
         }
 
 
+    }
+
+    protected class LoadMoreViewHolder extends BaseViewHoler{
+
+        public LoadMoreViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        protected void setData(int position) {
+
+        }
     }
 }

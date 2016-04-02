@@ -1,14 +1,13 @@
 package xyz.yluo.ruisiapp.activity;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.provider.DocumentFile;
 import android.support.v7.widget.LinearLayoutManager;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -17,9 +16,7 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.adapter.ArticleListBtAdapter;
-import xyz.yluo.ruisiapp.adapter.ArticleListImageAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListBtData;
-import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
