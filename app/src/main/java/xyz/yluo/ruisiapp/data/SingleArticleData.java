@@ -16,28 +16,31 @@ public class SingleArticleData {
 
     //通用
     private String username;
-    private String userUrl;
     private String userImgUrl;
     private String postTime;
+    //楼层
+    private String index;
     private String cotent;
+    //楼中楼回复链接
+    private String replyUrl;
 
 
     //index>0 的数据也就是评论
-    public SingleArticleData(String username, String userUrl, String userImgUrl, String postTime,String cotent) {
+    public SingleArticleData(String username, String userImgUrl, String postTime,String index,String replyUrl,String cotent) {
+        this.index = index;
         this.username = username;
-        this.userUrl = userUrl;
         this.userImgUrl = userImgUrl;
         this.postTime = postTime;
         this.cotent = cotent;
+        this.replyUrl = replyUrl;
     }
 
     //index==0 内容
-    public SingleArticleData(String title, String type, String replyCount, String username, String userUrl, String userImgUrl, String postTime, String cotent) {
+    public SingleArticleData(String title, String type, String replyCount, String username, String userImgUrl, String postTime, String cotent) {
         this.title = title;
         this.type = type;
         this.replyCount = replyCount;
         this.username = username;
-        this.userUrl = userUrl;
         this.userImgUrl = userImgUrl;
         this.postTime = postTime;
         this.cotent = cotent;
@@ -45,10 +48,6 @@ public class SingleArticleData {
 
     public String getUsername() {
         return username;
-    }
-
-    public String getUserUrl() {
-        return userUrl;
     }
 
     public String getUserImgUrl() {
@@ -81,5 +80,12 @@ public class SingleArticleData {
 
     public String getReplyCount() {
         return replyCount;
+    }
+
+    public String getIndex() {
+        return index;
+    }
+    public String getReplyUrl() {
+        return replyUrl;
     }
 }

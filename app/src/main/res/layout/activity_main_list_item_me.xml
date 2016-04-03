@@ -27,6 +27,9 @@
             android:orientation="horizontal">
 
             <TextView
+                android:gravity="top"
+                android:drawablePadding="4dp"
+                android:drawableStart="@drawable/ic_person_12dp"
                 android:id="@+id/author_name"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -47,7 +50,7 @@
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="12sp"
                 android:singleLine="true"
-                android:text="回复：222"/>
+                android:text="222"/>
         </LinearLayout>
 
 

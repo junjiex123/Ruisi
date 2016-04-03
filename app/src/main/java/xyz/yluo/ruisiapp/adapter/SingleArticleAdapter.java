@@ -21,7 +21,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.utils.MyHtmlTextView;
 import xyz.yluo.ruisiapp.utils.MyWebView;
 
@@ -109,7 +109,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
     }
 
     //文章内容 楼主ViewHolder
-    public class ArticleContentViewHolder extends BaseViewHolder {
+    public class ArticleContentViewHolder extends BaseViewHolder{
         @Bind(R.id.article_title)
         protected TextView article_title;
         @Bind(R.id.article_user_image)
@@ -153,23 +153,23 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         @OnClick(R.id.article_user_image)
         protected void authorClick(){
             UserDetailActivity.openWithTransitionAnimation(activity, datalist.get(0).getUsername(), article_user_image,datalist.get(0).getUserImgUrl());
-            //ArticleNormalActivity.open(activity, "id12345");
         }
         @Override
         void setData(int position){
-            article_title.setText(datalist.get(0).getTitle());
+            SingleArticleData single = datalist.get(position);
+            article_title.setText(single.getTitle());
             //normal zhidin gold:100
-            if(datalist.get(0).getType().equalsIgnoreCase("zhidin")){
+            if(single.getType().equalsIgnoreCase("zhidin")){
                 article_type.setVisibility(View.VISIBLE);
             }else{
                 article_type.setVisibility(View.INVISIBLE);
             }
-            article_username.setText(datalist.get(0).getUsername());
-            article_replaycount.setText("回复：" + datalist.get(0).getReplyCount());
-            Picasso.with(activity).load(datalist.get(0).getUserImgUrl()).resize(44,44).centerCrop().placeholder(R.drawable.image_placeholder).into(article_user_image);
-            article_post_time.setText(datalist.get(0).getPostTime());
+            article_username.setText(single.getUsername());
+            article_replaycount.setText(single.getReplyCount());
+            Picasso.with(activity).load(single.getUserImgUrl()).resize(44,44).centerCrop().placeholder(R.drawable.image_placeholder).into(article_user_image);
+            article_post_time.setText(single.getPostTime());
             webView.getSettings().setLoadsImagesAutomatically(true);
-            webView.loadDataWithBaseURL(ConfigClass.BBS_BASE_URL,datalist.get(0).getCotent(),"text/html","UTF-8",null);
+            webView.loadDataWithBaseURL(MySetting.BBS_BASE_URL,single.getCotent(),"text/html","UTF-8",null);
         }
 
     }
@@ -190,9 +190,6 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         @Bind(R.id.replay_time)
         protected TextView replay_time;
 
-        @Bind(R.id.replay_user_gold)
-        protected TextView replay_user_gold;
-
         @Bind(R.id.html_text)
         protected MyHtmlTextView htmlTextView;
 
@@ -206,24 +203,13 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         //设置listItem的数据
         @Override
         void setData(final int position) {
-
-            replay_author.setText(datalist.get(position).getUsername());
-            Picasso.with(activity).load(datalist.get(position).getUserImgUrl()).resize(36,36).centerCrop().placeholder(R.drawable.image_placeholder).into(replay_image);
+            SingleArticleData single = datalist.get(position);
+            replay_author.setText(single.getUsername());
+            Picasso.with(activity).load(single.getUserImgUrl()).resize(36,36).centerCrop().placeholder(R.drawable.image_placeholder).into(replay_image);
             //.error(R.drawable.user_placeholder_error)
-            replay_time.setText(datalist.get(position).getPostTime());
-
-            if(position==1){
-                replay_index.setText("沙发");
-
-            }else if(position==2){
-                replay_index.setText("板凳");
-            }else if(position==3){
-                replay_index.setText("地板");
-            }else{
-                replay_index.setText("第"+(position+1)+"楼");
-            }
-
-            htmlTextView.mySetText(activity, datalist.get(position).getCotent());
+            replay_time.setText(single.getPostTime());
+            replay_index.setText(single.getIndex());
+            htmlTextView.mySetText(activity, single.getCotent());
 
         }
 
@@ -231,6 +217,11 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             protected void onBtnAvatarClick() {
                 UserDetailActivity.openWithTransitionAnimation(activity, datalist.get(getAdapterPosition()).getUsername(), replay_image,datalist.get(getAdapterPosition()).getUserImgUrl());
             }
+
+        @OnClick(R.id.btn_reply_2)
+        protected void btn_reply2_click(View v){
+            itemListener.recyclerViewListClicked(v, this.getLayoutPosition());
+        }
     }
 
     //加载更多ViewHolder

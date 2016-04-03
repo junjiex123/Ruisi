@@ -23,7 +23,7 @@ import xyz.yluo.ruisiapp.adapter.ArticleListNormalAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /*
@@ -76,14 +76,14 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
     @Override
     protected void getData() {
         String url = UrlUtils.getArticleListUrl(CurrentFid,CurrentPage,true);
-        if(!ConfigClass.CONFIG_IS_INNER){
+        if(!MySetting.CONFIG_IS_INNER){
             url = url + UrlUtils.getArticleListUrl(CurrentFid,CurrentPage,false);
         }
 
         AsyncHttpCilentUtil.get(getApplicationContext(), url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                if(ConfigClass.CONFIG_IS_INNER){
+                if(MySetting.CONFIG_IS_INNER){
                     new GetNormalArticleListTaskRs(new String(responseBody)).execute();
                 }else{
                     //外网
@@ -147,7 +147,7 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
                         String viewcount = src.getElementsByAttributeValue("class", "num").select("em").text();
                         String replaycount = src.getElementsByAttributeValue("class", "num").select("a").text();
 
-                        if(!ConfigClass.CONFIG_ISSHOW_ZHIDIN&&type.equals("zhidin")){
+                        if(!MySetting.CONFIG_ISSHOW_ZHIDIN&&type.equals("zhidin")){
                             //do no thing
                         }else{
                             if (title != "" && author != "" && viewcount != "") {

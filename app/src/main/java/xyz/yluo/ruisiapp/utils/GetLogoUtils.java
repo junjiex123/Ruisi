@@ -6,8 +6,6 @@ import android.support.v4.content.ContextCompat;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import xyz.yluo.ruisiapp.R;
 

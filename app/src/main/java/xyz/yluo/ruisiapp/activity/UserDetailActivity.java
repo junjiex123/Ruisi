@@ -43,7 +43,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.UserInfoStarAdapter;
 import xyz.yluo.ruisiapp.fragment.ExitLoginDialogFragment;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.GetLevel;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -114,7 +114,7 @@ public class UserDetailActivity extends AppCompatActivity {
         recycler_view.setAdapter(myadapterUserInfo);
         userUid = GetId.getUid(imageUrl);
         //如果是自己
-        if (userUid.equals(ConfigClass.CONFIG_USER_UID)){
+        if (userUid.equals(MySetting.CONFIG_USER_UID)){
             fab.setImageResource(R.drawable.ic_exit_24dp);
         }
         String url0= UrlUtils.getUserHomeUrl(userUid,false);
@@ -150,11 +150,11 @@ public class UserDetailActivity extends AppCompatActivity {
     @OnClick(R.id.fab)
     protected void fab_click(){
         //如果是自己
-        if (userUid.equals(ConfigClass.CONFIG_USER_UID)){
+        if (userUid.equals(MySetting.CONFIG_USER_UID)){
             ExitLoginDialogFragment dialogFragment = new ExitLoginDialogFragment();
             dialogFragment.show(getFragmentManager(), "exit");
 
-        }else if(ConfigClass.CONFIG_ISLOGIN){
+        }else if(MySetting.CONFIG_ISLOGIN){
             //home.php?mod=spacecp&ac=pm&op=send&pmid=450602&daterange=0&pmsubmit=yes&mobile=2
             //home.php?mod=space&do=pm&subop=view&touid=261098&mobile=2
             String url = "home.php?mod=spacecp&ac=pm&op=send&pmid="+userUid+"&daterange=0&pmsubmit=yes&mobile=2";

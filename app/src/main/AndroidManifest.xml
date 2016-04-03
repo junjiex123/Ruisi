@@ -6,12 +6,12 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".MySetting"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name=".utils.ConfigClass">
+        android:theme="@style/AppTheme">
         <activity
             android:name=".activity.LaunchActivity"
             android:label="@string/app_name"
@@ -22,68 +22,45 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".activity.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-
-        <activity android:name=".activity.ArticleListNormalActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <activity android:name=".activity.ArticleListBtActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <activity android:name=".activity.ArticleListImageActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-
-        <activity android:name=".activity.AboutActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-
-        <activity android:name=".activity.ArticleNormalActivity"
+        <activity
+            android:name=".activity.HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.ArticleListNormalActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.ArticleListBtActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.ArticleListImageActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.AboutActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.SingleArticleNormalActivity"
             android:hardwareAccelerated="true"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"></activity>
+        <activity
+            android:name=".activity.NewArticleActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".activity.SettingActivity"></activity>
+        <activity
+            android:name=".activity.UserDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".TestActivity"></activity>
+        <activity android:name=".activity.LoginActivity"></activity>
+        <activity android:name=".activity.UserDakaActivity"></activity>
+        <activity
+            android:name=".activity.ChatActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".activity.NewArticleActivity_2"></activity>
 
-        </activity>
-
-        <activity android:name=".activity.NewArticleActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-
-        <activity android:name=".activity.SettingActivity">
-
-        </activity>
-
-        <activity android:name=".activity.UserDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <activity android:name=".TestActivity">
-
-        </activity>
-        <activity android:name=".activity.LoginActivity">
-
-        </activity>
-
-        <activity android:name=".activity.UserDakaActivity">
-
-        </activity>
-
-        <activity android:name=".activity.ChatActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <activity android:name=".activity.NewArticleActivity_2">
-
-        </activity>
+        <service
+            android:name=".CheckMessageService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

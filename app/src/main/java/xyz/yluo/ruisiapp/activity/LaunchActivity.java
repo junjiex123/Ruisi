@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
@@ -68,14 +68,14 @@ public class LaunchActivity extends AppCompatActivity{
 
     private void canGetRs(int type,String res){
         if(type==TYPE_INNER){
-            ConfigClass.CONFIG_IS_INNER = true;
+            MySetting.CONFIG_IS_INNER = true;
             Toast.makeText(getApplicationContext(),"校园网",Toast.LENGTH_SHORT).show();
-            ConfigClass.BBS_BASE_URL= UrlUtils.getBaseUrl(true);
+            MySetting.BBS_BASE_URL= UrlUtils.getBaseUrl(true);
             checklogin(res);
         }else{
             Toast.makeText(getApplicationContext(),"校外网",Toast.LENGTH_SHORT).show();
-            ConfigClass.BBS_BASE_URL = UrlUtils.getBaseUrl(false);
-            ConfigClass.CONFIG_IS_INNER = false;
+            MySetting.BBS_BASE_URL = UrlUtils.getBaseUrl(false);
+            MySetting.CONFIG_IS_INNER = false;
             checklogin(res);
         }
     }
@@ -91,15 +91,15 @@ public class LaunchActivity extends AppCompatActivity{
 
     private void checklogin(String res){
         progressBar.setVisibility(View.GONE);
-        ConfigClass.CONFIG_ISLOGIN = false;
+        MySetting.CONFIG_ISLOGIN = false;
         if (res.contains("loginbox")) {
-            ConfigClass.CONFIG_ISLOGIN = false;
+            MySetting.CONFIG_ISLOGIN = false;
         } else {
             Document doc = Jsoup.parse(res);
-            ConfigClass.CONFIG_USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
+            MySetting.CONFIG_USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
             String url = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").attr("href");
-            ConfigClass.CONFIG_USER_UID = GetId.getUid(url);
-            ConfigClass.CONFIG_ISLOGIN = true;
+            MySetting.CONFIG_USER_UID = GetId.getUid(url);
+            MySetting.CONFIG_ISLOGIN = true;
         }
 
         startActivity(new Intent(getApplicationContext(),HomeActivity.class));
@@ -108,7 +108,7 @@ public class LaunchActivity extends AppCompatActivity{
 
     private void checkOuter(){
         final String url = UrlUtils.getLoginUrl(false);
-        ConfigClass.BBS_BASE_URL = UrlUtils.getBaseUrl(false);
+        MySetting.BBS_BASE_URL = UrlUtils.getBaseUrl(false);
         AsyncHttpCilentUtil.get(getApplicationContext(),
                 url, new AsyncHttpResponseHandler() {
                     @Override
@@ -124,7 +124,7 @@ public class LaunchActivity extends AppCompatActivity{
 
     private void checkInner(){
         final String url = UrlUtils.getLoginUrl(false);
-        ConfigClass.BBS_BASE_URL = UrlUtils.getBaseUrl(true);
+        MySetting.BBS_BASE_URL = UrlUtils.getBaseUrl(true);
         AsyncHttpCilentUtil.get(getApplicationContext(),
                 url, new AsyncHttpResponseHandler() {
                     @Override

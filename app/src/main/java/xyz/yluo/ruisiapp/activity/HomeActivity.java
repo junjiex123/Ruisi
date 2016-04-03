@@ -30,7 +30,7 @@ import xyz.yluo.ruisiapp.fragment.HomeFragement_1;
 import xyz.yluo.ruisiapp.fragment.HomeFragement_2;
 import xyz.yluo.ruisiapp.fragment.HomeFragement_3;
 import xyz.yluo.ruisiapp.fragment.NeedLoginDialogFragment;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -96,7 +96,7 @@ public class HomeActivity extends AppCompatActivity
                         startActivity(new Intent(getApplicationContext(), SettingActivity.class));
                         break;
                     case R.id.nav_bt_list:
-                        if(ConfigClass.CONFIG_IS_INNER){
+                        if(MySetting.CONFIG_IS_INNER){
                             if(islogin_dialog()){
                                 startActivity(new Intent(getApplicationContext(),ArticleListBtActivity.class));
                             }
@@ -105,7 +105,7 @@ public class HomeActivity extends AppCompatActivity
                         }
                         break;
                     case R.id.nav_sign:
-                        if(ConfigClass.CONFIG_IS_INNER){
+                        if(MySetting.CONFIG_IS_INNER){
                             if(islogin_dialog()){
                                 startActivity(new Intent(getApplicationContext(),UserDakaActivity.class));
                             }
@@ -124,14 +124,14 @@ public class HomeActivity extends AppCompatActivity
 
         final View header = navigationView.getHeaderView(0);
         userImge = (CircleImageView) header.findViewById(R.id.profile_image);
-        final String url = UrlUtils.getimageurl(ConfigClass.CONFIG_USER_UID,true);
+        final String url = UrlUtils.getimageurl(MySetting.CONFIG_USER_UID,true);
         Picasso.with(getApplicationContext()).load(url).placeholder(R.drawable.image_placeholder).resize(80,80).into(userImge);
         userImge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
 
-                if (ConfigClass.CONFIG_ISLOGIN) {
-                    UserDetailActivity.openWithTransitionAnimation(HomeActivity.this,ConfigClass.CONFIG_USER_NAME,userImge,url);
+                if (MySetting.CONFIG_ISLOGIN) {
+                    UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, MySetting.CONFIG_USER_NAME,userImge,url);
                 } else {
                     Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivityForResult(i, 1);
@@ -169,7 +169,7 @@ public class HomeActivity extends AppCompatActivity
     protected void btn_3_click(){
         if(islogin_dialog()){
             if(actionBar!=null){
-                actionBar.setTitle(ConfigClass.CONFIG_USER_NAME);
+                actionBar.setTitle(MySetting.CONFIG_USER_NAME);
             }
             Fragment fragment3 = new HomeFragement_3();
             FragmentManager manager = getFragmentManager();
@@ -224,9 +224,9 @@ public class HomeActivity extends AppCompatActivity
         final View nav_header_login = header.findViewById(R.id.nav_header_login);
         final View nav_header_notlogin = header.findViewById(R.id.nav_header_notlogin);
         //判断是否登陆
-        if (ConfigClass.CONFIG_ISLOGIN) {
+        if (MySetting.CONFIG_ISLOGIN) {
             TextView text1 = (TextView) header.findViewById(R.id.header_user_name);
-            text1.setText(ConfigClass.CONFIG_USER_NAME);
+            text1.setText(MySetting.CONFIG_USER_NAME);
             nav_header_login.setVisibility(View.VISIBLE);
             nav_header_notlogin.setVisibility(View.GONE);
         } else {
@@ -239,7 +239,7 @@ public class HomeActivity extends AppCompatActivity
     //判断是否需要弹出登录dialog
     private boolean islogin_dialog(){
 
-        if(ConfigClass.CONFIG_ISLOGIN){
+        if(MySetting.CONFIG_ISLOGIN){
             return true;
         }else{
             NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();

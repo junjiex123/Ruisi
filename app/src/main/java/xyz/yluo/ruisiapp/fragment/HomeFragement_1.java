@@ -24,12 +24,11 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
-import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
 import xyz.yluo.ruisiapp.data.FroumListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.MySetting;
 
 /**
  * Created by free2 on 16-3-19.
@@ -122,7 +121,7 @@ public class HomeFragement_1 extends Fragment {
                     String titleUrl = tmp.select("a").attr("href");
 
                     //如果是校园网
-                    if(ConfigClass.CONFIG_IS_INNER){
+                    if(MySetting.CONFIG_IS_INNER){
                         //boolean isheader,String title, String todayNew,  String titleUrl
                         simpledatas.add(new FroumListData(false,title,todayNew,titleUrl));
 

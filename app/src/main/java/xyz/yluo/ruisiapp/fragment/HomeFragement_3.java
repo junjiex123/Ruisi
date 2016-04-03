@@ -29,7 +29,7 @@ import xyz.yluo.ruisiapp.adapter.UserArticleReplyStarAdapter;
 import xyz.yluo.ruisiapp.adapter.UserInfoStarAdapter;
 import xyz.yluo.ruisiapp.data.MyTopicReplyListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.MySetting;
 
 /**
  * Created by free2 on 16-3-19.
@@ -50,7 +50,7 @@ public class HomeFragement_3 extends Fragment {
     private UserInfoStarAdapter myadapterUserInfo;
 
     private int currentIndex =0;
-    private String uid = ConfigClass.CONFIG_USER_UID;
+    private String uid = MySetting.CONFIG_USER_UID;
 
 
     @Override
@@ -63,7 +63,7 @@ public class HomeFragement_3 extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         mytab.addTab(mytab.newTab().setText("我的主题"));
-        mytab.addTab(mytab.newTab().setText("我的消息"));
+        mytab.addTab(mytab.newTab().setText("私人消息"));
         mytab.addTab(mytab.newTab().setText("我的收藏"));
 
         mytab.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

@@ -17,8 +17,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.activity.ArticleNormalActivity;
 import xyz.yluo.ruisiapp.activity.ChatActivity;
+import xyz.yluo.ruisiapp.activity.SingleArticleNormalActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.MyTopicReplyListData;
 import xyz.yluo.ruisiapp.utils.ArrowTextView;
@@ -153,7 +153,7 @@ public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticl
         protected void main_item_btn_item_click(){
             MyTopicReplyListData single_data =  DataSet.get(getAdapterPosition());
             if(!single_data.getTitleUrl().isEmpty()){
-                ArticleNormalActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplycount()," ");
+                SingleArticleNormalActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplycount()," ");
             }
 
         }

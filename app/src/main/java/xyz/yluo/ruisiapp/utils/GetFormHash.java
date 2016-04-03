@@ -8,6 +8,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import cz.msebera.android.httpclient.Header;
+import xyz.yluo.ruisiapp.MySetting;
 
 /**
  * Created by free2 on 16-3-16.
@@ -25,7 +26,7 @@ public class GetFormHash {
                 Document doc = Jsoup.parse(new String(responseBody));
                 // 具有 formhash 属性的链接
                 if (doc.select("input[name=formhash]").attr("value") != null) {
-                    ConfigClass.CONFIG_FORMHASH = doc.select("input[name=formhash]").attr("value");
+                    MySetting.CONFIG_FORMHASH = doc.select("input[name=formhash]").attr("value");
                 }
             }
             @Override
@@ -42,7 +43,7 @@ public class GetFormHash {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     Document doc = Jsoup.parse(new String(responseBody));
-                    ConfigClass.CONFIG_FORMHASH = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
+                    MySetting.CONFIG_FORMHASH = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
                 }
 
                 @Override

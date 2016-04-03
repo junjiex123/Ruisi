@@ -16,9 +16,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.activity.ArticleNormalActivity;
+import xyz.yluo.ruisiapp.activity.SingleArticleNormalActivity;
 import xyz.yluo.ruisiapp.data.ImageArticleListData;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
@@ -76,7 +76,7 @@ public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListIma
             img_card_title.setText(DataSet.get(position).getTitle());
             img_card_like.setText(DataSet.get(position).getReplyCount());
             if(DataSet.get(position).getImage()!=""){
-                Picasso.with(activity).load(ConfigClass.BBS_BASE_URL+DataSet.get(position).getImage()).placeholder(R.drawable.image_placeholder).into(img_card_image);
+                Picasso.with(activity).load(MySetting.BBS_BASE_URL+DataSet.get(position).getImage()).placeholder(R.drawable.image_placeholder).into(img_card_image);
             }else{
                 img_card_image.setImageResource(R.drawable.image_placeholder);
             }
@@ -90,7 +90,7 @@ public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListIma
             //Context context, String tid,String title,String replycount,String type
             //String title, String titleUrl, String image, String author, String authorUrl, String viewCount
 
-            ArticleNormalActivity.open(activity,tid,single_data.getTitle(),single_data.getReplyCount(),"");
+            SingleArticleNormalActivity.open(activity,tid,single_data.getTitle(),single_data.getReplyCount(),"");
         }
     }
 }

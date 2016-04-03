@@ -39,7 +39,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
 import xyz.yluo.ruisiapp.data.ChatListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.utils.GetFormHash;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.PostHander;
@@ -202,7 +202,7 @@ public class ChatActivity extends AppCompatActivity{
 
                 String temp_hash= doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
                 if(!temp_hash.isEmpty()){
-                    ConfigClass.CONFIG_FORMHASH = temp_hash;
+                    MySetting.CONFIG_FORMHASH = temp_hash;
                 }
                 touid = doc.select("input[name=touid]").attr("value");
             }
@@ -256,7 +256,7 @@ public class ChatActivity extends AppCompatActivity{
         }else if(id==R.id.menu_refresh){
             refresh();
         }else if(id==R.id.menu_broswer){
-            RequestOpenBrowser.openBroswer(this,ConfigClass.BBS_BASE_URL+url);
+            RequestOpenBrowser.openBroswer(this, MySetting.BBS_BASE_URL+url);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -291,7 +291,7 @@ public class ChatActivity extends AppCompatActivity{
             formhash:70af5bb6
             */
             RequestParams params = new RequestParams();
-            params.put("formhash", ConfigClass.CONFIG_FORMHASH);
+            params.put("formhash", MySetting.CONFIG_FORMHASH);
             params.put("touid",touid);
             params.put("message", text);
             System.out.print(">>>>>>>>>>>>>>>>>>>>>>.replyurl"+replyUrl);
@@ -324,7 +324,7 @@ public class ChatActivity extends AppCompatActivity{
 
     private void send_success(){
         //http://rs.xidian.edu.cn/ucenter/avatar.php?uid=252553&size=small
-        String userImage = ConfigClass.BBS_BASE_URL+"ucenter/avatar.php?uid="+ConfigClass.CONFIG_USER_UID+"&size=small";
+        String userImage = MySetting.BBS_BASE_URL+"ucenter/avatar.php?uid="+ MySetting.CONFIG_USER_UID+"&size=small";
         datas.add(new ChatListData(1,userImage,input_aera.getText().toString(),"刚刚"));
         input_aera.setText("");
         adapter.notifyItemInserted(datas.size()-1);

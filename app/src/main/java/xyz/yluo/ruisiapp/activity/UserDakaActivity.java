@@ -29,7 +29,7 @@ import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -142,7 +142,7 @@ public class UserDakaActivity extends AppCompatActivity{
     protected void btn_submit_click(){
         boolean isok = false;
         getGroup1_select();
-        String formhash = ConfigClass.CONFIG_FORMHASH;
+        String formhash = MySetting.CONFIG_FORMHASH;
         qdxq = "ng";
         String qdmode = "1";
         String todaysay = "";
@@ -231,7 +231,7 @@ public class UserDakaActivity extends AppCompatActivity{
                 if (doc.select("input[name=formhash]").first() != null) {
                     String temphash = doc.select("input[name=formhash]").attr("value");
                     if(!temphash.isEmpty()){
-                        ConfigClass.CONFIG_FORMHASH = temphash;
+                        MySetting.CONFIG_FORMHASH = temphash;
                     }
 
                 }

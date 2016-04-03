@@ -17,6 +17,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import pl.droidsonroids.gif.GifDrawable;
+import xyz.yluo.ruisiapp.MySetting;
 
 /**
  * Created by free2 on 16-3-31.
@@ -66,7 +67,7 @@ public class MyHtmlTextView extends TextView implements Html.ImageGetter {
                 if(source.startsWith("http")){
                     url = new URL(source);
                 }else{
-                    url = new URL(ConfigClass.BBS_BASE_URL + source);
+                    url = new URL(MySetting.BBS_BASE_URL + source);
                 }
 
                 URLConnection conn = url.openConnection();

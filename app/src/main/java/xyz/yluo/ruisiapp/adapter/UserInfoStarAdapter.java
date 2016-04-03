@@ -15,7 +15,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.activity.ArticleNormalActivity;
+import xyz.yluo.ruisiapp.activity.SingleArticleNormalActivity;
 import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
@@ -80,7 +80,7 @@ public class UserInfoStarAdapter extends RecyclerView.Adapter<UserInfoStarAdapte
                 Pair<String,String > single_data =  datas.get(getAdapterPosition());
 
                 String tid = GetId.getTid(single_data.second);
-                ArticleNormalActivity.open(activity,tid,single_data.first,"","");
+                SingleArticleNormalActivity.open(activity,tid,single_data.first,"","");
             }
         }
     }

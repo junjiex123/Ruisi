@@ -79,26 +79,14 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/topic_item_reply_layout_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="36dp"
-        android:gravity="end"
-        android:orientation="horizontal">
-        <TextView
-            android:visibility="gone"
-            android:id="@+id/replay_btn_01"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:padding="6dp"
-            android:drawableStart="@drawable/ic_menu_gallery"
-            android:drawablePadding="8dp"
-            android:textColor="?android:attr/textColorSecondary"
-            android:textSize="14sp"
-            android:gravity="center"
-            android:text="12" />
-
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/btn_reply_2"
+            android:clickable="true"
+            android:background="?attr/selectableItemBackground"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:padding="@dimen/dimen_4"
+            android:src="@drawable/ic_reply_accent_24dp" />
 
 </LinearLayout>
 

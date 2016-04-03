@@ -30,7 +30,7 @@ import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
@@ -169,7 +169,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (doc.select("input[name=formhash]").first() != null) {
                     String temphash = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
                     if(!temphash.isEmpty()){
-                        ConfigClass.CONFIG_FORMHASH = temphash;
+                        MySetting.CONFIG_FORMHASH = temphash;
                     }
 
                 }
@@ -231,14 +231,14 @@ public class LoginActivity extends AppCompatActivity {
         editor.apply();
 
         Document doc = Jsoup.parse(res);
-        ConfigClass.CONFIG_USER_NAME = ed_username.getText().toString().trim();
+        MySetting.CONFIG_USER_NAME = ed_username.getText().toString().trim();
         String url = doc.select("a[href^=home.php?mod=space&uid=]").attr("href");
-        ConfigClass.CONFIG_USER_UID = GetId.getUid(url);
+        MySetting.CONFIG_USER_UID = GetId.getUid(url);
 
         //开始获取formhash
         progressBar.setVisibility(View.INVISIBLE);
-        ConfigClass.CONFIG_ISLOGIN = true;
-        Toast.makeText(getApplicationContext(), "欢迎你"+ConfigClass.CONFIG_USER_NAME+"登陆成功", Toast.LENGTH_SHORT).show();
+        MySetting.CONFIG_ISLOGIN = true;
+        Toast.makeText(getApplicationContext(), "欢迎你"+ MySetting.CONFIG_USER_NAME+"登陆成功", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
         //把返回数据存入Intent
         intent.putExtra("result", "ok");

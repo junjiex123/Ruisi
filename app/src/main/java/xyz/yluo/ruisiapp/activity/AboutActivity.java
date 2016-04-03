@@ -14,7 +14,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.utils.MyWebView;
 
 
@@ -48,7 +48,7 @@ public class AboutActivity extends AppCompatActivity {
         String ss = "西电睿思手机客户端\n目前可见bug很多，最近比较忙我也不会去修复他。。。" +
                 "\nbug反馈点击按钮给我发邮件吧\n或者 <a href=\"home.php?mod=space&uid=252553&do=profile&mobile=2\">" +
                 "@谁用了FREEDOM</a>或者<a href=\"home.php?mod=space&uid=261098&do=profile&mobile=2\">@wangfuyang</a>";
-        mywebview.loadDataWithBaseURL(ConfigClass.BBS_BASE_URL,ss,"text/html","UTF-8",null);
+        mywebview.loadDataWithBaseURL(MySetting.BBS_BASE_URL,ss,"text/html","UTF-8",null);
     }
 
 

@@ -1,5 +1,7 @@
 package xyz.yluo.ruisiapp.utils;
 
+import xyz.yluo.ruisiapp.MySetting;
+
 /**
  * Created by free2 on 16-4-1.
  * 返回各种url;
@@ -43,12 +45,12 @@ public class UrlUtils {
         //http://bbs.rs.xidian.me/274679
         String uid = GetId.getUid(userurl);
 
-        return ConfigClass.BBS_BASE_URL+"ucenter/avatar.php?uid="+uid+"&size=small";
+        return MySetting.BBS_BASE_URL+"ucenter/avatar.php?uid="+uid+"&size=small";
     }
 
     public static String getimageurl(String userurl,boolean ismiddle){
         String uid = GetId.getUid(userurl);
-        return ConfigClass.BBS_BASE_URL+"ucenter/avatar.php?uid="+uid+"&size=middle";
+        return MySetting.BBS_BASE_URL+"ucenter/avatar.php?uid="+uid+"&size=middle";
     }
 
     public static String getSignUrl(){

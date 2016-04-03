@@ -18,10 +18,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.activity.ArticleNormalActivity;
+import xyz.yluo.ruisiapp.activity.SingleArticleNormalActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ArticleListData;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
@@ -54,7 +54,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<ArticleListNo
             return TYPE_LOAD_MORE;
         }
         //手机版
-        if(!ConfigClass.CONFIG_IS_INNER||type==TYPE_NORMAL_MOBILE){
+        if(!MySetting.CONFIG_IS_INNER||type==TYPE_NORMAL_MOBILE){
             return TYPE_NORMAL_MOBILE;
         }else{
             //一般板块
@@ -160,7 +160,6 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<ArticleListNo
             //Activity activity, String loginName, ImageView imgAvatar, String avatarUrl
             String imageUrl = UrlUtils.getimageurl(DataSet.get(getAdapterPosition()).getAuthorUrl());
             UserDetailActivity.openWithTransitionAnimation(activity, DataSet.get(getAdapterPosition()).getAuthor(), author_img,imageUrl);
-            //ArticleNormalActivity.open(activity, "id12345");
         }
 
         @OnClick(R.id.main_item_btn_item)
@@ -168,7 +167,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<ArticleListNo
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
 
             //Context context, String tid,String title,String replycount,String type
-            ArticleNormalActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplayCount(),single_data.getType());
+            SingleArticleNormalActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplayCount(),single_data.getType());
             //System.out.print("$$$$$$$$$>>"+DataSet.get(getPosition()).getTitleUrl()+"|"+article_title.getText()+"|"+reply_count.getText()+"|"+article_type.getText()+"|"+author_name.getText()+"\n");
         }
     }
@@ -231,7 +230,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<ArticleListNo
 
             System.out.print("\ntid"+tid);
             //Context context, String tid,String title,String replycount,String type
-            ArticleNormalActivity.open(activity,tid,title,replyCount,"");
+            SingleArticleNormalActivity.open(activity,tid,title,replyCount,"");
         }
     }
 

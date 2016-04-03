@@ -15,7 +15,7 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.cookie.Cookie;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.utils.MyWebView;
 
 /**
@@ -57,7 +57,7 @@ public class NewArticleActivity_2 extends AppCompatActivity {
         myWebView.setWebViewClient(client);
         //http://bbs.rs.xidian.me/
         myWebView.getSettings().setJavaScriptEnabled(true);
-        myWebView.loadUrl(ConfigClass.BBS_BASE_URL+"forum.php?mod=post&action=newthread&fid=72&mobile=2");
+        myWebView.loadUrl(MySetting.BBS_BASE_URL+"forum.php?mod=post&action=newthread&fid=72&mobile=2");
 
     }
 
@@ -70,7 +70,7 @@ public class NewArticleActivity_2 extends AppCompatActivity {
         for (int i = 0; i < cookies.size(); i++) {
             Cookie eachCookie = cookies.get(i);
             String cookieString = eachCookie.getName() + "=" + eachCookie.getValue();
-            cookieManager.setCookie(ConfigClass.BBS_BASE_URL, cookieString);
+            cookieManager.setCookie(MySetting.BBS_BASE_URL, cookieString);
             Log.i(">>>>>", "cookie : " + cookieString);
         }
 

@@ -1,10 +1,16 @@
 package xyz.yluo.ruisiapp;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,15 +33,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.activity.ChatActivity;
+import xyz.yluo.ruisiapp.activity.NewArticleActivity;
 import xyz.yluo.ruisiapp.activity.NewArticleActivity_2;
 import xyz.yluo.ruisiapp.data.ArticleListData;
-import xyz.yluo.ruisiapp.utils.ConfigClass;
 
 /**
  * Created by free2 on 16-3-10.
  *
  */
-public class TestActivity extends AppCompatActivity {
+public class TestActivity extends AppCompatActivity implements ServiceConnection {
 
     @Bind(R.id.text_response)
     protected TextView responseText;
@@ -60,7 +66,7 @@ public class TestActivity extends AppCompatActivity {
     protected void login_button_click() {
 
         client.setCookieStore(myCookieStore);
-        client.get(ConfigClass.BBS_BASE_URL+"member.php?mod=logging&action=login&mobile=2", null, new AsyncHttpResponseHandler() {
+        client.get(MySetting.BBS_BASE_URL+"member.php?mod=logging&action=login&mobile=2", null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String res = new String(responseBody);
@@ -80,7 +86,7 @@ public class TestActivity extends AppCompatActivity {
                     params.put("answer", "");
 
                     client.setCookieStore(myCookieStore);
-                    client.post(ConfigClass.BBS_BASE_URL+loginUrl, params, new AsyncHttpResponseHandler() {
+                    client.post(MySetting.BBS_BASE_URL+loginUrl, params, new AsyncHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                             String res = new String(responseBody);
@@ -116,7 +122,7 @@ public class TestActivity extends AppCompatActivity {
     protected void login_post_click() {
 
         client.setCookieStore(myCookieStore);
-        client.get(getApplicationContext(), ConfigClass.BBS_BASE_URL+"forum.php?mod=post&action=newthread&fid=72&mobile=2", null, new AsyncHttpResponseHandler() {
+        client.get(getApplicationContext(), MySetting.BBS_BASE_URL+"forum.php?mod=post&action=newthread&fid=72&mobile=2", null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Document doc  = Jsoup.parse(new String(responseBody));
@@ -132,9 +138,9 @@ public class TestActivity extends AppCompatActivity {
                 params.add("subject","发帖失败了");
                 params.add("message","现在看看怎么样。。。。。。[b]...[/b]");
 
-                String url2 = ConfigClass.BBS_BASE_URL+"forum.php?mod=post&action=newthread&fid=72&topicsubmit=yes&infloat=yes&handlekey=fastnewpost";
+                String url2 = MySetting.BBS_BASE_URL+"forum.php?mod=post&action=newthread&fid=72&topicsubmit=yes&infloat=yes&handlekey=fastnewpost";
 
-                String url = ConfigClass.BBS_BASE_URL+"forum.php?mod=post&action=newthread&fid=72&extra=&topicsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
+                String url = MySetting.BBS_BASE_URL+"forum.php?mod=post&action=newthread&fid=72&extra=&topicsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
 
 
                 client.setCookieStore(myCookieStore);
@@ -168,6 +174,47 @@ public class TestActivity extends AppCompatActivity {
     protected void start_chat_click(){
         startActivity(new Intent(getApplicationContext(), ChatActivity.class));
     }
+
+    @OnClick(R.id.start_service)
+    protected void start_service_click(){
+        Intent i = new Intent(this,CheckMessageService.class);
+        startService(i);
+    }
+    @OnClick(R.id.stop_service)
+    protected void stop_service_click(){
+        stopService(new Intent(this,CheckMessageService.class));
+    }
+    @OnClick(R.id.notification)
+    protected void notification_click(){
+        NotificationCompat.Builder mBuilder =
+                (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_favorite_24dp)
+                        .setContentTitle("My notification")
+                        .setContentText("Hello World!")
+                        .setAutoCancel(true);
+
+        Intent resultIntent = new Intent(this, NewArticleActivity.class);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+
+        NotificationManager mNotifyMgr =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        // Builds the notification and issues it.
+        mNotifyMgr.notify(1, mBuilder.build());
+
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+        System.out.print(">>connected");
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName componentName) {
+        System.out.print(">>disconnected");
+    }
+
+
 
     //获得数据
     public class GetListTask extends AsyncTask<Void, Void, String> {

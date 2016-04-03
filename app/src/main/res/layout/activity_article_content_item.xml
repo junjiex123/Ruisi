@@ -96,6 +96,9 @@
                             android:text="发布于：2天前" />
 
                         <TextView
+                            android:gravity="top"
+                            android:drawablePadding="4dp"
+                            android:drawableStart="@drawable/ic_reply_12dp"
                             android:id="@+id/article_replaycount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -130,24 +133,24 @@
                     xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:src="@drawable/ic_menu_share_accent_24dp"
                     android:padding="@dimen/dimen_4"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp" />
+                    android:layout_width="28dp"
+                    android:layout_height="28dp" />
                 <ImageView
                     android:id="@+id/btn_star"
                     android:clickable="true"
                     android:background="?attr/selectableItemBackground"
                     android:layout_marginLeft="@dimen/dimen_8"
                     android:layout_marginRight="@dimen/dimen_8"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:padding="@dimen/dimen_4"
-                    android:src="@drawable/ic_stars_accent_24dp" />
+                    android:src="@drawable/ic_favorite_border_black_24dp" />
                 <ImageView
                     android:id="@+id/btn_reply"
                     android:clickable="true"
                     android:background="?attr/selectableItemBackground"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:padding="@dimen/dimen_4"
                     android:src="@drawable/ic_reply_accent_24dp" />
 

@@ -11,6 +11,7 @@ import com.loopj.android.http.PersistentCookieStore;
 import java.util.List;
 
 import cz.msebera.android.httpclient.cookie.Cookie;
+import xyz.yluo.ruisiapp.MySetting;
 
 /**
  * Created by free2 on 16-3-8.
@@ -77,7 +78,7 @@ public class MyWebView extends WebView{
         for (int i = 0; i < cookies.size(); i++) {
             Cookie eachCookie = cookies.get(i);
             String cookieString = eachCookie.getName() + "=" + eachCookie.getValue();
-            cookieManager.setCookie(ConfigClass.BBS_BASE_URL, cookieString);
+            cookieManager.setCookie(MySetting.BBS_BASE_URL, cookieString);
             Log.i(">>>>>", "cookie : " + cookieString);
         }
 

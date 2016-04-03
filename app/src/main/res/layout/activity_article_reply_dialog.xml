@@ -4,7 +4,10 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/dimen_16">
+    android:paddingTop="@dimen/dimen_8"
+    android:paddingBottom="@dimen/dimen_4"
+    android:paddingStart="@dimen/dimen_16"
+    android:paddingEnd="@dimen/dimen_16">
 
     <EditText
         android:layout_marginTop="@dimen/dimen_4"
@@ -12,7 +15,42 @@
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:ems="10"
+        android:lines="1"
+        android:maxLines="5"
         android:hint="请输入内容"
-        android:id="@+id/reply_content"
-        android:layout_gravity="center_horizontal" />
+        android:id="@+id/reply_content" />
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/dimen_16"
+        android:gravity="end"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/btn_cancel"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="16sp"
+           android:padding="@dimen/dimen_16"
+            android:text="取消"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/btn_send"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:layout_marginStart="@dimen/dimen_8"
+            android:textColor="@color/colorAccent"
+            android:text="发送"
+            android:textSize="16sp"
+            android:padding="@dimen/dimen_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
 </LinearLayout>

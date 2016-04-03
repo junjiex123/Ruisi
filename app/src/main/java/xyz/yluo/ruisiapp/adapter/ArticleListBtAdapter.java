@@ -1,12 +1,10 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -17,10 +15,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.activity.ArticleNormalActivity;
+import xyz.yluo.ruisiapp.activity.SingleArticleNormalActivity;
 import xyz.yluo.ruisiapp.data.ArticleListBtData;
 import xyz.yluo.ruisiapp.utils.GetId;
-import xyz.yluo.ruisiapp.utils.GetLogoUtils;
 
 /**
  * Created by free2 on 16-4-2.
@@ -143,7 +140,7 @@ public class ArticleListBtAdapter extends RecyclerView.Adapter<ArticleListBtAdap
         @OnClick(R.id.main_item_btn_item)
         protected void item_click(){
             ArticleListBtData single_data =  Datas.get(getAdapterPosition());
-            ArticleNormalActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle(),"null","");
+            SingleArticleNormalActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle(),"null","");
 
         }
 
