@@ -94,8 +94,6 @@ public class ArticleListBtAdapter extends RecyclerView.Adapter<ArticleListBtAdap
         protected TextView bt_size;
         @Bind(R.id.bt_num)
         protected TextView bt_num;
-        @Bind(R.id.bt_logo)
-        protected ImageView bt_logo;
         @Bind(R.id.bt_title)
         protected TextView bt_title;
         @Bind(R.id.bt_author)
@@ -136,9 +134,9 @@ public class ArticleListBtAdapter extends RecyclerView.Adapter<ArticleListBtAdap
             bt_author.setText(single.getAuthor());
             bt_size.setText(single.getBtSize());
             bt_time.setText(single.getTime());
+            String num = single.getBtNum()+"/"+single.getBtDownLoadNum()+"/"+single.getBtCompeteNum();
+            bt_num.setText(num);
 
-            Drawable dra = GetLogoUtils.getBtLogo(activity, single.getLogoUrl());
-            bt_logo.setImageDrawable(dra);
         }
 
 

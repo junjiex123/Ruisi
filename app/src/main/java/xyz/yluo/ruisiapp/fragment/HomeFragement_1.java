@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -54,9 +53,7 @@ public class HomeFragement_1 extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
         recycler_view.setLayoutManager(mLayoutManager);
         forumListAdapter = new ForumListAdapter(getActivity(),datas);
-        ScaleInAnimationAdapter alphaAdapter = new ScaleInAnimationAdapter(forumListAdapter);
-        alphaAdapter.setDuration(150);
-        recycler_view.setAdapter(alphaAdapter);
+        recycler_view.setAdapter(forumListAdapter);
 
 
         //刷新

@@ -62,7 +62,7 @@
     <TextView
         android:text="反正又不是不能用"
         android:id="@+id/text_2"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:layout_width="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_height="wrap_content" />

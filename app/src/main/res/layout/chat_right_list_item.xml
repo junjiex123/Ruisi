@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -25,8 +26,10 @@
     </LinearLayout>
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="40dip"
-        android:layout_height="40dip"
+        android:layout_width="40dp"
+        app:civ_border_width="1dp"
+        app:civ_border_color="@android:color/white"
+        android:layout_height="40dp"
         android:id="@+id/user_image"
         android:src="@drawable/image_placeholder"/>
 

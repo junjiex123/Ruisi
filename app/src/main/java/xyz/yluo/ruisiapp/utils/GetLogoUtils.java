@@ -36,31 +36,4 @@ public class GetLogoUtils {
         }
     }
 
-    public static Drawable getBtLogo(Context context,String url){
-
-        Pattern pattern = Pattern.compile("[0-9]{2,}");
-        Matcher matcher = pattern.matcher(url);
-        String tid ="";
-        String trueid  ="";
-        while (matcher.find()) {
-            tid = url.substring(matcher.start(),matcher.end());
-            trueid = tid.substring(0,2);
-            break;
-            //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
-        }
-
-        try {
-
-            InputStream ims = context.getAssets().open("btlogo/"+trueid+"00.png");
-            // load image as Drawable
-
-            return Drawable.createFromStream(ims, null);
-        }
-        catch(IOException ex) {
-            //nothing
-            return ContextCompat.getDrawable(context,R.drawable.image_placeholder);
-        }
-    }
-
-
 }

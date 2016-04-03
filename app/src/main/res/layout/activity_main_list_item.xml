@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ffflay">
 
     <LinearLayout
@@ -21,6 +22,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:layout_marginEnd="@dimen/dimen_8"
                 android:id="@+id/article_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -28,15 +30,13 @@
                 android:paddingRight="4dp"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
-                android:background="@color/colorAccent"
+                android:background="@color/orange200"
                 android:text="置顶" />
 
             <TextView
                 android:id="@+id/article_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
                 android:textColor="?android:attr/textColorPrimary"
                 android:textSize="16sp"
                 android:singleLine="true"
@@ -57,6 +57,8 @@
                 android:id="@+id/author_img"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                app:civ_border_width="1dp"
+                app:civ_border_color="@android:color/white"
                 android:src="@drawable/image_placeholder"/>
 
 
@@ -81,7 +83,7 @@
                         android:layout_marginEnd="4dp"
                         android:layout_marginRight="4dp"
                         android:textColor="?android:attr/textColorPrimary"
-                        android:textSize="12sp"
+                        android:textSize="14sp"
                         android:singleLine="true"
                         android:text="TakWolf" />
 
@@ -93,6 +95,7 @@
                         android:layout_toLeftOf="@+id/main_item_icon_slash"
                         android:layout_centerVertical="true"
                         android:textSize="12sp"
+                        android:textColor="?android:attr/textColorSecondary"
                         android:text="111"
                         android:singleLine="true" />
 
@@ -133,22 +136,19 @@
                         android:id="@+id/post_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_toStartOf="@+id/main_item_tv_last_reply_time"
-                        android:layout_toLeftOf="@+id/main_item_tv_last_reply_time"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="4dp"
                         android:layout_marginRight="4dp"
                         android:textColor="?android:attr/textColorSecondary"
                         android:textSize="12sp"
                         android:singleLine="true"
-                        android:text="创建于：2015-1-1 19:20:15" />
+                        android:text="2015-1-1 19:20:15" />
 
                     <TextView
                         android:id="@+id/main_item_tv_last_reply_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:textColor="?android:attr/textColorSecondary"
                         android:textSize="12sp"

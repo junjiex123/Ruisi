@@ -24,17 +24,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_marginEnd="4dp"
-                android:id="@+id/bt_isfree"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:background="@color/colorAccent"
-                android:text="FREE" />
+
             <TextView
                 android:id="@+id/bt_lable_1"
                 android:layout_width="wrap_content"
@@ -79,66 +69,61 @@
                 android:textSize="12sp"
                 android:background="@color/bluegrey200"
                 android:text="1/2/66" />
+            <TextView
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="@dimen/dimen_4"
+                android:id="@+id/bt_isfree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:background="@color/orange300"
+                android:text="FREE" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/bt_logo"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/image_placeholder"/>
-
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/bt_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:orientation="vertical">
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="16sp"
+                android:maxLines="2"
+                android:text="[生活大爆炸/天才理论传][The.Big.Bang.Theory][1-7季合集][cmct][中英字幕]" />
 
+            <LinearLayout
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
                 <TextView
-                    android:id="@+id/bt_title"
-                    android:layout_width="match_parent"
+                    android:id="@+id/bt_author"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:textSize="16sp"
-                    android:maxLines="2"
-                    android:text="[生活大爆炸/天才理论传][The.Big.Bang.Theory][1-7季合集][cmct][中英字幕]" />
-
-                <LinearLayout
-                    android:layout_marginTop="4dp"
-                    android:layout_width="match_parent"
+                    android:layout_marginEnd="4dp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="12sp"
+                    android:singleLine="true"
+                    android:text="raindrop" />
+                <TextView
+                    android:id="@+id/bt_time"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/bt_author"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:textSize="12sp"
-                        android:singleLine="true"
-                        android:text="raindrop" />
-                    <TextView
-                        android:id="@+id/bt_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:textSize="12sp"
-                        android:singleLine="true"
-                        android:text="昨天 23:48" />
-                </LinearLayout>
+                    android:layout_marginEnd="4dp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="12sp"
+                    android:singleLine="true"
+                    android:text="昨天 23:48" />
             </LinearLayout>
-
         </LinearLayout>
 
     </LinearLayout>

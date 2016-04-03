@@ -39,11 +39,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 android:text="2016年初的雪景"/>
 
             <LinearLayout
+                android:layout_marginTop="@dimen/dimen_4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -59,16 +60,14 @@
                     android:text="00101330"/>
 
                 <TextView
-                    android:padding="@dimen/dimen_4"
                     android:layout_gravity="end"
                     android:clickable="true"
                     android:background="?attr/selectableItemBackground"
                     android:textColor="#afffffff"
                     android:gravity="center"
-                    android:drawableEnd="@drawable/ic_stars_accent_24dp"
                     android:id="@+id/img_card_like"
                     android:layout_width="wrap_content"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:text="喜欢:0  "
                     android:layout_height="match_parent" />
             </LinearLayout>

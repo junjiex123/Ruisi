@@ -130,11 +130,13 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<ArticleListNo
             String type = DataSet.get(position).getType();
             if (type.equals("zhidin")) {
                 article_type.setText("置顶");
-            } else if (type.equals("normal")) {
-                article_type.setText("水贴");
+                article_type.setVisibility(View.VISIBLE);
             } else if (type.startsWith("gold")) {
                 String gold = type.substring(5);
+                article_type.setVisibility(View.VISIBLE);
                 article_type.setText("金币:" + gold);
+            }else {
+                article_type.setVisibility(View.GONE);
             }
 
             if(DataSet.get(position).getType().equals("zhidin")){

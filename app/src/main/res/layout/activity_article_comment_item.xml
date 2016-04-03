@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:foreground="?android:attr/selectableItemBackground"
     android:background="@android:color/white"
     android:layout_width="match_parent"
@@ -15,6 +15,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
     <de.hdodenhof.circleimageview.CircleImageView
+        app:civ_border_color="@android:color/white"
+        app:civ_border_width="1dp"
         android:id="@+id/article_user_image"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -62,6 +64,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:singleLine="true"
+                android:textColor="?android:attr/textColorSecondary"
                 android:text="1楼" />
 
             <TextView

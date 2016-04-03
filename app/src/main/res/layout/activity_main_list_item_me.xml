@@ -19,7 +19,6 @@
             android:layout_height="wrap_content"
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
-            android:singleLine="true"
             tools:text="话题的标题" />
         <LinearLayout
             android:layout_marginTop="@dimen/dimen_8"
@@ -33,8 +32,8 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="14sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="12sp"
                 android:singleLine="true"
                 android:text="TakWolf" />
 
@@ -46,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorSecondary"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:singleLine="true"
                 android:text="回复：222"/>
         </LinearLayout>
@@ -61,7 +60,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/icon_tu"/>
+
     <View style="@style/DeepLine"
+        android:layout_marginRight="@dimen/dimen_16"
+        android:layout_marginLeft="@dimen/dimen_16"
         android:layout_gravity="bottom" />
 
 </FrameLayout>
