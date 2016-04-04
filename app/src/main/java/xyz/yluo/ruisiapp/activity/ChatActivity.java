@@ -20,26 +20,25 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
 import xyz.yluo.ruisiapp.data.ChatListData;
-import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetFormHash;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.PostHander;
@@ -132,14 +131,14 @@ public class ChatActivity extends AppCompatActivity{
     private void getData(){
 
         load_View.setVisibility(View.VISIBLE);
-        AsyncHttpCilentUtil.get(getApplicationContext(), url, new AsyncHttpResponseHandler() {
+        HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                new GetDataTask(new String(responseBody)).execute();
+            public void onSuccess(byte[] response) {
+                new GetDataTask(new String(response)).execute();
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(Throwable e) {
 
             }
         });
@@ -283,22 +282,17 @@ public class ChatActivity extends AppCompatActivity{
         }else {
 
             final ProgressDialog progress;
-            progress = ProgressDialog.show(this, "正在发送",
-                    "请等待", true);
-            //尝试回复
-            /*
-            message:帮顶
-            formhash:70af5bb6
-            */
-            RequestParams params = new RequestParams();
+            progress = ProgressDialog.show(this, "正在发送", "请等待", true);
+
+            Map<String,String> params = new HashMap<>();
             params.put("formhash", MySetting.CONFIG_FORMHASH);
             params.put("touid",touid);
             params.put("message", text);
-            System.out.print(">>>>>>>>>>>>>>>>>>>>>>.replyurl"+replyUrl);
-            AsyncHttpCilentUtil.post(getApplicationContext(), replyUrl, params, new AsyncHttpResponseHandler() {
+
+            HttpUtil.post(getApplicationContext(), replyUrl, params, new ResponseHandler() {
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                    String res = new String(responseBody);
+                public void onSuccess(byte[] response) {
+                    String res = new String(response);
                     if (res.contains("操作成功")) {
                         send_success();
                         hide_ime();
@@ -313,8 +307,9 @@ public class ChatActivity extends AppCompatActivity{
 
                     }
                 }
+
                 @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                public void onFailure(Throwable e) {
                     Toast.makeText(getApplicationContext(), "网络错误！！！", Toast.LENGTH_SHORT).show();
                     progress.dismiss();
                 }

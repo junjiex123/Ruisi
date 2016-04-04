@@ -24,7 +24,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
@@ -37,12 +36,12 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.UserInfoStarAdapter;
 import xyz.yluo.ruisiapp.fragment.ExitLoginDialogFragment;
-import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.CircleImageView;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.GetLevel;
@@ -133,13 +132,13 @@ public class UserDetailActivity extends AppCompatActivity {
     }
 
     private void getdata(String url){
-        AsyncHttpCilentUtil.get(getApplicationContext(), url, new AsyncHttpResponseHandler() {
+        HttpUtil.get(this, url, new ResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                new GetUserInfoTask(new String(responseBody)).execute();
+            public void onSuccess(byte[] response) {
+                new GetUserInfoTask(new String(response)).execute();
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(Throwable e) {
                 Toast.makeText(getApplicationContext(), "网络错误！！", Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
             }

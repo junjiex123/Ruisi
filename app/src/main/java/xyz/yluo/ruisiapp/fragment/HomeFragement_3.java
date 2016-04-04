@@ -12,8 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -23,13 +21,13 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.UserArticleReplyStarAdapter;
 import xyz.yluo.ruisiapp.adapter.UserInfoStarAdapter;
 import xyz.yluo.ruisiapp.data.MyTopicReplyListData;
-import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 
 /**
  * Created by free2 on 16-3-19.
@@ -142,25 +140,31 @@ public class HomeFragement_3 extends Fragment {
             }
         });
 
-        AsyncHttpCilentUtil.get(getActivity(), url, new AsyncHttpResponseHandler() {
+        HttpUtil.get(getActivity(), url, new ResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                if(type==0){
-                    new GetUserReplyTask(new String(responseBody)).execute();
-                }else if (type == 1) {
-                    //我的主题
-                    new GetUserArticleask(new String(responseBody)).execute();
-                } else if (type == 2) {
-                    //我的消息
-                    new GetUserMessageTask(new String(responseBody)).execute();
-                }
-                else if(type==3){
-                    //我的收藏
-                    new GetUserStarTask(new String(responseBody)).execute();
+            public void onSuccess(byte[] response) {
+                String res= new String(response);
+                switch (type){
+                    case 0:
+                        new GetUserReplyTask(res).execute();
+                        break;
+                    case 1:
+                        //我的主题
+                        new GetUserArticleask(res).execute();
+                        break;
+                    case 2:
+                        //我的消息
+                        new GetUserMessageTask(res).execute();
+                        break;
+                    case 3:
+                        //我的收藏
+                        new GetUserStarTask(res).execute();
+                        break;
                 }
             }
+
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(Throwable e) {
                 //st.makeText(getActivity().getApplicationContext(), "网络错误！！", Toast.LENGTH_SHORT).show();
                 refresh_view.setRefreshing(false);
             }

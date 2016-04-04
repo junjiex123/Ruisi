@@ -14,14 +14,14 @@ import android.support.v7.app.AppCompatDelegate;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.fragment.NewVersionDialog;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 
 /**
  * Created by free2 on 16-3-6.
@@ -93,13 +93,12 @@ public class SettingActivity extends PreferenceActivity {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     Toast.makeText(getActivity(),"正在检查更新",Toast.LENGTH_SHORT).show();
-                    AsyncHttpClient client = new AsyncHttpClient();
-                    client.get(getActivity(), "http://104.236.65.81/version.json", new AsyncHttpResponseHandler() {
+                    HttpUtil.get(getActivity(), "http://104.236.65.81/version.json", new ResponseHandler() {
                         @Override
-                        public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody) {
+                        public void onSuccess(byte[] response) {
                             JSONObject jsonObject = null;
                             try {
-                                jsonObject = new JSONObject(new String(responseBody));
+                                jsonObject = new JSONObject(new String(response));
                                 int get_code = jsonObject.getInt("version_code");
                                 if(get_code> finalVersion_code){
                                     String get_name = jsonObject.getString("version_name");
@@ -123,9 +122,8 @@ public class SettingActivity extends PreferenceActivity {
                                 e.printStackTrace();
                             }
                         }
-
                         @Override
-                        public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody, Throwable error) {
+                        public void onFailure(Throwable e) {
 
                         }
                     });

@@ -28,4 +28,12 @@ public class HttpUtil {
         store = new PersistentCookieStore(context);
         client.setStore(store);
     }
+
+    public static void exit(){
+        store.clearCookie();
+    }
+
+    public static AsyncHttpClient getClient() {
+        return client;
+    }
 }

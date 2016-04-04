@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -17,13 +15,13 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
 import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.adapter.ArticleListNormalAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
-import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /*
@@ -80,18 +78,19 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
             url = url + UrlUtils.getArticleListUrl(CurrentFid,CurrentPage,false);
         }
 
-        AsyncHttpCilentUtil.get(getApplicationContext(), url, new AsyncHttpResponseHandler() {
+        HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            public void onSuccess(byte[] response) {
                 if(MySetting.CONFIG_IS_INNER){
-                    new GetNormalArticleListTaskRs(new String(responseBody)).execute();
+                    new GetNormalArticleListTaskRs(new String(response)).execute();
                 }else{
                     //外网
-                    new GetArticleListTaskMe(new String(responseBody)).execute();
+                    new GetArticleListTaskMe(new String(response)).execute();
                 }
             }
+
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(Throwable e) {
                 Toast.makeText(getApplicationContext(), "网络错误！！", Toast.LENGTH_SHORT).show();
                 refreshLayout.setRefreshing(false);
             }

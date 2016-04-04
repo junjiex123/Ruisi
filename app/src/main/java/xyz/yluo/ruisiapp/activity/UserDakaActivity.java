@@ -15,21 +15,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -66,7 +65,6 @@ public class UserDakaActivity extends AppCompatActivity{
     private int spinner__select = 0;
 
     private String qdxq = "ng";
-    private boolean isdaka = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -187,22 +185,22 @@ public class UserDakaActivity extends AppCompatActivity{
         }
 
         if(isok){
-            RequestParams params = new RequestParams();
-            params.add("formhash",formhash);
-            params.add("qdxq",qdxq);
-            params.add("qdmode",qdmode);
-            params.add("todaysay",todaysay);
-            params.add("fastreplay",fastreplay);
+            Map<String,String> params = new HashMap<>();
+            params.put("formhash",formhash);
+            params.put("qdxq",qdxq);
+            params.put("qdmode",qdmode);
+            params.put("todaysay",todaysay);
+            params.put("fastreplay",fastreplay);
             String url = UrlUtils.getSignUrl();
-            AsyncHttpCilentUtil.post(getApplicationContext(), url, params, new AsyncHttpResponseHandler() {
+            HttpUtil.post(this, url, params, new ResponseHandler() {
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                    String res = new String(responseBody);
-
+                public void onSuccess(byte[] response) {
+                    String res = new String(response);
                     if(res.contains("恭喜你签到成功")){
                         Document doc = Jsoup.parse(res);
                         String get = doc.select("div[class=c]").text();
                         Toast.makeText(getApplicationContext(),get,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"签到成功",Toast.LENGTH_SHORT).show();
                         finish();
                     }else{
                         Toast.makeText(getApplicationContext(),"未知错误",Toast.LENGTH_SHORT).show();
@@ -210,7 +208,7 @@ public class UserDakaActivity extends AppCompatActivity{
                 }
 
                 @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                public void onFailure(Throwable e) {
                     Toast.makeText(getApplicationContext(),"网络错误",Toast.LENGTH_SHORT).show();
                 }
             });
@@ -220,10 +218,10 @@ public class UserDakaActivity extends AppCompatActivity{
 
     private void isHaveDaka(){
         String urlget =   "plugin.php?id=dsu_paulsign:sign";
-        AsyncHttpCilentUtil.get(getApplicationContext(), urlget, new AsyncHttpResponseHandler() {
+        HttpUtil.get(this, urlget, new ResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                String res = new String(responseBody);
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
 
                 System.out.print("\nres" + res);
 
@@ -233,23 +231,18 @@ public class UserDakaActivity extends AppCompatActivity{
                     if(!temphash.isEmpty()){
                         MySetting.CONFIG_FORMHASH = temphash;
                     }
-
                 }
-
                 if(res.contains("您今天已经签到过了或者签到时间还未开始")){
-                    isdaka = true;
                     ll_daka.setVisibility(View.GONE);
                     text_have_daka.setVisibility(View.VISIBLE);
-
                 }else{
-                    isdaka = false;
                     ll_daka.setVisibility(View.VISIBLE);
                     text_have_daka.setVisibility(View.GONE);
                 }
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(Throwable e) {
 
             }
         });

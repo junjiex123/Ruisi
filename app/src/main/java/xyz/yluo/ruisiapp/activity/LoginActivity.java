@@ -18,19 +18,19 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
@@ -158,10 +158,10 @@ public class LoginActivity extends AppCompatActivity {
         final String username = ed_username.getText().toString().trim();
         final String passNo = ed_pass.getText().toString().trim();
         String url = UrlUtils.getLoginUrl(false);
-        AsyncHttpCilentUtil.get(getApplicationContext(), url, new AsyncHttpResponseHandler() {
+        HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                String res = new String(responseBody);
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
                 if(res.contains("欢迎您回来")){
                     login_ok(res);
                 }
@@ -174,7 +174,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 }
                 loginUrl = doc.select("form#loginform").attr("action");
-                RequestParams params = new RequestParams();
+                Map<String,String> params = new HashMap<>();
                 params.put("fastloginfield", "username");
                 params.put("cookietime", "2592000");
                 params.put("username", username);
@@ -183,27 +183,29 @@ public class LoginActivity extends AppCompatActivity {
                 params.put("answer", "");
                 begain_login(params);
             }
+
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(Throwable e) {
                 login_fail("网络异常！！！");
             }
         });
     }
 
-    private void begain_login(RequestParams params){
+    private void begain_login(Map<String,String> params){
 
-        AsyncHttpCilentUtil.post(getApplicationContext(), loginUrl, params, new AsyncHttpResponseHandler() {
+        HttpUtil.post(getApplicationContext(), loginUrl, params, new ResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                String res = new String(responseBody);
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
                 if (res.contains("欢迎您回来")) {
                     login_ok(res);
                 } else {
                     login_fail("账号或者密码错误");
                 }
             }
+
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(Throwable e) {
                 login_fail("网络异常");
             }
         });

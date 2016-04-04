@@ -24,9 +24,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -34,22 +31,24 @@ import org.jsoup.select.Elements;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
 import xyz.yluo.ruisiapp.fragment.NeedLoginDialogFragment;
 import xyz.yluo.ruisiapp.fragment.Reply_Dialog_Fragment;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.HidingScrollListener;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
-import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.PostHander;
 import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -277,15 +276,15 @@ public class SingleArticleNormalActivity extends AppCompatActivity
             url = nextPageUrl;
         }
 
-        AsyncHttpCilentUtil.get(this, url, new AsyncHttpResponseHandler() {
+        HttpUtil.get(this, url, new ResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                String res = new String(responseBody);
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
                 new DealWithArticleData(res).execute((Void) null);
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(Throwable e) {
                 Toast.makeText(getApplicationContext(), "网络错误", Toast.LENGTH_SHORT).show();
             }
         });
@@ -427,16 +426,14 @@ public class SingleArticleNormalActivity extends AppCompatActivity
     //收藏 任务
     private void starTask(){
         final String url = UrlUtils.getStarUrl(ARTICLE_TID);
-        RequestParams params = new RequestParams();
-        //favoritesubmit:true
-        //formhash:b6ba5839
-        params.add("favoritesubmit","true");
-        params.add("formhash", MySetting.CONFIG_FORMHASH);
+        Map<String,String> params = new HashMap<>();
+        params.put("favoritesubmit","true");
+        params.put("formhash", MySetting.CONFIG_FORMHASH);
 
-        AsyncHttpCilentUtil.post(getApplicationContext(), url, params, new AsyncHttpResponseHandler() {
+        HttpUtil.post(this, url, params, new ResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                String res = new String(responseBody);
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
 
                 if(res.contains("成功")){
                     Toast.makeText(getApplicationContext(),"收藏成功",Toast.LENGTH_SHORT).show();
@@ -446,7 +443,7 @@ public class SingleArticleNormalActivity extends AppCompatActivity
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(Throwable e) {
                 Toast.makeText(getApplicationContext(),"网络错误",Toast.LENGTH_SHORT).show();
             }
         });
@@ -458,17 +455,18 @@ public class SingleArticleNormalActivity extends AppCompatActivity
         message:帮顶
         formhash:70af5bb6
         */
-        RequestParams params = new RequestParams();
+        Map<String,String> params = new HashMap<>();
         params.put("formhash", MySetting.CONFIG_FORMHASH);
         params.put("message", text);
-        AsyncHttpCilentUtil.post(getApplicationContext(), replyUrl+"&handlekey=fastpost&loc=1&inajax=1", params, new AsyncHttpResponseHandler() {
+        HttpUtil.post(this, replyUrl+"&handlekey=fastpost&loc=1&inajax=1", params, new ResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                String res = new String(responseBody);
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
                 handleReply(true,res);
             }
+
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(Throwable e) {
                 handleReply(false,"");
             }
         });
@@ -505,10 +503,10 @@ public class SingleArticleNormalActivity extends AppCompatActivity
     public void onDialogSendClick(final DialogFragment dialog, String url, final String text) {
 
         progress = ProgressDialog.show(this, "正在发送", "请等待", true);
-        AsyncHttpCilentUtil.get(this, url, new AsyncHttpResponseHandler() {
+        HttpUtil.get(this, url, new ResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Document document = Jsoup.parse(new String(responseBody));
+            public void onSuccess(byte[] response) {
+                Document document = Jsoup.parse(new String(response));
                 Elements els = document.select("#postform");
                 String formhash = els.select("input[name=formhash]").attr("value");
                 String posttime = els.select("input[name=posttime]").attr("value");
@@ -518,32 +516,33 @@ public class SingleArticleNormalActivity extends AppCompatActivity
                 String reppost = els.select("input[name=reppost]").attr("value");
                 String noticeauthormsg = els.select("input[name=noticeauthormsg]").attr("value");
                 String postUrl = els.attr("action");
-                RequestParams params = new RequestParams();
-                params.add("formhash",formhash);
-                params.add("posttime",posttime);
-                params.add("noticeauthor",noticeauthor);
-                params.add("noticetrimstr",noticetrimstr);
-                params.add("reppid",reppid);
-                params.add("reppost",reppost);
-                params.add("noticeauthormsg",noticeauthormsg);
-                params.add("replysubmit","yes");
-                params.add("message",text);
-                AsyncHttpCilentUtil.post(getApplicationContext(), postUrl, params, new AsyncHttpResponseHandler() {
-                    //TODO 不管成不成功 都是 failer
+                Map<String,String> params = new HashMap<>();
+                params.put("formhash",formhash);
+                params.put("posttime",posttime);
+                params.put("noticeauthor",noticeauthor);
+                params.put("noticetrimstr",noticetrimstr);
+                params.put("reppid",reppid);
+                params.put("reppost",reppost);
+                params.put("noticeauthormsg",noticeauthormsg);
+                params.put("replysubmit","yes");
+                params.put("message",text);
+                HttpUtil.post(getApplicationContext(), postUrl, params, new ResponseHandler() {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        String res = new String(responseBody);
+                    public void onSuccess(byte[] response) {
+                        String res = new String(response);
                         handleReply(true,res);
                     }
+
+                    //TODO 不管成不成功 都是 failer
                     @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    public void onFailure(Throwable e) {
                         handleReply(false,"todo");
                     }
                 });
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                handleReply(false,"");
+            public void onFailure(Throwable e) {
+
             }
         });
     }

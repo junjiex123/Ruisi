@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 
 import xyz.yluo.ruisiapp.MySetting;
-import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 
 /**
  * Created by free2 on 16-3-20.
@@ -21,7 +21,7 @@ public class ExitLoginDialogFragment extends DialogFragment {
         builder.setMessage("你要退出登录吗？？？")
                 .setPositiveButton("好的", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        AsyncHttpCilentUtil.exit();
+                        HttpUtil.exit();
                         MySetting.CONFIG_ISLOGIN= false;
                         MySetting.CONFIG_USER_NAME = "";
                         MySetting.CONFIG_USER_UID = "";

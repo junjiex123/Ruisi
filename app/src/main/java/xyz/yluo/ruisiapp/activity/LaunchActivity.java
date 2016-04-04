@@ -11,17 +11,15 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
@@ -109,33 +107,32 @@ public class LaunchActivity extends AppCompatActivity{
     private void checkOuter(){
         final String url = UrlUtils.getLoginUrl(false);
         MySetting.BBS_BASE_URL = UrlUtils.getBaseUrl(false);
-        AsyncHttpCilentUtil.get(getApplicationContext(),
-                url, new AsyncHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        canGetRs(TYPE_OUTER,new String(responseBody));
-                    }
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                        rsError();
-                    }
-                });
+        HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                canGetRs(TYPE_OUTER, new String(response));
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                rsError();
+            }
+        });
     }
 
     private void checkInner(){
         final String url = UrlUtils.getLoginUrl(false);
         MySetting.BBS_BASE_URL = UrlUtils.getBaseUrl(true);
-        AsyncHttpCilentUtil.get(getApplicationContext(),
-                url, new AsyncHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        canGetRs(TYPE_INNER, new String(responseBody));
-                    }
+        HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                canGetRs(TYPE_INNER, new String(response));
+            }
 
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                        checkOuter();
-                    }
-                });
+            @Override
+            public void onFailure(Throwable e) {
+                checkOuter();
+            }
+        });
     }
 }

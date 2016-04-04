@@ -8,17 +8,14 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.SyncHttpClient;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.activity.NewArticleActivity;
-import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
+import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.httpUtil.SyncHttpClient;
 
 public class CheckMessageService extends Service {
 
@@ -47,13 +44,13 @@ public class CheckMessageService extends Service {
         // Builds the notification and issues it.
         //mNotifyMgr.notify(1, mBuilder.build());
 
-        final SyncHttpClient client = AsyncHttpCilentUtil.getSyncHttpClient(getApplicationContext());
-        final AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
+        final SyncHttpClient client = new SyncHttpClient();
+        final ResponseHandler handler = new ResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            public void onSuccess(byte[] response) {
                 //System.out.println(new String(responseBody));
                 System.out.println(">>>>>>>service running");
-                Document document = Jsoup.parse(new String(responseBody));
+                Document document = Jsoup.parse(new String(response));
                 Elements elemens  = document.select(".nts").select("dl.cl");
                 for(Element e:elemens){
                     String s = e.select(".ntc_body").attr("style");
@@ -63,10 +60,8 @@ public class CheckMessageService extends Service {
                     }
                 }
             }
-
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
+            public void onFailure(Throwable e) {
             }
         };
 
@@ -80,9 +75,9 @@ public class CheckMessageService extends Service {
 
                 while (true){
                     if(!MySetting.CONFIG_IS_INNER){
-                        client.get(getApplicationContext(),url2,null,handler);
+                        client.get(url2,handler);
                     }else{
-                        client.get(getApplicationContext(),url1,null,handler);
+                        client.get(url1,handler);
                     }
                     try {
                         Thread.sleep(15000);

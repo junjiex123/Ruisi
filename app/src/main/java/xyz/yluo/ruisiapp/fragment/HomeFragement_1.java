@@ -11,8 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -23,12 +21,12 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
 import xyz.yluo.ruisiapp.data.FroumListData;
-import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 
 /**
  * Created by free2 on 16-3-19.
@@ -79,14 +77,14 @@ public class HomeFragement_1 extends Fragment {
 
     private void getData(){
         String url = "forum.php?forumlist=1&mobile=2";
-        AsyncHttpCilentUtil.get(getActivity(), url, new AsyncHttpResponseHandler() {
+        HttpUtil.get(getActivity(), url, new ResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                new GetForumList(new String(responseBody)).execute();
+            public void onSuccess(byte[] response) {
+                new GetForumList(new String(response)).execute();
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(Throwable e) {
                 //Toast.makeText(getActivity(), "网络错误！！", Toast.LENGTH_SHORT).show();
                 refreshLayout.setRefreshing(false);
             }

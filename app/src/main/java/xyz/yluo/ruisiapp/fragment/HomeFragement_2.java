@@ -12,8 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -24,13 +22,13 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ArticleListNormalAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
-import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 
 /**
  * Created by free2 on 16-3-19.
@@ -105,14 +103,14 @@ public class HomeFragement_2 extends Fragment implements LoadMoreListener.OnLoad
         //TODO hot
         String url = "forum.php?mod=guide&view=new&page="+CurrentPage+"&mobile=2";
 
-        AsyncHttpCilentUtil.get(getActivity(), url, new AsyncHttpResponseHandler() {
+        HttpUtil.get(getActivity(), url, new ResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                new GetNewArticleListTaskMe(new String(responseBody)).execute();
+            public void onSuccess(byte[] response) {
+                new GetNewArticleListTaskMe(new String(response)).execute();
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(Throwable e) {
                 //st.makeText(getActivity(), "网络错误！！", Toast.LENGTH_SHORT).show();
                 refreshLayout.setRefreshing(false);
             }

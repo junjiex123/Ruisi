@@ -10,8 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -19,12 +17,12 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ArticleListBtAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListBtData;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
-import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -133,13 +131,14 @@ public class ArticleListBtActivity extends ArticleListBaseActivity{
     protected void getData() {
 
         String url = UrlUtils.getBtListUrl(CurrentId,CurrentPage);
-        AsyncHttpCilentUtil.get(getApplicationContext(), url, new AsyncHttpResponseHandler() {
+        HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                new GetBtArticleListTaskRS(new String(responseBody)).execute();
+            public void onSuccess(byte[] response) {
+                new GetBtArticleListTaskRS(new String(response)).execute();
             }
+
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(Throwable e) {
                 Toast.makeText(getApplicationContext(), "网络错误！！", Toast.LENGTH_SHORT).show();
                 refreshLayout.setRefreshing(false);
             }

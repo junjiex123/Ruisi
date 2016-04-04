@@ -14,18 +14,18 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.PostHander;
 
 /**
@@ -140,19 +140,18 @@ public class NewArticleActivity extends AppCompatActivity {
     private void preparePost(final String fid){
         progress = ProgressDialog.show(this, "正在发送", "请等待", true);
         String url = "forum.php?mod=post&action=newthread&fid="+fid+"&mobile=2";
-        AsyncHttpCilentUtil.get(getApplicationContext(), url, new AsyncHttpResponseHandler() {
+        HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Document doc  = Jsoup.parse(new String(responseBody));
-
+            public void onSuccess(byte[] response) {
+                Document doc  = Jsoup.parse(new String(response));
                 String url  = doc.select("#postform").attr("action");
                 String hash = doc.select("input#formhash").attr("value");
                 String time = doc.select("input#posttime").attr("value");
-
                 begainPost(url,hash,time);
             }
+
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(Throwable e) {
                 postFail("网络错误");
             }
         });
@@ -163,17 +162,17 @@ public class NewArticleActivity extends AppCompatActivity {
 
         String url3 = "forum.php?mod=post&action=newthread&fid=72&extra=&topicsubmit=yes&mobile=yes";
         String url2 = "forum.php?mod=post&action=newthread&fid=72&extra=&topicsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
-        RequestParams params = new RequestParams();
-        params.add("formhash",hash);
-        params.add("posttime",time);
-        params.add("topicsubmit","yes");
-        params.add("subject",edit_input_title.getText().toString());
-        params.add("message",edit_input_content.getText().toString());
-        AsyncHttpCilentUtil.post(getApplicationContext(), url3, params, new AsyncHttpResponseHandler() {
+        Map<String,String> params = new HashMap<>();
+        params.put("formhash",hash);
+        params.put("posttime",time);
+        params.put("topicsubmit","yes");
+        params.put("subject",edit_input_title.getText().toString());
+        params.put("message",edit_input_content.getText().toString());
+        HttpUtil.post(getApplicationContext(), url3, params, new ResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                String res = new String(responseBody);
-                edit_input_content.setText(new String(responseBody));
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                edit_input_content.setText(res);
 
                 if(res.contains("非常感谢")){
                     postSuccess();
@@ -181,8 +180,9 @@ public class NewArticleActivity extends AppCompatActivity {
                     postFail("由于未知原因发帖失败");
                 }
             }
+
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(Throwable e) {
                 postFail("由于未知原因发帖失败");
             }
         });
