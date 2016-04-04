@@ -27,9 +27,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
-import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**

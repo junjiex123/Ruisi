@@ -24,12 +24,12 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.UserArticleReplyStarAdapter;
 import xyz.yluo.ruisiapp.adapter.UserInfoStarAdapter;
 import xyz.yluo.ruisiapp.data.MyTopicReplyListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
-import xyz.yluo.ruisiapp.MySetting;
 
 /**
  * Created by free2 on 16-3-19.
@@ -62,6 +62,7 @@ public class HomeFragement_3 extends Fragment {
 
         recyclerView.setLayoutManager(layoutManager);
 
+        mytab.addTab(mytab.newTab().setText("回复我的"));
         mytab.addTab(mytab.newTab().setText("我的主题"));
         mytab.addTab(mytab.newTab().setText("私人消息"));
         mytab.addTab(mytab.newTab().setText("我的收藏"));
@@ -101,23 +102,32 @@ public class HomeFragement_3 extends Fragment {
 
         //TODO 所有链接重写
         switch (position){
+            //回复我的
             case 0:
-                //我回主题
-                String url1 = "home.php?mod=space&uid="+uid+"&do=thread&view=me&mobile=2";
-                getStringFromInternet(0,url1);
+                String url0 = "home.php?mod=space&do=notice&view=mypost";
+                if(!MySetting.CONFIG_IS_INNER){
+                    url0+="&mobile=2";
+                }
+                getStringFromInternet(0,url0);
                 currentIndex =0;
                 break;
             case 1:
-                //我的消息
-                String url2 = "home.php?mod=space&do=pm&mobile=2";
-                getStringFromInternet(1,url2);
-                currentIndex = 1;
+                //我回主题
+                String url1 = "home.php?mod=space&uid="+uid+"&do=thread&view=me&mobile=2";
+                getStringFromInternet(1,url1);
+                currentIndex =1;
                 break;
             case 2:
+                //我的消息
+                String url2 = "home.php?mod=space&do=pm&mobile=2";
+                getStringFromInternet(2,url2);
+                currentIndex = 2;
+                break;
+            case 3:
                 //我的收藏
                 String url3 = "home.php?mod=space&uid="+uid+"&do=favorite&view=me&type=thread&mobile=2";
-                getStringFromInternet(2,url3);
-                currentIndex = 2;
+                getStringFromInternet(3,url3);
+                currentIndex = 3;
                 break;
         }
     }
@@ -135,14 +145,16 @@ public class HomeFragement_3 extends Fragment {
         AsyncHttpCilentUtil.get(getActivity(), url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                if (type == 0) {
+                if(type==0){
+                    new GetUserReplyTask(new String(responseBody)).execute();
+                }else if (type == 1) {
                     //我的主题
                     new GetUserArticleask(new String(responseBody)).execute();
-                } else if (type == 1) {
+                } else if (type == 2) {
                     //我的消息
                     new GetUserMessageTask(new String(responseBody)).execute();
                 }
-                else if(type==2){
+                else if(type==3){
                     //我的收藏
                     new GetUserStarTask(new String(responseBody)).execute();
                 }
@@ -258,6 +270,49 @@ public class HomeFragement_3 extends Fragment {
             recyclerView.setAdapter(myadapterUserInfo);
             myadapterUserInfo.notifyItemRangeInserted(0, datasUserInfo.size());
 
+        }
+    }
+
+    //获得回复我的
+    public class GetUserReplyTask extends AsyncTask<Void, Void, String> {
+
+        private String res;
+
+        public GetUserReplyTask(String res) {
+            this.res = res;
+        }
+        @Override
+        protected String doInBackground(Void... params) {
+            //pmbox
+            Elements lists = Jsoup.parse(res).select(".nts").select("dl.cl");
+            if(lists!=null){
+                for(Element tmp:lists){
+                    boolean isNew = false;
+                    if(tmp.select(".ntc_body").attr("style").contains("bold")){
+                        isNew = true;
+                    }
+                    String content = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").text().replace("查看","");;
+                    if(content.isEmpty()){
+                        continue;
+                    }
+                    String authorImage = tmp.select(".avt").select("img").attr("src");
+                    String authorTitle = tmp.select(".ntc_body").select("a[href^=home.php]").text()+" 回复了我";
+                    String time = tmp.select(".xg1.xw0").text();
+                    String titleUrl =tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
+
+                    //int type, String title, String titleUrl, String authorImage, String time,String content
+                    datasArticleReply.add(new MyTopicReplyListData(2,authorTitle,titleUrl,authorImage,time,content));
+                }
+            }
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(final String res) {
+            refresh_view.setRefreshing(false);
+            adapterArtilceReply = new UserArticleReplyStarAdapter(getActivity(),datasArticleReply);
+            recyclerView.setAdapter(adapterArtilceReply);
+            adapterArtilceReply.notifyItemRangeInserted(0, datasArticleReply.size());
         }
     }
 

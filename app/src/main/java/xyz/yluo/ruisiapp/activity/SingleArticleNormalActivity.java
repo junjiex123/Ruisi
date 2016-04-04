@@ -40,6 +40,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
@@ -49,7 +50,6 @@ import xyz.yluo.ruisiapp.listener.HidingScrollListener;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
-import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.utils.PostHander;
 import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -86,6 +86,9 @@ public class SingleArticleNormalActivity extends AppCompatActivity
     private static String ARTICLE_REPLY_COUNT;
     private static String ARTICLE_TYPE;
     //TODO 金币贴/精华。。。
+    //TODO 跳转到指定楼层
+    //快速 跳转
+
     //当前回复链接
     private boolean isEnableLoadMore = false;
     //回复楼主的链接

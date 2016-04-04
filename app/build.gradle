@@ -20,7 +20,6 @@ repositories {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:support-v13:23.2.1'
-    compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.android.support:appcompat-v7:23.2.1'
@@ -31,5 +30,5 @@ dependencies {
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'jp.wasabeef:recyclerview-animators:2.2.1'
     compile 'com.loopj.android:android-async-http:1.4.9'
-    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.13'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.15'
 }

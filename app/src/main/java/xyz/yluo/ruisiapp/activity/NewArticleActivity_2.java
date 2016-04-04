@@ -14,8 +14,8 @@ import com.loopj.android.http.PersistentCookieStore;
 import java.util.List;
 
 import cz.msebera.android.httpclient.cookie.Cookie;
-import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.utils.MyWebView;
 
 /**

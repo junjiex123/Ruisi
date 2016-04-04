@@ -19,11 +19,11 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.adapter.ArticleListNormalAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
-import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /*

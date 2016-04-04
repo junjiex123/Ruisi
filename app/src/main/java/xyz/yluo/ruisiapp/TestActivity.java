@@ -15,27 +15,24 @@ import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.PersistentCookieStore;
-import com.loopj.android.http.RequestParams;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cz.msebera.android.httpclient.Header;
 import xyz.yluo.ruisiapp.activity.ChatActivity;
 import xyz.yluo.ruisiapp.activity.NewArticleActivity;
-import xyz.yluo.ruisiapp.activity.NewArticleActivity_2;
 import xyz.yluo.ruisiapp.data.ArticleListData;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 
 /**
  * Created by free2 on 16-3-10.
@@ -48,9 +45,6 @@ public class TestActivity extends AppCompatActivity implements ServiceConnection
     @Bind(R.id.webview)
     protected WebView webview;
 
-    final AsyncHttpClient client = new AsyncHttpClient();
-    PersistentCookieStore myCookieStore;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,26 +52,23 @@ public class TestActivity extends AppCompatActivity implements ServiceConnection
 
         setContentView(R.layout.activity_login);
 
-        myCookieStore = new PersistentCookieStore(getApplicationContext());
         ButterKnife.bind(this);
     }
 
     @OnClick(R.id.login_button)
     protected void login_button_click() {
-
-        client.setCookieStore(myCookieStore);
-        client.get(MySetting.BBS_BASE_URL+"member.php?mod=logging&action=login&mobile=2", null, new AsyncHttpResponseHandler() {
+        HttpUtil.get(this,"member.php?mod=logging&action=login&mobile=2", new ResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                String res = new String(responseBody);
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
                 Document doc = Jsoup.parse(res);
-
+                responseText.setText(res);
                 if (doc.select("form#loginform").attr("action") != "") {
                     String loginUrl = "";
                     loginUrl = doc.select("form#loginform").attr("action");
 
                     responseText.setText(loginUrl);
-                    RequestParams params = new RequestParams();
+                    Map<String, String> params = new HashMap<String, String>();
                     params.put("fastloginfield", "username");
                     params.put("cookietime", "2592000");
                     params.put("username", "FREEDOM_1");
@@ -85,89 +76,60 @@ public class TestActivity extends AppCompatActivity implements ServiceConnection
                     params.put("questionid", "0");
                     params.put("answer", "");
 
-                    client.setCookieStore(myCookieStore);
-                    client.post(MySetting.BBS_BASE_URL+loginUrl, params, new AsyncHttpResponseHandler() {
+                    HttpUtil.post(getApplicationContext(),loginUrl, params, new ResponseHandler() {
+
                         @Override
-                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                            String res = new String(responseBody);
-
+                        public void onSuccess(byte[] response) {
+                            String res = new String(response);
                             responseText.setText(res);
-
                             if (res.contains("欢迎您回来")) {
                                 Document document = Jsoup.parse(res);
+                                Toast.makeText(getApplicationContext(), "ok", Toast.LENGTH_LONG).show();
                             } else {
                                 Toast.makeText(getApplicationContext(), "用户名或者密码错误登陆失败！！", Toast.LENGTH_SHORT).show();
                             }
                         }
 
                         @Override
-                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        public void onFailure(Throwable e) {
 
                         }
                     });
                 }
-
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                responseText.setText("error");
+            public void onFailure(Throwable e) {
             }
+
         });
-
-
     }
 
-    @OnClick(R.id.login_post)
-    protected void login_post_click() {
+    @OnClick(R.id.test_cookie)
+    protected void test_cookie_click(){
 
-        client.setCookieStore(myCookieStore);
-        client.get(getApplicationContext(), MySetting.BBS_BASE_URL+"forum.php?mod=post&action=newthread&fid=72&mobile=2", null, new AsyncHttpResponseHandler() {
+        HttpUtil.get(getApplicationContext(),"portal.php", new ResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Document doc  = Jsoup.parse(new String(responseBody));
-
-                String  hash = doc.select("input#formhash").attr("value");
-                String  time = doc.select("input#posttime").attr("value");
-
-                RequestParams params = new RequestParams();
-                params.add("formhash",hash);
-                params.add("posttime",time);
-                //params.add("topicsubmit","yes");
-                params.add("usesig","1");
-                params.add("subject","发帖失败了");
-                params.add("message","现在看看怎么样。。。。。。[b]...[/b]");
-
-                String url2 = MySetting.BBS_BASE_URL+"forum.php?mod=post&action=newthread&fid=72&topicsubmit=yes&infloat=yes&handlekey=fastnewpost";
-
-                String url = MySetting.BBS_BASE_URL+"forum.php?mod=post&action=newthread&fid=72&extra=&topicsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
-
-
-                client.setCookieStore(myCookieStore);
-                client.post(getApplicationContext(), url, params, new AsyncHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        String res = new String(responseBody);
-                        responseText.setText(res + "\n\n\n");
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                        Toast.makeText(getApplicationContext(), "网络异常！！", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            public void onSuccess(byte[] response) {
+                responseText.setText(new String(response));
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(Throwable e) {
 
             }
         });
     }
+
+    @OnClick(R.id.test_2)
+    protected void test_2(){
+    }
+
+
 
     @OnClick(R.id.start_test)
     protected void start_test_click(){
-        startActivity(new Intent(getApplicationContext(), NewArticleActivity_2.class));
+
     }
 
     @OnClick(R.id.start_chat)
@@ -204,6 +166,11 @@ public class TestActivity extends AppCompatActivity implements ServiceConnection
 
     }
 
+    @OnClick(R.id.new_http)
+    protected void new_http_click(){
+
+    }
+
     @Override
     public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
         System.out.print(">>connected");
@@ -213,7 +180,6 @@ public class TestActivity extends AppCompatActivity implements ServiceConnection
     public void onServiceDisconnected(ComponentName componentName) {
         System.out.print(">>disconnected");
     }
-
 
 
     //获得数据

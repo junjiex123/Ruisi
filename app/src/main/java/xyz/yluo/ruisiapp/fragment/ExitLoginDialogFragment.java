@@ -6,8 +6,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 
-import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
 
 /**
  * Created by free2 on 16-3-20.

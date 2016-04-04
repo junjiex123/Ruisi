@@ -24,11 +24,11 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
 import xyz.yluo.ruisiapp.data.FroumListData;
 import xyz.yluo.ruisiapp.utils.AsyncHttpCilentUtil;
-import xyz.yluo.ruisiapp.MySetting;
 
 /**
  * Created by free2 on 16-3-19.
@@ -46,7 +46,7 @@ public class HomeFragement_1 extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home_1_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_home_1_2_list, container, false);
         ButterKnife.bind(this, view);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);

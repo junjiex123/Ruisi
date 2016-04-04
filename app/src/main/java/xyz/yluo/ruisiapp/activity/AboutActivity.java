@@ -13,8 +13,8 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.utils.MyWebView;
 
 

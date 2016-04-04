@@ -15,10 +15,10 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.SingleArticleNormalActivity;
 import xyz.yluo.ruisiapp.data.ImageArticleListData;
-import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.utils.GetId;
 
 /**

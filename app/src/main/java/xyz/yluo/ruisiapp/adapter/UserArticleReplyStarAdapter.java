@@ -15,13 +15,13 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.ChatActivity;
 import xyz.yluo.ruisiapp.activity.SingleArticleNormalActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.MyTopicReplyListData;
 import xyz.yluo.ruisiapp.utils.ArrowTextView;
+import xyz.yluo.ruisiapp.utils.CircleImageView;
 import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
@@ -32,6 +32,7 @@ public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticl
 
     private final int TYPE_MY_ARTICLE =0;
     private final int TYPE_MY_MESSAGE = 1;
+    private final int TYPE_REPLY_ME = 2;//回复我的
     //数据
     private List<MyTopicReplyListData> DataSet;
     protected Activity activity;
@@ -47,7 +48,7 @@ public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticl
             //我的主题
             return new GetListArticleHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.userinfo_article_list_item, parent, false));
         }else{
-            //我的消息
+            //我的消息 //回复我的
             return new GetMessageListHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.user_message_list_item, parent, false));
         }
     }
@@ -63,9 +64,11 @@ public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticl
             case 0:
                 //我的主题
                 return TYPE_MY_ARTICLE;
+            case 1:
+                return  TYPE_MY_MESSAGE;
             default:
                 //我的消息
-                return TYPE_MY_MESSAGE;
+                return TYPE_REPLY_ME;
         }
     }
 
@@ -84,7 +87,7 @@ public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticl
     }
 
 
-    //用户消息holder
+    //用户消息holder //回复我的
     public class GetMessageListHolder extends BaseViewHolder{
 
         @Bind(R.id.title)
@@ -95,7 +98,6 @@ public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticl
         protected CircleImageView article_user_image;
         @Bind(R.id.reply_content)
         protected ArrowTextView reply_content;
-
         //url
         public GetMessageListHolder(View itemView) {
             super(itemView);
@@ -114,8 +116,19 @@ public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticl
         @OnClick(R.id.main_item_btn_item)
         protected void main_item_btn_item_click(){
             MyTopicReplyListData single_data =  DataSet.get(getAdapterPosition());
-            String username = single_data.getTitle().replace("我对 ","").replace("说:","").replace(" 对我","");
-            ChatActivity.open(activity,username,single_data.getTitleUrl(),false);
+            int type = single_data.getType();
+            if(type==1){
+                String username = single_data.getTitle().replace("我对 ","").replace("说:","").replace(" 对我","");
+                ChatActivity.open(activity,username,single_data.getTitleUrl(),false);
+            }else{
+                String fid = GetId.getTid(single_data.getTitleUrl());
+                String title = single_data.getcontent();
+                System.out.println(single_data.getTitleUrl());
+                System.out.println(fid);
+                //Context context, String tid,String title,String replycount,String type
+                SingleArticleNormalActivity.open(activity,fid,title,"","");
+            }
+
         }
         @OnClick(R.id.article_user_image)
         protected void article_user_image_click(){
@@ -146,7 +159,7 @@ public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticl
         //int type, String title, String titleUrl, String replycount
         void setData(int position) {
             article_title.setText( DataSet.get(position).getTitle());
-            reply_num.setText("回复:"+DataSet.get(position).getReplycount());
+            reply_num.setText(DataSet.get(position).getReplycount());
         }
 
         @OnClick(R.id.main_item_btn_item)

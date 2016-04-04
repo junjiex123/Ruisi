@@ -13,10 +13,10 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ChatListData;
+import xyz.yluo.ruisiapp.utils.CircleImageView;
 import xyz.yluo.ruisiapp.utils.MyHtmlTextView;
 
 /**

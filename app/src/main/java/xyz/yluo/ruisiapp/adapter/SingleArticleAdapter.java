@@ -16,12 +16,12 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.hdodenhof.circleimageview.CircleImageView;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
-import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.utils.CircleImageView;
 import xyz.yluo.ruisiapp.utils.MyHtmlTextView;
 import xyz.yluo.ruisiapp.utils.MyWebView;
 
@@ -193,6 +193,9 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         @Bind(R.id.html_text)
         protected MyHtmlTextView htmlTextView;
 
+        @Bind(R.id.bt_lable_lz)
+        protected TextView bt_lable_lz;
+
 
         public CommentViewHolder(View itemView) {
             super(itemView);
@@ -205,12 +208,17 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         void setData(final int position) {
             SingleArticleData single = datalist.get(position);
             replay_author.setText(single.getUsername());
+            //判断是不是楼主
+            if(datalist.get(position).getUsername().equals(datalist.get(0).getUsername())){
+                bt_lable_lz.setVisibility(View.VISIBLE);
+            }else {
+                bt_lable_lz.setVisibility(View.GONE);
+            }
             Picasso.with(activity).load(single.getUserImgUrl()).resize(36,36).centerCrop().placeholder(R.drawable.image_placeholder).into(replay_image);
             //.error(R.drawable.user_placeholder_error)
             replay_time.setText(single.getPostTime());
             replay_index.setText(single.getIndex());
             htmlTextView.mySetText(activity, single.getCotent());
-
         }
 
         @OnClick(R.id.article_user_image)

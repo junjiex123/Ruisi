@@ -6,7 +6,7 @@ package xyz.yluo.ruisiapp.data;
  * 我的回复 list data
  */
 public class MyTopicReplyListData {
-    private int type =0;//0 我的主题 1我的消息
+    private int type =0;//0 我的主题 1我的消息 2回复我的
 
     private String title;
     private String titleUrl;

@@ -53,7 +53,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <xyz.yluo.ruisiapp.utils.CircleImageView
                 android:id="@+id/author_img"
                 android:layout_width="40dp"
                 android:layout_height="40dp"

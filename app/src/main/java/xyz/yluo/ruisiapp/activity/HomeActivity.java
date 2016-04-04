@@ -23,14 +23,14 @@ import com.squareup.picasso.Picasso;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.hdodenhof.circleimageview.CircleImageView;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.TestActivity;
 import xyz.yluo.ruisiapp.fragment.HomeFragement_1;
 import xyz.yluo.ruisiapp.fragment.HomeFragement_2;
 import xyz.yluo.ruisiapp.fragment.HomeFragement_3;
 import xyz.yluo.ruisiapp.fragment.NeedLoginDialogFragment;
-import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.utils.CircleImageView;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
