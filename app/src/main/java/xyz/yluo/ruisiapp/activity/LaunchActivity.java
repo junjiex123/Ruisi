@@ -2,9 +2,11 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
@@ -41,7 +43,30 @@ public class LaunchActivity extends AppCompatActivity{
         setContentView(R.layout.activity_launch);
         ButterKnife.bind(this);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getSetting();
         checkNetWork();
+    }
+
+
+    //从首选项读出设置
+    private void getSetting(){
+        SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(this);
+        try {
+            String urlSetting  = shp.getString("setting_forums_url", "0");
+            boolean isShowZhidin  = shp.getBoolean("setting_show_zhidin",false);
+            String tail = shp.getString("setting_user_tail","");
+            boolean theme = shp.getBoolean("setting_swich_theme",false);
+            boolean setting_show_style = shp.getBoolean("setting_show_style",true);
+
+            MySetting.CONFIG_ISSHOW_ZHIDIN = isShowZhidin;
+            MySetting.CONFIG_SHOW_PLAIN_TEXT = !setting_show_style;
+
+            System.out.println("url"+urlSetting+"|"+"是否显示置顶"+isShowZhidin+"|"+"小尾巴"+tail+"|"+"主题"+theme+"|"+"是否显示样式"+setting_show_style);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
     }
 
 

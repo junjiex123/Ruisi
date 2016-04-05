@@ -88,6 +88,9 @@
                         android:text="TakWolf" />
 
                     <TextView
+                        android:gravity="top"
+                        android:drawablePadding="4dp"
+                        android:drawableStart="@drawable/ic_reply_12dp"
                         android:id="@+id/reply_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -114,6 +117,9 @@
                         android:singleLine="true" />
 
                     <TextView
+                        android:gravity="top"
+                        android:drawablePadding="@dimen/dimen_4"
+                        android:drawableStart="@drawable/ic_look_12dp"
                         android:id="@+id/view_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -145,6 +151,9 @@
                         android:text="2015-1-1 19:20:15" />
 
                     <TextView
+                        android:gravity="center"
+                        android:drawablePadding="4dp"
+                        android:drawableStart="@drawable/ic_time_12dp"
                         android:id="@+id/main_item_tv_last_reply_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

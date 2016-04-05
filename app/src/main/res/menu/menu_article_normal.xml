@@ -14,7 +14,23 @@
         android:title="在浏览器中查看"
         android:orderInCategory="1"
         android:icon="@drawable/ic_open_in_browser_24dp"
-        app:showAsAction="always">
+        app:showAsAction="never">
+    </item>
+
+    <item
+        android:id="@+id/menu_reverse"
+        android:title="倒序查看"
+        android:icon="@drawable/ic_swap_ver_24dp"
+        app:showAsAction="never">
+
+    </item>
+
+    <item
+        android:id="@+id/menu_star"
+        android:title="收藏本帖"
+        android:icon="@drawable/ic_favorite_24dp"
+        app:showAsAction="never">
+
     </item>
 
 </menu>

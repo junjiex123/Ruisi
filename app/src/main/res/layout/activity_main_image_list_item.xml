@@ -50,6 +50,8 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:drawablePadding="@dimen/dimen_4"
+                    android:drawableStart="@drawable/ic_person_whire_12dp"
                     android:gravity="center_vertical"
                     android:layout_weight="1"
                     android:textColor="#afffffff"
@@ -60,6 +62,8 @@
                     android:text="00101330"/>
 
                 <TextView
+                    android:drawablePadding="@dimen/dimen_4"
+                    android:drawableStart="@drawable/ic_favorite_white_12dp"
                     android:layout_gravity="end"
                     android:clickable="true"
                     android:background="?attr/selectableItemBackground"

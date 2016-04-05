@@ -21,7 +21,7 @@
         </SwitchPreference>
         <EditTextPreference
             android:key="setting_user_tail"
-            android:defaultValue="无"
+            android:defaultValue="暂不支持，设置了也没用"
             android:capitalize="words"
             android:title="自定义小尾巴"
             android:summary="自定义你的小尾巴"
@@ -36,7 +36,7 @@
         <SwitchPreference
             android:key="setting_swich_theme"
             android:defaultValue="true"
-            android:summary="日间主题"
+            android:summary="还没写，点了也没用"
             android:summaryOff="夜间主题"
             android:title="切换主题" />
 

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.fragment.NewVersionDialog;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
@@ -145,7 +146,7 @@ public class SettingActivity extends PreferenceActivity {
             if(key.equals("setting_forums_url")){
                 switch (sharedPreferences.getString("setting_forums_url","0")){
                     case "0":
-                        setting_forums_url.setSummary("自动");
+                        setting_forums_url.setSummary("自动切换");
                         break;
                     case "1":
                         setting_forums_url.setSummary("内网:http://rs.xidian.edu.cn/");
@@ -157,6 +158,10 @@ public class SettingActivity extends PreferenceActivity {
 
             }else if(key.equals("setting_user_tail")){
                 setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail","无小尾巴"));
+            }else if(key.equals("setting_show_zhidin")){
+                MySetting.CONFIG_ISSHOW_ZHIDIN = sharedPreferences.getBoolean("setting_show_zhidin",false);
+            }else if(key.equals("setting_show_style")){
+                MySetting.CONFIG_SHOW_PLAIN_TEXT = !sharedPreferences.getBoolean("setting_show_style",true);
             }
         }
     }

@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/ffflay">
 
     <LinearLayout
+        android:clickable="true"
         android:id="@+id/main_item_btn_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:paddingTop="16dp"
+        android:paddingStart="@dimen/dimen_16"
+        android:paddingEnd="@dimen/dimen_16"
+        android:paddingBottom="@dimen/dimen_8"
         android:background="?android:attr/selectableItemBackground"
         android:orientation="vertical">
 
@@ -21,7 +26,7 @@
             android:textSize="16sp"
             tools:text="话题的标题" />
         <LinearLayout
-            android:layout_marginTop="@dimen/dimen_8"
+            android:layout_marginTop="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -45,7 +50,7 @@
                 android:drawablePadding="4dp"
                 android:drawableStart="@drawable/ic_reply_12dp"
                 android:id="@+id/reply_count"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="12sp"

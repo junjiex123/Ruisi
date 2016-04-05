@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -74,10 +76,16 @@ public class SingleArticleNormalActivity extends AppCompatActivity
     protected LinearLayout smiley_container;
     private ActionBar actionBar;
     private ProgressDialog progress;
+    //上一次回复时间
     private long replyTime = 0;
 
-    //当前评论第几页
+    //当前第几页
     private int CURRENT_PAGE = 1;
+    //是否倒叙浏览
+    private boolean isReverse = false;
+    //全部页数
+    private int TOTAL_PAGE = 1;
+
     //存储数据 需要填充的列表
     private List<SingleArticleData> mydatalist = new ArrayList<>();
     private static String ARTICLE_TID;
@@ -92,8 +100,6 @@ public class SingleArticleNormalActivity extends AppCompatActivity
     private boolean isEnableLoadMore = false;
     //回复楼主的链接
     private String replyUrl = "";
-    //下一页链接
-    private String nextPageUrl = "";
     private SingleArticleAdapter mRecyleAdapter;
 
     //约定好要就收的数据
@@ -125,7 +131,7 @@ public class SingleArticleNormalActivity extends AppCompatActivity
         mRecyleAdapter = new SingleArticleAdapter(this, this, mydatalist);
         mRecyclerView.setAdapter(mRecyleAdapter);
         mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this,8));
-        getArticleData();
+        getArticleData(1);
 
     }
 
@@ -156,12 +162,7 @@ public class SingleArticleNormalActivity extends AppCompatActivity
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //数据填充
-                CURRENT_PAGE = 1;
-                nextPageUrl = "";
-                mydatalist.clear();
-                mRecyleAdapter.notifyDataSetChanged();
-                getArticleData();
+                refresh();
             }
         });
     }
@@ -240,10 +241,7 @@ public class SingleArticleNormalActivity extends AppCompatActivity
             //加载更多被电击
             if(isEnableLoadMore){
                 isEnableLoadMore = false;
-                if(!nextPageUrl.isEmpty()){
-                    CURRENT_PAGE++;
-                }
-                getArticleData();
+                onLoadMore();
             }
         }
     }
@@ -259,21 +257,18 @@ public class SingleArticleNormalActivity extends AppCompatActivity
     }
 
     //文章一页的html 根据页数 tid
-    private void getArticleData() {
-        //到哪一页去加载
-        if(mydatalist.size()==0){
-            CURRENT_PAGE =1;
-        }
-        String url = UrlUtils.getSingleArticleUrl(ARTICLE_TID,CURRENT_PAGE,false);
-        if(!nextPageUrl.isEmpty()){
-            url = nextPageUrl;
-        }
+    private void getArticleData(final int page) {
 
+        String url = UrlUtils.getSingleArticleUrl(ARTICLE_TID,page,false);
+        //是否倒序查看
+        if(isReverse){
+            url+="&ordertype=1";
+        }
         HttpUtil.get(this ,url,new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                new DealWithArticleData(res).execute((Void) null);
+                new DealWithArticleData(res,page).execute((Void) null);
             }
 
             @Override
@@ -286,14 +281,30 @@ public class SingleArticleNormalActivity extends AppCompatActivity
 
     @Override
     public void onLoadMore() {
+        System.out.println("====load more====");
         //加载更多被电击
         if(isEnableLoadMore){
             isEnableLoadMore = false;
-            if(!nextPageUrl.isEmpty()){
-                CURRENT_PAGE++;
+            int page = CURRENT_PAGE;
+            if(CURRENT_PAGE<TOTAL_PAGE){
+                page= CURRENT_PAGE+1;
             }
-            getArticleData();
+            getArticleData(page);
         }
+    }
+
+    private void refresh(){
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+            }
+        });
+        //数据填充
+        CURRENT_PAGE = 1;
+        mydatalist.clear();
+        mRecyleAdapter.notifyDataSetChanged();
+        getArticleData(1);
     }
 
     public class DealWithArticleData extends AsyncTask<Void,Void,String>{
@@ -301,15 +312,16 @@ public class SingleArticleNormalActivity extends AppCompatActivity
         //* 返回list<SingleArticleData>
         private List<SingleArticleData> tepdata = new ArrayList<>();
         private String htmlData;
-
-        public DealWithArticleData(String htmlData) {
+        private int page;
+        public DealWithArticleData(String htmlData,int page) {
+            this.page = page;
             this.htmlData = htmlData;
         }
-
         @Override
         protected String doInBackground(Void... params) {
             //list 所有楼数据
             Document doc = Jsoup.parse(htmlData);
+
             //获取回复/hash
             if (doc.select("input[name=formhash]").first() != null) {
                 replyUrl = doc.select("form#fastpostform").attr("action");
@@ -319,12 +331,24 @@ public class SingleArticleNormalActivity extends AppCompatActivity
                 }
             }
 
-            String url = doc.select(".pg").select("a.nxt").attr("href");
-            if(url.contains("forum.php")){
-                nextPageUrl = url;
-            }else{
-                nextPageUrl = "";
+            //获取总页数
+            Pattern pattern = Pattern.compile("[0-9]+");
+            String s = doc.select(".pg").select("span").attr("title");
+            Matcher matcher = pattern.matcher(s);
+            if (matcher.find()) {
+                String temps = s.substring(matcher.start(),matcher.end());
+                try {
+                    int  n = Integer.parseInt(temps);
+                    if(n>0&&n>TOTAL_PAGE){
+                        TOTAL_PAGE = n;
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
+
+            System.out.println("======total========"+TOTAL_PAGE);
+
             Elements elements = doc.select(".postlist");
             if(elements!=null){
                 SingleArticleData data;
@@ -332,6 +356,7 @@ public class SingleArticleNormalActivity extends AppCompatActivity
                 if(ARTICLE_TITLE.equals("")){
                     ARTICLE_TITLE = elements.select("h2").first().text().trim();
                 }
+
 
                 Elements postlist = elements.select("div[id^=pid]");
 
@@ -341,7 +366,6 @@ public class SingleArticleNormalActivity extends AppCompatActivity
                     String index = userInfo.select("li.grey").select("em").text();
                     String username = userInfo.select("a[href^=home.php?mod=space&uid=]").text();
                     String posttime = userInfo.select("li.grey.rela").text();
-                    String star = userInfo.select("a[href^=home.php?mod=spacecp&ac=favorite").text();
                     String replyUrl = temp.select(".replybtn").select("input").attr("href");
 
                     //是否移除所有样式
@@ -354,7 +378,6 @@ public class SingleArticleNormalActivity extends AppCompatActivity
 
                     //修改表情大小 30x30
                     for (Element tempp : temp.select("img[src^=static/image/smiley/]")) {
-
                         tempp.attr("style", "width:30px;height: 30px;");
                     }
 
@@ -365,6 +388,7 @@ public class SingleArticleNormalActivity extends AppCompatActivity
 
                     //替换无意义的 br
                     String content = temp.select(".message").html().replaceAll("(\\s*<br>\\s*){2,}","");
+
                     //文章内容
                     if(mydatalist.size()==0&&tepdata.size()==0){
                         String newtime = posttime.replace("收藏","");
@@ -372,10 +396,6 @@ public class SingleArticleNormalActivity extends AppCompatActivity
                         data = new SingleArticleData(ARTICLE_TITLE,ARTICLE_TYPE,ARTICLE_REPLY_COUNT,username,userimg,newtime,content);
                         tepdata.add(data);
                     }else{
-                        //又回到了1楼
-                        if(star.equals("收藏")&&tepdata.size()==0){
-                            break;
-                        }
                         //评论
                         //String username, String userImgUrl, String postTime,String index,String replyUrl,String cotent
                         data = new SingleArticleData(username,userimg,posttime,index,replyUrl,content);
@@ -394,21 +414,25 @@ public class SingleArticleNormalActivity extends AppCompatActivity
             }
             int start = mydatalist.size();
             int add = 0;
-            if(!nextPageUrl.isEmpty()||mydatalist.size()==0){
+
+            if(page<TOTAL_PAGE){
                 mydatalist.addAll(tepdata);
                 add = tepdata.size();
-            }else if(tepdata.size()==0){
-                CURRENT_PAGE--;
-                add =0 ;
-            }else if(tepdata.size()>0){
-                for(int i=(mydatalist.size()%10);i<tepdata.size();i++){
+                CURRENT_PAGE++;
+            }else if(page==TOTAL_PAGE){
+                int have =mydatalist.size() - (CURRENT_PAGE-1)*10;
+                int get = tepdata.size();
+
+                for(int i = have;i<get&&i>=0;i++){
                     mydatalist.add(tepdata.get(i));
                     add++;
                 }
             }
-            if(add==0){
-                Toast.makeText(getApplicationContext(),"暂无更多",Toast.LENGTH_SHORT).show();
-            }
+
+            //不够友好
+//            if(add==0){
+//                Toast.makeText(getApplicationContext(),"暂无更多",Toast.LENGTH_SHORT).show();
+//            }
             mRecyleAdapter.notifyItemRangeInserted(start, add);
             isEnableLoadMore = true;
             refreshLayout.setRefreshing(false);
@@ -544,10 +568,6 @@ public class SingleArticleNormalActivity extends AppCompatActivity
         progress.dismiss();
         if(isok){
             if (res.contains("成功")) {
-                //修正页数
-                if(nextPageUrl.isEmpty()&&mydatalist.size()%10==0){
-                    nextPageUrl = "mm";
-                }
                 Toast.makeText(getApplicationContext(), "回复发表成功", Toast.LENGTH_SHORT).show();
                 input_aera.setText("");
                 hide_ime();
@@ -609,6 +629,16 @@ public class SingleArticleNormalActivity extends AppCompatActivity
         }else if(id==R.id.menu_broswer){
             String url = MySetting.BBS_BASE_URL+UrlUtils.getSingleArticleUrl(ARTICLE_TID,CURRENT_PAGE,false);
             RequestOpenBrowser.openBroswer(this,url);
+        }else if(id==R.id.menu_refresh){
+            refresh();
+        }else if(id==R.id.menu_reverse){
+            isReverse = !isReverse;
+            refresh();
+        }else if(id==R.id.menu_star){
+            if(isNeedLoginDialog()){
+                Toast.makeText(getApplicationContext(),"正在收藏......",Toast.LENGTH_SHORT).show();
+                starTask();
+            }
         }
         return super.onOptionsItemSelected(item);
     }

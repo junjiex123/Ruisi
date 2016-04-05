@@ -61,13 +61,12 @@ public class HomeActivity extends AppCompatActivity
         actionBar = getSupportActionBar();
 
         init();
-
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
         btn_1_click();
-        checkIsLogin();
+        checkIsLoginView();
 
     }
 
@@ -79,7 +78,7 @@ public class HomeActivity extends AppCompatActivity
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 clickId = 0;
-                checkIsLogin();
+                checkIsLoginView();
             }
 
             @Override
@@ -124,13 +123,12 @@ public class HomeActivity extends AppCompatActivity
 
         final View header = navigationView.getHeaderView(0);
         userImge = (CircleImageView) header.findViewById(R.id.profile_image);
-        final String url = UrlUtils.getimageurl(MySetting.CONFIG_USER_UID,true);
-        Picasso.with(getApplicationContext()).load(url).placeholder(R.drawable.image_placeholder).resize(80,80).into(userImge);
         userImge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
 
                 if (MySetting.CONFIG_ISLOGIN) {
+                    String url = UrlUtils.getimageurl(MySetting.CONFIG_USER_UID,true);
                     UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, MySetting.CONFIG_USER_NAME,userImge,url);
                 } else {
                     Intent i = new Intent(getApplicationContext(), LoginActivity.class);
@@ -138,6 +136,8 @@ public class HomeActivity extends AppCompatActivity
                 }
             }
         });
+
+        checkIsLoginView();
     }
 
 
@@ -219,7 +219,7 @@ public class HomeActivity extends AppCompatActivity
         return true;
     }
 
-    private void checkIsLogin(){
+    private void checkIsLoginView(){
         final View header = navigationView.getHeaderView(0);
         final View nav_header_login = header.findViewById(R.id.nav_header_login);
         final View nav_header_notlogin = header.findViewById(R.id.nav_header_notlogin);
@@ -229,6 +229,8 @@ public class HomeActivity extends AppCompatActivity
             text1.setText(MySetting.CONFIG_USER_NAME);
             nav_header_login.setVisibility(View.VISIBLE);
             nav_header_notlogin.setVisibility(View.GONE);
+            String url = UrlUtils.getimageurl(MySetting.CONFIG_USER_UID,true);
+            Picasso.with(getApplicationContext()).load(url).placeholder(R.drawable.image_placeholder).resize(80,80).into(userImge);
         } else {
             userImge.setImageResource(R.drawable.image_placeholder);
             nav_header_notlogin.setVisibility(View.VISIBLE);
@@ -252,10 +254,9 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode == RESULT_OK) {
-            String result = data.getExtras().getString("result");//得到新Activity 关闭后返回的数据
+            checkIsLoginView();
         }
-        checkIsLogin();
+
     }
 }

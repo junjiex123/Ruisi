@@ -30,7 +30,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.activity.ChatActivity;
 import xyz.yluo.ruisiapp.activity.NewArticleActivity;
+import xyz.yluo.ruisiapp.activity.NewArticleActivity_2;
 import xyz.yluo.ruisiapp.data.ArticleListData;
+import xyz.yluo.ruisiapp.httpUtil.AsyncHttpClient;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 
@@ -123,12 +125,24 @@ public class TestActivity extends AppCompatActivity implements ServiceConnection
 
     @OnClick(R.id.test_2)
     protected void test_2(){
+        HttpUtil.get(this, "forum.php?mod=viewthread&tid=845382&extra=page%3D1&page=1&mobile=2", new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                responseText.setText(new String(response));
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+
+            }
+        });
     }
 
 
 
     @OnClick(R.id.start_test)
     protected void start_test_click(){
+        startActivity(new Intent(this, NewArticleActivity_2.class));
 
     }
 

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:foreground="?android:attr/selectableItemBackground"
-    android:background="@android:color/white"
+    android:background="?attr/selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="12dp"
     android:paddingLeft="12dp"
     android:paddingRight="12dp"
+    android:clickable="true"
     android:orientation="vertical">
 
     <LinearLayout
@@ -105,15 +105,16 @@
 
 
     <xyz.yluo.ruisiapp.utils.MyHtmlTextView
-        android:layout_marginLeft="44dp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:layout_marginStart="44dp"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp"
         android:id="@+id/html_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
+        android:textSize="16sp"/>
 
     <View style="@style/DeepLine"
-        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
         android:layout_gravity="bottom" />
 </LinearLayout>

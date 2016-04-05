@@ -3,11 +3,17 @@ package xyz.yluo.ruisiapp.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.PersistentCookieStore;
 import xyz.yluo.ruisiapp.utils.MyWebView;
 
 /**
@@ -26,6 +32,8 @@ public class NewArticleActivity_2 extends AppCompatActivity {
 
         myWebView = new MyWebView(this);
         setContentView(myWebView);
+
+        System.out.println("=======create=====");
         //ButterKnife.bind(this);
 
 //        Intent  i  = getIntent();
@@ -33,40 +41,35 @@ public class NewArticleActivity_2 extends AppCompatActivity {
 //        String title = i.getExtras().getString("title");
 
 
-        WebViewClient client = new WebViewClient(){
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if(isfirst){
-                    isfirst = false;
-                }else {
-                    finish();
-                }
-                return true;
-            }
-        };
+//        WebViewClient client = new WebViewClient(){
+//            @Override
+//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//                if(isfirst){
+//                    isfirst = false;
+//                }else {
+//                    finish();
+//                }
+//                return true;
+//            }
+//        };
 
         setCookie(this);
-        myWebView.setWebViewClient(client);
+        //myWebView.setWebViewClient(client);
         //http://bbs.rs.xidian.me/
-        myWebView.getSettings().setJavaScriptEnabled(true);
-        myWebView.loadUrl(MySetting.BBS_BASE_URL+"forum.php?mod=post&action=newthread&fid=72&mobile=2");
+
+        myWebView.loadUrl("http://www.baidu.com/");
 
     }
 
     //设置cookie
     private void setCookie(Context context){
-        //TODO
+
 //        CookieManager cookieManager = CookieManager.getInstance();
-//        PersistentCookieStore cookieStore = AsyncHttpCilentUtil.getMyCookieStore(context);
+//        PersistentCookieStore cookieStore = HttpUtil.getStore(context);
 //
-//        List<Cookie> cookies = cookieStore.getCookies();
-//        for (int i = 0; i < cookies.size(); i++) {
-//            Cookie eachCookie = cookies.get(i);
-//            String cookieString = eachCookie.getName() + "=" + eachCookie.getValue();
-//            cookieManager.setCookie(MySetting.BBS_BASE_URL, cookieString);
-//            Log.i(">>>>>", "cookie : " + cookieString);
-//        }
+//        cookieManager.setCookie(MySetting.BBS_BASE_URL, cookieStore.getCookie());
 //
 //        cookieManager.setAcceptCookie(true);
     }
+
 }

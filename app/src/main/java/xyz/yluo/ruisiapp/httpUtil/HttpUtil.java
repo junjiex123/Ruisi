@@ -40,6 +40,15 @@ public class HttpUtil {
         store.clearCookie();
     }
 
+    public static PersistentCookieStore getStore(Context context){
+        if(store==null){
+            store = new PersistentCookieStore(context);
+            return store;
+        }else {
+            return store;
+        }
+    }
+
     public static AsyncHttpClient getClient() {
         return client;
     }

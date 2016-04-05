@@ -250,8 +250,11 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             //load more 现在没有数据填充
             if(position==1){
                 aticle_load_more_text.setText("还没有人回复快来抢沙发吧！！");
-            }else{
+            }else if(position%10==0){
                 aticle_load_more_text.setText("加载更多");
+            }
+            else{
+                aticle_load_more_text.setText("暂无更多");
             }
         }
 
