@@ -1,206 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/main_window"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="260dp"
+        android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/user_detail_layout_info"
+                android:src="@drawable/user_detail_header_bg"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true" />
+
+            <LinearLayout
+                android:background="@drawable/user_detail_header_bg"
+                android:padding="@dimen/dimen_16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+                <TextView
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="22sp"
+                    android:text="欢迎来到签到中心"/>
+
+                <xyz.yluo.ruisiapp.utils.CircleImageView
+                    android:id="@+id/user_image"
+                    android:layout_marginTop="@dimen/dimen_16"
+                    android:src="@drawable/image"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    app:civ_border_width="2dp"
+                    app:civ_border_color="@android:color/white"/>
+
+                <TextView
+                    android:id="@+id/user_name"
+                    android:layout_marginTop="@dimen/dimen_8"
+                    android:text="哈哈哈哈"
+                    android:textColor="@color/colorAuthor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"/>
+
+                <LinearLayout
+                    android:id="@+id/View_have_sign"
+                    android:layout_marginTop="@dimen/dimen_4"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/total_sign_day"
+                        android:textSize="16sp"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:text="您累计已签到:443 天"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/total_sign_month"
+                        android:text="您本月已累计签到:5天"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <FrameLayout
+        android:id="@+id/frame"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_margin="@dimen/dimen_8"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_horizontal|top" />
 
         <LinearLayout
-            android:id="@+id/ll_daka"
-            android:layout_margin="@dimen/dimen_8"
+            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:textSize="16sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="选择心情"
-                android:id="@+id/textView2" />
-
             <LinearLayout
-                android:gravity="center"
+                android:id="@+id/View_not_sign"
+                android:padding="@dimen/dimen_16"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
+                <TextView
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="选择心情："/>
 
-                <ImageButton
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/da_kx" />
+                <Spinner
+                    android:layout_marginTop="@dimen/dimen_8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinner_select"
+                    android:layout_gravity="center_horizontal" />
 
-
-                <ImageButton
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/da_ng" />
-
-                <ImageButton
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/da_ym" />
-                <ImageButton
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/da_wl" />
-                <ImageButton
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/da_nu" />
-                <ImageButton
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/da_ch" />
-                <ImageButton
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/da_fd" />
-                <ImageButton
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/da_yl" />
-
-                <ImageButton
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/da_shuai" />
-
-
+                <EditText
+                    android:id="@+id/input"
+                    android:layout_marginTop="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="输入你最想说的话,不想填写就留空"/>
 
             </LinearLayout>
-            <RadioGroup
+
+            <LinearLayout
+                android:id="@+id/View_have_sign_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dimen_16"
                 android:gravity="center"
-                android:id="@+id/group_1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <RadioButton
-                    android:id="@+id/radiobtn_01"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp" />
-                <RadioButton
-                    android:id="@+id/radiobtn_02"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp" />
-                <RadioButton
-                    android:id="@+id/radiobtn_03"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp" />
-                <RadioButton
-                    android:id="@+id/radiobtn_04"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp" />
-                <RadioButton
-                    android:id="@+id/radiobtn_05"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp" />
-                <RadioButton
-                    android:id="@+id/radiobtn_06"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp" />
-                <RadioButton
-                    android:id="@+id/radiobtn_07"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp" />
-                <RadioButton
-                    android:id="@+id/radiobtn_08"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp" />
-                <RadioButton
-                    android:id="@+id/radiobtn_09"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp" />
-            </RadioGroup>
-
-            <TextView
-                android:layout_marginTop="@dimen/dimen_16"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="今日最想说模式"
-                android:id="@+id/textView" />
-
-
-
-            <RadioGroup
-                android:id="@+id/group_2"
-                android:layout_marginTop="4dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_16"
-                android:layout_marginRight="@dimen/dimen_16"
-                android:orientation="horizontal">
-                <RadioButton
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/info_title"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="自己填写"
-                    android:id="@+id/btn1" />
-                <RadioButton
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="快速回复"
-                    android:id="@+id/btn2" />
-                <RadioButton
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="不想填写"
-                    android:id="@+id/btn3" />
-            </RadioGroup>
-
-            <EditText
-                android:id="@+id/input"
-                android:layout_marginLeft="@dimen/dimen_16"
-                android:layout_marginRight="@dimen/dimen_16"
-                android:layout_marginTop="30dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="输入你最想说的话"/>
-
-            <Spinner
-                android:layout_marginTop="30dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner_select"
-                android:layout_marginRight="@dimen/dimen_16"
-                android:layout_marginLeft="@dimen/dimen_16"
-                android:visibility="gone"
-                android:layout_gravity="center_horizontal" />
-
+                    android:textSize="20sp"
+                    android:text="您今天已经签到过了"/>
+                <TextView
+                    android:id="@+id/information"
+                    android:layout_marginTop="@dimen/dimen_4"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
 
         </LinearLayout>
+    </FrameLayout>
 
-        <TextView
-            android:id="@+id/text_have_daka"
-            android:layout_margin="@dimen/dimen_16"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="30sp"
-            android:visibility="gone"
-            android:text="您今天已经签到过了或者签到时间还未开始"/>
-
-        <TextView
-            android:id="@+id/test"
-            android:layout_margin="@dimen/dimen_16"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="output"/>
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btn_submit"
-        android:text="开始签到"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+    <android.support.design.widget.FloatingActionButton
         android:layout_margin="@dimen/dimen_16"
-        android:src="@drawable/ic_menu_send"/>
+        android:id="@+id/btn_start_sign"
+        android:src="@drawable/ic_menu_send"
+        app:layout_anchor="@id/frame"
+        app:layout_anchorGravity="bottom|end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </android.support.design.widget.CoordinatorLayout>

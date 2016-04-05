@@ -22,7 +22,7 @@
             android:id="@+id/img_card_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/cardbg"
+            android:src="@drawable/image_placeholder"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop" />
 

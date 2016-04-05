@@ -1,24 +1,31 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.Time;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
-import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +36,7 @@ import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.utils.CircleImageView;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -37,160 +45,97 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class UserDakaActivity extends AppCompatActivity{
 
-    @Bind(R.id.group_1)
-    protected RadioGroup group_1;
-
-    @Bind(R.id.group_2)
-    protected RadioGroup group_2;
-
     @Bind(R.id.input)
     protected TextView input;
-
+    @Bind(R.id.main_window)
+    protected CoordinatorLayout main_window;
     @Bind(R.id.spinner_select)
     protected Spinner spinner_select;
-    @Bind(R.id.btn_submit)
-    protected Button btn_submit;
+    @Bind(R.id.btn_start_sign)
+    protected FloatingActionButton btn_start_sign;
+    @Bind(R.id.user_image)
+    protected CircleImageView user_image;
+    @Bind(R.id.user_name)
+    protected TextView user_name;
+    @Bind(R.id.View_have_sign)
+    protected LinearLayout View_have_sign;
+    @Bind(R.id.View_have_sign_2)
+    protected LinearLayout View_have_sign_2;
+    @Bind(R.id.View_not_sign)
+    protected LinearLayout View_not_sign;
+    @Bind(R.id.container)
+    protected LinearLayout container;
+    @Bind(R.id.progressBar)
+    protected ProgressBar progressBar;
+    @Bind(R.id.total_sign_day)
+    protected TextView total_sign_day;
+    @Bind(R.id.total_sign_month)
+    protected TextView total_sign_month;
+    @Bind(R.id.information)
+    protected TextView information;
+    @Bind(R.id.info_title)
+    protected TextView info_title;
 
-    @Bind(R.id.ll_daka)
-    protected LinearLayout ll_daka;
-
-    @Bind(R.id.text_have_daka)
-    protected TextView text_have_daka;
-
-    @Bind(R.id.test)
-    protected TextView testView;
-
-    private int group1_select = 1;
-    private int group2_select = 1;
     private int spinner__select = 0;
-
-    private String qdxq = "ng";
+    private String qdxq  = "kx";
+    private boolean isSign = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_daka);
         ButterKnife.bind(this);
-
-        // Show the Up button in the action bar.
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar!=null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle("签到");
-        }
-
+        user_name.setText(MySetting.CONFIG_USER_NAME);
+        Picasso.with(this).load(UrlUtils.getimageurl(MySetting.CONFIG_USER_UID,true)).placeholder(R.drawable.image_placeholder).into(user_image);
         init();
         isHaveDaka();
-        final String[] mItems = {"新的一天，新的开始~","今天要更加努力哦~~","我要成为BT大神~~~","今天要怒冲水神榜！！","有点小忧伤~","每天的太阳都是新的！","我又回来了！！！","来吧骚年，战个痛快！！"};
+        final String[] mItems = {"开心","难过","郁闷","无聊","怒","擦汗","奋斗","慵懒","衰"};
         ArrayAdapter<String> adapter=new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, mItems);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_select.setAdapter(adapter);
-
     }
 
     private void init(){
-        ll_daka.setVisibility(View.GONE);
-        text_have_daka.setVisibility(View.GONE);
-        group_2.check(R.id.btn1);
-        group_1.check(R.id.radiobtn_01);
-        spinner_select.setVisibility(View.GONE);
+        container.setVisibility(View.GONE);
+        View_not_sign.setVisibility(View.GONE);
+        View_have_sign.setVisibility(View.GONE);
+        View_have_sign_2.setVisibility(View.GONE);
 
         spinner_select.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int pos, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 spinner__select = pos;
-                //Toast.makeText(getApplicationContext(), "你点击的是:" + mItems[pos], Toast.LENGTH_SHORT).show();
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
-
-        group_2.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId){
-                    case R.id.btn1:
-                        input.setVisibility(View.VISIBLE);
-                        spinner_select.setVisibility(View.GONE);
-                        group2_select = 1;
-                        break;
-                    case R.id.btn2:
-                        input.setVisibility(View.GONE);
-                        spinner_select.setVisibility(View.VISIBLE);
-                        group2_select = 2;
-                        break;
-                    case R.id.btn3:
-                        input.setVisibility(View.GONE);
-                        spinner_select.setVisibility(View.GONE);
-                        group2_select = 3;
-                        break;
-                }
-
-            }
-        });
-
     }
 
+    @OnClick(R.id.btn_start_sign)
+    protected void btn_start_sign_click(){
+        if(isSign){
+            finish();
+        }else{
+            String xinqin = getGroup1_select();
+            String formhash = MySetting.CONFIG_FORMHASH;
+            String qdmode = "1";
+            String todaysay = "";
+            String fastreplay = "0";
 
-    @OnClick(R.id.btn_submit)
-    protected void btn_submit_click(){
-        boolean isok = false;
-        getGroup1_select();
-        String formhash = MySetting.CONFIG_FORMHASH;
-        qdxq = "ng";
-        String qdmode = "1";
-        String todaysay = "";
-        String fastreplay = "0";
-
-        switch (group2_select){
-            case 1:
-                //自己填写
-//                qdmode:1
-//                todaysay:这是一个测试签到
+            if(!input.getText().toString().isEmpty()){
                 qdmode = "1";
-                try {
-                    String tmp =   input.getText().toString();
-                    int len  = tmp.getBytes("UTF-8").length;
-                    if(len<3){
-                        //len = text.getBytes("UTF-8").length;
-                        Toast.makeText(getApplicationContext(),"字数不够",Toast.LENGTH_SHORT).show();
-                        isok = false;
-                    }else{
-                        todaysay = input.getText().toString()+"  --来自睿思手机客户端";
-                        isok = true;
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 2:
-                //快速选择
-//                qdmode:2
-//                fastreply:5
-                qdmode = "2";
-                fastreplay = ""+spinner__select;
-                isok = true;
-                break;
-
-            case 3:
-                //不想填写
-//                qdmode:3
+                todaysay = input.getText().toString()+"  --来自睿思手机客户端";
+            }else {
                 qdmode = "3";
-                isok = true;
-                break;
-        }
-
-        if(isok){
+            }
             Map<String,String> params = new HashMap<>();
             params.put("formhash",formhash);
-            params.put("qdxq",qdxq);
+            params.put("qdxq",xinqin);
             params.put("qdmode",qdmode);
             params.put("todaysay",todaysay);
             params.put("fastreplay",fastreplay);
+
             String url = UrlUtils.getSignUrl();
             HttpUtil.post(this, url, params, new ResponseHandler() {
                 @Override
@@ -199,21 +144,21 @@ public class UserDakaActivity extends AppCompatActivity{
                     if(res.contains("恭喜你签到成功")){
                         Document doc = Jsoup.parse(res);
                         String get = doc.select("div[class=c]").text();
-                        Toast.makeText(getApplicationContext(),get,Toast.LENGTH_SHORT).show();
-                        Toast.makeText(getApplicationContext(),"签到成功",Toast.LENGTH_SHORT).show();
-                        finish();
+                        showNtice("签到成功!!!");
+                        info_title.setText("恭喜你签到成功");
+                        isSign = true;
+                        System.out.println(get);
+                        btn_start_sign.setImageResource(R.drawable.ic_arrow_back_24dp);
                     }else{
-                        Toast.makeText(getApplicationContext(),"未知错误",Toast.LENGTH_SHORT).show();
+                        showNtice("未知错误");
                     }
                 }
-
                 @Override
                 public void onFailure(Throwable e) {
-                    Toast.makeText(getApplicationContext(),"网络错误",Toast.LENGTH_SHORT).show();
+                    showNtice("网络错误!!!!!");
                 }
             });
         }
-
     }
 
     private void isHaveDaka(){
@@ -222,9 +167,6 @@ public class UserDakaActivity extends AppCompatActivity{
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-
-                System.out.print("\nres" + res);
-
                 Document doc = Jsoup.parse(res);
                 if (doc.select("input[name=formhash]").first() != null) {
                     String temphash = doc.select("input[name=formhash]").attr("value");
@@ -232,61 +174,85 @@ public class UserDakaActivity extends AppCompatActivity{
                         MySetting.CONFIG_FORMHASH = temphash;
                     }
                 }
+
                 if(res.contains("您今天已经签到过了或者签到时间还未开始")){
-                    ll_daka.setVisibility(View.GONE);
-                    text_have_daka.setVisibility(View.VISIBLE);
+                    //您今天已经签到过了
+                    //获得时间
+                    Calendar c = Calendar.getInstance();
+                    int HOUR_OF_DAY = c.get(Calendar.HOUR_OF_DAY);
+                    if(7<=HOUR_OF_DAY&&HOUR_OF_DAY<23){
+                        info_title.setText("您今天已经签到过了");
+                    }else {
+                        info_title.setText("今天的签到还没开始呢");
+                    }
+                    System.out.println(HOUR_OF_DAY);
+
+                    for(Element temp:doc.select(".mn").select("p")){
+                        String temptext = temp.text();
+                        if(temptext.contains("您累计已签到")){
+                            int pos = temptext.indexOf("您累计已签到");
+                            total_sign_day.setText(temptext.substring(pos));
+                        }else if(temptext.contains("您本月已累计签到")){
+                            total_sign_month.setText(temptext);
+                        }else {
+                            String newString = information.getText().toString()+"\n"+temptext;
+                            information.setText(newString);
+                        }
+                    }
+
+                    isSign = true;
+                    View_have_sign.setVisibility(View.VISIBLE);
+                    View_have_sign_2.setVisibility(View.VISIBLE);
+                    View_not_sign.setVisibility(View.GONE);
+                    btn_start_sign.setImageResource(R.drawable.ic_arrow_back_24dp);
                 }else{
-                    ll_daka.setVisibility(View.VISIBLE);
-                    text_have_daka.setVisibility(View.GONE);
+                    isSign = false;
+                    View_not_sign.setVisibility(View.VISIBLE);
+                    View_have_sign.setVisibility(View.GONE);
+                    View_have_sign_2.setVisibility(View.GONE);
                 }
+                container.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Throwable e) {
-
+                showNtice("网络错误");
             }
         });
     }
 
-    private void getGroup1_select(){
-        switch (group_1.getCheckedRadioButtonId()){
-            case R.id.radiobtn_01:
-                group1_select =1;
+    private String getGroup1_select(){
+        switch (spinner__select){
+            case 0:
                 qdxq = "kx";
                 break;
-            case R.id.radiobtn_02:
-                group1_select =2;
+            case 1:
                 qdxq = "ng";
                 break;
-            case R.id.radiobtn_03:
-                group1_select =3;
+            case 2:
                 qdxq = "ym";
                 break;
-            case R.id.radiobtn_04:
-                group1_select =4;
+            case 3:
                 qdxq = "wl";
                 break;
-            case R.id.radiobtn_05:
-                group1_select =5;
+            case 4:
                 qdxq = "nu";
                 break;
-            case R.id.radiobtn_06:
-                group1_select =6;
+            case 5:
                 qdxq = "ch";
                 break;
-            case R.id.radiobtn_07:
-                group1_select =7;
+            case 6:
                 qdxq = "fd";
                 break;
-            case R.id.radiobtn_08:
-                group1_select =8;
+            case 7:
                 qdxq = "yl";
                 break;
-            case R.id.radiobtn_09:
+            case 8:
                 qdxq = "shuai";
-                group1_select =9;
                 break;
         }
+        return qdxq;
     }
 
     @Override
@@ -298,5 +264,11 @@ public class UserDakaActivity extends AppCompatActivity{
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showNtice(String res){
+
+        progressBar.setVisibility(View.GONE);
+        Snackbar.make(main_window, res, Snackbar.LENGTH_LONG).show();
     }
 }
