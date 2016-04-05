@@ -17,7 +17,6 @@ public class SyncHttpClient {
     public static final String UTF8 = "UTF-8";
     private int connectionTimeout = 8000;
     private int dataRetrievalTimeout = 8000;
-    private boolean followRedirects = false;
     private Map<String, String> headers;
 
     public SyncHttpClient() {
@@ -26,7 +25,9 @@ public class SyncHttpClient {
     }
 
     public void setStore(PersistentCookieStore store) {
-        SyncHttpClient.store = store;
+        if(SyncHttpClient.store==null){
+            SyncHttpClient.store = store;
+        }
     }
 
     public int getConnectionTimeout() {
@@ -43,14 +44,6 @@ public class SyncHttpClient {
 
     public void setDataRetrievalTimeout(int dataRetrievalTimeout) {
         this.dataRetrievalTimeout = dataRetrievalTimeout;
-    }
-
-    public boolean getFollowRedirects() {
-        return followRedirects;
-    }
-
-    public void setFollowRedirects(boolean followRedirects) {
-        this.followRedirects = followRedirects;
     }
 
     public String getUserAgent() {
@@ -94,7 +87,7 @@ public class SyncHttpClient {
         connection.setConnectTimeout(connectionTimeout);
         connection.setReadTimeout(dataRetrievalTimeout);
         connection.setUseCaches(false);
-        connection.setInstanceFollowRedirects(followRedirects);
+        connection.setInstanceFollowRedirects(false);
         connection.setRequestMethod(method.toString());
         connection.setDoInput(true);
 

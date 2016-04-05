@@ -67,11 +67,10 @@ public class LaunchActivity extends AppCompatActivity{
     private void canGetRs(int type,String res){
         if(type==TYPE_INNER){
             MySetting.CONFIG_IS_INNER = true;
-            Toast.makeText(getApplicationContext(),"校园网",Toast.LENGTH_SHORT).show();
             MySetting.BBS_BASE_URL= UrlUtils.getBaseUrl(true);
             checklogin(res);
         }else{
-            Toast.makeText(getApplicationContext(),"校外网",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"已经切换到外网",Toast.LENGTH_SHORT).show();
             MySetting.BBS_BASE_URL = UrlUtils.getBaseUrl(false);
             MySetting.CONFIG_IS_INNER = false;
             checklogin(res);

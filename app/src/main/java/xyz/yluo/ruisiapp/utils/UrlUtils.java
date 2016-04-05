@@ -24,11 +24,16 @@ public class UrlUtils {
     }
 
     public static String getSingleArticleUrl(String tid,int page,boolean isInner){
-        if(isInner){
-            return "forum.php?mod=viewthread&tid="+tid+"&page="+page;
-        }else{
-            return "forum.php?mod=viewthread&tid="+tid+"&page="+page+"&mobile=2";
+        String url = "forum.php?mod=viewthread&tid="+tid;
+        if(page>1){
+            url+="&page="+page;
         }
+        if(isInner){
+            return url;
+        }else{
+            return url+"&mobile=2";
+        }
+
     }
     public static String getLoginUrl(boolean isInner){
         String url = "member.php?mod=logging&action=login";

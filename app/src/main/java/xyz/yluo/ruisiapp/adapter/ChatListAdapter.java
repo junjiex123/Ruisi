@@ -21,7 +21,7 @@ import xyz.yluo.ruisiapp.utils.MyHtmlTextView;
 
 /**
  * Created by free2 on 16-3-30.
- *
+ * 私人消息
  */
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyViewHolder>{
 

@@ -9,80 +9,13 @@
         android:id="@+id/main_item_btn_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="@dimen/dimen_8"
+        android:paddingStart="@dimen/dimen_8"
+        android:paddingBottom="@dimen/dimen_4"
         android:clickable="true"
         android:background="?android:attr/selectableItemBackground"
         android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="18dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="@dimen/dimen_8"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="@dimen/dimen_4"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-
-            <TextView
-                android:id="@+id/bt_lable_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:background="@color/lightblue200"
-                android:text="剧集" />
-            <TextView
-                android:layout_marginLeft="@dimen/dimen_4"
-                android:id="@+id/bt_lable_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:background="@color/lightblue200"
-                android:text="欧美" />
-
-            <TextView
-                android:layout_marginLeft="@dimen/dimen_4"
-                android:id="@+id/bt_size"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:background="@color/green100"
-                android:text="119GB" />
-            <TextView
-                android:layout_marginLeft="@dimen/dimen_4"
-                android:id="@+id/bt_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:background="@color/bluegrey200"
-                android:text="1/2/66" />
-            <TextView
-                android:layout_marginEnd="4dp"
-                android:layout_marginStart="@dimen/dimen_4"
-                android:id="@+id/bt_isfree"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:background="@color/orange300"
-                android:text="FREE" />
-
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -91,21 +24,89 @@
             android:layout_marginLeft="8dp"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                    <TextView
+                        android:layout_marginEnd="4dp"
+                        android:id="@+id/bt_isfree"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="10sp"
+                        android:background="@color/pink200"
+                        android:text="FREE" />
+
+                    <TextView
+                        android:id="@+id/bt_lable_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="10sp"
+                        android:background="@color/blue200"
+                        android:text="剧集" />
+                    <TextView
+                        android:layout_marginLeft="@dimen/dimen_4"
+                        android:id="@+id/bt_lable_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="10sp"
+                        android:background="@color/blue200"
+                        android:text="欧美" />
+
+                    <TextView
+                        android:layout_marginLeft="@dimen/dimen_4"
+                        android:id="@+id/bt_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="10sp"
+                        android:background="@color/bluegrey200"
+                        android:text="119GB" />
+                    <TextView
+                        android:layout_marginLeft="@dimen/dimen_4"
+                        android:id="@+id/bt_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="10sp"
+                        android:background="@color/bluegrey200"
+                        android:text="1/2/66" />
+
+
+            </LinearLayout>
+
             <TextView
+                android:layout_marginTop="@dimen/dimen_4"
                 android:id="@+id/bt_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorPrimary"
                 android:textSize="16sp"
-                android:maxLines="2"
+                android:maxLines="3"
                 android:text="[生活大爆炸/天才理论传][The.Big.Bang.Theory][1-7季合集][cmct][中英字幕]" />
 
             <LinearLayout
-                android:layout_marginTop="4dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_4"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="horizontal">
                 <TextView
+                    android:drawableStart="@drawable/ic_person_12dp"
                     android:id="@+id/bt_author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -115,6 +116,7 @@
                     android:singleLine="true"
                     android:text="raindrop" />
                 <TextView
+                    android:layout_marginStart="@dimen/dimen_8"
                     android:id="@+id/bt_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -124,6 +126,8 @@
                     android:singleLine="true"
                     android:text="昨天 23:48" />
             </LinearLayout>
+
+
         </LinearLayout>
 
     </LinearLayout>

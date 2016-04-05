@@ -214,14 +214,7 @@ public class SingleArticleNormalActivity extends AppCompatActivity
         hander.insertSmiley("{:16" + tmp + ":}", btn.getDrawable());
     }
 
-    //登陆页面返回结果
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==RESULT_OK){
-            String result = data.getExtras().getString("result");//得到新Activity 关闭后返回的数据
-        }
-    }
+
     //recyclerView item点击事件 加载更多事件
     @Override
     public void recyclerViewListClicked(View v, int position) {
@@ -276,7 +269,7 @@ public class SingleArticleNormalActivity extends AppCompatActivity
             url = nextPageUrl;
         }
 
-        HttpUtil.get(this, url, new ResponseHandler() {
+        HttpUtil.get(this ,url,new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
@@ -285,7 +278,8 @@ public class SingleArticleNormalActivity extends AppCompatActivity
 
             @Override
             public void onFailure(Throwable e) {
-                Toast.makeText(getApplicationContext(), "网络错误", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), ">>>网络错误", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -314,7 +308,6 @@ public class SingleArticleNormalActivity extends AppCompatActivity
 
         @Override
         protected String doInBackground(Void... params) {
-
             //list 所有楼数据
             Document doc = Jsoup.parse(htmlData);
             //获取回复/hash
@@ -628,6 +621,11 @@ public class SingleArticleNormalActivity extends AppCompatActivity
             super.onBackPressed();
         }
 
+    }
+
+    private void netWorkError(String res){
+        Toast.makeText(getApplicationContext(),res,Toast.LENGTH_SHORT).show();
+        refreshLayout.setRefreshing(false);
     }
 
 }

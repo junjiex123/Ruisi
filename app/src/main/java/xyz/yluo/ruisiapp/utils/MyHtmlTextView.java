@@ -16,7 +16,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import pl.droidsonroids.gif.GifDrawable;
 import xyz.yluo.ruisiapp.MySetting;
 
 /**
@@ -53,16 +52,18 @@ public class MyHtmlTextView extends TextView implements Html.ImageGetter {
 
         try {
             //替换表情到本地
-            if (source.startsWith("static/image/smiley/") && (source.contains(".gif") || source.contains(".GIF"))) {
+            if (source.contains("static/image/smiley/")) {
+                source = source.substring(source.indexOf("static"));
+                if(!source.contains("tieba")){
+                    source = source.replace(".gif",".jpg").replace(".png",".jpg").replace(".GIF",".jpg").replace(".png",".jpg");
+                }
                 //asset file
-                GifDrawable gifFromAssets = new GifDrawable(activity.getAssets(), source);
-                gifFromAssets.setBounds(0, 0, 80, 80);
-                return gifFromAssets;
-            } else if (source.startsWith("static/image/smiley/")) {
-                InputStream ims = activity.getAssets().open(source);
-                drawable = Drawable.createFromStream(ims, null);
-                drawable.setBounds(0, 0, 80, 80);
+                Drawable drawable1 = Drawable.createFromStream(activity.getAssets().open(source), null);
+                drawable1.setBounds(0, 0, 80, 80);
+                return drawable1;
             } else {
+
+                //TODO 无法显示网络图片
                 URL url = null;
                 if(source.startsWith("http")){
                     url = new URL(source);
