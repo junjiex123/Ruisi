@@ -22,7 +22,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ArticleListNormalAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
@@ -162,10 +161,7 @@ public class HomeFragement_2 extends Fragment implements LoadMoreListener.OnLoad
 
             if(CurrentPage==1){
                 //item 增加删除 改变动画
-                recycler_view.setItemAnimator(new OvershootInLeftAnimator());
-                recycler_view.getItemAnimator().setAddDuration(250);
-                recycler_view.getItemAnimator().setRemoveDuration(10);
-                recycler_view.getItemAnimator().setChangeDuration(10);
+
                 mydatasetnormal.clear();
             }
 

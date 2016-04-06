@@ -1,5 +1,6 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -37,6 +38,12 @@ public class NewArticleActivity_2 extends AppCompatActivity {
     Map<Integer,String> map = new LinkedHashMap<>();
 
     private static int CURRENT_FID = 72;
+
+    public static void open(Context context) {
+        Intent intent = new Intent(context, NewArticleActivity_2.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
 
 
     @Override

@@ -14,8 +14,7 @@
         android:background="@color/bluegrey500"
         android:padding="@dimen/dimen_4"
         android:orientation="horizontal"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:android="http://schemas.android.com/apk/res/android">
         <ImageButton
             android:layout_gravity="bottom|start"
             android:id="@+id/action_smiley"

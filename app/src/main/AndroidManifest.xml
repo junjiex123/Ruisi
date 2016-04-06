@@ -67,9 +67,6 @@
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
-        <activity android:name=".todo.TestActivity">
-
-        </activity>
         <activity android:name=".activity.LoginActivity">
 
         </activity>

@@ -62,6 +62,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private String loginUrl;
 
+    public static void open(Context context) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

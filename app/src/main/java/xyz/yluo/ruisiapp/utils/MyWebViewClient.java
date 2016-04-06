@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import xyz.yluo.ruisiapp.activity.ArticleListNormalActivity;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.NewArticleActivity_2;
 import xyz.yluo.ruisiapp.activity.SingleArticleNormalActivity;
@@ -48,17 +47,13 @@ public class MyWebViewClient extends WebViewClient {
         } else if(url.contains("forum.php?mod=post&action=newthread")){ //发帖链接
             context.startActivity(new Intent(context,NewArticleActivity_2.class));
             return true;
-        }else if(url.contains("forum.php?mod=forumdisplay&fid=")) {//梯子列表
-            String fid = GetId.getFroumFid(url);
-            ArticleListNormalActivity.open(context,Integer.parseInt(fid),"帖子列表");
-            return true;
         }else if(url.contains("member.php?mod=logging&action=login")){//登陆
-            context.startActivity(new Intent(context, LoginActivity.class));
+            LoginActivity.open(context);
             return true;
         }
         else{
             // 其他连接
-            return false;
+            return true;
         }
     }
 

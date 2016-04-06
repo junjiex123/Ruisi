@@ -45,7 +45,7 @@
                 <xyz.yluo.ruisiapp.utils.CircleImageView
                     android:id="@+id/user_image"
                     android:layout_marginTop="@dimen/dimen_16"
-                    android:src="@drawable/image"
+                    android:src="@drawable/image_placeholder"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     app:civ_border_width="2dp"

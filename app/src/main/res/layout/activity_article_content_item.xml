@@ -25,10 +25,10 @@
                     android:layout_width="6dp"
                     android:layout_height="28sp"
                     android:background="@android:color/holo_red_dark"
-                    android:layout_marginRight="3dp">
+                    android:layout_marginEnd="3dp">
                 </LinearLayout>
                 <TextView
-                    android:layout_marginLeft="@dimen/dimen_4"
+                    android:layout_marginStart="@dimen/dimen_4"
                     android:id="@+id/article_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
                     android:text="话题的标题" />
             </LinearLayout>
             <LinearLayout
-                android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -71,7 +71,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
-                            android:layout_marginRight="8dp"
                             android:textColor="@color/colorAuthor"
                             android:textSize="14sp"
                             android:text="TakWolf" />
@@ -100,7 +99,6 @@
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
-                            android:layout_marginRight="8dp"
                             android:textColor="?android:attr/textColorSecondary"
                             android:textSize="12sp"
                             android:singleLine="true"
@@ -124,7 +122,7 @@
             </LinearLayout>
             <xyz.yluo.ruisiapp.utils.MyWebView
                 android:layout_marginTop="8dp"
-                android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
                 android:id="@+id/content_webView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

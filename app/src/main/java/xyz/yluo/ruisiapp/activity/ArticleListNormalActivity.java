@@ -15,7 +15,6 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
 import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.adapter.ArticleListNormalAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
@@ -54,11 +53,6 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
         //加载更多
         mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this,8));
 
-        //item 增加删除 改变动画
-        mRecyclerView.setItemAnimator(new OvershootInLeftAnimator());
-        mRecyclerView.getItemAnimator().setAddDuration(250);
-        mRecyclerView.getItemAnimator().setRemoveDuration(10);
-        mRecyclerView.getItemAnimator().setChangeDuration(10);
         mydatasetnormal.clear();
 }
 
@@ -123,7 +117,6 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
             if(res!=""){
                 Elements list = Jsoup.parse(res).select("div[id=threadlist]");
                 Elements links = list.select("tbody");
-                //System.out.print(links);
                 ArticleListData temp;
                 for (Element src : links) {
                     if (src.getElementsByAttributeValue("class", "by").first() != null) {
@@ -197,7 +190,6 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
 
                 ArticleListData temp;
                 Elements links = body.select("li");
-                System.out.print(links);
                 for (Element src : links) {
                     String url = src.select("a").attr("href");
                     String author = src.select(".by").text();

@@ -20,7 +20,7 @@
 
         <TextView
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dimen_8"
+            android:layout_marginStart="@dimen/dimen_8"
             android:id="@+id/header_title"
             android:layout_width="0dp"
             android:layout_weight="1"

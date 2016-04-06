@@ -59,7 +59,7 @@ public class MyHtmlTextView extends TextView implements Html.ImageGetter {
                 }
                 //asset file
                 Drawable drawable1 = Drawable.createFromStream(activity.getAssets().open(source), null);
-                drawable1.setBounds(0, 0, 80, 80);
+                drawable1.setBounds(0, 0, 70, 70);
                 return drawable1;
             } else {
 

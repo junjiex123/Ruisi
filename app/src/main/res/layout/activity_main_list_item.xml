@@ -77,8 +77,6 @@
                         android:id="@+id/author_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_toStartOf="@+id/reply_count"
-                        android:layout_toLeftOf="@+id/reply_count"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="4dp"
                         android:layout_marginRight="4dp"
@@ -86,6 +84,40 @@
                         android:textSize="14sp"
                         android:singleLine="true"
                         android:text="TakWolf" />
+
+                    <TextView
+                        android:gravity="center"
+                        android:id="@+id/main_item_tv_last_reply_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="12sp"
+                        android:singleLine="true"
+                        android:text="2分前" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp">
+
+                    <TextView
+                        android:gravity="center"
+                        android:drawablePadding="4dp"
+                        android:drawableStart="@drawable/ic_time_12dp"
+                        android:id="@+id/post_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginRight="4dp"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="12sp"
+                        android:singleLine="true"
+                        android:text="2015-1-1 19:20:15" />
 
                     <TextView
                         android:gravity="top"
@@ -130,40 +162,6 @@
                         android:textSize="12sp"
                         android:singleLine="true"
                         android:text="222"/>
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp">
-
-                    <TextView
-                        android:id="@+id/post_time"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="4dp"
-                        android:layout_marginRight="4dp"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:textSize="12sp"
-                        android:singleLine="true"
-                        android:text="2015-1-1 19:20:15" />
-
-                    <TextView
-                        android:gravity="center"
-                        android:drawablePadding="4dp"
-                        android:drawableStart="@drawable/ic_time_12dp"
-                        android:id="@+id/main_item_tv_last_reply_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:textSize="12sp"
-                        android:singleLine="true"
-                        android:text="2分前" />
-
                 </RelativeLayout>
 
             </LinearLayout>
