@@ -55,7 +55,7 @@
 
         </activity>
         <activity
-            android:name=".activity.NewArticleActivity"
+            android:name=".todo.NewArticleActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>

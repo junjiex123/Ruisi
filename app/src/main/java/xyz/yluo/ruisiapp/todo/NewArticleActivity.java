@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.activity;
+package xyz.yluo.ruisiapp.todo;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -32,6 +32,8 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 /**
  * Created by free2 on 16-3-6.
  * 发帖activity
+ * TODO
+ * 暂时不能用，绕不过验证码
  */
 public class NewArticleActivity extends AppCompatActivity {
 
