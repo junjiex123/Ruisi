@@ -1,9 +1,14 @@
 package xyz.yluo.ruisiapp.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import xyz.yluo.ruisiapp.activity.ArticleListNormalActivity;
+import xyz.yluo.ruisiapp.activity.LoginActivity;
+import xyz.yluo.ruisiapp.activity.NewArticleActivity_2;
+import xyz.yluo.ruisiapp.activity.SingleArticleNormalActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 
 
@@ -32,22 +37,28 @@ public class MyWebViewClient extends WebViewClient {
     @Override
     public boolean shouldOverrideUrlLoading(WebView webView, String url) {
         //TODO 处理不同的链接点击事件
-
-        //http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=840272&extra=
-        if (url.startsWith("forum.php?mod=viewthread&tid=")) { // 帖子
-
+        if (url.contains("forum.php?mod=viewthread&tid=")) { // 帖子
+            String tid = GetId.getTid(url);
+            SingleArticleNormalActivity.open(context,tid,"查看主题","","");
             return true;
         } else if (url.contains("home.php?mod=space&uid=")) { // 用户
             String imageUrl = UrlUtils.getimageurl(url,true);
             UserDetailActivity.open(context,"name",imageUrl);
             return true;
-            //http://bbs.rs.xidian.me/forum.php?mod=post&action=newthread&fid=72&mobile=2
-            //发帖链接
-        } else if(url.contains("forum.php?mod=post&action=newthread")){
-            return false;
-        }else {
-            // 其他连接
+        } else if(url.contains("forum.php?mod=post&action=newthread")){ //发帖链接
+            context.startActivity(new Intent(context,NewArticleActivity_2.class));
             return true;
+        }else if(url.contains("forum.php?mod=forumdisplay&fid=")) {//梯子列表
+            String fid = GetId.getFroumFid(url);
+            ArticleListNormalActivity.open(context,Integer.parseInt(fid),"帖子列表");
+            return true;
+        }else if(url.contains("member.php?mod=logging&action=login")){//登陆
+            context.startActivity(new Intent(context, LoginActivity.class));
+            return true;
+        }
+        else{
+            // 其他连接
+            return false;
         }
     }
 

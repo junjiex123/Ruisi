@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.TestActivity;
+import xyz.yluo.ruisiapp.todo.TestActivity;
 import xyz.yluo.ruisiapp.fragment.HomeFragement_1;
 import xyz.yluo.ruisiapp.fragment.HomeFragement_2;
 import xyz.yluo.ruisiapp.fragment.HomeFragement_3;
@@ -67,7 +67,6 @@ public class HomeActivity extends AppCompatActivity
 
         btn_1_click();
         checkIsLoginView();
-
     }
 
     private void init(){
@@ -85,9 +84,6 @@ public class HomeActivity extends AppCompatActivity
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
                 switch (clickId){
-                    case R.id.nav_test:
-                        startActivity(new Intent(getApplicationContext(), TestActivity.class));
-                        break;
                     case R.id.nav_about:
                         startActivity(new Intent(getApplicationContext(),AboutActivity.class));
                         break;
@@ -114,7 +110,7 @@ public class HomeActivity extends AppCompatActivity
                         break;
                     case R.id.nav_post:
                         if(islogin_dialog()){
-                            startActivity(new Intent(getApplicationContext(),NewArticleActivity.class));
+                            startActivity(new Intent(getApplicationContext(),NewArticleActivity_2.class));
                         }
                         break;
                 }
@@ -201,7 +197,7 @@ public class HomeActivity extends AppCompatActivity
         if (id == R.id.new_topic) {
 
             if(islogin_dialog()){
-                startActivity(new Intent(getApplicationContext(),NewArticleActivity.class));
+                startActivity(new Intent(getApplicationContext(),NewArticleActivity_2.class));
             }
             return true;
         }else if(id==R.id.menu_setting){
@@ -254,9 +250,6 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            checkIsLoginView();
-        }
-
+        checkIsLoginView();
     }
 }

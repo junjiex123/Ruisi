@@ -67,7 +67,7 @@
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
-        <activity android:name=".TestActivity">
+        <activity android:name=".todo.TestActivity">
 
         </activity>
         <activity android:name=".activity.LoginActivity">
@@ -82,12 +82,13 @@
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
-        <activity android:name=".activity.NewArticleActivity_2">
+        <activity android:name=".activity.NewArticleActivity_2"
+            android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
 
         <service
-            android:name=".CheckMessageService"
+            android:name=".todo.CheckMessageService"
             android:enabled="true"
             android:exported="true">
 

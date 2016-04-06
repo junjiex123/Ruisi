@@ -43,7 +43,7 @@ public class ArticleListBtActivity extends ArticleListBaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        spinner = new Spinner(getApplicationContext());
+        spinner = new Spinner(this);
         actionBar.setDisplayShowTitleEnabled(false); // DEPRACATED
 
         ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<>(this,R.layout.spinner_item, mItems);

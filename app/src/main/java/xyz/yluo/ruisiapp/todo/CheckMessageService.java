@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp;
+package xyz.yluo.ruisiapp.todo;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -13,7 +13,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import xyz.yluo.ruisiapp.activity.NewArticleActivity;
+import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.activity.NewArticleActivity_2;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.httpUtil.SyncHttpClient;
 
@@ -37,7 +39,7 @@ public class CheckMessageService extends Service {
                         .setContentText("你有新的回复点击查看")
                         .setAutoCancel(true);
 
-        final Intent resultIntent = new Intent(this, NewArticleActivity.class);
+        final Intent resultIntent = new Intent(this, NewArticleActivity_2.class);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(resultPendingIntent);
         final NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);

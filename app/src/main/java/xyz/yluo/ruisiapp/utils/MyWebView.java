@@ -2,7 +2,12 @@ package xyz.yluo.ruisiapp.utils;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.webkit.CookieManager;
 import android.webkit.WebView;
+
+import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.PersistentCookieStore;
 
 /**
  * Created by free2 on 16-3-8.
@@ -32,20 +37,19 @@ public class MyWebView extends WebView{
         super(context);
 
         setWebViewClient(MyWebViewClient.with(context));
-        //setCookie(context);
+        setCookie(context);
     }
 
     public MyWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setWebViewClient(MyWebViewClient.with(context));
-        //// TODO: 16-4-4  设置cookie
-        //setCookie(context);
+        setCookie(context);
     }
 
     public MyWebView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setWebViewClient(MyWebViewClient.with(context));
-        //setCookie(context);
+        setCookie(context);
     }
 
     @Override
@@ -62,21 +66,19 @@ public class MyWebView extends WebView{
         super.loadDataWithBaseURL(baseUrl, newData, mimeType, encoding, historyUrl);
     }
 
-//    private void setCookie(Context context){
-//        CookieManager cookieManager = CookieManager.getInstance();
-//        PersistentCookieStore cookieStore = AsyncHttpCilentUtil.getMyCookieStore(context);
-//
-//        List<Cookie> cookies = cookieStore.getCookies();
-//        for (int i = 0; i < cookies.size(); i++) {
-//            Cookie eachCookie = cookies.get(i);
-//            String cookieString = eachCookie.getName() + "=" + eachCookie.getValue();
-//            cookieManager.setCookie(MySetting.BBS_BASE_URL, cookieString);
-//            Log.i(">>>>>", "cookie : " + cookieString);
-//        }
-//
-//        cookieManager.setAcceptCookie(true);
-//        //CookieSyncManager.getInstance().sync();
-//    }
+    //设置cookie
+    private void setCookie(Context context) {
 
+        PersistentCookieStore cookieStore = HttpUtil.getStore(context);
+        CookieManager cookieManager = CookieManager.getInstance();
 
+        cookieManager.setAcceptCookie(true);
+
+        String domain = ";domain=" + MySetting.BBS_BASE_URL.replace("http://", "").replace("/", "");
+
+        for (String s : cookieStore.getCookie().split(";")) {
+            s = s + domain;
+            cookieManager.setCookie(MySetting.BBS_BASE_URL, s);
+        }
+    }
 }

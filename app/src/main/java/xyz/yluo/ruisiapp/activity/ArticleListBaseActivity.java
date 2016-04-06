@@ -123,7 +123,7 @@ public abstract class ArticleListBaseActivity extends AppCompatActivity
 
     @OnClick(R.id.fab_post)
     protected void fab_post_click(){
-        startActivity(new Intent(getApplicationContext(), NewArticleActivity.class));
+        startActivity(new Intent(getApplicationContext(), NewArticleActivity_2.class));
         fabMenu.toggle(true);
     }
     @OnClick(R.id.fab_refresh)
@@ -148,7 +148,7 @@ public abstract class ArticleListBaseActivity extends AppCompatActivity
             return true;
         }
         if (id==R.id.new_topic){
-            startActivity(new Intent(getApplicationContext(),NewArticleActivity.class));
+            startActivity(new Intent(getApplicationContext(),NewArticleActivity_2.class));
         }
         return super.onOptionsItemSelected(item);
     }

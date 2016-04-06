@@ -56,19 +56,16 @@ public class LaunchActivity extends AppCompatActivity{
             boolean isShowZhidin  = shp.getBoolean("setting_show_zhidin",false);
             String tail = shp.getString("setting_user_tail","");
             boolean theme = shp.getBoolean("setting_swich_theme",false);
-            boolean setting_show_style = shp.getBoolean("setting_show_style",true);
+            boolean setting_show_plain = shp.getBoolean("setting_show_plain",true);
 
             MySetting.CONFIG_ISSHOW_ZHIDIN = isShowZhidin;
-            MySetting.CONFIG_SHOW_PLAIN_TEXT = !setting_show_style;
+            MySetting.CONFIG_SHOW_PLAIN_TEXT = setting_show_plain;
 
-            System.out.println("url"+urlSetting+"|"+"是否显示置顶"+isShowZhidin+"|"+"小尾巴"+tail+"|"+"主题"+theme+"|"+"是否显示样式"+setting_show_style);
+            System.out.println("url"+urlSetting+"|"+"是否显示置顶"+isShowZhidin+"|"+"小尾巴"+tail+"|"+"主题"+theme+"|"+"是否显示样式"+setting_show_plain);
         }catch (Exception e){
             e.printStackTrace();
         }
-
-
     }
-
 
     //检测网络状态 有无/校园网/外网
     private void checkNetWork(){

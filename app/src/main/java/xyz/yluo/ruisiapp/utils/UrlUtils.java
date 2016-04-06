@@ -83,4 +83,8 @@ public class UrlUtils {
     public static String getBtListUrl(String id,int page){
         return "bt.php?mod=browse&"+id+"&page="+page;
     }
+
+    public static String getPostUrl(int fid){
+        return "forum.php?mod=post&action=newthread&fid="+fid+"&mobile=2";
+    }
 }

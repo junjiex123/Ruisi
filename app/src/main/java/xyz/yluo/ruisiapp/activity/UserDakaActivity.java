@@ -92,10 +92,7 @@ public class UserDakaActivity extends AppCompatActivity{
     }
 
     private void init(){
-        container.setVisibility(View.GONE);
-        View_not_sign.setVisibility(View.GONE);
-        View_have_sign.setVisibility(View.GONE);
-        View_have_sign_2.setVisibility(View.GONE);
+
 
         spinner_select.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -140,7 +137,7 @@ public class UserDakaActivity extends AppCompatActivity{
                     if(res.contains("恭喜你签到成功")){
                         Document doc = Jsoup.parse(res);
                         String get = doc.select("div[class=c]").text();
-                        showNtice("签到成功!!!");
+                        showNtice("签到成功,点击按钮返回");
                         info_title.setText("恭喜你签到成功");
                         isSign = true;
                         System.out.println(get);
@@ -148,6 +145,8 @@ public class UserDakaActivity extends AppCompatActivity{
                     }else{
                         showNtice("未知错误");
                     }
+
+                    isHaveDaka();
                 }
                 @Override
                 public void onFailure(Throwable e) {
@@ -158,6 +157,11 @@ public class UserDakaActivity extends AppCompatActivity{
     }
 
     private void isHaveDaka(){
+        container.setVisibility(View.GONE);
+        View_not_sign.setVisibility(View.GONE);
+        View_have_sign.setVisibility(View.GONE);
+        View_have_sign_2.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
         String urlget =   "plugin.php?id=dsu_paulsign:sign";
         HttpUtil.get(this, urlget, new ResponseHandler() {
             @Override

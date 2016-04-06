@@ -41,11 +41,10 @@
             android:title="切换主题" />
 
         <SwitchPreference
-            android:key="setting_show_style"
-            android:defaultValue="false"
-            android:title="是否显示文章样式"
-            android:summary="选中将删除文章样式,例如字体大小,颜色等"
-            android:summaryOn="显示所有样式"
+            android:key="setting_show_plain"
+            android:defaultValue="true"
+            android:title="是否去掉帖子内容一些样式"
+            android:summaryOn="将删除文章内容样式,例如字体大小,颜色等会被删除"
             android:summaryOff="删除文章字体颜色大小等其余样式">
 
         </SwitchPreference>

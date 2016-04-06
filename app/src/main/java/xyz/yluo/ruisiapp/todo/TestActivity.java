@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp;
+package xyz.yluo.ruisiapp.todo;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -28,11 +28,10 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.ChatActivity;
-import xyz.yluo.ruisiapp.activity.NewArticleActivity;
 import xyz.yluo.ruisiapp.activity.NewArticleActivity_2;
 import xyz.yluo.ruisiapp.data.ArticleListData;
-import xyz.yluo.ruisiapp.httpUtil.AsyncHttpClient;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 
@@ -169,7 +168,7 @@ public class TestActivity extends AppCompatActivity implements ServiceConnection
                         .setContentText("Hello World!")
                         .setAutoCancel(true);
 
-        Intent resultIntent = new Intent(this, NewArticleActivity.class);
+        Intent resultIntent = new Intent(this, NewArticleActivity_2.class);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(resultPendingIntent);
 

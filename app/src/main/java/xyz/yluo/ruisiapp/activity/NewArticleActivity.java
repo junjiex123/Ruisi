@@ -27,6 +27,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.PostHander;
+import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-6.
@@ -48,9 +49,9 @@ public class NewArticleActivity extends AppCompatActivity {
     protected CheckBox action_italic;
     @Bind(R.id.main_window)
     protected CoordinatorLayout main_window;
-
-    private String CURRENT_FID = "72";
     private ProgressDialog progress;
+
+    private int CURRENT_FID = 72;
 
 
     @Override
@@ -137,7 +138,7 @@ public class NewArticleActivity extends AppCompatActivity {
     }
 
     //准备发帖需要的东西
-    private void preparePost(final String fid){
+    private void preparePost(final int fid){
         progress = ProgressDialog.show(this, "正在发送", "请等待", true);
         String url = "forum.php?mod=post&action=newthread&fid="+fid+"&mobile=2";
         HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
@@ -160,9 +161,9 @@ public class NewArticleActivity extends AppCompatActivity {
     //开始发帖
     private void begainPost(String url,String hash,String time){
 
-        String url3 = "forum.php?mod=post&action=newthread&fid=72&extra=&topicsubmit=yes&mobile=yes";
-        String url2 = "forum.php?mod=post&action=newthread&fid=72&extra=&topicsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
-        Map<String,String> params = new HashMap<>();
+        String url3 = UrlUtils.getPostUrl(72);
+
+         Map<String,String> params = new HashMap<>();
         params.put("formhash",hash);
         params.put("posttime",time);
         params.put("topicsubmit","yes");

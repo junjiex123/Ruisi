@@ -160,8 +160,8 @@ public class SettingActivity extends PreferenceActivity {
                 setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail","无小尾巴"));
             }else if(key.equals("setting_show_zhidin")){
                 MySetting.CONFIG_ISSHOW_ZHIDIN = sharedPreferences.getBoolean("setting_show_zhidin",false);
-            }else if(key.equals("setting_show_style")){
-                MySetting.CONFIG_SHOW_PLAIN_TEXT = !sharedPreferences.getBoolean("setting_show_style",true);
+            }else if(key.equals("setting_show_plain")){
+                MySetting.CONFIG_SHOW_PLAIN_TEXT = sharedPreferences.getBoolean("setting_show_plain",true);
             }
         }
     }
