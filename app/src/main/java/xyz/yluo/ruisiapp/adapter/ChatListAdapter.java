@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -75,6 +76,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
         protected MyHtmlTextView content;
         @Bind(R.id.user_image)
         protected CircleImageView user_image;
+        @Bind(R.id.post_time)
+        protected TextView post_time;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -82,8 +85,10 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
         }
 
         private void setData(final int position){
-            Picasso.with(context).load(DataSets.get(position).getUserImage()).into(user_image);
-            content.mySetText(context, DataSets.get(position).getContent());
+            ChatListData single = DataSets.get(position);
+            Picasso.with(context).load(single.getUserImage()).into(user_image);
+            post_time.setText(single.getTime());
+            content.mySetText(context, single.getContent());
         }
 
         @OnClick(R.id.user_image)

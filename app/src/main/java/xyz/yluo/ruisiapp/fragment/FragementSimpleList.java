@@ -33,7 +33,7 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
  * Created by free2 on 16-3-19.
  *
  */
-public class HomeFragement_2 extends Fragment implements LoadMoreListener.OnLoadMoreListener{
+public class FragementSimpleList extends Fragment implements LoadMoreListener.OnLoadMoreListener{
 
     @Bind(R.id.recycler_view)
     protected RecyclerView recycler_view;
@@ -48,7 +48,7 @@ public class HomeFragement_2 extends Fragment implements LoadMoreListener.OnLoad
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home_2_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_simple_list, container, false);
         ButterKnife.bind(this, view);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());

@@ -26,7 +26,7 @@ import xyz.yluo.ruisiapp.utils.GetLogoUtils;
  * Created by free2 on 16-3-19.
  *
  */
-public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.BaseViewHolder>{
+public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     //数据
     private List<FroumListData> DataSet;
@@ -77,15 +77,6 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.Base
             return 0;
         }
         return DataSet.size()+2;
-    }
-
-
-    protected abstract class BaseViewHolder extends RecyclerView.ViewHolder{
-
-        public BaseViewHolder(View itemView) {
-            super(itemView);
-        }
-        abstract void setData(int position);
     }
 
     //首页板块列表ViewHolder

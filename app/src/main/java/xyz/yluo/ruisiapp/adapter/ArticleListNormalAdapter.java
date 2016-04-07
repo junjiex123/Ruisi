@@ -29,7 +29,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * Created by free2 on 16-3-5.
  *
  */
-public class ArticleListNormalAdapter extends RecyclerView.Adapter<ArticleListNormalAdapter.BaseViewHolder>{
+public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     private static final int TYPE_NORMAL = 0;
     private static final int TYPE_LOAD_MORE = 1;
@@ -89,14 +89,6 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<ArticleListNo
             return 0;
         }
         return DataSet.size() + 1;
-    }
-
-    public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
-
-        public BaseViewHolder(View itemView) {
-            super(itemView);
-        }
-        abstract void setData(int position);
     }
 
     //文章列表ViewHolder 如果想创建别的样式还可以创建别的houlder继承自RecyclerView.ViewHolder

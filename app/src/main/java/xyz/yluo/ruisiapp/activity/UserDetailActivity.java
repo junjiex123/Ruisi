@@ -16,7 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -38,7 +37,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.adapter.UserInfoStarAdapter;
+import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
+import xyz.yluo.ruisiapp.data.SimpleListData;
 import xyz.yluo.ruisiapp.fragment.ExitLoginDialogFragment;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -66,8 +66,8 @@ public class UserDetailActivity extends AppCompatActivity {
     @Bind(R.id.progressBar)
     protected ProgressBar progressBar;
 
-    private List<Pair<String,String>> datasUserInfo = new ArrayList<>();
-    private UserInfoStarAdapter myadapterUserInfo;
+    private List<SimpleListData> datas = new ArrayList<>();
+    private SimpleListAdapter adapter;
     private static final String NAME_IMG_AVATAR = "imgAvatar";
     private static String userUid = "";
     private String username = "";
@@ -107,10 +107,10 @@ public class UserDetailActivity extends AppCompatActivity {
             actionBar.setTitle("");
         }
 
-        myadapterUserInfo = new UserInfoStarAdapter(this,datasUserInfo,0);
+        adapter = new SimpleListAdapter(this,datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recycler_view.setLayoutManager(layoutManager);
-        recycler_view.setAdapter(myadapterUserInfo);
+        recycler_view.setAdapter(adapter);
         userUid = GetId.getUid(imageUrl);
         //如果是自己
         if (userUid.equals(MySetting.CONFIG_USER_UID)){
@@ -184,13 +184,11 @@ public class UserDetailActivity extends AppCompatActivity {
             username = Jsoup.parse(res).select(".user_avatar").select(".name").text();
             Elements lists = Jsoup.parse(res).select(".user_box").select("ul").select("li");
             if(lists!=null){
-                Pair<String,String> temp;
                 for(Element tmp:lists){
                     String value = tmp.select("span").text();
                     tmp.select("span").remove();
                     String key = tmp.text();
-                    temp = new Pair<>(key,value);
-                    datasUserInfo.add(temp);
+                    datas.add(new SimpleListData(key,value,""));
                 }
             }
             return null;
@@ -198,15 +196,15 @@ public class UserDetailActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            if(datasUserInfo.size()>0){
-                if(datasUserInfo.get(0).first.contains("积分")){
-                    String userjifen = datasUserInfo.get(0).second;
+            if(datas.size()>0){
+                if(datas.get(0).getKey().contains("积分")){
+                    String userjifen = datas.get(0).getValue();
                     usergrade.setText(GetLevel.getUserLevel(Integer.parseInt(userjifen)));
                 }
             }
             usernameView.setText(username);
             progressBar.setVisibility(View.GONE);
-            myadapterUserInfo.notifyItemRangeInserted(0, datasUserInfo.size());
+            adapter.notifyDataSetChanged();
         }
 
 

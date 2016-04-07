@@ -23,7 +23,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * Created by free2 on 16-4-2.
  *
  */
-public class ArticleListBtAdapter extends RecyclerView.Adapter<ArticleListBtAdapter.BaseViewHoler>{
+public class ArticleListBtAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     private List<ArticleListBtData> Datas;
     private Activity activity;
@@ -46,7 +46,7 @@ public class ArticleListBtAdapter extends RecyclerView.Adapter<ArticleListBtAdap
     }
 
     @Override
-    public BaseViewHoler onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType){
             case TYPE_LOAD_MORE:
                 return new LoadMoreViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_main_load_more_list_item, parent, false));
@@ -56,7 +56,7 @@ public class ArticleListBtAdapter extends RecyclerView.Adapter<ArticleListBtAdap
     }
 
     @Override
-    public void onBindViewHolder(BaseViewHoler holder, int position) {
+    public void onBindViewHolder(BaseViewHolder holder, int position) {
         holder.setData(position);
     }
 
@@ -69,17 +69,8 @@ public class ArticleListBtAdapter extends RecyclerView.Adapter<ArticleListBtAdap
         }
     }
 
-    protected abstract class BaseViewHoler extends RecyclerView.ViewHolder{
 
-        public BaseViewHoler(View itemView) {
-            super(itemView);
-        }
-
-        protected abstract void setData(int position);
-    }
-
-
-    protected class MyBtNormalViewHolder extends BaseViewHoler{
+    protected class MyBtNormalViewHolder extends BaseViewHolder{
 
         @Bind(R.id.bt_isfree)
         protected TextView bt_isfree;
@@ -147,7 +138,7 @@ public class ArticleListBtAdapter extends RecyclerView.Adapter<ArticleListBtAdap
 
     }
 
-    protected class LoadMoreViewHolder extends BaseViewHoler{
+    protected class LoadMoreViewHolder extends BaseViewHolder{
 
         public LoadMoreViewHolder(View itemView) {
             super(itemView);

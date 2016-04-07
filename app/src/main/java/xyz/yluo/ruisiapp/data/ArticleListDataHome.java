@@ -54,23 +54,6 @@ public class ArticleListDataHome {
         this.url = url;
     }
 
-    public String getTodaypost() {
-        return todaypost;
-    }
-
-    public void setTodaypost(String todaypost) {
-        this.todaypost = todaypost;
-    }
-
-
-    public String getViewCount() {
-        return viewCount;
-    }
-
-    public void setViewCount(String viewCount) {
-        this.viewCount = viewCount;
-    }
-
     //热帖新帖
     //title titleurl User ReplyCount ViewCount
     public ArticleListDataHome(String name, String url, String user, String replaycount, String viewcount) {

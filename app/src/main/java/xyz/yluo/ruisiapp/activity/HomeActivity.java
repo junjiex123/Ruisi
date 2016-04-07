@@ -25,9 +25,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.fragment.HomeFragement_1;
-import xyz.yluo.ruisiapp.fragment.HomeFragement_2;
-import xyz.yluo.ruisiapp.fragment.HomeFragement_3;
+import xyz.yluo.ruisiapp.fragment.FragementSimpleList;
+import xyz.yluo.ruisiapp.fragment.FragementUser;
+import xyz.yluo.ruisiapp.fragment.HomeFormList;
 import xyz.yluo.ruisiapp.fragment.NeedLoginDialogFragment;
 import xyz.yluo.ruisiapp.utils.CircleImageView;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -141,7 +141,7 @@ public class HomeActivity extends AppCompatActivity
         if(actionBar!=null){
             actionBar.setTitle("板块");
         }
-        Fragment fragment1 = new HomeFragement_1();
+        Fragment fragment1 = new HomeFormList();
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.fragment_container, fragment1);
@@ -152,7 +152,7 @@ public class HomeActivity extends AppCompatActivity
         if(actionBar!=null){
             actionBar.setTitle("新帖");
         }
-        Fragment fragment2 = new HomeFragement_2();
+        Fragment fragment2 = new FragementSimpleList();
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.fragment_container, fragment2);
@@ -166,7 +166,7 @@ public class HomeActivity extends AppCompatActivity
             if(actionBar!=null){
                 actionBar.setTitle(MySetting.CONFIG_USER_NAME);
             }
-            Fragment fragment3 = new HomeFragement_3();
+            Fragment fragment3 = new FragementUser();
             FragmentManager manager = getFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.replace(R.id.fragment_container, fragment3);

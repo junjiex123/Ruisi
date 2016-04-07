@@ -76,7 +76,7 @@
                         android:textColor="@android:color/white"
                         android:textSize="12sp"
                         android:background="@color/lightblue200"
-                        tool:text="楼主" />
+                        android:text="楼主" />
 
                 </LinearLayout>
 

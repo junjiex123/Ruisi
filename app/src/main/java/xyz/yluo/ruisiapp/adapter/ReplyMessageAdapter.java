@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -19,7 +18,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.ChatActivity;
 import xyz.yluo.ruisiapp.activity.SingleArticleNormalActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
-import xyz.yluo.ruisiapp.data.MyTopicReplyListData;
+import xyz.yluo.ruisiapp.data.ReplyMessageData;
 import xyz.yluo.ruisiapp.utils.ArrowTextView;
 import xyz.yluo.ruisiapp.utils.CircleImageView;
 import xyz.yluo.ruisiapp.utils.GetId;
@@ -28,29 +27,22 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * Created by free2 on 16-3-21.
  * 首页第三页用户主题 回复 消息 收藏
  */
-public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticleReplyStarAdapter.BaseViewHolder>{
+public class ReplyMessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
-    private final int TYPE_MY_ARTICLE =0;
-    private final int TYPE_MY_MESSAGE = 1;
-    private final int TYPE_REPLY_ME = 2;//回复我的
     //数据
-    private List<MyTopicReplyListData> DataSet;
+    private List<ReplyMessageData> DataSet;
     protected Activity activity;
+    private int type; //0回复我的 //1我的消息
 
-    public UserArticleReplyStarAdapter(Activity activity, List<MyTopicReplyListData> dataSet) {
+    public ReplyMessageAdapter(Activity activity, List<ReplyMessageData> dataSet, int type) {
         DataSet = dataSet;
         this.activity = activity;
+        this.type = type;
     }
 
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(viewType==TYPE_MY_ARTICLE){
-            //我的主题
-            return new GetListArticleHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.userinfo_article_list_item, parent, false));
-        }else{
-            //我的消息 //回复我的
-            return new GetMessageListHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.user_message_list_item, parent, false));
-        }
+        return new MessageReplyListHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.user_message_list_item, parent, false));
     }
 
     @Override
@@ -59,37 +51,13 @@ public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticl
     }
 
     @Override
-    public int getItemViewType(int position) {
-        switch (DataSet.get(position).getType()){
-            case 0:
-                //我的主题
-                return TYPE_MY_ARTICLE;
-            case 1:
-                return  TYPE_MY_MESSAGE;
-            default:
-                //我的消息
-                return TYPE_REPLY_ME;
-        }
-    }
-
-    @Override
     public int getItemCount() {
         return DataSet.size();
     }
 
-    public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
-        public BaseViewHolder(View itemView) {
-            super(itemView);
-
-        }
-        abstract void setData(int position);
-
-    }
-
 
     //用户消息holder //回复我的
-    public class GetMessageListHolder extends BaseViewHolder{
-
+    protected class MessageReplyListHolder extends BaseViewHolder{
         @Bind(R.id.title)
         protected TextView title;
         @Bind(R.id.time)
@@ -99,13 +67,13 @@ public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticl
         @Bind(R.id.reply_content)
         protected ArrowTextView reply_content;
         //url
-        public GetMessageListHolder(View itemView) {
+        public MessageReplyListHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
         void setData(int position) {
-            MyTopicReplyListData single_data = DataSet.get(position);
+            ReplyMessageData single_data = DataSet.get(position);
             title.setText(single_data.getTitle());
             time.setText(single_data.getTime());
             String imageUrl = single_data.getauthorImage();
@@ -115,8 +83,7 @@ public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticl
 
         @OnClick(R.id.main_item_btn_item)
         protected void main_item_btn_item_click(){
-            MyTopicReplyListData single_data =  DataSet.get(getAdapterPosition());
-            int type = single_data.getType();
+            ReplyMessageData single_data =  DataSet.get(getAdapterPosition());
             if(type==1){
                 String username = single_data.getTitle().replace("我对 ","").replace("说:","").replace(" 对我","");
                 ChatActivity.open(activity,username,single_data.getTitleUrl(),false);
@@ -132,43 +99,10 @@ public class UserArticleReplyStarAdapter extends RecyclerView.Adapter<UserArticl
         }
         @OnClick(R.id.article_user_image)
         protected void article_user_image_click(){
-            MyTopicReplyListData single_data =  DataSet.get(getAdapterPosition());
+            ReplyMessageData single_data =  DataSet.get(getAdapterPosition());
             String username = single_data.getTitle().replace("我对 ","").replace("说:","").replace(" 对我","");
             UserDetailActivity.openWithTransitionAnimation(activity, username, article_user_image,DataSet.get(getAdapterPosition()).getauthorImage());
         }
     }
 
-    //用户主题
-    public class GetListArticleHolder extends BaseViewHolder{
-
-        @Bind(R.id.key)
-        protected TextView article_title;
-
-        @Bind(R.id.value)
-        protected TextView reply_num;
-
-        @Bind(R.id.main_item_btn_item)
-        protected LinearLayout main_item_btn_item;
-
-        public GetListArticleHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-
-
-        //int type, String title, String titleUrl, String replycount
-        void setData(int position) {
-            article_title.setText( DataSet.get(position).getTitle());
-            reply_num.setText(DataSet.get(position).getReplycount());
-        }
-
-        @OnClick(R.id.main_item_btn_item)
-        protected void main_item_btn_item_click(){
-            MyTopicReplyListData single_data =  DataSet.get(getAdapterPosition());
-            if(!single_data.getTitleUrl().isEmpty()){
-                SingleArticleNormalActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplycount()," ");
-            }
-
-        }
-    }
 }

@@ -30,7 +30,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.adapter.UserInfoStarAdapter;
+import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
+import xyz.yluo.ruisiapp.data.SimpleListData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 
@@ -51,12 +52,12 @@ public class ActivitySearch extends AppCompatActivity {
     @Bind(R.id.refresh_view)
     protected SwipeRefreshLayout refresh_view;
 
-    private UserInfoStarAdapter myadapterUserInfo;
+    private SimpleListAdapter adapter;
 
     private boolean isEnableLoadMore = false;
 
     private ActionBar actionBar;
-    private List<Pair<String,String>> datas = new ArrayList<>();
+    private List<SimpleListData> datas = new ArrayList<>();
 
 
     @Override
@@ -65,10 +66,10 @@ public class ActivitySearch extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
 
-        myadapterUserInfo = new UserInfoStarAdapter(this, datas,1);
+        adapter = new SimpleListAdapter(this, datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recycler_view.setLayoutManager(layoutManager);
-        recycler_view.setAdapter(myadapterUserInfo);
+        recycler_view.setAdapter(adapter);
 
         String search_string = "";
         try {
@@ -168,7 +169,7 @@ public class ActivitySearch extends AppCompatActivity {
 
     public class GetResultListTaskMe extends AsyncTask<Void, Void, String> {
 
-        private List<Pair<String,String>> dataset = new ArrayList<>();
+        private List<SimpleListData> dataset = new ArrayList<>();
         private String res;
 
         public GetResultListTaskMe(String res) {
@@ -186,7 +187,7 @@ public class ActivitySearch extends AppCompatActivity {
             for (Element src : links) {
                 String url = src.select("a").attr("href");
                 String title = src.select("a").text();
-                dataset.add(new Pair<>(title, url));
+                dataset.add(new SimpleListData(title,"",url));
             }
             return "";
         }
@@ -197,9 +198,9 @@ public class ActivitySearch extends AppCompatActivity {
             refresh_view.setRefreshing(false);
             datas.addAll(dataset);
             if(datas.size()==0){
-                datas.add(new Pair<>("没有搜索到结果",""));
+                datas.add(new SimpleListData("没有搜索到结果","",""));
             }
-            myadapterUserInfo.notifyItemRangeInserted(datas.size() - dataset.size(), dataset.size());
+            adapter.notifyDataSetChanged();
             isEnableLoadMore = true;
         }
     }
