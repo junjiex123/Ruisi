@@ -11,6 +11,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import xyz.yluo.ruisiapp.MySetting;
+
 public class SyncHttpClient {
     public static final String DEFAULT_USER_AGENT = "AsyncLiteHttp/1.3";
     private static PersistentCookieStore store;
@@ -64,8 +66,8 @@ public class SyncHttpClient {
 
     private void getCookie(HttpURLConnection conn){
         String fullCookie = "";
-        String cookieVal = "";
-        String key = null;
+        String cookieVal;
+        String key;
         //取cookie
         for(int i = 1; (key = conn.getHeaderFieldKey(i)) != null; i++){
             if(key.equalsIgnoreCase("set-cookie")){
@@ -155,6 +157,16 @@ public class SyncHttpClient {
                 os.write(content);
                 os.flush();
                 os.close();
+            }
+
+
+            //处理重定向
+            int code = connection.getResponseCode();
+            if(code==302){
+                //如果会重定向，保存302重定向地址，以及Cookies,然后重新发送请求(模拟请求)
+                String location = connection.getHeaderField("Location");
+                System.out.println("=====302 error======"+location);
+                request(MySetting.BBS_BASE_URL+location,Method.GET,map,handler);
             }
 
             // Process the response in the handler because it can be done in different ways

@@ -1,15 +1,20 @@
 package xyz.yluo.ruisiapp.fragment;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.widget.EditText;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,36 +26,64 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.activity.ActivitySearch;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
 import xyz.yluo.ruisiapp.data.FroumListData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.listener.HidingScrollListener;
+import xyz.yluo.ruisiapp.utils.GetFormHash;
 
 /**
  * Created by free2 on 16-3-19.
  *
  */
-public class HomeFragement_1 extends Fragment {
+public class HomeFragement_1 extends Fragment{
 
     @Bind(R.id.recycler_view)
     protected RecyclerView recycler_view;
     @Bind(R.id.main_refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
+    @Bind(R.id.search_view)
+    protected CardView search_view;
     private ForumListAdapter forumListAdapter;
     private List<FroumListData> datas = new ArrayList<>();
+    @Bind(R.id.search_input)
+    protected EditText search_input;
+    @Bind(R.id.main_window)
+    protected CoordinatorLayout main_window;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home_1_2_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_home_1_list, container, false);
         ButterKnife.bind(this, view);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
         recycler_view.setLayoutManager(mLayoutManager);
         forumListAdapter = new ForumListAdapter(getActivity(),datas);
         recycler_view.setAdapter(forumListAdapter);
+
+        recycler_view.addOnScrollListener(new HidingScrollListener() {
+            @Override
+            public void onHide() {
+                CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) search_view.getLayoutParams();
+                int bottomMargin = lp.bottomMargin;
+                int distanceToScroll = search_view.getHeight() + bottomMargin;
+                search_view.animate().translationY(-distanceToScroll).setInterpolator(new AccelerateInterpolator(2));
+            }
+
+            @Override
+            public void onShow() {
+                search_view.animate().translationY(0).setInterpolator(new AccelerateInterpolator(2));
+            }
+        });
+
+        refreshLayout.setProgressViewOffset(true,150,200);
 
 
         //刷新
@@ -107,6 +140,14 @@ public class HomeFragement_1 extends Fragment {
             Document document = Jsoup.parse(response);
 
             Elements elements = document.select("div#wp.wp.wm").select("div.bm.bmw.fl");
+            //获得hash
+            String hash = document.select(".footer").select("a.dialog").attr("href");
+
+            String ress =  GetFormHash.getHash(hash);
+            if(!ress.isEmpty()){
+                MySetting.CONFIG_FORMHASH = ress;
+                System.out.println("set hash"+ ress);
+            }
 
             for(Element ele:elements){
                 String header = ele.select("h2").text();
@@ -117,25 +158,8 @@ public class HomeFragement_1 extends Fragment {
                     tmp.select("span.num").remove();
                     String title = tmp.text();
                     String titleUrl = tmp.select("a").attr("href");
-
-                    //如果是校园网
-                    if(MySetting.CONFIG_IS_INNER){
-                        //boolean isheader,String title, String todayNew,  String titleUrl
-                        simpledatas.add(new FroumListData(false,title,todayNew,titleUrl));
-
-                        }else{
-
-                        //摄影天地 //校园活动 //电影
-                        //这三个分区只有校园网才能上
-                        if(title.equals("摄影天地")|title.equals("校园活动")|title.equals("电影")){
-                        }else{
-                            //boolean isheader,String title, String todayNew,  String titleUrl
-                            simpledatas.add(new FroumListData(false,title,todayNew,titleUrl));
-                        }
-
-                    }
-
-
+                    //boolean isheader,String title, String todayNew,  String titleUrl
+                    simpledatas.add(new FroumListData(false,title,todayNew,titleUrl));
                 }
             }
             return null;
@@ -149,5 +173,33 @@ public class HomeFragement_1 extends Fragment {
             forumListAdapter.notifyItemRangeInserted(0, simpledatas.size());
         }
 
+    }
+
+    @OnClick(R.id.start_search)
+    protected void start_search_click(){
+        if(islogin_dialog()){
+            if (search_input.getText().toString().isEmpty()){
+                search_input.setError("你还没写呢");
+            }else{
+                Intent i = new Intent(getActivity(),ActivitySearch.class);
+                i.putExtra("res",search_input.getText().toString());
+                search_input.setText("");
+                startActivity(new Intent(i));
+            }
+        }
+
+    }
+
+
+    //判断是否需要弹出登录dialog
+    private boolean islogin_dialog(){
+
+        if(MySetting.CONFIG_ISLOGIN){
+            return true;
+        }else{
+            NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();
+            dialogFragment.show(getFragmentManager(), "needlogin");
+        }
+        return false;
     }
 }

@@ -1,6 +1,6 @@
 package xyz.yluo.ruisiapp.utils;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
@@ -10,7 +10,7 @@ import android.net.Uri;
  */
 public class RequestOpenBrowser {
 
-    public static void openBroswer(Activity activity,String url){
+    public static void openBroswer(Context activity, String url){
         Intent intent = new Intent();
         intent.setAction("android.intent.action.VIEW");
         Uri content_url = Uri.parse(url);

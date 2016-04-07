@@ -14,6 +14,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.ArticleListImageActivity;
 import xyz.yluo.ruisiapp.activity.ArticleListNormalActivity;
@@ -33,6 +34,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.Base
 
     private final int TYPE_NORMAL = 0;
     private final int TYPE_HEADER = 1;
+    private final int TYPE_EMPTY =  2;
 
     public ForumListAdapter(Activity activity, List<FroumListData> dataSet) {
         DataSet = dataSet;
@@ -41,7 +43,10 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.Base
 
     @Override
     public int getItemViewType(int position) {
-        if(DataSet.get(position).isheader()){
+        if(position==0||position==1){
+            return TYPE_EMPTY;
+        }
+        if(DataSet.get(position-2).isheader()){
             return TYPE_HEADER;
         }else{
             return TYPE_NORMAL;
@@ -52,8 +57,10 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.Base
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType==TYPE_NORMAL){
             return new FroumsListViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.main_forums_list_item, parent, false));
-        }else{
+        }else if(viewType==TYPE_HEADER){
             return new FroumsListHeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.main_forums_list_item_header, parent, false));
+        }else {
+            return new EmptyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_list_item,parent,false));
         }
 
     }
@@ -66,11 +73,14 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.Base
 
     @Override
     public int getItemCount() {
-        return DataSet.size();
+        if(DataSet.size()==0){
+            return 0;
+        }
+        return DataSet.size()+2;
     }
 
 
-    public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
+    protected abstract class BaseViewHolder extends RecyclerView.ViewHolder{
 
         public BaseViewHolder(View itemView) {
             super(itemView);
@@ -79,7 +89,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.Base
     }
 
     //首页板块列表ViewHolder
-    public class FroumsListViewHolder extends BaseViewHolder{
+    protected class FroumsListViewHolder extends BaseViewHolder{
 
         @Bind(R.id.img)
         protected ImageView img;
@@ -96,29 +106,33 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.Base
         }
         @OnClick(R.id.forum_list_item)
         protected void forum_list_item_click(){
-            String fid = GetId.getFroumFid(DataSet.get(getAdapterPosition()).getTitleUrl());
-            if(fid.equals("561")||fid.equals("157")||fid.equals("13")){
-                ArticleListImageActivity.open(activity,Integer.parseInt(fid),DataSet.get(getAdapterPosition()).getTitle());
+            FroumListData single = DataSet.get(getAdapterPosition()-2);
+
+            String fid = GetId.getFroumFid(single.getTitleUrl());
+            //几个特殊的板块
+            if(MySetting.CONFIG_IS_INNER&&(fid.equals("561")||fid.equals("157")||fid.equals("13"))){
+                ArticleListImageActivity.open(activity,Integer.parseInt(fid),single.getTitle());
             }else{
-                ArticleListNormalActivity.open(activity, Integer.parseInt(fid), DataSet.get(getAdapterPosition()).getTitle());
+                ArticleListNormalActivity.open(activity, Integer.parseInt(fid), single.getTitle());
             }
 
         }
         void setData(int position) {
-            title.setText(DataSet.get(position).getTitle());
-            if(!DataSet.get(position).getTodayNew().isEmpty()){
+            FroumListData single = DataSet.get(position-2);
+            title.setText(single.getTitle());
+            if(!single.getTodayNew().isEmpty()){
                 today_count.setVisibility(View.VISIBLE);
-                today_count.setText(DataSet.get(position).getTodayNew());
+                today_count.setText(single.getTodayNew());
             }
 
-            String url = DataSet.get(position).getTitleUrl();
+            String url = single.getTitleUrl();
             Drawable dra = GetLogoUtils.getlogo(activity, url);
             img.setImageDrawable(dra);
         }
 
     }
 
-    public class FroumsListHeaderViewHolder extends BaseViewHolder{
+    protected class FroumsListHeaderViewHolder extends BaseViewHolder{
 
         @Bind(R.id.header_title)
         protected TextView header_title;
@@ -130,7 +144,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.Base
 
         @Override
         void setData(int position) {
-            header_title.setText(DataSet.get(position).getTitle());
+            header_title.setText(DataSet.get(position-2).getTitle());
         }
 
         @OnClick(R.id.forum_list_item)
@@ -138,5 +152,19 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.Base
 
         }
     }
+
+    protected class EmptyViewHolder extends BaseViewHolder{
+
+        public EmptyViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        void setData(int position) {
+
+        }
+    }
+
+
 
 }

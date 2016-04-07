@@ -24,7 +24,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
  */
 public class UserInfoStarAdapter extends RecyclerView.Adapter<UserInfoStarAdapter.UserInfoViewHolder>{
 
-    List<Pair<String,String >> datas = new ArrayList<Pair<String,String >>();
+    List<Pair<String,String >> datas = new ArrayList<>();
     private int type;
     private Activity activity;
     //0---用户信息
@@ -78,9 +78,11 @@ public class UserInfoStarAdapter extends RecyclerView.Adapter<UserInfoStarAdapte
         protected void main_container_click(){
             if(type==1){
                 Pair<String,String > single_data =  datas.get(getAdapterPosition());
-
                 String tid = GetId.getTid(single_data.second);
-                SingleArticleNormalActivity.open(activity,tid,single_data.first,"","");
+                if(tid.length()>=2){
+                    SingleArticleNormalActivity.open(activity,tid,single_data.first,"","");
+                }
+
             }
         }
     }

@@ -114,42 +114,40 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
 
         @Override
         protected String doInBackground(Void... params) {
-            if(res!=""){
-                Elements list = Jsoup.parse(res).select("div[id=threadlist]");
-                Elements links = list.select("tbody");
-                ArticleListData temp;
-                for (Element src : links) {
-                    if (src.getElementsByAttributeValue("class", "by").first() != null) {
+            Elements list = Jsoup.parse(res).select("div[id=threadlist]");
+            Elements links = list.select("tbody");
+            ArticleListData temp;
+            for (Element src : links) {
+                if (src.getElementsByAttributeValue("class", "by").first() != null) {
 
-                        String type = "normal";
-                        //金币
-                        if (src.select("th").select("strong").text() != "") {
-                            type = "gold:" + src.select("th").select("strong").text().trim();
-                        } else if (src.attr("id").contains("stickthread")) {
-                            type = "zhidin";
-                        } else {
-                            type = "normal";
-                        }
-                        String title = src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]").text();
-                        String titleUrl = src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]").attr("href");
-                        //http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=836820&extra=page%3D1
-                        String author = src.getElementsByAttributeValue("class", "by").first().select("a").text();
-                        String authorUrl = src.getElementsByAttributeValue("class", "by").first().select("a").attr("href");
-                        String time = src.getElementsByAttributeValue("class", "by").first().select("em").text().trim();
-                        String viewcount = src.getElementsByAttributeValue("class", "num").select("em").text();
-                        String replaycount = src.getElementsByAttributeValue("class", "num").select("a").text();
-
-                        if(!MySetting.CONFIG_ISSHOW_ZHIDIN&&type.equals("zhidin")){
-                            //do no thing
-                        }else{
-                            if (title != "" && author != "" && viewcount != "") {
-                                //新建对象
-                                temp = new ArticleListData(title, titleUrl, type, author, authorUrl, time, viewcount, replaycount);
-                                dataset.add(temp);
-                            }
-                        }
-
+                    String type;
+                    //金币
+                    if (src.select("th").select("strong").text().length()>0) {
+                        type = "gold:" + src.select("th").select("strong").text().trim();
+                    } else if (src.attr("id").contains("stickthread")) {
+                        type = "zhidin";
+                    } else {
+                        type = "normal";
                     }
+                    String title = src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]").text();
+                    String titleUrl = src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]").attr("href");
+                    //http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=836820&extra=page%3D1
+                    String author = src.getElementsByAttributeValue("class", "by").first().select("a").text();
+                    String authorUrl = src.getElementsByAttributeValue("class", "by").first().select("a").attr("href");
+                    String time = src.getElementsByAttributeValue("class", "by").first().select("em").text().trim();
+                    String viewcount = src.getElementsByAttributeValue("class", "num").select("em").text();
+                    String replaycount = src.getElementsByAttributeValue("class", "num").select("a").text();
+
+                    if(!MySetting.CONFIG_ISSHOW_ZHIDIN&&type.equals("zhidin")){
+                        //do no thing
+                    }else{
+                        if (title.length()>0&& author.length()>0) {
+                            //新建对象
+                            temp = new ArticleListData(title, titleUrl, type, author, authorUrl, time, viewcount, replaycount);
+                            dataset.add(temp);
+                        }
+                    }
+
                 }
             }
             return "";
@@ -183,30 +181,28 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
 
         @Override
         protected String doInBackground(Void... params) {
-            if(res!=""){
-                //chiphell
-                Document doc = Jsoup.parse(res);
-                Elements body = doc.select("div[class=threadlist]"); // 具有 href 属性的链接
+            //chiphell
+            Document doc = Jsoup.parse(res);
+            Elements body = doc.select("div[class=threadlist]"); // 具有 href 属性的链接
 
-                ArticleListData temp;
-                Elements links = body.select("li");
-                for (Element src : links) {
-                    String url = src.select("a").attr("href");
-                    String author = src.select(".by").text();
-                    src.select("span.by").remove();
-                    String title = src.select("a").text();
-                    String replyCount = src.select("span.num").text();
+            ArticleListData temp;
+            Elements links = body.select("li");
+            for (Element src : links) {
+                String url = src.select("a").attr("href");
+                String author = src.select(".by").text();
+                src.select("span.by").remove();
+                String title = src.select("a").text();
+                String replyCount = src.select("span.num").text();
 
-                    String img = src.select("img").attr("src");
-                    String hasImage = "";
-                    if(img.contains("icon_tu.png")){
-                        hasImage = "0";
-                    }
-
-                    //String type,String title, String titleUrl, String author, String replayCount
-                    temp = new ArticleListData(hasImage,title, url, author, replyCount);
-                    dataset.add(temp);
+                String img = src.select("img").attr("src");
+                String hasImage = "";
+                if(img.contains("icon_tu.png")){
+                    hasImage = "0";
                 }
+
+                //String type,String title, String titleUrl, String author, String replayCount
+                temp = new ArticleListData(hasImage,title, url, author, replyCount);
+                dataset.add(temp);
             }
             return "";
         }
@@ -216,10 +212,6 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
 
             mydatasetnormal.addAll(dataset);
             refreshLayout.setRefreshing(false);
-            if(CurrentPage!=1){
-                mRecyclerView.getItemAnimator().setAddDuration(0);
-            }
-
             mRecyleAdapter.notifyItemRangeInserted(mydatasetnormal.size() - dataset.size(), dataset.size());
             isEnableLoadMore = true;
 

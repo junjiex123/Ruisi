@@ -17,9 +17,8 @@ public class GetId {
         Pattern pattern = Pattern.compile("[0-9]{3,}");
         Matcher matcher = pattern.matcher(url);
         String tid ="";
-        while (matcher.find()) {
+        if (matcher.find()) {
             tid = url.substring(matcher.start(),matcher.end());
-            break;
             //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
         }
         return tid;
@@ -31,29 +30,33 @@ public class GetId {
         Pattern pattern = Pattern.compile("[0-9]{3,}");
         Matcher matcher = pattern.matcher(url);
         String uid ="";
-        while (matcher.find()) {
+        if (matcher.find()) {
             uid = url.substring(matcher.start(),matcher.end());
-            break;
-            //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
         }
         return uid;
     }
 
     public static String getFroumFid(String url){
 
-        //fid=[0-9]+
-        Pattern pattern = Pattern.compile("fid=[0-9]+");
-        Matcher matcher = pattern.matcher(url);
-        String fid ="";
-        if (matcher.find()) {
-            fid = url.substring(matcher.start()+4,matcher.end());
-        }
-        if(fid.equals("106")){
-            fid="110";
-        }else if(fid.equals("553")){
-            fid="554";
-        }
-        return fid;
+        try {
+            //fid=[0-9]+
+            Pattern pattern = Pattern.compile("fid=[0-9]+");
+            Matcher matcher = pattern.matcher(url);
+            String fid ="";
+            if (matcher.find()) {
+                fid = url.substring(matcher.start()+4,matcher.end());
+            }
+            if(fid.equals("106")){
+                fid="110";
+            }else if(fid.equals("553")){
+                fid="554";
+            }
+            return fid;
 
+        }catch (Exception e){
+            e.printStackTrace();
+
+            return "0";
+        }
     }
 }

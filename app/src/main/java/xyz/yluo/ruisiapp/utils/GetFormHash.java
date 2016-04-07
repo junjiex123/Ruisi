@@ -5,6 +5,9 @@ import android.content.Context;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -15,24 +18,6 @@ import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
  * 获得论坛FormHash
  */
 public class GetFormHash {
-
-    public static void start_get_hash(Context context){
-
-        HttpUtil.get(context, "portal.php", new ResponseHandler() {
-            @Override
-            public void onSuccess(byte[] response) {
-                Document doc = Jsoup.parse(new String(response));
-                // 具有 formhash 属性的链接
-                if (doc.select("input[name=formhash]").attr("value") != null) {
-                    MySetting.CONFIG_FORMHASH = doc.select("input[name=formhash]").attr("value");
-                }
-            }
-            @Override
-            public void onFailure(Throwable e) {
-
-            }
-        });
-    }
 
     public static void start_get_hash(Context context,boolean isMobile){
         if(isMobile){
@@ -50,5 +35,25 @@ public class GetFormHash {
                 }
             });
         }
+    }
+
+    public static String getHash(String url){
+        //member.php?mod=logging&action=logout&formhash=cb9f1c2f&mobile=2
+        try {
+            //fid=[0-9]+
+            Pattern pattern = Pattern.compile("formhash=.*&");
+            Matcher matcher = pattern.matcher(url);
+            String hash ="";
+            if (matcher.find()) {
+                hash = url.substring(matcher.start()+9,matcher.end()-1);
+            }
+
+            return hash;
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return "";
+        }
+
     }
 }

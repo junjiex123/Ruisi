@@ -90,13 +90,13 @@ public class LaunchActivity extends AppCompatActivity{
         if(type==TYPE_INNER){
             MySetting.CONFIG_IS_INNER = true;
             MySetting.BBS_BASE_URL= UrlUtils.getBaseUrl(true);
-            checklogin(res);
         }else{
             Toast.makeText(getApplicationContext(),"已经切换到外网",Toast.LENGTH_SHORT).show();
             MySetting.BBS_BASE_URL = UrlUtils.getBaseUrl(false);
             MySetting.CONFIG_IS_INNER = false;
-            checklogin(res);
+
         }
+        checklogin(res);
     }
 
     private void rsError(){

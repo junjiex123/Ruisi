@@ -180,19 +180,16 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
 
         @Bind(R.id.article_user_image)
         protected ImageView replay_image;
-
+        @Bind(R.id.btn_reply_2)
+        protected ImageView btn_reply_2;
         @Bind(R.id.replay_author)
         protected TextView replay_author;
-
         @Bind(R.id.replay_index)
         protected TextView replay_index;
-
         @Bind(R.id.replay_time)
         protected TextView replay_time;
-
         @Bind(R.id.html_text)
         protected MyHtmlTextView htmlTextView;
-
         @Bind(R.id.bt_lable_lz)
         protected TextView bt_lable_lz;
 
@@ -213,6 +210,12 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
                 bt_lable_lz.setVisibility(View.VISIBLE);
             }else {
                 bt_lable_lz.setVisibility(View.GONE);
+            }
+            if(!single.getReplyUrl().contains("action=reply")){
+                //链接不合法
+                btn_reply_2.setVisibility(View.GONE);
+            }else {
+                btn_reply_2.setVisibility(View.VISIBLE);
             }
             Picasso.with(activity).load(single.getUserImgUrl()).resize(36,36).centerCrop().placeholder(R.drawable.image_placeholder).into(replay_image);
             //.error(R.drawable.user_placeholder_error)

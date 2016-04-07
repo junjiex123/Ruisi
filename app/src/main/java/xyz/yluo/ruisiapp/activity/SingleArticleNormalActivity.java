@@ -105,6 +105,7 @@ public class SingleArticleNormalActivity extends AppCompatActivity
     //约定好要就收的数据
     public static void open(Context context, String tid,String title,String replycount,String type) {
         Intent intent = new Intent(context, SingleArticleNormalActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ARTICLE_TID = tid;
         ARTICLE_TITLE = title;
         ARTICLE_REPLY_COUNT = replycount;
@@ -149,12 +150,12 @@ public class SingleArticleNormalActivity extends AppCompatActivity
                 CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) replay_bar.getLayoutParams();
                 int bottomMargin = lp.bottomMargin;
                 int distanceToScroll = replay_bar.getHeight() + bottomMargin;
-                replay_bar.animate().translationY(distanceToScroll).setInterpolator(new AccelerateInterpolator(5));
+                replay_bar.animate().translationY(distanceToScroll).setInterpolator(new AccelerateInterpolator(2));
             }
 
             @Override
             public void onShow() {
-                replay_bar.animate().translationY(0).setInterpolator(new AccelerateInterpolator(5));
+                replay_bar.animate().translationY(0).setInterpolator(new AccelerateInterpolator(2));
             }
         });
 
@@ -357,7 +358,6 @@ public class SingleArticleNormalActivity extends AppCompatActivity
                     ARTICLE_TITLE = elements.select("h2").first().text().trim();
                 }
 
-
                 Elements postlist = elements.select("div[id^=pid]");
 
                 for(Element temp:postlist){
@@ -547,13 +547,12 @@ public class SingleArticleNormalActivity extends AppCompatActivity
                     @Override
                     public void onSuccess(byte[] response) {
                         String res = new String(response);
-                        handleReply(true,res);
+                        handleReply(true,res+"层主");
                     }
-
-                    //TODO 不管成不成功 都是 failer
                     @Override
                     public void onFailure(Throwable e) {
-                        handleReply(false,"todo");
+                        e.printStackTrace();
+                        handleReply(false,"");
                     }
                 });
             }
@@ -567,9 +566,8 @@ public class SingleArticleNormalActivity extends AppCompatActivity
     private void handleReply(boolean isok,String res){
         progress.dismiss();
         if(isok){
-            if (res.contains("成功")) {
+            if (res.contains("成功")||res.contains("层主")) {
                 Toast.makeText(getApplicationContext(), "回复发表成功", Toast.LENGTH_SHORT).show();
-                input_aera.setText("");
                 hide_ime();
                 replyTime = System.currentTimeMillis();
             } else if(res.contains("您两次发表间隔")){
@@ -578,13 +576,7 @@ public class SingleArticleNormalActivity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(), "由于未知原因发表失败", Toast.LENGTH_SHORT).show();
             }
         }else{
-            if(res.equals("todo")){
-                Toast.makeText(getApplicationContext(),"应该发送成功了.....",Toast.LENGTH_SHORT).show();
-                replyTime = System.currentTimeMillis();
-            }else{
-                Toast.makeText(getApplicationContext(), "网络错误", Toast.LENGTH_SHORT).show();
-            }
-
+            Toast.makeText(getApplicationContext(),"网络错误",Toast.LENGTH_SHORT).show();
         }
     }
 

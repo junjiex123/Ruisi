@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.NewArticleActivity_2;
 import xyz.yluo.ruisiapp.activity.SingleArticleNormalActivity;
@@ -35,26 +36,21 @@ public class MyWebViewClient extends WebViewClient {
     //重写文章中点击连接的事件
     @Override
     public boolean shouldOverrideUrlLoading(WebView webView, String url) {
-        //TODO 处理不同的链接点击事件
         if (url.contains("forum.php?mod=viewthread&tid=")) { // 帖子
             String tid = GetId.getTid(url);
             SingleArticleNormalActivity.open(context,tid,"查看主题","","");
-            return true;
         } else if (url.contains("home.php?mod=space&uid=")) { // 用户
             String imageUrl = UrlUtils.getimageurl(url,true);
             UserDetailActivity.open(context,"name",imageUrl);
-            return true;
         } else if(url.contains("forum.php?mod=post&action=newthread")){ //发帖链接
             context.startActivity(new Intent(context,NewArticleActivity_2.class));
-            return true;
-        }else if(url.contains("member.php?mod=logging&action=login")){//登陆
+        }else if(url.contains("member.php?mod=logging&action=login")) {//登陆
             LoginActivity.open(context);
-            return true;
+        }else{
+            RequestOpenBrowser.openBroswer(context, MySetting.BBS_BASE_URL+url);
         }
-        else{
-            // 其他连接
-            return true;
-        }
+
+        return true;
     }
 
 }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    android:id="@+id/forum_list_item"
+<LinearLayout android:id="@+id/forum_list_item"
     android:gravity="center_vertical"
     android:layout_marginTop="@dimen/dimen_4"
     android:padding="@dimen/dimen_8"
@@ -10,7 +9,8 @@
     android:clickable="true"
     android:background="?attr/selectableItemBackground"
     android:orientation="horizontal"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools">
 
         <View
             android:layout_gravity="center_vertical"
@@ -25,10 +25,8 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="16sp"
+            android:textColor="@color/colorAccent"
+            android:textSize="17sp"
             android:singleLine="true"
-            android:text="西电生活" />
-
-
+            tool:text="西电生活" />
     </LinearLayout>

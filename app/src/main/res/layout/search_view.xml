@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView android:background="@android:color/white"
+    android:layout_margin="6dp"
+    android:id="@+id/search_view"
+    android:layout_width="match_parent"
+    android:layout_height="46dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="start|center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingEnd="@dimen/dimen_8">
+
+        <EditText
+            android:hint="搜索"
+            android:id="@+id/search_input"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_gravity="start|center_vertical"
+            android:paddingEnd="8dp"
+            android:paddingStart="4dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="start|center_vertical"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:singleLine="true"
+            android:textSize="16sp">
+        </EditText>
+
+        <ImageView
+            android:background="?attr/selectableItemBackground"
+            android:padding="11dp"
+            android:clickable="true"
+            android:id="@+id/start_search"
+            android:src="@drawable/ic_search_gray_24dp"
+            android:layout_width="46dp"
+            android:layout_height="46dp" />
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

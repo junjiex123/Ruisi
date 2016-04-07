@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,7 +10,7 @@
         android:id="@+id/main_item_btn_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="16dp"
+        android:paddingTop="12dp"
         android:paddingStart="@dimen/dimen_16"
         android:paddingEnd="@dimen/dimen_16"
         android:paddingBottom="@dimen/dimen_8"
@@ -23,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="?android:attr/textColorPrimary"
-            android:textSize="16sp"
+            android:textSize="17sp"
             tools:text="话题的标题" />
         <LinearLayout
             android:layout_marginTop="12dp"
@@ -40,10 +39,10 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
-                android:textColor="?android:attr/textColorSecondary"
+                android:textColor="@color/colorAuthor"
                 android:textSize="12sp"
                 android:singleLine="true"
-                android:text="TakWolf" />
+                android:text="some"/>
 
             <TextView
                 android:gravity="top"
