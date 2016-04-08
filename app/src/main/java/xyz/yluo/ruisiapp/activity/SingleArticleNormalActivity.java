@@ -60,7 +60,8 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  *
  */
 public class SingleArticleNormalActivity extends AppCompatActivity
-        implements RecyclerViewClickListener,LoadMoreListener.OnLoadMoreListener,Reply_Dialog_Fragment.ReplyDialogListener {
+        implements RecyclerViewClickListener,LoadMoreListener.OnLoadMoreListener,
+        Reply_Dialog_Fragment.ReplyDialogListener {
 
     @Bind(R.id.topic_recycler_view)
     protected RecyclerView mRecyclerView;
@@ -144,20 +145,6 @@ public class SingleArticleNormalActivity extends AppCompatActivity
             }
         });
 
-        mRecyclerView.addOnScrollListener(new HidingScrollListener() {
-            @Override
-            public void onHide() {
-                CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) replay_bar.getLayoutParams();
-                int bottomMargin = lp.bottomMargin;
-                int distanceToScroll = replay_bar.getHeight() + bottomMargin;
-                replay_bar.animate().translationY(distanceToScroll).setInterpolator(new AccelerateInterpolator(2));
-            }
-
-            @Override
-            public void onShow() {
-                replay_bar.animate().translationY(0).setInterpolator(new AccelerateInterpolator(2));
-            }
-        });
 
         //下拉刷新
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -227,7 +214,6 @@ public class SingleArticleNormalActivity extends AppCompatActivity
             }
         }else if(v.getId()==R.id.btn_reply){
             if(isNeedLoginDialog()){
-                replay_bar.animate().translationY(0).setInterpolator(new AccelerateInterpolator(5));
                 show_ime();
             }
         }else if(v.getId()==R.id.btn_reply_2){
@@ -257,32 +243,9 @@ public class SingleArticleNormalActivity extends AppCompatActivity
         return false;
     }
 
-    //文章一页的html 根据页数 tid
-    private void getArticleData(final int page) {
-
-        String url = UrlUtils.getSingleArticleUrl(ARTICLE_TID,page,false);
-        //是否倒序查看
-        if(isReverse){
-            url+="&ordertype=1";
-        }
-        HttpUtil.get(this ,url,new ResponseHandler() {
-            @Override
-            public void onSuccess(byte[] response) {
-                String res = new String(response);
-                new DealWithArticleData(res,page).execute((Void) null);
-            }
-
-            @Override
-            public void onFailure(Throwable e) {
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), ">>>网络错误", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     @Override
     public void onLoadMore() {
-        System.out.println("====load more====");
         //加载更多被电击
         if(isEnableLoadMore){
             isEnableLoadMore = false;
@@ -308,6 +271,29 @@ public class SingleArticleNormalActivity extends AppCompatActivity
         getArticleData(1);
     }
 
+    //文章一页的html 根据页数 tid
+    private void getArticleData(final int page) {
+
+        String url = UrlUtils.getSingleArticleUrl(ARTICLE_TID,page,false);
+        //是否倒序查看
+        if(isReverse){
+            url+="&ordertype=1";
+        }
+        HttpUtil.get(this ,url,new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                new DealWithArticleData(res,page).execute((Void) null);
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), ">>>网络错误", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     public class DealWithArticleData extends AsyncTask<Void,Void,String>{
         //* 传入一篇文章html
         //* 返回list<SingleArticleData>
@@ -322,7 +308,6 @@ public class SingleArticleNormalActivity extends AppCompatActivity
         protected String doInBackground(Void... params) {
             //list 所有楼数据
             Document doc = Jsoup.parse(htmlData);
-
             //获取回复/hash
             if (doc.select("input[name=formhash]").first() != null) {
                 replyUrl = doc.select("form#fastpostform").attr("action");
@@ -331,7 +316,6 @@ public class SingleArticleNormalActivity extends AppCompatActivity
                     MySetting.CONFIG_FORMHASH =hash;
                 }
             }
-
             //获取总页数
             Pattern pattern = Pattern.compile("[0-9]+");
             String s = doc.select(".pg").select("span").attr("title");
@@ -347,8 +331,6 @@ public class SingleArticleNormalActivity extends AppCompatActivity
                     e.printStackTrace();
                 }
             }
-
-            System.out.println("======total========"+TOTAL_PAGE);
 
             Elements elements = doc.select(".postlist");
             if(elements!=null){
@@ -368,37 +350,45 @@ public class SingleArticleNormalActivity extends AppCompatActivity
                     String posttime = userInfo.select("li.grey.rela").text();
                     String replyUrl = temp.select(".replybtn").select("input").attr("href");
 
+                    Elements contentels = temp.select(".message");
+
                     //是否移除所有样式
                     if(MySetting.CONFIG_SHOW_PLAIN_TEXT){
                         //移除所有style
                         //移除font所有样式
-                        temp.select("[style]").removeAttr("style");
-                        temp.select("font").removeAttr("color").removeAttr("size").removeAttr("face");
+                        contentels.select("[style]").removeAttr("style");
+                        contentels.select("font").removeAttr("color").removeAttr("size").removeAttr("face");
                     }
 
                     //修改表情大小 30x30
-                    for (Element tempp : temp.select("img[src^=static/image/smiley/]")) {
+                    for (Element tempp : contentels.select("img[src^=static/image/smiley/]")) {
                         tempp.attr("style", "width:30px;height: 30px;");
                     }
 
                     //替换代码块里面的br
-                    for(Element tempp:temp.select(".blockcode")){
+                    for(Element tempp:contentels.select(".blockcode")){
                         tempp.select("br").remove();
                     }
 
-                    //替换无意义的 br
-                    String content = temp.select(".message").html().replaceAll("(\\s*<br>\\s*){2,}","");
 
-                    //文章内容
+                    for(Element ttt:contentels.select("a[href*=from=album]")){
+                        ttt.select("img").attr("style","display: block;margin:10px auto;width:80%;");
+                    }
+
+                    ////替换无意义的 br
+                    String finalcontent = contentels.html().replaceAll("(\\s*<br>\\s*){2,}","");;
+
+
+                    //String content = temp.select(".message").html()
+
                     if(mydatalist.size()==0&&tepdata.size()==0){
+                        //文章内容
                         String newtime = posttime.replace("收藏","");
-                        //title, type, replyCount,username,userUrl,userImgUrl,postTime,cotent
-                        data = new SingleArticleData(ARTICLE_TITLE,ARTICLE_TYPE,ARTICLE_REPLY_COUNT,username,userimg,newtime,content);
+                        data = new SingleArticleData(ARTICLE_TITLE,ARTICLE_TYPE,ARTICLE_REPLY_COUNT,username,userimg,newtime,finalcontent);
                         tepdata.add(data);
                     }else{
                         //评论
-                        //String username, String userImgUrl, String postTime,String index,String replyUrl,String cotent
-                        data = new SingleArticleData(username,userimg,posttime,index,replyUrl,content);
+                        data = new SingleArticleData(username,userimg,posttime,index,replyUrl,finalcontent);
                         tepdata.add(data);
                     }
                 }
@@ -433,6 +423,7 @@ public class SingleArticleNormalActivity extends AppCompatActivity
 //            if(add==0){
 //                Toast.makeText(getApplicationContext(),"暂无更多",Toast.LENGTH_SHORT).show();
 //            }
+
             mRecyleAdapter.notifyItemRangeInserted(start, add);
             isEnableLoadMore = true;
             refreshLayout.setRefreshing(false);
@@ -643,11 +634,6 @@ public class SingleArticleNormalActivity extends AppCompatActivity
             super.onBackPressed();
         }
 
-    }
-
-    private void netWorkError(String res){
-        Toast.makeText(getApplicationContext(),res,Toast.LENGTH_SHORT).show();
-        refreshLayout.setRefreshing(false);
     }
 
 }

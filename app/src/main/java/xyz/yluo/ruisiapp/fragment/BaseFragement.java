@@ -15,6 +15,7 @@ import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 
 /**
  * Created by free2 on 16-4-7.
@@ -43,6 +44,14 @@ public abstract class BaseFragement extends Fragment {
         recycler_view.setLayoutManager(layoutManager);
         initView();
         startGetdata();
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+                startGetdata();
+            }
+        });
         return view;
     }
 
@@ -77,5 +86,6 @@ public abstract class BaseFragement extends Fragment {
 
     protected abstract void initView();
     protected abstract void finishGetData(String res);
+    protected abstract void refresh();
 
 }

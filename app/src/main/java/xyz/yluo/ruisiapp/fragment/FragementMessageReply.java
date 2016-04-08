@@ -50,6 +50,11 @@ public class FragementMessageReply extends BaseFragement{
         }
     }
 
+    @Override
+    protected void refresh() {
+        datas.clear();
+        adapter.notifyDataSetChanged();
+    }
 
     //获得回复我的
     public class GetUserReplyTask extends AsyncTask<Void, Void, String> {
@@ -63,24 +68,22 @@ public class FragementMessageReply extends BaseFragement{
         protected String doInBackground(Void... params) {
             //pmbox
             Elements lists = Jsoup.parse(res).select(".nts").select("dl.cl");
-            if(lists!=null){
-                for(Element tmp:lists){
-                    boolean isNew = false;
-                    if(tmp.select(".ntc_body").attr("style").contains("bold")){
-                        isNew = true;
-                    }
-                    String content = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").text().replace("查看","");;
-                    if(content.isEmpty()){
-                        continue;
-                    }
-                    String authorImage = tmp.select(".avt").select("img").attr("src");
-                    String authorTitle = tmp.select(".ntc_body").select("a[href^=home.php]").text()+" 回复了我";
-                    String time = tmp.select(".xg1.xw0").text();
-                    String titleUrl =tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
-
-                    //String title, String titleUrl, String authorImage, String time,String content
-                    datas.add(new ReplyMessageData(authorTitle,titleUrl,authorImage,time,content));
+            for(Element tmp:lists){
+                boolean isNew = false;
+                if(tmp.select(".ntc_body").attr("style").contains("bold")){
+                    isNew = true;
                 }
+                String content = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").text().replace("查看","");;
+                if(content.isEmpty()){
+                    continue;
+                }
+                String authorImage = tmp.select(".avt").select("img").attr("src");
+                String authorTitle = tmp.select(".ntc_body").select("a[href^=home.php]").text()+" 回复了我";
+                String time = tmp.select(".xg1.xw0").text();
+                String titleUrl =tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
+
+                //String title, String titleUrl, String authorImage, String time,String content
+                datas.add(new ReplyMessageData(authorTitle,titleUrl,authorImage,time,content));
             }
             return "";
         }
@@ -103,24 +106,20 @@ public class FragementMessageReply extends BaseFragement{
         protected String doInBackground(Void... params) {
             //pmbox
             Elements lists = Jsoup.parse(res).select(".pmbox").select("ul").select("li");
-            if(lists!=null){
-                for(Element tmp:lists){
-                    String title = tmp.select(".cl").select(".name").text();
-                    String time = tmp.select(".cl.grey").select(".time").text();
-                    tmp.select(".cl.grey").select(".time").remove();
-
-                    String content = tmp.select(".cl.grey").text();
-                    String authorImage = tmp.select("img").attr("src");
-                    String titleUrl =tmp.select("a").attr("href");
-                    datas.add(new ReplyMessageData(title,titleUrl,authorImage,time,content));
-                }
+            for(Element tmp:lists){
+                String title = tmp.select(".cl").select(".name").text();
+                String time = tmp.select(".cl.grey").select(".time").text();
+                tmp.select(".cl.grey").select(".time").remove();
+                String content = tmp.select(".cl.grey").text();
+                String authorImage = tmp.select("img").attr("src");
+                String titleUrl =tmp.select("a").attr("href");
+                datas.add(new ReplyMessageData(title,titleUrl,authorImage,time,content));
             }
             return "";
         }
 
         @Override
         protected void onPostExecute(final String res) {
-
             refreshLayout.setRefreshing(false);
             adapter.notifyDataSetChanged();
         }

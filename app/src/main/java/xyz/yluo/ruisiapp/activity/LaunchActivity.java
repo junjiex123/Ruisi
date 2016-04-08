@@ -147,6 +147,7 @@ public class LaunchActivity extends AppCompatActivity{
         HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
+                System.out.println("====response===="+new String(response));
                 canGetRs(TYPE_INNER, new String(response));
             }
 

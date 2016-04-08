@@ -191,7 +191,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         protected TextView author_name;
 
         @Bind(R.id.is_image)
-        protected ImageView is_image;
+        protected TextView is_image;
         @Bind(R.id.reply_count)
         protected TextView reply_count;
 

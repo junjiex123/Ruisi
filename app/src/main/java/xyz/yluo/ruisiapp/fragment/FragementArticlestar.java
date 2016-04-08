@@ -50,6 +50,12 @@ public class FragementArticlestar extends BaseFragement{
         }
     }
 
+    @Override
+    protected void refresh() {
+        datas.clear();
+        adapter.notifyDataSetChanged();
+    }
+
 
     //获得主题
     public class GetUserArticleask extends AsyncTask<Void, Void, String> {
@@ -61,15 +67,11 @@ public class FragementArticlestar extends BaseFragement{
         @Override
         protected String doInBackground(Void... params) {
             Elements lists = Jsoup.parse(res).select(".threadlist").select("ul").select("li");
-            if(lists!=null){
-                for(Element tmp:lists){
-                    String title = tmp.select("a").text();
-                    String titleUrl =tmp.select("a").attr("href");
-                    String num = tmp.select(".num").text();
-                    datas.add(new SimpleListData(title,num,titleUrl));
-                }
-            }else{
-                datas.add(new SimpleListData("你还没有发过贴","",""));
+            for(Element tmp:lists){
+                String title = tmp.select("a").text();
+                String titleUrl =tmp.select("a").attr("href");
+                String num = tmp.select(".num").text();
+                datas.add(new SimpleListData(title,num,titleUrl));
             }
             return "";
         }
@@ -85,6 +87,7 @@ public class FragementArticlestar extends BaseFragement{
     public class GetUserStarTask extends AsyncTask<Void, Void, String> {
 
         private String res;
+        private List<SimpleListData> tempdatas = new ArrayList<>();
         public GetUserStarTask(String res) {
             this.res = res;
         }
@@ -92,12 +95,10 @@ public class FragementArticlestar extends BaseFragement{
         @Override
         protected String doInBackground(Void... params) {
             Elements lists = Jsoup.parse(res).select(".threadlist").select("ul").select("li");
-            if(lists!=null){
-                for(Element tmp:lists){
-                    String key = tmp.select("a").text();
-                    String link = tmp.select("a").attr("href");
-                    datas.add(new SimpleListData(key,"",link));
-                }
+            for(Element tmp:lists){
+                String key = tmp.select("a").text();
+                String link = tmp.select("a").attr("href");
+                tempdatas.add(new SimpleListData(key,"",link));
             }
             return "";
         }
@@ -105,9 +106,13 @@ public class FragementArticlestar extends BaseFragement{
         @Override
         protected void onPostExecute(final String res) {
 
-            refreshLayout.setRefreshing(false);
-            adapter.notifyDataSetChanged();
+            int start = datas.size();
 
+            if(tempdatas.size()>0){
+                datas.addAll(tempdatas);
+            }
+            refreshLayout.setRefreshing(false);
+            adapter.notifyItemRangeInserted(start,tempdatas.size());
         }
     }
 

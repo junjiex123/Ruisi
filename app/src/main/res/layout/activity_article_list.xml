@@ -47,8 +47,7 @@
             android:paddingLeft="10dp"
             app:menu_fab_size="normal"
             app:menu_labels_ellipsize="end"
-            app:menu_labels_singleLine="true"
-            app:menu_fab_label="返回">
+            app:menu_labels_singleLine="true">
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fab_post"
