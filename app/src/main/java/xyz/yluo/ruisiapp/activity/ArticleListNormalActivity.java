@@ -131,7 +131,6 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
                     }
                     String title = src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]").text();
                     String titleUrl = src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]").attr("href");
-                    //http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=836820&extra=page%3D1
                     String author = src.getElementsByAttributeValue("class", "by").first().select("a").text();
                     String authorUrl = src.getElementsByAttributeValue("class", "by").first().select("a").attr("href");
                     String time = src.getElementsByAttributeValue("class", "by").first().select("em").text().trim();

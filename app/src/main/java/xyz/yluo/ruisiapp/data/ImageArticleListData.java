@@ -10,17 +10,13 @@ public class ImageArticleListData {
     private String titleUrl;
     private String image;
     private String author;
-    private String authorUrl;
-    private String likeCount;
     private String ReplyCount;
 
-    public ImageArticleListData(String title, String titleUrl, String image, String author, String authorUrl, String likeCount, String replyCount) {
+    public ImageArticleListData(String title, String titleUrl, String image, String author,String replyCount) {
         this.title = title;
         this.titleUrl = titleUrl;
         this.image = image;
         this.author = author;
-        this.authorUrl = authorUrl;
-        this.likeCount = likeCount;
         ReplyCount = replyCount;
     }
 
@@ -38,14 +34,6 @@ public class ImageArticleListData {
 
     public String getAuthor() {
         return author;
-    }
-
-    public String getAuthorUrl() {
-        return authorUrl;
-    }
-
-    public String getLikeCount() {
-        return likeCount;
     }
 
     public String getReplyCount() {

@@ -22,6 +22,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.fragment.NewVersionDialog;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 
 /**
  * Created by free2 on 16-3-6.
@@ -46,7 +47,8 @@ public class SettingActivity extends PreferenceActivity {
 
     }
 
-    public static class MyPreferenceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+    public static class MyPreferenceFragment extends PreferenceFragment
+            implements SharedPreferences.OnSharedPreferenceChangeListener {
 
         //小尾巴
         private EditTextPreference setting_user_tail;
@@ -96,7 +98,7 @@ public class SettingActivity extends PreferenceActivity {
                     HttpUtil.get(getActivity(), "http://104.236.65.81/version.json", new ResponseHandler() {
                         @Override
                         public void onSuccess(byte[] response) {
-                            JSONObject jsonObject = null;
+                            JSONObject jsonObject;
                             try {
                                 jsonObject = new JSONObject(new String(response));
                                 int get_code = jsonObject.getInt("version_code");
@@ -135,7 +137,7 @@ public class SettingActivity extends PreferenceActivity {
             open_sourse.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    Toast.makeText(getActivity(),"被电击2",Toast.LENGTH_SHORT).show();
+                    RequestOpenBrowser.openBroswer(getActivity(),"https://github.com/freedom10086/Ruisi");
                     return false;
                 }
             });

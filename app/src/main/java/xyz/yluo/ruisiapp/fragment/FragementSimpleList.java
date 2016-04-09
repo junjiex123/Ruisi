@@ -133,7 +133,6 @@ public class FragementSimpleList extends Fragment implements LoadMoreListener.On
             Elements body = doc.select("div[class=threadlist]"); // 具有 href 属性的链接
             ArticleListData temp;
             Elements links = body.select("li");
-            System.out.print(links);
             for (Element src : links) {
                 String url = src.select("a").attr("href");
                 String author = src.select(".by").text();

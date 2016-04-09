@@ -95,13 +95,10 @@ public class ArticleListImageActivity extends ArticleListBaseActivity{
                 String url = tmp.select("h3.xw0").select("a[href^=forum.php]").attr("href");
                 String title = tmp.select("h3.xw0").select("a[href^=forum.php]").text();
                 String author = tmp.select("a[href^=home.php]").text();
-                String authorurl = tmp.select("a[href^=home.php]").attr("href");
                 String replyCount = tmp.select(".xg1.y").select("a[href^=forum.php]").text();
                 tmp.select(".xg1.y").select("a[href^=forum.php]").remove();
-                String likecount = tmp.select(".xg1.y").text().replace("回复: ","");
 
-                //String title, String titleUrl, String image, String author, String authorUrl, String likeCount, String replyCount
-                ImageArticleListData tem = new ImageArticleListData(title, url, img, author, authorurl, likecount,replyCount);
+                ImageArticleListData tem = new ImageArticleListData(title, url, img, author,replyCount);
                 mydatasetnormal.add(tem);
             }
             return null;

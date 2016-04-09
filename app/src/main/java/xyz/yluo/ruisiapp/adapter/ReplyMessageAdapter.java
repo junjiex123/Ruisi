@@ -90,9 +90,6 @@ public class ReplyMessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
             }else{
                 String fid = GetId.getTid(single_data.getTitleUrl());
                 String title = single_data.getcontent();
-                System.out.println(single_data.getTitleUrl());
-                System.out.println(fid);
-                //Context context, String tid,String title,String replycount,String type
                 SingleArticleNormalActivity.open(activity,fid,title,"","");
             }
 

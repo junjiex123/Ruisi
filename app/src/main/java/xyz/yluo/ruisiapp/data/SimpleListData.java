@@ -36,7 +36,4 @@ public class SimpleListData {
         return extradata;
     }
 
-    public void setExtradata(String extradata) {
-        this.extradata = extradata;
-    }
 }

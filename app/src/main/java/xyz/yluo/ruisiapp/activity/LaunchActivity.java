@@ -6,7 +6,9 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
@@ -36,12 +38,14 @@ public class LaunchActivity extends AppCompatActivity{
     protected ProgressBar progressBar;
     private final int TYPE_INNER = 0;
     private final int TYPE_OUTER = 1;
+    private long starttime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
         ButterKnife.bind(this);
+        starttime = System.currentTimeMillis();
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSetting();
         checkNetWork();
@@ -60,8 +64,6 @@ public class LaunchActivity extends AppCompatActivity{
 
             MySetting.CONFIG_ISSHOW_ZHIDIN = isShowZhidin;
             MySetting.CONFIG_SHOW_PLAIN_TEXT = setting_show_plain;
-
-            System.out.println("url"+urlSetting+"|"+"是否显示置顶"+isShowZhidin+"|"+"小尾巴"+tail+"|"+"主题"+theme+"|"+"是否显示样式"+setting_show_plain);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -109,7 +111,6 @@ public class LaunchActivity extends AppCompatActivity{
 
 
     private void checklogin(String res){
-        progressBar.setVisibility(View.GONE);
         MySetting.CONFIG_ISLOGIN = false;
         if (res.contains("loginbox")) {
             MySetting.CONFIG_ISLOGIN = false;
@@ -121,8 +122,8 @@ public class LaunchActivity extends AppCompatActivity{
             MySetting.CONFIG_ISLOGIN = true;
         }
 
-        startActivity(new Intent(getApplicationContext(),HomeActivity.class));
-        finish();
+        finishthis();
+
     }
 
     private void checkOuter(){
@@ -156,5 +157,24 @@ public class LaunchActivity extends AppCompatActivity{
                 checkOuter();
             }
         });
+    }
+
+    private void finishthis(){
+        long currenttime = System.currentTimeMillis();
+
+        long delay = 1500-(currenttime-starttime);
+        if(delay<0){
+            delay = 0;
+        }
+        new Handler().postDelayed(new Runnable(){
+
+            public void run() {
+                progressBar.setVisibility(View.GONE);
+                startActivity(new Intent(getApplicationContext(),HomeActivity.class));
+                finish();
+            }
+
+        }, delay);
+
     }
 }

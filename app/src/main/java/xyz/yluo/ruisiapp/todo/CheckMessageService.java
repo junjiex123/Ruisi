@@ -74,7 +74,6 @@ public class CheckMessageService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-
                 while (true){
                     if(!MySetting.CONFIG_IS_INNER){
                         client.get(url2,handler);

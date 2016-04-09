@@ -19,17 +19,10 @@ public class GetLogoUtils {
         try {
 
             String fid = GetId.getFroumFid(url);
-            //./data/attachment/common/32/common_72_icon.gif
-            //forum.php?mod=forumdisplay&fid=72
-            // get input stream
-            //file:///android_asset/forumlogo/xxx.png
             InputStream ims = contex.getAssets().open("forumlogo/common_"+fid+"_icon.gif");
-            // load image as Drawable
-
             return Drawable.createFromStream(ims, null);
         }
         catch(IOException ex) {
-          //nothing
             return ContextCompat.getDrawable(contex,R.drawable.image_placeholder);
         }
     }

@@ -23,12 +23,14 @@ public class PersistentCookieStore {
 
     public PersistentCookieStore(Context context) {
         cookiePrefs = context.getSharedPreferences(COOKIE_PREFS, 0);
-
         Map<String, ?> allContent = cookiePrefs.getAll();
+
         //注意遍历map的方法
         for(Map.Entry<String, ?>  entry : allContent.entrySet()){
             listCookie.put(entry.getKey(), (String) entry.getValue());
         }
+
+
     }
 
     public void addCookie(String cookies) {
@@ -39,7 +41,6 @@ public class PersistentCookieStore {
                 String key = tmp.split("=")[0];
                 if(key.startsWith("Q8qA")){
                     String value = tmp.split("=")[1];
-                    System.out.println("put key"+key+"     value"+value);
                     listCookie.put(key,value);
                     prefsWriter.putString(key,value);
                 }

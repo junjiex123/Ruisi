@@ -140,7 +140,6 @@ public class UserDakaActivity extends AppCompatActivity{
                         showNtice("签到成功,点击按钮返回");
                         info_title.setText("恭喜你签到成功");
                         isSign = true;
-                        System.out.println(get);
                         btn_start_sign.setImageResource(R.drawable.ic_arrow_back_24dp);
                     }else{
                         showNtice("未知错误");
@@ -185,7 +184,6 @@ public class UserDakaActivity extends AppCompatActivity{
                     }else {
                         info_title.setText("今天的签到还没开始呢");
                     }
-                    System.out.println(HOUR_OF_DAY);
 
                     for(Element temp:doc.select(".mn").select("p")){
                         String temptext = temp.text();

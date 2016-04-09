@@ -37,8 +37,6 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class NewArticleActivity extends AppCompatActivity {
 
-    @Bind(R.id.edit_bar)
-    protected LinearLayout edit_bar;
     @Bind(R.id.emotion_container)
     protected LinearLayout emotion_container;
     @Bind(R.id.edit_input_title)
@@ -52,8 +50,6 @@ public class NewArticleActivity extends AppCompatActivity {
     @Bind(R.id.main_window)
     protected CoordinatorLayout main_window;
     private ProgressDialog progress;
-
-    private int CURRENT_FID = 72;
 
 
     @Override
@@ -112,8 +108,6 @@ public class NewArticleActivity extends AppCompatActivity {
     protected void smiley_click(ImageButton btn){
         //插入表情
         //{:16_1021:}
-        //_1021
-        //input_aera.append(btn.getTag().toString());
         String tmp = btn.getTag().toString();
         PostHander hander = new PostHander(getApplicationContext(),(EditText)getCurrentFocus());
         hander.insertSmiley("{:16" + tmp + ":}", btn.getDrawable());
@@ -123,15 +117,16 @@ public class NewArticleActivity extends AppCompatActivity {
     @OnClick(R.id.btn_send)
     protected void btn_send_click(){
         if(checkPostInput()){
+            int CURRENT_FID = 72;
             preparePost(CURRENT_FID);
         }
     }
 
     private boolean checkPostInput(){
-        if (edit_input_title.getText().toString()==""){
+        if (edit_input_title.getText().toString().equals("")){
             postFail("标题不能为空啊");
             return false;
-        }else if(edit_input_content.getText().toString()==""){
+        }else if(edit_input_content.getText().toString().equals("")){
             postFail("内容不能为空啊");
             return false;
         }else{
@@ -150,7 +145,7 @@ public class NewArticleActivity extends AppCompatActivity {
                 String url  = doc.select("#postform").attr("action");
                 String hash = doc.select("input#formhash").attr("value");
                 String time = doc.select("input#posttime").attr("value");
-                begainPost(url,hash,time);
+                begainPost(hash,time);
             }
 
             @Override
@@ -161,7 +156,7 @@ public class NewArticleActivity extends AppCompatActivity {
     }
 
     //开始发帖
-    private void begainPost(String url,String hash,String time){
+    private void begainPost(String hash,String time){
 
         String url3 = UrlUtils.getPostUrl(72);
 

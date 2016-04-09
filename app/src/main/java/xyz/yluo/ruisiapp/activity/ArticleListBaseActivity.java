@@ -2,6 +2,7 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -10,10 +11,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.VelocityTracker;
+import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.jude.swipbackhelper.SwipeBackHelper;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,10 +37,6 @@ public abstract class ArticleListBaseActivity extends AppCompatActivity
 
     @Bind(R.id.toolbar)
     protected Toolbar toolbar;
-    @Bind(R.id.fab_post)
-    protected FloatingActionButton fab_post;
-    @Bind(R.id.fab_refresh)
-    protected FloatingActionButton fab_refresh;
     @Bind(R.id.fab)
     protected FloatingActionMenu fabMenu;
     @Bind(R.id.main_recycler_view)
@@ -57,6 +57,7 @@ public abstract class ArticleListBaseActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
+        SwipeBackHelper.onCreate(this);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
@@ -151,5 +152,17 @@ public abstract class ArticleListBaseActivity extends AppCompatActivity
             startActivity(new Intent(getApplicationContext(),NewArticleActivity_2.class));
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        SwipeBackHelper.onPostCreate(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
     }
 }

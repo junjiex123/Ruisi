@@ -126,7 +126,8 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
             } else if (type.startsWith("gold")) {
                 String gold = type.substring(5);
                 article_type.setVisibility(View.VISIBLE);
-                article_type.setText("金币:" + gold);
+                String golds ="金币:" + gold ;
+                article_type.setText(golds);
             }else {
                 article_type.setVisibility(View.GONE);
             }
@@ -157,10 +158,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         @OnClick(R.id.main_item_btn_item)
         protected void onBtnItemClick() {
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
-
-            //Context context, String tid,String title,String replycount,String type
             SingleArticleNormalActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplayCount(),single_data.getType());
-            //System.out.print("$$$$$$$$$>>"+DataSet.get(getPosition()).getTitleUrl()+"|"+article_title.getText()+"|"+reply_count.getText()+"|"+article_type.getText()+"|"+author_name.getText()+"\n");
         }
     }
 
@@ -219,8 +217,6 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
             String tid = GetId.getTid(single_data.getTitleUrl());
             String title = single_data.getTitle();
             String replyCount = single_data.getReplayCount();
-
-            System.out.print("\ntid"+tid);
             //Context context, String tid,String title,String replycount,String type
             SingleArticleNormalActivity.open(activity,tid,title,replyCount,"");
         }

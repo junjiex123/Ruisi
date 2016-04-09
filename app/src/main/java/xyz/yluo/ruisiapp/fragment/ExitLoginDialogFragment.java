@@ -16,7 +16,6 @@ import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 public class ExitLoginDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("你要退出登录吗？？？")
                 .setPositiveButton("好的", new DialogInterface.OnClickListener() {
@@ -30,10 +29,8 @@ public class ExitLoginDialogFragment extends DialogFragment {
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
                     }
                 });
-        // Create the AlertDialog object and return it
         return builder.create();
     }
 }

@@ -20,6 +20,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.jude.swipbackhelper.SwipeBackHelper;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -58,8 +60,6 @@ public class ChatActivity extends AppCompatActivity{
     protected Toolbar toolbar;
     @Bind(R.id.load_View)
     protected LinearLayout load_View;
-    @Bind(R.id.action_smiley)
-    protected ImageButton action_smiley;
     @Bind(R.id.smiley_container)
     protected LinearLayout smiley_container;
     @Bind(R.id.input_aera)
@@ -90,6 +90,7 @@ public class ChatActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         ButterKnife.bind(this);
+        SwipeBackHelper.onCreate(this);
 
         try {
             Bundle bundle = this.getIntent().getExtras();
@@ -327,4 +328,16 @@ public class ChatActivity extends AppCompatActivity{
         Toast.makeText(getApplicationContext(),"发布成功",Toast.LENGTH_SHORT).show();
     }
 
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        SwipeBackHelper.onPostCreate(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SwipeBackHelper.onDestroy(this);
+    }
 }

@@ -77,7 +77,6 @@ public class SyncHttpClient {
             }
         }
 
-        System.out.println(">>>>>>>>>>>>>>>get cookie"+fullCookie);
         store.addCookie(fullCookie);
     }
 
@@ -96,7 +95,6 @@ public class SyncHttpClient {
         //加入cookie
         if (store!=null){
             connection.setRequestProperty("Cookie",store.getCookie());
-            System.out.println("set cookie>>>"+store.getCookie());
         }
 
         // Headers
@@ -165,7 +163,6 @@ public class SyncHttpClient {
             if(code==302){
                 //如果会重定向，保存302重定向地址，以及Cookies,然后重新发送请求(模拟请求)
                 String location = connection.getHeaderField("Location");
-                System.out.println("=====302 error======"+location);
                 request(MySetting.BBS_BASE_URL+location,Method.GET,map,handler);
             }
 

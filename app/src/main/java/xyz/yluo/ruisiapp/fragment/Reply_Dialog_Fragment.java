@@ -22,8 +22,6 @@ import xyz.yluo.ruisiapp.R;
 public class Reply_Dialog_Fragment extends DialogFragment{
 
     private EditText content;
-    private TextView btn_send;
-    private TextView btn_cancel;
     private long lasttime = 0;
 
     private String title = "回复";
@@ -46,8 +44,8 @@ public class Reply_Dialog_Fragment extends DialogFragment{
         builder.setTitle(title);
 
         content = (EditText) view.findViewById(R.id.reply_content);
-        btn_cancel = (TextView) view.findViewById(R.id.btn_cancel);
-        btn_send = (TextView) view.findViewById(R.id.btn_send);
+        TextView btn_cancel = (TextView) view.findViewById(R.id.btn_cancel);
+        TextView btn_send = (TextView) view.findViewById(R.id.btn_send);
 
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override

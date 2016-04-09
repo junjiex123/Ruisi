@@ -16,7 +16,6 @@ import xyz.yluo.ruisiapp.activity.LoginActivity;
 public class NeedLoginDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("你还没有登陆，要去登陆吗？？？")
                 .setPositiveButton("好的", new DialogInterface.OnClickListener() {
@@ -29,7 +28,6 @@ public class NeedLoginDialogFragment extends DialogFragment {
                         // User cancelled the dialog
                     }
                 });
-        // Create the AlertDialog object and return it
         return builder.create();
     }
 }

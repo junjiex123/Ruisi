@@ -23,10 +23,6 @@ public class ChatListData {
         this.type = type;
     }
 
-    public void setUserImage(String userImage) {
-        UserImage = userImage;
-    }
-
     public void setContent(String content) {
         this.content = content;
     }

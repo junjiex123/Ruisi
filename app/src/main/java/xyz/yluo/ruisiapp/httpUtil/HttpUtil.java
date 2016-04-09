@@ -31,7 +31,6 @@ public class HttpUtil {
         if(store==null){
             store = new PersistentCookieStore(context);
             client.setStore(store);
-            System.out.println("new and set store");
         }
 
     }

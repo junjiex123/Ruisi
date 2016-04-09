@@ -2,6 +2,7 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,6 +15,8 @@ import android.util.Pair;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+
+import com.jude.swipbackhelper.SwipeBackHelper;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -41,8 +44,6 @@ import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
  */
 public class ActivitySearch extends AppCompatActivity {
 
-    @Bind(R.id.search_view)
-    protected CardView search_view;
     @Bind(R.id.recycler_view)
     protected RecyclerView recycler_view;
     @Bind(R.id.search_input)
@@ -54,8 +55,6 @@ public class ActivitySearch extends AppCompatActivity {
 
     private SimpleListAdapter adapter;
 
-    private boolean isEnableLoadMore = false;
-
     private ActionBar actionBar;
     private List<SimpleListData> datas = new ArrayList<>();
 
@@ -65,6 +64,7 @@ public class ActivitySearch extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
+        SwipeBackHelper.onCreate(this);
 
         adapter = new SimpleListAdapter(this, datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -122,11 +122,6 @@ public class ActivitySearch extends AppCompatActivity {
         });
 
         String url = "search.php?mod=forum&mobile=2";
-        //formhash:90aeb849
-        //srchtxt:logo
-        //searchsubmit:yes
-
-        System.out.println("+++++++");
         Map<String,String> paras = new HashMap<>();
         paras.put("formhash", MySetting.CONFIG_FORMHASH);
         paras.put("searchsubmit","yes");
@@ -140,7 +135,6 @@ public class ActivitySearch extends AppCompatActivity {
                     Snackbar.make(main_window,"抱歉，您在 15 秒内只能进行一次搜索",Snackbar.LENGTH_SHORT).show();
                     refresh_view.setRefreshing(false);
                 }else {
-                    System.out.println(new String(response));
                     actionBar.setTitle("搜索结果");
                     new GetResultListTaskMe(new String(response)).execute();
                 }
@@ -201,7 +195,19 @@ public class ActivitySearch extends AppCompatActivity {
                 datas.add(new SimpleListData("没有搜索到结果","",""));
             }
             adapter.notifyDataSetChanged();
-            isEnableLoadMore = true;
+            boolean isEnableLoadMore = true;
         }
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        SwipeBackHelper.onPostCreate(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SwipeBackHelper.onDestroy(this);
     }
 }

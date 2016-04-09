@@ -54,16 +54,14 @@
         <Preference
             android:key="about_this"
             android:title="关于本程序"
-            android:summary="当前版本1.0">
-
+            android:summary="当前版本1.0 beta 1">
         </Preference>
         <Preference
             android:key="open_sourse"
-            android:title="开源信息"
-            android:summary="开放源代码信息">
+            android:title="项目地址"
+            android:summary="在github上查看本项目">
 
         </Preference>
     </PreferenceCategory>
-
 
 </PreferenceScreen>

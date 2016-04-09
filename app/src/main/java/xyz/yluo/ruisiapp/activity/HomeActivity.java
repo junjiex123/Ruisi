@@ -50,6 +50,7 @@ public class HomeActivity extends AppCompatActivity
     private ActionBarDrawerToggle toggle;
     private int clickId = 0;
     private CircleImageView userImge;
+    private long mExitTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +181,12 @@ public class HomeActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if ((System.currentTimeMillis() - mExitTime) > 1500) {
+                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                mExitTime = System.currentTimeMillis();
+            } else {
+                finish();
+            }
         }
     }
 

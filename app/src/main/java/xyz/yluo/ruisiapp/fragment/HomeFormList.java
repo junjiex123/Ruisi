@@ -135,10 +135,7 @@ public class HomeFormList extends Fragment{
         }
         @Override
         protected String doInBackground(Void... voids) {
-
-            System.out.println("\n"+response);
             Document document = Jsoup.parse(response);
-
             Elements elements = document.select("div#wp.wp.wm").select("div.bm.bmw.fl");
             //获得hash
             String hash = document.select(".footer").select("a.dialog").attr("href");
@@ -146,7 +143,6 @@ public class HomeFormList extends Fragment{
             String ress =  GetFormHash.getHash(hash);
             if(!ress.isEmpty()){
                 MySetting.CONFIG_FORMHASH = ress;
-                System.out.println("set hash"+ ress);
             }
 
             for(Element ele:elements){

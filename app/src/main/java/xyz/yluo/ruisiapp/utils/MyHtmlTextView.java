@@ -48,7 +48,7 @@ public class MyHtmlTextView extends TextView implements Html.ImageGetter {
 
     @Override
     public Drawable getDrawable(String source) {
-        Drawable drawable = null;
+        Drawable drawable;
 
         try {
             //替换表情到本地
@@ -64,7 +64,7 @@ public class MyHtmlTextView extends TextView implements Html.ImageGetter {
             } else {
 
                 //TODO 无法显示网络图片
-                URL url = null;
+                URL url;
                 if(source.startsWith("http")){
                     url = new URL(source);
                 }else{

@@ -31,10 +31,6 @@ public class FroumListData {
         return isheader;
     }
 
-    public void setIsheader(boolean isheader) {
-        this.isheader = isheader;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -56,7 +52,4 @@ public class FroumListData {
         return todayNew;
     }
 
-    public void setTodayNew(String todayNew) {
-        this.todayNew = todayNew;
-    }
 }

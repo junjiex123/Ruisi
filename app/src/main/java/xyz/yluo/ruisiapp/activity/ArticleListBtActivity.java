@@ -34,7 +34,6 @@ public class ArticleListBtActivity extends ArticleListBaseActivity{
     private List<ArticleListBtData> mydatasetnormal;
     private ArticleListBtAdapter adapter;
     private String CurrentId = "all";
-    private Spinner spinner;
     private final String[] mItems = {"全部种子","热门种子","推荐种子","FREE种子","我的种子",
             "电影","剧集","音乐","动漫","游戏","综艺","体育","软件","学习","纪录片","西电","其他"};
 
@@ -43,7 +42,7 @@ public class ArticleListBtActivity extends ArticleListBaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        spinner = new Spinner(this);
+        Spinner spinner = new Spinner(this);
         actionBar.setDisplayShowTitleEnabled(false); // DEPRACATED
 
         ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<>(this,R.layout.spinner_item, mItems);
@@ -191,8 +190,7 @@ public class ArticleListBtActivity extends ArticleListBaseActivity{
                 String bt_com = items.get(8).text();
                 String author = items.get(9).text();
 
-                //System.out.print(title+titleUrl+author+logoUrl+time+size+bt_num+bt_down+bt_com+isFree+"\n");
-                //title, titleUrl, author, logoUrl, time, btSize, btNum, btDownLoadNum, btCompeteNum, isFree
+                  //title, titleUrl, author, logoUrl, time, btSize, btNum, btDownLoadNum, btCompeteNum, isFree
                 dataset.add(new ArticleListBtData(title,titleUrl,author,logoUrl,time,size,bt_num,bt_down,bt_com,isFree));
 
             }

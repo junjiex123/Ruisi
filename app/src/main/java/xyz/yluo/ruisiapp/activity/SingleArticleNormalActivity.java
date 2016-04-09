@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
@@ -23,6 +24,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.jude.swipbackhelper.SwipeBackHelper;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -61,7 +64,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class SingleArticleNormalActivity extends AppCompatActivity
         implements RecyclerViewClickListener,LoadMoreListener.OnLoadMoreListener,
-        Reply_Dialog_Fragment.ReplyDialogListener {
+        Reply_Dialog_Fragment.ReplyDialogListener{
 
     @Bind(R.id.topic_recycler_view)
     protected RecyclerView mRecyclerView;
@@ -69,8 +72,6 @@ public class SingleArticleNormalActivity extends AppCompatActivity
     protected SwipeRefreshLayout refreshLayout;
     @Bind(R.id.toolbar)
     protected Toolbar toolbar;
-    @Bind(R.id.replay_bar)
-    protected LinearLayout replay_bar;
     @Bind(R.id.input_aera)
     protected EditText input_aera;
     @Bind(R.id.smiley_container)
@@ -118,6 +119,7 @@ public class SingleArticleNormalActivity extends AppCompatActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
+        SwipeBackHelper.onCreate(this);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
@@ -196,8 +198,6 @@ public class SingleArticleNormalActivity extends AppCompatActivity
     protected void smiley_click(ImageButton btn){
         //插入表情
         //{:16_1021:}
-        //_1021
-        //input_aera.append(btn.getTag().toString());
         String tmp = btn.getTag().toString();
         PostHander hander = new PostHander(getApplicationContext(),input_aera);
         hander.insertSmiley("{:16" + tmp + ":}", btn.getDrawable());
@@ -293,6 +293,7 @@ public class SingleArticleNormalActivity extends AppCompatActivity
             }
         });
     }
+
 
     public class DealWithArticleData extends AsyncTask<Void,Void,String>{
         //* 传入一篇文章html
@@ -419,11 +420,6 @@ public class SingleArticleNormalActivity extends AppCompatActivity
                 }
             }
 
-            //不够友好
-//            if(add==0){
-//                Toast.makeText(getApplicationContext(),"暂无更多",Toast.LENGTH_SHORT).show();
-//            }
-
             mRecyleAdapter.notifyItemRangeInserted(start, add);
             isEnableLoadMore = true;
             refreshLayout.setRefreshing(false);
@@ -459,10 +455,6 @@ public class SingleArticleNormalActivity extends AppCompatActivity
 
     private void post_reply(String text){
         progress = ProgressDialog.show(this, "正在发送", "请等待", true);
-        /*
-        message:帮顶
-        formhash:70af5bb6
-        */
         Map<String,String> params = new HashMap<>();
         params.put("formhash", MySetting.CONFIG_FORMHASH);
         params.put("message", text);
@@ -559,7 +551,9 @@ public class SingleArticleNormalActivity extends AppCompatActivity
         if(isok){
             if (res.contains("成功")||res.contains("层主")) {
                 Toast.makeText(getApplicationContext(), "回复发表成功", Toast.LENGTH_SHORT).show();
+                input_aera.setText("");
                 hide_ime();
+
                 replyTime = System.currentTimeMillis();
             } else if(res.contains("您两次发表间隔")){
                 Toast.makeText(getApplicationContext(), "您两次发表间隔太短了......", Toast.LENGTH_SHORT).show();
@@ -636,4 +630,15 @@ public class SingleArticleNormalActivity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        SwipeBackHelper.onPostCreate(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SwipeBackHelper.onDestroy(this);
+    }
 }

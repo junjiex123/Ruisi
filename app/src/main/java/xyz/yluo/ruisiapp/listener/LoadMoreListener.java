@@ -21,10 +21,6 @@ public class LoadMoreListener extends RecyclerView.OnScrollListener {
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
         //-1最后  -2 倒数第二
         if (linearLayoutManager.findLastVisibleItemPosition()>limit&&linearLayoutManager.findLastVisibleItemPosition() == linearLayoutManager.getItemCount() - 1) {
-
-                // 向下滑动，判断最后一个item是不是显示中
-            //最后一个体验不好
-            //向前移几个
                 onLoadMoreListener.onLoadMore();
         }
     }

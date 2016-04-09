@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,34 +14,33 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="160dp" />
 
+    <ProgressBar
+        android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_above="@+id/textView"
+        android:layout_centerHorizontal="true" />
+
     <TextView
-        android:textSize="24sp"
+        android:layout_marginBottom="@dimen/dimen_8"
+        android:layout_above="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="正在准备数据"
+        android:id="@+id/textView"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_marginBottom="12dp"
+        android:textSize="20sp"
         android:textColor="@color/colorAccent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="西电睿思"
+        android:text="睿思手机客户端"
         android:id="@+id/textView3"
-        android:layout_above="@+id/textView14"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Powered By YLuo"
-        android:textSize="18sp"
-        android:id="@+id/textView14"
-        android:layout_marginBottom="16dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:textColor="@color/colorAccent" />
-
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:layout_above="@+id/textView3"
         android:layout_centerHorizontal="true" />
-
 
 </RelativeLayout>

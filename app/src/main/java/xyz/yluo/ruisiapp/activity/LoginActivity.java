@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.jude.swipbackhelper.SwipeBackHelper;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -75,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_login);
         ButterKnife.bind(this);
+        SwipeBackHelper.onCreate(this);
 
         ActionBar actionBar = getSupportActionBar();
         if(actionBar!=null){
@@ -271,12 +275,23 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.home) {
+        if (id == android.R.id.home) {
             finish();
-
+            return true;
         }
+        return super.onOptionsItemSelected(item);
+    }
 
-        return  true;
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        SwipeBackHelper.onPostCreate(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SwipeBackHelper.onDestroy(this);
     }
 }
 
