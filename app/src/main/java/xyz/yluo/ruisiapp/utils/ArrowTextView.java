@@ -14,34 +14,21 @@ import xyz.yluo.ruisiapp.R;
 
 /**
  * Created by free2 on 16-3-21.
- *
+ * 带小三角的textview
  */
 public class ArrowTextView extends TextView{
 
-    private Paint paint;
-    private RectF rectF;
-    private float arrowInHeight = 10;
-    private Path path;
 
     public ArrowTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     public ArrowTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init();
     }
 
     public ArrowTextView(Context context) {
         super(context);
-        init();
-    }
-
-    private void init(){
-        paint=new Paint();
-        rectF = new RectF(0, arrowInHeight, getWidth(),getHeight());
-        path=new Path();
     }
 
 
@@ -49,15 +36,18 @@ public class ArrowTextView extends TextView{
 
     @Override
     protected void onDraw(Canvas canvas) {
+        Paint paint=new Paint();
         paint.setColor(color == 0 ? Color.RED : color);
         paint.setAntiAlias(true);
 
 
-
-        canvas.drawRoundRect(rectF, 4, 4, paint);
+        float arrowInHeight = 10;
+        canvas.drawRoundRect(new RectF(0, arrowInHeight, getWidth(),getHeight()), 4, 4, paint);
 
         //画三角形
+        Path path=new Path();
         path.setFillType(Path.FillType.EVEN_ODD);
+
         path.moveTo(80,0);
         path.lineTo(68, arrowInHeight);
         path.lineTo(92, arrowInHeight);
