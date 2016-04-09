@@ -15,7 +15,6 @@ import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
-import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 
 /**
  * Created by free2 on 16-4-7.

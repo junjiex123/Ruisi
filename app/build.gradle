@@ -4,7 +4,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion '24.0.0 rc2'
     defaultConfig {
-        applicationId "xyz.yluo.ruisiapp"
+        applicationId "com.yluo.ruisiapp"
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 2

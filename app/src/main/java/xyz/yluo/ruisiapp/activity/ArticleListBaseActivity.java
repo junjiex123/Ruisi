@@ -11,11 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.VelocityTracker;
-import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
-import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.jude.swipbackhelper.SwipeBackHelper;
 

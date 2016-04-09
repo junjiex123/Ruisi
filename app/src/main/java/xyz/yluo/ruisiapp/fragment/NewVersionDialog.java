@@ -33,7 +33,7 @@ public class NewVersionDialog extends DialogFragment {
         builder.setMessage(message)
                 .setPositiveButton("去下载", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        RequestOpenBrowser.openBroswer(getActivity(),"http://www.baidu.com/");
+                        RequestOpenBrowser.openBroswer(getActivity(),"http://123.206.22.74/ruisiapp.apk");
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {

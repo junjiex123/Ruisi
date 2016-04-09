@@ -15,16 +15,15 @@
         <activity
             android:name=".activity.LaunchActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/ThemeHome">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/ThemeHome"
             android:windowSoftInputMode="adjustPan|stateHidden">
 
         </activity>

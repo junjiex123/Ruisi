@@ -8,7 +8,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
@@ -148,7 +147,6 @@ public class LaunchActivity extends AppCompatActivity{
         HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
-                System.out.println("====response===="+new String(response));
                 canGetRs(TYPE_INNER, new String(response));
             }
 
@@ -167,10 +165,10 @@ public class LaunchActivity extends AppCompatActivity{
             delay = 0;
         }
         new Handler().postDelayed(new Runnable(){
-
             public void run() {
                 progressBar.setVisibility(View.GONE);
                 startActivity(new Intent(getApplicationContext(),HomeActivity.class));
+                overridePendingTransition(0,0);
                 finish();
             }
 

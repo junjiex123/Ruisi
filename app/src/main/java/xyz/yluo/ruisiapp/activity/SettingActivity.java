@@ -95,7 +95,7 @@ public class SettingActivity extends PreferenceActivity {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     Toast.makeText(getActivity(),"正在检查更新",Toast.LENGTH_SHORT).show();
-                    HttpUtil.get(getActivity(), "http://104.236.65.81/version.json", new ResponseHandler() {
+                    HttpUtil.get(getActivity(), "http://123.206.22.74/version.json", new ResponseHandler() {
                         @Override
                         public void onSuccess(byte[] response) {
                             JSONObject jsonObject;
@@ -126,7 +126,7 @@ public class SettingActivity extends PreferenceActivity {
                         }
                         @Override
                         public void onFailure(Throwable e) {
-
+                            Toast.makeText(getActivity(),"连接服务器失败",Toast.LENGTH_SHORT).show();
                         }
                     });
 
