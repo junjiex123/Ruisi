@@ -49,14 +49,8 @@
         </activity>
         <activity
             android:name=".activity.SingleArticleNormalActivity"
-            android:hardwareAccelerated="true"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize">
-
-        </activity>
-        <activity
-            android:name=".todo.NewArticleActivity"
-            android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
         <activity android:name=".activity.SettingActivity">
@@ -86,13 +80,6 @@
         <activity android:name=".activity.ActivitySearch">
 
         </activity>
-
-        <service
-            android:name=".todo.CheckMessageService"
-            android:enabled="true"
-            android:exported="true">
-
-        </service>
     </application>
 
 </manifest>

@@ -20,7 +20,7 @@ import org.json.JSONObject;
 import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.fragment.NewVersionDialog;
-import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.AsyncHttpClient;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 
@@ -95,7 +95,8 @@ public class SettingActivity extends PreferenceActivity {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     Toast.makeText(getActivity(),"正在检查更新",Toast.LENGTH_SHORT).show();
-                    HttpUtil.get(getActivity(), "http://123.206.22.74/version.json", new ResponseHandler() {
+                    AsyncHttpClient client = new AsyncHttpClient();
+                    client.get("http://123.206.22.74/version.json", new ResponseHandler() {
                         @Override
                         public void onSuccess(byte[] response) {
                             JSONObject jsonObject;
