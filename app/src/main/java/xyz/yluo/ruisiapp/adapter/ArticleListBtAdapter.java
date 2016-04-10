@@ -15,7 +15,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.activity.SingleArticleNormalActivity;
+import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.data.ArticleListBtData;
 import xyz.yluo.ruisiapp.utils.GetId;
 
@@ -131,7 +131,7 @@ public class ArticleListBtAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         @OnClick(R.id.main_item_btn_item)
         protected void item_click(){
             ArticleListBtData single_data =  Datas.get(getAdapterPosition());
-            SingleArticleNormalActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle(),"null","");
+            SingleArticleActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle(),"null","");
 
         }
 

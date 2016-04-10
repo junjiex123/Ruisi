@@ -6,12 +6,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -44,7 +44,6 @@ import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetFormHash;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.PostHander;
-import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -58,12 +57,12 @@ public class ChatActivity extends AppCompatActivity{
     protected RecyclerView recycler_view;
     @Bind(R.id.toolbar)
     protected Toolbar toolbar;
-    @Bind(R.id.load_View)
-    protected LinearLayout load_View;
     @Bind(R.id.smiley_container)
     protected LinearLayout smiley_container;
     @Bind(R.id.input_aera)
     protected EditText input_aera;
+    @Bind(R.id.refresh_view)
+    protected SwipeRefreshLayout refreshLayout;
 
     private List<ChatListData> datas = new ArrayList<>();
     private ChatListAdapter adapter;
@@ -92,13 +91,26 @@ public class ChatActivity extends AppCompatActivity{
         ButterKnife.bind(this);
         SwipeBackHelper.onCreate(this);
 
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        adapter = new ChatListAdapter(this,datas);
+        recycler_view.setLayoutManager(layoutManager);
+        recycler_view.setAdapter(adapter);
+
+        refresh();
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
+
         try {
             Bundle bundle = this.getIntent().getExtras();
             username = bundle.getString("username");
             url = bundle.getString("url");
             isOpenFromOut = bundle.getBoolean("isOpenFromOut");
             //从webview链接点击进来的
-
             if(isOpenFromOut){
                 replyUrl = url;
                 touid = GetId.getUid(url);
@@ -118,20 +130,12 @@ public class ChatActivity extends AppCompatActivity{
             actionBar.setTitle(username);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        adapter = new ChatListAdapter(this,datas);
-
-        recycler_view.setLayoutManager(layoutManager);
-        recycler_view.setAdapter(adapter);
-
         getData();
 
     }
 
     private void getData(){
 
-        load_View.setVisibility(View.VISIBLE);
         HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -140,7 +144,7 @@ public class ChatActivity extends AppCompatActivity{
 
             @Override
             public void onFailure(Throwable e) {
-
+                refreshLayout.setRefreshing(false);
             }
         });
     }
@@ -234,16 +238,9 @@ public class ChatActivity extends AppCompatActivity{
                 datas.add(new ChatListData(0,imageUrl,"给我发消息吧","刚刚"));
             }
             adapter.notifyDataSetChanged();
-            load_View.setVisibility(View.GONE);
-
+            refreshLayout.setRefreshing(false);
         }
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_article_normal, menu);
-        return true;
     }
 
     @Override
@@ -253,15 +250,19 @@ public class ChatActivity extends AppCompatActivity{
         if (id == android.R.id.home) {
             finish();
             return true;
-        }else if(id==R.id.menu_refresh){
-            refresh();
-        }else if(id==R.id.menu_broswer){
-            RequestOpenBrowser.openBroswer(this, MySetting.BBS_BASE_URL+url);
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void refresh(){
+
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+            }
+        });
+
         datas.clear();
         adapter.notifyDataSetChanged();
         getData();

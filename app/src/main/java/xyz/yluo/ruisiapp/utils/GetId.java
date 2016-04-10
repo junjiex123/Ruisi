@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 public class GetId {
 
     public static String getTid(String url){
-        //http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=840272&extra=
 
         Pattern pattern = Pattern.compile("[0-9]{3,}");
         Matcher matcher = pattern.matcher(url);

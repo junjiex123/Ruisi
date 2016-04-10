@@ -8,7 +8,7 @@ import android.webkit.WebViewClient;
 import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.NewArticleActivity_2;
-import xyz.yluo.ruisiapp.activity.SingleArticleNormalActivity;
+import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 
 
@@ -42,7 +42,7 @@ public class MyWebViewClient extends WebViewClient {
         }
         if (url.contains("forum.php?mod=viewthread&tid=")) { // 帖子
             String tid = GetId.getTid(url);
-            SingleArticleNormalActivity.open(context,tid,"查看主题","","");
+            SingleArticleActivity.open(context,tid,"查看主题","","");
         } else if (url.contains("home.php?mod=space&uid=")) { // 用户
             String imageUrl = UrlUtils.getimageurl(url,true);
             UserDetailActivity.open(context,"name",imageUrl);

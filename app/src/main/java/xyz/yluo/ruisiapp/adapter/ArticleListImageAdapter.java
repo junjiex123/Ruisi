@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.activity.SingleArticleNormalActivity;
+import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.data.ImageArticleListData;
 import xyz.yluo.ruisiapp.utils.GetId;
 
@@ -90,7 +90,7 @@ public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListIma
             //Context context, String tid,String title,String replycount,String type
             //String title, String titleUrl, String image, String author, String authorUrl, String viewCount
 
-            SingleArticleNormalActivity.open(activity,tid,single_data.getTitle(),single_data.getReplyCount(),"");
+            SingleArticleActivity.open(activity,tid,single_data.getTitle(),single_data.getReplyCount(),"");
         }
     }
 }

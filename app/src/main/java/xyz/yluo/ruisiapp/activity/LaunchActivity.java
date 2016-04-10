@@ -168,7 +168,6 @@ public class LaunchActivity extends AppCompatActivity{
             public void run() {
                 progressBar.setVisibility(View.GONE);
                 startActivity(new Intent(getApplicationContext(),HomeActivity.class));
-                overridePendingTransition(0,0);
                 finish();
             }
 

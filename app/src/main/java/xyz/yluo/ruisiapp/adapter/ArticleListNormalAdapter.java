@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.activity.SingleArticleNormalActivity;
+import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.utils.CircleImageView;
@@ -158,7 +158,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         @OnClick(R.id.main_item_btn_item)
         protected void onBtnItemClick() {
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
-            SingleArticleNormalActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplayCount(),single_data.getType());
+            SingleArticleActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplayCount(),single_data.getType());
         }
     }
 
@@ -218,7 +218,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
             String title = single_data.getTitle();
             String replyCount = single_data.getReplayCount();
             //Context context, String tid,String title,String replycount,String type
-            SingleArticleNormalActivity.open(activity,tid,title,replyCount,"");
+            SingleArticleActivity.open(activity,tid,title,replyCount,"");
         }
     }
 

@@ -86,7 +86,4 @@
             android:text="登陆"
             android:enabled="false"
             android:id="@+id/login_test_button" />
-
-
-
     </LinearLayout>

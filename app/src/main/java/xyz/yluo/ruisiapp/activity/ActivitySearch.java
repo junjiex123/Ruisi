@@ -193,7 +193,6 @@ public class ActivitySearch extends AppCompatActivity {
                 datas.add(new SimpleListData("没有搜索到结果","",""));
             }
             adapter.notifyDataSetChanged();
-            boolean isEnableLoadMore = true;
         }
     }
 

@@ -46,7 +46,7 @@ public class GetLevel {
             return " 西电博四";
         }else if(a<40000){
             return " 西电博五";
-        }else if(a>40000&&a<100000){
+        }else if(a>=40000&&a<100000){
             return " 西电博士后";
         }
         else{

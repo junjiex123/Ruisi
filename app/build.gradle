@@ -5,7 +5,7 @@ android {
     buildToolsVersion '24.0.0 rc2'
     defaultConfig {
         applicationId "com.yluo.ruisiapp"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
         versionName '1.0 beta'

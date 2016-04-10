@@ -1,0 +1,116 @@
+package xyz.yluo.ruisiapp.fragment;
+
+import android.app.Activity;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import java.io.UnsupportedEncodingException;
+
+import xyz.yluo.ruisiapp.R;
+
+/**
+ * Created by free2 on 16-3-14.
+ * 回复dialog
+ *
+ */
+public class ArticleJumpDialog extends DialogFragment{
+
+    private EditText content;
+    private int currentPage = 1;
+    private int maxPage = 1;
+    private JumpDialogListener dialogListener;
+    private int selectPage = 1;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.article_jump_dialog,null);
+        builder.setView(view);
+
+        content = (EditText) view.findViewById(R.id.content);
+
+        TextView textView = (TextView) view.findViewById(R.id.textpage);
+        String text  = "第"+currentPage+"/"+maxPage+"页";
+        textView.setText(text);
+        TextView btn_cancel = (TextView) view.findViewById(R.id.btn_cancel);
+        TextView btn_send = (TextView) view.findViewById(R.id.btn_send);
+
+        btn_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(checkInput()){
+                    dialogListener.JumpComfirmClick(ArticleJumpDialog.this,selectPage);
+                    ArticleJumpDialog.this.getDialog().cancel();
+                }
+
+
+            }
+        });
+
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
+
+
+        return builder.create();
+    }
+
+    public interface JumpDialogListener {
+        void JumpComfirmClick(DialogFragment dialog, int page);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            dialogListener = (JumpDialogListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement NoticeDialogListener");
+        }
+    }
+
+    public void setCurrentPage(int page) {
+        this.currentPage = page;
+    }
+
+    public void setMaxPage(int maxPage){
+        this.maxPage = maxPage;
+    }
+
+    private boolean checkInput(){
+        String str = content.getText().toString();
+        if(str.isEmpty()){
+            content.setError("不能为空");
+            return false;
+        }
+
+        int a = Integer.parseInt(str);
+        if(a>maxPage||a<1){
+            content.setError("请输入正确的页数");
+            return false;
+        }else {
+            selectPage = a;
+        }
+
+        return true;
+    }
+}

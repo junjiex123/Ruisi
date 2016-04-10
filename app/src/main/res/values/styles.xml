@@ -5,12 +5,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@style/AnimationActivity</item>
     </style>
 
     <style name="AnimationActivity" parent="@android:style/Animation.Translucent">
-        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in</item>
         <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
     </style>
 
@@ -19,9 +17,18 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="ThemeHome" parent="AppTheme.NoActionBar">
-        <item name="android:windowIsTranslucent">false</item>
+
+    <style name="AppThemeNoActionWithAni" parent="AppTheme.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@style/AnimationActivity</item>
     </style>
+    
+    
+    <style name="AppThemeWithAni" parent="AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@style/AnimationActivity</item>
+    </style>
+    
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

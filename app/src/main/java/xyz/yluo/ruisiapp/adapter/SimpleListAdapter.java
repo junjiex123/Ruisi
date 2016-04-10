@@ -14,7 +14,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.activity.SingleArticleNormalActivity;
+import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.data.SimpleListData;
 import xyz.yluo.ruisiapp.utils.GetId;
 
@@ -77,7 +77,7 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
             if(!url.equals("")){
                 String tid = GetId.getTid(url);
                 if(!tid.equals(""))
-                    SingleArticleNormalActivity.open(activity,tid,single_data.getKey(),"","");
+                    SingleArticleActivity.open(activity,tid,single_data.getKey(),"","");
             }
         }
     }

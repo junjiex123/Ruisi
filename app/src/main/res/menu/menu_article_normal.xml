@@ -30,7 +30,12 @@
         android:title="收藏本帖"
         android:icon="@drawable/ic_favorite_24dp"
         app:showAsAction="never">
+    </item>
 
+    <item
+        android:id="@+id/menu_jump"
+        android:title="跳页"
+        app:showAsAction="never">
     </item>
 
 </menu>
