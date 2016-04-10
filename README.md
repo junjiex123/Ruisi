@@ -1,4 +1,4 @@
-西电睿思手机客户端
+##西电睿思手机客户端
 
 内外网自动切换，节约你的流量，不过部分功能只有连接到校园网才可使用。
 
@@ -6,7 +6,7 @@
 
 
 
-参考和用到的开源库和软件：
+##参考和用到的开源库和软件：
 
 [SwipeBackHelper](https://github.com/Jude95/SwipeBackHelper)
 
@@ -23,4 +23,7 @@
 [picasso](https://github.com/square/picasso)
 
 [FloatingActionButton](https://github.com/Clans/FloatingActionButton)
+
+##License
+略
 
