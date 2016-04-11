@@ -382,13 +382,14 @@ public class SingleArticleActivity extends AppCompatActivity
                 add += tepdata.size();
                 CURRENT_PAGE++;
             }else if(page==TOTAL_PAGE){
-                int have =mydatalist.size() - CURRENT_PAGE*10;
+                int have =mydatalist.size()%11;
                 int get = tepdata.size();
                 for(int i = have;i<get&&i>=0;i++){
                     mydatalist.add(tepdata.get(i));
                     add++;
                 }
             }
+
             mRecyleAdapter.notifyItemRangeInserted(start, add);
             isEnableLoadMore = true;
             refreshLayout.setRefreshing(false);
