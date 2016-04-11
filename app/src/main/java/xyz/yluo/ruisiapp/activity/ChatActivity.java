@@ -89,8 +89,6 @@ public class ChatActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         ButterKnife.bind(this);
-        SwipeBackHelper.onCreate(this);
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         adapter = new ChatListAdapter(this,datas);
         recycler_view.setLayoutManager(layoutManager);
@@ -326,18 +324,5 @@ public class ChatActivity extends BaseActivity{
         adapter.notifyItemInserted(datas.size()-1);
         smiley_container.setVisibility(View.GONE);
         Toast.makeText(getApplicationContext(),"发布成功",Toast.LENGTH_SHORT).show();
-    }
-
-
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        SwipeBackHelper.onPostCreate(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        SwipeBackHelper.onDestroy(this);
     }
 }

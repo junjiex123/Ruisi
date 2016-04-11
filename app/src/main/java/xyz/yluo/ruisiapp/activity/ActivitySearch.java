@@ -62,7 +62,6 @@ public class ActivitySearch extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
-        SwipeBackHelper.onCreate(this);
 
         adapter = new SimpleListAdapter(this, datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -194,17 +193,5 @@ public class ActivitySearch extends BaseActivity {
             }
             adapter.notifyDataSetChanged();
         }
-    }
-
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        SwipeBackHelper.onPostCreate(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        SwipeBackHelper.onDestroy(this);
     }
 }

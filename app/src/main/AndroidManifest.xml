@@ -59,7 +59,7 @@
         </activity>
 
         <activity android:name=".activity.SettingActivity"
-            android:theme="@style/AppThemeWithAni">
+            android:theme="@style/AppTheme">
         </activity>
 
         <activity
@@ -69,16 +69,16 @@
 
         <activity android:name=".activity.LoginActivity"
             android:label="登陆"
-            android:theme="@style/AppThemeWithAni">
+            android:theme="@style/AppTheme">
         </activity>
 
         <activity android:name=".activity.UserDakaActivity"
-            android:theme="@style/AppThemeNoActionWithAni">
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <activity
             android:name=".activity.ChatActivity"
-            android:theme="@style/AppThemeNoActionWithAni">
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <activity android:name=".activity.NewArticleActivity_2"
@@ -86,7 +86,7 @@
         </activity>
 
         <activity android:name=".activity.ActivitySearch"
-            android:theme="@style/AppThemeWithAni">
+            android:theme="@style/AppTheme">
         </activity>
 
     </application>
