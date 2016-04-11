@@ -147,7 +147,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             article_username.setText(single.getUsername());
             Picasso.with(activity).load(single.getImg()).resize(44,44).centerCrop().placeholder(R.drawable.image_placeholder).into(article_user_image);
             article_post_time.setText(single.getPostTime());
-            article_title.setText(single.getTitle());
+            article_title.setText(single.getReplyUrlTitle());
             webView.getSettings().setLoadsImagesAutomatically(true);
             webView.loadDataWithBaseURL(MySetting.BBS_BASE_URL,single.getCotent(),"text/html","UTF-8",null);
         }
@@ -188,7 +188,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             }else {
                 bt_lable_lz.setVisibility(View.GONE);
             }
-            if(!single.getReplyUrl().contains("action=reply")){
+            if(!single.getReplyUrlTitle().contains("action=reply")){
                 //链接不合法
                 btn_reply_2.setVisibility(View.GONE);
             }else {

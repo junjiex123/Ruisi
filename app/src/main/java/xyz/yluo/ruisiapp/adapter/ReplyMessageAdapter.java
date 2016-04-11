@@ -84,13 +84,15 @@ public class ReplyMessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         @OnClick(R.id.main_item_btn_item)
         protected void main_item_btn_item_click(){
             ReplyMessageData single_data =  DataSet.get(getAdapterPosition());
-            if(type==1){
+            if(type==1){//用户消息
                 String username = single_data.getTitle().replace("我对 ","").replace("说:","").replace(" 对我","");
                 ChatActivity.open(activity,username,single_data.getTitleUrl(),false);
-            }else{
+            }else{//回复我的
+                System.out.println("+++++++++++"+single_data.getTitleUrl());
                 String fid = GetId.getTid(single_data.getTitleUrl());
+
                 String title = single_data.getcontent();
-                SingleArticleActivity.open(activity,fid,title,"");
+                SingleArticleActivity.open(activity,fid,title);
             }
 
         }

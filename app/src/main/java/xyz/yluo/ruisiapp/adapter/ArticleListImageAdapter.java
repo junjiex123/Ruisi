@@ -90,7 +90,7 @@ public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListIma
             //Context context, String tid,String title,String replycount,String type
             //String title, String titleUrl, String image, String author, String authorUrl, String viewCount
 
-            SingleArticleActivity.open(activity,tid,single_data.getTitle(),single_data.getReplyCount());
+            SingleArticleActivity.open(activity,tid,single_data.getTitle());
         }
     }
 }

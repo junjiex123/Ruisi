@@ -131,7 +131,7 @@ public class ArticleListBtAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         @OnClick(R.id.main_item_btn_item)
         protected void item_click(){
             ArticleListBtData single_data =  Datas.get(getAdapterPosition());
-            SingleArticleActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle(),"null");
+            SingleArticleActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle());
 
         }
 

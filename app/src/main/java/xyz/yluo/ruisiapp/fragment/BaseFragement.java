@@ -15,20 +15,23 @@ import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 
 /**
  * Created by free2 on 16-4-7.
  *
  */
-public abstract class BaseFragement extends Fragment {
+public abstract class BaseFragement extends Fragment implements LoadMoreListener.OnLoadMoreListener{
 
     @Bind(R.id.recycler_view)
     protected RecyclerView recycler_view;
     @Bind(R.id.main_refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
-
+    protected int CurrentPage = 0;
+    protected boolean isEnableLoadMore = true;
     protected  String url = "";
-
+    protected int currentIndex = 0;
+    protected boolean isHaveMore = true;
     public BaseFragement(String url) {
         this.url = url;
     }
@@ -47,10 +50,15 @@ public abstract class BaseFragement extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                CurrentPage =0;
+                isHaveMore = true;
+                isEnableLoadMore = true;
                 refresh();
                 startGetdata();
             }
         });
+
+        recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) layoutManager, this,15));
         return view;
     }
 
@@ -82,6 +90,20 @@ public abstract class BaseFragement extends Fragment {
         });
     }
 
+    @Override
+    public void onLoadMore() {
+        if(currentIndex==1||currentIndex==3){
+            if(isEnableLoadMore&&isHaveMore){
+                int a = CurrentPage;
+                String newurl = url+"&page="+(a+1);
+                getStringFromInternet(newurl);
+                System.out.println("===load more=="+newurl);
+                isEnableLoadMore = false;
+            }
+
+        }
+
+    }
 
     protected abstract void initView();
     protected abstract void finishGetData(String res);

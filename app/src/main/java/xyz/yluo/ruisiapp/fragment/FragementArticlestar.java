@@ -27,7 +27,6 @@ public class FragementArticlestar extends BaseFragement{
     }
 
     public static FragementArticlestar newInstance(int type, String url) {
-
         FragementArticlestar.type = type;
         FragementArticlestar.url = url;
         return new FragementArticlestar();
@@ -37,6 +36,11 @@ public class FragementArticlestar extends BaseFragement{
     protected void initView() {
         adapter = new SimpleListAdapter(getActivity(),datas);
         recycler_view.setAdapter(adapter);
+        if(type==0){
+            currentIndex = 1;
+        }else {
+            currentIndex = 3;
+        }
     }
 
     @Override
@@ -69,6 +73,11 @@ public class FragementArticlestar extends BaseFragement{
             Elements lists = Jsoup.parse(res).select(".threadlist").select("ul").select("li");
             for(Element tmp:lists){
                 String title = tmp.select("a").text();
+                if(title.isEmpty()){
+                    datas.add(new SimpleListData("暂无更多","",""));
+                    isHaveMore = false;
+                    break;
+                }
                 String titleUrl =tmp.select("a").attr("href");
                 String num = tmp.select(".num").text();
                 datas.add(new SimpleListData(title,num,titleUrl));
@@ -78,6 +87,8 @@ public class FragementArticlestar extends BaseFragement{
 
         @Override
         protected void onPostExecute(final String res) {
+            isEnableLoadMore = true;
+            CurrentPage++;
             refreshLayout.setRefreshing(false);
             adapter.notifyDataSetChanged();
         }
@@ -87,7 +98,6 @@ public class FragementArticlestar extends BaseFragement{
     public class GetUserStarTask extends AsyncTask<Void, Void, String> {
 
         private String res;
-        private List<SimpleListData> tempdatas = new ArrayList<>();
         public GetUserStarTask(String res) {
             this.res = res;
         }
@@ -97,22 +107,23 @@ public class FragementArticlestar extends BaseFragement{
             Elements lists = Jsoup.parse(res).select(".threadlist").select("ul").select("li");
             for(Element tmp:lists){
                 String key = tmp.select("a").text();
+                if(key.isEmpty()){
+                    datas.add(new SimpleListData("暂无更多","",""));
+                    isHaveMore = false;
+                    break;
+                }
                 String link = tmp.select("a").attr("href");
-                tempdatas.add(new SimpleListData(key,"",link));
+                datas.add(new SimpleListData(key,"",link));
             }
             return "";
         }
 
         @Override
         protected void onPostExecute(final String res) {
-
-            int start = datas.size();
-
-            if(tempdatas.size()>0){
-                datas.addAll(tempdatas);
-            }
+            isEnableLoadMore = true;
+            CurrentPage++;
             refreshLayout.setRefreshing(false);
-            adapter.notifyItemRangeInserted(start,tempdatas.size());
+            adapter.notifyDataSetChanged();
         }
     }
 

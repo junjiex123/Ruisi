@@ -14,12 +14,8 @@ public class SingleArticleData {
     //楼层
     private String index;
     //回复链接
-    private String replyUrl;
+    private String replyUrlTitle;
     private String cotent;
-
-    //楼主特有
-    private String title;
-
 
     //层主
     public SingleArticleData(SingleType type, String Img, String username, String postTime, String index, String replyUrl, String cotent) {
@@ -28,25 +24,13 @@ public class SingleArticleData {
         this.username = username;
         this.postTime = postTime;
         this.index = index;
-        this.replyUrl = replyUrl;
-        this.cotent = cotent;
-    }
-
-    public SingleArticleData(SingleType type, String title,String Img, String username, String postTime, String index, String replyUrl, String cotent) {
-        this.type = type;
-        this.title = title;
-        this.Img = Img;
-        this.username = username;
-        this.postTime = postTime;
-        this.index = index;
-        this.replyUrl = replyUrl;
+        this.replyUrlTitle = replyUrl;
         this.cotent = cotent;
     }
 
 
-
-    public String getReplyUrl() {
-        return replyUrl;
+    public String getReplyUrlTitle() {
+        return replyUrlTitle;
     }
     public String getUsername() {
         return username;
@@ -74,9 +58,5 @@ public class SingleArticleData {
 
     public void setType(SingleType type) {
         this.type = type;
-    }
-
-    public String getTitle() {
-        return title;
     }
 }

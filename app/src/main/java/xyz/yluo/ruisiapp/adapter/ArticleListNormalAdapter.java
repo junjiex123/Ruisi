@@ -148,7 +148,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         @OnClick(R.id.main_item_btn_item)
         protected void onBtnItemClick() {
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
-            SingleArticleActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplayCount());
+            SingleArticleActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle());
         }
     }
 
@@ -205,9 +205,8 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
             String tid = GetId.getTid(single_data.getTitleUrl());
             String title = single_data.getTitle();
-            String replyCount = single_data.getReplayCount();
-            //Context context, String tid,String title,String replycount,String type
-            SingleArticleActivity.open(activity,tid,title,replyCount);
+
+            SingleArticleActivity.open(activity,tid,title);
         }
     }
 

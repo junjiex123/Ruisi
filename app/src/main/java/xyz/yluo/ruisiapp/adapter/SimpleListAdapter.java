@@ -77,7 +77,7 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
             if(!url.equals("")){
                 String tid = GetId.getTid(url);
                 if(!tid.equals(""))
-                    SingleArticleActivity.open(activity,tid,single_data.getKey(),"");
+                    SingleArticleActivity.open(activity,tid,single_data.getKey());
             }
         }
     }

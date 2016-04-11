@@ -39,6 +39,11 @@ public class FragementMessageReply extends BaseFragement{
     protected void initView() {
         adapter  = new ReplyMessageAdapter(getActivity(),datas,type);
         recycler_view.setAdapter(adapter);
+        if(type==0){
+            currentIndex = 0;
+        }else {
+            currentIndex = 2;
+        }
     }
 
     @Override

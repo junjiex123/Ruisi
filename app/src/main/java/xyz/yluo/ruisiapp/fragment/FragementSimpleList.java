@@ -160,14 +160,10 @@ public class FragementSimpleList extends Fragment implements LoadMoreListener.On
 
             if(CurrentPage==1){
                 //item 增加删除 改变动画
-
                 mydatasetnormal.clear();
             }
-
-
             mydatasetnormal.addAll(dataset);
             refreshLayout.setRefreshing(false);
-
             adapter.notifyItemRangeInserted(mydatasetnormal.size() - dataset.size(), dataset.size());
             isEnableLoadMore = true;
         }

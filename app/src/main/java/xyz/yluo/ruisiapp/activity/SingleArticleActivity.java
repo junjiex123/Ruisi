@@ -52,6 +52,7 @@ import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
+import xyz.yluo.ruisiapp.utils.GetIndex;
 import xyz.yluo.ruisiapp.utils.PostHander;
 import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -80,9 +81,7 @@ public class SingleArticleActivity extends AppCompatActivity
     //上一次回复时间
     private long replyTime = 0;
     //当前第几页
-    private int CURRENT_PAGE = 0;
-    //是否倒叙浏览
-    private boolean isReverse = false;
+    private int CURRENT_PAGE = 1;
     //全部页数
     private int TOTAL_PAGE = 1;
     //是否允许加载更多
@@ -96,17 +95,15 @@ public class SingleArticleActivity extends AppCompatActivity
 
     private static String ARTICLE_TID;
     private static String ARTICLE_TITLE = "";
-    private static String ARTICLE_REPLY_COUNT;
     //TODO 金币贴/精华。。。
     //TODO 跳转到指定楼层
 
     //约定好要就收的数据
-    public static void open(Context context, String tid,String title,String replycount) {
+    public static void open(Context context, String tid,String title) {
         Intent intent = new Intent(context, SingleArticleActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ARTICLE_TID = tid;
         ARTICLE_TITLE = title;
-        ARTICLE_REPLY_COUNT = replycount;
         context.startActivity(intent);
     }
 
@@ -224,7 +221,6 @@ public class SingleArticleActivity extends AppCompatActivity
     @Override
     public void JumpComfirmClick(DialogFragment dialog, int page) {
         Toast.makeText(this,"被电击"+page,Toast.LENGTH_SHORT).show();
-        isReverse = false;
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -232,12 +228,10 @@ public class SingleArticleActivity extends AppCompatActivity
             }
         });
         //数据填充
-        CURRENT_PAGE = (page-1);
         mydatalist.clear();
         mRecyleAdapter.notifyDataSetChanged();
         getArticleData(page);
     }
-
 
     private void refresh(){
         refreshLayout.post(new Runnable() {
@@ -247,7 +241,6 @@ public class SingleArticleActivity extends AppCompatActivity
             }
         });
         //数据填充
-        CURRENT_PAGE = 0;
         mydatalist.clear();
         mRecyleAdapter.notifyDataSetChanged();
         getArticleData(1);
@@ -256,10 +249,6 @@ public class SingleArticleActivity extends AppCompatActivity
     //文章一页的html 根据页数 tid
     private void getArticleData(final int page) {
         String url = UrlUtils.getSingleArticleUrl(ARTICLE_TID,page,false);
-        //是否倒序查看
-        if(isReverse){
-            url+="&ordertype=1";
-        }
         HttpUtil.get(this ,url,new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -275,8 +264,6 @@ public class SingleArticleActivity extends AppCompatActivity
             }
         });
     }
-
-
 
     public class DealWithArticleData extends AsyncTask<Void,Void,String>{
         //* 传入一篇文章html
@@ -322,6 +309,15 @@ public class SingleArticleActivity extends AppCompatActivity
                 ARTICLE_TITLE = elements.select("h2").first().text().trim();
             }
             Elements postlist = elements.select("div[id^=pid]");
+
+            int a =0;
+            if(mydatalist.size()==0){
+                a = 0;
+            }else {
+                String indexs= mydatalist.get(mydatalist.size()-1).getIndex();
+                a = GetIndex.getIndex(indexs);
+            }
+
             for(Element temp:postlist){
                 SingleArticleData data;
                 String userimg = temp.select("span[class=avatar]").select("img").attr("src");
@@ -333,6 +329,11 @@ public class SingleArticleActivity extends AppCompatActivity
                 Elements contentels = temp.select(".message");
                 String finalcontent = contentels.html();
 
+                int b = GetIndex.getIndex(index);
+                if(b<=a){
+                    continue;
+                }
+
                 //是否移除所有样式
                 if(MySetting.CONFIG_SHOW_PLAIN_TEXT){
                     //移除所有style
@@ -340,7 +341,6 @@ public class SingleArticleActivity extends AppCompatActivity
                     contentels.select("[style]").removeAttr("style");
                     contentels.select("font").removeAttr("color").removeAttr("size").removeAttr("face");
                 }
-
                 //这是内容
                 if(index.contains("楼主")||index.contains("收藏")){
                     //修改表情大小 30x30
@@ -358,12 +358,13 @@ public class SingleArticleActivity extends AppCompatActivity
                     finalcontent = contentels.html().replaceAll("(\\s*<br>\\s*){2,}","");
                     String newtime = posttime.replace("收藏","");
 
-                    //SingleType type, String title,String Img, String username, String postTime, String index, String replyUrl, String cotent
-                    data = new SingleArticleData(SingleType.CONTENT,ARTICLE_TITLE,userimg,username,newtime,index,ARTICLE_REPLY_COUNT,finalcontent);
+                                                //SingleType type, String Img,username,postTime,index, String replyUrl, String cotent
+                    data = new SingleArticleData(SingleType.CONTENT, userimg,username,newtime,index,ARTICLE_TITLE,finalcontent);
                 } else {
                     //SingleType type, String userImgUrl, String username, String postTime, String index, String replyNumUrl, String cotent
                     data = new SingleArticleData(SingleType.COMMENT,userimg,username,posttime,index,replyUrl,finalcontent);
                 }
+
                 tepdata.add(data);
             }
             return null;
@@ -376,21 +377,11 @@ public class SingleArticleActivity extends AppCompatActivity
                 actionBar.setTitle(ARTICLE_TITLE);
             }
             int start = mydatalist.size();
-            int add = 0;
-            if(page<TOTAL_PAGE){
-                mydatalist.addAll(tepdata);
-                add += tepdata.size();
-                CURRENT_PAGE++;
-            }else if(page==TOTAL_PAGE){
-                int have =mydatalist.size()%11;
-                int get = tepdata.size();
-                for(int i = have;i<get&&i>=0;i++){
-                    mydatalist.add(tepdata.get(i));
-                    add++;
-                }
-            }
-
-            mRecyleAdapter.notifyItemRangeInserted(start, add);
+            mydatalist.addAll(tepdata);
+            String indexs= mydatalist.get(mydatalist.size()-1).getIndex();
+            int a = GetIndex.getIndex(indexs);
+            CURRENT_PAGE = (a+9)/10;
+            mRecyleAdapter.notifyItemRangeInserted(start, tepdata.size());
             isEnableLoadMore = true;
             refreshLayout.setRefreshing(false);
         }
@@ -411,7 +402,7 @@ public class SingleArticleActivity extends AppCompatActivity
             }
         }else if(v.getId()==R.id.btn_reply_2){
             if(isNeedLoginDialog()){
-                String replyUrl = mydatalist.get(position).getReplyUrl();
+                String replyUrl = mydatalist.get(position).getReplyUrlTitle();
                 String replyIndex = mydatalist.get(position).getIndex();
                 String replyName = mydatalist.get(position).getUsername();
                 ReplyCen(replyUrl,replyIndex,replyName);
@@ -589,7 +580,6 @@ public class SingleArticleActivity extends AppCompatActivity
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_article_normal, menu);
@@ -609,10 +599,6 @@ public class SingleArticleActivity extends AppCompatActivity
                 RequestOpenBrowser.openBroswer(this,url);
                 break;
             case R.id.menu_refresh:
-                refresh();
-                break;
-            case R.id.menu_reverse:
-                isReverse = !isReverse;
                 refresh();
                 break;
             case R.id.menu_star:

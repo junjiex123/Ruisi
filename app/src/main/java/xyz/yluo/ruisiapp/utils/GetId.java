@@ -12,25 +12,37 @@ import java.util.regex.Pattern;
 public class GetId {
 
     public static String getTid(String url){
-
-        Pattern pattern = Pattern.compile("[0-9]{3,}");
+        //forum.php?mod=redirect&goto=findpost&ptid=846689&pid=21330831
+        Pattern pattern = Pattern.compile("tid=[0-9]{3,}");
         Matcher matcher = pattern.matcher(url);
         String tid ="";
         if (matcher.find()) {
-            tid = url.substring(matcher.start(),matcher.end());
+            tid = url.substring(matcher.start()+4,matcher.end());
             //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
         }
         return tid;
     }
 
+    public static String getPid(String url){
+        //forum.php?mod=redirect&goto=findpost&ptid=846689&pid=21330831
+        Pattern pattern = Pattern.compile("pid=[0-9]{3,}");
+        Matcher matcher = pattern.matcher(url);
+        String pid ="";
+        if (matcher.find()) {
+            pid = url.substring(matcher.start()+4,matcher.end());
+            //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
+        }
+        return pid;
+    }
+
     public static String getUid(String url){
         //http://rs.xidian.edu.cn/ucenter/avatar.php?uid=284747&size=small
 
-        Pattern pattern = Pattern.compile("[0-9]{3,}");
+        Pattern pattern = Pattern.compile("uid=[0-9]{3,}");
         Matcher matcher = pattern.matcher(url);
         String uid ="";
         if (matcher.find()) {
-            uid = url.substring(matcher.start(),matcher.end());
+            uid = url.substring(matcher.start()+4,matcher.end());
         }
         return uid;
     }
