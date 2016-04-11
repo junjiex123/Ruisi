@@ -3,17 +3,12 @@ package xyz.yluo.ruisiapp.fragment;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import java.io.UnsupportedEncodingException;
 
 import xyz.yluo.ruisiapp.R;
 

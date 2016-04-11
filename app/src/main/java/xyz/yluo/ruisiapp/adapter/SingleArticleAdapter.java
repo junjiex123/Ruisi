@@ -20,6 +20,7 @@ import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
+import xyz.yluo.ruisiapp.data.SingleType;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 import xyz.yluo.ruisiapp.utils.CircleImageView;
 import xyz.yluo.ruisiapp.utils.MyHtmlTextView;
@@ -32,43 +33,38 @@ import xyz.yluo.ruisiapp.utils.MyWebView;
 
 public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdapter.BaseViewHolder>{
 
-    private static final int TYPE_COMENT = 1;
-    private static final int TYPE_LOAD_MORE_N = 2;
-    private static final int TYPE_CONTENT=0;
+    private  final int CONTENT =0;
+    private  final int COMENT = 1;
+    private  final int LOAD_MORE = 2;
+
     //数据
     private List<SingleArticleData> datalist;
     private static RecyclerViewClickListener itemListener;
-    //上下文
     private Activity activity;
-
-
-    public SingleArticleAdapter(Activity activity, RecyclerViewClickListener itemListener, List<SingleArticleData> datalist) {
+    public SingleArticleAdapter(Activity activity, RecyclerViewClickListener itemListener,List<SingleArticleData> datalist) {
         this.datalist = datalist;
         this.activity =activity;
         SingleArticleAdapter.itemListener = itemListener;
     }
 
-
     @Override
     public int getItemViewType(int position) {
-        //判断listItem类型
-        if(position==0){
-            return TYPE_CONTENT;
-        }else if (position!= getItemCount() - 1) {
-            return TYPE_COMENT;
-        } else {
-            return TYPE_LOAD_MORE_N;
+        if(position==getItemCount()-1){
+            return LOAD_MORE;
+        }else if(datalist.get(position).getType()== SingleType.CONTENT){
+            return CONTENT;
+        }else{
+            return COMENT;
         }
-        //TODO 普通文章类型再分类
-        //int type   =  DataSet.get(position).getType();
     }
+
     //设置view
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         switch (viewType) {
-            case TYPE_CONTENT:
+            case CONTENT:
                 return new ArticleContentViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_article_content_item, viewGroup, false));
-            case TYPE_LOAD_MORE_N:
+            case LOAD_MORE:
                 return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_article_load_more, viewGroup, false));
             default: // TYPE_COMMENT
                 return new CommentViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_article_comment_item, viewGroup, false));
@@ -80,10 +76,6 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
     public void onBindViewHolder(BaseViewHolder holder, int position) {
         holder.setData(position);
     }
-    //为了让 list item可以变化，我们可以重写这个方法
-    //他的返回值是onCreateViewHolder 的参数viewType
-    //这儿可以 知道position 和 data
-
     @Override
     public int getItemCount() {
         if(datalist.size()==0){
@@ -92,7 +84,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         return datalist.size()+1;
     }
 
-    public abstract class BaseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    protected abstract class BaseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public BaseViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
@@ -109,19 +101,15 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
     }
 
     //文章内容 楼主ViewHolder
-    public class ArticleContentViewHolder extends BaseViewHolder{
-        @Bind(R.id.article_title)
-        protected TextView article_title;
+    protected class ArticleContentViewHolder extends BaseViewHolder{
         @Bind(R.id.article_user_image)
         protected CircleImageView article_user_image;
-        @Bind(R.id.article_type)
-        protected ImageView article_type;
         @Bind(R.id.article_username)
         protected TextView article_username;
-        @Bind(R.id.article_replaycount)
-        protected TextView article_replaycount;
         @Bind(R.id.article_post_time)
         protected TextView article_post_time;
+        @Bind(R.id.article_title)
+        protected TextView article_title;
         @Bind(R.id.content_webView)
         protected MyWebView webView;
 
@@ -129,7 +117,6 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
-
 
         @OnClick(R.id.btn_star)
         protected void btn_star_click(View v){
@@ -152,22 +139,15 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         }
         @OnClick(R.id.article_user_image)
         protected void authorClick(){
-            UserDetailActivity.openWithTransitionAnimation(activity, datalist.get(0).getUsername(), article_user_image,datalist.get(0).getUserImgUrl());
+            UserDetailActivity.openWithTransitionAnimation(activity, datalist.get(0).getUsername(), article_user_image,datalist.get(0).getImg());
         }
         @Override
         void setData(int position){
             SingleArticleData single = datalist.get(position);
-            article_title.setText(single.getTitle());
-            //normal zhidin gold:100
-            if(single.getType().equalsIgnoreCase("zhidin")){
-                article_type.setVisibility(View.VISIBLE);
-            }else{
-                article_type.setVisibility(View.INVISIBLE);
-            }
             article_username.setText(single.getUsername());
-            article_replaycount.setText(single.getReplyCount());
-            Picasso.with(activity).load(single.getUserImgUrl()).resize(44,44).centerCrop().placeholder(R.drawable.image_placeholder).into(article_user_image);
+            Picasso.with(activity).load(single.getImg()).resize(44,44).centerCrop().placeholder(R.drawable.image_placeholder).into(article_user_image);
             article_post_time.setText(single.getPostTime());
+            article_title.setText(single.getTitle());
             webView.getSettings().setLoadsImagesAutomatically(true);
             webView.loadDataWithBaseURL(MySetting.BBS_BASE_URL,single.getCotent(),"text/html","UTF-8",null);
         }
@@ -175,9 +155,8 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
     }
 
     //评论列表ViewHolder 如果想创建别的样式还可以创建别的houlder继承自RecyclerView.ViewHolder
-    public  class CommentViewHolder extends BaseViewHolder{
+    protected  class CommentViewHolder extends BaseViewHolder{
         //protected ImageView good;
-
         @Bind(R.id.article_user_image)
         protected ImageView replay_image;
         @Bind(R.id.btn_reply_2)
@@ -193,10 +172,8 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         @Bind(R.id.bt_lable_lz)
         protected TextView bt_lable_lz;
 
-
         public CommentViewHolder(View itemView) {
             super(itemView);
-
             ButterKnife.bind(this,itemView);
         }
 
@@ -217,7 +194,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             }else {
                 btn_reply_2.setVisibility(View.VISIBLE);
             }
-            Picasso.with(activity).load(single.getUserImgUrl()).resize(36,36).centerCrop().placeholder(R.drawable.image_placeholder).into(replay_image);
+            Picasso.with(activity).load(single.getImg()).resize(36,36).centerCrop().placeholder(R.drawable.image_placeholder).into(replay_image);
             //.error(R.drawable.user_placeholder_error)
             replay_time.setText(single.getPostTime());
             replay_index.setText(single.getIndex());
@@ -226,17 +203,17 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
 
         @OnClick(R.id.article_user_image)
             protected void onBtnAvatarClick() {
-                UserDetailActivity.openWithTransitionAnimation(activity, datalist.get(getAdapterPosition()).getUsername(), replay_image,datalist.get(getAdapterPosition()).getUserImgUrl());
+                UserDetailActivity.openWithTransitionAnimation(activity, datalist.get(getAdapterPosition()).getUsername(), replay_image,datalist.get(getAdapterPosition()).getImg());
             }
 
         @OnClick(R.id.btn_reply_2)
         protected void btn_reply2_click(View v){
-            itemListener.recyclerViewListClicked(v, this.getLayoutPosition());
+            itemListener.recyclerViewListClicked(v, getLayoutPosition());
         }
     }
 
     //加载更多ViewHolder
-    public class LoadMoreViewHolder extends BaseViewHolder{
+    protected class LoadMoreViewHolder extends BaseViewHolder{
 
         @Bind(R.id.aticle_load_more_text)
         protected TextView aticle_load_more_text;

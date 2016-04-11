@@ -44,6 +44,7 @@ import xyz.yluo.ruisiapp.MySetting;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
+import xyz.yluo.ruisiapp.data.SingleType;
 import xyz.yluo.ruisiapp.fragment.ArticleJumpDialog;
 import xyz.yluo.ruisiapp.fragment.NeedLoginDialogFragment;
 import xyz.yluo.ruisiapp.fragment.ReplyDialog;
@@ -75,40 +76,37 @@ public class SingleArticleActivity extends AppCompatActivity
     protected LinearLayout smiley_container;
     private ActionBar actionBar;
     private ProgressDialog progress;
+
     //上一次回复时间
     private long replyTime = 0;
-
     //当前第几页
-    private int CURRENT_PAGE = 1;
+    private int CURRENT_PAGE = 0;
     //是否倒叙浏览
     private boolean isReverse = false;
     //全部页数
     private int TOTAL_PAGE = 1;
-
-    //存储数据 需要填充的列表
-    private List<SingleArticleData> mydatalist = new ArrayList<>();
-    private static String ARTICLE_TID;
-    private static String ARTICLE_TITLE = "";
-    private static String ARTICLE_REPLY_COUNT;
-    private static String ARTICLE_TYPE;
-    //TODO 金币贴/精华。。。
-    //TODO 跳转到指定楼层
-    //快速 跳转
-
-    //当前回复链接
+    //是否允许加载更多
     private boolean isEnableLoadMore = false;
     //回复楼主的链接
     private String replyUrl = "";
+
     private SingleArticleAdapter mRecyleAdapter;
+    //存储数据 需要填充的列表
+    private List<SingleArticleData> mydatalist = new ArrayList<>();
+
+    private static String ARTICLE_TID;
+    private static String ARTICLE_TITLE = "";
+    private static String ARTICLE_REPLY_COUNT;
+    //TODO 金币贴/精华。。。
+    //TODO 跳转到指定楼层
 
     //约定好要就收的数据
-    public static void open(Context context, String tid,String title,String replycount,String type) {
+    public static void open(Context context, String tid,String title,String replycount) {
         Intent intent = new Intent(context, SingleArticleActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ARTICLE_TID = tid;
         ARTICLE_TITLE = title;
         ARTICLE_REPLY_COUNT = replycount;
-        ARTICLE_TYPE = type;
         context.startActivity(intent);
     }
 
@@ -143,7 +141,6 @@ public class SingleArticleActivity extends AppCompatActivity
                 refreshLayout.setRefreshing(true);
             }
         });
-
 
         //下拉刷新
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -200,8 +197,86 @@ public class SingleArticleActivity extends AppCompatActivity
         hander.insertSmiley("{:16" + tmp + ":}", btn.getDrawable());
     }
 
+    private boolean isNeedLoginDialog(){
+        if (MySetting.CONFIG_ISLOGIN) {
+            return true;
+        } else {
+            NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();
+            dialogFragment.show(getFragmentManager(), "needlogin");
+        }
+        return false;
+    }
 
-    //recyclerView item点击事件 加载更多事件
+    @Override
+    public void onLoadMore() {
+        //加载更多被电击
+        if(isEnableLoadMore){
+            isEnableLoadMore = false;
+            int page = CURRENT_PAGE;
+            if(CURRENT_PAGE<TOTAL_PAGE){
+                page= CURRENT_PAGE+1;
+            }
+            getArticleData(page);
+        }
+    }
+
+    //跳页确认点击回调
+    @Override
+    public void JumpComfirmClick(DialogFragment dialog, int page) {
+        Toast.makeText(this,"被电击"+page,Toast.LENGTH_SHORT).show();
+        isReverse = false;
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+            }
+        });
+        //数据填充
+        CURRENT_PAGE = (page-1);
+        mydatalist.clear();
+        mRecyleAdapter.notifyDataSetChanged();
+        getArticleData(page);
+    }
+
+
+    private void refresh(){
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+            }
+        });
+        //数据填充
+        CURRENT_PAGE = 0;
+        mydatalist.clear();
+        mRecyleAdapter.notifyDataSetChanged();
+        getArticleData(1);
+    }
+
+    //文章一页的html 根据页数 tid
+    private void getArticleData(final int page) {
+        String url = UrlUtils.getSingleArticleUrl(ARTICLE_TID,page,false);
+        //是否倒序查看
+        if(isReverse){
+            url+="&ordertype=1";
+        }
+        HttpUtil.get(this ,url,new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                new DealWithArticleData(res,page).execute((Void) null);
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                isEnableLoadMore = true;
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), ">>>网络错误", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    ////recyclerView item点击事件 加载更多事件
     @Override
     public void recyclerViewListClicked(View v, int position) {
         if(v.getId()==R.id.btn_star){
@@ -229,70 +304,6 @@ public class SingleArticleActivity extends AppCompatActivity
             }
         }
     }
-
-    private boolean isNeedLoginDialog(){
-        if (MySetting.CONFIG_ISLOGIN) {
-            return true;
-        } else {
-            NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();
-            dialogFragment.show(getFragmentManager(), "needlogin");
-        }
-        return false;
-    }
-
-
-    @Override
-    public void onLoadMore() {
-        //加载更多被电击
-        if(isEnableLoadMore){
-            isEnableLoadMore = false;
-            int page = CURRENT_PAGE;
-            if(CURRENT_PAGE<TOTAL_PAGE){
-                page= CURRENT_PAGE+1;
-            }
-            getArticleData(page);
-        }
-    }
-
-    private void refresh(){
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        });
-        //数据填充
-        CURRENT_PAGE = 1;
-        mydatalist.clear();
-        mRecyleAdapter.notifyDataSetChanged();
-        getArticleData(1);
-    }
-
-    //文章一页的html 根据页数 tid
-    private void getArticleData(final int page) {
-
-        String url = UrlUtils.getSingleArticleUrl(ARTICLE_TID,page,false);
-        //是否倒序查看
-        if(isReverse){
-            url+="&ordertype=1";
-        }
-        HttpUtil.get(this ,url,new ResponseHandler() {
-            @Override
-            public void onSuccess(byte[] response) {
-                String res = new String(response);
-                new DealWithArticleData(res,page).execute((Void) null);
-            }
-
-            @Override
-            public void onFailure(Throwable e) {
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), ">>>网络错误", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-
-
 
     public class DealWithArticleData extends AsyncTask<Void,Void,String>{
         //* 传入一篇文章html
@@ -333,65 +344,54 @@ public class SingleArticleActivity extends AppCompatActivity
             }
 
             Elements elements = doc.select(".postlist");
-            if(elements!=null){
+            //获取标题
+            if(ARTICLE_TITLE.equals("")){
+                ARTICLE_TITLE = elements.select("h2").first().text().trim();
+            }
+            Elements postlist = elements.select("div[id^=pid]");
+            for(Element temp:postlist){
                 SingleArticleData data;
-                //获取标题
-                if(ARTICLE_TITLE.equals("")){
-                    ARTICLE_TITLE = elements.select("h2").first().text().trim();
+                String userimg = temp.select("span[class=avatar]").select("img").attr("src");
+                Elements userInfo = temp.select("ul.authi");
+                String index = userInfo.select("li.grey").select("em").text();
+                String username = userInfo.select("a[href^=home.php?mod=space&uid=]").text();
+                String posttime = userInfo.select("li.grey.rela").text();
+                String replyUrl = temp.select(".replybtn").select("input").attr("href");
+                Elements contentels = temp.select(".message");
+                String finalcontent = contentels.html();
+
+                //是否移除所有样式
+                if(MySetting.CONFIG_SHOW_PLAIN_TEXT){
+                    //移除所有style
+                    //移除font所有样式
+                    contentels.select("[style]").removeAttr("style");
+                    contentels.select("font").removeAttr("color").removeAttr("size").removeAttr("face");
                 }
 
-                Elements postlist = elements.select("div[id^=pid]");
-
-                for(Element temp:postlist){
-                    String userimg = temp.select("span[class=avatar]").select("img").attr("src");
-                    Elements userInfo = temp.select("ul.authi");
-                    String index = userInfo.select("li.grey").select("em").text();
-                    String username = userInfo.select("a[href^=home.php?mod=space&uid=]").text();
-                    String posttime = userInfo.select("li.grey.rela").text();
-                    String replyUrl = temp.select(".replybtn").select("input").attr("href");
-
-                    Elements contentels = temp.select(".message");
-
-                    //是否移除所有样式
-                    if(MySetting.CONFIG_SHOW_PLAIN_TEXT){
-                        //移除所有style
-                        //移除font所有样式
-                        contentels.select("[style]").removeAttr("style");
-                        contentels.select("font").removeAttr("color").removeAttr("size").removeAttr("face");
-                    }
-
+                //这是内容
+                if(index.contains("楼主")||index.contains("收藏")){
                     //修改表情大小 30x30
                     for (Element tempp : contentels.select("img[src^=static/image/smiley/]")) {
                         tempp.attr("style", "width:30px;height: 30px;");
                     }
-
                     //替换代码块里面的br
                     for(Element tempp:contentels.select(".blockcode")){
                         tempp.select("br").remove();
                     }
-
-
                     for(Element ttt:contentels.select("a[href*=from=album]")){
                         ttt.select("img").attr("style","display: block;margin:10px auto;width:80%;");
                     }
-
                     ////替换无意义的 br
-                    String finalcontent = contentels.html().replaceAll("(\\s*<br>\\s*){2,}","");;
+                    finalcontent = contentels.html().replaceAll("(\\s*<br>\\s*){2,}","");
+                    String newtime = posttime.replace("收藏","");
 
-
-                    //String content = temp.select(".message").html()
-
-                    if(mydatalist.size()==0&&tepdata.size()==0){
-                        //文章内容
-                        String newtime = posttime.replace("收藏","");
-                        data = new SingleArticleData(ARTICLE_TITLE,ARTICLE_TYPE,ARTICLE_REPLY_COUNT,username,userimg,newtime,finalcontent);
-                        tepdata.add(data);
-                    }else{
-                        //评论
-                        data = new SingleArticleData(username,userimg,posttime,index,replyUrl,finalcontent);
-                        tepdata.add(data);
-                    }
+                    //SingleType type, String title,String Img, String username, String postTime, String index, String replyUrl, String cotent
+                    data = new SingleArticleData(SingleType.CONTENT,ARTICLE_TITLE,userimg,username,newtime,index,ARTICLE_REPLY_COUNT,finalcontent);
+                } else {
+                    //SingleType type, String userImgUrl, String username, String postTime, String index, String replyNumUrl, String cotent
+                    data = new SingleArticleData(SingleType.COMMENT,userimg,username,posttime,index,replyUrl,finalcontent);
                 }
+                tepdata.add(data);
             }
             return null;
         }
@@ -404,21 +404,18 @@ public class SingleArticleActivity extends AppCompatActivity
             }
             int start = mydatalist.size();
             int add = 0;
-
             if(page<TOTAL_PAGE){
                 mydatalist.addAll(tepdata);
-                add = tepdata.size();
+                add += tepdata.size();
                 CURRENT_PAGE++;
-            }else if(page==TOTAL_PAGE){
-                int have =mydatalist.size() - (CURRENT_PAGE-1)*10;
+            } else if(page==TOTAL_PAGE){
+                int have =mydatalist.size() - CURRENT_PAGE*10;
                 int get = tepdata.size();
-
                 for(int i = have;i<get&&i>=0;i++){
                     mydatalist.add(tepdata.get(i));
                     add++;
                 }
             }
-
             mRecyleAdapter.notifyItemRangeInserted(start, add);
             isEnableLoadMore = true;
             refreshLayout.setRefreshing(false);
@@ -587,13 +584,6 @@ public class SingleArticleActivity extends AppCompatActivity
         }else {
             return true;
         }
-    }
-
-
-    //跳页确认点击回调
-    @Override
-    public void JumpComfirmClick(DialogFragment dialog, int page) {
-        Toast.makeText(this,"被电击"+page,Toast.LENGTH_SHORT).show();
     }
 
 

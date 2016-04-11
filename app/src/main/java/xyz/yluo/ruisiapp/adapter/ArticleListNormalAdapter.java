@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -149,7 +148,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         @OnClick(R.id.main_item_btn_item)
         protected void onBtnItemClick() {
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
-            SingleArticleActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplayCount(),single_data.getType());
+            SingleArticleActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle(),single_data.getReplayCount());
         }
     }
 
@@ -208,7 +207,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
             String title = single_data.getTitle();
             String replyCount = single_data.getReplayCount();
             //Context context, String tid,String title,String replycount,String type
-            SingleArticleActivity.open(activity,tid,title,replyCount,"");
+            SingleArticleActivity.open(activity,tid,title,replyCount);
         }
     }
 

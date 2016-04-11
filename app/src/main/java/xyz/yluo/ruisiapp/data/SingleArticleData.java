@@ -3,55 +3,57 @@ package xyz.yluo.ruisiapp.data;
 /**
  * Created by free2 on 16-3-11.
  * 单篇文章数据包括评论
- * 0-文章
- * >0评论
  */
-//单层楼数据 0 楼主 > 0 回复
 public class SingleArticleData {
 
-    //作者的内容特有 0 位置特有
-    private String title;
-    private String type;
-    private String replyCount;
-
-    //通用
+    //用来标识是楼主还是内容还是loadmore
+    private SingleType type;
+    private String Img;
     private String username;
-    private String userImgUrl;
     private String postTime;
     //楼层
     private String index;
-    private String cotent;
-    //楼中楼回复链接
+    //回复链接
     private String replyUrl;
+    private String cotent;
+
+    //楼主特有
+    private String title;
 
 
-    //index>0 的数据也就是评论
-    public SingleArticleData(String username, String userImgUrl, String postTime,String index,String replyUrl,String cotent) {
-        this.index = index;
-        this.username = username;
-        this.userImgUrl = userImgUrl;
-        this.postTime = postTime;
-        this.cotent = cotent;
-        this.replyUrl = replyUrl;
-    }
-
-    //index==0 内容
-    public SingleArticleData(String title, String type, String replyCount, String username, String userImgUrl, String postTime, String cotent) {
-        this.title = title;
+    //层主
+    public SingleArticleData(SingleType type, String Img, String username, String postTime, String index, String replyUrl, String cotent) {
         this.type = type;
-        this.replyCount = replyCount;
+        this.Img = Img;
         this.username = username;
-        this.userImgUrl = userImgUrl;
         this.postTime = postTime;
+        this.index = index;
+        this.replyUrl = replyUrl;
         this.cotent = cotent;
     }
 
+    public SingleArticleData(SingleType type, String title,String Img, String username, String postTime, String index, String replyUrl, String cotent) {
+        this.type = type;
+        this.title = title;
+        this.Img = Img;
+        this.username = username;
+        this.postTime = postTime;
+        this.index = index;
+        this.replyUrl = replyUrl;
+        this.cotent = cotent;
+    }
+
+
+
+    public String getReplyUrl() {
+        return replyUrl;
+    }
     public String getUsername() {
         return username;
     }
 
-    public String getUserImgUrl() {
-        return userImgUrl;
+    public String getImg() {
+        return Img;
     }
 
     public String getPostTime() {
@@ -62,30 +64,19 @@ public class SingleArticleData {
         return cotent;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getReplyCount() {
-        return replyCount;
-    }
-
     public String getIndex() {
         return index;
     }
-    public String getReplyUrl() {
-        return replyUrl;
+
+    public SingleType getType() {
+        return type;
+    }
+
+    public void setType(SingleType type) {
+        this.type = type;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }
