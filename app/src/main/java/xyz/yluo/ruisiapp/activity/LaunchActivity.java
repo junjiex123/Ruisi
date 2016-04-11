@@ -30,7 +30,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * Created by free2 on 16-3-19.
  *
  */
-public class LaunchActivity extends AppCompatActivity{
+public class LaunchActivity extends BaseActivity{
 
 
     @Bind(R.id.progressBar)
@@ -38,7 +38,6 @@ public class LaunchActivity extends AppCompatActivity{
     private final int TYPE_INNER = 0;
     private final int TYPE_OUTER = 1;
     private long starttime = 0;
-    MyPublicData PublicSetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +48,6 @@ public class LaunchActivity extends AppCompatActivity{
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSetting();
         checkNetWork();
-        PublicSetting = new MyPublicData();
     }
 
 

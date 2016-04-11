@@ -51,7 +51,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 聊天activity
  * TODO 支持翻页。。。。目前只能看最后一页
  */
-public class ChatActivity extends AppCompatActivity{
+public class ChatActivity extends BaseActivity{
 
     @Bind(R.id.topic_recycler_view)
     protected RecyclerView recycler_view;

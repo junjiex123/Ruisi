@@ -29,7 +29,7 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
  * 一般文章列表
  * 图片文章列表都继承这个类
  */
-public abstract class ArticleListBaseActivity extends AppCompatActivity
+public abstract class ArticleListBaseActivity extends BaseActivity
         implements LoadMoreListener.OnLoadMoreListener{
 
     @Bind(R.id.toolbar)

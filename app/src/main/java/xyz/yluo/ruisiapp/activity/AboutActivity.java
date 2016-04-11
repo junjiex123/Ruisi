@@ -21,7 +21,7 @@ import xyz.yluo.ruisiapp.utils.MyWebView;
  * Created by yluo on 2015/10/5 0005.
  * 个人信息页面
  */
-public class AboutActivity extends AppCompatActivity {
+public class AboutActivity extends BaseActivity {
 
     @Bind(R.id.mywebview)
     protected MyWebView mywebview;

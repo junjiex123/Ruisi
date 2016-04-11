@@ -40,7 +40,7 @@ import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
  * Created by free2 on 16-4-6.
  * 搜索
  */
-public class ActivitySearch extends AppCompatActivity {
+public class ActivitySearch extends BaseActivity {
 
     @Bind(R.id.recycler_view)
     protected RecyclerView recycler_view;

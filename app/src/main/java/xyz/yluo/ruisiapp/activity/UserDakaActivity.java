@@ -39,7 +39,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * Created by free2 on 16-3-15.
  *
  */
-public class UserDakaActivity extends AppCompatActivity{
+public class UserDakaActivity extends BaseActivity{
 
     @Bind(R.id.input)
     protected TextView input;

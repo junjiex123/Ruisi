@@ -47,7 +47,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.GetLevel;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
-public class UserDetailActivity extends AppCompatActivity {
+public class UserDetailActivity extends BaseActivity {
 
     @Bind(R.id.recycler_view)
     protected RecyclerView recycler_view;

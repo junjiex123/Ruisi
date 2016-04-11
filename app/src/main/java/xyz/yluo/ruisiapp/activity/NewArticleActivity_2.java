@@ -30,7 +30,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * todo 替换webview发帖。。。。
  *
  */
-public class NewArticleActivity_2 extends AppCompatActivity {
+public class NewArticleActivity_2 extends BaseActivity {
 
     //@Bind(R.id.webView)
     protected MyWebView myWebView;

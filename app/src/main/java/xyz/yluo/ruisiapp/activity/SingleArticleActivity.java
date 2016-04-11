@@ -61,7 +61,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * Created by free2 on 16-3-6.
  *
  */
-public class SingleArticleActivity extends AppCompatActivity
+public class SingleArticleActivity extends BaseActivity
         implements RecyclerViewClickListener,LoadMoreListener.OnLoadMoreListener,
         ReplyDialog.ReplyDialogListener,ArticleJumpDialog.JumpDialogListener{
 

@@ -36,7 +36,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * Created by free2 on 16-3-17.
  *
  */
-public class HomeActivity extends AppCompatActivity
+public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     @Bind(R.id.toolbar)

@@ -50,7 +50,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  *
  * edit in 2016 03 14
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     @Bind(R.id.login_name)
     protected EditText ed_username;
