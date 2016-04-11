@@ -15,7 +15,6 @@
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:ems="10"
-        android:lines="1"
         android:maxLines="5"
         android:hint="请输入内容"
         android:id="@+id/reply_content" />

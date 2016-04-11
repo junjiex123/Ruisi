@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -40,6 +41,9 @@ public class ArticleJumpDialog extends DialogFragment{
         content = (EditText) view.findViewById(R.id.content);
 
         TextView textView = (TextView) view.findViewById(R.id.textpage);
+        if(currentPage<1){
+            currentPage =1;
+        }
         String text  = "第"+currentPage+"/"+maxPage+"页";
         textView.setText(text);
         TextView btn_cancel = (TextView) view.findViewById(R.id.btn_cancel);

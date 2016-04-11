@@ -43,6 +43,7 @@ public class MyHtmlTextView extends TextView implements Html.ImageGetter {
         this.activity = activity;
         Spanned spanned = Html.fromHtml(text, this, null);
         super.setText(spanned);
+        setLinkTextColor(0xff529ECC);
     }
 
 

@@ -228,7 +228,6 @@ public class LoginActivity extends AppCompatActivity {
                     if(!temphash.isEmpty()){
                         MySetting.CONFIG_FORMHASH = temphash;
                     }
-
                 }
                 loginUrl = doc.select("form#loginform").attr("action");
                 Map<String,String> params = new HashMap<>();

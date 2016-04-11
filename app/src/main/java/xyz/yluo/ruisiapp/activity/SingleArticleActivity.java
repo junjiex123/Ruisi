@@ -276,34 +276,7 @@ public class SingleArticleActivity extends AppCompatActivity
         });
     }
 
-    ////recyclerView item点击事件 加载更多事件
-    @Override
-    public void recyclerViewListClicked(View v, int position) {
-        if(v.getId()==R.id.btn_star){
-            if(isNeedLoginDialog()){
-                Toast.makeText(getApplicationContext(),"正在收藏......",Toast.LENGTH_SHORT).show();
-                starTask();
-            }
-        }else if(v.getId()==R.id.btn_reply){
-            if(isNeedLoginDialog()){
-                show_ime();
-            }
-        }else if(v.getId()==R.id.btn_reply_2){
-            if(isNeedLoginDialog()){
-                String replyUrl = mydatalist.get(position).getReplyUrl();
-                String replyIndex = mydatalist.get(position).getIndex();
-                String replyName = mydatalist.get(position).getUsername();
-                ReplyCen(replyUrl,replyIndex,replyName);
-            }
-        }
-        if(position==mydatalist.size()){
-            //加载更多被电击
-            if(isEnableLoadMore){
-                isEnableLoadMore = false;
-                onLoadMore();
-            }
-        }
-    }
+
 
     public class DealWithArticleData extends AsyncTask<Void,Void,String>{
         //* 传入一篇文章html
@@ -408,7 +381,7 @@ public class SingleArticleActivity extends AppCompatActivity
                 mydatalist.addAll(tepdata);
                 add += tepdata.size();
                 CURRENT_PAGE++;
-            } else if(page==TOTAL_PAGE){
+            }else if(page==TOTAL_PAGE){
                 int have =mydatalist.size() - CURRENT_PAGE*10;
                 int get = tepdata.size();
                 for(int i = have;i<get&&i>=0;i++){
@@ -421,6 +394,35 @@ public class SingleArticleActivity extends AppCompatActivity
             refreshLayout.setRefreshing(false);
         }
 
+    }
+
+    ////recyclerView item点击事件 加载更多事件
+    @Override
+    public void recyclerViewListClicked(View v, int position) {
+        if(v.getId()==R.id.btn_star){
+            if(isNeedLoginDialog()){
+                Toast.makeText(getApplicationContext(),"正在收藏......",Toast.LENGTH_SHORT).show();
+                starTask();
+            }
+        }else if(v.getId()==R.id.btn_reply){
+            if(isNeedLoginDialog()){
+                show_ime();
+            }
+        }else if(v.getId()==R.id.btn_reply_2){
+            if(isNeedLoginDialog()){
+                String replyUrl = mydatalist.get(position).getReplyUrl();
+                String replyIndex = mydatalist.get(position).getIndex();
+                String replyName = mydatalist.get(position).getUsername();
+                ReplyCen(replyUrl,replyIndex,replyName);
+            }
+        }
+        if(position==mydatalist.size()){
+            //加载更多被电击
+            if(isEnableLoadMore){
+                isEnableLoadMore = false;
+                onLoadMore();
+            }
+        }
     }
 
     //收藏 任务
