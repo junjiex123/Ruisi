@@ -1,185 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout android:id="@+id/main_item_btn_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingTop="12dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:background="?android:attr/selectableItemBackground"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/ffflay">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
-        android:id="@+id/main_item_btn_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:orientation="vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_marginEnd="@dimen/dimen_8"
+            android:id="@+id/article_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:background="@color/orange200"
+            android:text="置顶" />
+
+        <TextView
+            android:id="@+id/article_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="16sp"
+            android:singleLine="true"
+            tools:text="话题的标题" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <xyz.yluo.ruisiapp.utils.CircleImageView
+            android:id="@+id/author_img"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:civ_border_width="1dp"
+            app:civ_border_color="@android:color/white"
+            android:src="@drawable/image_placeholder"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_marginEnd="@dimen/dimen_8"
-                android:id="@+id/article_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:background="@color/orange200"
-                android:text="置顶" />
-
-            <TextView
-                android:id="@+id/article_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="16sp"
-                android:singleLine="true"
-                tools:text="话题的标题" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <xyz.yluo.ruisiapp.utils.CircleImageView
-                android:id="@+id/author_img"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                app:civ_border_width="1dp"
-                app:civ_border_color="@android:color/white"
-                android:src="@drawable/image_placeholder"/>
-
+            android:layout_marginStart="8dp"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/author_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="4dp"
-                        android:layout_marginRight="4dp"
-                        android:textColor="?android:attr/textColorPrimary"
-                        android:textSize="14sp"
-                        android:singleLine="true"
-                        android:text="TakWolf" />
-
-                    <TextView
-                        android:gravity="center"
-                        android:id="@+id/main_item_tv_last_reply_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:textSize="12sp"
-                        android:singleLine="true"
-                        android:text="2分前" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/author_name"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp">
-
-                    <TextView
-                        android:gravity="center"
-                        android:drawablePadding="4dp"
-                        android:drawableStart="@drawable/ic_time_12dp"
-                        android:id="@+id/post_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="4dp"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:textSize="12sp"
-                        android:singleLine="true"
-                        android:text="2015-1-1 19:20:15" />
-
-                    <TextView
-                        android:gravity="top"
-                        android:drawablePadding="4dp"
-                        android:drawableStart="@drawable/ic_reply_12dp"
-                        android:id="@+id/reply_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toStartOf="@+id/main_item_icon_slash"
-                        android:layout_toLeftOf="@+id/main_item_icon_slash"
-                        android:layout_centerVertical="true"
-                        android:textSize="12sp"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:text="111"
-                        android:singleLine="true" />
-
-                    <TextView
-                        android:id="@+id/main_item_icon_slash"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toStartOf="@+id/view_count"
-                        android:layout_toLeftOf="@+id/view_count"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="4dp"
-                        android:layout_marginRight="4dp"
-                        android:text="/"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:textSize="12sp"
-                        android:singleLine="true" />
-
-                    <TextView
-                        android:gravity="top"
-                        android:drawablePadding="@dimen/dimen_4"
-                        android:drawableStart="@drawable/ic_look_12dp"
-                        android:id="@+id/view_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:textSize="12sp"
-                        android:singleLine="true"
-                        android:text="222"/>
-                </RelativeLayout>
-
+                    android:layout_marginEnd="4dp"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="14sp"
+                    android:singleLine="true"
+                    tools:text="hahah" />
+                <TextView
+                    android:gravity="center"
+                    android:id="@+id/last_reply_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="12sp"
+                    android:singleLine="true"
+                    tools:text="2分前" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="@dimen/dimen_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:gravity="center|start"
+                    android:drawablePadding="4dp"
+                    android:drawableStart="@drawable/ic_time_12dp"
+                    android:id="@+id/post_time"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="12sp"
+                    android:singleLine="true"
+                    tools:text="2015-1-1 19:20:15" />
+
+
+                <TextView
+                    android:gravity="top"
+                    android:drawablePadding="@dimen/dimen_4"
+                    android:drawableStart="@drawable/ic_look_12dp"
+                    android:id="@+id/view_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="12sp"
+                    android:singleLine="true"
+                    tools:text="222"/>
+
+                <TextView
+                    android:layout_marginStart="@dimen/dimen_8"
+                    android:gravity="top"
+                    android:drawablePadding="4dp"
+                    android:drawableStart="@drawable/ic_reply_12dp"
+                    android:id="@+id/reply_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    tools:text="111"
+                    android:singleLine="true" />
+            </LinearLayout>
+
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/image_good"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_gravity="end"
-        android:layout_margin="16dp"
-        android:src="@drawable/tab_ic_good"
-        android:scaleType="centerInside"
-        android:adjustViewBounds="true" />
-
     <View style="@style/DeepLine"
+        android:layout_marginTop="12dp"
         android:layout_gravity="bottom" />
+</LinearLayout>
 
-</FrameLayout>
+

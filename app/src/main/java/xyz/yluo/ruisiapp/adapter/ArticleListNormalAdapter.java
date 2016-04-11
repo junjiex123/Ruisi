@@ -79,9 +79,6 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
     public void onBindViewHolder(BaseViewHolder holder, int position) {
         holder.setData(position);
     }
-    //为了让 list item可以变化，我们可以重写这个方法
-    //他的返回值是onCreateViewHolder 的参数viewType
-    //这儿可以 知道position 和 data
 
     @Override
     public int getItemCount() {
@@ -92,9 +89,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
     }
 
     //文章列表ViewHolder 如果想创建别的样式还可以创建别的houlder继承自RecyclerView.ViewHolder
-    public  class NormalViewHolder extends BaseViewHolder {
-        @Bind(R.id.image_good)
-        protected ImageView image_good;
+    protected  class NormalViewHolder extends BaseViewHolder {
         @Bind(R.id.article_type)
         protected TextView article_type;
         @Bind(R.id.article_title)
@@ -105,6 +100,8 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         protected TextView author_name;
         @Bind(R.id.post_time)
         protected TextView post_time;
+        @Bind(R.id.last_reply_time)
+        protected TextView last_reply_time;
         @Bind(R.id.reply_count)
         protected TextView reply_count;
         @Bind(R.id.view_count)
@@ -113,13 +110,12 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         public NormalViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
-            //imageView = (ImageView) v.findViewById(R.id.main_item_icon_good);
-            //textViewTitle = (TextView) v.findViewById(R.id.main_item_tv_title);
         }
         //设置listItem的数据
         @Override
         void setData(int position) {
-            String type = DataSet.get(position).getType();
+            ArticleListData single = DataSet.get(position);
+            String type = single.getType();
             if (type.equals("zhidin")) {
                 article_type.setText("置顶");
                 article_type.setVisibility(View.VISIBLE);
@@ -132,20 +128,15 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
                 article_type.setVisibility(View.GONE);
             }
 
-            if(DataSet.get(position).getType().equals("zhidin")){
-                image_good.setVisibility(View.VISIBLE);
-            }else {
-                image_good.setVisibility(View.INVISIBLE);
-            }
+            String postTime = "发表于:"+single.getPostTime();
+            post_time.setText(postTime);
+            view_count.setText(single.getViewCount());
 
-            post_time.setText(DataSet.get(position).getPostTime());
-            view_count.setText(DataSet.get(position).getViewCount());
-            String imageUrl = UrlUtils.getimageurl(DataSet.get(position).getAuthorUrl());
+            String imageUrl = UrlUtils.getimageurl(single.getAuthorUrl());
             Picasso.with(activity).load(imageUrl).resize(36,36).centerCrop().placeholder(R.drawable.image_placeholder).into(author_img);
-
-            article_title.setText(DataSet.get(position).getTitle());
-            author_name.setText(DataSet.get(position).getAuthor());
-            reply_count.setText(DataSet.get(position).getReplayCount());
+            article_title.setText(single.getTitle());
+            author_name.setText(single.getAuthor());
+            reply_count.setText(single.getReplayCount());
         }
 
         @OnClick(R.id.author_img)
@@ -163,7 +154,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
     }
 
     //加载更多ViewHolder
-    public class LoadMoreViewHolder extends BaseViewHolder{
+    protected class LoadMoreViewHolder extends BaseViewHolder{
 
         protected EditText loadmoreText;
 
@@ -180,14 +171,12 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
 
 
     //手机版文章列表
-    public  class NormalViewHolderMe extends BaseViewHolder {
+    protected   class NormalViewHolderMe extends BaseViewHolder {
 
         @Bind(R.id.article_title)
         protected TextView article_title;
-
         @Bind(R.id.author_name)
         protected TextView author_name;
-
         @Bind(R.id.is_image)
         protected TextView is_image;
         @Bind(R.id.reply_count)
@@ -201,11 +190,12 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         //设置listItem的数据
         @Override
         void setData(int position) {
-            article_title.setText(DataSet.get(position).getTitle());
-            author_name.setText(DataSet.get(position).getAuthor());
-            reply_count.setText(DataSet.get(position).getReplayCount());
+            ArticleListData single = DataSet.get(position);
+            article_title.setText(single.getTitle());
+            author_name.setText(single.getAuthor());
+            reply_count.setText(single.getReplayCount());
 
-            if(DataSet.get(position).getType().equals("0")){
+            if(single.getType().equals("0")){
                 is_image.setVisibility(View.VISIBLE);
             }else {
                 is_image.setVisibility(View.GONE);
