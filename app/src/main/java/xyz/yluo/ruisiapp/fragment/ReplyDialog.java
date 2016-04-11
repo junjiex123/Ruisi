@@ -37,7 +37,7 @@ public class ReplyDialog extends DialogFragment{
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.activity_article_reply_dialog,null);
+        View view = inflater.inflate(R.layout.reply_dialog,null);
         builder.setView(view);
         builder.setTitle(title);
 
