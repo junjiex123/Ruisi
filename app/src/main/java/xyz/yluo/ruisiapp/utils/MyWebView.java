@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
 
-import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.MyPublicData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.PersistentCookieStore;
 
@@ -74,11 +74,11 @@ public class MyWebView extends WebView{
 
         cookieManager.setAcceptCookie(true);
 
-        String domain = ";domain=" + MySetting.BBS_BASE_URL.replace("http://", "").replace("/", "");
+        String domain = ";domain=" + MyPublicData.BBS_BASE_URL.replace("http://", "").replace("/", "");
 
         for (String s : cookieStore.getCookie().split(";")) {
             s = s + domain;
-            cookieManager.setCookie(MySetting.BBS_BASE_URL, s);
+            cookieManager.setCookie(MyPublicData.BBS_BASE_URL, s);
         }
     }
 }

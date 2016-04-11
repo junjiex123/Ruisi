@@ -28,7 +28,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.MyPublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -81,8 +81,8 @@ public class UserDakaActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_daka);
         ButterKnife.bind(this);
-        user_name.setText(MySetting.CONFIG_USER_NAME);
-        Picasso.with(this).load(UrlUtils.getimageurl(MySetting.CONFIG_USER_UID,true)).placeholder(R.drawable.image_placeholder).into(user_image);
+        user_name.setText(MyPublicData.CONFIG_USER_NAME);
+        Picasso.with(this).load(UrlUtils.getimageurl(MyPublicData.CONFIG_USER_UID,true)).placeholder(R.drawable.image_placeholder).into(user_image);
         init();
         isHaveDaka();
         final String[] mItems = {"开心","难过","郁闷","无聊","怒","擦汗","奋斗","慵懒","衰"};
@@ -111,7 +111,7 @@ public class UserDakaActivity extends AppCompatActivity{
             finish();
         }else{
             String xinqin = getGroup1_select();
-            String formhash = MySetting.CONFIG_FORMHASH;
+            String formhash = MyPublicData.CONFIG_FORMHASH;
             String qdmode = "1";
             String todaysay = "";
             String fastreplay = "0";
@@ -170,7 +170,7 @@ public class UserDakaActivity extends AppCompatActivity{
                 if (doc.select("input[name=formhash]").first() != null) {
                     String temphash = doc.select("input[name=formhash]").attr("value");
                     if(!temphash.isEmpty()){
-                        MySetting.CONFIG_FORMHASH = temphash;
+                        MyPublicData.CONFIG_FORMHASH = temphash;
                     }
                 }
 

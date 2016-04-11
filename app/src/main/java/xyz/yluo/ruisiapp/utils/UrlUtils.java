@@ -1,6 +1,6 @@
 package xyz.yluo.ruisiapp.utils;
 
-import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.MyPublicData;
 
 /**
  * Created by free2 on 16-4-1.
@@ -50,11 +50,11 @@ public class UrlUtils {
         //http://bbs.rs.xidian.me/274679
         String uid = GetId.getUid(userurl);
 
-        return MySetting.BBS_BASE_URL+"ucenter/avatar.php?uid="+uid+"&size=small";
+        return MyPublicData.BBS_BASE_URL+"ucenter/avatar.php?uid="+uid+"&size=small";
     }
 
     public static String getimageurl(String uid,boolean ismiddle){
-        return MySetting.BBS_BASE_URL+"ucenter/avatar.php?uid="+uid+"&size=middle";
+        return MyPublicData.BBS_BASE_URL+"ucenter/avatar.php?uid="+uid+"&size=middle";
     }
 
     public static String getSignUrl(){

@@ -15,7 +15,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.MyPublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.data.ImageArticleListData;
@@ -76,7 +76,7 @@ public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListIma
             img_card_title.setText(DataSet.get(position).getTitle());
             img_card_like.setText(DataSet.get(position).getReplyCount());
             if(DataSet.get(position).getImage()!=""){
-                Picasso.with(activity).load(MySetting.BBS_BASE_URL+DataSet.get(position).getImage()).placeholder(R.drawable.image_placeholder).into(img_card_image);
+                Picasso.with(activity).load(MyPublicData.BBS_BASE_URL+DataSet.get(position).getImage()).placeholder(R.drawable.image_placeholder).into(img_card_image);
             }else{
                 img_card_image.setImageResource(R.drawable.image_placeholder);
             }

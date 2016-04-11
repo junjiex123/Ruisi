@@ -14,7 +14,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.MyPublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.ArticleListImageActivity;
 import xyz.yluo.ruisiapp.activity.ArticleListNormalActivity;
@@ -101,7 +101,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
             String fid = GetId.getFroumFid(single.getTitleUrl());
             //几个特殊的板块
-            if(MySetting.CONFIG_IS_INNER&&(fid.equals("561")||fid.equals("157")||fid.equals("13"))){
+            if(MyPublicData.CONFIG_IS_INNER&&(fid.equals("561")||fid.equals("157")||fid.equals("13"))){
                 ArticleListImageActivity.open(activity,Integer.parseInt(fid),single.getTitle());
             }else{
                 ArticleListNormalActivity.open(activity, Integer.parseInt(fid), single.getTitle());

@@ -27,7 +27,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.MyPublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.ActivitySearch;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
@@ -142,7 +142,7 @@ public class HomeFormList extends Fragment{
 
             String ress =  GetFormHash.getHash(hash);
             if(!ress.isEmpty()){
-                MySetting.CONFIG_FORMHASH = ress;
+                MyPublicData.CONFIG_FORMHASH = ress;
             }
 
             for(Element ele:elements){
@@ -190,7 +190,7 @@ public class HomeFormList extends Fragment{
     //判断是否需要弹出登录dialog
     private boolean islogin_dialog(){
 
-        if(MySetting.CONFIG_ISLOGIN){
+        if(MyPublicData.CONFIG_ISLOGIN){
             return true;
         }else{
             NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();

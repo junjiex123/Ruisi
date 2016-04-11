@@ -15,7 +15,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.MyPublicData;
 import xyz.yluo.ruisiapp.adapter.ArticleListNormalAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
@@ -68,14 +68,14 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
     @Override
     protected void getData() {
         String url = UrlUtils.getArticleListUrl(CurrentFid,CurrentPage,true);
-        if(!MySetting.CONFIG_IS_INNER){
+        if(!MyPublicData.CONFIG_IS_INNER){
             url = url + UrlUtils.getArticleListUrl(CurrentFid,CurrentPage,false);
         }
 
         HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
-                if(MySetting.CONFIG_IS_INNER){
+                if(MyPublicData.CONFIG_IS_INNER){
                     new GetNormalArticleListTaskRs(new String(response)).execute();
                 }else{
                     //外网
@@ -137,7 +137,7 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
                     String viewcount = src.getElementsByAttributeValue("class", "num").select("em").text();
                     String replaycount = src.getElementsByAttributeValue("class", "num").select("a").text();
 
-                    if(!MySetting.CONFIG_ISSHOW_ZHIDIN&&type.equals("zhidin")){
+                    if(!MyPublicData.CONFIG_ISSHOW_ZHIDIN&&type.equals("zhidin")){
                         //do no thing
                     }else{
                         if (title.length()>0&& author.length()>0) {

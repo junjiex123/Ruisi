@@ -20,7 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.MyPublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.utils.MyWebView;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -105,7 +105,7 @@ public class NewArticleActivity_2 extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                myWebView.loadUrl(MySetting.BBS_BASE_URL+UrlUtils.getPostUrl(CURRENT_FID));
+                myWebView.loadUrl(MyPublicData.BBS_BASE_URL+UrlUtils.getPostUrl(CURRENT_FID));
             }
 
             @Override
@@ -117,8 +117,8 @@ public class NewArticleActivity_2 extends AppCompatActivity {
         WebSettings settings = myWebView.getSettings();
         settings.setJavaScriptEnabled(true);
 
-        if(MySetting.CONFIG_ISLOGIN){
-            myWebView.loadUrl(MySetting.BBS_BASE_URL+ UrlUtils.getPostUrl(CURRENT_FID));
+        if(MyPublicData.CONFIG_ISLOGIN){
+            myWebView.loadUrl(MyPublicData.BBS_BASE_URL+ UrlUtils.getPostUrl(CURRENT_FID));
         }else {
             Toast.makeText(this,"你还没有登陆",Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this,LoginActivity.class));

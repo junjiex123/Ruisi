@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.MyPublicData;
 
 public class SyncHttpClient {
     public static final String DEFAULT_USER_AGENT = "AsyncLiteHttp/1.3";
@@ -163,7 +163,7 @@ public class SyncHttpClient {
             if(code==302){
                 //如果会重定向，保存302重定向地址，以及Cookies,然后重新发送请求(模拟请求)
                 String location = connection.getHeaderField("Location");
-                request(MySetting.BBS_BASE_URL+location,Method.GET,map,handler);
+                request(MyPublicData.BBS_BASE_URL+location,Method.GET,map,handler);
             }
 
             // Process the response in the handler because it can be done in different ways

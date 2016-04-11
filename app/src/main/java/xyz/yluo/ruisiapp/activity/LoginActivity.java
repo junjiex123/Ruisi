@@ -37,7 +37,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.MyPublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -226,7 +226,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (doc.select("input[name=formhash]").first() != null) {
                     String temphash = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
                     if(!temphash.isEmpty()){
-                        MySetting.CONFIG_FORMHASH = temphash;
+                        MyPublicData.CONFIG_FORMHASH = temphash;
                     }
                 }
                 loginUrl = doc.select("form#loginform").attr("action");
@@ -295,14 +295,14 @@ public class LoginActivity extends AppCompatActivity {
         editor.apply();
 
         Document doc = Jsoup.parse(res);
-        MySetting.CONFIG_USER_NAME = ed_username.getText().toString().trim();
+        MyPublicData.CONFIG_USER_NAME = ed_username.getText().toString().trim();
         String url = doc.select("a[href^=home.php?mod=space&uid=]").attr("href");
-        MySetting.CONFIG_USER_UID = GetId.getUid(url);
+        MyPublicData.CONFIG_USER_UID = GetId.getUid(url);
 
         //开始获取formhash
         progress.dismiss();
-        MySetting.CONFIG_ISLOGIN = true;
-        Toast.makeText(getApplicationContext(), "欢迎你"+ MySetting.CONFIG_USER_NAME+"登陆成功", Toast.LENGTH_SHORT).show();
+        MyPublicData.CONFIG_ISLOGIN = true;
+        Toast.makeText(getApplicationContext(), "欢迎你"+ MyPublicData.CONFIG_USER_NAME+"登陆成功", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
         //把返回数据存入Intent
         intent.putExtra("result", "ok");

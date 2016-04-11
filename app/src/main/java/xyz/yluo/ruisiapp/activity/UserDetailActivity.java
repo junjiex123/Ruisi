@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -24,7 +23,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jude.swipbackhelper.SwipeBackHelper;
 import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
@@ -37,7 +35,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.MyPublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
 import xyz.yluo.ruisiapp.data.SimpleListData;
@@ -115,7 +113,7 @@ public class UserDetailActivity extends AppCompatActivity {
         recycler_view.setAdapter(adapter);
         userUid = GetId.getUid(imageUrl);
         //如果是自己
-        if (userUid.equals(MySetting.CONFIG_USER_UID)){
+        if (userUid.equals(MyPublicData.CONFIG_USER_UID)){
             fab.setImageResource(R.drawable.ic_exit_24dp);
         }
         String url0= UrlUtils.getUserHomeUrl(userUid,false);
@@ -151,11 +149,11 @@ public class UserDetailActivity extends AppCompatActivity {
     @OnClick(R.id.fab)
     protected void fab_click(){
         //如果是自己
-        if (userUid.equals(MySetting.CONFIG_USER_UID)){
+        if (userUid.equals(MyPublicData.CONFIG_USER_UID)){
             ExitLoginDialogFragment dialogFragment = new ExitLoginDialogFragment();
             dialogFragment.show(getFragmentManager(), "exit");
 
-        }else if(MySetting.CONFIG_ISLOGIN){
+        }else if(MyPublicData.CONFIG_ISLOGIN){
             //home.php?mod=spacecp&ac=pm&op=send&pmid=450602&daterange=0&pmsubmit=yes&mobile=2
             //home.php?mod=space&do=pm&subop=view&touid=261098&mobile=2
             String url = "home.php?mod=spacecp&ac=pm&op=send&pmid="+userUid+"&daterange=0&pmsubmit=yes&mobile=2";

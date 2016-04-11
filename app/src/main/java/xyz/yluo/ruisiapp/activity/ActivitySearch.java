@@ -29,7 +29,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.MyPublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
 import xyz.yluo.ruisiapp.data.SimpleListData;
@@ -121,7 +121,7 @@ public class ActivitySearch extends AppCompatActivity {
 
         String url = "search.php?mod=forum&mobile=2";
         Map<String,String> paras = new HashMap<>();
-        paras.put("formhash", MySetting.CONFIG_FORMHASH);
+        paras.put("formhash", MyPublicData.CONFIG_FORMHASH);
         paras.put("searchsubmit","yes");
         paras.put("srchtxt",str);
 

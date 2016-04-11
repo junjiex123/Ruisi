@@ -35,7 +35,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.MyPublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
 import xyz.yluo.ruisiapp.data.ChatListData;
@@ -206,7 +206,7 @@ public class ChatActivity extends AppCompatActivity{
 
                 String temp_hash= doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
                 if(!temp_hash.isEmpty()){
-                    MySetting.CONFIG_FORMHASH = temp_hash;
+                    MyPublicData.CONFIG_FORMHASH = temp_hash;
                 }
                 touid = doc.select("input[name=touid]").attr("value");
             }
@@ -286,7 +286,7 @@ public class ChatActivity extends AppCompatActivity{
             progress = ProgressDialog.show(this, "正在发送", "请等待", true);
 
             Map<String,String> params = new HashMap<>();
-            params.put("formhash", MySetting.CONFIG_FORMHASH);
+            params.put("formhash", MyPublicData.CONFIG_FORMHASH);
             params.put("touid",touid);
             params.put("message", text);
 
@@ -320,7 +320,7 @@ public class ChatActivity extends AppCompatActivity{
 
     private void send_success(){
         //http://rs.xidian.edu.cn/ucenter/avatar.php?uid=252553&size=small
-        String userImage = MySetting.BBS_BASE_URL+"ucenter/avatar.php?uid="+ MySetting.CONFIG_USER_UID+"&size=small";
+        String userImage = MyPublicData.BBS_BASE_URL+"ucenter/avatar.php?uid="+ MyPublicData.CONFIG_USER_UID+"&size=small";
         datas.add(new ChatListData(1,userImage,input_aera.getText().toString(),"刚刚"));
         input_aera.setText("");
         adapter.notifyItemInserted(datas.size()-1);

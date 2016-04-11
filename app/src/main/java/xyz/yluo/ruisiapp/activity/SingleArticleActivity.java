@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.MyPublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
@@ -195,7 +195,7 @@ public class SingleArticleActivity extends AppCompatActivity
     }
 
     private boolean isNeedLoginDialog(){
-        if (MySetting.CONFIG_ISLOGIN) {
+        if (MyPublicData.CONFIG_ISLOGIN) {
             return true;
         } else {
             NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();
@@ -284,7 +284,7 @@ public class SingleArticleActivity extends AppCompatActivity
                 replyUrl = doc.select("form#fastpostform").attr("action");
                 String hash = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
                 if (!hash.isEmpty()){
-                    MySetting.CONFIG_FORMHASH =hash;
+                    MyPublicData.CONFIG_FORMHASH =hash;
                 }
             }
             //获取总页数
@@ -335,7 +335,7 @@ public class SingleArticleActivity extends AppCompatActivity
                 }
 
                 //是否移除所有样式
-                if(MySetting.CONFIG_SHOW_PLAIN_TEXT){
+                if(MyPublicData.CONFIG_SHOW_PLAIN_TEXT){
                     //移除所有style
                     //移除font所有样式
                     contentels.select("[style]").removeAttr("style");
@@ -422,7 +422,7 @@ public class SingleArticleActivity extends AppCompatActivity
         final String url = UrlUtils.getStarUrl(ARTICLE_TID);
         Map<String,String> params = new HashMap<>();
         params.put("favoritesubmit","true");
-        params.put("formhash", MySetting.CONFIG_FORMHASH);
+        params.put("formhash", MyPublicData.CONFIG_FORMHASH);
 
         HttpUtil.post(this, url, params, new ResponseHandler() {
             @Override
@@ -446,7 +446,7 @@ public class SingleArticleActivity extends AppCompatActivity
     private void post_reply(String text){
         progress = ProgressDialog.show(this, "正在发送", "请等待", true);
         Map<String,String> params = new HashMap<>();
-        params.put("formhash", MySetting.CONFIG_FORMHASH);
+        params.put("formhash", MyPublicData.CONFIG_FORMHASH);
         params.put("message", text);
         HttpUtil.post(this, replyUrl+"&handlekey=fastpost&loc=1&inajax=1", params, new ResponseHandler() {
             @Override
@@ -595,7 +595,7 @@ public class SingleArticleActivity extends AppCompatActivity
                 finish();
                 break;
             case R.id.menu_broswer:
-                String url = MySetting.BBS_BASE_URL+UrlUtils.getSingleArticleUrl(ARTICLE_TID,CURRENT_PAGE,false);
+                String url = MyPublicData.BBS_BASE_URL+UrlUtils.getSingleArticleUrl(ARTICLE_TID,CURRENT_PAGE,false);
                 RequestOpenBrowser.openBroswer(this,url);
                 break;
             case R.id.menu_refresh:

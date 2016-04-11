@@ -8,7 +8,7 @@ import org.jsoup.nodes.Document;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.MyPublicData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 
@@ -26,7 +26,7 @@ public class GetFormHash {
                 @Override
                 public void onSuccess(byte[] response) {
                     Document doc = Jsoup.parse(new String(response));
-                    MySetting.CONFIG_FORMHASH = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
+                    MyPublicData.CONFIG_FORMHASH = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
                 }
 
                 @Override

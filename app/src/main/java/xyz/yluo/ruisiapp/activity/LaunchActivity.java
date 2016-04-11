@@ -19,7 +19,7 @@ import org.jsoup.nodes.Document;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.MyPublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -38,6 +38,7 @@ public class LaunchActivity extends AppCompatActivity{
     private final int TYPE_INNER = 0;
     private final int TYPE_OUTER = 1;
     private long starttime = 0;
+    MyPublicData PublicSetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class LaunchActivity extends AppCompatActivity{
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSetting();
         checkNetWork();
+        PublicSetting = new MyPublicData();
     }
 
 
@@ -61,8 +63,8 @@ public class LaunchActivity extends AppCompatActivity{
             boolean theme = shp.getBoolean("setting_swich_theme",false);
             boolean setting_show_plain = shp.getBoolean("setting_show_plain",true);
 
-            MySetting.CONFIG_ISSHOW_ZHIDIN = isShowZhidin;
-            MySetting.CONFIG_SHOW_PLAIN_TEXT = setting_show_plain;
+            MyPublicData.CONFIG_ISSHOW_ZHIDIN = isShowZhidin;
+            MyPublicData.CONFIG_SHOW_PLAIN_TEXT = setting_show_plain;
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -89,12 +91,12 @@ public class LaunchActivity extends AppCompatActivity{
 
     private void canGetRs(int type,String res){
         if(type==TYPE_INNER){
-            MySetting.CONFIG_IS_INNER = true;
-            MySetting.BBS_BASE_URL= UrlUtils.getBaseUrl(true);
+            MyPublicData.CONFIG_IS_INNER = true;
+            MyPublicData.BBS_BASE_URL= UrlUtils.getBaseUrl(true);
         }else{
             Toast.makeText(getApplicationContext(),"已经切换到外网",Toast.LENGTH_SHORT).show();
-            MySetting.BBS_BASE_URL = UrlUtils.getBaseUrl(false);
-            MySetting.CONFIG_IS_INNER = false;
+            MyPublicData.BBS_BASE_URL = UrlUtils.getBaseUrl(false);
+            MyPublicData.CONFIG_IS_INNER = false;
 
         }
         checklogin(res);
@@ -110,15 +112,15 @@ public class LaunchActivity extends AppCompatActivity{
 
 
     private void checklogin(String res){
-        MySetting.CONFIG_ISLOGIN = false;
+        MyPublicData.CONFIG_ISLOGIN = false;
         if (res.contains("loginbox")) {
-            MySetting.CONFIG_ISLOGIN = false;
+            MyPublicData.CONFIG_ISLOGIN = false;
         } else {
             Document doc = Jsoup.parse(res);
-            MySetting.CONFIG_USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
+            MyPublicData.CONFIG_USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
             String url = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").attr("href");
-            MySetting.CONFIG_USER_UID = GetId.getUid(url);
-            MySetting.CONFIG_ISLOGIN = true;
+            MyPublicData.CONFIG_USER_UID = GetId.getUid(url);
+            MyPublicData.CONFIG_ISLOGIN = true;
         }
 
         finishthis();
@@ -127,7 +129,7 @@ public class LaunchActivity extends AppCompatActivity{
 
     private void checkOuter(){
         final String url = UrlUtils.getLoginUrl(false);
-        MySetting.BBS_BASE_URL = UrlUtils.getBaseUrl(false);
+        MyPublicData.BBS_BASE_URL = UrlUtils.getBaseUrl(false);
         HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -143,7 +145,7 @@ public class LaunchActivity extends AppCompatActivity{
 
     private void checkInner(){
         final String url = UrlUtils.getLoginUrl(false);
-        MySetting.BBS_BASE_URL = UrlUtils.getBaseUrl(true);
+        MyPublicData.BBS_BASE_URL = UrlUtils.getBaseUrl(true);
         HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {

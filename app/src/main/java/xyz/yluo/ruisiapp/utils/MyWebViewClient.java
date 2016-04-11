@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import xyz.yluo.ruisiapp.MySetting;
+import xyz.yluo.ruisiapp.MyPublicData;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.NewArticleActivity_2;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
@@ -52,7 +52,7 @@ public class MyWebViewClient extends WebViewClient {
         }else if(url.contains("member.php?mod=logging&action=login")) {//登陆
             LoginActivity.open(context);
         }else{
-            RequestOpenBrowser.openBroswer(context, MySetting.BBS_BASE_URL+url);
+            RequestOpenBrowser.openBroswer(context, MyPublicData.BBS_BASE_URL+url);
         }
 
         return true;
