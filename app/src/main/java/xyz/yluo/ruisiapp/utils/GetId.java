@@ -37,8 +37,7 @@ public class GetId {
 
     public static String getUid(String url){
         //http://rs.xidian.edu.cn/ucenter/avatar.php?uid=284747&size=small
-
-        Pattern pattern = Pattern.compile("uid=[0-9]{3,}");
+        Pattern pattern = Pattern.compile("uid=[0-9]{2,}");
         Matcher matcher = pattern.matcher(url);
         String uid ="";
         if (matcher.find()) {

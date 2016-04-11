@@ -234,7 +234,6 @@ public class ChatActivity extends AppCompatActivity{
             super.onPostExecute(s);
             if (datas.size()==0){
                 String imageUrl = UrlUtils.getimageurl(url);
-
                 datas.add(new ChatListData(0,imageUrl,"给我发消息吧","刚刚"));
             }
             adapter.notifyDataSetChanged();

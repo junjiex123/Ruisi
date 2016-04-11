@@ -53,8 +53,7 @@ public class UrlUtils {
         return MySetting.BBS_BASE_URL+"ucenter/avatar.php?uid="+uid+"&size=small";
     }
 
-    public static String getimageurl(String userurl,boolean ismiddle){
-        String uid = GetId.getUid(userurl);
+    public static String getimageurl(String uid,boolean ismiddle){
         return MySetting.BBS_BASE_URL+"ucenter/avatar.php?uid="+uid+"&size=middle";
     }
 

@@ -44,7 +44,8 @@ public class MyWebViewClient extends WebViewClient {
             String tid = GetId.getTid(url);
             SingleArticleActivity.open(context,tid,"查看主题");
         } else if (url.contains("home.php?mod=space&uid=")) { // 用户
-            String imageUrl = UrlUtils.getimageurl(url,true);
+            String uid = GetId.getUid(url);
+            String imageUrl = UrlUtils.getimageurl(uid,true);
             UserDetailActivity.open(context,"name",imageUrl);
         } else if(url.contains("forum.php?mod=post&action=newthread")){ //发帖链接
             context.startActivity(new Intent(context,NewArticleActivity_2.class));

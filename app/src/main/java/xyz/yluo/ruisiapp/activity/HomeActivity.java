@@ -231,7 +231,7 @@ public class HomeActivity extends AppCompatActivity
             nav_header_login.setVisibility(View.VISIBLE);
             nav_header_notlogin.setVisibility(View.GONE);
             String url = UrlUtils.getimageurl(MySetting.CONFIG_USER_UID,true);
-            Picasso.with(getApplicationContext()).load(url).placeholder(R.drawable.image_placeholder).resize(80,80).into(userImge);
+            Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).resize(80,80).into(userImge);
         } else {
             userImge.setImageResource(R.drawable.image_placeholder);
             nav_header_notlogin.setVisibility(View.VISIBLE);
