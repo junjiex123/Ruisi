@@ -68,6 +68,7 @@
         </activity>
 
         <activity android:name=".activity.LoginActivity"
+            android:label="登陆"
             android:theme="@style/AppThemeWithAni">
         </activity>
 

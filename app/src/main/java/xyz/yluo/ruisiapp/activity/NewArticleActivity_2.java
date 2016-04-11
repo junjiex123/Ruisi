@@ -27,6 +27,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-4-2.
+ * todo 替换webview发帖。。。。
  *
  */
 public class NewArticleActivity_2 extends AppCompatActivity {
@@ -34,9 +35,7 @@ public class NewArticleActivity_2 extends AppCompatActivity {
     //@Bind(R.id.webView)
     protected MyWebView myWebView;
     private List<String> list = new ArrayList<>();
-
     Map<Integer,String> map = new LinkedHashMap<>();
-
     private static int CURRENT_FID = 72;
 
     public static void open(Context context) {

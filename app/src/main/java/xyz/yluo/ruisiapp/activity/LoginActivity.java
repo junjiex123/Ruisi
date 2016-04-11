@@ -1,5 +1,6 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,12 +14,15 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
@@ -26,7 +30,9 @@ import com.jude.swipbackhelper.SwipeBackHelper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -51,8 +57,6 @@ public class LoginActivity extends AppCompatActivity {
     protected EditText ed_username;
     @Bind(R.id.login_pas)
     protected EditText ed_pass;
-    @Bind(R.id.login_progressBar)
-    protected ProgressBar progressBar;
     @Bind(R.id.login_test_button)
     protected Button test_btn;
     @Bind(R.id.iv_login_l)
@@ -63,9 +67,16 @@ public class LoginActivity extends AppCompatActivity {
     protected CheckBox rem_user;
     @Bind(R.id.rem_pass)
     protected CheckBox rem_pass;
-    private SharedPreferences perPreferences;
+    @Bind(R.id.anwser_select)
+    protected Spinner anwser_select;
+    @Bind(R.id.anwser_text)
+    protected EditText anwser_text;
+    private ProgressDialog progress;
 
+    private SharedPreferences perPreferences;
+    private List<String> list = new ArrayList<>();
     private String loginUrl;
+    private int answerSelect = 0;
 
     public static void open(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -85,6 +96,7 @@ public class LoginActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+
         perPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         boolean isRemUser = perPreferences.getBoolean("ISREMUSER", false);
         boolean isRemberPass = perPreferences.getBoolean("ISREMPASS",false);
@@ -99,6 +111,35 @@ public class LoginActivity extends AppCompatActivity {
             ed_pass.setText(perPreferences.getString("PASSWORD",""));
             test_btn.setEnabled(true);
         }
+
+        list.add("安全提问(未设置请忽略)");
+        list.add("母亲的名字");
+        list.add("爷爷的名字");
+        list.add("父亲出生的城市");
+        list.add("您其中一位老师的名字");
+        list.add("您个人计算机的型号");
+        list.add("您最喜欢的餐馆名称");
+        list.add("驾驶执照最后四位数字");
+
+        ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,list);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        anwser_select.setAdapter(spinnerAdapter);
+        anwser_select.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                answerSelect = i;
+                if(i!=0){
+                    anwser_text.setVisibility(View.VISIBLE);
+                }else {
+                    anwser_text.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         ed_username.addTextChangedListener(new TextWatcher() {
             @Override
@@ -171,7 +212,7 @@ public class LoginActivity extends AppCompatActivity {
     @OnClick(R.id.login_test_button)
     protected void login_test_button_click() {
         //启动登陆Thread
-        progressBar.setVisibility(View.VISIBLE);
+        progress = ProgressDialog.show(this, "正在登陆", "请等待", true);
         final String username = ed_username.getText().toString().trim();
         final String passNo = ed_pass.getText().toString().trim();
         String url = UrlUtils.getLoginUrl(false);
@@ -196,14 +237,20 @@ public class LoginActivity extends AppCompatActivity {
                 params.put("cookietime", "2592000");
                 params.put("username", username);
                 params.put("password", passNo);
-                params.put("questionid", "0");
-                params.put("answer", "");
+                params.put("questionid", answerSelect+"");
+                if(answerSelect==0){
+                    params.put("answer", "");
+                }else {
+                    params.put("answer", anwser_text.getText().toString());
+                }
+
                 begain_login(params);
             }
 
             @Override
             public void onFailure(Throwable e) {
                 login_fail("网络异常！！！");
+                progress.dismiss();
             }
         });
     }
@@ -255,7 +302,7 @@ public class LoginActivity extends AppCompatActivity {
         MySetting.CONFIG_USER_UID = GetId.getUid(url);
 
         //开始获取formhash
-        progressBar.setVisibility(View.INVISIBLE);
+        progress.dismiss();
         MySetting.CONFIG_ISLOGIN = true;
         Toast.makeText(getApplicationContext(), "欢迎你"+ MySetting.CONFIG_USER_NAME+"登陆成功", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
@@ -268,7 +315,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login_fail(String res){
-        progressBar.setVisibility(View.INVISIBLE);
+        progress.dismiss();
         Toast.makeText(getApplicationContext(), res, Toast.LENGTH_SHORT).show();
     }
 
