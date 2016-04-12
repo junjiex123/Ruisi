@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -195,7 +194,7 @@ public class SingleArticleActivity extends BaseActivity
     }
 
     private boolean isNeedLoginDialog(){
-        if (MyPublicData.CONFIG_ISLOGIN) {
+        if (MyPublicData.ISLOGIN) {
             return true;
         } else {
             NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();
@@ -284,7 +283,7 @@ public class SingleArticleActivity extends BaseActivity
                 replyUrl = doc.select("form#fastpostform").attr("action");
                 String hash = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
                 if (!hash.isEmpty()){
-                    MyPublicData.CONFIG_FORMHASH =hash;
+                    MyPublicData.FORMHASH =hash;
                 }
             }
             //获取总页数
@@ -335,7 +334,7 @@ public class SingleArticleActivity extends BaseActivity
                 }
 
                 //是否移除所有样式
-                if(MyPublicData.CONFIG_SHOW_PLAIN_TEXT){
+                if(MyPublicData.ISSHOW_PLAIN){
                     //移除所有style
                     //移除font所有样式
                     contentels.select("[style]").removeAttr("style");
@@ -422,7 +421,7 @@ public class SingleArticleActivity extends BaseActivity
         final String url = UrlUtils.getStarUrl(ARTICLE_TID);
         Map<String,String> params = new HashMap<>();
         params.put("favoritesubmit","true");
-        params.put("formhash", MyPublicData.CONFIG_FORMHASH);
+        params.put("formhash", MyPublicData.FORMHASH);
 
         HttpUtil.post(this, url, params, new ResponseHandler() {
             @Override
@@ -446,7 +445,7 @@ public class SingleArticleActivity extends BaseActivity
     private void post_reply(String text){
         progress = ProgressDialog.show(this, "正在发送", "请等待", true);
         Map<String,String> params = new HashMap<>();
-        params.put("formhash", MyPublicData.CONFIG_FORMHASH);
+        params.put("formhash", MyPublicData.FORMHASH);
         params.put("message", text);
         HttpUtil.post(this, replyUrl+"&handlekey=fastpost&loc=1&inajax=1", params, new ResponseHandler() {
             @Override
@@ -595,7 +594,7 @@ public class SingleArticleActivity extends BaseActivity
                 finish();
                 break;
             case R.id.menu_broswer:
-                String url = MyPublicData.BBS_BASE_URL+UrlUtils.getSingleArticleUrl(ARTICLE_TID,CURRENT_PAGE,false);
+                String url = MyPublicData.BASE_URL +UrlUtils.getSingleArticleUrl(ARTICLE_TID,CURRENT_PAGE,false);
                 RequestOpenBrowser.openBroswer(this,url);
                 break;
             case R.id.menu_refresh:

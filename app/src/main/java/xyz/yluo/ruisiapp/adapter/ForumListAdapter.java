@@ -56,9 +56,9 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType==TYPE_NORMAL){
-            return new FroumsListViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.main_forums_list_item, parent, false));
+            return new FroumsListViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.forums_list_item, parent, false));
         }else if(viewType==TYPE_HEADER){
-            return new FroumsListHeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.main_forums_list_item_header, parent, false));
+            return new FroumsListHeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.forums_item_header, parent, false));
         }else {
             return new EmptyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_list_item,parent,false));
         }
@@ -101,7 +101,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
             String fid = GetId.getFroumFid(single.getTitleUrl());
             //几个特殊的板块
-            if(MyPublicData.CONFIG_IS_INNER&&(fid.equals("561")||fid.equals("157")||fid.equals("13"))){
+            if(MyPublicData.IS_SCHOOL_NET &&(fid.equals("561")||fid.equals("157")||fid.equals("13"))){
                 ArticleListImageActivity.open(activity,Integer.parseInt(fid),single.getTitle());
             }else{
                 ArticleListNormalActivity.open(activity, Integer.parseInt(fid), single.getTitle());

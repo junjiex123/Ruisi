@@ -13,7 +13,6 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -107,7 +106,7 @@ public class MyHtmlTextView extends TextView implements Html.ImageGetter {
                 if(source.startsWith("http")){
                     url = new URL(source);
                 }else{
-                    url = new URL(MyPublicData.BBS_BASE_URL + source);
+                    url = new URL(MyPublicData.BASE_URL + source);
                 }
 
                 URLConnection conn = url.openConnection();

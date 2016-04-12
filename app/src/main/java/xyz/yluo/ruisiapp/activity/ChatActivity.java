@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,8 +18,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
-import com.jude.swipbackhelper.SwipeBackHelper;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -204,7 +201,7 @@ public class ChatActivity extends BaseActivity{
 
                 String temp_hash= doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
                 if(!temp_hash.isEmpty()){
-                    MyPublicData.CONFIG_FORMHASH = temp_hash;
+                    MyPublicData.FORMHASH = temp_hash;
                 }
                 touid = doc.select("input[name=touid]").attr("value");
             }
@@ -284,7 +281,7 @@ public class ChatActivity extends BaseActivity{
             progress = ProgressDialog.show(this, "正在发送", "请等待", true);
 
             Map<String,String> params = new HashMap<>();
-            params.put("formhash", MyPublicData.CONFIG_FORMHASH);
+            params.put("formhash", MyPublicData.FORMHASH);
             params.put("touid",touid);
             params.put("message", text);
 
@@ -318,7 +315,7 @@ public class ChatActivity extends BaseActivity{
 
     private void send_success(){
         //http://rs.xidian.edu.cn/ucenter/avatar.php?uid=252553&size=small
-        String userImage = MyPublicData.BBS_BASE_URL+"ucenter/avatar.php?uid="+ MyPublicData.CONFIG_USER_UID+"&size=small";
+        String userImage = MyPublicData.BASE_URL +"ucenter/avatar.php?uid="+ MyPublicData.USER_UID +"&size=small";
         datas.add(new ChatListData(1,userImage,input_aera.getText().toString(),"刚刚"));
         input_aera.setText("");
         adapter.notifyItemInserted(datas.size()-1);

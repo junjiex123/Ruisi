@@ -50,11 +50,11 @@ public class UrlUtils {
         //http://bbs.rs.xidian.me/274679
         String uid = GetId.getUid(userurl);
 
-        return MyPublicData.BBS_BASE_URL+"ucenter/avatar.php?uid="+uid+"&size=small";
+        return MyPublicData.BASE_URL +"ucenter/avatar.php?uid="+uid+"&size=small";
     }
 
     public static String getimageurl(String uid,boolean ismiddle){
-        return MyPublicData.BBS_BASE_URL+"ucenter/avatar.php?uid="+uid+"&size=middle";
+        return MyPublicData.BASE_URL +"ucenter/avatar.php?uid="+uid+"&size=middle";
     }
 
     public static String getSignUrl(){

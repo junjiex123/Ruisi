@@ -18,12 +18,12 @@ public class HttpUtil {
 
     public static void get(Context context,String url,ResponseHandler handler){
         init(context);
-        client.get(MyPublicData.BBS_BASE_URL+url,handler);
+        client.get(MyPublicData.BASE_URL +url,handler);
     }
 
     public static void post(Context context,String url, Map<String,String> map,ResponseHandler handler){
         init(context);
-        client.post(MyPublicData.BBS_BASE_URL+url,map,handler);
+        client.post(MyPublicData.BASE_URL +url,map,handler);
     }
 
     private static void init(Context context){

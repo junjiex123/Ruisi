@@ -74,11 +74,11 @@ public class MyWebView extends WebView{
 
         cookieManager.setAcceptCookie(true);
 
-        String domain = ";domain=" + MyPublicData.BBS_BASE_URL.replace("http://", "").replace("/", "");
+        String domain = ";domain=" + MyPublicData.BASE_URL.replace("http://", "").replace("/", "");
 
         for (String s : cookieStore.getCookie().split(";")) {
             s = s + domain;
-            cookieManager.setCookie(MyPublicData.BBS_BASE_URL, s);
+            cookieManager.setCookie(MyPublicData.BASE_URL, s);
         }
     }
 }

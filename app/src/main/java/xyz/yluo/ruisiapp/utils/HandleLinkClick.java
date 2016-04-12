@@ -30,7 +30,7 @@ public class HandleLinkClick {
         }else if(url.contains("member.php?mod=logging&action=login")) {//登陆
             LoginActivity.open(context);
         }else{
-            RequestOpenBrowser.openBroswer(context, MyPublicData.BBS_BASE_URL+url);
+            RequestOpenBrowser.openBroswer(context, MyPublicData.BASE_URL +url);
         }
     }
 }

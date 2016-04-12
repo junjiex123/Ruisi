@@ -26,7 +26,7 @@ public class GetFormHash {
                 @Override
                 public void onSuccess(byte[] response) {
                     Document doc = Jsoup.parse(new String(response));
-                    MyPublicData.CONFIG_FORMHASH = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
+                    MyPublicData.FORMHASH = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
                 }
 
                 @Override

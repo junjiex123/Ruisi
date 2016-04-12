@@ -12,7 +12,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -113,7 +112,7 @@ public class UserDetailActivity extends BaseActivity {
         recycler_view.setAdapter(adapter);
         userUid = GetId.getUid(imageUrl);
         //如果是自己
-        if (userUid.equals(MyPublicData.CONFIG_USER_UID)){
+        if (userUid.equals(MyPublicData.USER_UID)){
             fab.setImageResource(R.drawable.ic_exit_24dp);
         }
         String url0= UrlUtils.getUserHomeUrl(userUid,false);
@@ -149,11 +148,11 @@ public class UserDetailActivity extends BaseActivity {
     @OnClick(R.id.fab)
     protected void fab_click(){
         //如果是自己
-        if (userUid.equals(MyPublicData.CONFIG_USER_UID)){
+        if (userUid.equals(MyPublicData.USER_UID)){
             ExitLoginDialogFragment dialogFragment = new ExitLoginDialogFragment();
             dialogFragment.show(getFragmentManager(), "exit");
 
-        }else if(MyPublicData.CONFIG_ISLOGIN){
+        }else if(MyPublicData.ISLOGIN){
             //home.php?mod=spacecp&ac=pm&op=send&pmid=450602&daterange=0&pmsubmit=yes&mobile=2
             //home.php?mod=space&do=pm&subop=view&touid=261098&mobile=2
             String url = "home.php?mod=spacecp&ac=pm&op=send&pmid="+userUid+"&daterange=0&pmsubmit=yes&mobile=2";

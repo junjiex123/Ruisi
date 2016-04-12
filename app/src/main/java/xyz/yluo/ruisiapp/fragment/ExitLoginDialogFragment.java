@@ -21,9 +21,9 @@ public class ExitLoginDialogFragment extends DialogFragment {
                 .setPositiveButton("好的", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         HttpUtil.exit();
-                        MyPublicData.CONFIG_ISLOGIN= false;
-                        MyPublicData.CONFIG_USER_NAME = "";
-                        MyPublicData.CONFIG_USER_UID = "";
+                        MyPublicData.ISLOGIN = false;
+                        MyPublicData.USER_NAME = "";
+                        MyPublicData.USER_UID = "";
                         getActivity().finish();
                     }
                 })

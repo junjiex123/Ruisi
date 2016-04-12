@@ -1,15 +1,8 @@
 package xyz.yluo.ruisiapp.utils;
 
 import android.content.Context;
-import android.content.Intent;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
-import xyz.yluo.ruisiapp.MyPublicData;
-import xyz.yluo.ruisiapp.activity.LoginActivity;
-import xyz.yluo.ruisiapp.activity.NewArticleActivity_2;
-import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
-import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 
 
 public class MyWebViewClient extends WebViewClient {

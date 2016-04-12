@@ -63,11 +63,11 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
     public BaseViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         switch (viewType) {
             case CONTENT:
-                return new ArticleContentViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_article_content_item, viewGroup, false));
+                return new ArticleContentViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.content_item, viewGroup, false));
             case LOAD_MORE:
-                return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_article_load_more, viewGroup, false));
+                return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.article_load_more, viewGroup, false));
             default: // TYPE_COMMENT
-                return new CommentViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_article_comment_item, viewGroup, false));
+                return new CommentViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.comment_item, viewGroup, false));
         }
     }
 
@@ -149,7 +149,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             article_post_time.setText(single.getPostTime());
             article_title.setText(single.getReplyUrlTitle());
             webView.getSettings().setLoadsImagesAutomatically(true);
-            webView.loadDataWithBaseURL(MyPublicData.BBS_BASE_URL,single.getCotent(),"text/html","UTF-8",null);
+            webView.loadDataWithBaseURL(MyPublicData.BASE_URL,single.getCotent(),"text/html","UTF-8",null);
         }
 
     }

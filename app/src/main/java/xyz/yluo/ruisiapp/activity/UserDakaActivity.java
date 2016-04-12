@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -81,8 +80,8 @@ public class UserDakaActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_daka);
         ButterKnife.bind(this);
-        user_name.setText(MyPublicData.CONFIG_USER_NAME);
-        Picasso.with(this).load(UrlUtils.getimageurl(MyPublicData.CONFIG_USER_UID,true)).placeholder(R.drawable.image_placeholder).into(user_image);
+        user_name.setText(MyPublicData.USER_NAME);
+        Picasso.with(this).load(UrlUtils.getimageurl(MyPublicData.USER_UID,true)).placeholder(R.drawable.image_placeholder).into(user_image);
         init();
         isHaveDaka();
         final String[] mItems = {"开心","难过","郁闷","无聊","怒","擦汗","奋斗","慵懒","衰"};
@@ -111,7 +110,7 @@ public class UserDakaActivity extends BaseActivity{
             finish();
         }else{
             String xinqin = getGroup1_select();
-            String formhash = MyPublicData.CONFIG_FORMHASH;
+            String formhash = MyPublicData.FORMHASH;
             String qdmode = "1";
             String todaysay = "";
             String fastreplay = "0";
@@ -170,7 +169,7 @@ public class UserDakaActivity extends BaseActivity{
                 if (doc.select("input[name=formhash]").first() != null) {
                     String temphash = doc.select("input[name=formhash]").attr("value");
                     if(!temphash.isEmpty()){
-                        MyPublicData.CONFIG_FORMHASH = temphash;
+                        MyPublicData.FORMHASH = temphash;
                     }
                 }
 

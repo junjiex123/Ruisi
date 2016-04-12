@@ -49,7 +49,7 @@ public class ArticleListBtAdapter extends RecyclerView.Adapter<BaseViewHolder>{
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType){
             case TYPE_LOAD_MORE:
-                return new LoadMoreViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_main_load_more_list_item, parent, false));
+                return new LoadMoreViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.main_load_more_item, parent, false));
             default:
                 return new MyBtNormalViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.bt_list_item, parent, false));
         }

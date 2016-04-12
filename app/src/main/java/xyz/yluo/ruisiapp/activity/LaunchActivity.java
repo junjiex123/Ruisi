@@ -8,7 +8,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
@@ -61,8 +60,8 @@ public class LaunchActivity extends BaseActivity{
             boolean theme = shp.getBoolean("setting_swich_theme",false);
             boolean setting_show_plain = shp.getBoolean("setting_show_plain",true);
 
-            MyPublicData.CONFIG_ISSHOW_ZHIDIN = isShowZhidin;
-            MyPublicData.CONFIG_SHOW_PLAIN_TEXT = setting_show_plain;
+            MyPublicData.ISSHOW_ZHIDIN = isShowZhidin;
+            MyPublicData.ISSHOW_PLAIN = setting_show_plain;
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -89,12 +88,12 @@ public class LaunchActivity extends BaseActivity{
 
     private void canGetRs(int type,String res){
         if(type==TYPE_INNER){
-            MyPublicData.CONFIG_IS_INNER = true;
-            MyPublicData.BBS_BASE_URL= UrlUtils.getBaseUrl(true);
+            MyPublicData.IS_SCHOOL_NET = true;
+            MyPublicData.BASE_URL = UrlUtils.getBaseUrl(true);
         }else{
             Toast.makeText(getApplicationContext(),"已经切换到外网",Toast.LENGTH_SHORT).show();
-            MyPublicData.BBS_BASE_URL = UrlUtils.getBaseUrl(false);
-            MyPublicData.CONFIG_IS_INNER = false;
+            MyPublicData.BASE_URL = UrlUtils.getBaseUrl(false);
+            MyPublicData.IS_SCHOOL_NET = false;
 
         }
         checklogin(res);
@@ -110,15 +109,15 @@ public class LaunchActivity extends BaseActivity{
 
 
     private void checklogin(String res){
-        MyPublicData.CONFIG_ISLOGIN = false;
+        MyPublicData.ISLOGIN = false;
         if (res.contains("loginbox")) {
-            MyPublicData.CONFIG_ISLOGIN = false;
+            MyPublicData.ISLOGIN = false;
         } else {
             Document doc = Jsoup.parse(res);
-            MyPublicData.CONFIG_USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
+            MyPublicData.USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
             String url = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").attr("href");
-            MyPublicData.CONFIG_USER_UID = GetId.getUid(url);
-            MyPublicData.CONFIG_ISLOGIN = true;
+            MyPublicData.USER_UID = GetId.getUid(url);
+            MyPublicData.ISLOGIN = true;
         }
 
         finishthis();
@@ -127,7 +126,7 @@ public class LaunchActivity extends BaseActivity{
 
     private void checkOuter(){
         final String url = UrlUtils.getLoginUrl(false);
-        MyPublicData.BBS_BASE_URL = UrlUtils.getBaseUrl(false);
+        MyPublicData.BASE_URL = UrlUtils.getBaseUrl(false);
         HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -143,7 +142,7 @@ public class LaunchActivity extends BaseActivity{
 
     private void checkInner(){
         final String url = UrlUtils.getLoginUrl(false);
-        MyPublicData.BBS_BASE_URL = UrlUtils.getBaseUrl(true);
+        MyPublicData.BASE_URL = UrlUtils.getBaseUrl(true);
         HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {

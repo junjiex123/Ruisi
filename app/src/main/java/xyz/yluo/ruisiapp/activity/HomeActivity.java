@@ -10,7 +10,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -91,7 +90,7 @@ public class HomeActivity extends BaseActivity
                         startActivity(new Intent(getApplicationContext(), SettingActivity.class));
                         break;
                     case R.id.nav_bt_list:
-                        if(MyPublicData.CONFIG_IS_INNER){
+                        if(MyPublicData.IS_SCHOOL_NET){
                             if(islogin_dialog()){
                                 startActivity(new Intent(getApplicationContext(),ArticleListBtActivity.class));
                             }
@@ -100,7 +99,7 @@ public class HomeActivity extends BaseActivity
                         }
                         break;
                     case R.id.nav_sign:
-                        if(MyPublicData.CONFIG_IS_INNER){
+                        if(MyPublicData.IS_SCHOOL_NET){
                             if(islogin_dialog()){
                                 startActivity(new Intent(getApplicationContext(),UserDakaActivity.class));
                             }
@@ -123,9 +122,9 @@ public class HomeActivity extends BaseActivity
             @Override
             public void onClick(final View v) {
 
-                if (MyPublicData.CONFIG_ISLOGIN) {
-                    String url = UrlUtils.getimageurl(MyPublicData.CONFIG_USER_UID,true);
-                    UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, MyPublicData.CONFIG_USER_NAME,userImge,url);
+                if (MyPublicData.ISLOGIN) {
+                    String url = UrlUtils.getimageurl(MyPublicData.USER_UID,true);
+                    UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, MyPublicData.USER_NAME,userImge,url);
                 } else {
                     Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivityForResult(i, 1);
@@ -165,7 +164,7 @@ public class HomeActivity extends BaseActivity
     protected void btn_3_click(){
         if(islogin_dialog()){
             if(actionBar!=null){
-                actionBar.setTitle(MyPublicData.CONFIG_USER_NAME);
+                actionBar.setTitle(MyPublicData.USER_NAME);
             }
             Fragment fragment3 = new FragementUser();
             FragmentManager manager = getFragmentManager();
@@ -225,12 +224,12 @@ public class HomeActivity extends BaseActivity
         final View nav_header_login = header.findViewById(R.id.nav_header_login);
         final View nav_header_notlogin = header.findViewById(R.id.nav_header_notlogin);
         //判断是否登陆
-        if (MyPublicData.CONFIG_ISLOGIN) {
+        if (MyPublicData.ISLOGIN) {
             TextView text1 = (TextView) header.findViewById(R.id.header_user_name);
-            text1.setText(MyPublicData.CONFIG_USER_NAME);
+            text1.setText(MyPublicData.USER_NAME);
             nav_header_login.setVisibility(View.VISIBLE);
             nav_header_notlogin.setVisibility(View.GONE);
-            String url = UrlUtils.getimageurl(MyPublicData.CONFIG_USER_UID,true);
+            String url = UrlUtils.getimageurl(MyPublicData.USER_UID,true);
             Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).resize(80,80).into(userImge);
         } else {
             userImge.setImageResource(R.drawable.image_placeholder);
@@ -242,7 +241,7 @@ public class HomeActivity extends BaseActivity
     //判断是否需要弹出登录dialog
     private boolean islogin_dialog(){
 
-        if(MyPublicData.CONFIG_ISLOGIN){
+        if(MyPublicData.ISLOGIN){
             return true;
         }else{
             NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();

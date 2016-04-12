@@ -36,7 +36,7 @@ public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListIma
 
     @Override
     public ImageCardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ImageCardViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_main_image_list_item, parent, false));
+        return new ImageCardViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.image_list_item, parent, false));
     }
 
     @Override
@@ -76,7 +76,7 @@ public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListIma
             img_card_title.setText(DataSet.get(position).getTitle());
             img_card_like.setText(DataSet.get(position).getReplyCount());
             if(DataSet.get(position).getImage()!=""){
-                Picasso.with(activity).load(MyPublicData.BBS_BASE_URL+DataSet.get(position).getImage()).placeholder(R.drawable.image_placeholder).into(img_card_image);
+                Picasso.with(activity).load(MyPublicData.BASE_URL +DataSet.get(position).getImage()).placeholder(R.drawable.image_placeholder).into(img_card_image);
             }else{
                 img_card_image.setImageResource(R.drawable.image_placeholder);
             }

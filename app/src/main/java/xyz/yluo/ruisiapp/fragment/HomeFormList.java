@@ -142,7 +142,7 @@ public class HomeFormList extends Fragment{
 
             String ress =  GetFormHash.getHash(hash);
             if(!ress.isEmpty()){
-                MyPublicData.CONFIG_FORMHASH = ress;
+                MyPublicData.FORMHASH = ress;
             }
 
             for(Element ele:elements){
@@ -190,7 +190,7 @@ public class HomeFormList extends Fragment{
     //判断是否需要弹出登录dialog
     private boolean islogin_dialog(){
 
-        if(MyPublicData.CONFIG_ISLOGIN){
+        if(MyPublicData.ISLOGIN){
             return true;
         }else{
             NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();

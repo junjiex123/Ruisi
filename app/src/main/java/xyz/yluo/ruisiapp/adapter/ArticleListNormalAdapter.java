@@ -53,7 +53,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
             return TYPE_LOAD_MORE;
         }
         //手机版
-        if(!MyPublicData.CONFIG_IS_INNER||type==TYPE_NORMAL_MOBILE){
+        if(!MyPublicData.IS_SCHOOL_NET ||type==TYPE_NORMAL_MOBILE){
             return TYPE_NORMAL_MOBILE;
         }else{
             //一般板块
@@ -65,11 +65,11 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
     public BaseViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         switch (viewType) {
             case TYPE_NORMAL_MOBILE:
-                return new NormalViewHolderMe(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_main_list_item_me, viewGroup, false));
+                return new NormalViewHolderMe(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.main_list_item_me, viewGroup, false));
             case TYPE_LOAD_MORE:
-                return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_main_load_more_list_item, viewGroup, false));
+                return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.main_load_more_item, viewGroup, false));
             default: // TYPE_NORMAL
-                return new NormalViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_main_list_item, viewGroup, false));
+                return new NormalViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.main_list_item, viewGroup, false));
         }
     }
 

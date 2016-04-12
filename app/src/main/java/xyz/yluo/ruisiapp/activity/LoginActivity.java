@@ -5,10 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -23,8 +21,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
-
-import com.jude.swipbackhelper.SwipeBackHelper;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -224,7 +220,7 @@ public class LoginActivity extends BaseActivity {
                 if (doc.select("input[name=formhash]").first() != null) {
                     String temphash = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
                     if(!temphash.isEmpty()){
-                        MyPublicData.CONFIG_FORMHASH = temphash;
+                        MyPublicData.FORMHASH = temphash;
                     }
                 }
                 loginUrl = doc.select("form#loginform").attr("action");
@@ -293,14 +289,14 @@ public class LoginActivity extends BaseActivity {
         editor.apply();
 
         Document doc = Jsoup.parse(res);
-        MyPublicData.CONFIG_USER_NAME = ed_username.getText().toString().trim();
+        MyPublicData.USER_NAME = ed_username.getText().toString().trim();
         String url = doc.select("a[href^=home.php?mod=space&uid=]").attr("href");
-        MyPublicData.CONFIG_USER_UID = GetId.getUid(url);
+        MyPublicData.USER_UID = GetId.getUid(url);
 
         //开始获取formhash
         progress.dismiss();
-        MyPublicData.CONFIG_ISLOGIN = true;
-        Toast.makeText(getApplicationContext(), "欢迎你"+ MyPublicData.CONFIG_USER_NAME+"登陆成功", Toast.LENGTH_SHORT).show();
+        MyPublicData.ISLOGIN = true;
+        Toast.makeText(getApplicationContext(), "欢迎你"+ MyPublicData.USER_NAME +"登陆成功", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
         //把返回数据存入Intent
         intent.putExtra("result", "ok");

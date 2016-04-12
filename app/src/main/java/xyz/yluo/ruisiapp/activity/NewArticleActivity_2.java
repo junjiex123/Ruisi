@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -105,7 +104,7 @@ public class NewArticleActivity_2 extends BaseActivity {
                     e.printStackTrace();
                 }
 
-                myWebView.loadUrl(MyPublicData.BBS_BASE_URL+UrlUtils.getPostUrl(CURRENT_FID));
+                myWebView.loadUrl(MyPublicData.BASE_URL +UrlUtils.getPostUrl(CURRENT_FID));
             }
 
             @Override
@@ -117,8 +116,8 @@ public class NewArticleActivity_2 extends BaseActivity {
         WebSettings settings = myWebView.getSettings();
         settings.setJavaScriptEnabled(true);
 
-        if(MyPublicData.CONFIG_ISLOGIN){
-            myWebView.loadUrl(MyPublicData.BBS_BASE_URL+ UrlUtils.getPostUrl(CURRENT_FID));
+        if(MyPublicData.ISLOGIN){
+            myWebView.loadUrl(MyPublicData.BASE_URL + UrlUtils.getPostUrl(CURRENT_FID));
         }else {
             Toast.makeText(this,"你还没有登陆",Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this,LoginActivity.class));

@@ -6,15 +6,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-
-import com.jude.swipbackhelper.SwipeBackHelper;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -120,7 +117,7 @@ public class ActivitySearch extends BaseActivity {
 
         String url = "search.php?mod=forum&mobile=2";
         Map<String,String> paras = new HashMap<>();
-        paras.put("formhash", MyPublicData.CONFIG_FORMHASH);
+        paras.put("formhash", MyPublicData.FORMHASH);
         paras.put("searchsubmit","yes");
         paras.put("srchtxt",str);
 

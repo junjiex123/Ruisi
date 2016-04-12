@@ -162,9 +162,9 @@ public class SettingActivity extends PreferenceActivity {
             }else if(key.equals("setting_user_tail")){
                 setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail","无小尾巴"));
             }else if(key.equals("setting_show_zhidin")){
-                MyPublicData.CONFIG_ISSHOW_ZHIDIN = sharedPreferences.getBoolean("setting_show_zhidin",false);
+                MyPublicData.ISSHOW_ZHIDIN = sharedPreferences.getBoolean("setting_show_zhidin",false);
             }else if(key.equals("setting_show_plain")){
-                MyPublicData.CONFIG_SHOW_PLAIN_TEXT = sharedPreferences.getBoolean("setting_show_plain",true);
+                MyPublicData.ISSHOW_PLAIN = sharedPreferences.getBoolean("setting_show_plain",true);
             }
         }
     }

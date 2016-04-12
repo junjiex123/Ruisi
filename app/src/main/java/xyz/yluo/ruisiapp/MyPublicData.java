@@ -4,27 +4,27 @@ import android.app.Application;
 
 /**
  * Created by free2 on 16-3-11.
- *
+ * 共享的全局数据 //todo 更好的实现？？？
  */
 public class MyPublicData extends Application {
 
     //启动时设定
     //论坛基地址
-    public static String BBS_BASE_URL = "http://rs.xidian.edu.cn/";
+    public static String BASE_URL = "http://rs.xidian.edu.cn/";
     //是否为校园网
-    public static boolean CONFIG_IS_INNER = false;
+    public static boolean IS_SCHOOL_NET = false;
     //论坛FORMHASH
-    public static String CONFIG_FORMHASH = "";
+    public static String FORMHASH = "";
     //是否登陆
-    public  static boolean CONFIG_ISLOGIN = false;
+    public  static boolean ISLOGIN = false;
     //用户名
-    public static String CONFIG_USER_NAME = "";
+    public static String USER_NAME = "";
     //是否显示置顶帖
-    public  static boolean CONFIG_ISSHOW_ZHIDIN = false;
+    public  static boolean ISSHOW_ZHIDIN = false;
     //是否将文章页面的样式删除
-    public static boolean CONFIG_SHOW_PLAIN_TEXT = true;
+    public static boolean ISSHOW_PLAIN = true;
     //user uid
-    public static  String CONFIG_USER_UID = "";
+    public static  String USER_UID = "";
 
 
 }
