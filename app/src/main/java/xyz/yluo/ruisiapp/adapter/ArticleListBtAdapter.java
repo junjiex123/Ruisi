@@ -21,7 +21,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-4-2.
- *
+ * 种子列表adapter{@link xyz.yluo.ruisiapp.activity.ArticleListBtActivity}
  */
 public class ArticleListBtAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 

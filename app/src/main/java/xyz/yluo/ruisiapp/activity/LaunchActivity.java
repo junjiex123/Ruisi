@@ -27,10 +27,11 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-19.
- *
+ * 启动activity
+ * 检查是否登陆
+ * 读取相关设置写到{@link PublicData}
  */
 public class LaunchActivity extends BaseActivity{
-
 
     @Bind(R.id.progressBar)
     protected ProgressBar progressBar;

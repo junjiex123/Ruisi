@@ -36,6 +36,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-15.
+ * 签到activity
  *
  */
 public class UserDakaActivity extends BaseActivity{
@@ -103,56 +104,7 @@ public class UserDakaActivity extends BaseActivity{
         });
     }
 
-    @OnClick(R.id.btn_start_sign)
-    protected void btn_start_sign_click(){
-        if(isSign){
-            finish();
-        }else{
-            String xinqin = getGroup1_select();
-            String formhash = hash;
-            String qdmode = "1";
-            String todaysay = "";
-            String fastreplay = "0";
-
-            if(!input.getText().toString().isEmpty()){
-                qdmode = "1";
-                todaysay = input.getText().toString()+"  --来自睿思手机客户端";
-            }else {
-                qdmode = "3";
-            }
-            Map<String,String> params = new HashMap<>();
-            params.put("formhash",formhash);
-            params.put("qdxq",xinqin);
-            params.put("qdmode",qdmode);
-            params.put("todaysay",todaysay);
-            params.put("fastreplay",fastreplay);
-
-            String url = UrlUtils.getSignUrl();
-            HttpUtil.post(this, url, params, new ResponseHandler() {
-                @Override
-                public void onSuccess(byte[] response) {
-                    String res = new String(response);
-                    if(res.contains("恭喜你签到成功")){
-                        Document doc = Jsoup.parse(res);
-                        String get = doc.select("div[class=c]").text();
-                        showNtice("签到成功,点击按钮返回");
-                        info_title.setText("恭喜你签到成功");
-                        isSign = true;
-                        btn_start_sign.setImageResource(R.drawable.ic_arrow_back_24dp);
-                    }else{
-                        showNtice("未知错误");
-                    }
-
-                    isHaveDaka();
-                }
-                @Override
-                public void onFailure(Throwable e) {
-                    showNtice("网络错误!!!!!");
-                }
-            });
-        }
-    }
-
+    //看看是否已经签到
     private void isHaveDaka(){
         container.setVisibility(View.GONE);
         View_not_sign.setVisibility(View.GONE);
@@ -215,6 +167,57 @@ public class UserDakaActivity extends BaseActivity{
         });
     }
 
+    //点击签到按钮
+    @OnClick(R.id.btn_start_sign)
+    protected void btn_start_sign_click(){
+        if(isSign){
+            finish();
+        }else{
+            String xinqin = getGroup1_select();
+            String formhash = hash;
+            String qdmode = "1";
+            String todaysay = "";
+            String fastreplay = "0";
+
+            if(!input.getText().toString().isEmpty()){
+                qdmode = "1";
+                todaysay = input.getText().toString()+"  --来自睿思手机客户端";
+            }else {
+                qdmode = "3";
+            }
+            Map<String,String> params = new HashMap<>();
+            params.put("formhash",formhash);
+            params.put("qdxq",xinqin);
+            params.put("qdmode",qdmode);
+            params.put("todaysay",todaysay);
+            params.put("fastreplay",fastreplay);
+
+            String url = UrlUtils.getSignUrl();
+            HttpUtil.post(this, url, params, new ResponseHandler() {
+                @Override
+                public void onSuccess(byte[] response) {
+                    String res = new String(response);
+                    if(res.contains("恭喜你签到成功")){
+                        Document doc = Jsoup.parse(res);
+                        String get = doc.select("div[class=c]").text();
+                        showNtice("签到成功,点击按钮返回");
+                        info_title.setText("恭喜你签到成功");
+                        isSign = true;
+                        btn_start_sign.setImageResource(R.drawable.ic_arrow_back_24dp);
+                    }else{
+                        showNtice("未知错误");
+                    }
+
+                    isHaveDaka();
+                }
+                @Override
+                public void onFailure(Throwable e) {
+                    showNtice("网络错误!!!!!");
+                }
+            });
+        }
+    }
+    //获得选择的心情
     private String getGroup1_select(){
         switch (spinner__select){
             case 0:
@@ -248,19 +251,7 @@ public class UserDakaActivity extends BaseActivity{
         return qdxq;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            this.finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void showNtice(String res){
-
         progressBar.setVisibility(View.GONE);
         Snackbar.make(main_window, res, Snackbar.LENGTH_LONG).show();
     }

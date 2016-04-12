@@ -11,7 +11,7 @@ import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 
 /**
  * Created by free2 on 16-4-12.
- *
+ * 处理{@link MyWebView}和 {@link MyHtmlTextView}链接点击
  */
 public class HandleLinkClick {
     public static void handleClick(Context context, String url){

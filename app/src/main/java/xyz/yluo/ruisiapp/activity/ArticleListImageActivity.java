@@ -22,8 +22,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-31.
- * 图片文章列表activity
- *
+ * 图片文章列表activity 摄影天地等用这个模板
  */
 public class ArticleListImageActivity extends ArticleListBaseActivity{
 
@@ -46,7 +45,6 @@ public class ArticleListImageActivity extends ArticleListBaseActivity{
         mRecyclerView.setLayoutManager(mLayoutManager);
         adapter = new ArticleListImageAdapter(this,mydatasetnormal);
         mRecyclerView.setAdapter(adapter);
-
     }
 
 
@@ -106,6 +104,7 @@ public class ArticleListImageActivity extends ArticleListBaseActivity{
 
         @Override
         protected void onPostExecute(final String res) {
+            btn_refresh.show();
             refreshLayout.setRefreshing(false);
             adapter.notifyDataSetChanged();
         }

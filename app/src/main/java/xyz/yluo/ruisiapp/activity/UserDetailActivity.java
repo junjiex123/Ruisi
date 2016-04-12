@@ -45,7 +45,10 @@ import xyz.yluo.ruisiapp.utils.CircleImageView;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.GetLevel;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
-
+/**
+ * 用户信息activity
+ *
+ */
 public class UserDetailActivity extends BaseActivity {
 
     @Bind(R.id.recycler_view)
@@ -118,17 +121,6 @@ public class UserDetailActivity extends BaseActivity {
         getdata(url0);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        //返回按钮
-        if (id == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void getdata(String url){
         HttpUtil.get(this, url, new ResponseHandler() {
             @Override
@@ -142,7 +134,6 @@ public class UserDetailActivity extends BaseActivity {
             }
         });
     }
-
 
     @OnClick(R.id.fab)
     protected void fab_click(){

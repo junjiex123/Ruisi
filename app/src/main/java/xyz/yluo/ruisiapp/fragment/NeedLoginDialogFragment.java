@@ -11,7 +11,7 @@ import xyz.yluo.ruisiapp.activity.LoginActivity;
 
 /**
  * Created by free2 on 16-3-20.
- * 是否要登陆
+ * 是否要登陆框
  */
 public class NeedLoginDialogFragment extends DialogFragment {
     @Override

@@ -17,8 +17,7 @@ import xyz.yluo.ruisiapp.utils.ArrowTextView;
 
 /**
  * Created by free2 on 16-3-14.
- * 回复dialog
- *
+ * 回复层主dialog
  */
 public class ReplyDialog extends DialogFragment{
 

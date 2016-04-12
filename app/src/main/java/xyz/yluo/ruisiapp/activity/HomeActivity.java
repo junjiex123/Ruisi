@@ -33,6 +33,10 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-17.
+ * 这是首页 管理3个fragment
+ * 1.板块列表{@link HomeActivity}
+ * 2.新帖{@link FragementSimpleList}
+ * 3.我{@link FragementUser}
  *
  */
 public class HomeActivity extends BaseActivity
@@ -69,9 +73,7 @@ public class HomeActivity extends BaseActivity
     }
 
     private void init(){
-        toggle = new ActionBarDrawerToggle(this,
-                drawer, toolbar, R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close){
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -113,7 +115,10 @@ public class HomeActivity extends BaseActivity
                         }
                         break;
                     case R.id.nav_friend:
-                        startActivity(new Intent(getApplicationContext(),ActivityFriend.class));
+                        if(islogin_dialog()){
+                            startActivity(new Intent(getApplicationContext(),ActivityFriend.class));
+                        }
+
                 }
             }
         };
@@ -198,25 +203,9 @@ public class HomeActivity extends BaseActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.new_topic) {
-
-            if(islogin_dialog()){
-                startActivity(new Intent(getApplicationContext(),NewArticleActivity_2.class));
-            }
-            return true;
-        }else if(id==R.id.menu_setting){
-            startActivity(new Intent(getApplicationContext(),SettingActivity.class));
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         clickId = item.getItemId();
-
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

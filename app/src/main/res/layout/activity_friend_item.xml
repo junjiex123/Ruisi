@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout android:layout_width="match_parent"
-    android:id="@+id/main_item_btn_item"
-    android:clickable="true"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_item_btn_item"
+    android:layout_width="match_parent"
+    android:paddingTop="@dimen/dimen_16"
+    android:paddingStart="16dp"
+    android:paddingEnd="@dimen/dimen_16"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:orientation="vertical">
     <LinearLayout
-        android:background="?attr/selectableItemBackground"
-        android:clickable="true"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:layout_height="wrap_content">
         <xyz.yluo.ruisiapp.utils.CircleImageView
             android:id="@+id/user_image"
             android:layout_marginEnd="@dimen/dimen_8"
@@ -51,7 +52,6 @@
     </LinearLayout>
 
     <View style="@style/DeepLine"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="@dimen/dimen_16"
         android:layout_gravity="bottom" />
 </LinearLayout>

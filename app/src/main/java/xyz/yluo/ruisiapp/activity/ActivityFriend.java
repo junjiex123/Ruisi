@@ -3,9 +3,10 @@ package xyz.yluo.ruisiapp.activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -16,7 +17,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.FriendAdapter;
 import xyz.yluo.ruisiapp.data.FriendData;
@@ -26,12 +26,16 @@ import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-4-12.
- *
+ * 好友列表
+ * 数据{@link FriendData}
+ * adapter{@link FriendAdapter}
  */
 public class ActivityFriend extends BaseActivity{
 
     @Bind(R.id.recycler_view)
     protected RecyclerView recycler_view;
+    @Bind(R.id.main_refresh_layout)
+    protected SwipeRefreshLayout refreshLayout;
     private FriendAdapter adapter;
     private List<FriendData> datas;
     @Override
@@ -45,11 +49,15 @@ public class ActivityFriend extends BaseActivity{
         recycler_view.setLayoutManager(new LinearLayoutManager(this));
         recycler_view.setAdapter(adapter);
 
-        String url = "home.php?mod=space&do=friend";
-        if(!PublicData.IS_SCHOOL_NET){
-            url+="&mobile=2";
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar!=null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+
+        String url = "home.php?mod=space&do=friend&mobile=2";
         new GetDataTask(url,1).execute();
+        refreshLayout.setEnabled(false);
     }
 
     private class GetDataTask extends AsyncTask<Void,Void,String>{
@@ -90,4 +98,5 @@ public class ActivityFriend extends BaseActivity{
             super.onPostExecute(s);
         }
     }
+
 }

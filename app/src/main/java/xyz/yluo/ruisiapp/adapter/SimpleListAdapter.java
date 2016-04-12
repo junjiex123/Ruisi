@@ -20,6 +20,8 @@ import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-4-7.
+ * 简单的adapter 比如用户信息
+ * 我的收藏 我的帖子等都用这个
  *
  */
 public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder>{

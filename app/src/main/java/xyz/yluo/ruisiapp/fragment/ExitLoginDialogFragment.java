@@ -11,7 +11,7 @@ import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 
 /**
  * Created by free2 on 16-3-20.
- * 是否要登陆
+ * 是否要退出登录
  */
 public class ExitLoginDialogFragment extends DialogFragment {
     @Override
@@ -20,6 +20,7 @@ public class ExitLoginDialogFragment extends DialogFragment {
         builder.setMessage("你要退出登录吗？？？")
                 .setPositiveButton("好的", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        //删除cookie
                         HttpUtil.exit();
                         PublicData.ISLOGIN = false;
                         PublicData.USER_NAME = "";

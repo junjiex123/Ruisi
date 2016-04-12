@@ -35,7 +35,8 @@ import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 
 /**
  * Created by free2 on 16-4-6.
- * 搜索
+ * 搜索activity
+ * todo 支持更多的搜索，支持翻页
  */
 public class ActivitySearch extends BaseActivity {
 
@@ -143,17 +144,6 @@ public class ActivitySearch extends BaseActivity {
             }
         });
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 
     public class GetResultListTaskMe extends AsyncTask<Void, Void, String> {
 

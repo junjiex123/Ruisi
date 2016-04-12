@@ -10,7 +10,7 @@ import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 
 /**
  * Created by free2 on 16-3-20.
- * 是否要登陆
+ * 检测到新版本提示
  */
 public class NewVersionDialog extends DialogFragment {
 

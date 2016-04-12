@@ -45,7 +45,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-30.
- * 聊天activity
+ * 消息聊天 activity
  * TODO 支持翻页。。。。目前只能看最后一页
  */
 public class ChatActivity extends BaseActivity{
@@ -276,15 +276,5 @@ public class ChatActivity extends BaseActivity{
         String tmp = btn.getTag().toString();
         PostHander hander = new PostHander(getApplicationContext(),input_aera);
         hander.insertSmiley("{:16" + tmp + ":}", btn.getDrawable());
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-
-        }
-        return true;
     }
 }

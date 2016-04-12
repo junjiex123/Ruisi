@@ -23,9 +23,11 @@ import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
-/*
- *帖子列表activity
- *
+/**
+ *一般文章列表
+ * 链接到校园网时 GetNormalArticleListTaskRs
+ * 外网时 GetArticleListTaskMe
+ * 2个是不同的
  */
 public class ArticleListNormalActivity extends ArticleListBaseActivity{
 
@@ -155,6 +157,7 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
         @Override
         protected void onPostExecute(final String res) {
 
+            btn_refresh.show();
             mydatasetnormal.addAll(dataset);
             refreshLayout.setRefreshing(false);
             if(CurrentPage!=1){
@@ -208,7 +211,7 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
 
         @Override
         protected void onPostExecute(final String res) {
-
+            btn_refresh.show();
             mydatasetnormal.addAll(dataset);
             refreshLayout.setRefreshing(false);
             mRecyleAdapter.notifyItemRangeInserted(mydatasetnormal.size() - dataset.size(), dataset.size());

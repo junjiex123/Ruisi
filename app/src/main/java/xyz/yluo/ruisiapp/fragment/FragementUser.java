@@ -16,6 +16,7 @@ import xyz.yluo.ruisiapp.R;
 
 /**
  * Created by free2 on 16-3-19.
+ * 首页第三页fragement 管理4个页面 2个fragemnt
  *
  */
 public class FragementUser extends Fragment{
@@ -24,11 +25,9 @@ public class FragementUser extends Fragment{
     protected TabLayout mytab;
     private String uid = "";
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_me, container, false);
-
         ButterKnife.bind(this, view);
 
         mytab.addTab(mytab.newTab().setText("回复我的"));
@@ -59,10 +58,7 @@ public class FragementUser extends Fragment{
     private void changeFrageMent(int position){
 
         //回复我的
-        String url0 ="home.php?mod=space&do=notice";
-        if(!PublicData.IS_SCHOOL_NET){
-            url0+="&mobile=2";
-        }
+        String url0 ="home.php?mod=space&do=notice&mobile=2";
         //主题
         String url1 = "home.php?mod=space&uid="+uid+"&do=thread&view=me&mobile=2";
         //我的消息

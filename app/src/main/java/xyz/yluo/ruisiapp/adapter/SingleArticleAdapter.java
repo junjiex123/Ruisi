@@ -29,6 +29,7 @@ import xyz.yluo.ruisiapp.utils.MyWebView;
 /**
  * Created by free2 on 16-3-7.
  * 单篇文章adapter
+ * 评论 文章 loadmore
  */
 
 public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdapter.BaseViewHolder>{

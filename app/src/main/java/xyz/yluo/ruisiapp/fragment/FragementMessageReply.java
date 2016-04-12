@@ -12,7 +12,8 @@ import java.util.List;
 import xyz.yluo.ruisiapp.adapter.ReplyMessageAdapter;
 import xyz.yluo.ruisiapp.data.ReplyMessageData;
 
-
+//我的消息
+//回复我的
 public class FragementMessageReply extends BaseFragement{
 
     private ReplyMessageAdapter adapter;

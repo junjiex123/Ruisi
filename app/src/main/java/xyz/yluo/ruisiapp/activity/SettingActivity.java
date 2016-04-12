@@ -26,6 +26,7 @@ import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 
 /**
  * Created by free2 on 16-3-6.
+ * 设置activity 待完善
  *
  */
 public class SettingActivity extends PreferenceActivity {

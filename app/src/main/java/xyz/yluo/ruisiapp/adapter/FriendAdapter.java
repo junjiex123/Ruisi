@@ -7,21 +7,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import com.squareup.picasso.Picasso;
-
 import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.activity.ChatActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.FriendData;
 import xyz.yluo.ruisiapp.utils.CircleImageView;
 
 /**
  * Created by free2 on 16-4-12.
+ * 好友列表
  *
  */
 public class FriendAdapter extends RecyclerView.Adapter<BaseViewHolder>{
@@ -78,6 +78,14 @@ public class FriendAdapter extends RecyclerView.Adapter<BaseViewHolder>{
             String username= single.getUserName();
             String imgUrl = single.getImgUrl();
             UserDetailActivity.openWithTransitionAnimation(activity,username,user_image,imgUrl);
+        }
+
+        @OnClick(R.id.main_item_btn_item)
+        protected void main_item_click(){
+            String uid = datas.get(getAdapterPosition()).getUid();
+            String username = datas.get(getAdapterPosition()).getUserName();
+            String url = "home.php?mod=space&do=pm&subop=view&touid="+uid+"&mobile=2";
+            ChatActivity.open(activity,username,url);
         }
 
     }

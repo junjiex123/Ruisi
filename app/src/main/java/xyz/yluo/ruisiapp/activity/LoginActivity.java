@@ -45,6 +45,9 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * Created by free2 on 2016/1/11 0011.
  *
  * edit in 2016 03 14
+ *
+ * 登陆activity
+ *
  */
 public class LoginActivity extends BaseActivity {
 
@@ -88,7 +91,6 @@ public class LoginActivity extends BaseActivity {
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
 
         perPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         boolean isRemUser = perPreferences.getBoolean("ISREMUSER", false);
@@ -204,7 +206,6 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.login_test_button)
     protected void login_test_button_click() {
-        //启动登陆Thread
         progress = ProgressDialog.show(this, "正在登陆", "请等待", true);
         final String username = ed_username.getText().toString().trim();
         final String passNo = ed_pass.getText().toString().trim();
@@ -242,7 +243,6 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void begain_login(Map<String,String> params){
-
         HttpUtil.post(getApplicationContext(), loginUrl, params, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -261,6 +261,7 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
+    //登陆成功执行
     private void login_ok(String res){
         //写入到首选项
         SharedPreferences.Editor editor = perPreferences.edit();
@@ -299,21 +300,11 @@ public class LoginActivity extends BaseActivity {
         finish();
     }
 
+    //登陆失败执行
     private void login_fail(String res){
         progress.dismiss();
         Toast.makeText(getApplicationContext(), res, Toast.LENGTH_SHORT).show();
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 }
 
 

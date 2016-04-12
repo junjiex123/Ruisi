@@ -200,6 +200,7 @@ public class ArticleListBtActivity extends ArticleListBaseActivity{
 
         @Override
         protected void onPostExecute(String s) {
+            btn_refresh.show();
             mydatasetnormal.addAll(dataset);
             refreshLayout.setRefreshing(false);
             if(CurrentPage!=1){

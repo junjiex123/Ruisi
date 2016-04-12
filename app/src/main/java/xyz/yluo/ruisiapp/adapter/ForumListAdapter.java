@@ -24,6 +24,7 @@ import xyz.yluo.ruisiapp.utils.GetLogoUtils;
 
 /**
  * Created by free2 on 16-3-19.
+ * 板块列表
  *
  */
 public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{

@@ -14,7 +14,7 @@ import xyz.yluo.ruisiapp.R;
 
 /**
  * Created by free2 on 16-3-14.
- * 回复dialog
+ * 快速跳页 dialog
  *
  */
 public class ArticleJumpDialog extends DialogFragment{

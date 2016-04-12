@@ -25,7 +25,8 @@ import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-3-21.
- * 首页第三页用户主题 回复 消息 收藏
+ * 首页第三页
+ * 回复我的 我的消息
  */
 public class ReplyMessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 

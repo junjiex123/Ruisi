@@ -11,7 +11,7 @@ import xyz.yluo.ruisiapp.R;
 
 /**
  * Created by free2 on 16-3-23.
- * 根据fid获得logo
+ * 根据fid获得板块logo
  */
 public class GetLogoUtils {
 

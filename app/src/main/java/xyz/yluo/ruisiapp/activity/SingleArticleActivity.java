@@ -21,8 +21,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.jude.swipbackhelper.SwipeBackHelper;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -58,7 +56,9 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-6.
- *
+ * 单篇文章activity
+ * 一楼是楼主
+ * 其余是评论
  */
 public class SingleArticleActivity extends BaseActivity
         implements RecyclerViewClickListener,LoadMoreListener.OnLoadMoreListener,
@@ -94,8 +94,6 @@ public class SingleArticleActivity extends BaseActivity
 
     private static String ARTICLE_TID;
     private static String ARTICLE_TITLE = "";
-    //TODO 金币贴/精华。。。
-    //TODO 跳转到指定楼层
 
     //约定好要就收的数据
     public static void open(Context context, String tid,String title) {
@@ -110,7 +108,6 @@ public class SingleArticleActivity extends BaseActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
-        SwipeBackHelper.onCreate(this);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
@@ -590,11 +587,7 @@ public class SingleArticleActivity extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         switch (id){
-            case android.R.id.home:
-                finish();
-                break;
             case R.id.menu_broswer:
                 String url = PublicData.BASE_URL +UrlUtils.getSingleArticleUrl(ARTICLE_TID,CURRENT_PAGE,false);
                 RequestOpenBrowser.openBroswer(this,url);
@@ -613,9 +606,8 @@ public class SingleArticleActivity extends BaseActivity
                 dialogFragment.setCurrentPage(CURRENT_PAGE);
                 dialogFragment.setMaxPage(TOTAL_PAGE);
                 dialogFragment.show(getFragmentManager(),"jump");
-
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -628,15 +620,4 @@ public class SingleArticleActivity extends BaseActivity
 
     }
 
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        SwipeBackHelper.onPostCreate(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        SwipeBackHelper.onDestroy(this);
-    }
 }

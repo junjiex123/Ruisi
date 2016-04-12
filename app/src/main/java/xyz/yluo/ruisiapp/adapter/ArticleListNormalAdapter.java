@@ -26,7 +26,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-5.
- *
+ * 一般文章列表adapter分校园网和外网
  */
 public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 

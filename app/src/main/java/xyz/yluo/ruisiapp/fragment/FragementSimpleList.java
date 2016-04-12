@@ -31,7 +31,7 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 
 /**
  * Created by free2 on 16-3-19.
- *
+ * 简单的fragment
  */
 public class FragementSimpleList extends Fragment implements LoadMoreListener.OnLoadMoreListener{
 

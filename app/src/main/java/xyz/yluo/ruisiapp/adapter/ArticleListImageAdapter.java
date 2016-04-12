@@ -23,6 +23,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-3-31.
+ * 图片文章列表adapter 例如摄影天地板块{@link xyz.yluo.ruisiapp.activity.ArticleListImageActivity}
  *
  */
 public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListImageAdapter.ImageCardViewHolder> {

@@ -18,7 +18,7 @@ import xyz.yluo.ruisiapp.utils.MyWebView;
 
 /**
  * Created by yluo on 2015/10/5 0005.
- * 个人信息页面
+ * 关于页面
  */
 public class AboutActivity extends BaseActivity {
 
@@ -52,18 +52,6 @@ public class AboutActivity extends BaseActivity {
     protected void fab_clidk(View view){
         Snackbar.make(view, "别点了，还没写", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        //返回按钮
-        if (id == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
 }

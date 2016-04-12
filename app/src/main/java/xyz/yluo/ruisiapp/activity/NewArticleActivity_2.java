@@ -27,7 +27,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 /**
  * Created by free2 on 16-4-2.
  * todo 替换webview发帖。。。。
- *
+ * 无法绕过验证码
  */
 public class NewArticleActivity_2 extends BaseActivity {
 
@@ -142,15 +142,5 @@ public class NewArticleActivity_2 extends BaseActivity {
             j++;
         }
         return null;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
