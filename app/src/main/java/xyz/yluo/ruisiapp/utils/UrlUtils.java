@@ -46,15 +46,16 @@ public class UrlUtils {
         return url;
     }
 
-    public static String getimageurl(String userurl){
-        //http://bbs.rs.xidian.me/274679
-        String uid = GetId.getUid(userurl);
+    public static String getimageurl(String urlUid,boolean ismiddle){
+        String uid = GetId.getid(urlUid);
+        String url = MyPublicData.BASE_URL +"ucenter/avatar.php?uid="+uid;
+        if(ismiddle){
+            url+="&size=middle";
+        }else {
+            url+="&size=small";
+        }
 
-        return MyPublicData.BASE_URL +"ucenter/avatar.php?uid="+uid+"&size=small";
-    }
-
-    public static String getimageurl(String uid,boolean ismiddle){
-        return MyPublicData.BASE_URL +"ucenter/avatar.php?uid="+uid+"&size=middle";
+        return url;
     }
 
     public static String getSignUrl(){

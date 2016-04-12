@@ -11,6 +11,17 @@ import java.util.regex.Pattern;
  */
 public class GetId {
 
+    public static String getid(String url){
+        //forum.php?mod=redirect&goto=findpost&ptid=846689&pid=21330831
+        Pattern pattern = Pattern.compile("[0-9]{3,}");
+        Matcher matcher = pattern.matcher(url);
+        String tid ="";
+        if (matcher.find()) {
+            tid = url.substring(matcher.start(),matcher.end());
+        }
+        return tid;
+    }
+
     public static String getTid(String url){
         //forum.php?mod=redirect&goto=findpost&ptid=846689&pid=21330831
         Pattern pattern = Pattern.compile("tid=[0-9]{3,}");

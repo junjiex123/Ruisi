@@ -41,7 +41,9 @@ public abstract class ResponseHandler {
 
     public abstract void onSuccess(byte[] response);
 
-    public abstract void onFailure(Throwable e);
+    public void onFailure(Throwable e){
+        // Do nothing by default
+    }
 
     void processResponse(HttpURLConnection connection) throws IOException {
         int responseCode = connection.getResponseCode();

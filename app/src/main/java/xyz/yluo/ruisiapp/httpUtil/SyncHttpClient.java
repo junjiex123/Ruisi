@@ -157,7 +157,6 @@ public class SyncHttpClient {
                 os.close();
             }
 
-
             //处理重定向
             int code = connection.getResponseCode();
             if(code==302){

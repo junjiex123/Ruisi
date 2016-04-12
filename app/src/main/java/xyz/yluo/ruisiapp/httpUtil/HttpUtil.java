@@ -12,6 +12,7 @@ import xyz.yluo.ruisiapp.MyPublicData;
  */
 public class HttpUtil {
     private static AsyncHttpClient client = new AsyncHttpClient();
+    private static SyncHttpClient syncHttpClient = new SyncHttpClient();
     private static PersistentCookieStore store;
     private static final String UAC_MOBILE = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3 like Mac OS X; en-us) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3";
     private static final String UAC_PC = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36 Core/1.47.163.400";
@@ -33,6 +34,12 @@ public class HttpUtil {
             client.setStore(store);
         }
 
+    }
+
+    //同步
+    public static void SyncGet(Context context,String url,ResponseHandler handler){
+        init(context);
+        syncHttpClient.get(MyPublicData.BASE_URL +url,handler);
     }
 
     public static void exit(){

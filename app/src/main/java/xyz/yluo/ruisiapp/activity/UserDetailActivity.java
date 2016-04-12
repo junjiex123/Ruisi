@@ -153,8 +153,6 @@ public class UserDetailActivity extends BaseActivity {
             dialogFragment.show(getFragmentManager(), "exit");
 
         }else if(MyPublicData.ISLOGIN){
-            //home.php?mod=spacecp&ac=pm&op=send&pmid=450602&daterange=0&pmsubmit=yes&mobile=2
-            //home.php?mod=space&do=pm&subop=view&touid=261098&mobile=2
             String url = "home.php?mod=spacecp&ac=pm&op=send&pmid="+userUid+"&daterange=0&pmsubmit=yes&mobile=2";
             ChatActivity.open(this,username,url,true);
         }else{

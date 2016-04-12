@@ -228,7 +228,7 @@ public class ChatActivity extends BaseActivity{
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             if (datas.size()==0){
-                String imageUrl = UrlUtils.getimageurl(url);
+                String imageUrl = UrlUtils.getimageurl(url,false);
                 datas.add(new ChatListData(0,imageUrl,"给我发消息吧","刚刚"));
             }
             adapter.notifyDataSetChanged();
