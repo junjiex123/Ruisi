@@ -9,7 +9,6 @@
     android:paddingTop="12dp"
     android:paddingLeft="12dp"
     android:paddingRight="12dp"
-    android:clickable="true"
     android:orientation="vertical">
 
     <LinearLayout
@@ -95,6 +94,7 @@
 
     <xyz.yluo.ruisiapp.utils.MyHtmlTextView
         android:textColor="?android:attr/textColorPrimary"
+        android:autoLink="web"
         android:layout_marginStart="44dp"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp"

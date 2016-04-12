@@ -36,25 +36,7 @@ public class MyWebViewClient extends WebViewClient {
     //重写文章中点击连接的事件
     @Override
     public boolean shouldOverrideUrlLoading(WebView webView, String url) {
-        //点击了图片
-        if(url.contains("from=album")){
-            return true;
-        }
-        if (url.contains("forum.php?mod=viewthread&tid=")) { // 帖子
-            String tid = GetId.getTid(url);
-            SingleArticleActivity.open(context,tid,"查看主题");
-        } else if (url.contains("home.php?mod=space&uid=")) { // 用户
-            String uid = GetId.getUid(url);
-            String imageUrl = UrlUtils.getimageurl(uid,true);
-            UserDetailActivity.open(context,"name",imageUrl);
-        } else if(url.contains("forum.php?mod=post&action=newthread")){ //发帖链接
-            context.startActivity(new Intent(context,NewArticleActivity_2.class));
-        }else if(url.contains("member.php?mod=logging&action=login")) {//登陆
-            LoginActivity.open(context);
-        }else{
-            RequestOpenBrowser.openBroswer(context, MyPublicData.BBS_BASE_URL+url);
-        }
-
+        HandleLinkClick.handleClick(context,url);
         return true;
     }
 

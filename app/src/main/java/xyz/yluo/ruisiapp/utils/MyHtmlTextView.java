@@ -7,8 +7,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import java.io.BufferedInputStream;
@@ -41,9 +47,41 @@ public class MyHtmlTextView extends TextView implements Html.ImageGetter {
 
     public void mySetText(Activity activity, String text) {
         this.activity = activity;
-        Spanned spanned = Html.fromHtml(text, this, null);
-        super.setText(spanned);
+//        Spanned spanned = Html.fromHtml(text, this, null);
+//        super.setText(spanned);
+        super.setText(getClickableHtml(text,this));
+        setMovementMethod(LinkMovementMethod.getInstance());
         setLinkTextColor(0xff529ECC);
+    }
+
+
+    //获得textView 链接点击
+    private CharSequence getClickableHtml(String html, Html.ImageGetter getter) {
+        Spanned spannedHtml = Html.fromHtml(html,getter,null);
+        SpannableStringBuilder clickableHtmlBuilder = new SpannableStringBuilder(spannedHtml);
+        URLSpan[] urls = clickableHtmlBuilder.getSpans(0, spannedHtml.length(), URLSpan.class);
+        for(final URLSpan span : urls) {
+            //不是层主引用链接
+            if(!span.getURL().contains("redirect")){
+                setLinkClickable(clickableHtmlBuilder, span);
+            }
+
+        }
+        return clickableHtmlBuilder;
+    }
+
+    private void setLinkClickable(final SpannableStringBuilder clickableHtmlBuilder, final URLSpan urlSpan) {
+        int start = clickableHtmlBuilder.getSpanStart(urlSpan);
+        int end = clickableHtmlBuilder.getSpanEnd(urlSpan);
+        int flags = clickableHtmlBuilder.getSpanFlags(urlSpan);
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            public void onClick(View view) {
+                System.out.println("link click"+urlSpan.getURL());
+                HandleLinkClick.handleClick(activity,urlSpan.getURL());
+
+            }
+        };
+        clickableHtmlBuilder.setSpan(clickableSpan, start, end, flags);
     }
 
 
