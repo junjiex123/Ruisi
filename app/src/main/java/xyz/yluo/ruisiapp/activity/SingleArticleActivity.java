@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.MyPublicData;
+import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
@@ -194,7 +194,7 @@ public class SingleArticleActivity extends BaseActivity
     }
 
     private boolean isNeedLoginDialog(){
-        if (MyPublicData.ISLOGIN) {
+        if (PublicData.ISLOGIN) {
             return true;
         } else {
             NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();
@@ -264,7 +264,7 @@ public class SingleArticleActivity extends BaseActivity
         });
     }
 
-    public class DealWithArticleData extends AsyncTask<Void,Void,String>{
+    private class DealWithArticleData extends AsyncTask<Void,Void,String>{
         //* 传入一篇文章html
         //* 返回list<SingleArticleData>
         private List<SingleArticleData> tepdata = new ArrayList<>();
@@ -283,7 +283,7 @@ public class SingleArticleActivity extends BaseActivity
                 replyUrl = doc.select("form#fastpostform").attr("action");
                 String hash = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
                 if (!hash.isEmpty()){
-                    MyPublicData.FORMHASH =hash;
+                    PublicData.FORMHASH =hash;
                 }
             }
             //获取总页数
@@ -334,7 +334,7 @@ public class SingleArticleActivity extends BaseActivity
                 }
 
                 //是否移除所有样式
-                if(MyPublicData.ISSHOW_PLAIN){
+                if(PublicData.ISSHOW_PLAIN){
                     //移除所有style
                     //移除font所有样式
                     contentels.select("[style]").removeAttr("style");
@@ -428,8 +428,7 @@ public class SingleArticleActivity extends BaseActivity
         final String url = UrlUtils.getStarUrl(ARTICLE_TID);
         Map<String,String> params = new HashMap<>();
         params.put("favoritesubmit","true");
-        params.put("formhash", MyPublicData.FORMHASH);
-
+        params.put("formhash", PublicData.FORMHASH);
         HttpUtil.post(this, url, params, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -441,18 +440,14 @@ public class SingleArticleActivity extends BaseActivity
                     Toast.makeText(getApplicationContext(),"您已收藏请勿重复收藏",Toast.LENGTH_SHORT).show();
                 }
             }
-
-            @Override
-            public void onFailure(Throwable e) {
-                Toast.makeText(getApplicationContext(),"网络错误",Toast.LENGTH_SHORT).show();
-            }
         });
     }
 
+    //回复楼主
     private void post_reply(String text){
         progress = ProgressDialog.show(this, "正在发送", "请等待", true);
         Map<String,String> params = new HashMap<>();
-        params.put("formhash", MyPublicData.FORMHASH);
+        params.put("formhash", PublicData.FORMHASH);
         params.put("message", text);
         HttpUtil.post(this, replyUrl+"&handlekey=fastpost&loc=1&inajax=1", params, new ResponseHandler() {
             @Override
@@ -466,6 +461,16 @@ public class SingleArticleActivity extends BaseActivity
                 handleReply(false,"");
             }
         });
+    }
+
+    //回复层主
+    private void ReplyCen(String url,String index,String name,String ref){
+        ReplyDialog fragment = new ReplyDialog();
+        fragment.setTitle("回复:"+index+" "+name);
+        fragment.setUrl(url);
+        fragment.setLasttime(replyTime);
+        fragment.setReply_ref(ref);
+        fragment.show(getFragmentManager(),"reply");
     }
 
     private void hide_ime(){
@@ -485,20 +490,9 @@ public class SingleArticleActivity extends BaseActivity
         }
     }
 
-    //回复层主
-    private void ReplyCen(String url,String index,String name,String ref){
-        ReplyDialog fragment = new ReplyDialog();
-        fragment.setTitle("回复:"+index+" "+name);
-        fragment.setUrl(url);
-        fragment.setLasttime(replyTime);
-        fragment.setReply_ref(ref);
-        fragment.show(getFragmentManager(),"reply");
-    }
-
     //楼中楼回复回调函数
     @Override
     public void onDialogSendClick(final DialogFragment dialog, String url, final String text) {
-
         progress = ProgressDialog.show(this, "正在发送", "请等待", true);
         HttpUtil.get(this, url, new ResponseHandler() {
             @Override
@@ -602,7 +596,7 @@ public class SingleArticleActivity extends BaseActivity
                 finish();
                 break;
             case R.id.menu_broswer:
-                String url = MyPublicData.BASE_URL +UrlUtils.getSingleArticleUrl(ARTICLE_TID,CURRENT_PAGE,false);
+                String url = PublicData.BASE_URL +UrlUtils.getSingleArticleUrl(ARTICLE_TID,CURRENT_PAGE,false);
                 RequestOpenBrowser.openBroswer(this,url);
                 break;
             case R.id.menu_refresh:

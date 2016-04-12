@@ -15,7 +15,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.MyPublicData;
+import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
@@ -53,7 +53,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
             return TYPE_LOAD_MORE;
         }
         //手机版
-        if(!MyPublicData.IS_SCHOOL_NET ||type==TYPE_NORMAL_MOBILE){
+        if(!PublicData.IS_SCHOOL_NET ||type==TYPE_NORMAL_MOBILE){
             return TYPE_NORMAL_MOBILE;
         }else{
             //一般板块

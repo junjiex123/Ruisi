@@ -27,7 +27,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.MyPublicData;
+import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.ActivitySearch;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
@@ -35,7 +35,7 @@ import xyz.yluo.ruisiapp.data.FroumListData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.HidingScrollListener;
-import xyz.yluo.ruisiapp.utils.GetFormHash;
+import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-3-19.
@@ -129,7 +129,6 @@ public class HomeFormList extends Fragment{
     public class GetForumList extends AsyncTask<Void, Void, String> {
         private String response;
         private List<FroumListData> simpledatas = new ArrayList<>();
-
         public GetForumList(String res) {
             this.response = res;
         }
@@ -139,10 +138,9 @@ public class HomeFormList extends Fragment{
             Elements elements = document.select("div#wp.wp.wm").select("div.bm.bmw.fl");
             //获得hash
             String hash = document.select(".footer").select("a.dialog").attr("href");
-
-            String ress =  GetFormHash.getHash(hash);
+            String ress =  GetId.getHash(hash);
             if(!ress.isEmpty()){
-                MyPublicData.FORMHASH = ress;
+                PublicData.FORMHASH = ress;
             }
 
             for(Element ele:elements){
@@ -190,7 +188,7 @@ public class HomeFormList extends Fragment{
     //判断是否需要弹出登录dialog
     private boolean islogin_dialog(){
 
-        if(MyPublicData.ISLOGIN){
+        if(PublicData.ISLOGIN){
             return true;
         }else{
             NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();

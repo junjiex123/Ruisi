@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    android:id="@+id/main_window"
+<android.support.design.widget.CoordinatorLayout android:id="@+id/main_window"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -58,13 +58,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="24sp"
-                        android:text="用户名"/>
+                        tools:text="用户名"/>
                     <TextView
                         android:id="@+id/usergrade"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
-                        android:text="西电大一"/>
+                        tools:text="等级"/>
 
                 </LinearLayout>
 

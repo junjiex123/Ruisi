@@ -27,7 +27,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.MyPublicData;
+import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -74,14 +74,15 @@ public class UserDakaActivity extends BaseActivity{
     private int spinner__select = 0;
     private String qdxq  = "kx";
     private boolean isSign = true;
+    private String hash = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_daka);
         ButterKnife.bind(this);
-        user_name.setText(MyPublicData.USER_NAME);
-        Picasso.with(this).load(UrlUtils.getimageurl(MyPublicData.USER_UID,true)).placeholder(R.drawable.image_placeholder).into(user_image);
+        user_name.setText(PublicData.USER_NAME);
+        Picasso.with(this).load(UrlUtils.getimageurl(PublicData.USER_UID,true)).placeholder(R.drawable.image_placeholder).into(user_image);
         init();
         isHaveDaka();
         final String[] mItems = {"开心","难过","郁闷","无聊","怒","擦汗","奋斗","慵懒","衰"};
@@ -91,8 +92,6 @@ public class UserDakaActivity extends BaseActivity{
     }
 
     private void init(){
-
-
         spinner_select.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -110,7 +109,7 @@ public class UserDakaActivity extends BaseActivity{
             finish();
         }else{
             String xinqin = getGroup1_select();
-            String formhash = MyPublicData.FORMHASH;
+            String formhash = hash;
             String qdmode = "1";
             String todaysay = "";
             String fastreplay = "0";
@@ -166,13 +165,10 @@ public class UserDakaActivity extends BaseActivity{
             public void onSuccess(byte[] response) {
                 String res = new String(response);
                 Document doc = Jsoup.parse(res);
-                if (doc.select("input[name=formhash]").first() != null) {
-                    String temphash = doc.select("input[name=formhash]").attr("value");
-                    if(!temphash.isEmpty()){
-                        MyPublicData.FORMHASH = temphash;
-                    }
+                String temphash = doc.select("input[name=formhash]").attr("value");
+                if(!temphash.isEmpty()){
+                    hash = temphash;
                 }
-
                 if(res.contains("您今天已经签到过了或者签到时间还未开始")){
                     //您今天已经签到过了
                     //获得时间

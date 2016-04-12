@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout android:layout_width="match_parent"
+    android:id="@+id/main_item_btn_item"
+    android:clickable="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+        <xyz.yluo.ruisiapp.utils.CircleImageView
+            android:id="@+id/user_image"
+            android:layout_marginEnd="@dimen/dimen_8"
+            android:src="@drawable/image_placeholder"
+            app:civ_border_color="@android:color/white"
+            app:civ_border_width="1dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp" />
+        <LinearLayout
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="16sp"
+                android:singleLine="true"
+                tools:text="hualong95" />
+            <TextView
+                android:id="@+id/user_info"
+                android:layout_marginTop="@dimen/dimen_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="13sp"
+                android:singleLine="true"
+                tools:text="木有人买电脑了" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View style="@style/DeepLine"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_gravity="bottom" />
+</LinearLayout>

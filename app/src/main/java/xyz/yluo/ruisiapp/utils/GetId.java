@@ -22,6 +22,26 @@ public class GetId {
         return tid;
     }
 
+    public static String getHash(String url){
+        //member.php?mod=logging&action=logout&formhash=cb9f1c2f&mobile=2
+        try {
+            //fid=[0-9]+
+            Pattern pattern = Pattern.compile("formhash=.*&");
+            Matcher matcher = pattern.matcher(url);
+            String hash ="";
+            if (matcher.find()) {
+                hash = url.substring(matcher.start()+9,matcher.end()-1);
+            }
+
+            return hash;
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return "";
+        }
+
+    }
+
     public static String getTid(String url){
         //forum.php?mod=redirect&goto=findpost&ptid=846689&pid=21330831
         Pattern pattern = Pattern.compile("tid=[0-9]{3,}");

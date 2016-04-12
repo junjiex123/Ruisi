@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 
-import xyz.yluo.ruisiapp.MyPublicData;
+import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 
 /**
@@ -21,9 +21,9 @@ public class ExitLoginDialogFragment extends DialogFragment {
                 .setPositiveButton("好的", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         HttpUtil.exit();
-                        MyPublicData.ISLOGIN = false;
-                        MyPublicData.USER_NAME = "";
-                        MyPublicData.USER_UID = "";
+                        PublicData.ISLOGIN = false;
+                        PublicData.USER_NAME = "";
+                        PublicData.USER_UID = "";
                         getActivity().finish();
                     }
                 })

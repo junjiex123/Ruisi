@@ -22,6 +22,12 @@
 
             </item>
             <item
+                android:id="@+id/nav_friend"
+                android:icon="@drawable/ic_favorite_white_12dp"
+                android:title="好友">
+
+            </item>
+            <item
                 android:id="@+id/nav_post"
                 android:icon="@drawable/ic_edit"
                 android:title="发帖" />

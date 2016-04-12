@@ -17,7 +17,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import xyz.yluo.ruisiapp.MyPublicData;
+import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.fragment.NewVersionDialog;
 import xyz.yluo.ruisiapp.httpUtil.AsyncHttpClient;
@@ -162,9 +162,9 @@ public class SettingActivity extends PreferenceActivity {
             }else if(key.equals("setting_user_tail")){
                 setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail","无小尾巴"));
             }else if(key.equals("setting_show_zhidin")){
-                MyPublicData.ISSHOW_ZHIDIN = sharedPreferences.getBoolean("setting_show_zhidin",false);
+                PublicData.ISSHOW_ZHIDIN = sharedPreferences.getBoolean("setting_show_zhidin",false);
             }else if(key.equals("setting_show_plain")){
-                MyPublicData.ISSHOW_PLAIN = sharedPreferences.getBoolean("setting_show_plain",true);
+                PublicData.ISSHOW_PLAIN = sharedPreferences.getBoolean("setting_show_plain",true);
             }
         }
     }

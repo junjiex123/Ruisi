@@ -26,7 +26,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.MyPublicData;
+import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
 import xyz.yluo.ruisiapp.data.SimpleListData;
@@ -117,7 +117,7 @@ public class ActivitySearch extends BaseActivity {
 
         String url = "search.php?mod=forum&mobile=2";
         Map<String,String> paras = new HashMap<>();
-        paras.put("formhash", MyPublicData.FORMHASH);
+        paras.put("formhash", PublicData.FORMHASH);
         paras.put("searchsubmit","yes");
         paras.put("srchtxt",str);
 

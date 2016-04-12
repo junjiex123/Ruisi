@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import xyz.yluo.ruisiapp.MyPublicData;
+import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 
 /**
@@ -35,7 +35,7 @@ public class FragementUser extends Fragment{
         mytab.addTab(mytab.newTab().setText("我的主题"));
         mytab.addTab(mytab.newTab().setText("私人消息"));
         mytab.addTab(mytab.newTab().setText("我的收藏"));
-        uid = MyPublicData.USER_UID;
+        uid = PublicData.USER_UID;
 
 
 
@@ -60,7 +60,7 @@ public class FragementUser extends Fragment{
 
         //回复我的
         String url0 ="home.php?mod=space&do=notice";
-        if(!MyPublicData.IS_SCHOOL_NET){
+        if(!PublicData.IS_SCHOOL_NET){
             url0+="&mobile=2";
         }
         //主题

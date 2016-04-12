@@ -32,7 +32,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.MyPublicData;
+import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
 import xyz.yluo.ruisiapp.data.ChatListData;
@@ -200,7 +200,7 @@ public class ChatActivity extends BaseActivity{
             final ProgressDialog progress;
             progress = ProgressDialog.show(this, "正在发送", "请等待", true);
             Map<String,String> params = new HashMap<>();
-            params.put("formhash", MyPublicData.FORMHASH);
+            params.put("formhash", PublicData.FORMHASH);
             params.put("touid",touid);
             params.put("message", text);
             HttpUtil.post(getApplicationContext(), replyUrl, params, new ResponseHandler() {
@@ -234,7 +234,7 @@ public class ChatActivity extends BaseActivity{
 
     private void send_success(){
         //http://rs.xidian.edu.cn/ucenter/avatar.php?uid=252553&size=small
-        String userImage = MyPublicData.BASE_URL +"ucenter/avatar.php?uid="+ MyPublicData.USER_UID +"&size=small";
+        String userImage = PublicData.BASE_URL +"ucenter/avatar.php?uid="+ PublicData.USER_UID +"&size=small";
         datas.add(new ChatListData(1,userImage,input_aera.getText().toString(),"刚刚"));
         input_aera.setText("");
         adapter.notifyItemInserted(datas.size()-1);

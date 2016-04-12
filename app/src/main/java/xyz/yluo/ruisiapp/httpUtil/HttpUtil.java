@@ -4,7 +4,7 @@ import android.content.Context;
 
 import java.util.Map;
 
-import xyz.yluo.ruisiapp.MyPublicData;
+import xyz.yluo.ruisiapp.PublicData;
 
 /**
  * Created by free2 on 16-4-4.
@@ -19,12 +19,12 @@ public class HttpUtil {
 
     public static void get(Context context,String url,ResponseHandler handler){
         init(context);
-        client.get(MyPublicData.BASE_URL +url,handler);
+        client.get(PublicData.BASE_URL +url,handler);
     }
 
     public static void post(Context context,String url, Map<String,String> map,ResponseHandler handler){
         init(context);
-        client.post(MyPublicData.BASE_URL +url,map,handler);
+        client.post(PublicData.BASE_URL +url,map,handler);
     }
 
     private static void init(Context context){
@@ -39,7 +39,7 @@ public class HttpUtil {
     //同步
     public static void SyncGet(Context context,String url,ResponseHandler handler){
         init(context);
-        syncHttpClient.get(MyPublicData.BASE_URL +url,handler);
+        syncHttpClient.get(PublicData.BASE_URL +url,handler);
     }
 
     public static void exit(){

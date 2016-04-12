@@ -21,7 +21,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.squareup.picasso.Picasso;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -32,7 +34,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.MyPublicData;
+import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
 import xyz.yluo.ruisiapp.data.SimpleListData;
@@ -69,18 +71,18 @@ public class UserDetailActivity extends BaseActivity {
     private static String userUid = "";
     private String username = "";
 
-    public static void openWithTransitionAnimation(Activity activity, String loginName, ImageView imgAvatar, String avatarUrl) {
+    public static void openWithTransitionAnimation(Activity activity, String username, ImageView imgAvatar, String avatarUrl) {
         Intent intent = new Intent(activity, UserDetailActivity.class);
-        intent.putExtra("loginName", loginName);
+        intent.putExtra("loginName", username);
         intent.putExtra("avatarUrl", avatarUrl);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, imgAvatar, NAME_IMG_AVATAR);
         ActivityCompat.startActivity(activity, intent, options.toBundle());
     }
 
-    public static void open(Context context, String loginName,String avatarUrl) {
+    public static void open(Context context, String username,String avatarUrl) {
         Intent intent = new Intent(context, UserDetailActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("loginName", loginName);
+        intent.putExtra("loginName", username);
         intent.putExtra("avatarUrl", avatarUrl);
         context.startActivity(intent);
     }
@@ -103,14 +105,13 @@ public class UserDetailActivity extends BaseActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle("");
         }
-
         adapter = new SimpleListAdapter(this,datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recycler_view.setLayoutManager(layoutManager);
         recycler_view.setAdapter(adapter);
         userUid = GetId.getUid(imageUrl);
         //如果是自己
-        if (userUid.equals(MyPublicData.USER_UID)){
+        if (userUid.equals(PublicData.USER_UID)){
             fab.setImageResource(R.drawable.ic_exit_24dp);
         }
         String url0= UrlUtils.getUserHomeUrl(userUid,false);
@@ -146,10 +147,10 @@ public class UserDetailActivity extends BaseActivity {
     @OnClick(R.id.fab)
     protected void fab_click(){
         //如果是自己
-        if (userUid.equals(MyPublicData.USER_UID)){
+        if (userUid.equals(PublicData.USER_UID)){
             ExitLoginDialogFragment dialogFragment = new ExitLoginDialogFragment();
             dialogFragment.show(getFragmentManager(), "exit");
-        }else if(MyPublicData.ISLOGIN){
+        }else if(PublicData.ISLOGIN){
             //url      home.php?mod=space&do=pm&subop=view&touid=261098&mobile=2
             //replyurl home.php?mod=spacecp&ac=pm&op=send&pmid=452408&daterange=0&pmsubmit=yes&mobile=2
             String url = "home.php?mod=space&do=pm&subop=view&touid="+userUid+"&mobile=2";

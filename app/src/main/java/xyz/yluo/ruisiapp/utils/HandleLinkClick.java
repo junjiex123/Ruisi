@@ -3,7 +3,7 @@ package xyz.yluo.ruisiapp.utils;
 import android.content.Context;
 import android.content.Intent;
 
-import xyz.yluo.ruisiapp.MyPublicData;
+import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.NewArticleActivity_2;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
@@ -31,7 +31,7 @@ public class HandleLinkClick {
             LoginActivity.open(context);
         }else{
             System.out.println("request b"+url);
-            RequestOpenBrowser.openBroswer(context, MyPublicData.BASE_URL +url);
+            RequestOpenBrowser.openBroswer(context, PublicData.BASE_URL +url);
         }
     }
 }

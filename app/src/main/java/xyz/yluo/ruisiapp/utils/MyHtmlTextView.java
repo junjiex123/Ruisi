@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import xyz.yluo.ruisiapp.MyPublicData;
+import xyz.yluo.ruisiapp.PublicData;
 
 /**
  * Created by free2 on 16-3-31.
@@ -103,7 +103,7 @@ public class MyHtmlTextView extends TextView implements Html.ImageGetter {
                 if(source.startsWith("http")){
                     url = new URL(source);
                 }else{
-                    url = new URL(MyPublicData.BASE_URL + source);
+                    url = new URL(PublicData.BASE_URL + source);
                 }
 
                 URLConnection conn = url.openConnection();

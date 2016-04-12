@@ -16,7 +16,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.MyPublicData;
+import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
@@ -149,7 +149,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             article_post_time.setText(single.getPostTime());
             article_title.setText(single.getReplyUrlTitle());
             webView.getSettings().setLoadsImagesAutomatically(true);
-            webView.loadDataWithBaseURL(MyPublicData.BASE_URL,single.getCotent(),"text/html","UTF-8",null);
+            webView.loadDataWithBaseURL(PublicData.BASE_URL,single.getCotent(),"text/html","UTF-8",null);
         }
 
     }

@@ -33,7 +33,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.MyPublicData;
+import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -217,12 +217,6 @@ public class LoginActivity extends BaseActivity {
                     login_ok(res);
                 }
                 Document doc = Jsoup.parse(res);
-                if (doc.select("input[name=formhash]").first() != null) {
-                    String temphash = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
-                    if(!temphash.isEmpty()){
-                        MyPublicData.FORMHASH = temphash;
-                    }
-                }
                 loginUrl = doc.select("form#loginform").attr("action");
                 Map<String,String> params = new HashMap<>();
                 params.put("fastloginfield", "username");
@@ -268,7 +262,6 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login_ok(String res){
-
         //写入到首选项
         SharedPreferences.Editor editor = perPreferences.edit();
         if(rem_pass.isChecked()){
@@ -289,14 +282,14 @@ public class LoginActivity extends BaseActivity {
         editor.apply();
 
         Document doc = Jsoup.parse(res);
-        MyPublicData.USER_NAME = ed_username.getText().toString().trim();
+        PublicData.USER_NAME = ed_username.getText().toString().trim();
         String url = doc.select("a[href^=home.php?mod=space&uid=]").attr("href");
-        MyPublicData.USER_UID = GetId.getUid(url);
+        PublicData.USER_UID = GetId.getUid(url);
 
         //开始获取formhash
         progress.dismiss();
-        MyPublicData.ISLOGIN = true;
-        Toast.makeText(getApplicationContext(), "欢迎你"+ MyPublicData.USER_NAME +"登陆成功", Toast.LENGTH_SHORT).show();
+        PublicData.ISLOGIN = true;
+        Toast.makeText(getApplicationContext(), "欢迎你"+ PublicData.USER_NAME +"登陆成功", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
         //把返回数据存入Intent
         intent.putExtra("result", "ok");

@@ -18,7 +18,7 @@ import org.jsoup.nodes.Document;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import xyz.yluo.ruisiapp.MyPublicData;
+import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -60,8 +60,8 @@ public class LaunchActivity extends BaseActivity{
             boolean theme = shp.getBoolean("setting_swich_theme",false);
             boolean setting_show_plain = shp.getBoolean("setting_show_plain",true);
 
-            MyPublicData.ISSHOW_ZHIDIN = isShowZhidin;
-            MyPublicData.ISSHOW_PLAIN = setting_show_plain;
+            PublicData.ISSHOW_ZHIDIN = isShowZhidin;
+            PublicData.ISSHOW_PLAIN = setting_show_plain;
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -88,12 +88,12 @@ public class LaunchActivity extends BaseActivity{
 
     private void canGetRs(int type,String res){
         if(type==TYPE_INNER){
-            MyPublicData.IS_SCHOOL_NET = true;
-            MyPublicData.BASE_URL = UrlUtils.getBaseUrl(true);
+            PublicData.IS_SCHOOL_NET = true;
+            PublicData.BASE_URL = UrlUtils.getBaseUrl(true);
         }else{
             Toast.makeText(getApplicationContext(),"已经切换到外网",Toast.LENGTH_SHORT).show();
-            MyPublicData.BASE_URL = UrlUtils.getBaseUrl(false);
-            MyPublicData.IS_SCHOOL_NET = false;
+            PublicData.BASE_URL = UrlUtils.getBaseUrl(false);
+            PublicData.IS_SCHOOL_NET = false;
 
         }
         checklogin(res);
@@ -107,17 +107,16 @@ public class LaunchActivity extends BaseActivity{
         Toast.makeText(getApplicationContext(),"没网,请打开网络连接",Toast.LENGTH_SHORT).show();
     }
 
-
     private void checklogin(String res){
-        MyPublicData.ISLOGIN = false;
+        PublicData.ISLOGIN = false;
         if (res.contains("loginbox")) {
-            MyPublicData.ISLOGIN = false;
+            PublicData.ISLOGIN = false;
         } else {
             Document doc = Jsoup.parse(res);
-            MyPublicData.USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
+            PublicData.USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
             String url = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").attr("href");
-            MyPublicData.USER_UID = GetId.getUid(url);
-            MyPublicData.ISLOGIN = true;
+            PublicData.USER_UID = GetId.getUid(url);
+            PublicData.ISLOGIN = true;
         }
 
         finishthis();
@@ -126,7 +125,7 @@ public class LaunchActivity extends BaseActivity{
 
     private void checkOuter(){
         final String url = UrlUtils.getLoginUrl(false);
-        MyPublicData.BASE_URL = UrlUtils.getBaseUrl(false);
+        PublicData.BASE_URL = UrlUtils.getBaseUrl(false);
         HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -142,7 +141,7 @@ public class LaunchActivity extends BaseActivity{
 
     private void checkInner(){
         final String url = UrlUtils.getLoginUrl(false);
-        MyPublicData.BASE_URL = UrlUtils.getBaseUrl(true);
+        PublicData.BASE_URL = UrlUtils.getBaseUrl(true);
         HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {

@@ -6,7 +6,7 @@ import android.app.Application;
  * Created by free2 on 16-3-11.
  * 共享的全局数据 //todo 更好的实现？？？
  */
-public class MyPublicData extends Application {
+public class PublicData extends Application {
 
     //启动时设定
     //论坛基地址

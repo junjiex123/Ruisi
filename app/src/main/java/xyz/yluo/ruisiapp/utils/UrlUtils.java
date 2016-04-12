@@ -1,6 +1,6 @@
 package xyz.yluo.ruisiapp.utils;
 
-import xyz.yluo.ruisiapp.MyPublicData;
+import xyz.yluo.ruisiapp.PublicData;
 
 /**
  * Created by free2 on 16-4-1.
@@ -48,7 +48,7 @@ public class UrlUtils {
 
     public static String getimageurl(String urlUid,boolean ismiddle){
         String uid = GetId.getid(urlUid);
-        String url = MyPublicData.BASE_URL +"ucenter/avatar.php?uid="+uid;
+        String url = PublicData.BASE_URL +"ucenter/avatar.php?uid="+uid;
         if(ismiddle){
             url+="&size=middle";
         }else {
