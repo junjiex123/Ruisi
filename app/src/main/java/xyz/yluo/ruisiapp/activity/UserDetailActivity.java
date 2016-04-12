@@ -21,9 +21,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.squareup.picasso.Picasso;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -151,10 +149,11 @@ public class UserDetailActivity extends BaseActivity {
         if (userUid.equals(MyPublicData.USER_UID)){
             ExitLoginDialogFragment dialogFragment = new ExitLoginDialogFragment();
             dialogFragment.show(getFragmentManager(), "exit");
-
         }else if(MyPublicData.ISLOGIN){
-            String url = "home.php?mod=spacecp&ac=pm&op=send&pmid="+userUid+"&daterange=0&pmsubmit=yes&mobile=2";
-            ChatActivity.open(this,username,url,true);
+            //url      home.php?mod=space&do=pm&subop=view&touid=261098&mobile=2
+            //replyurl home.php?mod=spacecp&ac=pm&op=send&pmid=452408&daterange=0&pmsubmit=yes&mobile=2
+            String url = "home.php?mod=space&do=pm&subop=view&touid="+userUid+"&mobile=2";
+            ChatActivity.open(this,username,url);
         }else{
             Snackbar.make(layout, "你还没有登陆，无法发送消息", Snackbar.LENGTH_LONG)
                     .setAction("点我登陆", new View.OnClickListener() {

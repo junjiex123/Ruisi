@@ -38,7 +38,7 @@ import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
 import xyz.yluo.ruisiapp.data.ChatListData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
-import xyz.yluo.ruisiapp.utils.GetFormHash;
+import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.PostHander;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -68,16 +68,13 @@ public class ChatActivity extends BaseActivity{
     private String username = "消息";
     private String url = "";
     private String touid = "";
-    private boolean  isOpenFromOut = false;
 
-    public static void open(Context context, String username,String url,boolean isOpenFromWebView) {
+    public static void open(Context context, String username,String url) {
         //isopenfromwebview 是从webview打开的是新疆的回话
         Intent intent = new Intent(context, ChatActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("username", username);
         intent.putExtra("url",url);
-        //是否从特殊链接进入
-        intent.putExtra("isOpenFromOut",isOpenFromWebView);
         context.startActivity(intent);
     }
 
@@ -90,8 +87,9 @@ public class ChatActivity extends BaseActivity{
         adapter = new ChatListAdapter(this,datas);
         recycler_view.setLayoutManager(layoutManager);
         recycler_view.setAdapter(adapter);
-
         refresh();
+        //url      home.php?mod=space&do=pm&subop=view&touid=261098&mobile=2
+        //replyurl home.php?mod=spacecp&ac=pm&op=send&pmid=452408&daterange=0&pmsubmit=yes&mobile=2
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -99,21 +97,10 @@ public class ChatActivity extends BaseActivity{
                 refresh();
             }
         });
-
         try {
             Bundle bundle = this.getIntent().getExtras();
             username = bundle.getString("username");
             url = bundle.getString("url");
-            isOpenFromOut = bundle.getBoolean("isOpenFromOut");
-            //从webview链接点击进来的
-            if(isOpenFromOut){
-                replyUrl = url;
-                touid = GetId.getUid(url);
-                //home.php?mod=space&do=pm&subop=view&touid=261098&mobile=2
-                url = "home.php?mod=space&do=pm&subop=view&touid="+touid+"&mobile=2";
-                GetFormHash.start_get_hash(getApplicationContext(),true);
-            }
-
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -125,23 +112,134 @@ public class ChatActivity extends BaseActivity{
             actionBar.setTitle(username);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        getData();
-
+        new GetDataTask(url).execute();
     }
 
-    private void getData(){
 
-        HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
-            @Override
-            public void onSuccess(byte[] response) {
-                new GetDataTask(new String(response)).execute();
-            }
+    public class GetDataTask extends AsyncTask<Void,Void,String> {
+        private String url;
+        public GetDataTask(String url) {
+            this.url = url;
+        }
+        @Override
+        protected String doInBackground(Void... params) {
+            HttpUtil.SyncGet(getApplicationContext(),url, new TextResponseHandler() {
+                @Override
+                public void onSuccess(String response) {
+                    int type = 0;
+                    //list 所有楼数据
+                    Document doc = Jsoup.parse(response);
+                    String temps = doc.select("form#pmform").attr("action");
+                    if(!temps.isEmpty()){
+                        replyUrl = temps;
+                        touid = doc.select("input[name=touid]").attr("value");
+                    }else {
+                        touid = GetId.getid(url);
+                        replyUrl = "home.php?mod=spacecp&ac=pm&op=send&pmid="+touid+"&daterange=0&pmsubmit=yes&mobile=2";
+                    }
+                    Elements elements = doc.select(".msgbox.b_m");
+                    //还没有消息
+                    if(elements.text().contains("当前没有相应的短消息")){
+                        String userimg = UrlUtils.getimageurl(touid,false);
+                        datas.add(new ChatListData(0,userimg,"给我发消息吧...","刚刚"));
+                    }else {
+                        Elements listdata = elements.select(".cl");
+                        for(Element temp:listdata){
+                            //左边
+                            if(temp.attr("class").contains("friend_msg")){
+                                type =0 ;
+                            }else{//右边
+                                type = 1;
+                            }
+                            String userimg = temp.select(".avat").select("img").attr("src");
+                            String content = temp.select(".dialog_t").html();
+                            String posttime = temp.select(".date").text();
+                            datas.add(new ChatListData(type,userimg,content,posttime));
+                        }
+                    }
 
+                }
+            });
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String s) {
+
+            super.onPostExecute(s);
+            adapter.notifyDataSetChanged();
+            refreshLayout.setRefreshing(false);
+        }
+    }
+
+    private void refresh(){
+        refreshLayout.post(new Runnable() {
             @Override
-            public void onFailure(Throwable e) {
-                refreshLayout.setRefreshing(false);
+            public void run() {
+                refreshLayout.setRefreshing(true);
             }
         });
+
+        datas.clear();
+        adapter.notifyDataSetChanged();
+        new GetDataTask(url).execute();
+    }
+
+    private void hide_ime(){
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    private void post_reply(String text){
+
+        if(text.isEmpty()){
+            Toast.makeText(getApplicationContext(),"你还没有输入内容！！！",Toast.LENGTH_SHORT).show();
+        }else {
+            final ProgressDialog progress;
+            progress = ProgressDialog.show(this, "正在发送", "请等待", true);
+            Map<String,String> params = new HashMap<>();
+            params.put("formhash", MyPublicData.FORMHASH);
+            params.put("touid",touid);
+            params.put("message", text);
+            HttpUtil.post(getApplicationContext(), replyUrl, params, new ResponseHandler() {
+                @Override
+                public void onSuccess(byte[] response) {
+                    String res = new String(response);
+                    if (res.contains("操作成功")) {
+                        send_success();
+                        hide_ime();
+                        progress.dismiss();
+                    } else {
+                        progress.dismiss();
+                        if(res.contains("两次发送短消息太快")){
+                            Toast.makeText(getApplicationContext(),"两次发送短消息太快，请稍候再发送",Toast.LENGTH_SHORT).show();
+                        }else{
+                            System.out.println(res);
+                            Toast.makeText(getApplicationContext(), "由于未知原因发表失败", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable e) {
+                    Toast.makeText(getApplicationContext(), "网络错误！！！", Toast.LENGTH_SHORT).show();
+                    progress.dismiss();
+                }
+            });
+        }
+    }
+
+    private void send_success(){
+        //http://rs.xidian.edu.cn/ucenter/avatar.php?uid=252553&size=small
+        String userImage = MyPublicData.BASE_URL +"ucenter/avatar.php?uid="+ MyPublicData.USER_UID +"&size=small";
+        datas.add(new ChatListData(1,userImage,input_aera.getText().toString(),"刚刚"));
+        input_aera.setText("");
+        adapter.notifyItemInserted(datas.size()-1);
+        smiley_container.setVisibility(View.GONE);
+        Toast.makeText(getApplicationContext(),"发布成功",Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.action_smiley)
@@ -180,146 +278,13 @@ public class ChatActivity extends BaseActivity{
         hander.insertSmiley("{:16" + tmp + ":}", btn.getDrawable());
     }
 
-    public class GetDataTask extends AsyncTask<Void,Void,String> {
-        //* 传入一篇文章html
-        //* 返回list<ChatListData>
-
-        private String htmlData;
-        public GetDataTask(String htmlData) {
-            this.htmlData = htmlData;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-
-            int type = 0;
-            //list 所有楼数据
-            Document doc = Jsoup.parse(htmlData);
-            //获取回复/hash
-            if (doc.select("#pmform")!= null&&!isOpenFromOut) {
-                replyUrl = doc.select("form#pmform").attr("action");
-
-                String temp_hash= doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
-                if(!temp_hash.isEmpty()){
-                    MyPublicData.FORMHASH = temp_hash;
-                }
-                touid = doc.select("input[name=touid]").attr("value");
-            }
-            Elements elements = doc.select(".msgbox.b_m");
-            Elements listdata = elements.select(".cl");
-
-            for(Element temp:listdata){
-                //左边
-                if(temp.attr("class").contains("friend_msg")){
-                    type =0 ;
-                }else{//右边
-                    type = 1;
-                }
-                String userimg = temp.select(".avat").select("img").attr("src");
-                String content = temp.select(".dialog_t").html();
-                String posttime = temp.select(".date").text();
-
-                datas.add(new ChatListData(type,userimg,content,posttime));
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            if (datas.size()==0){
-                String imageUrl = UrlUtils.getimageurl(url,false);
-                datas.add(new ChatListData(0,imageUrl,"给我发消息吧","刚刚"));
-            }
-            adapter.notifyDataSetChanged();
-            refreshLayout.setRefreshing(false);
-        }
-
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         if (id == android.R.id.home) {
             finish();
-            return true;
+
         }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void refresh(){
-
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        });
-
-        datas.clear();
-        adapter.notifyDataSetChanged();
-        getData();
-    }
-
-    private void hide_ime(){
-        // Check if no view has focus:
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
-    private void post_reply(String text){
-
-        if(text.isEmpty()){
-            Toast.makeText(getApplicationContext(),"你还没有输入内容！！！",Toast.LENGTH_SHORT).show();
-        }else {
-
-            final ProgressDialog progress;
-            progress = ProgressDialog.show(this, "正在发送", "请等待", true);
-
-            Map<String,String> params = new HashMap<>();
-            params.put("formhash", MyPublicData.FORMHASH);
-            params.put("touid",touid);
-            params.put("message", text);
-
-            HttpUtil.post(getApplicationContext(), replyUrl, params, new ResponseHandler() {
-                @Override
-                public void onSuccess(byte[] response) {
-                    String res = new String(response);
-                    if (res.contains("操作成功")) {
-                        send_success();
-                        hide_ime();
-                        progress.dismiss();
-                    } else {
-                        progress.dismiss();
-                        if(res.contains("两次发送短消息太快")){
-                            Toast.makeText(getApplicationContext(),"两次发送短消息太快，请稍候再发送",Toast.LENGTH_SHORT).show();
-                        }else{
-                            Toast.makeText(getApplicationContext(), "由于未知原因发表失败", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable e) {
-                    Toast.makeText(getApplicationContext(), "网络错误！！！", Toast.LENGTH_SHORT).show();
-                    progress.dismiss();
-                }
-            });
-        }
-    }
-
-    private void send_success(){
-        //http://rs.xidian.edu.cn/ucenter/avatar.php?uid=252553&size=small
-        String userImage = MyPublicData.BASE_URL +"ucenter/avatar.php?uid="+ MyPublicData.USER_UID +"&size=small";
-        datas.add(new ChatListData(1,userImage,input_aera.getText().toString(),"刚刚"));
-        input_aera.setText("");
-        adapter.notifyItemInserted(datas.size()-1);
-        smiley_container.setVisibility(View.GONE);
-        Toast.makeText(getApplicationContext(),"发布成功",Toast.LENGTH_SHORT).show();
+        return true;
     }
 }

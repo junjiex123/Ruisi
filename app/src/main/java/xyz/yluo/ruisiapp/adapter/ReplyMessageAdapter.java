@@ -86,7 +86,7 @@ public class ReplyMessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
             ReplyMessageData single_data =  DataSet.get(getAdapterPosition());
             if(type==1){//用户消息
                 String username = single_data.getTitle().replace("我对 ","").replace("说:","").replace(" 对我","");
-                ChatActivity.open(activity,username,single_data.getTitleUrl(),false);
+                ChatActivity.open(activity,username,single_data.getTitleUrl());
             }else{//回复我的
                 String fid = GetId.getTid(single_data.getTitleUrl());
                 String title = single_data.getcontent();
