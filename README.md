@@ -4,7 +4,11 @@
 
 已经具备基本功能,bug还有很多。
 
-
+##软件截图
+![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/1.jpg)
+![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/2.jpg)
+![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/3.jpg)
+![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/4.jpg)
 
 ##参考和用到的开源库和软件：
 
