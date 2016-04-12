@@ -46,8 +46,6 @@ public class MyHtmlTextView extends TextView implements Html.ImageGetter {
 
     public void mySetText(Activity activity, String text) {
         this.activity = activity;
-//        Spanned spanned = Html.fromHtml(text, this, null);
-//        super.setText(spanned);
         super.setText(getClickableHtml(text,this));
         setMovementMethod(LinkMovementMethod.getInstance());
         setLinkTextColor(0xff529ECC);
@@ -75,9 +73,8 @@ public class MyHtmlTextView extends TextView implements Html.ImageGetter {
         int flags = clickableHtmlBuilder.getSpanFlags(urlSpan);
         ClickableSpan clickableSpan = new ClickableSpan() {
             public void onClick(View view) {
-                System.out.println("link click"+urlSpan.getURL());
+                System.out.println("===link click==="+urlSpan.getURL());
                 HandleLinkClick.handleClick(activity,urlSpan.getURL());
-
             }
         };
         clickableHtmlBuilder.setSpan(clickableSpan, start, end, flags);

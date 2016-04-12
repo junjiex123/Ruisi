@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -377,7 +378,11 @@ public class SingleArticleActivity extends BaseActivity
             }
             int start = mydatalist.size();
             mydatalist.addAll(tepdata);
-            String indexs= mydatalist.get(mydatalist.size()-1).getIndex();
+            String indexs ="0";
+            if(mydatalist.size()>1){
+                indexs= mydatalist.get(mydatalist.size()-1).getIndex();
+            }
+
             int a = GetIndex.getIndex(indexs);
             CURRENT_PAGE = (a+9)/10;
             mRecyleAdapter.notifyItemRangeInserted(start, tepdata.size());
@@ -399,12 +404,15 @@ public class SingleArticleActivity extends BaseActivity
             if(isNeedLoginDialog()){
                 show_ime();
             }
+            //回复层主
         }else if(v.getId()==R.id.btn_reply_2){
             if(isNeedLoginDialog()){
-                String replyUrl = mydatalist.get(position).getReplyUrlTitle();
-                String replyIndex = mydatalist.get(position).getIndex();
-                String replyName = mydatalist.get(position).getUsername();
-                ReplyCen(replyUrl,replyIndex,replyName);
+                SingleArticleData single = mydatalist.get(position);
+                String replyUrl = single.getReplyUrlTitle();
+                String replyIndex = single.getIndex();
+                String replyName = single.getUsername();
+                String  ref = Jsoup.parse(single.getCotent()).text();
+                ReplyCen(replyUrl,replyIndex,replyName,ref);
             }
         }
         if(position==mydatalist.size()){
@@ -479,11 +487,12 @@ public class SingleArticleActivity extends BaseActivity
     }
 
     //回复层主
-    private void ReplyCen(String url,String index,String name){
+    private void ReplyCen(String url,String index,String name,String ref){
         ReplyDialog fragment = new ReplyDialog();
         fragment.setTitle("回复:"+index+" "+name);
         fragment.setUrl(url);
         fragment.setLasttime(replyTime);
+        fragment.setReply_ref(ref);
         fragment.show(getFragmentManager(),"reply");
     }
 

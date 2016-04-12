@@ -13,6 +13,7 @@ import android.widget.TextView;
 import java.io.UnsupportedEncodingException;
 
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.utils.ArrowTextView;
 
 /**
  * Created by free2 on 16-3-14.
@@ -22,10 +23,12 @@ import xyz.yluo.ruisiapp.R;
 public class ReplyDialog extends DialogFragment{
 
     private EditText content;
+    private ArrowTextView reply_ref;
     private long lasttime = 0;
 
     private String title = "回复";
     private String url = "";
+    private String reply_ref_text;
     private ReplyDialogListener dialogListener;
 
     @Override
@@ -42,6 +45,12 @@ public class ReplyDialog extends DialogFragment{
         builder.setTitle(title);
 
         content = (EditText) view.findViewById(R.id.reply_content);
+        reply_ref = (ArrowTextView) view.findViewById(R.id.reply_ref);
+        if(reply_ref_text==null){
+            reply_ref.setVisibility(View.GONE);
+        }else {
+            reply_ref.setText(reply_ref_text);
+        }
         TextView btn_cancel = (TextView) view.findViewById(R.id.btn_cancel);
         TextView btn_send = (TextView) view.findViewById(R.id.btn_send);
 
@@ -111,5 +120,9 @@ public class ReplyDialog extends DialogFragment{
             content.setError("还没到15s呢");
             return false;
         }
+    }
+
+    public void setReply_ref(String reply_ref_text) {
+        this.reply_ref_text = reply_ref_text;
     }
 }

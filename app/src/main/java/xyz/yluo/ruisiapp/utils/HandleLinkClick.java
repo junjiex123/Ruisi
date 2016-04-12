@@ -15,6 +15,7 @@ import xyz.yluo.ruisiapp.activity.UserDetailActivity;
  */
 public class HandleLinkClick {
     public static void handleClick(Context context, String url){
+        System.out.println("link"+url);
         //点击了图片
         if(url.contains("from=album")){
             //do nothing
@@ -30,6 +31,7 @@ public class HandleLinkClick {
         }else if(url.contains("member.php?mod=logging&action=login")) {//登陆
             LoginActivity.open(context);
         }else{
+            System.out.println("request b"+url);
             RequestOpenBrowser.openBroswer(context, MyPublicData.BASE_URL +url);
         }
     }
