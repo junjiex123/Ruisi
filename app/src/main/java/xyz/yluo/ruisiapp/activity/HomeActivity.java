@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +22,6 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.fragment.FragementSimpleList;
@@ -48,12 +48,15 @@ public class HomeActivity extends BaseActivity
     protected DrawerLayout drawer;
     @Bind(R.id.nav_view)
     protected NavigationView navigationView;
-
+    @Bind(R.id.bottom_nav)
+    protected RadioGroup bottom_nav;
     private ActionBar actionBar;
     private ActionBarDrawerToggle toggle;
     private int clickId = 0;
     private CircleImageView userImge;
     private long mExitTime;
+    private FragmentManager manager;
+    private FragmentTransaction transaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +65,14 @@ public class HomeActivity extends BaseActivity
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
+        manager = getFragmentManager();
 
         init();
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-
-        btn_1_click();
+        //btn_1_click();
+        bottom_nav.check(R.id.btn_1);
         checkIsLoginView();
     }
 
@@ -139,47 +143,46 @@ public class HomeActivity extends BaseActivity
             }
         });
 
-        checkIsLoginView();
-    }
+        bottom_nav.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                boolean isNeed = false;
+                String title = "首页";
+                Fragment fragment;
+                transaction= manager.beginTransaction();
+                switch (i){
+                    case R.id.btn_2:
+                        isNeed = true;
+                        title = "看帖";
+                        fragment = new FragementSimpleList();
+                        transaction.replace(R.id.fragment_container, fragment,"main_fra");
+                        break;
+                    case R.id.btn_3:
+                        if(islogin_dialog()){
+                            isNeed = true;
+                            title = "我";
+                            fragment = new FragementUser();
+                            transaction.replace(R.id.fragment_container, fragment,"main_fra");
+                        }
+                        break;
+                    default:
+                        isNeed = true;
+                        title = "首页";
+                        fragment = new HomeFormList();
+                        transaction.replace(R.id.fragment_container, fragment,"main_fra");
+                        break;
+                }
+                if(isNeed){
+                    transaction.commit();
+                }
 
-
-    @OnClick(R.id.btn_1)
-        protected void btn_1_click(){
-        if(actionBar!=null){
-            actionBar.setTitle("板块");
-        }
-        Fragment fragment1 = new HomeFormList();
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment1);
-        transaction.commit();
-    }
-    @OnClick(R.id.btn_2)
-    protected void btn_2_click(){
-        if(actionBar!=null){
-            actionBar.setTitle("新帖");
-        }
-        Fragment fragment2 = new FragementSimpleList();
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment2);
-        transaction.commit();
-
-    }
-
-    @OnClick(R.id.btn_3)
-    protected void btn_3_click(){
-        if(islogin_dialog()){
-            if(actionBar!=null){
-                actionBar.setTitle(PublicData.USER_NAME);
+                if(actionBar!=null){
+                    actionBar.setTitle(title);
+                }
             }
-            Fragment fragment3 = new FragementUser();
-            FragmentManager manager = getFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            transaction.replace(R.id.fragment_container, fragment3);
-            transaction.commit();
-        }
+        });
 
+        checkIsLoginView();
     }
 
     @Override
@@ -194,12 +197,6 @@ public class HomeActivity extends BaseActivity
                 finish();
             }
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home, menu);
-        return true;
     }
 
     @Override
@@ -239,6 +236,12 @@ public class HomeActivity extends BaseActivity
             dialogFragment.show(getFragmentManager(), "needlogin");
         }
         return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+        return true;
     }
 
     //登陆页面返回结果

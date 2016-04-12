@@ -24,13 +24,12 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/actionBarHeight"
             android:background="@color/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" >
-
 
         </android.support.v7.widget.Toolbar>
 
@@ -57,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"/>
         <RadioGroup
-            android:checkedButton="@+id/btn_1"
+            android:id="@+id/bottom_nav"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal"
@@ -84,7 +83,7 @@
                 android:gravity="center"
                 android:button="@null"
                 android:id="@+id/btn_2"
-                android:text="新帖"
+                android:text="看帖"
                 android:background = "?attr/selectableItemBackgroundBorderless"
                 android:drawableTop="@drawable/selector_home_nav_new"
                 android:layout_width = "wrap_content"
@@ -115,9 +114,7 @@
                 android:paddingLeft = "12dp"
                 android:paddingRight = "12dp"
                 android:textAllCaps = "false" />
-
         </RadioGroup>
-
     </LinearLayout>
 
 

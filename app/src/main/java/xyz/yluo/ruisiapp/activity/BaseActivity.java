@@ -32,6 +32,6 @@ public class BaseActivity extends AppCompatActivity{
         if (id==R.id.new_topic){
             startActivity(new Intent(getApplicationContext(),NewArticleActivity_2.class));
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 }

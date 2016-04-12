@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -14,6 +16,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ArticleListImageAdapter;
 import xyz.yluo.ruisiapp.data.ImageArticleListData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
@@ -28,6 +31,9 @@ public class ArticleListImageActivity extends ArticleListBaseActivity{
 
     private List<ImageArticleListData> mydatasetnormal;
     private ArticleListImageAdapter adapter;
+    private StaggeredGridLayoutManager layoutManager;
+    private int colNum = 2;
+
     public static void open(Context context, int fid, String title){
         Intent intent = new Intent(context, ArticleListImageActivity.class);
         CurrentFid = fid;
@@ -41,10 +47,12 @@ public class ArticleListImageActivity extends ArticleListBaseActivity{
 
         actionBar.setTitle(CurrentTitle);
         mydatasetnormal =  new ArrayList<>();
-        mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        layoutManager = new StaggeredGridLayoutManager(colNum,StaggeredGridLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
         adapter = new ArticleListImageAdapter(this,mydatasetnormal);
         mRecyclerView.setAdapter(adapter);
+
+        refreshLayout.setEnabled(false);
     }
 
 
@@ -108,5 +116,25 @@ public class ArticleListImageActivity extends ArticleListBaseActivity{
             refreshLayout.setRefreshing(false);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_article_image_list, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.menu_change_col){
+            if(colNum==1){
+                colNum =2;
+                layoutManager.setSpanCount(2);
+            }else {
+                colNum =1;
+                layoutManager.setSpanCount(1);
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -31,7 +31,7 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 
 /**
  * Created by free2 on 16-3-19.
- * 简单的fragment
+ * 简单的fragment 首页第二页
  */
 public class FragementSimpleList extends Fragment implements LoadMoreListener.OnLoadMoreListener{
 
@@ -57,16 +57,10 @@ public class FragementSimpleList extends Fragment implements LoadMoreListener.On
         recycler_view.setAdapter(adapter);
         recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 10));
 
-        //刷新
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {
-                refreshLayout.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout.setRefreshing(true);
-                    }
-                });
+                refreshLayout.setRefreshing(true);
             }
         });
 
@@ -74,19 +68,21 @@ public class FragementSimpleList extends Fragment implements LoadMoreListener.On
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mydatasetnormal.clear();
-                adapter.notifyDataSetChanged();
-                CurrentPage= 1 ;
-                isEnableLoadMore = false;
-                getData();
+                refresh();
             }
         });
 
         getData();
-
         return view;
     }
 
+    private void refresh(){
+        mydatasetnormal.clear();
+        adapter.notifyDataSetChanged();
+        CurrentPage= 1 ;
+        isEnableLoadMore = false;
+        getData();
+    }
     @Override
     public void onLoadMore() {
         if(isEnableLoadMore){
@@ -96,12 +92,8 @@ public class FragementSimpleList extends Fragment implements LoadMoreListener.On
         }
     }
 
-
     private void getData(){
-
-        //TODO hot
         String url = "forum.php?mod=guide&view=new&page="+CurrentPage+"&mobile=2";
-
         HttpUtil.get(getActivity(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
