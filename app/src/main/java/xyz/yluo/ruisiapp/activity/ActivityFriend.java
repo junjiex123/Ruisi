@@ -3,10 +3,14 @@ package xyz.yluo.ruisiapp.activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -99,5 +103,17 @@ public class ActivityFriend extends BaseActivity{
             super.onPostExecute(s);
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_friend, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
 
 }

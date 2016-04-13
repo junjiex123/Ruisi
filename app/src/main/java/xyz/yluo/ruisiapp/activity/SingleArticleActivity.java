@@ -216,7 +216,6 @@ public class SingleArticleActivity extends BaseActivity
     //跳页确认点击回调
     @Override
     public void JumpComfirmClick(DialogFragment dialog, int page) {
-        Toast.makeText(this,"被电击"+page,Toast.LENGTH_SHORT).show();
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {

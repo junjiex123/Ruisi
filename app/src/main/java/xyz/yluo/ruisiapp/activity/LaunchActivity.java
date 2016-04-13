@@ -73,7 +73,7 @@ public class LaunchActivity extends BaseActivity{
     }
 
     private void canGetRs(int type,String res){
-        String url = UrlUtils.getLoginUrl(true);
+        String url = UrlUtils.getLoginUrl(false);
         if(type==TYPE_INNER){
             PublicData.IS_SCHOOL_NET = true;
             PublicData.BASE_URL = UrlUtils.getBaseUrl(true);
