@@ -36,7 +36,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
-            android:textColor="@color/colorAuthor"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="12sp"
             android:singleLine="true"
             android:text="some"/>
@@ -67,6 +67,6 @@
     </LinearLayout>
 
     <View style="@style/DeepLine"
-        android:layout_marginTop="@dimen/dimen_8"
+        android:layout_marginTop="12dp"
         android:layout_gravity="bottom" />
 </LinearLayout>

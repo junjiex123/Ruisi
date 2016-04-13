@@ -10,11 +10,14 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -54,8 +57,6 @@ public class FragementFormList extends Fragment{
     private List<FroumListData> datas = new ArrayList<>();
     @Bind(R.id.search_input)
     protected EditText search_input;
-    @Bind(R.id.main_window)
-    protected CoordinatorLayout main_window;
 
 
     @Nullable
@@ -86,7 +87,6 @@ public class FragementFormList extends Fragment{
 
         refreshLayout.setProgressViewOffset(true,150,200);
 
-
         //刷新
         refreshLayout.post(new Runnable() {
             @Override
@@ -103,6 +103,18 @@ public class FragementFormList extends Fragment{
                 datas.clear();
                 forumListAdapter.notifyDataSetChanged();
                 getData();
+            }
+        });
+
+        search_input.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                boolean handled = false;
+                if (i == EditorInfo.IME_ACTION_SEARCH) {
+                    start_search_click();
+                    handled = true;
+                }
+                return handled;
             }
         });
 

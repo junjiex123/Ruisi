@@ -50,6 +50,9 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
         mydatasetnormal = new ArrayList<>();
         mLayoutManager = new LinearLayoutManager(this);
         mRecyleAdapter = new ArticleListNormalAdapter(this, mydatasetnormal,0);
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mRecyleAdapter);
         //加载更多

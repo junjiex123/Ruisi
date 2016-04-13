@@ -1,10 +1,7 @@
 package xyz.yluo.ruisiapp.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -20,8 +17,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.checknet.CheckNet;
+import xyz.yluo.ruisiapp.checknet.CheckNetResponse;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
-import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
@@ -35,8 +34,8 @@ public class LaunchActivity extends BaseActivity{
 
     @Bind(R.id.progressBar)
     protected ProgressBar progressBar;
-    private final int TYPE_INNER = 0;
-    private final int TYPE_OUTER = 1;
+    private final int TYPE_INNER = 1;
+    private final int TYPE_OUTER = 2;
     private long starttime = 0;
 
     @Override
@@ -46,10 +45,15 @@ public class LaunchActivity extends BaseActivity{
         ButterKnife.bind(this);
         starttime = System.currentTimeMillis();
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getSetting();
-        checkNetWork();
-    }
 
+        getSetting();
+        new CheckNet(this).startCheck(new CheckNetResponse() {
+            @Override
+            public void onFinish(int type, String response) {
+                canGetRs(type,response);
+            }
+        });
+    }
 
     //从首选项读出设置
     private void getSetting(){
@@ -68,97 +72,52 @@ public class LaunchActivity extends BaseActivity{
         }
     }
 
-    //检测网络状态 有无/校园网/外网
-    private void checkNetWork(){
-        Context context = getApplicationContext();
-        // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
-        ConnectivityManager conMgr = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();
-        if (activeNetwork != null && activeNetwork.isConnected()) {
-            //wifi 先检查校园网
-            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
-                checkInner();
-            }else {
-                checkOuter();
-            }
-        }
-        else {
+    private void canGetRs(int type,String res){
+        String url = UrlUtils.getLoginUrl(true);
+        if(type==TYPE_INNER){
+            PublicData.IS_SCHOOL_NET = true;
+            PublicData.BASE_URL = UrlUtils.getBaseUrl(true);
+            checklogin(url);
+        }else if(TYPE_OUTER==type){
+            url = UrlUtils.getLoginUrl(false);
+            PublicData.BASE_URL = UrlUtils.getBaseUrl(false);
+            PublicData.IS_SCHOOL_NET = false;
+            checklogin(url);
+        }else{
             noNetWork();
         }
     }
 
-    private void canGetRs(int type,String res){
-        if(type==TYPE_INNER){
-            PublicData.IS_SCHOOL_NET = true;
-            PublicData.BASE_URL = UrlUtils.getBaseUrl(true);
-        }else{
-            Toast.makeText(getApplicationContext(),"已经切换到外网",Toast.LENGTH_SHORT).show();
-            PublicData.BASE_URL = UrlUtils.getBaseUrl(false);
-            PublicData.IS_SCHOOL_NET = false;
+    private void checklogin(String url){
+        HttpUtil.get(this, url, new TextResponseHandler() {
+            @Override
+            public void onSuccess(String res) {
+                PublicData.ISLOGIN = false;
+                if (res.contains("loginbox")) {
+                    PublicData.ISLOGIN = false;
+                } else {
+                    Document doc = Jsoup.parse(res);
+                    PublicData.USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
+                    String url = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").attr("href");
+                    PublicData.USER_UID = GetId.getUid(url);
+                    PublicData.ISLOGIN = true;
+                }
+            }
+            @Override
+            public void onFinish() {
+                finishthis();
+            }
+        });
 
-        }
-        checklogin(res);
-    }
 
-    private void rsError(){
-        Toast.makeText(getApplicationContext(),"睿思有可能崩了，或者你的网络状态不好，等等再试试",Toast.LENGTH_SHORT).show();
     }
     //没网是执行
     private void noNetWork(){
-        Toast.makeText(getApplicationContext(),"没网,请打开网络连接",Toast.LENGTH_SHORT).show();
-    }
-
-    private void checklogin(String res){
-        PublicData.ISLOGIN = false;
-        if (res.contains("loginbox")) {
-            PublicData.ISLOGIN = false;
-        } else {
-            Document doc = Jsoup.parse(res);
-            PublicData.USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
-            String url = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").attr("href");
-            PublicData.USER_UID = GetId.getUid(url);
-            PublicData.ISLOGIN = true;
-        }
-
-        finishthis();
-
-    }
-
-    private void checkOuter(){
-        final String url = UrlUtils.getLoginUrl(false);
-        PublicData.BASE_URL = UrlUtils.getBaseUrl(false);
-        HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
-            @Override
-            public void onSuccess(byte[] response) {
-                canGetRs(TYPE_OUTER, new String(response));
-            }
-
-            @Override
-            public void onFailure(Throwable e) {
-                rsError();
-            }
-        });
-    }
-
-    private void checkInner(){
-        final String url = UrlUtils.getLoginUrl(false);
-        PublicData.BASE_URL = UrlUtils.getBaseUrl(true);
-        HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
-            @Override
-            public void onSuccess(byte[] response) {
-                canGetRs(TYPE_INNER, new String(response));
-            }
-
-            @Override
-            public void onFailure(Throwable e) {
-                checkOuter();
-            }
-        });
+        Toast.makeText(getApplicationContext(),"无法连接到服务器请检查网络设置！",Toast.LENGTH_SHORT).show();
     }
 
     private void finishthis(){
         long currenttime = System.currentTimeMillis();
-
         long delay = 1500-(currenttime-starttime);
         if(delay<0){
             delay = 0;

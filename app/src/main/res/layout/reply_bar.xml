@@ -23,13 +23,13 @@
             android:contentDescription="@null"
             android:src="@drawable/ic_edit_emoticon_24dp" />
         <EditText
-            android:hint="回复楼主"
+            android:hint="回复"
             android:id="@+id/input_aera"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/reply_edittext_background"
-            android:maxLines="3"/>
+            android:maxLines="3" />
 
         <ImageButton
             android:layout_gravity="bottom|end"

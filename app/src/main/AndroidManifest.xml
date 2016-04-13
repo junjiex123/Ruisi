@@ -94,6 +94,12 @@
             android:theme="@style/AppTheme">
         </activity>
 
+        <receiver android:name=".checknet.NetworkReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

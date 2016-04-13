@@ -47,6 +47,7 @@ public class ActivityFriend extends BaseActivity{
 
         datas = new ArrayList<>();
         adapter = new FriendAdapter(datas,this);
+        recycler_view.setHasFixedSize(true);
         recycler_view.setLayoutManager(new LinearLayoutManager(this));
         recycler_view.setAdapter(adapter);
 
@@ -54,7 +55,6 @@ public class ActivityFriend extends BaseActivity{
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
 
         String url = "home.php?mod=space&do=friend&mobile=2";
         new GetDataTask(url,1).execute();
