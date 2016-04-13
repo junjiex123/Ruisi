@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.utils;
+package xyz.yluo.ruisiapp.View;
 
 import android.app.Activity;
 import android.content.Context;
@@ -22,6 +22,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.utils.HandleLinkClick;
 
 /**
  * Created by free2 on 16-3-31.

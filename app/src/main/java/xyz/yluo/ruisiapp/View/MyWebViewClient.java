@@ -1,8 +1,10 @@
-package xyz.yluo.ruisiapp.utils;
+package xyz.yluo.ruisiapp.View;
 
 import android.content.Context;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import xyz.yluo.ruisiapp.utils.HandleLinkClick;
 
 
 public class MyWebViewClient extends WebViewClient {

@@ -24,18 +24,18 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.fragment.FragementSimpleList;
+import xyz.yluo.ruisiapp.View.CircleImageView;
+import xyz.yluo.ruisiapp.View.NeedLoginDialogFragment;
+import xyz.yluo.ruisiapp.fragment.FragementFormList;
+import xyz.yluo.ruisiapp.fragment.FragementSimpleArticle;
 import xyz.yluo.ruisiapp.fragment.FragementUser;
-import xyz.yluo.ruisiapp.fragment.HomeFormList;
-import xyz.yluo.ruisiapp.fragment.NeedLoginDialogFragment;
-import xyz.yluo.ruisiapp.utils.CircleImageView;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-17.
  * 这是首页 管理3个fragment
  * 1.板块列表{@link HomeActivity}
- * 2.新帖{@link FragementSimpleList}
+ * 2.新帖{@link FragementSimpleArticle}
  * 3.我{@link FragementUser}
  *
  */
@@ -154,7 +154,7 @@ public class HomeActivity extends BaseActivity
                     case R.id.btn_2:
                         isNeed = true;
                         title = "看帖";
-                        fragment = new FragementSimpleList();
+                        fragment = new FragementSimpleArticle();
                         transaction.replace(R.id.fragment_container, fragment,"main_fra");
                         break;
                     case R.id.btn_3:
@@ -168,7 +168,7 @@ public class HomeActivity extends BaseActivity
                     default:
                         isNeed = true;
                         title = "首页";
-                        fragment = new HomeFormList();
+                        fragment = new FragementFormList();
                         transaction.replace(R.id.fragment_container, fragment,"main_fra");
                         break;
                 }
@@ -228,7 +228,6 @@ public class HomeActivity extends BaseActivity
 
     //判断是否需要弹出登录dialog
     private boolean islogin_dialog(){
-
         if(PublicData.ISLOGIN){
             return true;
         }else{

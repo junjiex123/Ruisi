@@ -15,12 +15,13 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.ArrowTextView;
+import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.activity.ChatActivity;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
+import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.ReplyMessageData;
-import xyz.yluo.ruisiapp.utils.ArrowTextView;
-import xyz.yluo.ruisiapp.utils.CircleImageView;
 import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
@@ -29,13 +30,11 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * 回复我的 我的消息
  */
 public class ReplyMessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
-
-    //数据
     private List<ReplyMessageData> DataSet;
     protected Activity activity;
-    private int type; //0回复我的 //1我的消息
+    private ListType type;
 
-    public ReplyMessageAdapter(Activity activity, List<ReplyMessageData> dataSet, int type) {
+    public ReplyMessageAdapter(ListType type, Activity activity, List<ReplyMessageData> dataSet) {
         DataSet = dataSet;
         this.activity = activity;
         this.type = type;
@@ -57,7 +56,7 @@ public class ReplyMessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
     }
 
 
-    //用户消息holder //回复我的
+    //用户消息、回复我的 holder
     protected class MessageReplyListHolder extends BaseViewHolder{
         @Bind(R.id.title)
         protected TextView title;
@@ -85,10 +84,10 @@ public class ReplyMessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         @OnClick(R.id.main_item_btn_item)
         protected void main_item_btn_item_click(){
             ReplyMessageData single_data =  DataSet.get(getAdapterPosition());
-            if(type==1){//用户消息
+            if(ListType.MYMESSAGE==type){//用户消息
                 String username = single_data.getTitle().replace("我对 ","").replace("说:","").replace(" 对我","");
                 ChatActivity.open(activity,username,single_data.getTitleUrl());
-            }else{//回复我的
+            }else if(ListType.REPLAYME==type){//回复我的
                 String fid = GetId.getTid(single_data.getTitleUrl());
                 String title = single_data.getcontent();
                 SingleArticleActivity.open(activity,fid,title);

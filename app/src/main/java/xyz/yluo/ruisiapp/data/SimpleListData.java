@@ -5,7 +5,6 @@ package xyz.yluo.ruisiapp.data;
  *
  */
 public class SimpleListData {
-
     private String key;
     private String value;
     private String extradata;

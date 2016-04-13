@@ -42,7 +42,7 @@
                     android:textSize="22sp"
                     android:text="欢迎来到签到中心"/>
 
-                <xyz.yluo.ruisiapp.utils.CircleImageView
+                <xyz.yluo.ruisiapp.View.CircleImageView
                     android:id="@+id/user_image"
                     android:layout_marginTop="@dimen/dimen_16"
                     android:src="@drawable/image_placeholder"

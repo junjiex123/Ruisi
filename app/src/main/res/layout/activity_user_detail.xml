@@ -37,7 +37,7 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="80dp"
                 android:gravity="center_horizontal">
-                <xyz.yluo.ruisiapp.utils.CircleImageView
+                <xyz.yluo.ruisiapp.View.CircleImageView
                     android:id="@+id/user_detail_img_avatar"
                     android:layout_width="96dp"
                     android:layout_height="96dp"

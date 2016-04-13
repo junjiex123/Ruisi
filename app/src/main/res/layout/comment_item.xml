@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <xyz.yluo.ruisiapp.utils.CircleImageView
+        <xyz.yluo.ruisiapp.View.CircleImageView
             app:civ_border_color="@android:color/white"
             app:civ_border_width="1dp"
             android:id="@+id/article_user_image"
@@ -92,7 +92,7 @@
     </LinearLayout>
 
 
-    <xyz.yluo.ruisiapp.utils.MyHtmlTextView
+    <xyz.yluo.ruisiapp.View.MyHtmlTextView
         android:textColor="?android:attr/textColorPrimary"
         android:autoLink="web"
         android:layout_marginStart="44dp"

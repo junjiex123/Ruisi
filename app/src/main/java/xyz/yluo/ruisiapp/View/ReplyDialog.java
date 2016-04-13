@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.fragment;
+package xyz.yluo.ruisiapp.View;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -13,7 +13,6 @@ import android.widget.TextView;
 import java.io.UnsupportedEncodingException;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.utils.ArrowTextView;
 
 /**
  * Created by free2 on 16-3-14.

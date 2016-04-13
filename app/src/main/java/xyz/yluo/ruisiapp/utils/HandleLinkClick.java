@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.View.MyHtmlTextView;
+import xyz.yluo.ruisiapp.View.MyWebView;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.NewArticleActivity_2;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;

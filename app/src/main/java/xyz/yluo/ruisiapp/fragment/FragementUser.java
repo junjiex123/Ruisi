@@ -16,7 +16,7 @@ import xyz.yluo.ruisiapp.R;
 
 /**
  * Created by free2 on 16-3-19.
- * 首页第三页fragement 管理4个页面 2个fragemnt
+ * 首页第三页fragement 管理4个页面
  *
  */
 public class FragementUser extends Fragment{
@@ -30,18 +30,15 @@ public class FragementUser extends Fragment{
         View view = inflater.inflate(R.layout.fragment_me, container, false);
         ButterKnife.bind(this, view);
 
-        mytab.addTab(mytab.newTab().setText("回复我的"));
+        mytab.addTab(mytab.newTab().setText("最新回复"));
         mytab.addTab(mytab.newTab().setText("我的主题"));
         mytab.addTab(mytab.newTab().setText("私人消息"));
         mytab.addTab(mytab.newTab().setText("我的收藏"));
         uid = PublicData.USER_UID;
 
-
-
         mytab.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                //changeRecyclerViewData(mytab.getSelectedTabPosition());
                 changeFrageMent(tab.getPosition());
             }
             @Override
@@ -54,9 +51,7 @@ public class FragementUser extends Fragment{
         return view;
     }
 
-
     private void changeFrageMent(int position){
-
         //回复我的
         String url0 ="home.php?mod=space&do=notice&mobile=2";
         //主题
@@ -68,16 +63,16 @@ public class FragementUser extends Fragment{
         Fragment fragment  = null;
         switch (position){
             case 0:
-                fragment = FragementMessageReply.newInstance(0,url0);
+                fragment = FragementReplyMe.newInstance(url0);
                 break;
             case 1:
-                fragment= FragementArticlestar.newInstance(0,url1);
+                fragment= FragementMyArticle.newInstance(url1);
                 break;
             case 2:
-                fragment = FragementMessageReply.newInstance(1,url2);
+                fragment = FragementMyMessage.newInstance(url2);
                 break;
             case 3:
-                fragment= FragementArticlestar.newInstance(1,url3);
+                fragment= FragementMyStar.newInstance(url3);
                 break;
         }
         FragmentManager manager = getFragmentManager();

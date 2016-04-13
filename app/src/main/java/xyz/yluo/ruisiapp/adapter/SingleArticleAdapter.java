@@ -18,13 +18,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.CircleImageView;
+import xyz.yluo.ruisiapp.View.MyHtmlTextView;
+import xyz.yluo.ruisiapp.View.MyWebView;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
 import xyz.yluo.ruisiapp.data.SingleType;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
-import xyz.yluo.ruisiapp.utils.CircleImageView;
-import xyz.yluo.ruisiapp.utils.MyHtmlTextView;
-import xyz.yluo.ruisiapp.utils.MyWebView;
 
 /**
  * Created by free2 on 16-3-7.

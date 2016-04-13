@@ -28,6 +28,7 @@ import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
+import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.SimpleListData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -47,7 +48,6 @@ public class ActivitySearch extends BaseActivity {
     protected LinearLayout main_window;
     @Bind(R.id.refresh_view)
     protected SwipeRefreshLayout refresh_view;
-
     private SimpleListAdapter adapter;
 
     private ActionBar actionBar;
@@ -60,7 +60,7 @@ public class ActivitySearch extends BaseActivity {
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
 
-        adapter = new SimpleListAdapter(this, datas);
+        adapter = new SimpleListAdapter(ListType.SERRCH,this, datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recycler_view.setLayoutManager(layoutManager);
         recycler_view.setAdapter(adapter);
@@ -155,10 +155,8 @@ public class ActivitySearch extends BaseActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            //chiphell
             Document doc = Jsoup.parse(res);
             Elements body = doc.select("div[class=threadlist]"); // 具有 href 属性的链接
-
             Pair<String,String> temp;
             Elements links = body.select("li");
             for (Element src : links) {

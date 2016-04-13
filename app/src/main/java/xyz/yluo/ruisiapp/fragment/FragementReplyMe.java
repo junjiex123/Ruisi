@@ -10,50 +10,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xyz.yluo.ruisiapp.adapter.ReplyMessageAdapter;
+import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.ReplyMessageData;
 
-//我的消息
 //回复我的
-public class FragementMessageReply extends BaseFragement{
+public class FragementReplyMe extends BaseFragement {
 
     private ReplyMessageAdapter adapter;
     private List<ReplyMessageData> datas;
-
-    //0回复我的 //1消息
-    private static int type;
     private static String url;
 
-    public FragementMessageReply() {
+    public FragementReplyMe() {
         super(url);
         datas = new ArrayList<>();
     }
 
-
-    public static FragementMessageReply newInstance(int type, String url) {
-        FragementMessageReply.type = type;
-        FragementMessageReply.url = url;
-
-        return new FragementMessageReply();
+    public static FragementReplyMe newInstance(String url) {
+        FragementReplyMe.url = url;
+        return new FragementReplyMe();
     }
 
     @Override
     protected void initView() {
-        adapter  = new ReplyMessageAdapter(getActivity(),datas,type);
+        adapter  = new ReplyMessageAdapter( ListType.REPLAYME,getActivity(),datas);
         recycler_view.setAdapter(adapter);
-        if(type==0){
-            currentIndex = 0;
-        }else {
-            currentIndex = 2;
-        }
+        currentIndex = 0;
     }
 
     @Override
     protected void finishGetData(String res) {
-        if(type==0){
-            new GetUserReplyTask(res).execute();
-        }else{
-            new GetUserMessageTask(res).execute();
-        }
+        new GetUserReplyTask(res).execute();
     }
 
     @Override
@@ -98,36 +84,6 @@ public class FragementMessageReply extends BaseFragement{
         protected void onPostExecute(final String res) {
             adapter.notifyDataSetChanged();
             refreshLayout.setRefreshing(false);
-        }
-    }
-
-    //获得消息
-    public class GetUserMessageTask extends AsyncTask<Void, Void, String> {
-
-        private String res;
-        public GetUserMessageTask(String res) {
-            this.res = res;
-        }
-        @Override
-        protected String doInBackground(Void... params) {
-            //pmbox
-            Elements lists = Jsoup.parse(res).select(".pmbox").select("ul").select("li");
-            for(Element tmp:lists){
-                String title = tmp.select(".cl").select(".name").text();
-                String time = tmp.select(".cl.grey").select(".time").text();
-                tmp.select(".cl.grey").select(".time").remove();
-                String content = tmp.select(".cl.grey").text();
-                String authorImage = tmp.select("img").attr("src");
-                String titleUrl =tmp.select("a").attr("href");
-                datas.add(new ReplyMessageData(title,titleUrl,authorImage,time,content));
-            }
-            return "";
-        }
-
-        @Override
-        protected void onPostExecute(final String res) {
-            refreshLayout.setRefreshing(false);
-            adapter.notifyDataSetChanged();
         }
     }
 }

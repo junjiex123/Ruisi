@@ -19,7 +19,7 @@ import org.json.JSONObject;
 
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.fragment.NewVersionDialog;
+import xyz.yluo.ruisiapp.View.NewVersionDialog;
 import xyz.yluo.ruisiapp.httpUtil.AsyncHttpClient;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;

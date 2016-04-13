@@ -33,7 +33,7 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
  * Created by free2 on 16-3-19.
  * 简单的fragment 首页第二页
  */
-public class FragementSimpleList extends Fragment implements LoadMoreListener.OnLoadMoreListener{
+public class FragementSimpleArticle extends Fragment implements LoadMoreListener.OnLoadMoreListener{
 
     @Bind(R.id.recycler_view)
     protected RecyclerView recycler_view;

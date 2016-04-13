@@ -8,7 +8,7 @@
     android:paddingBottom="@dimen/dimen_4"
     android:paddingStart="@dimen/dimen_16"
     android:paddingEnd="@dimen/dimen_16">
-    <xyz.yluo.ruisiapp.utils.ArrowTextView
+    <xyz.yluo.ruisiapp.View.ArrowTextView
         android:id="@+id/reply_ref"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"

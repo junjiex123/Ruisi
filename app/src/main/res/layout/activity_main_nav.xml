@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <xyz.yluo.ruisiapp.utils.CircleImageView
+        <xyz.yluo.ruisiapp.View.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/profile_image"
             android:layout_width="85dp"

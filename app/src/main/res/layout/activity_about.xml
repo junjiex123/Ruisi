@@ -42,7 +42,7 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <xyz.yluo.ruisiapp.utils.MyWebView
+        <xyz.yluo.ruisiapp.View.MyWebView
             android:layout_margin="@dimen/dimen_16"
             android:background="@android:color/white"
             android:id="@+id/mywebview"

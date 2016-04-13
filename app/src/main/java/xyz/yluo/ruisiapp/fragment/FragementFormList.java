@@ -29,6 +29,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.NeedLoginDialogFragment;
 import xyz.yluo.ruisiapp.activity.ActivitySearch;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
 import xyz.yluo.ruisiapp.data.FroumListData;
@@ -41,7 +42,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * Created by free2 on 16-3-19.
  * 板块列表fragemnt
  */
-public class HomeFormList extends Fragment{
+public class FragementFormList extends Fragment{
 
     @Bind(R.id.recycler_view)
     protected RecyclerView recycler_view;

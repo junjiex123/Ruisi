@@ -16,10 +16,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.activity.ChatActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.FriendData;
-import xyz.yluo.ruisiapp.utils.CircleImageView;
 
 /**
  * Created by free2 on 16-4-12.

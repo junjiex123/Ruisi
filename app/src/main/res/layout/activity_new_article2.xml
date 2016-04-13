@@ -22,7 +22,7 @@
 
         </android.support.design.widget.AppBarLayout>
 
-    <xyz.yluo.ruisiapp.utils.MyWebView
+    <xyz.yluo.ruisiapp.View.MyWebView
         android:layout_marginTop="?attr/actionBarSize"
         android:id="@+id/mwebView"
         android:layout_width="match_parent"

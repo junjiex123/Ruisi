@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.fragment;
+package xyz.yluo.ruisiapp.View;
 
 import android.app.Dialog;
 import android.app.DialogFragment;

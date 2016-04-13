@@ -38,7 +38,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <xyz.yluo.ruisiapp.utils.CircleImageView
+        <xyz.yluo.ruisiapp.View.CircleImageView
             app:civ_border_width="1dp"
             app:civ_border_color="@android:color/white"
             android:id="@+id/article_user_image"
@@ -97,13 +97,13 @@
         </LinearLayout>
 
     </LinearLayout>
-    <xyz.yluo.ruisiapp.utils.MyWebView
+    <xyz.yluo.ruisiapp.View.MyWebView
         android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
         android:id="@+id/content_webView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    </xyz.yluo.ruisiapp.utils.MyWebView>
+    </xyz.yluo.ruisiapp.View.MyWebView>
 
     <LinearLayout
         android:layout_marginTop="@dimen/dimen_4"

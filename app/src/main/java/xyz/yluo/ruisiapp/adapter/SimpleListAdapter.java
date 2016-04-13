@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,25 +14,30 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
+import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.SimpleListData;
 import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-4-7.
  * 简单的adapter 比如用户信息
- * 我的收藏 我的帖子等都用这个
+ * 我的收藏 我的帖子,搜索结果
+ * 等都用这个
  *
  */
 public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     private List<SimpleListData> Datas = new ArrayList<>();
     private Activity activity;
+    private ListType type;
 
-    public SimpleListAdapter(Activity activity, List<SimpleListData> datas) {
+    public SimpleListAdapter(ListType type,Activity activity, List<SimpleListData> datas) {
         Datas = datas;
         this.activity = activity;
+        this.type = type;
     }
 
     @Override
@@ -73,7 +79,7 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         }
 
         @OnClick(R.id.main_item_btn_item)
-        protected void main_container_click(){
+        void main_item_click(){
             SimpleListData single_data =  Datas.get(getAdapterPosition());
             String url = single_data.getExtradata();
             if(!url.equals("")){
@@ -81,6 +87,15 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
                 if(!tid.equals(""))
                     SingleArticleActivity.open(activity,tid,single_data.getKey());
             }
+        }
+
+        @OnLongClick(R.id.main_item_btn_item)
+        boolean main_item_longClick(){
+            SimpleListData single_data =  Datas.get(getAdapterPosition());
+            if(type== ListType.STAR){
+                Toast.makeText(activity.getApplicationContext(),"long",Toast.LENGTH_SHORT).show();
+            }
+            return true;
         }
     }
 

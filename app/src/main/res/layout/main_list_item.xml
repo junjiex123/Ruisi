@@ -47,7 +47,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <xyz.yluo.ruisiapp.utils.CircleImageView
+        <xyz.yluo.ruisiapp.View.CircleImageView
             android:id="@+id/author_img"
             android:layout_width="40dp"
             android:layout_height="40dp"

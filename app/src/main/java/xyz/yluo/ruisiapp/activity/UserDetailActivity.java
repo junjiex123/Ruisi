@@ -35,12 +35,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.CircleImageView;
+import xyz.yluo.ruisiapp.View.ExitLoginDialogFragment;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
+import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.SimpleListData;
-import xyz.yluo.ruisiapp.fragment.ExitLoginDialogFragment;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
-import xyz.yluo.ruisiapp.utils.CircleImageView;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.GetLevel;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -107,7 +108,7 @@ public class UserDetailActivity extends BaseActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle("");
         }
-        adapter = new SimpleListAdapter(this,datas);
+        adapter = new SimpleListAdapter(ListType.INFO,this,datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recycler_view.setLayoutManager(layoutManager);
         recycler_view.setAdapter(adapter);
