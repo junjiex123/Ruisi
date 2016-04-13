@@ -56,7 +56,7 @@ public class HomeActivity extends BaseActivity
     private CircleImageView userImge;
     private long mExitTime;
     private FragmentManager manager;
-    private FragmentTransaction transaction;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,35 +146,27 @@ public class HomeActivity extends BaseActivity
         bottom_nav.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                boolean isNeed = false;
                 String title = "首页";
-                Fragment fragment;
-                transaction= manager.beginTransaction();
+                Fragment fragment = null;
                 switch (i){
                     case R.id.btn_2:
-                        isNeed = true;
                         title = "看帖";
                         fragment = new FragementSimpleArticle();
-                        transaction.replace(R.id.fragment_container, fragment,"main_fra");
                         break;
                     case R.id.btn_3:
                         if(islogin_dialog()){
-                            isNeed = true;
                             title = "我";
                             fragment = new FragementUser();
-                            transaction.replace(R.id.fragment_container, fragment,"main_fra");
                         }
                         break;
                     default:
-                        isNeed = true;
                         title = "首页";
                         fragment = new FragementFormList();
-                        transaction.replace(R.id.fragment_container, fragment,"main_fra");
                         break;
                 }
-                if(isNeed){
-                    transaction.commit();
-                }
+                FragmentTransaction  transaction= manager.beginTransaction();
+                transaction.replace(R.id.fragment_container, fragment,"main_fra");
+                transaction.commit();
 
                 if(actionBar!=null){
                     actionBar.setTitle(title);

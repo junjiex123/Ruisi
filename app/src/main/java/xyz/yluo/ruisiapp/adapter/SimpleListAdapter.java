@@ -93,7 +93,8 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         boolean main_item_longClick(){
             SimpleListData single_data =  Datas.get(getAdapterPosition());
             if(type== ListType.STAR){
-                Toast.makeText(activity.getApplicationContext(),"long",Toast.LENGTH_SHORT).show();
+                //TODO 收藏长安取消收藏
+                //Toast.makeText(activity.getApplicationContext(),"long",Toast.LENGTH_SHORT).show();
             }
             return true;
         }
