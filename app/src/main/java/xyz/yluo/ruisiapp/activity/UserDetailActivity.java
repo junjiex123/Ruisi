@@ -1,6 +1,7 @@
 package xyz.yluo.ruisiapp.activity;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -15,6 +16,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -35,6 +38,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.AddFriendDialog;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.View.ExitLoginDialogFragment;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
@@ -49,16 +53,12 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 用户信息activity
  *
  */
-public class UserDetailActivity extends BaseActivity {
+public class UserDetailActivity extends BaseActivity implements AddFriendDialog.AddFriendListener{
 
     @Bind(R.id.recycler_view)
     protected RecyclerView recycler_view;
     @Bind(R.id.user_detail_img_avatar)
     protected CircleImageView imageView;
-    @Bind(R.id.username)
-    protected TextView usernameView;
-    @Bind(R.id.usergrade)
-    protected TextView usergrade;
     @Bind(R.id.main_window)
     protected CoordinatorLayout layout;
     @Bind(R.id.toolbar)
@@ -67,12 +67,14 @@ public class UserDetailActivity extends BaseActivity {
     protected FloatingActionButton fab;
     @Bind(R.id.progressBar)
     protected ProgressBar progressBar;
+    private ActionBar actionBar;
 
     private List<SimpleListData> datas = new ArrayList<>();
     private SimpleListAdapter adapter;
     private static final String NAME_IMG_AVATAR = "imgAvatar";
     private static String userUid = "";
     private String username = "";
+    private String imageUrl = "";
 
     public static void openWithTransitionAnimation(Activity activity, String username, ImageView imgAvatar, String avatarUrl) {
         Intent intent = new Intent(activity, UserDetailActivity.class);
@@ -98,15 +100,14 @@ public class UserDetailActivity extends BaseActivity {
 
         ViewCompat.setTransitionName(imageView, NAME_IMG_AVATAR);
         username = getIntent().getStringExtra("loginName");
-        usernameView.setText(username);
-        String imageUrl = getIntent().getStringExtra("avatarUrl");
-        Picasso.with(getApplicationContext()).load(imageUrl).placeholder(R.drawable.image_placeholder).into(imageView);
+        imageUrl = getIntent().getStringExtra("avatarUrl");
+        Picasso.with(this).load(imageUrl).placeholder(R.drawable.image_placeholder).into(imageView);
 
         setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
+        actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle("");
+            actionBar.setTitle(username);
         }
         adapter = new SimpleListAdapter(ListType.INFO,this,datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -158,15 +159,12 @@ public class UserDetailActivity extends BaseActivity {
 
     }
 
-
     //获得用户个人信息
     public class GetUserInfoTask extends AsyncTask<Void, Void, String> {
-
         private String res;
         public GetUserInfoTask(String res) {
             this.res = res;
         }
-
         @Override
         protected String doInBackground(Void... voids) {
             username = Jsoup.parse(res).select(".user_avatar").select(".name").text();
@@ -176,6 +174,10 @@ public class UserDetailActivity extends BaseActivity {
                     String value = tmp.select("span").text();
                     tmp.select("span").remove();
                     String key = tmp.text();
+                    if(key.contains("积分")){
+                        String grade = GetLevel.getUserLevel(Integer.parseInt(value));
+                        datas.add(new SimpleListData("等级",grade,""));
+                    }
                     datas.add(new SimpleListData(key,value,""));
                 }
             }
@@ -184,17 +186,36 @@ public class UserDetailActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            if(datas.size()>0){
-                if(datas.get(0).getKey().contains("积分")){
-                    String userjifen = datas.get(0).getValue();
-                    usergrade.setText(GetLevel.getUserLevel(Integer.parseInt(userjifen)));
-                }
+            if(actionBar!=null){
+                actionBar.setTitle(username);
             }
-            usernameView.setText(username);
             progressBar.setVisibility(View.GONE);
             adapter.notifyDataSetChanged();
         }
 
+    }
 
+    //加好友确认按钮点击
+    @Override
+    public void OkClick(DialogFragment dialog, String mes) {
+        //todo 处理加好友逻辑
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_userdetail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id==R.id.menu_add){
+            AddFriendDialog dialogFragment = new AddFriendDialog();
+            dialogFragment.setUserName(username);
+            dialogFragment.setUserImage(imageUrl);
+            dialogFragment.show(getFragmentManager(),"add");
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

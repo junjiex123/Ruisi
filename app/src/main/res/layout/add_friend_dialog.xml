@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingTop="16dp"
+    android:paddingEnd="@dimen/dimen_16"
+    android:paddingStart="@dimen/dimen_16"
+    android:paddingBottom="@dimen/dimen_4"
+    android:layout_margin="@dimen/dimen_16"
+    android:gravity="center_horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <xyz.yluo.ruisiapp.View.CircleImageView
+            app:civ_border_width="1dp"
+            app:civ_border_color="@android:color/white"
+            android:id="@+id/user_image"
+            android:src="@drawable/image_placeholder"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
+        <TextView
+            android:textSize="18sp"
+            android:layout_marginStart="@dimen/dimen_8"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/user_name"
+            android:text="name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/message"
+        android:textSize="16sp"
+        android:layout_marginTop="@dimen/dimen_8"
+        android:maxLines="1"
+        android:background="@drawable/reply_edittext_background"
+        android:hint="填写留言，最多10个字"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/dimen_8"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/btn_cancel"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="16sp"
+            android:padding="@dimen/dimen_16"
+            android:text="取消"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/btn_send"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:layout_marginStart="@dimen/dimen_8"
+            android:textColor="@color/colorAccent"
+            android:text="确认"
+            android:textSize="16sp"
+            android:padding="@dimen/dimen_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>

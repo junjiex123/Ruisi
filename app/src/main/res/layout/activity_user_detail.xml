@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -15,6 +14,8 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.design.widget.CollapsingToolbarLayout
+            app:expandedTitleGravity="center_horizontal|bottom"
+            app:expandedTitleTextAppearance="@style/ToolBarText"
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -30,45 +31,14 @@
                 android:scaleType="centerCrop"
                 android:adjustViewBounds="true" />
 
-            <LinearLayout
-                android:layout_marginStart="@dimen/dimen_16"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:orientation="horizontal"
-                android:layout_marginTop="80dp"
-                android:gravity="center_horizontal">
-                <xyz.yluo.ruisiapp.View.CircleImageView
-                    android:id="@+id/user_detail_img_avatar"
-                    android:layout_width="96dp"
-                    android:layout_height="96dp"
-                    app:civ_border_width="2dp"
-                    app:civ_border_color="@android:color/white"
-                    android:src="@drawable/image_placeholder"/>
-
-                <LinearLayout
-                    android:layout_marginEnd="32dp"
-                    android:gravity="center"
-                    android:layout_marginStart="@dimen/dimen_16"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/username"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="22sp"
-                        tools:text="用户名"/>
-                    <TextView
-                        android:id="@+id/usergrade"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="18sp"
-                        tools:text="等级"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
+            <xyz.yluo.ruisiapp.View.CircleImageView
+                android:layout_gravity="center"
+                android:id="@+id/user_detail_img_avatar"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                app:civ_border_width="2dp"
+                app:civ_border_color="@android:color/white"
+                android:src="@drawable/image_placeholder"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -98,11 +68,7 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_gravity="center_horizontal|top" />
-
-
     </FrameLayout>
-
-
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

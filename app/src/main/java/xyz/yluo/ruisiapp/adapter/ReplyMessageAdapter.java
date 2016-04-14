@@ -97,7 +97,7 @@ public class ReplyMessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         @OnClick(R.id.article_user_image)
         protected void article_user_image_click(){
             ReplyMessageData single_data =  DataSet.get(getAdapterPosition());
-            String username = single_data.getTitle().replace("我对 ","").replace("说:","").replace(" 对我","");
+            String username = single_data.getTitle().replace("我对 ","").replace("说:","").replace(" 对我","").replace(" 回复了我","");
             UserDetailActivity.openWithTransitionAnimation(activity, username, article_user_image,DataSet.get(getAdapterPosition()).getauthorImage());
         }
     }

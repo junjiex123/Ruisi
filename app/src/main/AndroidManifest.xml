@@ -64,7 +64,8 @@
 
         <activity
             android:name=".activity.UserDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="用户信息">
         </activity>
 
         <activity android:name=".activity.LoginActivity"
@@ -72,7 +73,9 @@
             android:theme="@style/AppTheme">
         </activity>
 
-        <activity android:name=".activity.UserDakaActivity"
+        <activity
+            android:label="签到"
+            android:name=".activity.UserDakaActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
