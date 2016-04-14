@@ -17,8 +17,7 @@
         android:id="@+id/article_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="16sp"
+        style="@style/TitleText"
         tools:text="话题的标题" />
     <LinearLayout
         android:layout_marginTop="12dp"
@@ -36,8 +35,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
-            android:textColor="?android:attr/textColorSecondary"
-            android:textSize="12sp"
+            style="@style/SmallText"
             android:singleLine="true"
             android:text="some"/>
 
@@ -60,8 +58,7 @@
             android:id="@+id/reply_count"
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:textColor="?android:attr/textColorSecondary"
-            android:textSize="12sp"
+            style="@style/SmallText"
             android:singleLine="true"
             android:text="222"/>
     </LinearLayout>

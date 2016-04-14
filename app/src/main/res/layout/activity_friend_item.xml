@@ -34,8 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="16sp"
+                style="@style/TitleText"
                 android:singleLine="true"
                 tools:text="hualong95" />
             <TextView
@@ -44,8 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textSize="13sp"
+                style="@style/SmallText"
                 android:singleLine="true"
                 tools:text="木有人买电脑了" />
         </LinearLayout>

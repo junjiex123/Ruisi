@@ -33,8 +33,7 @@
             android:id="@+id/article_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="16sp"
+            style="@style/TitleText"
             android:singleLine="true"
             tools:text="话题的标题" />
 
@@ -72,8 +71,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
-                    android:textColor="?android:attr/textColorSecondary"
-                    android:textSize="14sp"
+                    style="@style/SmallText"
                     android:singleLine="true"
                     tools:text="hahah" />
                 <TextView
@@ -81,8 +79,7 @@
                     android:id="@+id/last_reply_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="?android:attr/textColorSecondary"
-                    android:textSize="12sp"
+                    style="@style/SmallText"
                     android:singleLine="true"
                     tools:text="2分前" />
             </LinearLayout>
@@ -102,8 +99,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
-                    android:textColor="?android:attr/textColorSecondary"
-                    android:textSize="12sp"
+                    style="@style/SmallText"
                     android:singleLine="true"
                     tools:text="2015-1-1 19:20:15" />
 
@@ -115,8 +111,7 @@
                     android:id="@+id/view_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="?android:attr/textColorSecondary"
-                    android:textSize="12sp"
+                    style="@style/SmallText"
                     android:singleLine="true"
                     tools:text="222"/>
 
@@ -128,8 +123,7 @@
                     android:id="@+id/reply_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:textColor="?android:attr/textColorSecondary"
+                    style="@style/SmallText"
                     tools:text="111"
                     android:singleLine="true" />
             </LinearLayout>

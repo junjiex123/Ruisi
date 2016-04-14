@@ -64,9 +64,8 @@
                     android:id="@+id/replay_index"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
                     android:singleLine="true"
-                    android:textColor="?android:attr/textColorSecondary"
+                    style="@style/SmallText"
                     tool:text="1楼" />
 
                 <TextView
@@ -74,8 +73,7 @@
                     android:id="@+id/replay_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="?android:attr/textColorSecondary"
-                    android:textSize="12sp"
+                    style="@style/SmallText"
                     android:singleLine="true"
                     tool:text="1小时前" />
             </LinearLayout>
@@ -85,8 +83,8 @@
             android:id="@+id/btn_reply_2"
             android:clickable="true"
             android:background="?attr/selectableItemBackground"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:padding="@dimen/dimen_4"
             android:src="@drawable/ic_reply_accent_24dp" />
     </LinearLayout>

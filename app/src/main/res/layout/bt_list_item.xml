@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ffflay">
 
     <LinearLayout
@@ -38,7 +39,7 @@
                         android:textColor="@android:color/white"
                         android:textSize="10sp"
                         android:background="@color/pink200"
-                        android:text="FREE" />
+                        tools:text="FREE" />
 
                     <TextView
                         android:id="@+id/bt_lable_1"
@@ -49,7 +50,7 @@
                         android:textColor="@android:color/white"
                         android:textSize="10sp"
                         android:background="@color/blue200"
-                        android:text="剧集" />
+                        tools:text="剧集" />
                     <TextView
                         android:layout_marginStart="@dimen/dimen_4"
                         android:id="@+id/bt_lable_2"
@@ -60,7 +61,7 @@
                         android:textColor="@android:color/white"
                         android:textSize="10sp"
                         android:background="@color/blue200"
-                        android:text="欧美" />
+                        tools:text="欧美" />
 
                     <TextView
                         android:layout_marginStart="@dimen/dimen_4"
@@ -72,7 +73,7 @@
                         android:textColor="@android:color/white"
                         android:textSize="10sp"
                         android:background="@color/bluegrey200"
-                        android:text="119GB" />
+                        tools:text="119GB" />
                     <TextView
                         android:layout_marginStart="@dimen/dimen_4"
                         android:id="@+id/bt_num"
@@ -83,7 +84,7 @@
                         android:textColor="@android:color/white"
                         android:textSize="10sp"
                         android:background="@color/bluegrey200"
-                        android:text="1/2/66" />
+                        tools:text="1/2/66" />
             </LinearLayout>
 
             <TextView
@@ -91,10 +92,9 @@
                 android:id="@+id/bt_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="16sp"
+                style="@style/TitleText"
                 android:maxLines="3"
-                android:text="[生活大爆炸/天才理论传][The.Big.Bang.Theory][1-7季合集][cmct][中英字幕]" />
+                tools:text="[生活大爆炸/天才理论传][The.Big.Bang.Theory][1-7季合集][cmct][中英字幕]" />
 
             <LinearLayout
                 android:layout_marginTop="@dimen/dimen_4"
@@ -102,25 +102,24 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
                 <TextView
+                    android:drawablePadding="4dp"
                     android:drawableStart="@drawable/ic_person_12dp"
                     android:id="@+id/bt_author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
-                    android:textColor="?android:attr/textColorSecondary"
-                    android:textSize="12sp"
+                    style="@style/SmallText"
                     android:singleLine="true"
-                    android:text="raindrop" />
+                    tools:text="raindrop" />
                 <TextView
                     android:layout_marginStart="@dimen/dimen_8"
                     android:id="@+id/bt_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
-                    android:textColor="?android:attr/textColorSecondary"
-                    android:textSize="12sp"
+                    style="@style/SmallText"
                     android:singleLine="true"
-                    android:text="昨天 23:48" />
+                    tools:text="昨天 23:48" />
             </LinearLayout>
 
 

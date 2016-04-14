@@ -147,7 +147,7 @@ public class HomeActivity extends BaseActivity
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 String title = "首页";
-                Fragment fragment = null;
+                Fragment fragment = new FragementFormList();
                 switch (i){
                     case R.id.btn_2:
                         title = "看帖";
