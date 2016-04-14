@@ -6,7 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
@@ -27,8 +26,6 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 public abstract class ArticleListBaseActivity extends BaseActivity
         implements LoadMoreListener.OnLoadMoreListener{
 
-    @Bind(R.id.toolbar)
-    protected Toolbar toolbar;
     @Bind(R.id.btn_refresh)
     protected FloatingActionButton btn_refresh;
     @Bind(R.id.main_recycler_view)
@@ -50,7 +47,6 @@ public abstract class ArticleListBaseActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
         ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);

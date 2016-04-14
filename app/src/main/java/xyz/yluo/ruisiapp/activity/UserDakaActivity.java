@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -70,6 +72,8 @@ public class UserDakaActivity extends BaseActivity{
     protected TextView information;
     @Bind(R.id.info_title)
     protected TextView info_title;
+    @Bind(R.id.toolbar)
+    protected Toolbar toolbar;
 
     private int spinner__select = 0;
     private String qdxq  = "kx";
@@ -88,6 +92,12 @@ public class UserDakaActivity extends BaseActivity{
         final String[] mItems = {"开心","难过","郁闷","无聊","怒","擦汗","奋斗","慵懒","衰"};
         ArrayAdapter<String> adapter=new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, mItems);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar!=null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         spinner_select.setAdapter(adapter);
     }
 

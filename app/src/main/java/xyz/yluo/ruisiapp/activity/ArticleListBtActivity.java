@@ -2,7 +2,9 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,6 +19,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ArticleListBtAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListBtData;
@@ -31,25 +34,24 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class ArticleListBtActivity extends ArticleListBaseActivity{
 
+    @Bind(R.id.main_window)
+    protected CoordinatorLayout main_window;
     private List<ArticleListBtData> mydatasetnormal;
     private ArticleListBtAdapter adapter;
     private String CurrentId = "all";
     private final String[] mItems = {"全部种子","热门种子","推荐种子","FREE种子","我的种子",
             "电影","剧集","音乐","动漫","游戏","综艺","体育","软件","学习","纪录片","西电","其他"};
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Spinner spinner = new Spinner(this);
-        actionBar.setDisplayShowTitleEnabled(false); // DEPRACATED
-
-        ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<>(this,R.layout.spinner_item, mItems);
+        View v = LayoutInflater.from(this).inflate(R.layout.spinner_cantainer,null);
+        Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+        main_window.addView(v);
+        ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, mItems);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
-        toolbar.addView(spinner);
-
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {

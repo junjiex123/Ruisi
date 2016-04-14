@@ -31,19 +31,20 @@
 
         <activity
             android:name=".activity.ArticleListNormalActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
 
         </activity>
 
         <activity
+            android:label="种子列表"
             android:name=".activity.ArticleListBtActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
 
         </activity>
 
         <activity
             android:name=".activity.ArticleListImageActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
         </activity>
 
         <activity
@@ -54,7 +55,7 @@
         <activity
             android:name=".activity.SingleArticleActivity"
             android:hardwareAccelerated="true"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize">
         </activity>
 
@@ -74,14 +75,14 @@
         </activity>
 
         <activity
-            android:label="签到"
+            android:label="签到中心"
             android:name=".activity.UserDakaActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <activity
             android:name=".activity.ChatActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
         </activity>
 
         <activity android:name=".activity.NewArticleActivity_2"

@@ -33,8 +33,6 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <!---->
-
     <RelativeLayout
         android:background="@android:color/white"
         android:layout_width="match_parent"

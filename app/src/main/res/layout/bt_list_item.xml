@@ -39,7 +39,7 @@
                         android:textColor="@android:color/white"
                         android:textSize="10sp"
                         android:background="@color/pink200"
-                        tools:text="FREE" />
+                        android:text="FREE" />
 
                     <TextView
                         android:id="@+id/bt_lable_1"

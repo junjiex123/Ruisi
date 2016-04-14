@@ -11,7 +11,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -68,8 +67,6 @@ public class SingleArticleActivity extends BaseActivity
     protected RecyclerView mRecyclerView;
     @Bind(R.id.topic_refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
-    @Bind(R.id.toolbar)
-    protected Toolbar toolbar;
     @Bind(R.id.input_aera)
     protected EditText input_aera;
     @Bind(R.id.smiley_container)
@@ -107,10 +104,8 @@ public class SingleArticleActivity extends BaseActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_article);
+        setContentView(R.layout.activity_article_chat);
         ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
-
         actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);

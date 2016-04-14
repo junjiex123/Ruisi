@@ -42,7 +42,6 @@ public class NewArticleActivity_2 extends BaseActivity {
         context.startActivity(intent);
     }
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,13 +83,13 @@ public class NewArticleActivity_2 extends BaseActivity {
         spinner.setAdapter(spinnerAdapter);
 
         setSupportActionBar(toolbar);
-        if(toolbar!=null)
-            toolbar.addView(spinner);
-
         final ActionBar actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setTitle("请选择分区");
             actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        if(toolbar!=null){
+            toolbar.addView(spinner);
         }
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

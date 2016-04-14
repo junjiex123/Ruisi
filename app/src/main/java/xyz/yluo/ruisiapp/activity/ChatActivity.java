@@ -10,7 +10,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -51,13 +50,11 @@ public class ChatActivity extends BaseActivity{
 
     @Bind(R.id.topic_recycler_view)
     protected RecyclerView recycler_view;
-    @Bind(R.id.toolbar)
-    protected Toolbar toolbar;
     @Bind(R.id.smiley_container)
     protected LinearLayout smiley_container;
     @Bind(R.id.input_aera)
     protected EditText input_aera;
-    @Bind(R.id.refresh_view)
+    @Bind(R.id.topic_refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
 
     private List<ChatListData> datas = new ArrayList<>();
@@ -80,7 +77,7 @@ public class ChatActivity extends BaseActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
+        setContentView(R.layout.activity_article_chat);
         ButterKnife.bind(this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         adapter = new ChatListAdapter(this,datas);
@@ -104,7 +101,6 @@ public class ChatActivity extends BaseActivity{
             e.printStackTrace();
         }
 
-        setSupportActionBar(toolbar);
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar!=null){
