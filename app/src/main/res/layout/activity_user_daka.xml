@@ -1,53 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    android:id="@+id/main_window"
+<android.support.design.widget.CoordinatorLayout android:id="@+id/main_window"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:fitsSystemWindows="true"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="260dp"
+        android:layout_height="280dp"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.design.widget.CollapsingToolbarLayout
+            app:expandedTitleMarginTop="@dimen/dimen_8"
+            app:expandedTitleGravity="center_horizontal|bottom"
+            app:expandedTitleTextAppearance="@style/ToolBarText"
+            android:elevation="4dp"
+            android:background="@drawable/user_detail_header_bg"
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/user_detail_layout_info"
-                android:src="@drawable/user_detail_header_bg"
-                android:scaleType="centerCrop"
-                android:adjustViewBounds="true" />
-
             <LinearLayout
-                android:background="@drawable/user_detail_header_bg"
                 android:padding="@dimen/dimen_16"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center">
-                <TextView
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="22sp"
-                    android:text="欢迎来到签到中心"/>
 
                 <xyz.yluo.ruisiapp.View.CircleImageView
                     android:id="@+id/user_image"
                     android:layout_marginTop="@dimen/dimen_16"
                     android:src="@drawable/image_placeholder"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     app:civ_border_width="2dp"
                     app:civ_border_color="@android:color/white"/>
 
@@ -72,39 +63,44 @@
                         android:id="@+id/total_sign_day"
                         android:textSize="16sp"
                         android:textColor="?android:attr/textColorPrimary"
-                        android:text="您累计已签到:443 天"
+                        tools:text="您累计已签到:443 天"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/total_sign_month"
-                        android:text="您本月已累计签到:5天"
+                        tools:text="您本月已累计签到:5天"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
             </LinearLayout>
-
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/frame"
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollView"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_margin="@dimen/dimen_8"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_gravity="center_horizontal|top" />
-
         <LinearLayout
+
             android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_margin="@dimen/dimen_8"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center_horizontal|top" />
 
             <LinearLayout
                 android:id="@+id/View_not_sign"
@@ -149,6 +145,7 @@
                     android:textSize="20sp"
                     android:text="您今天已经签到过了"/>
                 <TextView
+                    tools:text="hhhhh"
                     android:id="@+id/information"
                     android:layout_marginTop="@dimen/dimen_4"
                     android:textSize="16sp"
@@ -157,13 +154,13 @@
             </LinearLayout>
 
         </LinearLayout>
-    </FrameLayout>
+    </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
         android:layout_margin="@dimen/dimen_16"
         android:id="@+id/btn_start_sign"
         android:src="@drawable/ic_menu_send"
-        app:layout_anchor="@id/frame"
+        app:layout_anchor="@id/scrollView"
         app:layout_anchorGravity="bottom|end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
