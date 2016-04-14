@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -49,7 +50,7 @@ public class UserDakaActivity extends BaseActivity{
     @Bind(R.id.spinner_select)
     protected Spinner spinner_select;
     @Bind(R.id.btn_start_sign)
-    protected FloatingActionButton btn_start_sign;
+    protected Button btn_start_sign;
     @Bind(R.id.user_image)
     protected CircleImageView user_image;
     @Bind(R.id.user_name)
@@ -158,7 +159,7 @@ public class UserDakaActivity extends BaseActivity{
                     View_have_sign.setVisibility(View.VISIBLE);
                     View_have_sign_2.setVisibility(View.VISIBLE);
                     View_not_sign.setVisibility(View.GONE);
-                    btn_start_sign.setImageResource(R.drawable.ic_arrow_back_24dp);
+                    btn_start_sign.setText("返回");
                 }else{
                     isSign = false;
                     View_not_sign.setVisibility(View.VISIBLE);
@@ -212,7 +213,7 @@ public class UserDakaActivity extends BaseActivity{
                         showNtice("签到成功,点击按钮返回");
                         info_title.setText("恭喜你签到成功");
                         isSign = true;
-                        btn_start_sign.setImageResource(R.drawable.ic_arrow_back_24dp);
+                        btn_start_sign.setText("返回");
                     }else{
                         showNtice("未知错误");
                     }

@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
+    android:orientation="vertical"
     android:background="@android:color/white"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:src="@drawable/launch_bg"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="160dp" />
+        android:src="@drawable/launch_bg2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:adjustViewBounds="false"
+        android:scaleType="centerCrop" />
 
-    <ProgressBar
-        android:layout_marginBottom="16dp"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:layout_above="@+id/textView"
-        android:layout_centerHorizontal="true" />
+        android:orientation="vertical">
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/loading" />
+        <TextView
+            android:layout_marginTop="4dp"
+            style="@style/SmallText"
+            android:layout_marginBottom="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正在准备数据"
+            android:id="@+id/textView" />
 
-    <TextView
-        style="@style/SmallText"
-        android:layout_marginBottom="@dimen/dimen_8"
-        android:layout_above="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="正在准备数据"
-        android:id="@+id/textView"
-        android:layout_centerHorizontal="true" />
+        <TextView
+            android:textSize="16sp"
+            android:textColor="@color/colorAccent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="睿思手机客户端"
+            android:id="@+id/textView3" />
+    </LinearLayout>
 
-    <TextView
-        android:layout_marginBottom="12dp"
-        android:textSize="18sp"
-        android:textColor="@color/colorAccent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="睿思手机客户端"
-        android:id="@+id/textView3"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
-</RelativeLayout>
+</LinearLayout>

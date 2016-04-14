@@ -32,8 +32,6 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class LaunchActivity extends BaseActivity{
 
-    @Bind(R.id.progressBar)
-    protected ProgressBar progressBar;
     private final int TYPE_INNER = 1;
     private final int TYPE_OUTER = 2;
     private long starttime = 0;
@@ -124,7 +122,7 @@ public class LaunchActivity extends BaseActivity{
         }
         new Handler().postDelayed(new Runnable(){
             public void run() {
-                progressBar.setVisibility(View.GONE);
+                //progressBar.setVisibility(View.GONE);
                 startActivity(new Intent(getApplicationContext(),HomeActivity.class));
                 finish();
             }
