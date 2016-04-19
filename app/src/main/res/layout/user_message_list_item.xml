@@ -28,7 +28,7 @@
             android:src="@drawable/image_placeholder"/>
 
         <LinearLayout
-            android:layout_marginLeft="@dimen/dimen_8"
+            android:layout_marginStart="@dimen/dimen_8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -60,7 +60,7 @@
                 android:maxLines="3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="1111\n测试呵呵哈哈哈。。。"/>
+                tools:text="1111\n测试呵呵哈哈哈。。。"/>
 
         </LinearLayout>
 

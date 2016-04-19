@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -54,6 +55,8 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class UserDetailActivity extends BaseActivity implements AddFriendDialog.AddFriendListener{
 
+    @Bind(R.id.toolbar_layout)
+    protected CollapsingToolbarLayout toolbarLayout;
     @Bind(R.id.recycler_view)
     protected RecyclerView recycler_view;
     @Bind(R.id.user_detail_img_avatar)
@@ -102,11 +105,11 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         imageUrl = getIntent().getStringExtra("avatarUrl");
         Picasso.with(this).load(imageUrl).placeholder(R.drawable.image_placeholder).into(imageView);
 
+        toolbarLayout.setTitle(username);
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(username);
         }
         adapter = new SimpleListAdapter(ListType.INFO,this,datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -185,9 +188,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
 
         @Override
         protected void onPostExecute(String s) {
-            if(actionBar!=null){
-                actionBar.setTitle(username);
-            }
+            toolbarLayout.setTitle(username);
             progressBar.setVisibility(View.GONE);
             adapter.notifyDataSetChanged();
         }

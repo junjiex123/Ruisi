@@ -294,9 +294,8 @@ public class SingleArticleActivity extends BaseActivity
             }
 
             Elements elements = doc.select(".postlist");
-            //获取标题
-            if(ARTICLE_TITLE.equals("")){
-                ARTICLE_TITLE = elements.select("h2").first().text().trim();
+            if(elements.select("h2")!=null){
+                ARTICLE_TITLE =  elements.select("h2").text();
             }
             Elements postlist = elements.select("div[id^=pid]");
 
@@ -363,7 +362,7 @@ public class SingleArticleActivity extends BaseActivity
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if(!ARTICLE_TITLE.isEmpty()&&actionBar!=null){
+            if(actionBar!=null){
                 actionBar.setTitle(ARTICLE_TITLE);
             }
             int start = mydatalist.size();
