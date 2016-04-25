@@ -25,7 +25,7 @@
             android:id="@+id/article_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/TitleText"
+            style="@style/ArticleTitleText"
             android:textStyle="bold"
             tools:text="话题的标题" />
     </LinearLayout>

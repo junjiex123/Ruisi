@@ -89,15 +89,17 @@ public class SingleArticleActivity extends BaseActivity
     //存储数据 需要填充的列表
     private List<SingleArticleData> mydatalist = new ArrayList<>();
 
-    private static String ARTICLE_TID;
-    private static String ARTICLE_TITLE = "";
+    private  String ARTICLE_TID;
+    private  String ARTICLE_TITLE = "";
+    private  String ARTICLE_SUB_TITLE = "";
 
     //约定好要就收的数据
     public static void open(Context context, String tid,String title) {
         Intent intent = new Intent(context, SingleArticleActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        ARTICLE_TID = tid;
-        ARTICLE_TITLE = title;
+        intent.putExtra("tid",tid);
+        intent.putExtra("titile",title);
+
         context.startActivity(intent);
     }
 
@@ -106,6 +108,14 @@ public class SingleArticleActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_chat);
         ButterKnife.bind(this);
+
+        try {
+            ARTICLE_TID =  getIntent().getExtras().getString("tid");
+            ARTICLE_TITLE = getIntent().getExtras().getString("titile");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -243,7 +253,7 @@ public class SingleArticleActivity extends BaseActivity
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                new DealWithArticleData(res,page).execute((Void) null);
+                new DealWithArticleData(res).execute((Void) null);
             }
 
             @Override
@@ -260,15 +270,19 @@ public class SingleArticleActivity extends BaseActivity
         //* 返回list<SingleArticleData>
         private List<SingleArticleData> tepdata = new ArrayList<>();
         private String htmlData;
-        private int page;
-        public DealWithArticleData(String htmlData,int page) {
-            this.page = page;
+        public DealWithArticleData(String htmlData) {
             this.htmlData = htmlData;
         }
         @Override
         protected String doInBackground(Void... params) {
             //list 所有楼数据
             Document doc = Jsoup.parse(htmlData);
+            String titleText = doc.select("title").text();
+            if(titleText.contains("-")&&ARTICLE_SUB_TITLE.equals("")){
+                ARTICLE_SUB_TITLE = doc.select("title").text().split("-")[0].trim();
+                ARTICLE_TITLE = doc.select("title").text().split("-")[1].trim();
+            }
+
             //获取回复/hash
             if (doc.select("input[name=formhash]").first() != null) {
                 replyUrl = doc.select("form#fastpostform").attr("action");
@@ -294,9 +308,6 @@ public class SingleArticleActivity extends BaseActivity
             }
 
             Elements elements = doc.select(".postlist");
-            if(elements.select("h2")!=null){
-                ARTICLE_TITLE =  elements.select("h2").text();
-            }
             Elements postlist = elements.select("div[id^=pid]");
 
             int a =0;
@@ -362,8 +373,9 @@ public class SingleArticleActivity extends BaseActivity
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if(actionBar!=null){
+            if(actionBar!=null&&CURRENT_PAGE==1){
                 actionBar.setTitle(ARTICLE_TITLE);
+                actionBar.setSubtitle(ARTICLE_SUB_TITLE);
             }
             int start = mydatalist.size();
             mydatalist.addAll(tepdata);
