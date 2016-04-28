@@ -83,7 +83,7 @@ public class FriendAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         }
 
         @OnClick(R.id.main_item_btn_item)
-        protected void main_item_click(){
+        protected void item_click(){
             String uid = datas.get(getAdapterPosition()).getUid();
             String username = datas.get(getAdapterPosition()).getUserName();
             String url = "home.php?mod=space&do=pm&subop=view&touid="+uid+"&mobile=2";

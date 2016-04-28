@@ -78,7 +78,7 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         }
 
         @OnClick(R.id.main_item_btn_item)
-        void main_item_click(){
+        void item_click(){
             SimpleListData single_data =  Datas.get(getAdapterPosition());
             String url = single_data.getExtradata();
             if(!url.equals("")){
@@ -89,7 +89,7 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         }
 
         @OnLongClick(R.id.main_item_btn_item)
-        boolean main_item_longClick(){
+        boolean item_longClick(){
             SimpleListData single_data =  Datas.get(getAdapterPosition());
             if(type== ListType.STAR){
                 //TODO 收藏长安取消收藏

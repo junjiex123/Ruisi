@@ -3,8 +3,6 @@ package xyz.yluo.ruisiapp.checknet;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Message;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,8 +36,6 @@ public class CheckNet{
     }
 
     private void request(final CheckNetResponse checkNetResponse){
-        //do thing in here
-        final Message message = new Message();
         // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
         ConnectivityManager conMgr = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();

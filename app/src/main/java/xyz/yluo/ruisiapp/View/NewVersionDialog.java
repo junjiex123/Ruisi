@@ -27,7 +27,6 @@ public class NewVersionDialog extends DialogFragment {
     private String message = "";
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("检测到新版本："+code);
         builder.setMessage(message)
@@ -38,10 +37,8 @@ public class NewVersionDialog extends DialogFragment {
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
                     }
                 });
-        // Create the AlertDialog object and return it
         return builder.create();
     }
 }

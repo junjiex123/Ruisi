@@ -38,10 +38,6 @@ public class ReplyMessageData {
         return titleUrl;
     }
 
-    public void setTitleUrl(String titleUrl) {
-        this.titleUrl = titleUrl;
-    }
-
     public String getauthorImage() {
         return authorImage;
     }

@@ -99,8 +99,6 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         protected TextView author_name;
         @Bind(R.id.post_time)
         protected TextView post_time;
-        @Bind(R.id.last_reply_time)
-        protected TextView last_reply_time;
         @Bind(R.id.reply_count)
         protected TextView reply_count;
         @Bind(R.id.view_count)
@@ -154,8 +152,6 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
 
     //加载更多ViewHolder
     protected class LoadMoreViewHolder extends BaseViewHolder{
-
-        protected EditText loadmoreText;
 
         public LoadMoreViewHolder(View itemView) {
             super(itemView);

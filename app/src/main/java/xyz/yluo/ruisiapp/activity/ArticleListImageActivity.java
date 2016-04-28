@@ -29,7 +29,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class ArticleListImageActivity extends ArticleListBaseActivity{
 
-    private List<ImageArticleListData> mydatasetnormal;
+    private List<ImageArticleListData> datas;
     private ArticleListImageAdapter adapter;
     private StaggeredGridLayoutManager layoutManager;
     private int colNum = 2;
@@ -46,10 +46,10 @@ public class ArticleListImageActivity extends ArticleListBaseActivity{
         super.onCreate(savedInstanceState);
 
         actionBar.setTitle(CurrentTitle);
-        mydatasetnormal =  new ArrayList<>();
+        datas =  new ArrayList<>();
         layoutManager = new StaggeredGridLayoutManager(colNum,StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
-        adapter = new ArticleListImageAdapter(this,mydatasetnormal);
+        adapter = new ArticleListImageAdapter(this, datas);
         mRecyclerView.setAdapter(adapter);
 
         refreshLayout.setEnabled(false);
@@ -105,7 +105,7 @@ public class ArticleListImageActivity extends ArticleListBaseActivity{
                 tmp.select(".xg1.y").select("a[href^=forum.php]").remove();
 
                 ImageArticleListData tem = new ImageArticleListData(title, url, img, author,replyCount);
-                mydatasetnormal.add(tem);
+                datas.add(tem);
             }
             return null;
         }

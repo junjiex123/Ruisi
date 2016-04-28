@@ -171,8 +171,6 @@ public class HomeActivity extends BaseActivity
 
     /**
      * 当fragment进行切换时，采用隐藏与显示的方法加载fragment以防止数据的重复加载
-     * @param from
-     * @param to
      */
     public void switchContent(Fragment from, Fragment to) {
         FragmentManager fm = getFragmentManager();

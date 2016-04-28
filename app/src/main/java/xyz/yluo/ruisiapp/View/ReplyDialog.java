@@ -21,7 +21,6 @@ import xyz.yluo.ruisiapp.R;
 public class ReplyDialog extends DialogFragment{
 
     private EditText content;
-    private ArrowTextView reply_ref;
     private long lasttime = 0;
 
     private String title = "回复";
@@ -43,7 +42,7 @@ public class ReplyDialog extends DialogFragment{
         builder.setTitle(title);
 
         content = (EditText) view.findViewById(R.id.reply_content);
-        reply_ref = (ArrowTextView) view.findViewById(R.id.reply_ref);
+        ArrowTextView reply_ref = (ArrowTextView) view.findViewById(R.id.reply_ref);
         if(reply_ref_text==null){
             reply_ref.setVisibility(View.GONE);
         }else {

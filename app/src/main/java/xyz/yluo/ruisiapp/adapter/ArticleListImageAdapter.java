@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -76,7 +77,7 @@ public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListIma
             img_card_author.setText(DataSet.get(position).getAuthor());
             img_card_title.setText(DataSet.get(position).getTitle());
             img_card_like.setText(DataSet.get(position).getReplyCount());
-            if(DataSet.get(position).getImage()!=""){
+            if(!Objects.equals(DataSet.get(position).getImage(), "")){
                 Picasso.with(activity).load(PublicData.BASE_URL +DataSet.get(position).getImage()).placeholder(R.drawable.image_placeholder).into(img_card_image);
             }else{
                 img_card_image.setImageResource(R.drawable.image_placeholder);
@@ -85,12 +86,9 @@ public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListIma
         }
 
         @OnClick(R.id.card_list_item)
-        protected void card_list_item() {
+        protected void item_click() {
             ImageArticleListData single_data =  DataSet.get(getAdapterPosition());
             String tid = GetId.getTid(single_data.getTitleUrl());
-            //Context context, String tid,String title,String replycount,String type
-            //String title, String titleUrl, String image, String author, String authorUrl, String viewCount
-
             SingleArticleActivity.open(activity,tid,single_data.getTitle());
         }
     }

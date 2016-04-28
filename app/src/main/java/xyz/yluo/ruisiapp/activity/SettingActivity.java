@@ -147,25 +147,30 @@ public class SettingActivity extends PreferenceActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if(key.equals("setting_forums_url")){
-                switch (sharedPreferences.getString("setting_forums_url","0")){
-                    case "0":
-                        setting_forums_url.setSummary("自动切换");
-                        break;
-                    case "1":
-                        setting_forums_url.setSummary("内网:http://rs.xidian.edu.cn/");
-                        break;
-                    case "2":
-                        setting_forums_url.setSummary("外网:http://bbs.rs.xidian.me/");
-                        break;
-                }
+            switch (key) {
+                case "setting_forums_url":
+                    switch (sharedPreferences.getString("setting_forums_url", "0")) {
+                        case "0":
+                            setting_forums_url.setSummary("自动切换");
+                            break;
+                        case "1":
+                            setting_forums_url.setSummary("内网:http://rs.xidian.edu.cn/");
+                            break;
+                        case "2":
+                            setting_forums_url.setSummary("外网:http://bbs.rs.xidian.me/");
+                            break;
+                    }
 
-            }else if(key.equals("setting_user_tail")){
-                setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail","无小尾巴"));
-            }else if(key.equals("setting_show_zhidin")){
-                PublicData.ISSHOW_ZHIDIN = sharedPreferences.getBoolean("setting_show_zhidin",false);
-            }else if(key.equals("setting_show_plain")){
-                PublicData.ISSHOW_PLAIN = sharedPreferences.getBoolean("setting_show_plain",true);
+                    break;
+                case "setting_user_tail":
+                    setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail", "无小尾巴"));
+                    break;
+                case "setting_show_zhidin":
+                    PublicData.ISSHOW_ZHIDIN = sharedPreferences.getBoolean("setting_show_zhidin", false);
+                    break;
+                case "setting_show_plain":
+                    PublicData.ISSHOW_PLAIN = sharedPreferences.getBoolean("setting_show_plain", true);
+                    break;
             }
         }
     }

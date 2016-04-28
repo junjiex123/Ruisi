@@ -62,6 +62,7 @@ public class FragementReplyMe extends BaseFragement {
             Elements lists = Jsoup.parse(res).select(".nts").select("dl.cl");
             for(Element tmp:lists){
                 boolean isNew = false;
+                //todo isNew 代表未读消息
                 if(tmp.select(".ntc_body").attr("style").contains("bold")){
                     isNew = true;
                 }

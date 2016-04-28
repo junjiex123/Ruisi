@@ -272,7 +272,7 @@ public class SingleArticleActivity extends BaseActivity
             Elements elements = doc.select(".postlist");
             Elements postlist = elements.select("div[id^=pid]");
 
-            int a =0;
+            int a;
             if(mydatalist.size()==0){
                 a = 0;
             }else {

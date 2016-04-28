@@ -97,7 +97,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
             today_count.setVisibility(View.GONE);
         }
         @OnClick(R.id.forum_list_item)
-        protected void forum_list_item_click(){
+        protected void item_click(){
             FroumListData single = DataSet.get(getAdapterPosition()-2);
 
             String fid = GetId.getFroumFid(single.getTitleUrl());
@@ -140,7 +140,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         }
 
         @OnClick(R.id.forum_list_item)
-        protected void forum_list_item_click(){
+        protected void item_click(){
 
         }
     }

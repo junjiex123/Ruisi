@@ -118,17 +118,17 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         }
 
         @OnClick(R.id.btn_star)
-        protected void btn_star_click(View v){
+        protected void star_click(View v){
             itemListener.recyclerViewListClicked(v, this.getLayoutPosition());
         }
 
         @OnClick(R.id.btn_reply)
-        protected void btn_reply_click(View v){
+        protected void reply_click(View v){
             itemListener.recyclerViewListClicked(v, this.getLayoutPosition());
         }
 
         @OnClick(R.id.btn_share)
-        protected void btn_share_click(){
+        protected void share_click(){
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
             shareIntent.putExtra(Intent.EXTRA_TEXT, datalist.get(getAdapterPosition()).getCotent());

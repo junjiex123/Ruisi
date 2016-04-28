@@ -66,10 +66,6 @@ public class ArticleListData {
         return titleUrl;
     }
 
-    public void setTitleUrl(String titleUrl) {
-        this.titleUrl = titleUrl;
-    }
-
     public String getTitle() {
         return title;
     }

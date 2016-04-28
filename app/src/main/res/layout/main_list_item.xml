@@ -74,14 +74,6 @@
                     style="@style/SmallText"
                     android:singleLine="true"
                     tools:text="hahah" />
-                <TextView
-                    android:gravity="center"
-                    android:id="@+id/last_reply_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/SmallText"
-                    android:singleLine="true"
-                    tools:text="2分前" />
             </LinearLayout>
 
             <LinearLayout

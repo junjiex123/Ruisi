@@ -32,7 +32,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 public class ArticleListNormalActivity extends ArticleListBaseActivity{
 
     //一般板块/图片板块/手机板块数据列表
-    private List<ArticleListData> mydatasetnormal;
+    private List<ArticleListData> datas;
     private ArticleListNormalAdapter mRecyleAdapter;
 
     public static void open(Context context, int fid,String title){
@@ -47,9 +47,9 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
         super.onCreate(savedInstanceState);
 
         actionBar.setTitle(CurrentTitle);
-        mydatasetnormal = new ArrayList<>();
+        datas = new ArrayList<>();
         mLayoutManager = new LinearLayoutManager(this);
-        mRecyleAdapter = new ArticleListNormalAdapter(this, mydatasetnormal,0);
+        mRecyleAdapter = new ArticleListNormalAdapter(this, datas,0);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
@@ -58,14 +58,14 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
         //加载更多
         mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this,8));
 
-        mydatasetnormal.clear();
+        datas.clear();
 }
 
 
     @Override
     protected void refresh() {
         CurrentPage = 1;
-        mydatasetnormal.clear();
+        datas.clear();
         mRecyleAdapter.notifyDataSetChanged();
         getData();
     }
@@ -161,12 +161,12 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
         protected void onPostExecute(final String res) {
 
             btn_refresh.show();
-            mydatasetnormal.addAll(dataset);
+            datas.addAll(dataset);
             refreshLayout.setRefreshing(false);
             if(CurrentPage!=1){
                 mRecyclerView.getItemAnimator().setAddDuration(0);
             }
-            mRecyleAdapter.notifyItemRangeInserted(mydatasetnormal.size() - dataset.size(), dataset.size());
+            mRecyleAdapter.notifyItemRangeInserted(datas.size() - dataset.size(), dataset.size());
             isEnableLoadMore = true;
 
         }
@@ -215,9 +215,9 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
         @Override
         protected void onPostExecute(final String res) {
             btn_refresh.show();
-            mydatasetnormal.addAll(dataset);
+            datas.addAll(dataset);
             refreshLayout.setRefreshing(false);
-            mRecyleAdapter.notifyItemRangeInserted(mydatasetnormal.size() - dataset.size(), dataset.size());
+            mRecyleAdapter.notifyItemRangeInserted(datas.size() - dataset.size(), dataset.size());
             isEnableLoadMore = true;
 
         }

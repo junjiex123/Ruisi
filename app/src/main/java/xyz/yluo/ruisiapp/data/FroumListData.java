@@ -39,13 +39,8 @@ public class FroumListData {
         this.title = title;
     }
 
-
     public String getTitleUrl() {
         return titleUrl;
-    }
-
-    public void setTitleUrl(String titleUrl) {
-        this.titleUrl = titleUrl;
     }
 
     public String getTodayNew() {

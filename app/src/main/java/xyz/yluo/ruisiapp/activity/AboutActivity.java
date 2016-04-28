@@ -23,8 +23,6 @@ public class AboutActivity extends BaseActivity {
 
     @Bind(R.id.mywebview)
     protected MyWebView mywebview;
-    @Bind(R.id.fab)
-    protected FloatingActionButton fab;
 
 
     @Override
