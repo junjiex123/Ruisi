@@ -3,13 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tool="http://schemas.android.com/tools"
-    android:background="?attr/selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="12dp"
     android:paddingLeft="12dp"
     android:paddingRight="12dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@android:color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,7 +51,7 @@
                     android:paddingRight="4dp"
                     android:textColor="@android:color/white"
                     android:textSize="12sp"
-                    android:background="@color/lightblue200"
+                    android:background="@drawable/type_bg_blue"
                     android:text="楼主" />
             </LinearLayout>
 
@@ -67,7 +67,6 @@
                     android:singleLine="true"
                     style="@style/SmallText"
                     tool:text="1楼" />
-
                 <TextView
                     android:layout_marginStart="@dimen/dimen_4"
                     android:id="@+id/replay_time"

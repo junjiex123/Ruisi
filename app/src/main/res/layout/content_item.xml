@@ -53,7 +53,7 @@
                     android:paddingRight="4dp"
                     android:textColor="@android:color/white"
                     android:textSize="12sp"
-                    android:background="@color/lightblue200"
+                    android:background="@drawable/type_bg_blue"
                     android:text="楼主" />
 
             </LinearLayout>

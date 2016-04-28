@@ -52,7 +52,7 @@ public class HomeActivity extends BaseActivity
     private ActionBar actionBar;
     private ActionBarDrawerToggle toggle;
     private int clickId = 0;
-    private CircleImageView userImge;
+    private CircleImageView userImage;
     private long mExitTime;
     private Fragment currentFragment;//记录当前正在使用的fragment
     private Fragment frag_01,frag_02,frag_03;
@@ -92,15 +92,6 @@ public class HomeActivity extends BaseActivity
                     case R.id.nav_setting:
                         startActivity(new Intent(getApplicationContext(), SettingActivity.class));
                         break;
-                    case R.id.nav_bt_list:
-                        if(PublicData.IS_SCHOOL_NET){
-                            if(islogin_dialog()){
-                                startActivity(new Intent(getApplicationContext(),ArticleListBtActivity.class));
-                            }
-                        }else{
-                            Toast.makeText(getApplicationContext(),"你现在不是校园网,无法查看",Toast.LENGTH_SHORT).show();
-                        }
-                        break;
                     case R.id.nav_sign:
                         if(PublicData.IS_SCHOOL_NET){
                             if(islogin_dialog()){
@@ -125,14 +116,14 @@ public class HomeActivity extends BaseActivity
         };
 
         final View header = navigationView.getHeaderView(0);
-        userImge = (CircleImageView) header.findViewById(R.id.profile_image);
-        userImge.setOnClickListener(new View.OnClickListener() {
+        userImage = (CircleImageView) header.findViewById(R.id.profile_image);
+        userImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
 
                 if (PublicData.ISLOGIN) {
                     String url = UrlUtils.getimageurl(PublicData.USER_UID,true);
-                    UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, PublicData.USER_NAME,userImge,url);
+                    UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, PublicData.USER_NAME, userImage,url);
                 } else {
                     Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivityForResult(i, 1);
@@ -208,7 +199,7 @@ public class HomeActivity extends BaseActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             if ((System.currentTimeMillis() - mExitTime) > 1500) {
-                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "再按一次退出手机睿思", Toast.LENGTH_SHORT).show();
                 mExitTime = System.currentTimeMillis();
             } else {
                 finish();
@@ -234,9 +225,9 @@ public class HomeActivity extends BaseActivity
             nav_header_login.setVisibility(View.VISIBLE);
             nav_header_notlogin.setVisibility(View.GONE);
             String url = UrlUtils.getimageurl(PublicData.USER_UID,true);
-            Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).resize(80,80).into(userImge);
+            Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).resize(80,80).into(userImage);
         } else {
-            userImge.setImageResource(R.drawable.image_placeholder);
+            userImage.setImageResource(R.drawable.image_placeholder);
             nav_header_notlogin.setVisibility(View.VISIBLE);
             nav_header_login.setVisibility(View.GONE);
         }
