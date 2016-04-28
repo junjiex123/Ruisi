@@ -24,6 +24,8 @@ public class FragementUser extends Fragment{
     @Bind(R.id.mytab)
     protected TabLayout mytab;
     private String uid = "";
+    private Fragment curentFrag;
+    private Fragment fragment1,fragment2,fragment3,fragment4;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,7 +37,6 @@ public class FragementUser extends Fragment{
         mytab.addTab(mytab.newTab().setText("私人消息"));
         mytab.addTab(mytab.newTab().setText("我的收藏"));
         uid = PublicData.USER_UID;
-
         mytab.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -60,24 +61,58 @@ public class FragementUser extends Fragment{
         String url2 = "home.php?mod=space&do=pm&mobile=2";
         //我的收藏
         String url3 = "home.php?mod=space&uid="+uid+"&do=favorite&view=me&type=thread&mobile=2";
-        Fragment fragment  = null;
+        if(curentFrag==null){
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            if(curentFrag ==null) {
+                fragment1 = FragementReplyMe.newInstance(url0);
+                curentFrag =fragment1;
+                ft.replace(R.id.fragment_container_me, curentFrag).commit();
+            }
+            return;
+        }
+
         switch (position){
             case 0:
-                fragment = FragementReplyMe.newInstance(url0);
+                if(fragment1==null){
+                    fragment1 = FragementReplyMe.newInstance(url0);
+                }
+                switchContent(fragment1);
                 break;
             case 1:
-                fragment= FragementMyArticle.newInstance(url1);
+                if(fragment2==null){
+                    fragment2= FragementMyArticle.newInstance(url1);
+                }
+                switchContent(fragment2);
                 break;
             case 2:
-                fragment = FragementMyMessage.newInstance(url2);
+                if(fragment3==null){
+                    fragment3 = FragementMyMessage.newInstance(url2);
+                }
+                switchContent(fragment3);
                 break;
             case 3:
-                fragment= FragementMyStar.newInstance(url3);
+                if(fragment4==null){
+                    fragment4= FragementMyStar.newInstance(url3);
+                }
+                switchContent(fragment4);
                 break;
         }
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.fragment_container_me, fragment);
-        transaction.commit();
+    }
+
+    /**
+     * 当fragment进行切换时，采用隐藏与显示的方法加载fragment以防止数据的重复加载
+     */
+    public void switchContent(Fragment to) {
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        if (curentFrag != to) {
+            if (!to.isAdded()) {    // 先判断是否被add过
+                ft.hide(curentFrag).add(R.id.fragment_container_me, to).commit(); // 隐藏当前的fragment，add下一个到Activity中
+            } else {
+                ft.hide(curentFrag).show(to).commit(); // 隐藏当前的fragment，显示下一个
+            }
+            curentFrag = to;
+        }
     }
 }
