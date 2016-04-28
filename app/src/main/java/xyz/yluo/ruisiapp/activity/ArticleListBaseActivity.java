@@ -21,7 +21,6 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
  * 一个板块文章列表基类
  * 一般文章列表{@link ArticleListNormalActivity}
  * 图片文章列表{@link ArticleListImageActivity}
- * 种子列表都继承它{@link ArticleListBtActivity}
  */
 public abstract class ArticleListBaseActivity extends BaseActivity
         implements LoadMoreListener.OnLoadMoreListener{

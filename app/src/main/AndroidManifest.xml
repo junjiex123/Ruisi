@@ -36,13 +36,6 @@
         </activity>
 
         <activity
-            android:label="种子列表"
-            android:name=".activity.ArticleListBtActivity"
-            android:theme="@style/AppTheme">
-
-        </activity>
-
-        <activity
             android:name=".activity.ArticleListImageActivity"
             android:theme="@style/AppTheme">
         </activity>
