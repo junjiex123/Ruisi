@@ -23,6 +23,7 @@
 [jsoup](http://jsoup.org/)
 
 [picasso](https://github.com/square/picasso)
+[material-design-icons](https://github.com/google/material-design-icons)
 
 ##License
 略
