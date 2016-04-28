@@ -37,7 +37,6 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 1.板块列表{@link HomeActivity}
  * 2.新帖{@link FragementSimpleArticle}
  * 3.我{@link FragementUser}
- *
  */
 public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -55,7 +54,8 @@ public class HomeActivity extends BaseActivity
     private int clickId = 0;
     private CircleImageView userImge;
     private long mExitTime;
-    private FragmentManager manager;
+    private Fragment currentFragment;//记录当前正在使用的fragment
+    private Fragment frag_01,frag_02,frag_03;
 
 
     @Override
@@ -65,13 +65,10 @@ public class HomeActivity extends BaseActivity
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
-        manager = getFragmentManager();
-
         init();
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-        //btn_1_click();
         bottom_nav.check(R.id.btn_1);
         checkIsLoginView();
     }
@@ -147,27 +144,31 @@ public class HomeActivity extends BaseActivity
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 String title = "首页";
-                Fragment fragment = new FragementFormList();
                 switch (i){
                     case R.id.btn_2:
                         title = "看帖";
-                        fragment = new FragementSimpleArticle();
+                        if(frag_02==null){
+                            frag_02 = new FragementSimpleArticle();
+                        }
+                        switchContent(currentFragment,frag_02);
                         break;
                     case R.id.btn_3:
                         if(islogin_dialog()){
                             title = "我";
-                            fragment = new FragementUser();
+                            if(frag_03==null){
+                                frag_03= new FragementUser();
+                            }
+                            switchContent(currentFragment,frag_03);
                         }
                         break;
                     default:
                         title = "首页";
-                        fragment = new FragementFormList();
+                        if(frag_01==null){
+                            frag_01=new FragementFormList();
+                        }
+                        switchContent(currentFragment,frag_01);
                         break;
                 }
-                FragmentTransaction  transaction= manager.beginTransaction();
-                transaction.replace(R.id.fragment_container, fragment,"main_fra");
-                transaction.commit();
-
                 if(actionBar!=null){
                     actionBar.setTitle(title);
                 }
@@ -176,6 +177,30 @@ public class HomeActivity extends BaseActivity
 
         checkIsLoginView();
     }
+
+    /**
+     * 当fragment进行切换时，采用隐藏与显示的方法加载fragment以防止数据的重复加载
+     * @param from
+     * @param to
+     */
+    public void switchContent(Fragment from, Fragment to) {
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        if(currentFragment ==null) {
+            currentFragment = new FragementFormList();
+            ft.replace(R.id.fragment_container, currentFragment).commit();
+        }else{
+            if (currentFragment != to) {
+                currentFragment = to;
+                if (!to.isAdded()) {    // 先判断是否被add过
+                    ft.hide(from).add(R.id.fragment_container, to).commit(); // 隐藏当前的fragment，add下一个到Activity中
+                } else {
+                    ft.hide(from).show(to).commit(); // 隐藏当前的fragment，显示下一个
+                }
+            }
+        }
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -193,7 +218,6 @@ public class HomeActivity extends BaseActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         clickId = item.getItemId();
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -241,4 +265,6 @@ public class HomeActivity extends BaseActivity
         super.onActivityResult(requestCode, resultCode, data);
         checkIsLoginView();
     }
+
+
 }
