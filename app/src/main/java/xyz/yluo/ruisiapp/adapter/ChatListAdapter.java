@@ -24,10 +24,11 @@ import xyz.yluo.ruisiapp.data.ChatListData;
  * Created by free2 on 16-3-30.
  * 私人消息 adapter
  */
-public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyViewHolder>{
+public class ChatListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     private final int LEFT_ITEM = 0;
     private final int RIGHT_ITEM = 1;
+    private final int EMPTY_ITEM = 2;
 
     private List<ChatListData> DataSets;
     private Activity context;
@@ -39,38 +40,43 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
 
     @Override
     public int getItemViewType(int position) {
+        if(position==getItemCount()-1){
+            return EMPTY_ITEM;
+        }
         if(DataSets.get(position).getType()==0){
             return LEFT_ITEM;
-        }else {
+        }else{
             return RIGHT_ITEM;
         }
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         switch (viewType){
             case LEFT_ITEM:
                 return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_left_list_item, parent, false));
-
             case RIGHT_ITEM:
                 return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_right_list_item, parent, false));
+            case EMPTY_ITEM:
+                return new EmptyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_list_item,parent,false));
         }
         return null;
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(BaseViewHolder holder, int position) {
         holder.setData(position);
     }
 
 
+
     @Override
     public int getItemCount() {
-        return DataSets.size();
+        return DataSets.size()+1;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    public class MyViewHolder extends BaseViewHolder{
 
         @Bind(R.id.content)
         protected MyHtmlTextView content;
@@ -84,7 +90,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
             ButterKnife.bind(this,itemView);
         }
 
-        private void setData(final int position){
+        void setData(final int position){
             ChatListData single = DataSets.get(position);
             Picasso.with(context).load(single.getUserImage()).into(user_image);
             post_time.setText(single.getTime());
@@ -95,6 +101,18 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
         protected void user_image_click(){
             String imageUrl = DataSets.get(getAdapterPosition()).getUserImage();
             UserDetailActivity.openWithTransitionAnimation(context, "username", user_image,imageUrl);
+        }
+    }
+
+    protected class EmptyViewHolder extends BaseViewHolder{
+
+        public EmptyViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        void setData(int position) {
+
         }
     }
 

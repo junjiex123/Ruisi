@@ -12,16 +12,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,16 +24,16 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.MyReplyView;
 import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
 import xyz.yluo.ruisiapp.data.ChatListData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;
+import xyz.yluo.ruisiapp.listener.ReplyBarListner;
 import xyz.yluo.ruisiapp.utils.GetId;
-import xyz.yluo.ruisiapp.utils.PostHander;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -50,10 +45,8 @@ public class ChatActivity extends BaseActivity{
 
     @Bind(R.id.topic_recycler_view)
     protected RecyclerView recycler_view;
-    @Bind(R.id.smiley_container)
-    protected LinearLayout smiley_container;
-    @Bind(R.id.input_aera)
-    protected EditText input_aera;
+    @Bind(R.id.replay_bar)
+    protected MyReplyView myReplyView;
     @Bind(R.id.topic_refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
 
@@ -66,7 +59,7 @@ public class ChatActivity extends BaseActivity{
     private String touid = "";
 
     public static void open(Context context, String username,String url) {
-        //isopenfromwebview 是从webview打开的是新疆的回话
+        /*isopenfromwebview 是从webview打开的是新疆的回话*/
         Intent intent = new Intent(context, ChatActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("username", username);
@@ -84,9 +77,6 @@ public class ChatActivity extends BaseActivity{
         recycler_view.setLayoutManager(layoutManager);
         recycler_view.setAdapter(adapter);
         refresh();
-        //url      home.php?mod=space&do=pm&subop=view&touid=261098&mobile=2
-        //replyurl home.php?mod=spacecp&ac=pm&op=send&pmid=452408&daterange=0&pmsubmit=yes&mobile=2
-
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -108,6 +98,12 @@ public class ChatActivity extends BaseActivity{
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         new GetDataTask(url).execute();
+        myReplyView.setListener(new ReplyBarListner() {
+            @Override
+            public void btnSendClick(String input) {
+                post_reply(input);
+            }
+        });
     }
 
 
@@ -159,7 +155,6 @@ public class ChatActivity extends BaseActivity{
         }
         @Override
         protected void onPostExecute(String s) {
-
             super.onPostExecute(s);
             adapter.notifyDataSetChanged();
             refreshLayout.setRefreshing(false);
@@ -187,7 +182,7 @@ public class ChatActivity extends BaseActivity{
         }
     }
 
-    private void post_reply(String text){
+    private void post_reply(final String text){
 
         if(text.isEmpty()){
             Toast.makeText(getApplicationContext(),"你还没有输入内容！！！",Toast.LENGTH_SHORT).show();
@@ -203,9 +198,13 @@ public class ChatActivity extends BaseActivity{
                 public void onSuccess(byte[] response) {
                     String res = new String(response);
                     if (res.contains("操作成功")) {
-                        send_success();
                         hide_ime();
                         progress.dismiss();
+                        String userImage = PublicData.BASE_URL +"ucenter/avatar.php?uid="+ PublicData.USER_UID +"&size=small";
+                        datas.add(new ChatListData(1,userImage,text,"刚刚"));
+                        adapter.notifyItemInserted(datas.size()-1);
+                        myReplyView.clearText();
+                        Toast.makeText(getApplicationContext(),"发布成功",Toast.LENGTH_SHORT).show();
                     } else {
                         progress.dismiss();
                         if(res.contains("两次发送短消息太快")){
@@ -227,49 +226,4 @@ public class ChatActivity extends BaseActivity{
         }
     }
 
-    private void send_success(){
-        //http://rs.xidian.edu.cn/ucenter/avatar.php?uid=252553&size=small
-        String userImage = PublicData.BASE_URL +"ucenter/avatar.php?uid="+ PublicData.USER_UID +"&size=small";
-        datas.add(new ChatListData(1,userImage,input_aera.getText().toString(),"刚刚"));
-        input_aera.setText("");
-        adapter.notifyItemInserted(datas.size()-1);
-        smiley_container.setVisibility(View.GONE);
-        Toast.makeText(getApplicationContext(),"发布成功",Toast.LENGTH_SHORT).show();
-    }
-
-    @OnClick(R.id.action_smiley)
-    protected void action_smiley_click(){
-        if(smiley_container.getVisibility()==View.VISIBLE){
-            smiley_container.setVisibility(View.GONE);
-        }else{
-            smiley_container.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @OnClick(R.id.action_send)
-    protected void action_send_click(){
-        smiley_container.setVisibility(View.GONE);
-        hide_ime();
-        //按钮监听
-        post_reply(input_aera.getText().toString());
-
-    }
-
-    @OnClick({R.id._1000, R.id._1001,R.id._1002,R.id._1003,R.id._1005,
-            R.id._1006,R.id._1007,R.id._1008,R.id._1009,R.id._1010,
-            R.id._1011,R.id._1012,R.id._1013,R.id._1014,R.id._1015,
-            R.id._1016,R.id._1017,R.id._1018,R.id._1019,R.id._1020,
-            R.id._1021,R.id._1022,R.id._1023,R.id._1024,R.id._1025,
-            R.id._1027,R.id._1028,R.id._1029,R.id._1030, R.id._998,
-            R.id._999,R.id._9998,R.id._9999
-    })
-    protected void smiley_click(ImageButton btn){
-        //插入表情
-        //{:16_1021:}
-        //_1021
-        //input_aera.append(btn.getTag().toString());
-        String tmp = btn.getTag().toString();
-        PostHander hander = new PostHander(getApplicationContext(),input_aera);
-        hander.insertSmiley("{:16" + tmp + ":}", btn.getDrawable());
-    }
 }

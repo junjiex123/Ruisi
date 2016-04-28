@@ -19,9 +19,11 @@
             android:layout_height="match_parent" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include layout="@layout/reply_bar"
+    <xyz.yluo.ruisiapp.View.MyReplyView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/replay_bar"
         app:layout_anchorGravity="bottom"
-        app:layout_anchor="@+id/topic_recycler_view" />
+        app:layout_anchor="@+id/topic_recycler_view"/>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -178,7 +178,7 @@ public class UserDakaActivity extends BaseActivity{
 
     //点击签到按钮
     @OnClick(R.id.btn_start_sign)
-    protected void btn_start_sign_click(){
+    protected void btn_sign_click(){
         if(isSign){
             finish();
         }else{

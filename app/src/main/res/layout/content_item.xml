@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="12dp"
+    android:paddingStart="12dp"
     android:paddingEnd="12dp"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -11,27 +12,7 @@
     android:background="@android:color/white">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <View
-            android:layout_width="6dp"
-            android:layout_height="28sp"
-            android:background="@android:color/holo_red_dark"
-            android:layout_marginEnd="3dp">
-        </View>
-        <TextView
-            android:layout_marginStart="@dimen/dimen_4"
-            android:id="@+id/article_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/ArticleTitleText"
-            android:textStyle="bold"
-            tools:text="话题的标题" />
-    </LinearLayout>
-    <LinearLayout
         android:layout_marginTop="@dimen/dimen_4"
-        android:layout_marginStart="12dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -96,7 +77,6 @@
 
     </LinearLayout>
     <xyz.yluo.ruisiapp.View.MyWebView
-        android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
         android:id="@+id/content_webView"
         android:layout_width="match_parent"

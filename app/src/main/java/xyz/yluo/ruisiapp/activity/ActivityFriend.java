@@ -61,15 +61,13 @@ public class ActivityFriend extends BaseActivity{
         }
 
         String url = "home.php?mod=space&do=friend&mobile=2";
-        new GetDataTask(url,1).execute();
+        new GetDataTask(url).execute();
         refreshLayout.setEnabled(false);
     }
 
     private class GetDataTask extends AsyncTask<Void,Void,String>{
         private String url;
-        private int page;
-        public GetDataTask(String url,int page) {
-            this.page = page;
+        public GetDataTask(String url) {
             this.url = url;
         }
         @Override
@@ -110,7 +108,7 @@ public class ActivityFriend extends BaseActivity{
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-
+        //todo 搜索
 
         return super.onCreateOptionsMenu(menu);
     }

@@ -6,20 +6,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:src="@drawable/launch_bg2"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+    <TextView
+        android:textColor="@color/colorAccent"
+        android:textSize="20sp"
+        android:text="爱生活，爱西电，爱睿思。"
         android:layout_weight="1"
-        android:adjustViewBounds="false"
-        android:scaleType="centerCrop" />
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
 
     <LinearLayout
+        android:layout_gravity="bottom"
         android:gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <ProgressBar
+            android:layout_marginTop="20dp"
             android:id="@+id/progressBar"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -35,6 +38,7 @@
             android:id="@+id/textView" />
 
         <TextView
+            android:layout_marginBottom="4dp"
             android:textSize="16sp"
             android:textColor="@color/colorAccent"
             android:layout_width="wrap_content"

@@ -15,9 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -25,7 +22,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,10 +31,10 @@ import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.ArticleJumpDialog;
+import xyz.yluo.ruisiapp.View.MyReplyView;
 import xyz.yluo.ruisiapp.View.NeedLoginDialogFragment;
 import xyz.yluo.ruisiapp.View.ReplyDialog;
 import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
@@ -48,8 +44,8 @@ import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
+import xyz.yluo.ruisiapp.listener.ReplyBarListner;
 import xyz.yluo.ruisiapp.utils.GetIndex;
-import xyz.yluo.ruisiapp.utils.PostHander;
 import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
@@ -67,10 +63,8 @@ public class SingleArticleActivity extends BaseActivity
     protected RecyclerView mRecyclerView;
     @Bind(R.id.topic_refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
-    @Bind(R.id.input_aera)
-    protected EditText input_aera;
-    @Bind(R.id.smiley_container)
-    protected LinearLayout smiley_container;
+    @Bind(R.id.replay_bar)
+    protected MyReplyView MyReplyView;
     private ActionBar actionBar;
     private ProgressDialog progress;
 
@@ -84,7 +78,6 @@ public class SingleArticleActivity extends BaseActivity
     private boolean isEnableLoadMore = false;
     //回复楼主的链接
     private String replyUrl = "";
-
     private SingleArticleAdapter mRecyleAdapter;
     //存储数据 需要填充的列表
     private List<SingleArticleData> mydatalist = new ArrayList<>();
@@ -130,6 +123,19 @@ public class SingleArticleActivity extends BaseActivity
         mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this,8));
         getArticleData(1);
 
+        MyReplyView.setListener(new ReplyBarListner() {
+            @Override
+            public void btnSendClick(String input) {
+                hide_ime();
+                //按钮监听
+                if(isNeedLoginDialog()){
+                    if(checkTime()){
+                        post_reply(input);
+                    }
+                }
+            }
+        });
+
     }
 
     private void init(){
@@ -149,51 +155,7 @@ public class SingleArticleActivity extends BaseActivity
         });
     }
 
-    @OnClick(R.id.input_aera)
-    protected void input_aera_click(){
-        smiley_container.setVisibility(View.GONE);
-    }
 
-    @OnClick(R.id.action_smiley)
-    protected void action_smiey_click(){
-        if(smiley_container.getVisibility()==View.VISIBLE){
-            smiley_container.setVisibility(View.GONE);
-        }else{
-            smiley_container.setVisibility(View.VISIBLE);
-        }
-
-    }
-    @OnClick(R.id.action_send)
-    protected void action_send_click(){
-        smiley_container.setVisibility(View.GONE);
-        hide_ime();
-        //按钮监听
-        if(isNeedLoginDialog()){
-            if(checkTime()){
-                if(checkLength(input_aera.getText().toString())){
-                    post_reply(input_aera.getText().toString());
-                }
-
-            }
-        }
-
-    }
-
-    @OnClick({R.id._1000, R.id._1001,R.id._1002,R.id._1003,R.id._1005,
-            R.id._1006,R.id._1007,R.id._1008,R.id._1009,R.id._1010,
-            R.id._1011,R.id._1012,R.id._1013,R.id._1014,R.id._1015,
-            R.id._1016,R.id._1017,R.id._1018,R.id._1019,R.id._1020,
-            R.id._1021,R.id._1022,R.id._1023,R.id._1024,R.id._1025,
-            R.id._1027,R.id._1028,R.id._1029,R.id._1030, R.id._998,
-            R.id._999,R.id._9998,R.id._9999
-    })
-    protected void smiley_click(ImageButton btn){
-        //插入表情
-        //{:16_1021:}
-        String tmp = btn.getTag().toString();
-        PostHander hander = new PostHander(getApplicationContext(),input_aera);
-        hander.insertSmiley("{:16" + tmp + ":}", btn.getDrawable());
-    }
 
     private boolean isNeedLoginDialog(){
         if (PublicData.ISLOGIN) {
@@ -357,11 +319,8 @@ public class SingleArticleActivity extends BaseActivity
                     ////替换无意义的 br
                     finalcontent = contentels.html().replaceAll("(\\s*<br>\\s*){2,}","");
                     String newtime = posttime.replace("收藏","");
-
-                                                //SingleType type, String Img,username,postTime,index, String replyUrl, String cotent
                     data = new SingleArticleData(SingleType.CONTENT, userimg,username,newtime,index,ARTICLE_TITLE,finalcontent);
                 } else {
-                    //SingleType type, String userImgUrl, String username, String postTime, String index, String replyNumUrl, String cotent
                     data = new SingleArticleData(SingleType.COMMENT,userimg,username,posttime,index,replyUrl,finalcontent);
                 }
 
@@ -544,7 +503,7 @@ public class SingleArticleActivity extends BaseActivity
         if(isok){
             if (res.contains("成功")||res.contains("层主")) {
                 Toast.makeText(getApplicationContext(), "回复发表成功", Toast.LENGTH_SHORT).show();
-                input_aera.setText("");
+                MyReplyView.clearText();
                 hide_ime();
 
                 replyTime = System.currentTimeMillis();
@@ -564,22 +523,6 @@ public class SingleArticleActivity extends BaseActivity
         }else{
             Toast.makeText(this,"还没到15秒呢再等等吧",Toast.LENGTH_SHORT).show();
             return false;
-        }
-    }
-
-    private boolean checkLength(String str){
-        int len =0;
-        // Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
-        try {
-            len = str.getBytes("UTF-8").length;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        if(len<13){
-            Toast.makeText(getApplicationContext(),"字数不够要13个字节！！",Toast.LENGTH_SHORT).show();
-            return false;
-        }else {
-            return true;
         }
     }
 
@@ -617,12 +560,9 @@ public class SingleArticleActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
-        if(smiley_container.getVisibility()==View.VISIBLE){
-            smiley_container.setVisibility(View.GONE);
-        }else{
+        if(!MyReplyView.hideSmiley()){
             super.onBackPressed();
         }
-
     }
 
 }

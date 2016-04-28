@@ -119,7 +119,6 @@ public class LaunchActivity extends BaseActivity{
         }
         new Handler().postDelayed(new Runnable(){
             public void run() {
-                //progressBar.setVisibility(View.GONE);
                 startActivity(new Intent(getApplicationContext(),HomeActivity.class));
                 finish();
             }

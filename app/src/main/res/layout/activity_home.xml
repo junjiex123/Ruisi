@@ -27,7 +27,7 @@
             android:gravity="center"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/actionBarHeight"
+            android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" >
 
@@ -38,7 +38,7 @@
     <!-- Fragment -->
     <FrameLayout
         android:paddingBottom="50dp"
-        android:layout_marginTop="@dimen/actionBarHeight"
+        android:layout_marginTop="?attr/actionBarSize"
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -70,7 +70,6 @@
                 android:layout_width = "wrap_content"
                 android:layout_height  = "match_parent"
                 android:layout_weight = "1"
-                android:textColor = "@color/colorPrimary"
                 android:textSize ="12sp"
                 android:paddingTop = "6dp"
                 android:paddingBottom = "6dp"
@@ -89,7 +88,6 @@
                 android:layout_width = "wrap_content"
                 android:layout_height  = "match_parent"
                 android:layout_weight = "1"
-                android:textColor = "@color/colorPrimary"
                 android:textSize ="12sp"
                 android:paddingTop = "6dp"
                 android:paddingBottom = "6dp"
@@ -107,7 +105,6 @@
                 android:layout_width = "wrap_content"
                 android:layout_height  = "match_parent"
                 android:layout_weight = "1"
-                android:textColor = "@color/colorPrimary"
                 android:textSize ="12sp"
                 android:paddingTop = "6dp"
                 android:paddingBottom = "6dp"

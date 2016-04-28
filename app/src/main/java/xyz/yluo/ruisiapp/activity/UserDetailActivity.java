@@ -69,7 +69,6 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
     protected FloatingActionButton fab;
     @Bind(R.id.progressBar)
     protected ProgressBar progressBar;
-    private ActionBar actionBar;
 
     private List<SimpleListData> datas = new ArrayList<>();
     private SimpleListAdapter adapter;
@@ -107,8 +106,8 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
 
         toolbarLayout.setTitle(username);
         setSupportActionBar(toolbar);
-        actionBar = getSupportActionBar();
-        if(actionBar!=null){
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar !=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         adapter = new SimpleListAdapter(ListType.INFO,this,datas);
@@ -145,8 +144,6 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
             ExitLoginDialogFragment dialogFragment = new ExitLoginDialogFragment();
             dialogFragment.show(getFragmentManager(), "exit");
         }else if(PublicData.ISLOGIN){
-            //url      home.php?mod=space&do=pm&subop=view&touid=261098&mobile=2
-            //replyurl home.php?mod=spacecp&ac=pm&op=send&pmid=452408&daterange=0&pmsubmit=yes&mobile=2
             String url = "home.php?mod=space&do=pm&subop=view&touid="+userUid+"&mobile=2";
             ChatActivity.open(this,username,url);
         }else{

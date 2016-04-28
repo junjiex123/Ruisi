@@ -204,7 +204,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     @OnClick(R.id.login_test_button)
-    protected void login_test_button_click() {
+    protected void login_btn_click() {
         progress = ProgressDialog.show(this, "正在登陆", "请等待", true);
         final String username = ed_username.getText().toString().trim();
         final String passNo = ed_pass.getText().toString().trim();
