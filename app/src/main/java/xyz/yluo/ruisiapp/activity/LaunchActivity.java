@@ -45,7 +45,7 @@ public class LaunchActivity extends BaseActivity{
         new CheckNet(this).startCheck(new CheckNetResponse() {
             @Override
             public void onFinish(int type, String response) {
-                canGetRs(type,response);
+                canGetRs(type);
             }
         });
     }
@@ -59,6 +59,8 @@ public class LaunchActivity extends BaseActivity{
             String tail = shp.getString("setting_user_tail","");
             boolean theme = shp.getBoolean("setting_swich_theme",false);
             boolean setting_show_plain = shp.getBoolean("setting_show_plain",true);
+            boolean isrecieveMessage = shp.getBoolean("setting_show_notify",false);
+            System.out.println("isrecieveMessage"+isrecieveMessage);
 
             PublicData.ISSHOW_ZHIDIN = isShowZhidin;
             PublicData.ISSHOW_PLAIN = setting_show_plain;
@@ -67,7 +69,7 @@ public class LaunchActivity extends BaseActivity{
         }
     }
 
-    private void canGetRs(int type,String res){
+    private void canGetRs(int type){
         String url = UrlUtils.getLoginUrl(false);
         if(type==TYPE_INNER){
             PublicData.IS_SCHOOL_NET = true;

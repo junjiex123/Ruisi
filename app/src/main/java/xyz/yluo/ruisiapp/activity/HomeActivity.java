@@ -4,7 +4,9 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,6 +24,7 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import xyz.yluo.ruisiapp.CheckMessageService;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
@@ -54,7 +57,7 @@ public class HomeActivity extends BaseActivity
     private int clickId = 0;
     private CircleImageView userImage;
     private long mExitTime;
-    private Fragment currentFragment;//记录当前正在使用的fragment
+    private Fragment currentFragment;
     private Fragment frag_01,frag_02,frag_03;
 
 
@@ -70,7 +73,9 @@ public class HomeActivity extends BaseActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         bottom_nav.check(R.id.btn_1);
-        checkIsLoginView();
+        updateLoginView();
+        startCheckMessageService();
+
     }
 
     private void init(){
@@ -79,7 +84,7 @@ public class HomeActivity extends BaseActivity
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 clickId = 0;
-                checkIsLoginView();
+                updateLoginView();
             }
 
             @Override
@@ -122,7 +127,7 @@ public class HomeActivity extends BaseActivity
             public void onClick(final View v) {
 
                 if (PublicData.ISLOGIN) {
-                    String url = UrlUtils.getimageurl(PublicData.USER_UID,true);
+                    String url = UrlUtils.getimageurl("uid="+PublicData.USER_UID,true);
                     UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, PublicData.USER_NAME, userImage,url);
                 } else {
                     Intent i = new Intent(getApplicationContext(), LoginActivity.class);
@@ -166,7 +171,7 @@ public class HomeActivity extends BaseActivity
             }
         });
 
-        checkIsLoginView();
+        updateLoginView();
     }
 
     /**
@@ -212,17 +217,17 @@ public class HomeActivity extends BaseActivity
         return true;
     }
 
-    private void checkIsLoginView(){
+    private void updateLoginView(){
         final View header = navigationView.getHeaderView(0);
         final View nav_header_login = header.findViewById(R.id.nav_header_login);
         final View nav_header_notlogin = header.findViewById(R.id.nav_header_notlogin);
         //判断是否登陆
         if (PublicData.ISLOGIN) {
-            TextView text1 = (TextView) header.findViewById(R.id.header_user_name);
-            text1.setText(PublicData.USER_NAME);
+            TextView userName = (TextView) header.findViewById(R.id.header_user_name);
+            userName.setText(PublicData.USER_NAME);
             nav_header_login.setVisibility(View.VISIBLE);
             nav_header_notlogin.setVisibility(View.GONE);
-            String url = UrlUtils.getimageurl(PublicData.USER_UID,true);
+            String url = UrlUtils.getimageurl("uid="+PublicData.USER_UID,true);
             Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).resize(80,80).into(userImage);
         } else {
             userImage.setImageResource(R.drawable.image_placeholder);
@@ -252,8 +257,25 @@ public class HomeActivity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        checkIsLoginView();
+        updateLoginView();
     }
 
+    //是否启动 检查消息 service
+    private void startCheckMessageService(){
+        SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean isrecieveMessage = shp.getBoolean("setting_show_notify",false);
+        System.out.println("isrecieveMessage"+isrecieveMessage);
+        if(isrecieveMessage){
+            Intent i = new Intent(this, CheckMessageService.class);
+            i.putExtra("isRunning",true);
+            startService(i);
+        }
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Intent i = new Intent(this, CheckMessageService.class);
+        stopService(i);
+    }
 }

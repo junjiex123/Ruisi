@@ -19,6 +19,15 @@
             android:summaryOn="显示置顶帖,注意只对校园网环境有效"
             android:summaryOff="不显示置顶帖,注意只对校园网环境有效">
         </SwitchPreference>
+
+        <SwitchPreference
+            android:key="setting_show_notify"
+            android:defaultValue="false"
+            android:title="是否接受回复消息提醒"
+            android:summaryOn="有新的回复时会提醒你"
+            android:summaryOff="有新的回复不提醒">
+        </SwitchPreference>
+
         <EditTextPreference
             android:key="setting_user_tail"
             android:defaultValue="暂不支持，设置了也没用"

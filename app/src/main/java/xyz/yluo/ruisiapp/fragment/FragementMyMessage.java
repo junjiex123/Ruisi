@@ -62,13 +62,18 @@ public class FragementMyMessage extends BaseFragement {
             //pmbox
             Elements lists = Jsoup.parse(res).select(".pmbox").select("ul").select("li");
             for(Element tmp:lists){
+                boolean isRead = true;
+                if(tmp.select(".num").text().length()>0){
+                    isRead = false;
+                }
                 String title = tmp.select(".cl").select(".name").text();
                 String time = tmp.select(".cl.grey").select(".time").text();
                 tmp.select(".cl.grey").select(".time").remove();
                 String content = tmp.select(".cl.grey").text();
                 String authorImage = tmp.select("img").attr("src");
                 String titleUrl =tmp.select("a").attr("href");
-                datas.add(new ReplyMessageData(title,titleUrl,authorImage,time,content));
+                //todo
+                datas.add(new ReplyMessageData(title,titleUrl,authorImage,time,isRead,content));
             }
             return "";
         }

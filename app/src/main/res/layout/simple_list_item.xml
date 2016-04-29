@@ -25,13 +25,15 @@
             tools:text="金币："/>
 
         <TextView
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:textColor="#FFFFFFFF"
             android:layout_marginStart="@dimen/dimen_8"
-            android:background="@drawable/shape_cornerradus"
+            android:background="@drawable/type_bg_accent"
             android:id="@+id/value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:textColor="@color/colorAccent"
             android:singleLine="true"
             android:layout_marginEnd="@dimen/dimen_8"
             tools:text="150" />

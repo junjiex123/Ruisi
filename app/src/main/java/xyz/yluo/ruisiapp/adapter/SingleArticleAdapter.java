@@ -145,7 +145,8 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             SingleArticleData single = datalist.get(position);
             article_username.setText(single.getUsername());
             Picasso.with(activity).load(single.getImg()).resize(44,44).centerCrop().placeholder(R.drawable.image_placeholder).into(article_user_image);
-            article_post_time.setText(single.getPostTime());
+            String post_time = "发表于:"+single.getPostTime();
+            article_post_time.setText(post_time);
             webView.getSettings().setLoadsImagesAutomatically(true);
             webView.loadDataWithBaseURL(PublicData.BASE_URL,single.getCotent(),"text/html","UTF-8",null);
         }

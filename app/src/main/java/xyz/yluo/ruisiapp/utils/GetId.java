@@ -13,13 +13,24 @@ public class GetId {
 
     public static String getid(String url){
         //forum.php?mod=redirect&goto=findpost&ptid=846689&pid=21330831
-        Pattern pattern = Pattern.compile("[0-9]{3,}");
+        Pattern pattern = Pattern.compile("tid=[0-9]{3,}");
         Matcher matcher = pattern.matcher(url);
         String tid ="";
         if (matcher.find()) {
-            tid = url.substring(matcher.start(),matcher.end());
+            tid = url.substring(matcher.start()+4,matcher.end());
         }
         return tid;
+    }
+
+    public static String getTouid(String url){
+        //touid="+userUid
+        Pattern pattern = Pattern.compile("touid=[0-9]{3,}");
+        Matcher matcher = pattern.matcher(url);
+        String touid ="";
+        if (matcher.find()) {
+            touid = url.substring(matcher.start()+6,matcher.end());
+        }
+        return touid;
     }
 
     public static String getHash(String url){

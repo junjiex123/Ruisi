@@ -12,14 +12,24 @@ public class ReplyMessageData {
     private String authorImage;
     private String time;  //在我的回复当作内容
     private String content;
+    private boolean isRead = true;
 
     //我的消息 ////回复我的
-    public ReplyMessageData(String title, String titleUrl, String authorImage, String time, String content) {
+    public ReplyMessageData(String title, String titleUrl, String authorImage, String time,boolean isRead, String content) {
         this.title = title;
         this.titleUrl = titleUrl;
         this.authorImage = authorImage;
         this.time = time;
         this.content = content;
+        this.isRead = isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
+    }
+
+    public boolean isRead() {
+        return isRead;
     }
 
     public String getcontent() {

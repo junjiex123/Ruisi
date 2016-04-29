@@ -66,6 +66,8 @@ public class ReplyMessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         protected CircleImageView article_user_image;
         @Bind(R.id.reply_content)
         protected ArrowTextView reply_content;
+        @Bind(R.id.is_read)
+        protected TextView isRead;
         //url
         public MessageReplyListHolder(View itemView) {
             super(itemView);
@@ -79,18 +81,24 @@ public class ReplyMessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
             String imageUrl = single_data.getauthorImage();
             Picasso.with(activity).load(imageUrl).resize(40,40).centerCrop().placeholder(R.drawable.image_placeholder).into(article_user_image);
             reply_content.setText(single_data.getcontent());
+            if(single_data.isRead()){
+                isRead.setVisibility(View.GONE);
+            }else{
+                isRead.setVisibility(View.VISIBLE);
+            }
         }
 
         @OnClick(R.id.main_item_btn_item)
         protected void item_click(){
             ReplyMessageData single_data =  DataSet.get(getAdapterPosition());
-            if(ListType.MYMESSAGE==type){//用户消息
+            if(ListType.MYMESSAGE==type){//用户消息pm
                 String username = single_data.getTitle().replace("我对 ","").replace("说:","").replace(" 对我","");
                 ChatActivity.open(activity,username,single_data.getTitleUrl());
+                single_data.setRead(true);
             }else if(ListType.REPLAYME==type){//回复我的
-                String fid = GetId.getTid(single_data.getTitleUrl());
+                String tid = GetId.getTid(single_data.getTitleUrl());
                 String title = single_data.getcontent();
-                SingleArticleActivity.open(activity,fid,title);
+                SingleArticleActivity.open(activity,tid,title);
             }
 
         }

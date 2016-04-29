@@ -27,20 +27,6 @@
         android:orientation="horizontal">
 
         <TextView
-            android:gravity="top"
-            android:drawablePadding="4dp"
-            android:drawableStart="@drawable/ic_person_12dp"
-            android:id="@+id/author_name"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            style="@style/SmallText"
-            android:singleLine="true"
-            android:text="some"/>
-
-        <TextView
-            android:layout_marginEnd="8dp"
             android:id="@+id/is_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -48,10 +34,23 @@
             android:paddingRight="4dp"
             android:textColor="@android:color/white"
             android:textSize="10sp"
-            android:background="@color/blue200"
-            android:text="有图" />
+            android:text="有图"
+            android:background="@drawable/type_bg_blue" />
+        <TextView
+            android:layout_marginStart="8dp"
+            android:gravity="top"
+            android:drawablePadding="4dp"
+            android:drawableStart="@drawable/ic_person_12dp"
+            android:id="@+id/author_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            style="@style/SmallText"
+            android:singleLine="true"
+            tools:text="some"/>
 
         <TextView
+            android:layout_marginStart="4dp"
             android:gravity="top"
             android:drawablePadding="4dp"
             android:drawableStart="@drawable/ic_reply_12dp"
@@ -60,10 +59,11 @@
             android:layout_height="match_parent"
             style="@style/SmallText"
             android:singleLine="true"
-            android:text="222"/>
+            tools:text="222"/>
+
     </LinearLayout>
 
     <View style="@style/DeepLine"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:layout_gravity="bottom" />
 </LinearLayout>

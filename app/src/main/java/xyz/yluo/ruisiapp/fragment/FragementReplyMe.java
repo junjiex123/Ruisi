@@ -61,10 +61,10 @@ public class FragementReplyMe extends BaseFragement {
             //pmbox
             Elements lists = Jsoup.parse(res).select(".nts").select("dl.cl");
             for(Element tmp:lists){
-                boolean isNew = false;
+                boolean isRead = true;
                 //todo isNew 代表未读消息
                 if(tmp.select(".ntc_body").attr("style").contains("bold")){
-                    isNew = true;
+                    isRead = false;
                 }
                 String content = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").text().replace("查看","");;
                 if(content.isEmpty()){
@@ -76,7 +76,7 @@ public class FragementReplyMe extends BaseFragement {
                 String titleUrl =tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
 
                 //String title, String titleUrl, String authorImage, String time,String content
-                datas.add(new ReplyMessageData(authorTitle,titleUrl,authorImage,time,content));
+                datas.add(new ReplyMessageData(authorTitle,titleUrl,authorImage,time,isRead,content));
             }
             return "";
         }

@@ -98,6 +98,8 @@
             </intent-filter>
         </receiver>
 
+        <service android:name=".CheckMessageService"/>
+
     </application>
 
 </manifest>

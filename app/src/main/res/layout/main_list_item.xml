@@ -33,9 +33,9 @@
             android:id="@+id/article_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="1"
             style="@style/TitleText"
-            android:singleLine="true"
-            tools:text="话题的标题" />
+            tools:text="帖子的标题" />
 
     </LinearLayout>
 
