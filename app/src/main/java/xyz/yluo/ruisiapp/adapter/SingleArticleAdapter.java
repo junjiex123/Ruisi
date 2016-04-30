@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -37,6 +38,8 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
     private  final int CONTENT =0;
     private  final int COMENT = 1;
     private  final int LOAD_MORE = 2;
+    private boolean isLoading = true;
+
 
     //数据
     private List<SingleArticleData> datalist;
@@ -46,6 +49,10 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         this.datalist = datalist;
         this.activity =activity;
         SingleArticleAdapter.itemListener = itemListener;
+    }
+
+    public void setIsLoading(boolean isLoading) {
+       this.isLoading = isLoading;
     }
 
     @Override
@@ -66,7 +73,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             case CONTENT:
                 return new ArticleContentViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.content_item, viewGroup, false));
             case LOAD_MORE:
-                return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.article_load_more, viewGroup, false));
+                return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.load_more_item, viewGroup, false));
             default: // TYPE_COMMENT
                 return new CommentViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.comment_item, viewGroup, false));
         }
@@ -214,8 +221,13 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
     //加载更多ViewHolder
     protected class LoadMoreViewHolder extends BaseViewHolder{
 
-        @Bind(R.id.aticle_load_more_text)
-        protected TextView aticle_load_more_text;
+        @Bind(R.id.load_more_text)
+        protected TextView load_more_text;
+        @Bind(R.id.load_more_progress)
+        protected ProgressBar progressBar;
+        @Bind(R.id.load_more_empty)
+        protected View load_more_empty;
+
 
         public LoadMoreViewHolder(View itemView) {
             super(itemView);
@@ -228,12 +240,23 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             //TODO
             //load more 现在没有数据填充
             if(position==1){
-                aticle_load_more_text.setText("还没有人回复快来抢沙发吧！！");
-            }else if(position%10==0){
-                aticle_load_more_text.setText("加载更多");
-            }
-            else{
-                aticle_load_more_text.setText("暂无更多");
+                load_more_text.setText("还没有人回复快来抢沙发吧！！");
+                progressBar.setVisibility(View.GONE);
+                load_more_empty.setVisibility(View.GONE);
+            } else if(position%10!=0){
+                load_more_text.setText("暂无更多");
+                progressBar.setVisibility(View.GONE);
+                load_more_empty.setVisibility(View.VISIBLE);
+            }else {
+                if(isLoading){
+                    load_more_text.setText("正在加载");
+                    progressBar.setVisibility(View.VISIBLE);
+                    load_more_empty.setVisibility(View.VISIBLE);
+                }else{
+                    load_more_text.setText("暂无更多");
+                    progressBar.setVisibility(View.GONE);
+                    load_more_empty.setVisibility(View.VISIBLE);
+                }
             }
         }
 

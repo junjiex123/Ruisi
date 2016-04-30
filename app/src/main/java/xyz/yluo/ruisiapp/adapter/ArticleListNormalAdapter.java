@@ -65,7 +65,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
             case TYPE_NORMAL_MOBILE:
                 return new NormalViewHolderMe(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.main_list_item_me, viewGroup, false));
             case TYPE_LOAD_MORE:
-                return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.main_load_more_item, viewGroup, false));
+                return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.load_more_item, viewGroup, false));
             default: // TYPE_NORMAL
                 return new NormalViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.main_list_item, viewGroup, false));
         }

@@ -73,6 +73,8 @@ public class SingleArticleActivity extends BaseActivity
     //当前第几页
     private int CURRENT_PAGE = 1;
     private int TOTAL_PAGE = 1;
+    //是否倒序
+    private boolean isRevese = false;
 
     //是否允许加载更多
     private boolean isEnableLoadMore = false;
@@ -111,13 +113,19 @@ public class SingleArticleActivity extends BaseActivity
             actionBar.setTitle("正在加载...");
         }
 
-        init();
+        //下拉刷新
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyleAdapter = new SingleArticleAdapter(this, this, mydatalist);
         mRecyclerView.setAdapter(mRecyleAdapter);
-        mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this,8));
-        getArticleData(1);
+        mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this,9));
 
         MyReplyView.setListener(new ReplyBarListner() {
             @Override
@@ -132,26 +140,8 @@ public class SingleArticleActivity extends BaseActivity
             }
         });
 
+        refresh();
     }
-
-    private void init(){
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        });
-
-        //下拉刷新
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refresh();
-            }
-        });
-    }
-
-
 
     private boolean isNeedLoginDialog(){
         if (PublicData.ISLOGIN) {
@@ -207,6 +197,9 @@ public class SingleArticleActivity extends BaseActivity
     //文章一页的html 根据页数 tid
     private void getArticleData(final int page) {
         String url = UrlUtils.getSingleArticleUrl(tid,page,false);
+        if(isRevese){
+            url += "&ordertype=1";
+        }
         HttpUtil.get(this ,url,new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -252,7 +245,7 @@ public class SingleArticleActivity extends BaseActivity
             }
 
             int index =0;
-            if(CURRENT_PAGE==1||CURRENT_PAGE<TOTAL_PAGE){
+            if((CURRENT_PAGE==1&&mydatalist.size()==0)||CURRENT_PAGE<TOTAL_PAGE){
                 index = 0;
             }else if(CURRENT_PAGE>=TOTAL_PAGE){
                 if(mydatalist.size()==0){
@@ -337,15 +330,22 @@ public class SingleArticleActivity extends BaseActivity
                 actionBar.setSubtitle(subTitle);
                 isSetTitle = true;
             }
-            int start = mydatalist.size();
-            mydatalist.addAll(tepdata);
-            mRecyleAdapter.notifyItemRangeInserted(start, tepdata.size());
+            int add = tepdata.size();
+            if(add>0){
+                int start = mydatalist.size();
+                mydatalist.addAll(tepdata);
+                mRecyleAdapter.notifyItemRangeInserted(start, add);
+                mRecyleAdapter.setIsLoading(true);
+            }else{
+                //add = 0 没有添加
+                mRecyleAdapter.setIsLoading(false);
+                mRecyleAdapter.notifyItemChanged(mydatalist.size());
+            }
             isEnableLoadMore = true;
             refreshLayout.setRefreshing(false);
         }
     }
 
-    ////recyclerView item点击事件 加载更多事件
     @Override
     public void recyclerViewListClicked(View v, int position) {
         if(v.getId()==R.id.btn_star){
@@ -387,7 +387,6 @@ public class SingleArticleActivity extends BaseActivity
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-
                 if(res.contains("成功")){
                     Toast.makeText(getApplicationContext(),"收藏成功",Toast.LENGTH_SHORT).show();
                 }else if(res.contains("您已收藏")){
@@ -484,10 +483,6 @@ public class SingleArticleActivity extends BaseActivity
                     }
                 });
             }
-            @Override
-            public void onFailure(Throwable e) {
-
-            }
         });
     }
 
@@ -511,7 +506,7 @@ public class SingleArticleActivity extends BaseActivity
     }
 
     private boolean checkTime(){
-        if(System.currentTimeMillis()-replyTime>14500){
+        if(System.currentTimeMillis()-replyTime>15000){
             return  true;
         }else{
             Toast.makeText(this,"还没到15秒呢再等等吧",Toast.LENGTH_SHORT).show();
@@ -547,6 +542,11 @@ public class SingleArticleActivity extends BaseActivity
                 dialogFragment.setCurrentPage(CURRENT_PAGE);
                 dialogFragment.setMaxPage(TOTAL_PAGE);
                 dialogFragment.show(getFragmentManager(),"jump");
+                break;
+            case R.id.menu_reverse:
+                isRevese = !isRevese;
+                refresh();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
