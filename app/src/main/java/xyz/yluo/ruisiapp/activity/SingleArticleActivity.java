@@ -38,6 +38,7 @@ import xyz.yluo.ruisiapp.View.MyReplyView;
 import xyz.yluo.ruisiapp.View.NeedLoginDialogFragment;
 import xyz.yluo.ruisiapp.View.ReplyDialog;
 import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
+import xyz.yluo.ruisiapp.data.LoadMoreType;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
 import xyz.yluo.ruisiapp.data.SingleType;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
@@ -217,8 +218,6 @@ public class SingleArticleActivity extends BaseActivity
     }
 
     private class DealWithArticleData extends AsyncTask<Void,Void,String>{
-        //* 传入一篇文章html
-        //* 返回list<SingleArticleData>
         private List<SingleArticleData> tepdata = new ArrayList<>();
         private String htmlData;
         public DealWithArticleData(String htmlData) {
@@ -332,14 +331,21 @@ public class SingleArticleActivity extends BaseActivity
             }
             int add = tepdata.size();
             if(add>0){
+                if(add%10!=0){
+                    mRecyleAdapter.setLoadMoreType(LoadMoreType.NOTHING);
+                }else{
+                    mRecyleAdapter.setLoadMoreType(LoadMoreType.LOADING);
+                }
                 int start = mydatalist.size();
                 mydatalist.addAll(tepdata);
-                mRecyleAdapter.notifyItemRangeInserted(start, add);
-                mRecyleAdapter.setIsLoading(true);
+                mRecyleAdapter.notifyItemChanged(start);
+                mRecyleAdapter.notifyItemRangeInserted(start+1, add);
+                //mRecyleAdapter.notifyDataSetChanged();
+
             }else{
                 //add = 0 没有添加
-                mRecyleAdapter.setIsLoading(false);
-                mRecyleAdapter.notifyItemChanged(mydatalist.size());
+                mRecyleAdapter.setLoadMoreType(LoadMoreType.NOTHING);
+                mRecyleAdapter.notifyItemChanged(mRecyleAdapter.getItemCount()-1);
             }
             isEnableLoadMore = true;
             refreshLayout.setRefreshing(false);
@@ -348,32 +354,28 @@ public class SingleArticleActivity extends BaseActivity
 
     @Override
     public void recyclerViewListClicked(View v, int position) {
-        if(v.getId()==R.id.btn_star){
-            if(isNeedLoginDialog()){
-                Toast.makeText(getApplicationContext(),"正在收藏......",Toast.LENGTH_SHORT).show();
-                starTask();
-            }
-        }else if(v.getId()==R.id.btn_reply){
-            if(isNeedLoginDialog()){
-                show_ime();
-            }
-            //回复层主
-        }else if(v.getId()==R.id.btn_reply_2){
-            if(isNeedLoginDialog()){
-                SingleArticleData single = mydatalist.get(position);
-                String replyUrl = single.getReplyUrlTitle();
-                String replyIndex = single.getIndex();
-                String replyName = single.getUsername();
-                String  ref = Jsoup.parse(single.getCotent()).text();
-                ReplyCen(replyUrl,replyIndex,replyName,ref);
-            }
-        }
-        if(position==mydatalist.size()){
-            //加载更多被电击
-            if(isEnableLoadMore){
-                isEnableLoadMore = false;
-                onLoadMore();
-            }
+        switch (v.getId()){
+            case R.id.btn_star:
+                if(isNeedLoginDialog()){
+                    Toast.makeText(getApplicationContext(),"正在收藏......",Toast.LENGTH_SHORT).show();
+                    starTask();
+                }
+                break;
+            case R.id.btn_reply:
+                if(isNeedLoginDialog()){
+                    show_ime();
+                }
+                break;
+            case R.id.btn_reply_2:
+                if(isNeedLoginDialog()){
+                    SingleArticleData single = mydatalist.get(position);
+                    String replyUrl = single.getReplyUrlTitle();
+                    String replyIndex = single.getIndex();
+                    String replyName = single.getUsername();
+                    String  ref = Jsoup.parse(single.getCotent()).text();
+                    ReplyCen(replyUrl,replyIndex,replyName,ref);
+                }
+                break;
         }
     }
 

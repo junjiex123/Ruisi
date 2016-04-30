@@ -23,6 +23,7 @@ import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.View.MyHtmlTextView;
 import xyz.yluo.ruisiapp.View.MyWebView;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
+import xyz.yluo.ruisiapp.data.LoadMoreType;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
 import xyz.yluo.ruisiapp.data.SingleType;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
@@ -38,7 +39,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
     private  final int CONTENT =0;
     private  final int COMENT = 1;
     private  final int LOAD_MORE = 2;
-    private boolean isLoading = true;
+    private LoadMoreType loadMoreType = LoadMoreType.LOADING;
 
 
     //数据
@@ -51,8 +52,8 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         SingleArticleAdapter.itemListener = itemListener;
     }
 
-    public void setIsLoading(boolean isLoading) {
-       this.isLoading = isLoading;
+    public void setLoadMoreType(LoadMoreType loadMoreType) {
+        this.loadMoreType = loadMoreType;
     }
 
     @Override
@@ -240,25 +241,25 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             //TODO
             //load more 现在没有数据填充
             if(position==1){
+                loadMoreType = LoadMoreType.SECOND;
+            }
+            if(loadMoreType==LoadMoreType.LOADING){
+                load_more_text.setText("正在加载");
+                progressBar.setVisibility(View.VISIBLE);
+                load_more_empty.setVisibility(View.VISIBLE);
+            }else if(loadMoreType==LoadMoreType.SECOND){
                 load_more_text.setText("还没有人回复快来抢沙发吧！！");
                 progressBar.setVisibility(View.GONE);
                 load_more_empty.setVisibility(View.GONE);
-            } else if(position%10!=0){
+            }else if(loadMoreType==LoadMoreType.NOTHING){
                 load_more_text.setText("暂无更多");
                 progressBar.setVisibility(View.GONE);
                 load_more_empty.setVisibility(View.VISIBLE);
             }else {
-                if(isLoading){
-                    load_more_text.setText("正在加载");
-                    progressBar.setVisibility(View.VISIBLE);
-                    load_more_empty.setVisibility(View.VISIBLE);
-                }else{
-                    load_more_text.setText("暂无更多");
-                    progressBar.setVisibility(View.GONE);
-                    load_more_empty.setVisibility(View.VISIBLE);
-                }
+                load_more_text.setText("加载失败");
+                progressBar.setVisibility(View.GONE);
+                load_more_empty.setVisibility(View.VISIBLE);
             }
         }
-
     }
 }
