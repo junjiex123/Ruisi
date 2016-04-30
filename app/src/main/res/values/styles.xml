@@ -54,9 +54,4 @@
         <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
-    <style name="MyButton" parent="Theme.AppCompat.Light">
-        <item name="elevation">6dp</item>
-        <item name="colorControlHighlight">@color/indigo300</item>
-        <item name="colorButtonNormal">#2196f3</item>
-    </style>
 </resources>

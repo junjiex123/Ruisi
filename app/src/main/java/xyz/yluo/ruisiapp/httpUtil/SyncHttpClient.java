@@ -32,24 +32,13 @@ public class SyncHttpClient {
         }
     }
 
-    public int getConnectionTimeout() {
-        return connectionTimeout;
-    }
-
     public void setConnectionTimeout(int connectionTimeout) {
         this.connectionTimeout = connectionTimeout;
     }
 
-    public int getDataRetrievalTimeout() {
-        return dataRetrievalTimeout;
-    }
 
     public void setDataRetrievalTimeout(int dataRetrievalTimeout) {
         this.dataRetrievalTimeout = dataRetrievalTimeout;
-    }
-
-    public String getUserAgent() {
-        return headers.get("User-Agent");
     }
 
     public void setUserAgent(String userAgent) {
@@ -159,27 +148,23 @@ public class SyncHttpClient {
 
             //处理重定向
             int code = connection.getResponseCode();
-            if(code==302){
-                //如果会重定向，保存302重定向地址，以及Cookies,然后重新发送请求(模拟请求)
+            if(code==302||code==301){
+                //如果会重定向，保存302 301重定向地址,然后重新发送请求(模拟请求)
                 String location = connection.getHeaderField("Location");
                 request(PublicData.BASE_URL +location,Method.GET,map,handler);
+            }else{
+                // Process the response in the handler because it can be done in different ways
+                handler.processResponse(connection);
+                //获取cookie
+                if(store!=null){
+                    getCookie(connection);
+                }
             }
-
-            // Process the response in the handler because it can be done in different ways
-            handler.processResponse(connection);
-
-            //获取cookie
-            if(store!=null){
-                getCookie(connection);
-            }
-
-
         } catch (Exception e) {
             handler.sendFailureMessage(e);
         } finally {
             if (connection != null) {
                 connection.disconnect();
-                connection = null;
             }
             // Request finished
             handler.sendFinishMessage();

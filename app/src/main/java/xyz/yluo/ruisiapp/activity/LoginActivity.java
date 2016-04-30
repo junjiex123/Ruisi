@@ -54,8 +54,8 @@ public class LoginActivity extends BaseActivity {
     protected EditText ed_username;
     @Bind(R.id.login_pas)
     protected EditText ed_pass;
-    @Bind(R.id.login_test_button)
-    protected Button test_btn;
+    @Bind(R.id.btn_login)
+    protected Button btn_login;
     @Bind(R.id.iv_login_l)
     protected ImageView imageViewl;
     @Bind(R.id.iv_login_r)
@@ -103,7 +103,7 @@ public class LoginActivity extends BaseActivity {
             rem_user.setChecked(true);
             ed_username.setText(perPreferences.getString("USERNAME",""));
             ed_pass.setText(perPreferences.getString("PASSWORD",""));
-            test_btn.setEnabled(true);
+            btn_login.setEnabled(true);
         }
 
         list.add("安全提问(未设置请忽略)");
@@ -149,9 +149,9 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 if (!TextUtils.isEmpty(ed_username.getText()) && !TextUtils.isEmpty(ed_pass.getText())) {
-                    test_btn.setEnabled(true);
+                    btn_login.setEnabled(true);
                 } else {
-                    test_btn.setEnabled(false);
+                    btn_login.setEnabled(false);
                 }
             }
         });
@@ -169,9 +169,9 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 if (!TextUtils.isEmpty(ed_username.getText()) && !TextUtils.isEmpty(ed_pass.getText())) {
-                    test_btn.setEnabled(true);
+                    btn_login.setEnabled(true);
                 } else {
-                    test_btn.setEnabled(false);
+                    btn_login.setEnabled(false);
                 }
 
                 //替换密码框图片
@@ -203,8 +203,8 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    @OnClick(R.id.login_test_button)
-    protected void login_btn_click() {
+    @OnClick(R.id.btn_login)
+    protected void login_click() {
         progress = ProgressDialog.show(this, "正在登陆", "请等待", true);
         final String username = ed_username.getText().toString().trim();
         final String passNo = ed_pass.getText().toString().trim();

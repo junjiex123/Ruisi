@@ -45,7 +45,7 @@ import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 import xyz.yluo.ruisiapp.listener.ReplyBarListner;
-import xyz.yluo.ruisiapp.utils.GetIndex;
+import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
@@ -72,8 +72,8 @@ public class SingleArticleActivity extends BaseActivity
     private long replyTime = 0;
     //当前第几页
     private int CURRENT_PAGE = 1;
-    //全部页数
     private int TOTAL_PAGE = 1;
+
     //是否允许加载更多
     private boolean isEnableLoadMore = false;
     //回复楼主的链接
@@ -81,18 +81,14 @@ public class SingleArticleActivity extends BaseActivity
     private SingleArticleAdapter mRecyleAdapter;
     //存储数据 需要填充的列表
     private List<SingleArticleData> mydatalist = new ArrayList<>();
-
-    private  String ARTICLE_TID;
-    private  String ARTICLE_TITLE = "";
-    private  String ARTICLE_SUB_TITLE = "";
+    private String tid = "";
+    private boolean isSetTitle = false;
 
     //约定好要就收的数据
-    public static void open(Context context, String tid,String title) {
+    public static void open(Context context, String url) {
         Intent intent = new Intent(context, SingleArticleActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("tid",tid);
-        intent.putExtra("titile",title);
-
+        intent.putExtra("url",url);
         context.startActivity(intent);
     }
 
@@ -103,8 +99,8 @@ public class SingleArticleActivity extends BaseActivity
         ButterKnife.bind(this);
 
         try {
-            ARTICLE_TID =  getIntent().getExtras().getString("tid");
-            ARTICLE_TITLE = getIntent().getExtras().getString("titile");
+            String url =  getIntent().getExtras().getString("url");
+            tid = GetId.getTid(url);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -112,7 +108,7 @@ public class SingleArticleActivity extends BaseActivity
         actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(ARTICLE_TITLE);
+            actionBar.setTitle("正在加载...");
         }
 
         init();
@@ -210,7 +206,7 @@ public class SingleArticleActivity extends BaseActivity
 
     //文章一页的html 根据页数 tid
     private void getArticleData(final int page) {
-        String url = UrlUtils.getSingleArticleUrl(ARTICLE_TID,page,false);
+        String url = UrlUtils.getSingleArticleUrl(tid,page,false);
         HttpUtil.get(this ,url,new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -222,7 +218,7 @@ public class SingleArticleActivity extends BaseActivity
             public void onFailure(Throwable e) {
                 isEnableLoadMore = true;
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), ">>>网络错误", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "网络错误(Error -1)", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -235,16 +231,17 @@ public class SingleArticleActivity extends BaseActivity
         public DealWithArticleData(String htmlData) {
             this.htmlData = htmlData;
         }
+        private String title = "";
+        private String subTitle = "";
         @Override
         protected String doInBackground(Void... params) {
             //list 所有楼数据
             Document doc = Jsoup.parse(htmlData);
-            String titleText = doc.select("title").text();
-            if(titleText.contains("-")&&ARTICLE_SUB_TITLE.equals("")){
-                ARTICLE_SUB_TITLE = doc.select("title").text().split("-")[0].trim();
-                ARTICLE_TITLE = doc.select("title").text().split("-")[1].trim();
+            if(!isSetTitle){
+                String titleText = doc.select("title").text();
+                subTitle = titleText.split("-")[0].trim();
+                title = titleText.split("-")[1].trim();
             }
-
             //获取回复/hash
             if (doc.select("input[name=formhash]").first() != null) {
                 replyUrl = doc.select("form#fastpostform").attr("action");
@@ -253,48 +250,51 @@ public class SingleArticleActivity extends BaseActivity
                     PublicData.FORMHASH =hash;
                 }
             }
-            //获取总页数
-            Pattern pattern = Pattern.compile("[0-9]+");
-            String s = doc.select(".pg").select("span").attr("title");
-            Matcher matcher = pattern.matcher(s);
-            if (matcher.find()) {
-                String temps = s.substring(matcher.start(),matcher.end());
-                try {
-                    int  n = Integer.parseInt(temps);
-                    if(n>0&&n>TOTAL_PAGE){
-                        TOTAL_PAGE = n;
+
+            int index =0;
+            if(CURRENT_PAGE==1||CURRENT_PAGE<TOTAL_PAGE){
+                index = 0;
+            }else if(CURRENT_PAGE>=TOTAL_PAGE){
+                if(mydatalist.size()==0){
+                    index = 0;
+                }else{
+                    index = mydatalist.size()%10;
+                    if(index==0){
+                        index = 10;
                     }
-                }catch (Exception e){
-                    e.printStackTrace();
                 }
             }
-
+            //获取总页数 和当前页数
+            if(doc.select(".pg").text().length()>0){
+                CURRENT_PAGE = Integer.parseInt(doc.select(".pg").select("strong").text());
+                Pattern pattern = Pattern.compile("[0-9]+");
+                String s = doc.select(".pg").select("span").attr("title");
+                Matcher matcher = pattern.matcher(s);
+                if (matcher.find()) {
+                    String temps = s.substring(matcher.start(),matcher.end());
+                    try {
+                        int  n = Integer.parseInt(temps);
+                        if(n>0&&n>TOTAL_PAGE){
+                            TOTAL_PAGE = n;
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
             Elements elements = doc.select(".postlist");
             Elements postlist = elements.select("div[id^=pid]");
-
-            int a;
-            if(mydatalist.size()==0){
-                a = 0;
-            }else {
-                String indexs= mydatalist.get(mydatalist.size()-1).getIndex();
-                a = GetIndex.getIndex(indexs);
-            }
-
-            for(Element temp:postlist){
+            for(int i =index;i<postlist.size();i++){
+                Element temp = postlist.get(i);
                 SingleArticleData data;
                 String userimg = temp.select("span[class=avatar]").select("img").attr("src");
                 Elements userInfo = temp.select("ul.authi");
-                String index = userInfo.select("li.grey").select("em").text();
+                String commentindex = userInfo.select("li.grey").select("em").text();
                 String username = userInfo.select("a[href^=home.php?mod=space&uid=]").text();
                 String posttime = userInfo.select("li.grey.rela").text();
                 String replyUrl = temp.select(".replybtn").select("input").attr("href");
                 Elements contentels = temp.select(".message");
                 String finalcontent = contentels.html();
-
-                int b = GetIndex.getIndex(index);
-                if(b<=a){
-                    continue;
-                }
 
                 //是否移除所有样式
                 if(PublicData.ISSHOW_PLAIN){
@@ -304,7 +304,7 @@ public class SingleArticleActivity extends BaseActivity
                     contentels.select("font").removeAttr("color").removeAttr("size").removeAttr("face");
                 }
                 //这是内容
-                if(index.contains("楼主")||index.contains("收藏")){
+                if(commentindex.contains("楼主")||commentindex.contains("收藏")){
                     //修改表情大小 30x30
                     for (Element tempp : contentels.select("img[src^=static/image/smiley/]")) {
                         tempp.attr("style", "width:30px;height: 30px;");
@@ -319,37 +319,30 @@ public class SingleArticleActivity extends BaseActivity
                     ////替换无意义的 br
                     finalcontent = contentels.html().replaceAll("(\\s*<br>\\s*){2,}","");
                     String newtime = posttime.replace("收藏","");
-                    data = new SingleArticleData(SingleType.CONTENT, userimg,username,newtime,index,ARTICLE_TITLE,finalcontent);
+                    data = new SingleArticleData(SingleType.CONTENT, userimg,username,newtime,commentindex,replyUrl,finalcontent);
                 } else {
-                    data = new SingleArticleData(SingleType.COMMENT,userimg,username,posttime,index,replyUrl,finalcontent);
+                    data = new SingleArticleData(SingleType.COMMENT,userimg,username,posttime,commentindex,replyUrl,finalcontent);
                 }
-
                 tepdata.add(data);
             }
+
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if(actionBar!=null&&CURRENT_PAGE==1){
-                actionBar.setTitle(ARTICLE_TITLE);
-                actionBar.setSubtitle(ARTICLE_SUB_TITLE);
+            if(!isSetTitle){
+                actionBar.setTitle(title);
+                actionBar.setSubtitle(subTitle);
+                isSetTitle = true;
             }
             int start = mydatalist.size();
             mydatalist.addAll(tepdata);
-            String indexs ="0";
-            if(mydatalist.size()>1){
-                indexs= mydatalist.get(mydatalist.size()-1).getIndex();
-            }
-
-            int a = GetIndex.getIndex(indexs);
-            CURRENT_PAGE = (a+9)/10;
             mRecyleAdapter.notifyItemRangeInserted(start, tepdata.size());
             isEnableLoadMore = true;
             refreshLayout.setRefreshing(false);
         }
-
     }
 
     ////recyclerView item点击事件 加载更多事件
@@ -386,7 +379,7 @@ public class SingleArticleActivity extends BaseActivity
 
     //收藏 任务
     private void starTask(){
-        final String url = UrlUtils.getStarUrl(ARTICLE_TID);
+        final String url = UrlUtils.getStarUrl(tid);
         Map<String,String> params = new HashMap<>();
         params.put("favoritesubmit","true");
         params.put("formhash", PublicData.FORMHASH);
@@ -537,7 +530,7 @@ public class SingleArticleActivity extends BaseActivity
         int id = item.getItemId();
         switch (id){
             case R.id.menu_broswer:
-                String url = PublicData.BASE_URL +UrlUtils.getSingleArticleUrl(ARTICLE_TID,CURRENT_PAGE,false);
+                String url = PublicData.BASE_URL +UrlUtils.getSingleArticleUrl(tid,CURRENT_PAGE,false);
                 RequestOpenBrowser.openBroswer(this,url);
                 break;
             case R.id.menu_refresh:

@@ -47,9 +47,6 @@ public abstract class ResponseHandler {
 
     void processResponse(HttpURLConnection connection) throws IOException {
         int responseCode = connection.getResponseCode();
-        // Map<String, List<String>> responseHeaders =
-        // connection.getHeaderFields();
-        // Response
         long contentLength = connection.getContentLength();
 
         // 'Successful' response codes will be in interval [200,300)

@@ -22,8 +22,7 @@ public class HandleLinkClick {
         if(url.contains("from=album")){
             //do nothing
         }else if (url.contains("forum.php?mod=viewthread&tid=")) { // 帖子
-            String tid = GetId.getTid(url);
-            SingleArticleActivity.open(context,tid,"查看主题");
+            SingleArticleActivity.open(context,url);
         } else if (url.contains("home.php?mod=space&uid=")) { // 用户
             String imageUrl = UrlUtils.getimageurl(url,true);
             UserDetailActivity.open(context,"name",imageUrl);

@@ -127,7 +127,7 @@ public class HomeActivity extends BaseActivity
             public void onClick(final View v) {
 
                 if (PublicData.ISLOGIN) {
-                    String url = UrlUtils.getimageurl("uid="+PublicData.USER_UID,true);
+                    String url = UrlUtils.getimageurl(PublicData.USER_UID,true);
                     UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, PublicData.USER_NAME, userImage,url);
                 } else {
                     Intent i = new Intent(getApplicationContext(), LoginActivity.class);
@@ -227,7 +227,7 @@ public class HomeActivity extends BaseActivity
             userName.setText(PublicData.USER_NAME);
             nav_header_login.setVisibility(View.VISIBLE);
             nav_header_notlogin.setVisibility(View.GONE);
-            String url = UrlUtils.getimageurl("uid="+PublicData.USER_UID,true);
+            String url = UrlUtils.getimageurl(PublicData.USER_UID,true);
             Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).resize(80,80).into(userImage);
         } else {
             userImage.setImageResource(R.drawable.image_placeholder);

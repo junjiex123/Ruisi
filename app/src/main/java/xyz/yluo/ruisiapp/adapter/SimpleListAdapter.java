@@ -18,7 +18,6 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.SimpleListData;
-import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-4-7.
@@ -81,11 +80,7 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         void item_click(){
             SimpleListData single_data =  Datas.get(getAdapterPosition());
             String url = single_data.getExtradata();
-            if(!url.equals("")){
-                String tid = GetId.getTid(url);
-                if(!tid.equals(""))
-                    SingleArticleActivity.open(activity,tid,single_data.getKey());
-            }
+            SingleArticleActivity.open(activity,url);
         }
 
         @OnLongClick(R.id.main_item_btn_item)

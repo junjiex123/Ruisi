@@ -47,7 +47,10 @@ public class UrlUtils {
     }
 
     public static String getimageurl(String urlUid,boolean ismiddle){
-        String uid = GetId.getUid(urlUid);
+        String uid = urlUid;
+        if(urlUid.contains("uid")){
+           uid =  GetId.getUid(urlUid);
+        }
         String url = PublicData.BASE_URL +"ucenter/avatar.php?uid="+uid;
         if(ismiddle){
             url+="&size=middle";

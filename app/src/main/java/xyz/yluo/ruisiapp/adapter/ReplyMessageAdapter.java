@@ -22,7 +22,6 @@ import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.ReplyMessageData;
-import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-3-21.
@@ -96,9 +95,7 @@ public class ReplyMessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
                 ChatActivity.open(activity,username,single_data.getTitleUrl());
                 single_data.setRead(true);
             }else if(ListType.REPLAYME==type){//回复我的
-                String tid = GetId.getTid(single_data.getTitleUrl());
-                String title = single_data.getcontent();
-                SingleArticleActivity.open(activity,tid,title);
+                SingleArticleActivity.open(activity,single_data.getTitleUrl());
             }
 
         }

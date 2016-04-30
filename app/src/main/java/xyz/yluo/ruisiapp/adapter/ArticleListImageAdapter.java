@@ -20,7 +20,6 @@ import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.data.ImageArticleListData;
-import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-3-31.
@@ -88,8 +87,7 @@ public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListIma
         @OnClick(R.id.card_list_item)
         protected void item_click() {
             ImageArticleListData single_data =  DataSet.get(getAdapterPosition());
-            String tid = GetId.getTid(single_data.getTitleUrl());
-            SingleArticleActivity.open(activity,tid,single_data.getTitle());
+            SingleArticleActivity.open(activity,single_data.getTitleUrl());
         }
     }
 }

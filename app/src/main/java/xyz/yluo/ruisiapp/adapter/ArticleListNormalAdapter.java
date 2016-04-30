@@ -20,7 +20,6 @@ import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ArticleListData;
-import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -145,7 +144,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         @OnClick(R.id.main_item_btn_item)
         protected void onBtnItemClick() {
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
-            SingleArticleActivity.open(activity, GetId.getTid(single_data.getTitleUrl()),single_data.getTitle());
+            SingleArticleActivity.open(activity,single_data.getTitleUrl());
         }
     }
 
@@ -198,10 +197,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         @OnClick(R.id.main_item_btn_item)
         protected void onBtnItemClick() {
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
-            String tid = GetId.getTid(single_data.getTitleUrl());
-            String title = single_data.getTitle();
-
-            SingleArticleActivity.open(activity,tid,title);
+            SingleArticleActivity.open(activity,single_data.getTitleUrl());
         }
     }
 
