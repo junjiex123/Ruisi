@@ -27,6 +27,11 @@ public class HttpUtil {
         client.post(PublicData.BASE_URL +url,map,handler);
     }
 
+    public static void head(Context context,String url,ResponseHandler handler){
+        init(context);
+        client.head(PublicData.BASE_URL+url,handler);
+    }
+
     private static void init(Context context){
         client.setConnectionTimeout(5000);
         if(store==null){

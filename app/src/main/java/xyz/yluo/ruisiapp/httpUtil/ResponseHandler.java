@@ -48,8 +48,6 @@ public abstract class ResponseHandler {
     void processResponse(HttpURLConnection connection) throws IOException {
         int responseCode = connection.getResponseCode();
         long contentLength = connection.getContentLength();
-
-        // 'Successful' response codes will be in interval [200,300)
         if (responseCode >= 200 && responseCode < 303) {
             byte[] responseContent = readFrom(connection.getInputStream(), contentLength);
             sendSuccessMessage(responseContent);

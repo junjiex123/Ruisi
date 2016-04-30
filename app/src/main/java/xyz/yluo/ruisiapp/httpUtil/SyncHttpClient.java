@@ -123,6 +123,10 @@ public class SyncHttpClient {
         request(url, Method.POST, map, handler);
     }
 
+    public void head(final String url,final ResponseHandler handler){
+        request(url,Method.HEAD,null,handler);
+    }
+
     void request(final String url, final Method method, final Map<String, String> map,
                  final ResponseHandler handler) {
         HttpURLConnection connection = null;
@@ -137,29 +141,29 @@ public class SyncHttpClient {
                 byte[] content = encodeParameters(map);
                 connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + UTF8);
                 connection.setRequestProperty("Content-Length", Long.toString(content.length));
-
-                // Stream the data so we don't run out of memory
                 connection.setFixedLengthStreamingMode(content.length);
                 OutputStream os = connection.getOutputStream();
                 os.write(content);
                 os.flush();
                 os.close();
-            }
-
-            //处理重定向
-            int code = connection.getResponseCode();
-            if(code==302||code==301){
-                //如果会重定向，保存302 301重定向地址,然后重新发送请求(模拟请求)
+            }else if(method==Method.HEAD){
                 String location = connection.getHeaderField("Location");
-                request(PublicData.BASE_URL +location,Method.GET,map,handler);
-            }else{
-                // Process the response in the handler because it can be done in different ways
-                handler.processResponse(connection);
-                //获取cookie
-                if(store!=null){
-                    getCookie(connection);
-                }
+                handler.sendSuccessMessage(location.getBytes());
+                return;
             }
+            //处理重定向
+//            int code = connection.getResponseCode();
+//            if(code==302){
+//                //如果会重定向，保存302 301重定向地址,然后重新发送请求(模拟请求)
+//                String location = connection.getHeaderField("Location");
+//                request(PublicData.BASE_URL +location,Method.GET,map,handler);
+//            }else{
+            handler.processResponse(connection);
+            //获取cookie
+            if(store!=null){
+                getCookie(connection);
+            }
+            //}
         } catch (Exception e) {
             handler.sendFailureMessage(e);
         } finally {

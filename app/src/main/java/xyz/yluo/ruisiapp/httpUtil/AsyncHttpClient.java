@@ -31,4 +31,14 @@ public class AsyncHttpClient extends SyncHttpClient {
             }
         });
     }
+
+    @Override
+    public void head(final String url, final ResponseHandler handler) {
+        threadPool.execute(new Runnable() {
+            @Override
+            public void run() {
+                request(url, Method.HEAD,null, handler);
+            }
+        });
+    }
 }
