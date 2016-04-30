@@ -65,6 +65,18 @@ public class GetId {
         return tid;
     }
 
+    public static int getPage(String url){
+        //forum.php?mod=redirect&goto=findpost&ptid=846689&pid=21330831
+        Pattern pattern = Pattern.compile("page=[0-9]{1,}");
+        Matcher matcher = pattern.matcher(url);
+        int  page =1;
+        if (matcher.find()) {
+            page = Integer.parseInt(url.substring(matcher.start()+5,matcher.end()));
+            //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
+        }
+        return page;
+    }
+
     public static String getPid(String url){
         //forum.php?mod=redirect&goto=findpost&ptid=846689&pid=21330831
         Pattern pattern = Pattern.compile("pid=[0-9]{3,}");

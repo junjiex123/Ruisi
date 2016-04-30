@@ -72,10 +72,10 @@ public class SingleArticleActivity extends BaseActivity
     //上一次回复时间
     private long replyTime = 0;
     //当前第几页
-    private int CURRENT_PAGE = 1;
-    private int TOTAL_PAGE = 1;
+    private int page_now = 1;
+    private int page_sum = 1;
     //是否倒序
-    private boolean isRevese = false;
+    private boolean isRevere = false;
 
     //是否允许加载更多
     private boolean isEnableLoadMore = false;
@@ -86,6 +86,8 @@ public class SingleArticleActivity extends BaseActivity
     private List<SingleArticleData> mydatalist = new ArrayList<>();
     private String tid = "";
     private boolean isSetTitle = false;
+    //是否调到指定页数and楼层???
+    private boolean isRedirect  = false;
 
     //约定好要就收的数据
     public static void open(Context context, String url) {
@@ -100,13 +102,6 @@ public class SingleArticleActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_chat);
         ButterKnife.bind(this);
-
-        try {
-            String url =  getIntent().getExtras().getString("url");
-            tid = GetId.getTid(url);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
 
         actionBar = getSupportActionBar();
         if(actionBar!=null){
@@ -141,7 +136,42 @@ public class SingleArticleActivity extends BaseActivity
             }
         });
 
-        refresh();
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+            }
+        });
+
+        try {
+            String url =  getIntent().getExtras().getString("url");
+            tid = GetId.getTid(url);
+            if(url.contains("redirect")){
+                isRedirect = true;
+                HttpUtil.head(this, url, new ResponseHandler() {
+                    @Override
+                    public void onSuccess(byte[] response) {
+                        int page = GetId.getPage(new String(response));
+                        firstGetData(page);
+                    }
+                });
+            }else{
+                firstGetData(1);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void firstGetData(int page){
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+            }
+        });
+        //数据填充
+        getArticleData(page);
     }
 
     private boolean isNeedLoginDialog(){
@@ -159,9 +189,9 @@ public class SingleArticleActivity extends BaseActivity
         //加载更多被电击
         if(isEnableLoadMore){
             isEnableLoadMore = false;
-            int page = CURRENT_PAGE;
-            if(CURRENT_PAGE<TOTAL_PAGE){
-                page= CURRENT_PAGE+1;
+            int page = page_now;
+            if(page_now < page_sum){
+                page= page_now +1;
             }
             getArticleData(page);
         }
@@ -198,7 +228,7 @@ public class SingleArticleActivity extends BaseActivity
     //文章一页的html 根据页数 tid
     private void getArticleData(final int page) {
         String url = UrlUtils.getSingleArticleUrl(tid,page,false);
-        if(isRevese){
+        if(isRevere){
             url += "&ordertype=1";
         }
         HttpUtil.get(this ,url,new ResponseHandler() {
@@ -231,8 +261,14 @@ public class SingleArticleActivity extends BaseActivity
             Document doc = Jsoup.parse(htmlData);
             if(!isSetTitle){
                 String titleText = doc.select("title").text();
-                subTitle = titleText.split("-")[0].trim();
-                title = titleText.split("-")[1].trim();
+                String[] array = titleText.split("-");
+                for(int i =0;i<array.length;i++){
+                    if(i == 0){
+                        subTitle = array[i].trim();
+                    }else if(i==2){
+                        title = array[i].trim();
+                    }
+                }
             }
             //获取回复/hash
             if (doc.select("input[name=formhash]").first() != null) {
@@ -244,9 +280,9 @@ public class SingleArticleActivity extends BaseActivity
             }
 
             int index =0;
-            if((CURRENT_PAGE==1&&mydatalist.size()==0)||CURRENT_PAGE<TOTAL_PAGE){
+            if((page_now ==1&&mydatalist.size()==0)|| page_now < page_sum){
                 index = 0;
-            }else if(CURRENT_PAGE>=TOTAL_PAGE){
+            }else if(page_now >= page_sum){
                 if(mydatalist.size()==0){
                     index = 0;
                 }else{
@@ -258,7 +294,7 @@ public class SingleArticleActivity extends BaseActivity
             }
             //获取总页数 和当前页数
             if(doc.select(".pg").text().length()>0){
-                CURRENT_PAGE = Integer.parseInt(doc.select(".pg").select("strong").text());
+                page_now = Integer.parseInt(doc.select(".pg").select("strong").text());
                 Pattern pattern = Pattern.compile("[0-9]+");
                 String s = doc.select(".pg").select("span").attr("title");
                 Matcher matcher = pattern.matcher(s);
@@ -266,8 +302,8 @@ public class SingleArticleActivity extends BaseActivity
                     String temps = s.substring(matcher.start(),matcher.end());
                     try {
                         int  n = Integer.parseInt(temps);
-                        if(n>0&&n>TOTAL_PAGE){
-                            TOTAL_PAGE = n;
+                        if(n>0&&n> page_sum){
+                            page_sum = n;
                         }
                     }catch (Exception e){
                         e.printStackTrace();
@@ -340,7 +376,17 @@ public class SingleArticleActivity extends BaseActivity
                 mydatalist.addAll(tepdata);
                 mRecyleAdapter.notifyItemChanged(start);
                 mRecyleAdapter.notifyItemRangeInserted(start+1, add);
-                //mRecyleAdapter.notifyDataSetChanged();
+
+                if(isRedirect){
+                    isRedirect = false;
+                    for(int i =0;i<mydatalist.size();i++){
+                        if(mydatalist.get(i).getCotent().contains(PublicData.USER_NAME)){
+                            System.out.println("********find same*******");
+                            mRecyclerView.scrollToPosition(i);
+                            break;
+                        }
+                    }
+                }
 
             }else{
                 //add = 0 没有添加
@@ -527,7 +573,7 @@ public class SingleArticleActivity extends BaseActivity
         int id = item.getItemId();
         switch (id){
             case R.id.menu_broswer:
-                String url = PublicData.BASE_URL +UrlUtils.getSingleArticleUrl(tid,CURRENT_PAGE,false);
+                String url = PublicData.BASE_URL +UrlUtils.getSingleArticleUrl(tid, page_now,false);
                 RequestOpenBrowser.openBroswer(this,url);
                 break;
             case R.id.menu_refresh:
@@ -541,12 +587,12 @@ public class SingleArticleActivity extends BaseActivity
                 break;
             case R.id.menu_jump:
                 ArticleJumpDialog dialogFragment = new ArticleJumpDialog();
-                dialogFragment.setCurrentPage(CURRENT_PAGE);
-                dialogFragment.setMaxPage(TOTAL_PAGE);
+                dialogFragment.setCurrentPage(page_now);
+                dialogFragment.setMaxPage(page_sum);
                 dialogFragment.show(getFragmentManager(),"jump");
                 break;
             case R.id.menu_reverse:
-                isRevese = !isRevese;
+                isRevere = !isRevere;
                 refresh();
                 break;
         }

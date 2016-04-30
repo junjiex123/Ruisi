@@ -159,6 +159,7 @@ public class ChatActivity extends BaseActivity{
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             adapter.notifyDataSetChanged();
+            recycler_view.scrollToPosition(datas.size());
             refreshLayout.setRefreshing(false);
         }
     }
@@ -205,6 +206,7 @@ public class ChatActivity extends BaseActivity{
                         String userImage = PublicData.BASE_URL +"ucenter/avatar.php?uid="+ PublicData.USER_UID +"&size=small";
                         datas.add(new ChatListData(1,userImage,text,"刚刚"));
                         adapter.notifyItemInserted(datas.size()-1);
+                        recycler_view.scrollToPosition(datas.size());
                         myReplyView.clearText();
                         Toast.makeText(getApplicationContext(),"发布成功",Toast.LENGTH_SHORT).show();
                     } else {

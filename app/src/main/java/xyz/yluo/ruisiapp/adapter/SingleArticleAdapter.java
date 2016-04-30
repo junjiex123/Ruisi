@@ -250,7 +250,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             }else if(loadMoreType==LoadMoreType.SECOND){
                 load_more_text.setText("还没有人回复快来抢沙发吧！！");
                 progressBar.setVisibility(View.GONE);
-                load_more_empty.setVisibility(View.GONE);
+                load_more_empty.setVisibility(View.VISIBLE);
             }else if(loadMoreType==LoadMoreType.NOTHING){
                 load_more_text.setText("暂无更多");
                 progressBar.setVisibility(View.GONE);

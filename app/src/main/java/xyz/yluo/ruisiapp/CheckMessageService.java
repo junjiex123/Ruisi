@@ -16,7 +16,6 @@ import org.jsoup.select.Elements;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.httpUtil.SyncHttpClient;
-import xyz.yluo.ruisiapp.utils.GetId;
 
 public class CheckMessageService extends Service {
 
@@ -55,20 +54,16 @@ public class CheckMessageService extends Service {
                 for(Element e:elemens){
                     String s = e.select(".ntc_body").attr("style");
                     if(s.contains("bold")){
-                        String titleUrl =e.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
-                        String id = GetId.getid(titleUrl);
-                        resultIntent.putExtra("tid",id);
-                        resultIntent.putExtra("titile","加载中");
+                        String url =e.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
+                        resultIntent.putExtra("url",url);
                         PendingIntent rIntent = PendingIntent.getActivity(getApplicationContext(), 1, resultIntent, 0);
                         builder.setContentText(e.select(".ntc_body").text());
                         builder.setContentIntent(rIntent);
                         builder.setFullScreenIntent(rIntent,true);
                         mNotifyMgr.notify(1, builder.build());
+                        break;
                     }
                 }
-            }
-            @Override
-            public void onFailure(Throwable e) {
             }
         };
 
