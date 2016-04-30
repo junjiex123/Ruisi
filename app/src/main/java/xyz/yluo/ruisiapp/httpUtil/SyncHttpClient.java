@@ -151,19 +151,20 @@ public class SyncHttpClient {
                 handler.sendSuccessMessage(location.getBytes());
                 return;
             }
-            //处理重定向
-//            int code = connection.getResponseCode();
-//            if(code==302){
-//                //如果会重定向，保存302 301重定向地址,然后重新发送请求(模拟请求)
-//                String location = connection.getHeaderField("Location");
-//                request(PublicData.BASE_URL +location,Method.GET,map,handler);
-//            }else{
-            handler.processResponse(connection);
-            //获取cookie
-            if(store!=null){
-                getCookie(connection);
+//            处理重定向
+            int code = connection.getResponseCode();
+            if(code==302){
+                //如果会重定向，保存302 301重定向地址,然后重新发送请求(模拟请求)
+                String location = connection.getHeaderField("Location");
+                request(PublicData.BASE_URL +location,Method.GET,map,handler);
+                return;
+            }else{
+                handler.processResponse(connection);
+                //获取cookie
+                if(store!=null){
+                    getCookie(connection);
+                }
             }
-            //}
         } catch (Exception e) {
             handler.sendFailureMessage(e);
         } finally {

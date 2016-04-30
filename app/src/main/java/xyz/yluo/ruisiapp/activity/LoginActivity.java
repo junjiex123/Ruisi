@@ -267,7 +267,8 @@ public class LoginActivity extends BaseActivity {
         if(rem_pass.isChecked()){
             editor.putBoolean("ISREMUSER",true);
             editor.putBoolean("ISREMPASS",true);
-            editor.putString("USERNAME", ed_username.getText().toString().trim());
+            String userName = ed_username.getText().toString().trim();
+            editor.putString("USERNAME",userName);
             editor.putString("PASSWORD",ed_pass.getText().toString().trim());
         }else{
             editor.putBoolean("ISREMUSER",false);
@@ -280,9 +281,8 @@ public class LoginActivity extends BaseActivity {
             editor.putBoolean("ISREMUSER",false);
         }
         editor.apply();
-
         Document doc = Jsoup.parse(res);
-        PublicData.USER_NAME = ed_username.getText().toString().trim();
+        PublicData.USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
         String url = doc.select("a[href^=home.php?mod=space&uid=]").attr("href");
         PublicData.USER_UID = GetId.getUid(url);
 
@@ -291,11 +291,9 @@ public class LoginActivity extends BaseActivity {
         PublicData.ISLOGIN = true;
         Toast.makeText(getApplicationContext(), "欢迎你"+ PublicData.USER_NAME +"登陆成功", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
-        //把返回数据存入Intent
         intent.putExtra("result", "ok");
         //设置返回数据
         LoginActivity.this.setResult(RESULT_OK, intent);
-        //关闭Activity
         finish();
     }
 
