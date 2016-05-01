@@ -1,19 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:orientation="vertical"
-    android:background="@android:color/white"
+<FrameLayout
+    android:background="#ffffffff"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <xyz.yluo.ruisiapp.View.CircleImageView
+        android:visibility="gone"
+        android:id="@+id/user_image"
+        app:civ_border_width="2dp"
+        app:civ_border_color="@color/blue50"
+        android:src="@drawable/image_placeholder"
+        android:layout_marginTop="130dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
 
     <TextView
-        android:textColor="@color/colorAccent"
-        android:textSize="20sp"
-        android:text="爱生活，爱西电，爱睿思。"
-        android:layout_weight="1"
+        android:id="@+id/launch_text"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="250dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="25sp"
+        android:text="西电睿思"
         android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="0dp" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_gravity="bottom"
@@ -38,14 +51,14 @@
             android:id="@+id/textView" />
 
         <TextView
+            style="@style/TitleText"
+            android:textColor="#88333333"
             android:layout_marginBottom="4dp"
-            android:textSize="16sp"
-            android:textColor="@color/colorAccent"
+            android:textSize="15sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="睿思手机客户端"
+            android:text="©2016 xidianrs.cn"
             android:id="@+id/textView3" />
     </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>

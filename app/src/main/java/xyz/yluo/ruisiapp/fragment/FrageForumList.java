@@ -65,9 +65,20 @@ public class FrageForumList extends Fragment{
         View view = inflater.inflate(R.layout.fragment_form_ist, container, false);
         ButterKnife.bind(this, view);
 
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
-        recycler_view.setLayoutManager(mLayoutManager);
+        GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
         forumListAdapter = new ForumListAdapter(getActivity(),datas);
+        //跨列
+        mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if(forumListAdapter.getItemViewType(position)==1){
+                    return 2;
+                }
+                return 1;
+            }
+        });
+        recycler_view.setLayoutManager(mLayoutManager);
+
         recycler_view.setAdapter(forumListAdapter);
 
         recycler_view.addOnScrollListener(new HidingScrollListener() {

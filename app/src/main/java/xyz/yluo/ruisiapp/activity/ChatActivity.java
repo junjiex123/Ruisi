@@ -208,7 +208,7 @@ public class ChatActivity extends BaseActivity{
                         adapter.notifyItemInserted(datas.size()-1);
                         recycler_view.scrollToPosition(datas.size());
                         myReplyView.clearText();
-                        Toast.makeText(getApplicationContext(),"发布成功",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"回复成功！！",Toast.LENGTH_SHORT).show();
                     } else {
                         progress.dismiss();
                         if(res.contains("两次发送短消息太快")){

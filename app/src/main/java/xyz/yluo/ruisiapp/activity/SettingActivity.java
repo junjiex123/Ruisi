@@ -97,7 +97,7 @@ public class SettingActivity extends PreferenceActivity {
                 public boolean onPreferenceClick(Preference preference) {
                     Toast.makeText(getActivity(),"正在检查更新",Toast.LENGTH_SHORT).show();
                     AsyncHttpClient client = new AsyncHttpClient();
-                    client.get("http://123.206.22.74/version.json", new ResponseHandler() {
+                    client.get("http://xidianrs.cn/version.json", new ResponseHandler() {
                         @Override
                         public void onSuccess(byte[] response) {
                             JSONObject jsonObject;
