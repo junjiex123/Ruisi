@@ -45,6 +45,7 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
+        android:visibility="gone"
         android:background="#eeeeeeee"
         android:id="@+id/smileys_container"
         android:layout_width="match_parent"

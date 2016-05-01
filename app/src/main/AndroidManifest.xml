@@ -49,7 +49,7 @@
             android:name=".activity.SingleArticleActivity"
             android:hardwareAccelerated="true"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustPan">
         </activity>
 
         <activity android:name=".activity.SettingActivity"
