@@ -14,22 +14,22 @@ import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.ReplyMessageData;
 
 //我的消息
-public class FragementMyMessage extends BaseFragement {
+public class FrageMessage extends BaseFragement {
 
     private ReplyMessageAdapter adapter;
     private List<ReplyMessageData> datas;
     private static String url;
 
-    public FragementMyMessage() {
+    public FrageMessage() {
         super(url);
         datas = new ArrayList<>();
     }
 
 
-    public static FragementMyMessage newInstance(String url) {
-        FragementMyMessage.url = url;
+    public static FrageMessage newInstance(String url) {
+        FrageMessage.url = url;
 
-        return new FragementMyMessage();
+        return new FrageMessage();
     }
 
     @Override

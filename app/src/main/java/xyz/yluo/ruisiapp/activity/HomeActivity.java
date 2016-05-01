@@ -29,8 +29,8 @@ import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.View.NeedLoginDialogFragment;
-import xyz.yluo.ruisiapp.fragment.FragementFormList;
-import xyz.yluo.ruisiapp.fragment.FragementSimpleArticle;
+import xyz.yluo.ruisiapp.fragment.FrageForumList;
+import xyz.yluo.ruisiapp.fragment.FrageSimpleArticle;
 import xyz.yluo.ruisiapp.fragment.FragementUser;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
@@ -38,7 +38,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * Created by free2 on 16-3-17.
  * 这是首页 管理3个fragment
  * 1.板块列表{@link HomeActivity}
- * 2.新帖{@link FragementSimpleArticle}
+ * 2.新帖{@link FrageSimpleArticle}
  * 3.我{@link FragementUser}
  */
 public class HomeActivity extends BaseActivity
@@ -144,7 +144,7 @@ public class HomeActivity extends BaseActivity
                     case R.id.btn_2:
                         title = "看帖";
                         if(frag_02==null){
-                            frag_02 = new FragementSimpleArticle();
+                            frag_02 = new FrageSimpleArticle();
                         }
                         switchContent(currentFragment,frag_02);
                         break;
@@ -160,7 +160,7 @@ public class HomeActivity extends BaseActivity
                     default:
                         title = "首页";
                         if(frag_01==null){
-                            frag_01=new FragementFormList();
+                            frag_01=new FrageForumList();
                         }
                         switchContent(currentFragment,frag_01);
                         break;
@@ -181,7 +181,7 @@ public class HomeActivity extends BaseActivity
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         if(currentFragment ==null) {
-            currentFragment = new FragementFormList();
+            currentFragment = new FrageForumList();
             ft.replace(R.id.fragment_container, currentFragment).commit();
         }else{
             if (currentFragment != to) {

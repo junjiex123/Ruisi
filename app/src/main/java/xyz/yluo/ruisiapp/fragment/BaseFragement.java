@@ -20,7 +20,7 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 /**
  * Created by free2 on 16-4-7.
  * 首页我 的基类
- * 另外几个个继承他 {@link FragementMyArticle} {@link FragementReplyMe} {@link FragementMyStar}
+ * 另外几个个继承他 {@link FrageMyArticle} {@link FrageReplyMe} {@link FrageMyStar}
  */
 public abstract class BaseFragement extends Fragment implements LoadMoreListener.OnLoadMoreListener{
 

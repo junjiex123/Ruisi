@@ -65,7 +65,7 @@ public class FragementUser extends Fragment{
             FragmentManager fm = getFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
             if(curentFrag ==null) {
-                fragment1 = FragementReplyMe.newInstance(url0);
+                fragment1 = FrageReplyMe.newInstance(url0);
                 curentFrag =fragment1;
                 ft.replace(R.id.fragment_container_me, curentFrag).commit();
             }
@@ -75,25 +75,25 @@ public class FragementUser extends Fragment{
         switch (position){
             case 0:
                 if(fragment1==null){
-                    fragment1 = FragementReplyMe.newInstance(url0);
+                    fragment1 = FrageReplyMe.newInstance(url0);
                 }
                 switchContent(fragment1);
                 break;
             case 1:
                 if(fragment2==null){
-                    fragment2= FragementMyArticle.newInstance(url1);
+                    fragment2= FrageMyArticle.newInstance(url1);
                 }
                 switchContent(fragment2);
                 break;
             case 2:
                 if(fragment3==null){
-                    fragment3 = FragementMyMessage.newInstance(url2);
+                    fragment3 = FrageMessage.newInstance(url2);
                 }
                 switchContent(fragment3);
                 break;
             case 3:
                 if(fragment4==null){
-                    fragment4= FragementMyStar.newInstance(url3);
+                    fragment4= FrageMyStar.newInstance(url3);
                 }
                 switchContent(fragment4);
                 break;

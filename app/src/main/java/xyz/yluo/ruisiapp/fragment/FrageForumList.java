@@ -45,7 +45,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * Created by free2 on 16-3-19.
  * 板块列表fragemnt
  */
-public class FragementFormList extends Fragment{
+public class FrageForumList extends Fragment{
 
     @Bind(R.id.recycler_view)
     protected RecyclerView recycler_view;

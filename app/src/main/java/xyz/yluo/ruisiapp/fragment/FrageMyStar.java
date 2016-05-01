@@ -13,33 +13,36 @@ import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
 import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.SimpleListData;
 
-//我的主题页面
-public class FragementMyArticle extends BaseFragement{
+/**
+ *我的收藏fragement
+ */
+
+public class FrageMyStar extends BaseFragement{
 
     private List<SimpleListData> datas;
     private SimpleListAdapter adapter;
     private static String url = "";
 
-    public FragementMyArticle() {
+    public FrageMyStar() {
         super(url);
         datas = new ArrayList<>();
     }
 
-    public static FragementMyArticle newInstance(String url) {
-        FragementMyArticle.url = url;
-        return new FragementMyArticle();
+    public static FrageMyStar newInstance(String url) {
+        FrageMyStar.url = url;
+        return new FrageMyStar();
     }
 
     @Override
     protected void initView() {
-        adapter = new SimpleListAdapter(ListType.ARTICLE,getActivity(),datas);
+        adapter = new SimpleListAdapter(ListType.STAR,getActivity(),datas);
         recycler_view.setAdapter(adapter);
-        currentIndex = 1;
+        currentIndex = 3;
     }
 
     @Override
     protected void finishGetData(String res) {
-        new GetUserArticleask(res).execute();
+        new GetUserStarTask(res).execute();
     }
 
     @Override
@@ -48,10 +51,11 @@ public class FragementMyArticle extends BaseFragement{
         adapter.notifyDataSetChanged();
     }
 
-    //获得主题
-    public class GetUserArticleask extends AsyncTask<Void, Void, String> {
+    //获得用户收藏
+    public class GetUserStarTask extends AsyncTask<Void, Void, String> {
+
         private String res;
-        public GetUserArticleask(String res) {
+        public GetUserStarTask(String res) {
             this.res = res;
         }
 
@@ -59,15 +63,14 @@ public class FragementMyArticle extends BaseFragement{
         protected String doInBackground(Void... params) {
             Elements lists = Jsoup.parse(res).select(".threadlist").select("ul").select("li");
             for(Element tmp:lists){
-                String title = tmp.select("a").text();
-                if(title.isEmpty()){
+                String key = tmp.select("a").text();
+                if(key.isEmpty()){
                     datas.add(new SimpleListData("暂无更多","",""));
                     isHaveMore = false;
                     break;
                 }
-                String titleUrl =tmp.select("a").attr("href");
-                String num = tmp.select(".num").text();
-                datas.add(new SimpleListData(title,num,titleUrl));
+                String link = tmp.select("a").attr("href");
+                datas.add(new SimpleListData(key,"",link));
             }
             return "";
         }
@@ -80,4 +83,6 @@ public class FragementMyArticle extends BaseFragement{
             adapter.notifyDataSetChanged();
         }
     }
+
+
 }

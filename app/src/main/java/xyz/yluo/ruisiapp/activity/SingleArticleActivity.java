@@ -89,7 +89,6 @@ public class SingleArticleActivity extends BaseActivity
     //是否调到指定页数and楼层???
     private boolean isRedirect  = false;
 
-    //约定好要就收的数据
     public static void open(Context context, String url) {
         Intent intent = new Intent(context, SingleArticleActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -121,7 +120,7 @@ public class SingleArticleActivity extends BaseActivity
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyleAdapter = new SingleArticleAdapter(this, this, mydatalist);
         mRecyclerView.setAdapter(mRecyleAdapter);
-        mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this,9));
+        mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this,8));
 
         MyReplyView.setListener(new ReplyBarListner() {
             @Override
@@ -146,7 +145,7 @@ public class SingleArticleActivity extends BaseActivity
         try {
             String url =  getIntent().getExtras().getString("url");
             tid = GetId.getTid(url);
-            if(url.contains("redirect")){
+            if(url!=null&&url.contains("redirect")){
                 isRedirect = true;
                 HttpUtil.head(this, url, new ResponseHandler() {
                     @Override
@@ -265,8 +264,9 @@ public class SingleArticleActivity extends BaseActivity
                 for(int i =0;i<array.length;i++){
                     if(i == 0){
                         subTitle = array[i].trim();
-                    }else if(i==2){
+                    }else if(i==1){
                         title = array[i].trim();
+                        break;
                     }
                 }
             }

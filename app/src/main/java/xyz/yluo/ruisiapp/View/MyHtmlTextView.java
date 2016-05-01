@@ -74,7 +74,6 @@ public class MyHtmlTextView extends TextView implements Html.ImageGetter {
         int flags = clickableHtmlBuilder.getSpanFlags(urlSpan);
         ClickableSpan clickableSpan = new ClickableSpan() {
             public void onClick(View view) {
-                System.out.println("===link click==="+urlSpan.getURL());
                 HandleLinkClick.handleClick(activity,urlSpan.getURL());
             }
         };

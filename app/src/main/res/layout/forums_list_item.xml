@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
+<FrameLayout
+    android:layout_margin="4dp"
     android:id="@+id/forum_list_item"
-    android:gravity="center_vertical"
-    android:layout_marginTop="@dimen/dimen_4"
-    android:padding="@dimen/dimen_8"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
-    android:background="?attr/selectableItemBackground"
-    android:orientation="horizontal"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:background="@drawable/forum_item_bg"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:background="?attr/selectableItemBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
 
         <ImageView
             android:layout_marginEnd="@dimen/dimen_8"
@@ -26,7 +31,7 @@
             android:layout_height="wrap_content"
             style="@style/TitleText"
             android:singleLine="true"
-            android:text="话题的标题" />
+            tools:text="话题的标题" />
         <TextView
             android:background="@drawable/shape_cornerradus"
             android:id="@+id/today_count"
@@ -36,6 +41,6 @@
             android:textColor="@color/colorAccent"
             android:layout_marginStart="@dimen/dimen_4"
             android:singleLine="true"
-            android:text="150" />
-
+            tools:text="150" />
     </LinearLayout>
+</FrameLayout>

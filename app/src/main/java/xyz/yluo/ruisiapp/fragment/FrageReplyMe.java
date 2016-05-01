@@ -14,20 +14,20 @@ import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.ReplyMessageData;
 
 //回复我的
-public class FragementReplyMe extends BaseFragement {
+public class FrageReplyMe extends BaseFragement {
 
     private ReplyMessageAdapter adapter;
     private List<ReplyMessageData> datas;
     private static String url;
 
-    public FragementReplyMe() {
+    public FrageReplyMe() {
         super(url);
         datas = new ArrayList<>();
     }
 
-    public static FragementReplyMe newInstance(String url) {
-        FragementReplyMe.url = url;
-        return new FragementReplyMe();
+    public static FrageReplyMe newInstance(String url) {
+        FrageReplyMe.url = url;
+        return new FrageReplyMe();
     }
 
     @Override

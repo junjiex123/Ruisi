@@ -14,11 +14,11 @@ import java.util.TreeMap;
 import xyz.yluo.ruisiapp.PublicData;
 
 public class SyncHttpClient {
-    public static final String DEFAULT_USER_AGENT = "AsyncLiteHttp/1.3";
+    public static final String DEFAULT_USER_AGENT = "myRuisiAsyncLiteHttp/1.0";
     private static PersistentCookieStore store;
     public static final String UTF8 = "UTF-8";
     private int connectionTimeout = 8000;
-    private int dataRetrievalTimeout = 8000;
+    private final int dataRetrievalTimeout = 8000;
     private Map<String, String> headers;
 
     public SyncHttpClient() {
@@ -34,11 +34,6 @@ public class SyncHttpClient {
 
     public void setConnectionTimeout(int connectionTimeout) {
         this.connectionTimeout = connectionTimeout;
-    }
-
-
-    public void setDataRetrievalTimeout(int dataRetrievalTimeout) {
-        this.dataRetrievalTimeout = dataRetrievalTimeout;
     }
 
     public void setUserAgent(String userAgent) {

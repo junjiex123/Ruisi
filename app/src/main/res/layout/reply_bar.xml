@@ -7,13 +7,13 @@
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <View
-        android:background="#e4dddddd"
+        android:background="#eedddddd"
         android:layout_width="match_parent"
         android:layout_height="0.8dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#e4ffffff"
+        android:background="#eeffffff"
         android:padding="@dimen/dimen_4"
         android:orientation="horizontal"
         xmlns:android="http://schemas.android.com/apk/res/android">
@@ -42,15 +42,16 @@
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@null"
             android:src="@drawable/ic_menu_send" />
+    </LinearLayout>
 
-    </LinearLayout>
-    <LinearLayout
-        android:visibility="gone"
-        android:id="@+id/smiley_container"
+    <android.support.v7.widget.RecyclerView
+        android:background="#eeeeeeee"
+        android:id="@+id/smileys_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <include layout="@layout/smiley_pic_bar" />
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:scrollbars="horizontal"
+        android:scrollbarSize="3dp">
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>
 

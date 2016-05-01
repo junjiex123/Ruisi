@@ -1,133 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/main_item_btn_item"
+<LinearLayout
+    android:layout_marginBottom="4dp"
+    android:background="#eeffffff"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="12dp"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    android:background="?android:attr/selectableItemBackground"
     android:orientation="vertical"
+    android:clickable="true"
+    android:id="@+id/main_item_btn_item"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_marginEnd="4dp"
-            android:id="@+id/article_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:textColor="@android:color/white"
-            android:textSize="12sp"
-            android:background="@drawable/type_bg_accent"
-            android:text="金币" />
-
-        <TextView
-            android:id="@+id/article_title"
+        android:padding="12dp"
+        android:background="?android:attr/selectableItemBackground">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
-            style="@style/TitleText"
-            tools:text="帖子的标题" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-    </LinearLayout>
+            <TextView
+                android:layout_marginEnd="4dp"
+                android:id="@+id/article_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:background="@drawable/type_bg_accent"
+                android:text="金币" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+            <TextView
+                android:id="@+id/article_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                style="@style/TitleText"
+                tools:text="帖子的标题" />
 
-        <xyz.yluo.ruisiapp.View.CircleImageView
-            android:id="@+id/author_img"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:civ_border_width="1dp"
-            app:civ_border_color="@android:color/white"
-            android:src="@drawable/image_placeholder"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:orientation="vertical">
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <xyz.yluo.ruisiapp.View.CircleImageView
+                android:id="@+id/author_img"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:civ_border_width="1dp"
+                app:civ_border_color="@android:color/white"
+                android:src="@drawable/image_placeholder"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginStart="8dp"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/author_name"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    style="@style/SmallText"
-                    android:singleLine="true"
-                    tools:text="hahah" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/author_name"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        style="@style/SmallText"
+                        android:singleLine="true"
+                        tools:text="hahah" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginTop="@dimen/dimen_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:gravity="center|start"
+                        android:drawablePadding="4dp"
+                        android:drawableStart="@drawable/ic_time_12dp"
+                        android:id="@+id/post_time"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        style="@style/SmallText"
+                        android:singleLine="true"
+                        tools:text="2015-1-1 19:20:15" />
+
+
+                    <TextView
+                        android:gravity="top"
+                        android:drawablePadding="@dimen/dimen_4"
+                        android:drawableStart="@drawable/ic_look_12dp"
+                        android:id="@+id/view_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/SmallText"
+                        android:singleLine="true"
+                        tools:text="222"/>
+
+                    <TextView
+                        android:layout_marginStart="@dimen/dimen_8"
+                        android:gravity="top"
+                        android:drawablePadding="4dp"
+                        android:drawableStart="@drawable/ic_reply_12dp"
+                        android:id="@+id/reply_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/SmallText"
+                        tools:text="111"
+                        android:singleLine="true" />
+                </LinearLayout>
+
+
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_marginTop="@dimen/dimen_4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:gravity="center|start"
-                    android:drawablePadding="4dp"
-                    android:drawableStart="@drawable/ic_time_12dp"
-                    android:id="@+id/post_time"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    style="@style/SmallText"
-                    android:singleLine="true"
-                    tools:text="2015-1-1 19:20:15" />
-
-
-                <TextView
-                    android:gravity="top"
-                    android:drawablePadding="@dimen/dimen_4"
-                    android:drawableStart="@drawable/ic_look_12dp"
-                    android:id="@+id/view_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/SmallText"
-                    android:singleLine="true"
-                    tools:text="222"/>
-
-                <TextView
-                    android:layout_marginStart="@dimen/dimen_8"
-                    android:gravity="top"
-                    android:drawablePadding="4dp"
-                    android:drawableStart="@drawable/ic_reply_12dp"
-                    android:id="@+id/reply_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/SmallText"
-                    tools:text="111"
-                    android:singleLine="true" />
-            </LinearLayout>
-
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <View style="@style/DeepLine"
-        android:layout_marginTop="12dp"
-        android:layout_gravity="bottom" />
 </LinearLayout>
 
 

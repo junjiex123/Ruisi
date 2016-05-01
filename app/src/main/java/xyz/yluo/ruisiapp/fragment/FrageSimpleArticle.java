@@ -33,13 +33,13 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
  * Created by free2 on 16-3-19.
  * 简单的fragment 首页第二页
  */
-public class FragementSimpleArticle extends Fragment implements LoadMoreListener.OnLoadMoreListener{
+public class FrageSimpleArticle extends Fragment implements LoadMoreListener.OnLoadMoreListener{
 
     @Bind(R.id.recycler_view)
     protected RecyclerView recycler_view;
     @Bind(R.id.main_refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
-    private List<ArticleListData> mydatasetnormal =new ArrayList<>();
+    private List<ArticleListData> mydataset =new ArrayList<>();
     private ArticleListNormalAdapter adapter;
 
     private boolean isEnableLoadMore = false;
@@ -53,7 +53,7 @@ public class FragementSimpleArticle extends Fragment implements LoadMoreListener
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recycler_view.setLayoutManager(mLayoutManager);
-        adapter = new ArticleListNormalAdapter(getActivity(),mydatasetnormal,3);
+        adapter = new ArticleListNormalAdapter(getActivity(), mydataset,3);
         recycler_view.setAdapter(adapter);
         recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 10));
 
@@ -77,7 +77,7 @@ public class FragementSimpleArticle extends Fragment implements LoadMoreListener
     }
 
     private void refresh(){
-        mydatasetnormal.clear();
+        mydataset.clear();
         adapter.notifyDataSetChanged();
         CurrentPage= 1 ;
         isEnableLoadMore = false;
@@ -137,7 +137,6 @@ public class FragementSimpleArticle extends Fragment implements LoadMoreListener
                 if(img.contains("icon_tu.png")){
                     hasImage = "0";
                 }
-                //String title, String titleUrl, String image, String author, String replayCount
                 temp = new ArticleListData(hasImage,title, url, author, replyCount);
                 dataset.add(temp);
             }
@@ -152,11 +151,11 @@ public class FragementSimpleArticle extends Fragment implements LoadMoreListener
 
             if(CurrentPage==1){
                 //item 增加删除 改变动画
-                mydatasetnormal.clear();
+                mydataset.clear();
             }
-            mydatasetnormal.addAll(dataset);
+            mydataset.addAll(dataset);
             refreshLayout.setRefreshing(false);
-            adapter.notifyItemRangeInserted(mydatasetnormal.size() - dataset.size(), dataset.size());
+            adapter.notifyItemRangeInserted(mydataset.size() - dataset.size(), dataset.size());
             isEnableLoadMore = true;
         }
     }

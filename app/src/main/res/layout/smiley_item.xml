@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageButton
+    android:scaleType="centerCrop"
+    android:clickable="true"
+    android:background="?attr/selectableItemBackground"
+    android:id="@+id/smiley"
+    android:layout_height="36dp"
+    android:padding="6dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="36dp">
+</ImageButton>

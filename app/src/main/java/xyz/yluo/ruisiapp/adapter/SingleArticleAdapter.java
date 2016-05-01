@@ -44,12 +44,12 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
 
     //数据
     private List<SingleArticleData> datalist;
-    private static RecyclerViewClickListener itemListener;
+    private RecyclerViewClickListener itemListener;
     private Activity activity;
     public SingleArticleAdapter(Activity activity, RecyclerViewClickListener itemListener,List<SingleArticleData> datalist) {
         this.datalist = datalist;
         this.activity =activity;
-        SingleArticleAdapter.itemListener = itemListener;
+        this.itemListener = itemListener;
     }
 
     public void setLoadMoreType(LoadMoreType loadMoreType) {

@@ -1,106 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:layout_marginTop="4dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="12dp"
-    android:paddingLeft="12dp"
-    android:paddingRight="12dp"
     android:orientation="vertical"
-    android:background="@android:color/white">
-
+    android:clickable="true"
+    android:background="#eeffffff">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <xyz.yluo.ruisiapp.View.CircleImageView
-            app:civ_border_color="@android:color/white"
-            app:civ_border_width="1dp"
-            android:id="@+id/article_user_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/image_placeholder"/>
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:background="?attr/selectableItemBackground">
+
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:layout_marginStart="@dimen/dimen_8"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <xyz.yluo.ruisiapp.View.CircleImageView
+                app:civ_border_color="@android:color/white"
+                app:civ_border_width="1dp"
+                android:id="@+id/article_user_image"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/image_placeholder"/>
             <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginStart="@dimen/dimen_8"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/replay_author"
+                    <TextView
+                        android:id="@+id/replay_author"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorAuthor"
+                        android:textSize="14sp"
+                        tool:text="hhhhhh" />
+                    <TextView
+                        android:layout_marginStart="@dimen/dimen_8"
+                        android:id="@+id/bt_lable_lz"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"
+                        android:background="@drawable/type_bg_blue"
+                        android:text="楼主" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorAuthor"
-                    android:textSize="14sp"
-                    tool:text="hhhhhh" />
-                <TextView
-                    android:layout_marginStart="@dimen/dimen_8"
-                    android:id="@+id/bt_lable_lz"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="12sp"
-                    android:background="@drawable/type_bg_blue"
-                    android:text="楼主" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/replay_index"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        style="@style/SmallText"
+                        tool:text="1楼" />
+                    <TextView
+                        android:layout_marginStart="@dimen/dimen_4"
+                        android:id="@+id/replay_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/SmallText"
+                        android:singleLine="true"
+                        tool:text="1小时前" />
+                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/replay_index"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    style="@style/SmallText"
-                    tool:text="1楼" />
-                <TextView
-                    android:layout_marginStart="@dimen/dimen_4"
-                    android:id="@+id/replay_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/SmallText"
-                    android:singleLine="true"
-                    tool:text="1小时前" />
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/btn_reply_2"
+                android:clickable="true"
+                android:background="?attr/selectableItemBackground"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:padding="@dimen/dimen_4"
+                android:src="@drawable/ic_reply_accent_24dp" />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/btn_reply_2"
-            android:clickable="true"
-            android:background="?attr/selectableItemBackground"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:padding="@dimen/dimen_4"
-            android:src="@drawable/ic_reply_accent_24dp" />
+        <xyz.yluo.ruisiapp.View.MyHtmlTextView
+            android:textColor="?android:attr/textColorPrimary"
+            android:autoLink="web"
+            android:layout_marginStart="44dp"
+            android:layout_marginTop="12dp"
+            android:id="@+id/html_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="16sp"/>
     </LinearLayout>
 
-
-    <xyz.yluo.ruisiapp.View.MyHtmlTextView
-        android:textColor="?android:attr/textColorPrimary"
-        android:autoLink="web"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
-        android:id="@+id/html_text"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="16sp"/>
-
-    <View style="@style/DeepLine"
-        android:layout_marginStart="40dp"
-        android:layout_gravity="bottom" />
 </LinearLayout>

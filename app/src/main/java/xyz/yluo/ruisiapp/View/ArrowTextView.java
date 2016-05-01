@@ -33,10 +33,11 @@ public class ArrowTextView extends TextView{
 
 
     private int color = ContextCompat.getColor(getContext(), R.color.bluegrey50);
+    private Paint paint = new Paint();
+    private Path path = new Path();
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Paint paint=new Paint();
         paint.setColor(color == 0 ? Color.RED : color);
         paint.setAntiAlias(true);
 
@@ -44,10 +45,8 @@ public class ArrowTextView extends TextView{
         float arrowInHeight = 10;
         canvas.drawRoundRect(new RectF(0, arrowInHeight, getWidth(),getHeight()), 4, 4, paint);
 
-        //画三角形
-        Path path=new Path();
+        path.reset();
         path.setFillType(Path.FillType.EVEN_ODD);
-
         path.moveTo(80,0);
         path.lineTo(68, arrowInHeight);
         path.lineTo(92, arrowInHeight);

@@ -19,18 +19,18 @@ import java.util.ArrayList;
 public  class PostHander implements TextWatcher {
 
     private final EditText mEditor;
-    private final ArrayList<ImageSpan> mEmoticonsToRemove = new ArrayList<ImageSpan>();
+    private final ArrayList<ImageSpan> mEmoticonsToRemove = new ArrayList<>();
 
-    public PostHander(Context context, EditText editor) {
+
+    public PostHander(EditText editor) {
         // Attach the handler to listen for text changes.
         mEditor = editor;
         mEditor.addTextChangedListener(this);
     }
 
     public void insertSmiley(String emoticon, Drawable drawable) {
-        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        //drawable.setBounds(0, 0,drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight());
         ImageSpan span = new ImageSpan(drawable, ImageSpan.ALIGN_BOTTOM);
-
         // Get the selected text.
         int start = mEditor.getSelectionStart();
         int end = mEditor.getSelectionEnd();

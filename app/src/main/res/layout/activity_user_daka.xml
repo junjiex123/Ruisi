@@ -158,8 +158,7 @@
 
     <Button
         android:text="开始签到"
-        android:textColor="@android:color/white"
-        android:background="@drawable/round_btn"
+        style="@style/myButton"
         android:layout_margin="@dimen/dimen_16"
         android:id="@+id/btn_start_sign"
         app:layout_anchor="@id/scrollView"
