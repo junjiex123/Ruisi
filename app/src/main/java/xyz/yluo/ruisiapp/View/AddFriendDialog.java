@@ -85,7 +85,7 @@ public class AddFriendDialog extends DialogFragment{
     private boolean checkInput(){
         String str = content.getText().toString();
         if(str.length()>10){
-            content.setError("字数太多了");
+            content.setError("字数太多了,最多10个");
             return false;
         }
         return true;

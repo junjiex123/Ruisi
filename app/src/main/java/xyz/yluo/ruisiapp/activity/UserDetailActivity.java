@@ -2,6 +2,7 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -31,7 +32,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -194,8 +197,39 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
 
     //加好友确认按钮点击
     @Override
-    public void OkClick(DialogFragment dialog, String mes) {
-        //todo 处理加好友逻辑
+    public void OkClick(final DialogFragment dialog, String mes) {
+        final ProgressDialog dialog1 = new ProgressDialog(this);
+        dialog1.setTitle("正在发送请求");
+        dialog1.setMessage("请等待......");
+        Map<String,String> paras = new HashMap<>();
+        paras.put("addsubmit","true");
+        paras.put("handlekey","friend_"+userUid);
+        paras.put("formhash",PublicData.FORMHASH);
+        paras.put("note",mes);
+        paras.put("gid","1");
+        paras.put("addsubmit_btn","true");
+        HttpUtil.post(this, UrlUtils.getAddFrirndUrl(userUid), paras, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                if(res.contains("好友请求已")){
+                    Toast.makeText(getApplicationContext(),"请求已发送成功，正在请等待对方验证",Toast.LENGTH_SHORT).show();
+                }else if(res.contains("正在等待验证")){
+                    Toast.makeText(getApplicationContext(),"好友请求已经发送了，正在等待对方验证",Toast.LENGTH_SHORT).show();
+                }else if(res.contains("你们已成为好友")){
+                    Toast.makeText(getApplicationContext(),"你们已经是好友了不用添加了...",Toast.LENGTH_SHORT).show();
+                }
+
+                dialog1.dismiss();
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                super.onFailure(e);
+                Toast.makeText(getApplicationContext(),"出错了，我也不知道哪儿错了...",Toast.LENGTH_SHORT).show();
+                dialog1.dismiss();
+            }
+        });
     }
 
     @Override
@@ -208,10 +242,24 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id==R.id.menu_add){
-            AddFriendDialog dialogFragment = new AddFriendDialog();
-            dialogFragment.setUserName(username);
-            dialogFragment.setUserImage(imageUrl);
-            dialogFragment.show(getFragmentManager(),"add");
+            if(userUid.equals(PublicData.USER_UID)){
+                Toast.makeText(this,"你不能添加自己为好友",Toast.LENGTH_SHORT).show();
+                return super.onOptionsItemSelected(item);
+            }else if(!PublicData.ISLOGIN){
+                Snackbar.make(layout, "你还没有登陆，无法进行操作", Snackbar.LENGTH_LONG)
+                        .setAction("点我登陆", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+                            }
+                        }).show();
+            }else{
+                AddFriendDialog dialogFragment = new AddFriendDialog();
+                dialogFragment.setUserName(username);
+                dialogFragment.setUserImage(imageUrl);
+                dialogFragment.show(getFragmentManager(),"add");
+            }
+
         }
         return super.onOptionsItemSelected(item);
     }

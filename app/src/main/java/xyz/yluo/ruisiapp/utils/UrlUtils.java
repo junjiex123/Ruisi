@@ -35,6 +35,17 @@ public class UrlUtils {
         }
 
     }
+
+    public static String getAddFrirndUrl(String uid){
+        if(PublicData.IS_SCHOOL_NET){
+            return "home.php?mod=spacecp&ac=friend&op=add&uid="+uid+"&inajax=1";
+        }else{
+            return "home.php?mod=spacecp&ac=friend&op=add&uid="+uid+"&inajax=1&mobile=2";
+        }
+
+
+    }
+
     public static String getLoginUrl(boolean isInner){
         String url = "member.php?mod=logging&action=login";
         if(isInner){
