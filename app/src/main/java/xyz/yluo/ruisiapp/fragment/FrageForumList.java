@@ -62,7 +62,7 @@ public class FrageForumList extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_form_ist, container, false);
+        View view = inflater.inflate(R.layout.fragment_form_list, container, false);
         ButterKnife.bind(this, view);
 
         GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);

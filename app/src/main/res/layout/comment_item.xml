@@ -90,7 +90,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:padding="@dimen/dimen_4"
-                android:src="@drawable/ic_reply_accent_24dp" />
+                android:src="@drawable/ic_reply_grey_24dp" />
         </LinearLayout>
 
         <xyz.yluo.ruisiapp.View.MyHtmlTextView

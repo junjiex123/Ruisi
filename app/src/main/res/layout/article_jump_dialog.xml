@@ -20,7 +20,7 @@
         <TextView
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="17sp"
-            android:text="跳到第"
+            android:text="跳转到第"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

@@ -146,6 +146,9 @@ public class SingleArticleActivity extends BaseActivity
             String url =  getIntent().getExtras().getString("url");
             tid = GetId.getTid(url);
             if(url!=null&&url.contains("redirect")){
+                if(!PublicData.IS_SCHOOL_NET){
+                    url = url+"&mobile=2";
+                }
                 isRedirect = true;
                 HttpUtil.head(this, url, new ResponseHandler() {
                     @Override
