@@ -17,7 +17,7 @@ public class NeedLoginDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("你还没有登陆，要去登陆吗？？？")
+        builder.setMessage("此功能需要登陆,你还没有登陆，要去登陆吗？？？")
                 .setPositiveButton("好的", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         startActivity(new Intent(getActivity(),LoginActivity.class));

@@ -49,6 +49,11 @@ public class LaunchActivity extends BaseActivity{
         ButterKnife.bind(this);
         starttime = System.currentTimeMillis();
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         getSetting();
         AlphaAnimation anima = new AlphaAnimation(0.2f, 1.0f);

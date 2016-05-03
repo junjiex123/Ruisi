@@ -1,11 +1,10 @@
 package xyz.yluo.ruisiapp.fragment;
 
-import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -37,8 +36,9 @@ public class FrageSimpleArticle extends Fragment implements LoadMoreListener.OnL
 
     @Bind(R.id.recycler_view)
     protected RecyclerView recycler_view;
-    @Bind(R.id.main_refresh_layout)
+    @Bind(R.id.refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
+
     private List<ArticleListData> mydataset =new ArrayList<>();
     private ArticleListNormalAdapter adapter;
 
@@ -48,7 +48,7 @@ public class FrageSimpleArticle extends Fragment implements LoadMoreListener.OnL
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_simple_list, container, false);
+        View view = inflater.inflate(R.layout.simple_list_view, container, false);
         ButterKnife.bind(this, view);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -77,8 +77,6 @@ public class FrageSimpleArticle extends Fragment implements LoadMoreListener.OnL
     }
 
     private void refresh(){
-        mydataset.clear();
-        adapter.notifyDataSetChanged();
         CurrentPage= 1 ;
         isEnableLoadMore = false;
         getData();
@@ -102,7 +100,6 @@ public class FrageSimpleArticle extends Fragment implements LoadMoreListener.OnL
 
             @Override
             public void onFailure(Throwable e) {
-                //st.makeText(getActivity(), "网络错误！！", Toast.LENGTH_SHORT).show();
                 refreshLayout.setRefreshing(false);
             }
         });
@@ -145,17 +142,19 @@ public class FrageSimpleArticle extends Fragment implements LoadMoreListener.OnL
 
         @Override
         protected void onPostExecute(final String res) {
-
-            recycler_view.setItemAnimator(new DefaultItemAnimator());
-            recycler_view.getItemAnimator().setAddDuration(0);
-
             if(CurrentPage==1){
                 //item 增加删除 改变动画
                 mydataset.clear();
             }
+            int size = mydataset.size();
             mydataset.addAll(dataset);
             refreshLayout.setRefreshing(false);
-            adapter.notifyItemRangeInserted(mydataset.size() - dataset.size(), dataset.size());
+            if(size>0){
+                adapter.notifyItemChanged(size);
+                adapter.notifyItemRangeInserted(size+1, dataset.size());
+            }else{
+                adapter.notifyDataSetChanged();
+            }
             isEnableLoadMore = true;
         }
     }

@@ -6,6 +6,6 @@
 <!--</selector>-->
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:state_checked="true" android:drawable="@color/red500" />
-    <item android:state_checked="false" android:drawable="@color/colorPrimary" />
+    <item android:state_checked="true" android:drawable="@color/colorAccent" />
+    <item android:state_checked="false" android:drawable="@android:color/white" />
 </selector>

@@ -1,16 +1,15 @@
-package xyz.yluo.ruisiapp.activity;
+package xyz.yluo.ruisiapp.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.view.MenuItemCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -35,35 +34,32 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * 数据{@link FriendData}
  * adapter{@link FriendAdapter}
  */
-public class ActivityFriend extends BaseActivity{
+public class FrageFriends extends Fragment{
 
     @Bind(R.id.recycler_view)
     protected RecyclerView recycler_view;
-    @Bind(R.id.main_refresh_layout)
+    @Bind(R.id.refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
     private FriendAdapter adapter;
     private List<FriendData> datas;
+
+    @Nullable
     @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        setContentView(R.layout.fragment_simple_list);
-        ButterKnife.bind(this);
-
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.simple_list_view, container, false);
+        ButterKnife.bind(this,view);
         datas = new ArrayList<>();
-        adapter = new FriendAdapter(datas,this);
+        adapter = new FriendAdapter(datas,getActivity());
         recycler_view.setHasFixedSize(true);
-        recycler_view.setLayoutManager(new LinearLayoutManager(this));
+        recycler_view.setLayoutManager(new LinearLayoutManager(getContext()));
         recycler_view.setAdapter(adapter);
-
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar!=null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         String url = "home.php?mod=space&do=friend&mobile=2";
         new GetDataTask(url).execute();
         refreshLayout.setEnabled(false);
+        return view;
     }
+
 
     private class GetDataTask extends AsyncTask<Void,Void,String>{
         private String url;
@@ -72,7 +68,7 @@ public class ActivityFriend extends BaseActivity{
         }
         @Override
         protected String doInBackground(Void... voids) {
-            HttpUtil.SyncGet(getApplicationContext(), url, new TextResponseHandler() {
+            HttpUtil.SyncGet(getContext(), url, new TextResponseHandler() {
                 @Override
                 public void onSuccess(String response) {
                     Document document = Jsoup.parse(response);
@@ -101,17 +97,4 @@ public class ActivityFriend extends BaseActivity{
             super.onPostExecute(s);
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_friend, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        //todo 搜索
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-
 }

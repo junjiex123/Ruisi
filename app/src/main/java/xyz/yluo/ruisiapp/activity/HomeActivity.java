@@ -1,14 +1,13 @@
 package xyz.yluo.ruisiapp.activity;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,18 +26,17 @@ import xyz.yluo.ruisiapp.CheckMessageService;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
-import xyz.yluo.ruisiapp.View.NeedLoginDialogFragment;
-import xyz.yluo.ruisiapp.fragment.FrageForumList;
+import xyz.yluo.ruisiapp.adapter.ViewPagerAdapter;
 import xyz.yluo.ruisiapp.fragment.FrageSimpleArticle;
-import xyz.yluo.ruisiapp.fragment.FragementUser;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-17.
- * 这是首页 管理3个fragment
+ * 这是首页 管理4个fragment
  * 1.板块列表{@link HomeActivity}
  * 2.新帖{@link FrageSimpleArticle}
- * 3.我{@link FragementUser}
+ * 3.消息{@link xyz.yluo.ruisiapp.fragment.FrageMessage}
+ * 4.好友{@link xyz.yluo.ruisiapp.fragment.FrageFriends}
  */
 public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -50,15 +47,15 @@ public class HomeActivity extends BaseActivity
     protected DrawerLayout drawer;
     @Bind(R.id.nav_view)
     protected NavigationView navigationView;
-    @Bind(R.id.bottom_nav)
-    protected RadioGroup bottom_nav;
-    private ActionBar actionBar;
+    @Bind(R.id.viewpager)
+    protected ViewPager viewpager;
+    @Bind(R.id.mytab)
+    protected TabLayout tabLayout;
     private ActionBarDrawerToggle toggle;
     private int clickId = 0;
     private CircleImageView userImage;
     private long mExitTime;
-    private Fragment currentFragment;
-    private Fragment frag_01,frag_02,frag_03;
+    private final String[] titles = {"板块","看帖","回复","好友"};
 
 
     @Override
@@ -67,18 +64,39 @@ public class HomeActivity extends BaseActivity
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         init();
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-        bottom_nav.check(R.id.btn_1);
+
+
         updateLoginView();
         startCheckMessageService();
 
     }
 
     private void init(){
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewpager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), titles);
+        viewpager.setAdapter(viewPagerAdapter);
+        //设置Tab和ViewPager绑定
+        tabLayout.setupWithViewPager(viewpager);
+
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -99,7 +117,7 @@ public class HomeActivity extends BaseActivity
                         break;
                     case R.id.nav_sign:
                         if(PublicData.IS_SCHOOL_NET){
-                            if(islogin_dialog()){
+                            if(isneed_login()){
                                 startActivity(new Intent(getApplicationContext(),UserDakaActivity.class));
                             }
                         }else{
@@ -107,13 +125,22 @@ public class HomeActivity extends BaseActivity
                         }
                         break;
                     case R.id.nav_post:
-                        if(islogin_dialog()){
+                        if(isneed_login()){
                             startActivity(new Intent(getApplicationContext(),NewArticleActivity_2.class));
                         }
                         break;
-                    case R.id.nav_friend:
-                        if(islogin_dialog()){
-                            startActivity(new Intent(getApplicationContext(),ActivityFriend.class));
+                    case R.id.nav_my_topic:
+                        if(isneed_login()){
+                            Intent i = new Intent(getApplicationContext(),ActivityMyTopicStar.class);
+                            i.putExtra("type","mytopic");
+                            startActivity(i);
+                        }
+                        break;
+                    case R.id.nav_my_star:
+                        if(isneed_login()){
+                            Intent i = new Intent(getApplicationContext(),ActivityMyTopicStar.class);
+                            i.putExtra("type","mystar");
+                            startActivity(i);
                         }
 
                 }
@@ -136,64 +163,9 @@ public class HomeActivity extends BaseActivity
             }
         });
 
-        bottom_nav.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                String title = "首页";
-                switch (i){
-                    case R.id.btn_2:
-                        title = "看帖";
-                        if(frag_02==null){
-                            frag_02 = new FrageSimpleArticle();
-                        }
-                        switchContent(currentFragment,frag_02);
-                        break;
-                    case R.id.btn_3:
-                        if(islogin_dialog()){
-                            title = "我";
-                            if(frag_03==null){
-                                frag_03= new FragementUser();
-                            }
-                            switchContent(currentFragment,frag_03);
-                        }
-                        break;
-                    default:
-                        title = "首页";
-                        if(frag_01==null){
-                            frag_01=new FrageForumList();
-                        }
-                        switchContent(currentFragment,frag_01);
-                        break;
-                }
-                if(actionBar!=null){
-                    actionBar.setTitle(title);
-                }
-            }
-        });
-
         updateLoginView();
     }
 
-    /**
-     * 当fragment进行切换时，采用隐藏与显示的方法加载fragment以防止数据的重复加载
-     */
-    public void switchContent(Fragment from, Fragment to) {
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        if(currentFragment ==null) {
-            currentFragment = new FrageForumList();
-            ft.replace(R.id.fragment_container, currentFragment).commit();
-        }else{
-            if (currentFragment != to) {
-                currentFragment = to;
-                if (!to.isAdded()) {    // 先判断是否被add过
-                    ft.hide(from).add(R.id.fragment_container, to).commit(); // 隐藏当前的fragment，add下一个到Activity中
-                } else {
-                    ft.hide(from).show(to).commit(); // 隐藏当前的fragment，显示下一个
-                }
-            }
-        }
-    }
 
 
     @Override
@@ -236,16 +208,6 @@ public class HomeActivity extends BaseActivity
         }
     }
 
-    //判断是否需要弹出登录dialog
-    private boolean islogin_dialog(){
-        if(PublicData.ISLOGIN){
-            return true;
-        }else{
-            NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();
-            dialogFragment.show(getFragmentManager(), "needlogin");
-        }
-        return false;
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

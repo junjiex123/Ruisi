@@ -87,10 +87,8 @@
             android:theme="@style/AppTheme">
         </activity>
 
-        <activity android:name=".activity.ActivityFriend"
-            android:label="我的好友"
-            android:theme="@style/AppTheme">
-        </activity>
+        <activity android:name=".activity.ActivityMyTopicStar"
+            android:theme="@style/AppTheme"/>
 
         <receiver android:name=".checknet.NetworkReceiver">
             <intent-filter>

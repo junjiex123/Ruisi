@@ -35,7 +35,6 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     private final int TYPE_NORMAL = 0;
     private final int TYPE_HEADER = 1;
-    private final int TYPE_EMPTY =  2;
 
     public ForumListAdapter(Activity activity, List<FroumListData> dataSet) {
         DataSet = dataSet;
@@ -44,10 +43,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     @Override
     public int getItemViewType(int position) {
-        if(position==0||position==1){
-            return TYPE_EMPTY;
-        }
-        if(DataSet.get(position-2).isheader()){
+        if(DataSet.get(position).isheader()){
             return TYPE_HEADER;
         }else{
             return TYPE_NORMAL;
@@ -58,12 +54,9 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType==TYPE_NORMAL){
             return new FroumsListViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.forums_list_item, parent, false));
-        }else if(viewType==TYPE_HEADER){
+        }else{
             return new FroumsListHeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.forums_item_header, parent, false));
-        }else {
-            return new EmptyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_list_item,parent,false));
         }
-
     }
 
     @Override
@@ -74,10 +67,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     @Override
     public int getItemCount() {
-        if(DataSet.size()==0){
-            return 0;
-        }
-        return DataSet.size()+2;
+        return DataSet.size();
     }
 
     //首页板块列表ViewHolder
@@ -98,7 +88,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         }
         @OnClick(R.id.forum_list_item)
         protected void item_click(){
-            FroumListData single = DataSet.get(getAdapterPosition()-2);
+            FroumListData single = DataSet.get(getAdapterPosition());
 
             String fid = GetId.getFroumFid(single.getTitleUrl());
             //几个特殊的板块
@@ -110,7 +100,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
         }
         void setData(int position) {
-            FroumListData single = DataSet.get(position-2);
+            FroumListData single = DataSet.get(position);
             title.setText(single.getTitle());
             if(!single.getTodayNew().isEmpty()){
                 today_count.setVisibility(View.VISIBLE);
@@ -136,7 +126,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
         @Override
         void setData(int position) {
-            header_title.setText(DataSet.get(position-2).getTitle());
+            header_title.setText(DataSet.get(position).getTitle());
         }
 
         @OnClick(R.id.forum_list_item)
@@ -144,19 +134,4 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
         }
     }
-
-    protected class EmptyViewHolder extends BaseViewHolder{
-
-        public EmptyViewHolder(View itemView) {
-            super(itemView);
-        }
-
-        @Override
-        void setData(int position) {
-
-        }
-    }
-
-
-
 }

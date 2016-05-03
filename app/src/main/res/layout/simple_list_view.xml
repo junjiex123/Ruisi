@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    android:id="@+id/main_window"
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/main_refresh_layout"
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -22,6 +17,4 @@
         </android.support.v7.widget.RecyclerView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include layout="@layout/search_view"/>
-
-</android.support.design.widget.CoordinatorLayout>
+</FrameLayout>

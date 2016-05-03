@@ -24,97 +24,27 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
+            app:layout_scrollFlags="scroll|enterAlways"
             android:gravity="center"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" >
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        </android.support.v7.widget.Toolbar>
+        <android.support.design.widget.TabLayout
+            android:id="@+id/mytab"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginLeft="@dimen/dimen_16"
+            android:layout_marginRight="@dimen/dimen_16" />
 
     </android.support.design.widget.AppBarLayout>
 
-    <!-- Fragment -->
-    <FrameLayout
-        android:paddingBottom="50dp"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:id="@+id/fragment_container"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <!-- Bottom Navigation Bar -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_anchor="@id/fragment_container"
-        app:layout_anchorGravity="bottom"
-        android:orientation="vertical">
-
-        <View
-            android:background="#e4dddddd"
-            android:layout_width="match_parent"
-            android:layout_height="0.8dp"/>
-        <RadioGroup
-            android:id="@+id/bottom_nav"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal"
-            android:background="#8ff5f5f5">
-            <RadioButton
-                android:gravity="center"
-                android:button="@null"
-                android:id="@+id/btn_1"
-                android:text="板块"
-                android:drawableTop="@drawable/selector_home_nav_home"
-                android:layout_width = "wrap_content"
-                android:layout_height  = "match_parent"
-                android:layout_weight = "1"
-                android:textSize ="12sp"
-                android:paddingTop = "6dp"
-                android:paddingBottom = "6dp"
-                android:paddingLeft = "12dp"
-                android:paddingRight = "12dp"
-                android:background = "?attr/selectableItemBackgroundBorderless"
-                android:textAllCaps = "false"  />
-
-            <RadioButton
-                android:gravity="center"
-                android:button="@null"
-                android:id="@+id/btn_2"
-                android:text="看帖"
-                android:background = "?attr/selectableItemBackgroundBorderless"
-                android:drawableTop="@drawable/selector_home_nav_new"
-                android:layout_width = "wrap_content"
-                android:layout_height  = "match_parent"
-                android:layout_weight = "1"
-                android:textSize ="12sp"
-                android:paddingTop = "6dp"
-                android:paddingBottom = "6dp"
-                android:paddingLeft = "12dp"
-                android:paddingRight = "12dp"
-                android:textAllCaps = "false" />
-
-            <RadioButton
-                android:gravity="center"
-                android:button="@null"
-                android:id="@+id/btn_3"
-                android:background = "?attr/selectableItemBackgroundBorderless"
-                android:text="我"
-                android:drawableTop="@drawable/selector_home_nav_me"
-                android:layout_width = "wrap_content"
-                android:layout_height  = "match_parent"
-                android:layout_weight = "1"
-                android:textSize ="12sp"
-                android:paddingTop = "6dp"
-                android:paddingBottom = "6dp"
-                android:paddingLeft = "12dp"
-                android:paddingRight = "12dp"
-                android:textAllCaps = "false" />
-        </RadioGroup>
-    </LinearLayout>
-
-
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView

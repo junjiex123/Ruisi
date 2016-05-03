@@ -384,7 +384,6 @@ public class SingleArticleActivity extends BaseActivity
                     isRedirect = false;
                     for(int i =0;i<mydatalist.size();i++){
                         if(mydatalist.get(i).getCotent().contains(PublicData.USER_NAME)){
-                            System.out.println("********find same*******");
                             mRecyclerView.scrollToPosition(i);
                             break;
                         }

@@ -1,23 +1,15 @@
 package xyz.yluo.ruisiapp.fragment;
 
-import android.app.Fragment;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -29,40 +21,31 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.NeedLoginDialogFragment;
-import xyz.yluo.ruisiapp.activity.ActivitySearch;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
 import xyz.yluo.ruisiapp.data.FroumListData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
-import xyz.yluo.ruisiapp.listener.HidingScrollListener;
 import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-3-19.
  * 板块列表fragemnt
  */
-public class FrageForumList extends Fragment{
+public class FrageForumList extends Fragment {
 
     @Bind(R.id.recycler_view)
     protected RecyclerView recycler_view;
-    @Bind(R.id.main_refresh_layout)
+    @Bind(R.id.refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
-    @Bind(R.id.search_view)
-    protected CardView search_view;
     private ForumListAdapter forumListAdapter;
     private List<FroumListData> datas = new ArrayList<>();
-    @Bind(R.id.search_input)
-    protected EditText search_input;
-
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_form_list, container, false);
+        View view = inflater.inflate(R.layout.simple_list_view, container, false);
         ButterKnife.bind(this, view);
 
         GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
@@ -78,25 +61,7 @@ public class FrageForumList extends Fragment{
             }
         });
         recycler_view.setLayoutManager(mLayoutManager);
-
         recycler_view.setAdapter(forumListAdapter);
-
-        recycler_view.addOnScrollListener(new HidingScrollListener() {
-            @Override
-            public void onHide() {
-                CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) search_view.getLayoutParams();
-                int bottomMargin = lp.bottomMargin;
-                int distanceToScroll = search_view.getHeight() + bottomMargin;
-                search_view.animate().translationY(-distanceToScroll).setInterpolator(new AccelerateInterpolator(2));
-            }
-
-            @Override
-            public void onShow() {
-                search_view.animate().translationY(0).setInterpolator(new AccelerateInterpolator(2));
-            }
-        });
-
-        refreshLayout.setProgressViewOffset(true,150,200);
 
         //刷新
         refreshLayout.post(new Runnable() {
@@ -111,21 +76,7 @@ public class FrageForumList extends Fragment{
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                datas.clear();
-                forumListAdapter.notifyDataSetChanged();
                 getData();
-            }
-        });
-
-        search_input.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                boolean handled = false;
-                if (i == EditorInfo.IME_ACTION_SEARCH) {
-                    start_search_click();
-                    handled = true;
-                }
-                return handled;
             }
         });
 
@@ -142,7 +93,6 @@ public class FrageForumList extends Fragment{
 
             @Override
             public void onFailure(Throwable e) {
-                //Toast.makeText(getActivity(), "网络错误！！", Toast.LENGTH_SHORT).show();
                 refreshLayout.setRefreshing(false);
             }
         });
@@ -176,7 +126,6 @@ public class FrageForumList extends Fragment{
                     tmp.select("span.num").remove();
                     String title = tmp.text();
                     String titleUrl = tmp.select("a").attr("href");
-                    //boolean isheader,String title, String todayNew,  String titleUrl
                     simpledatas.add(new FroumListData(false,title,todayNew,titleUrl));
                 }
             }
@@ -188,36 +137,8 @@ public class FrageForumList extends Fragment{
             refreshLayout.setRefreshing(false);
             datas.clear();
             datas.addAll(simpledatas);
-            forumListAdapter.notifyItemRangeInserted(0, simpledatas.size());
+            forumListAdapter.notifyDataSetChanged();
         }
 
-    }
-
-    @OnClick(R.id.start_search)
-    protected void start_search_click(){
-        if(islogin_dialog()){
-            if (search_input.getText().toString().isEmpty()){
-                search_input.setError("你还没写呢");
-            }else{
-                Intent i = new Intent(getActivity(),ActivitySearch.class);
-                i.putExtra("res",search_input.getText().toString());
-                search_input.setText("");
-                startActivity(new Intent(i));
-            }
-        }
-
-    }
-
-
-    //判断是否需要弹出登录dialog
-    private boolean islogin_dialog(){
-
-        if(PublicData.ISLOGIN){
-            return true;
-        }else{
-            NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();
-            dialogFragment.show(getFragmentManager(), "needlogin");
-        }
-        return false;
     }
 }
