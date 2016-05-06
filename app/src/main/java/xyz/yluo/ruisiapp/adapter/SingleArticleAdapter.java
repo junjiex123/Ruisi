@@ -234,8 +234,6 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
 
         @Override
         void setData(int position) {
-            //TODO
-            //load more 现在没有数据填充
             if(position==1){
                 loadMoreType = LoadMoreType.SECOND;
             }

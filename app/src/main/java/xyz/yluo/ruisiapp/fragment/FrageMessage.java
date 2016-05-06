@@ -171,7 +171,6 @@ public class FrageMessage extends Fragment{
                 String content = tmp.select(".cl.grey").text();
                 String authorImage = tmp.select("img").attr("src");
                 String titleUrl =tmp.select("a").attr("href");
-                //todo
                 temdatas.add(new MessageData(ListType.MYMESSAGE,title,titleUrl,authorImage,time,isRead,content));
             }
             return "";

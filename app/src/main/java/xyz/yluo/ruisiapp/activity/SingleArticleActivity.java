@@ -76,7 +76,6 @@ public class SingleArticleActivity extends BaseActivity
     private int page_sum = 1;
     //是否倒序
     private boolean isRevere = false;
-
     //是否允许加载更多
     private boolean isEnableLoadMore = false;
     //回复楼主的链接
@@ -85,9 +84,10 @@ public class SingleArticleActivity extends BaseActivity
     //存储数据 需要填充的列表
     private List<SingleArticleData> mydatalist = new ArrayList<>();
     private String tid = "";
-    private boolean isSetTitle = false;
+    private boolean isSetToolBar = false;
     //是否调到指定页数and楼层???
     private boolean isRedirect  = false;
+    private String Title = "";
 
     public static void open(Context context, String url) {
         Intent intent = new Intent(context, SingleArticleActivity.class);
@@ -256,12 +256,11 @@ public class SingleArticleActivity extends BaseActivity
             this.htmlData = htmlData;
         }
         private String toolBarTitle = "";
-        private String Title = "";
         @Override
         protected String doInBackground(Void... params) {
             //list 所有楼数据
             Document doc = Jsoup.parse(htmlData);
-            if(!isSetTitle){
+            if(!isSetToolBar){
                 String titleText = doc.select("title").text();
                 String[] array = titleText.split("-");
                 if(array.length>=5){
@@ -273,7 +272,7 @@ public class SingleArticleActivity extends BaseActivity
             //获取回复/hash
             if (doc.select("input[name=formhash]").first() != null) {
                 replyUrl = doc.select("form#fastpostform").attr("action");
-                String hash = doc.select("input[name=formhash]").attr("value"); // 具有 formhash 属性的链接
+                String hash = doc.select("input[name=formhash]").attr("value");
                 if (!hash.isEmpty()){
                     PublicData.FORMHASH =hash;
                 }
@@ -360,9 +359,9 @@ public class SingleArticleActivity extends BaseActivity
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if(!isSetTitle){
+            if(!isSetToolBar){
                 actionBar.setTitle(toolBarTitle);
-                isSetTitle = true;
+                isSetToolBar = true;
             }
             int add = tepdata.size();
             if(add>0){
@@ -526,7 +525,6 @@ public class SingleArticleActivity extends BaseActivity
                 Toast.makeText(getApplicationContext(), "回复发表成功", Toast.LENGTH_SHORT).show();
                 MyReplyView.clearText();
                 hide_ime();
-
                 replyTime = System.currentTimeMillis();
             } else if(res.contains("您两次发表间隔")){
                 Toast.makeText(getApplicationContext(), "您两次发表间隔太短了......", Toast.LENGTH_SHORT).show();

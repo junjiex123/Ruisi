@@ -50,14 +50,11 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
         datas = new ArrayList<>();
         mLayoutManager = new LinearLayoutManager(this);
         mRecyleAdapter = new ArticleListNormalAdapter(this, datas,0);
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mRecyleAdapter);
         //加载更多
         mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this,8));
-
         datas.clear();
 }
 
@@ -126,14 +123,18 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
                 if (src.getElementsByAttributeValue("class", "by").first() != null) {
 
                     String type;
-                    //金币
-                    if (src.select("th").select("strong").text().length()>0) {
-                        type = "gold:" + src.select("th").select("strong").text().trim();
-                    } else if (src.attr("id").contains("stickthread")) {
-                        type = "zhidin";
-                    } else {
+                    if (src.attr("id").contains("stickthread")) {
+                        type = "置顶";
+                    }else if(src.select("th").attr("class").contains("lock")){
+                        type = "关闭";
+                    }else if(src.select(".icn").select("a").attr("title").contains("投票")){
+                        type = "投票";
+                    }else if (src.select("th").select("strong").text().length()>0) {
+                        type = "金币:" + src.select("th").select("strong").text().trim();
+                    }else{
                         type = "normal";
                     }
+
                     String title = src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]").text();
                     String titleUrl = src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]").attr("href");
                     String author = src.getElementsByAttributeValue("class", "by").first().select("a").text();
@@ -142,11 +143,10 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
                     String viewcount = src.getElementsByAttributeValue("class", "num").select("em").text();
                     String replaycount = src.getElementsByAttributeValue("class", "num").select("a").text();
 
-                    if(!PublicData.ISSHOW_ZHIDIN &&type.equals("zhidin")){
-                        //do no thing
+                    if(!PublicData.ISSHOW_ZHIDIN &&type.equals("置顶")){
+
                     }else{
                         if (title.length()>0&& author.length()>0) {
-                            //新建对象
                             temp = new ArticleListData(title, titleUrl, type, author, authorUrl, time, viewcount, replaycount);
                             dataset.add(temp);
                         }

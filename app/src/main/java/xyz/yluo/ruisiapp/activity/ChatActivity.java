@@ -61,7 +61,7 @@ public class ChatActivity extends BaseActivity{
     private String touid = "";
 
     public static void open(Context context, String username,String url) {
-        /*isopenfromwebview 是从webview打开的是新疆的回话*/
+        /*isopenfromwebview 是从webview打开的是新建的回话*/
         Intent intent = new Intent(context, ChatActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("username", username);
