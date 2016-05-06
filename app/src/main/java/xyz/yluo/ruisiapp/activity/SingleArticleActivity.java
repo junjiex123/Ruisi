@@ -255,8 +255,8 @@ public class SingleArticleActivity extends BaseActivity
         public DealWithArticleData(String htmlData) {
             this.htmlData = htmlData;
         }
-        private String title = "";
-        private String subTitle = "";
+        private String toolBarTitle = "";
+        private String Title = "";
         @Override
         protected String doInBackground(Void... params) {
             //list 所有楼数据
@@ -264,13 +264,10 @@ public class SingleArticleActivity extends BaseActivity
             if(!isSetTitle){
                 String titleText = doc.select("title").text();
                 String[] array = titleText.split("-");
-                for(int i =0;i<array.length;i++){
-                    if(i == 0){
-                        subTitle = array[i].trim();
-                    }else if(i==1){
-                        title = array[i].trim();
-                        break;
-                    }
+                if(array.length>=5){
+                    int len = array.length;
+                    toolBarTitle = array[len-4].trim();
+                    Title = array[len-5].trim();
                 }
             }
             //获取回复/hash
@@ -350,9 +347,9 @@ public class SingleArticleActivity extends BaseActivity
                     ////替换无意义的 br
                     finalcontent = contentels.html().replaceAll("(\\s*<br>\\s*){2,}","");
                     String newtime = posttime.replace("收藏","");
-                    data = new SingleArticleData(SingleType.CONTENT, userimg,username,newtime,commentindex,replyUrl,finalcontent);
+                    data = new SingleArticleData(SingleType.CONTENT,Title,userimg,username,newtime,commentindex,replyUrl,finalcontent);
                 } else {
-                    data = new SingleArticleData(SingleType.COMMENT,userimg,username,posttime,commentindex,replyUrl,finalcontent);
+                    data = new SingleArticleData(SingleType.COMMENT,Title,userimg,username,posttime,commentindex,replyUrl,finalcontent);
                 }
                 tepdata.add(data);
             }
@@ -364,8 +361,7 @@ public class SingleArticleActivity extends BaseActivity
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             if(!isSetTitle){
-                actionBar.setTitle(title);
-                actionBar.setSubtitle(subTitle);
+                actionBar.setTitle(toolBarTitle);
                 isSetTitle = true;
             }
             int add = tepdata.size();
@@ -407,11 +403,6 @@ public class SingleArticleActivity extends BaseActivity
                 if(isNeedLoginDialog()){
                     Toast.makeText(getApplicationContext(),"正在收藏......",Toast.LENGTH_SHORT).show();
                     starTask();
-                }
-                break;
-            case R.id.btn_reply:
-                if(isNeedLoginDialog()){
-                    show_ime();
                 }
                 break;
             case R.id.btn_reply_2:
@@ -477,7 +468,6 @@ public class SingleArticleActivity extends BaseActivity
     }
 
     private void hide_ime(){
-        // Check if no view has focus:
         View view = this.getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -485,13 +475,6 @@ public class SingleArticleActivity extends BaseActivity
         }
     }
 
-    private void show_ime(){
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(view,1);
-        }
-    }
 
     //楼中楼回复回调函数
     @Override
