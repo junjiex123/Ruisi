@@ -51,11 +51,16 @@ public class HomeActivity extends BaseActivity
     protected ViewPager viewpager;
     @Bind(R.id.mytab)
     protected TabLayout tabLayout;
+    @Bind(R.id.userName)
+    protected TextView usernameTitle;
+    @Bind(R.id.userImage)
+    protected CircleImageView userImageTitle;
+
     private ActionBarDrawerToggle toggle;
     private int clickId = 0;
     private CircleImageView userImage;
     private long mExitTime;
-    private final String[] titles = {"板块","看帖","回复","好友"};
+    private final String[] titles = {"板块","看帖","消息","好友"};
 
 
     @Override
@@ -65,6 +70,10 @@ public class HomeActivity extends BaseActivity
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
+        if(actionBar!=null){
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
+
         init();
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -195,14 +204,18 @@ public class HomeActivity extends BaseActivity
         final View nav_header_notlogin = header.findViewById(R.id.nav_header_notlogin);
         //判断是否登陆
         if (PublicData.ISLOGIN) {
+            usernameTitle.setText(PublicData.USER_NAME);
             TextView userName = (TextView) header.findViewById(R.id.header_user_name);
             userName.setText(PublicData.USER_NAME);
             nav_header_login.setVisibility(View.VISIBLE);
             nav_header_notlogin.setVisibility(View.GONE);
             String url = UrlUtils.getimageurl(PublicData.USER_UID,true);
             Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).resize(80,80).into(userImage);
+            Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).resize(32,32).into(userImageTitle);
         } else {
             userImage.setImageResource(R.drawable.image_placeholder);
+            userImageTitle.setImageResource(R.drawable.image_placeholder);
+            usernameTitle.setText("西电睿思");
             nav_header_notlogin.setVisibility(View.VISIBLE);
             nav_header_login.setVisibility(View.GONE);
         }

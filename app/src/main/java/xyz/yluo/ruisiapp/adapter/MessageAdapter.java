@@ -22,7 +22,7 @@ import xyz.yluo.ruisiapp.activity.ChatActivity;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ListType;
-import xyz.yluo.ruisiapp.data.ReplyMessageData;
+import xyz.yluo.ruisiapp.data.MessageData;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 
 /**
@@ -31,15 +31,13 @@ import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
  * 回复我的 我的消息
  */
 public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
-    private List<ReplyMessageData> DataSet;
+    private List<MessageData> DataSet;
     private RecyclerViewClickListener clickListener;
     protected Activity activity;
-    private ListType type;
 
-    public MessageAdapter(ListType type, Activity activity, List<ReplyMessageData> dataSet,RecyclerViewClickListener listener) {
+    public MessageAdapter(Activity activity, List<MessageData> dataSet, RecyclerViewClickListener listener) {
         DataSet = dataSet;
         this.activity = activity;
-        this.type = type;
         this.clickListener = listener;
     }
 
@@ -91,7 +89,7 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         }
 
         void setData(int position) {
-            ReplyMessageData single_data = DataSet.get(position-1);
+            MessageData single_data = DataSet.get(position-1);
             title.setText(single_data.getTitle());
             time.setText(single_data.getTime());
             String imageUrl = single_data.getauthorImage();
@@ -106,23 +104,23 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
         @OnClick(R.id.main_item_btn_item)
         protected void item_click(){
-            ReplyMessageData single_data =  DataSet.get(getAdapterPosition()-1);
+            MessageData single_data =  DataSet.get(getAdapterPosition()-1);
             if(!single_data.isRead()){
                 single_data.setRead(true);
                 notifyItemChanged(getAdapterPosition());
             }
-            if(ListType.MYMESSAGE==type){//用户消息pm
+            if(ListType.MYMESSAGE==single_data.getType()){//用户消息pm
                 String username = single_data.getTitle().replace("我对 ","").replace("说:","").replace(" 对我","");
                 ChatActivity.open(activity,username,single_data.getTitleUrl());
                 single_data.setRead(true);
-            }else if(ListType.REPLAYME==type){//回复我的
+            }else if(ListType.REPLAYME==single_data.getType()){//回复我的
                 SingleArticleActivity.open(activity,single_data.getTitleUrl());
             }
 
         }
         @OnClick(R.id.article_user_image)
         protected void user_click(){
-            ReplyMessageData single_data =  DataSet.get(getAdapterPosition()-1);
+            MessageData single_data =  DataSet.get(getAdapterPosition()-1);
             String username = single_data.getTitle().replace("我对 ","").replace("说:","").replace(" 对我","").replace(" 回复了我","");
             UserDetailActivity.openWithTransitionAnimation(activity, username, article_user_image,DataSet.get(getAdapterPosition()).getauthorImage());
         }

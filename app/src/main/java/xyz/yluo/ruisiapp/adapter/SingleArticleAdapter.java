@@ -111,6 +111,8 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
 
     //文章内容 楼主ViewHolder
     protected class ArticleContentViewHolder extends BaseViewHolder{
+        @Bind(R.id.article_title)
+        protected TextView article_title;
         @Bind(R.id.article_user_image)
         protected CircleImageView article_user_image;
         @Bind(R.id.article_username)
@@ -130,11 +132,6 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             itemListener.recyclerViewListClicked(v, this.getLayoutPosition());
         }
 
-        @OnClick(R.id.btn_reply)
-        protected void reply_click(View v){
-            itemListener.recyclerViewListClicked(v, this.getLayoutPosition());
-        }
-
         @OnClick(R.id.btn_share)
         protected void share_click(){
             Intent shareIntent = new Intent();
@@ -151,6 +148,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         @Override
         void setData(int position){
             SingleArticleData single = datalist.get(position);
+            article_title.setText(single.getTitle());
             article_username.setText(single.getUsername());
             Picasso.with(activity).load(single.getImg()).resize(44,44).centerCrop().placeholder(R.drawable.image_placeholder).into(article_user_image);
             String post_time = "发表于:"+single.getPostTime();
@@ -160,8 +158,6 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         }
 
     }
-
-    //评论列表ViewHolder 如果想创建别的样式还可以创建别的houlder继承自RecyclerView.ViewHolder
     protected  class CommentViewHolder extends BaseViewHolder{
         //protected ImageView good;
         @Bind(R.id.article_user_image)

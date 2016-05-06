@@ -9,8 +9,8 @@ body {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       font-size: 17px;
       line-height: 1.8;
-      color: #333333;
-      background-color: #ffffff;
+      color: #303030;
+      background-color: #fdfdfd;
 }
 b,strong {
   font-weight: bold;
@@ -148,7 +148,7 @@ i.pstatus{
  	 margin:6px 0px;
  	 padding: 10px;
    line-height:1.2em;
-   color: #F8F8D4;
+   color: #efefef;
    font-size: 80%;
    background:#4A4A4A;
    border-radius: 4px;

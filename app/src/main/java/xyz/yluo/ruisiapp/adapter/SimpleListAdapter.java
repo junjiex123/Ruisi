@@ -80,7 +80,10 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         void item_click(){
             SimpleListData single_data =  Datas.get(getAdapterPosition());
             String url = single_data.getExtradata();
-            SingleArticleActivity.open(activity,url);
+            if(url!=null&&url.length()>0){
+                SingleArticleActivity.open(activity,url);
+            }
+
         }
 
         @OnLongClick(R.id.main_item_btn_item)

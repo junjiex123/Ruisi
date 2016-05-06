@@ -2,7 +2,7 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,12 +46,13 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
     private String url;
 
     @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_list_view);
         ButterKnife.bind(this);
+
         try{
-            String type =  getIntent().getExtras().getString("url");
+            String type =  getIntent().getExtras().getString("type");
             if(type!=null&&type.equals("mytopic")){
                 currentIndex = 0;
             }else {
@@ -60,8 +61,6 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
         }catch (Exception e){
             e.printStackTrace();
         }
-
-        System.out.println("==================index"+currentIndex);
 
         ActionBar actionBar = getSupportActionBar();
         if(actionBar!=null){
@@ -87,6 +86,13 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
+
         refresh();
     }
 
@@ -96,7 +102,6 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
             int a = CurrentPage;
             String newurl = url+"&page="+(a+1);
             getStringFromInternet(newurl);
-            System.out.println("===load more=="+newurl);
             isEnableLoadMore = false;
         }
     }

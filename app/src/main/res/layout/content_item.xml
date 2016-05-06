@@ -1,123 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.v7.widget.CardView
+    app:cardCornerRadius="1dp"
+    app:cardElevation="1dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="12dp"
-    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@android:color/white"
-    android:layout_marginBottom="4dp">
-
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
-        android:layout_marginTop="@dimen/dimen_4"
+        android:background="@color/bgwhite"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <xyz.yluo.ruisiapp.View.CircleImageView
-            app:civ_border_width="1dp"
-            app:civ_border_color="@android:color/white"
-            android:id="@+id/article_user_image"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:src="@drawable/image_placeholder"/>
-        <LinearLayout
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/article_title"
+            android:textColor="@color/textColorPrimary"
+            android:background="@color/bgwhite"
+            android:padding="8dp"
+            android:textSize="18sp"
+            tools:text="尴尬，Xbox One 2与PS4.5太快推出压力重重"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:orientation="vertical">
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:background="@color/bggrey"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <xyz.yluo.ruisiapp.View.CircleImageView
+                app:civ_border_width="2dp"
+                app:civ_border_color="#f5f5f5"
+                android:id="@+id/article_user_image"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:src="@drawable/image_placeholder"/>
 
             <LinearLayout
-                android:gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/article_username"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:textColor="@color/colorAuthor"
+                        android:textSize="14sp"
+                        tools:text="author" />
+                    <TextView
+                        android:id="@+id/bt_lable_lz"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"
+                        android:background="@drawable/type_bg_blue"
+                        android:text="楼主" />
+
+                    <ImageView
+                        android:layout_marginStart="8dp"
+                        android:id="@+id/btn_share"
+                        android:clickable="true"
+                        android:background="?attr/selectableItemBackground"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:src="@drawable/ic_menu_share_accent_24dp"
+                        android:padding="@dimen/dimen_4"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp" />
+                    <ImageView
+                        android:id="@+id/btn_star"
+                        android:clickable="true"
+                        android:background="?attr/selectableItemBackground"
+                        android:layout_marginLeft="@dimen/dimen_8"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:padding="@dimen/dimen_4"
+                        android:src="@drawable/ic_favorite_border_black_24dp" />
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/article_username"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:textColor="@color/colorAuthor"
-                    android:textSize="14sp"
-                    tools:text="author" />
-                <TextView
-                    android:id="@+id/bt_lable_lz"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="12sp"
-                    android:background="@drawable/type_bg_blue"
-                    android:text="楼主" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal">
-                <TextView
+                    android:layout_width="match_parent"
                     android:id="@+id/article_post_time"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
                     style="@style/SmallText"
                     android:singleLine="true"
                     tools:text="发布于：2天前" />
+
             </LinearLayout>
+
         </LinearLayout>
 
-    </LinearLayout>
-    <xyz.yluo.ruisiapp.View.MyWebView
-        android:layout_marginTop="8dp"
-        android:id="@+id/content_webView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </xyz.yluo.ruisiapp.View.MyWebView>
-
-    <LinearLayout
-        android:layout_marginTop="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="end">
-
-        <ImageView
-            android:id="@+id/btn_share"
-            android:clickable="true"
-            android:background="?attr/selectableItemBackground"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:src="@drawable/ic_menu_share_accent_24dp"
-            android:padding="@dimen/dimen_4"
-            android:layout_width="28dp"
-            android:layout_height="28dp" />
-        <ImageView
-            android:id="@+id/btn_star"
-            android:clickable="true"
-            android:background="?attr/selectableItemBackground"
-            android:layout_marginLeft="@dimen/dimen_8"
-            android:layout_marginRight="@dimen/dimen_8"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:padding="@dimen/dimen_4"
-            android:src="@drawable/ic_favorite_border_black_24dp" />
-        <ImageView
-            android:id="@+id/btn_reply"
-            android:clickable="true"
-            android:background="?attr/selectableItemBackground"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:padding="@dimen/dimen_4"
-            android:src="@drawable/ic_reply_grey_24dp" />
+        <xyz.yluo.ruisiapp.View.MyWebView
+            android:layout_margin="8dp"
+            android:id="@+id/content_webView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </xyz.yluo.ruisiapp.View.MyWebView>
 
     </LinearLayout>
-
-</LinearLayout>
+</android.support.v7.widget.CardView>
 

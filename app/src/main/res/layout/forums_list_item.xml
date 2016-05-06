@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
-    android:layout_margin="3dp"
+    android:background="@color/bgwhite"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
     android:id="@+id/forum_list_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
-    android:background="@drawable/forum_item_bg"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -33,13 +34,14 @@
             android:singleLine="true"
             tools:text="话题的标题" />
         <TextView
-            android:background="@drawable/shape_cornerradus"
+            android:padding="4dp"
+            android:background="@drawable/type_bg_orange"
             android:id="@+id/today_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:textColor="@color/colorAccent"
-            android:layout_marginStart="@dimen/dimen_4"
+            android:textColor="#DC5A26"
+            android:layout_marginStart="8dp"
             android:singleLine="true"
             tools:text="150" />
     </LinearLayout>

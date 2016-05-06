@@ -16,9 +16,10 @@ public class SingleArticleData {
     //回复链接
     private String replyUrlTitle;
     private String cotent;
+    private String title;
 
     //层主
-    public SingleArticleData(SingleType type, String Img, String username, String postTime, String index, String replyUrl, String cotent) {
+    public SingleArticleData(SingleType type,String title, String Img, String username, String postTime, String index, String replyUrl, String cotent) {
         this.type = type;
         this.Img = Img;
         this.username = username;
@@ -26,9 +27,12 @@ public class SingleArticleData {
         this.index = index;
         this.replyUrlTitle = replyUrl;
         this.cotent = cotent;
+        this.title = title;
     }
 
-
+    public String getTitle() {
+        return title;
+    }
     public String getReplyUrlTitle() {
         return replyUrlTitle;
     }

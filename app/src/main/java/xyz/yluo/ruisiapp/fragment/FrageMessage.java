@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.MessageAdapter;
 import xyz.yluo.ruisiapp.data.ListType;
-import xyz.yluo.ruisiapp.data.ReplyMessageData;
+import xyz.yluo.ruisiapp.data.MessageData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
@@ -35,7 +35,7 @@ public class FrageMessage extends Fragment{
     @Bind(R.id.refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
     private MessageAdapter adapter;
-    private List<ReplyMessageData> datas;
+    private List<MessageData> datas;
     private int index =0;
 
     public FrageMessage() {
@@ -49,7 +49,7 @@ public class FrageMessage extends Fragment{
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recycler_view.setLayoutManager(layoutManager);
-        adapter = new MessageAdapter(ListType.REPLAYME, getActivity(), datas, new RecyclerViewClickListener() {
+        adapter = new MessageAdapter(getActivity(), datas, new RecyclerViewClickListener() {
             @Override
             public void recyclerViewListClicked(View v, int position) {
                 if(position!=index){
@@ -113,7 +113,7 @@ public class FrageMessage extends Fragment{
     //获得回复我的
     public class GetUserReplyTask extends AsyncTask<Void, Void, String> {
         private String res;
-        private List<ReplyMessageData> tempdatas = new ArrayList<>();
+        private List<MessageData> tempdatas = new ArrayList<>();
         public GetUserReplyTask(String res) {
             this.res = res;
         }
@@ -134,7 +134,7 @@ public class FrageMessage extends Fragment{
                 String authorTitle = tmp.select(".ntc_body").select("a[href^=home.php]").text()+" 回复了我";
                 String time = tmp.select(".xg1.xw0").text();
                 String titleUrl =tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
-                tempdatas.add(new ReplyMessageData(authorTitle,titleUrl,authorImage,time,isRead,content));
+                tempdatas.add(new MessageData(ListType.REPLAYME,authorTitle,titleUrl,authorImage,time,isRead,content));
             }
             return "";
         }
@@ -152,7 +152,7 @@ public class FrageMessage extends Fragment{
     public class GetUserPmTask extends AsyncTask<Void, Void, String> {
 
         private String res;
-        private List<ReplyMessageData> temdatas = new ArrayList<>();
+        private List<MessageData> temdatas = new ArrayList<>();
         public GetUserPmTask(String res) {
             this.res = res;
         }
@@ -172,7 +172,7 @@ public class FrageMessage extends Fragment{
                 String authorImage = tmp.select("img").attr("src");
                 String titleUrl =tmp.select("a").attr("href");
                 //todo
-                temdatas.add(new ReplyMessageData(title,titleUrl,authorImage,time,isRead,content));
+                temdatas.add(new MessageData(ListType.MYMESSAGE,title,titleUrl,authorImage,time,isRead,content));
             }
             return "";
         }

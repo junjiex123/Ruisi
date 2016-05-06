@@ -5,8 +5,9 @@ package xyz.yluo.ruisiapp.data;
  * 我的帖子
  * 我的回复 list data
  */
-public class ReplyMessageData {
+public class MessageData {
 
+    private ListType type;
     private String title;
     private String titleUrl;
     private String authorImage;
@@ -15,7 +16,8 @@ public class ReplyMessageData {
     private boolean isRead = true;
 
     //我的消息 ////回复我的
-    public ReplyMessageData(String title, String titleUrl, String authorImage, String time,boolean isRead, String content) {
+    public MessageData(ListType type,String title, String titleUrl, String authorImage, String time, boolean isRead, String content) {
+        this.type = type;
         this.title = title;
         this.titleUrl = titleUrl;
         this.authorImage = authorImage;
@@ -60,4 +62,7 @@ public class ReplyMessageData {
         this.time = time;
     }
 
+    public ListType getType() {
+        return type;
+    }
 }

@@ -25,11 +25,29 @@
 
         <android.support.v7.widget.Toolbar
             app:layout_scrollFlags="scroll|enterAlways"
-            android:gravity="center"
+            android:gravity="start|center_vertical"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay" >
+
+            <xyz.yluo.ruisiapp.View.CircleImageView
+                app:civ_border_color="@android:color/white"
+                app:civ_border_width="1dp"
+                android:id="@+id/userImage"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/image_placeholder"
+                android:layout_width="32dp"
+                android:layout_height="32dp" />
+
+            <TextView
+                android:id="@+id/userName"
+                android:textSize="18sp"
+                android:text="西电睿思"
+                android:textColor="@android:color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/mytab"

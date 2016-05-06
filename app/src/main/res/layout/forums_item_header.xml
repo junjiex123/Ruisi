@@ -1,28 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
+    android:layout_marginTop="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
     android:id="@+id/forum_list_item"
-    android:gravity="center_vertical"
-    android:background="?attr/selectableItemBackground"
+    android:gravity="center"
+    android:background="#00BBEF"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="8dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <View
-        android:layout_gravity="center_vertical"
-        android:layout_width="8dp"
-        android:layout_height="18dp"
-        android:background="@color/colorAccent"/>
     <TextView
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="@dimen/dimen_8"
         android:id="@+id/header_title"
-        android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorAccent"
-        android:textSize="17sp"
-        android:singleLine="true"
+        android:textColor="@color/bgwhite"
+        android:textSize="16sp"
         tools:text="西电生活" />
 </LinearLayout>
