@@ -262,6 +262,12 @@ public class LoginActivity extends BaseActivity {
 
     //登陆成功执行
     private void login_ok(String res){
+        int index =  res.indexOf("欢迎您回来");
+        String s = res.substring(index,index+30).split("，")[1].split(" ")[0].trim();
+        if(s.length()>0){
+            PublicData.USER_GRADE = s;
+        }
+
         //写入到首选项
         SharedPreferences.Editor editor = perPreferences.edit();
         if(rem_pass.isChecked()){

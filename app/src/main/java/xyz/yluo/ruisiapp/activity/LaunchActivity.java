@@ -115,6 +115,11 @@ public class LaunchActivity extends BaseActivity{
                     PublicData.ISLOGIN = false;
                 } else {
                     Document doc = Jsoup.parse(res);
+                    int index =  res.indexOf("欢迎您回来");
+                    String s = res.substring(index,index+30).split("，")[1].split(" ")[0].trim();
+                    if(s.length()>0){
+                        PublicData.USER_GRADE = s;
+                    }
                     PublicData.USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
                     String url = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").attr("href");
                     PublicData.USER_UID = GetId.getUid(url);

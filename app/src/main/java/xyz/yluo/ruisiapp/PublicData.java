@@ -25,6 +25,7 @@ public class PublicData extends Application {
     public static boolean ISSHOW_PLAIN = true;
     //user uid
     public static  String USER_UID = "";
+    public static String USER_GRADE = "";
 
 
 }

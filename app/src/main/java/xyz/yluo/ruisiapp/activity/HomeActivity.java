@@ -161,7 +161,6 @@ public class HomeActivity extends BaseActivity
         userImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-
                 if (PublicData.ISLOGIN) {
                     String url = UrlUtils.getimageurl(PublicData.USER_UID,true);
                     UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, PublicData.USER_NAME, userImage,url);
@@ -206,6 +205,10 @@ public class HomeActivity extends BaseActivity
         if (PublicData.ISLOGIN) {
             usernameTitle.setText(PublicData.USER_NAME);
             TextView userName = (TextView) header.findViewById(R.id.header_user_name);
+            TextView userGrade = (TextView) header.findViewById(R.id.user_grade);
+            if(PublicData.USER_GRADE.length()>0){
+                userGrade.setText(PublicData.USER_GRADE);
+            }
             userName.setText(PublicData.USER_NAME);
             nav_header_login.setVisibility(View.VISIBLE);
             nav_header_notlogin.setVisibility(View.GONE);

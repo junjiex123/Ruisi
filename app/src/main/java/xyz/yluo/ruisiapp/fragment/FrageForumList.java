@@ -5,11 +5,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -35,23 +34,23 @@ import xyz.yluo.ruisiapp.utils.GetId;
  */
 public class FrageForumList extends Fragment {
 
-    @Bind(R.id.recycler_view)
-    protected RecyclerView recycler_view;
     @Bind(R.id.refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
-    private ForumListAdapter forumListAdapter;
-    private List<FroumListData> datas = new ArrayList<>();
+    @Bind(R.id.exListView)
+    protected ExpandableListView exListView;
+
+    private List<FroumListData> datas = null;
+    ForumListAdapter adapter = null;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.simple_list_view, container, false);
+        View view = inflater.inflate(R.layout.frage_forum_list, container, false);
         ButterKnife.bind(this, view);
 
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        forumListAdapter = new ForumListAdapter(getActivity(),datas);
-        recycler_view.setLayoutManager(mLayoutManager);
-        recycler_view.setAdapter(forumListAdapter);
+        datas = new ArrayList<>();
+        adapter = new ForumListAdapter(datas,getActivity());
+        exListView.setAdapter(adapter);
 
         //刷新
         refreshLayout.post(new Runnable() {
@@ -127,8 +126,7 @@ public class FrageForumList extends Fragment {
             refreshLayout.setRefreshing(false);
             datas.clear();
             datas.addAll(simpledatas);
-            forumListAdapter.notifyDataSetChanged();
+            adapter.initData(datas);
         }
-
     }
 }

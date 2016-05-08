@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout
-    android:layout_marginTop="8dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
+    android:background="@color/bgwhite"
     android:id="@+id/forum_list_item"
     android:gravity="center"
-    android:background="#00BBEF"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -17,7 +13,7 @@
         android:id="@+id/header_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/bgwhite"
+        android:textColor="#00BBEF"
         android:textSize="16sp"
         tools:text="西电生活" />
 </LinearLayout>
