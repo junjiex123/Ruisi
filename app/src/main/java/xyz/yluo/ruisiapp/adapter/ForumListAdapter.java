@@ -41,6 +41,8 @@ public class ForumListAdapter extends BaseExpandableListAdapter{
     }
 
     public void initData(List<FroumListData> dataSet){
+        listParents.clear();
+        mapDatas.clear();
         for(FroumListData temp:dataSet){
             if(temp.isheader()){
                 listParents.add(temp);

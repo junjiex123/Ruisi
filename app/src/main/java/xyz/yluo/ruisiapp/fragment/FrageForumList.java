@@ -127,6 +127,10 @@ public class FrageForumList extends Fragment {
             datas.clear();
             datas.addAll(simpledatas);
             adapter.initData(datas);
+            for(int i = 0; i < adapter.getGroupCount(); i++){
+                exListView.expandGroup(i);
+
+            }
         }
     }
 }
