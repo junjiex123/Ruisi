@@ -39,7 +39,7 @@
             android:id="@+id/today_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textSize="10sp"
             android:textColor="#DC5A26"
             android:layout_marginStart="8dp"
             android:singleLine="true"
