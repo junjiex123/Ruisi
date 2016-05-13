@@ -102,6 +102,13 @@ public class SingleArticleActivity extends BaseActivity
         setContentView(R.layout.activity_article_chat);
         ButterKnife.bind(this);
 
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+            }
+        });
+
         actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -135,12 +142,7 @@ public class SingleArticleActivity extends BaseActivity
             }
         });
 
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        });
+
 
         try {
             String url =  getIntent().getExtras().getString("url");

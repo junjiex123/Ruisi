@@ -72,7 +72,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
     public BaseViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         switch (viewType) {
             case CONTENT:
-                return new ArticleContentViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.content_item, viewGroup, false));
+                return new ArticleContentViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.content_list_item, viewGroup, false));
             case LOAD_MORE:
                 return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.load_more_item, viewGroup, false));
             default: // TYPE_COMMENT
@@ -197,8 +197,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             }else {
                 btn_reply_2.setVisibility(View.VISIBLE);
             }
-            Picasso.with(activity).load(single.getImg()).resize(36,36).centerCrop().placeholder(R.drawable.image_placeholder).into(replay_image);
-            //.error(R.drawable.user_placeholder_error)
+            Picasso.with(activity).load(single.getImg()).resize(44,44).centerCrop().placeholder(R.drawable.image_placeholder).into(replay_image);
             replay_time.setText(single.getPostTime());
             replay_index.setText(single.getIndex());
             htmlTextView.mySetText(activity, single.getCotent());

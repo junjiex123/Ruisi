@@ -15,6 +15,7 @@ import xyz.yluo.ruisiapp.httpUtil.PersistentCookieStore;
  */
 public class MyWebView extends WebView{
 
+
     //指定css
     private static final String FILE_CSS = "file:///android_asset/style.css";
 

@@ -39,7 +39,6 @@ public class SettingActivity extends PreferenceActivity {
 
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
 
-        // Show the Up button in the action bar.
         ActionBar actionBar = getDelegate().getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);

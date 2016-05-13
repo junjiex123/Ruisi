@@ -5,8 +5,8 @@
     <color name="colorPrimaryDark">#005FAB</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="bgwhite">#fdfdfd</color>
-    <color name="bggrey">#efefef</color>
+    <color name="bgwhite">#F8F9F9</color>
+    <color name="bggrey">#F1F1F1</color>
     <color name="textColorPrimary">#303030</color>
 
     <color name="colorNavBackground">#2E7D32</color>

@@ -102,9 +102,11 @@ public class ForumListAdapter extends BaseExpandableListAdapter{
         return v;
     }
 
+
     @Override
     public View getChildView(final int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
+
         View v =  LayoutInflater.from(parent.getContext()).inflate(R.layout.forums_list_item, parent, false);
         final FroumListData single = mapDatas.get(groupPosition).get(childPosition);
         ImageView img = (ImageView) v.findViewById(R.id.img);
