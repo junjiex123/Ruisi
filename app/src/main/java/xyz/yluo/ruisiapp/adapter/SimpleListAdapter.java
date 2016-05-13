@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
@@ -54,9 +54,9 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
     }
 
     protected class SimpleVivwHolder extends BaseViewHolder {
-        @Bind(R.id.key)
+        @BindView(R.id.key)
         protected TextView key;
-        @Bind(R.id.value)
+        @BindView(R.id.value)
         protected TextView value;
 
         public SimpleVivwHolder(View itemView) {

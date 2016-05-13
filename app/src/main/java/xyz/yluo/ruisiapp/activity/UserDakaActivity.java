@@ -25,7 +25,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
@@ -42,37 +42,37 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class UserDakaActivity extends BaseActivity{
 
-    @Bind(R.id.input)
+    @BindView(R.id.input)
     protected TextView input;
-    @Bind(R.id.main_window)
+    @BindView(R.id.main_window)
     protected CoordinatorLayout main_window;
-    @Bind(R.id.spinner_select)
+    @BindView(R.id.spinner_select)
     protected Spinner spinner_select;
-    @Bind(R.id.btn_start_sign)
+    @BindView(R.id.btn_start_sign)
     protected Button btn_start_sign;
-    @Bind(R.id.user_image)
+    @BindView(R.id.user_image)
     protected CircleImageView user_image;
-    @Bind(R.id.user_name)
+    @BindView(R.id.user_name)
     protected TextView user_name;
-    @Bind(R.id.View_have_sign)
+    @BindView(R.id.View_have_sign)
     protected LinearLayout View_have_sign;
-    @Bind(R.id.View_have_sign_2)
+    @BindView(R.id.View_have_sign_2)
     protected LinearLayout View_have_sign_2;
-    @Bind(R.id.View_not_sign)
+    @BindView(R.id.View_not_sign)
     protected LinearLayout View_not_sign;
-    @Bind(R.id.container)
+    @BindView(R.id.container)
     protected LinearLayout container;
-    @Bind(R.id.progressBar)
+    @BindView(R.id.progressBar)
     protected ProgressBar progressBar;
-    @Bind(R.id.total_sign_day)
+    @BindView(R.id.total_sign_day)
     protected TextView total_sign_day;
-    @Bind(R.id.total_sign_month)
+    @BindView(R.id.total_sign_month)
     protected TextView total_sign_month;
-    @Bind(R.id.information)
+    @BindView(R.id.information)
     protected TextView information;
-    @Bind(R.id.info_title)
+    @BindView(R.id.info_title)
     protected TextView info_title;
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     protected Toolbar toolbar;
 
     private int spinner__select = 0;

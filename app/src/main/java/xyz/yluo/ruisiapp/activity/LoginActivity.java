@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
@@ -50,23 +50,23 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class LoginActivity extends BaseActivity {
 
-    @Bind(R.id.login_name)
+    @BindView(R.id.login_name)
     protected EditText ed_username;
-    @Bind(R.id.login_pas)
+    @BindView(R.id.login_pas)
     protected EditText ed_pass;
-    @Bind(R.id.btn_login)
+    @BindView(R.id.btn_login)
     protected Button btn_login;
-    @Bind(R.id.iv_login_l)
+    @BindView(R.id.iv_login_l)
     protected ImageView imageViewl;
-    @Bind(R.id.iv_login_r)
+    @BindView(R.id.iv_login_r)
     protected ImageView imageViewr;
-    @Bind(R.id.rem_user)
+    @BindView(R.id.rem_user)
     protected CheckBox rem_user;
-    @Bind(R.id.rem_pass)
+    @BindView(R.id.rem_pass)
     protected CheckBox rem_pass;
-    @Bind(R.id.anwser_select)
+    @BindView(R.id.anwser_select)
     protected Spinner anwser_select;
-    @Bind(R.id.anwser_text)
+    @BindView(R.id.anwser_text)
     protected EditText anwser_text;
     private ProgressDialog progress;
 

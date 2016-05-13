@@ -36,7 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
@@ -58,19 +58,19 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class UserDetailActivity extends BaseActivity implements AddFriendDialog.AddFriendListener{
 
-    @Bind(R.id.toolbar_layout)
+    @BindView(R.id.toolbar_layout)
     protected CollapsingToolbarLayout toolbarLayout;
-    @Bind(R.id.recycler_view)
+    @BindView(R.id.recycler_view)
     protected RecyclerView recycler_view;
-    @Bind(R.id.user_detail_img_avatar)
+    @BindView(R.id.user_detail_img_avatar)
     protected CircleImageView imageView;
-    @Bind(R.id.main_window)
+    @BindView(R.id.main_window)
     protected CoordinatorLayout layout;
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     protected Toolbar toolbar;
-    @Bind(R.id.fab)
+    @BindView(R.id.fab)
     protected FloatingActionButton fab;
-    @Bind(R.id.progressBar)
+    @BindView(R.id.progressBar)
     protected ProgressBar progressBar;
 
     private List<SimpleListData> datas = new ArrayList<>();

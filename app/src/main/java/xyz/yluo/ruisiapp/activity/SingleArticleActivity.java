@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
@@ -60,11 +60,11 @@ public class SingleArticleActivity extends BaseActivity
         implements RecyclerViewClickListener,LoadMoreListener.OnLoadMoreListener,
         ReplyDialog.ReplyDialogListener,ArticleJumpDialog.JumpDialogListener{
 
-    @Bind(R.id.topic_recycler_view)
+    @BindView(R.id.topic_recycler_view)
     protected RecyclerView mRecyclerView;
-    @Bind(R.id.topic_refresh_layout)
+    @BindView(R.id.topic_refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
-    @Bind(R.id.replay_bar)
+    @BindView(R.id.replay_bar)
     protected MyReplyView MyReplyView;
     private ActionBar actionBar;
     private ProgressDialog progress;

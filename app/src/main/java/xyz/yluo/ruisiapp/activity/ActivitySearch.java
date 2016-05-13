@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
@@ -42,13 +42,13 @@ import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
  */
 public class ActivitySearch extends BaseActivity {
 
-    @Bind(R.id.recycler_view)
+    @BindView(R.id.recycler_view)
     protected RecyclerView recycler_view;
-    @Bind(R.id.search_input)
+    @BindView(R.id.search_input)
     protected EditText search_input;
-    @Bind(R.id.main_window)
+    @BindView(R.id.main_window)
     protected LinearLayout main_window;
-    @Bind(R.id.refresh_view)
+    @BindView(R.id.refresh_view)
     protected SwipeRefreshLayout refresh_view;
     private SimpleListAdapter adapter;
 

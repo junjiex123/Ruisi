@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
@@ -72,15 +72,15 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     //用户消息、回复我的 holder
     protected class MessageReplyListHolder extends BaseViewHolder{
-        @Bind(R.id.title)
+        @BindView(R.id.title)
         protected TextView title;
-        @Bind(R.id.time)
+        @BindView(R.id.time)
         protected TextView time;
-        @Bind(R.id.article_user_image)
+        @BindView(R.id.article_user_image)
         protected CircleImageView article_user_image;
-        @Bind(R.id.reply_content)
+        @BindView(R.id.reply_content)
         protected ArrowTextView reply_content;
-        @Bind(R.id.is_read)
+        @BindView(R.id.is_read)
         protected TextView isRead;
         //url
         public MessageReplyListHolder(View itemView) {
@@ -128,7 +128,7 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     protected class ChangeMessageHolder extends BaseViewHolder{
 
-        @Bind(R.id.btn_change)
+        @BindView(R.id.btn_change)
         protected RadioGroup btn_change;
 
         public ChangeMessageHolder(View itemView) {

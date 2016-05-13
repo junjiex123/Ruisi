@@ -9,7 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
@@ -25,11 +25,11 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 public abstract class ArticleListBaseActivity extends BaseActivity
         implements LoadMoreListener.OnLoadMoreListener{
 
-    @Bind(R.id.btn_refresh)
+    @BindView(R.id.btn_refresh)
     protected FloatingActionButton btn_refresh;
-    @Bind(R.id.main_recycler_view)
+    @BindView(R.id.main_recycler_view)
     protected RecyclerView mRecyclerView;
-    @Bind(R.id.main_refresh_layout)
+    @BindView(R.id.main_refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
 
     protected static int CurrentFid =72;

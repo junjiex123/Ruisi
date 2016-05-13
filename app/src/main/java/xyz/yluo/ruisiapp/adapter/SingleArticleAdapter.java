@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
@@ -109,15 +109,15 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
 
     //文章内容 楼主ViewHolder
     protected class ArticleContentViewHolder extends BaseViewHolder{
-        @Bind(R.id.article_title)
+        @BindView(R.id.article_title)
         protected TextView article_title;
-        @Bind(R.id.article_user_image)
+        @BindView(R.id.article_user_image)
         protected CircleImageView article_user_image;
-        @Bind(R.id.article_username)
+        @BindView(R.id.article_username)
         protected TextView article_username;
-        @Bind(R.id.article_post_time)
+        @BindView(R.id.article_post_time)
         protected TextView article_post_time;
-        @Bind(R.id.html_text)
+        @BindView(R.id.html_text)
         protected MyHtmlTextView htmlTextView;
 
         public ArticleContentViewHolder(View itemView) {
@@ -157,19 +157,19 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
     }
     protected  class CommentViewHolder extends BaseViewHolder{
         //protected ImageView good;
-        @Bind(R.id.article_user_image)
+        @BindView(R.id.article_user_image)
         protected ImageView replay_image;
-        @Bind(R.id.btn_reply_2)
+        @BindView(R.id.btn_reply_2)
         protected ImageView btn_reply_2;
-        @Bind(R.id.replay_author)
+        @BindView(R.id.replay_author)
         protected TextView replay_author;
-        @Bind(R.id.replay_index)
+        @BindView(R.id.replay_index)
         protected TextView replay_index;
-        @Bind(R.id.replay_time)
+        @BindView(R.id.replay_time)
         protected TextView replay_time;
-        @Bind(R.id.html_text)
+        @BindView(R.id.html_text)
         protected MyHtmlTextView htmlTextView;
-        @Bind(R.id.bt_lable_lz)
+        @BindView(R.id.bt_lable_lz)
         protected TextView bt_lable_lz;
 
         public CommentViewHolder(View itemView) {
@@ -216,11 +216,11 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
     //加载更多ViewHolder
     protected class LoadMoreViewHolder extends BaseViewHolder{
 
-        @Bind(R.id.load_more_text)
+        @BindView(R.id.load_more_text)
         protected TextView load_more_text;
-        @Bind(R.id.load_more_progress)
+        @BindView(R.id.load_more_progress)
         protected ProgressBar progressBar;
-        @Bind(R.id.load_more_empty)
+        @BindView(R.id.load_more_empty)
         protected View load_more_empty;
 
 

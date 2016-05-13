@@ -19,7 +19,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ArticleListNormalAdapter;
@@ -34,9 +34,9 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
  */
 public class FrageSimpleArticle extends Fragment implements LoadMoreListener.OnLoadMoreListener{
 
-    @Bind(R.id.recycler_view)
+    @BindView(R.id.recycler_view)
     protected RecyclerView recycler_view;
-    @Bind(R.id.refresh_layout)
+    @BindView(R.id.refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
 
     private List<ArticleListData> mydataset =new ArrayList<>();

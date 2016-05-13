@@ -11,7 +11,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
@@ -78,11 +78,11 @@ public class ChatListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     public class MyViewHolder extends BaseViewHolder{
 
-        @Bind(R.id.content)
+        @BindView(R.id.content)
         protected MyHtmlTextView content;
-        @Bind(R.id.user_image)
+        @BindView(R.id.user_image)
         protected CircleImageView user_image;
-        @Bind(R.id.post_time)
+        @BindView(R.id.post_time)
         protected TextView post_time;
 
         public MyViewHolder(View itemView) {

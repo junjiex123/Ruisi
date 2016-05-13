@@ -13,7 +13,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 import java.util.Objects;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
@@ -54,16 +54,16 @@ public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListIma
     //图片板块ViewHolder
     public class ImageCardViewHolder extends RecyclerView.ViewHolder{
 
-        @Bind(R.id.img_card_image)
+        @BindView(R.id.img_card_image)
         protected ImageView img_card_image;
 
-        @Bind(R.id.img_card_title)
+        @BindView(R.id.img_card_title)
         protected TextView img_card_title;
 
-        @Bind(R.id.img_card_author)
+        @BindView(R.id.img_card_author)
         protected TextView img_card_author;
 
-        @Bind(R.id.img_card_like)
+        @BindView(R.id.img_card_like)
         protected TextView img_card_like;
 
         public ImageCardViewHolder(View itemView) {

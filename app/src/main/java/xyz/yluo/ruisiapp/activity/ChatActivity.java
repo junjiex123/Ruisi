@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
@@ -45,11 +45,11 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class ChatActivity extends BaseActivity{
 
-    @Bind(R.id.topic_recycler_view)
+    @BindView(R.id.topic_recycler_view)
     protected RecyclerView recycler_view;
-    @Bind(R.id.replay_bar)
+    @BindView(R.id.replay_bar)
     protected MyReplyView myReplyView;
-    @Bind(R.id.topic_refresh_layout)
+    @BindView(R.id.topic_refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
 
     private List<ChatListData> datas = new ArrayList<>();

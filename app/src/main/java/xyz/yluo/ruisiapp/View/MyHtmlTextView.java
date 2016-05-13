@@ -25,20 +25,15 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.utils.HandleLinkClick;

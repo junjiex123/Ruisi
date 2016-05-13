@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,11 +13,10 @@ import android.widget.Toast;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.checknet.CheckNet;
 import xyz.yluo.ruisiapp.checknet.CheckNetResponse;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
@@ -37,16 +35,16 @@ public class LaunchActivity extends BaseActivity{
     private final int TYPE_INNER = 1;
     private final int TYPE_OUTER = 2;
     private long starttime = 0;
-    @Bind(R.id.user_image)
-    protected CircleImageView image;
-    @Bind(R.id.launch_text)
-    protected TextView launch_text;
+
+    @BindView(R.id.launch_text) TextView launch_text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
+
         ButterKnife.bind(this);
+
         starttime = System.currentTimeMillis();
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
@@ -56,10 +54,9 @@ public class LaunchActivity extends BaseActivity{
         super.onStart();
 
         getSetting();
-        AlphaAnimation anima = new AlphaAnimation(0.2f, 1.0f);
-        anima.setDuration(1000);// 设置动画显示时间
-        image.startAnimation(anima);
-
+//      AlphaAnimation anima = new AlphaAnimation(0.2f, 1.0f);
+//      anima.setDuration(1000);// 设置动画显示时间
+//      image.startAnimation(anima);
         TranslateAnimation animation = new TranslateAnimation(0,0,80,0);
         animation.setDuration(1000);
         launch_text.startAnimation(animation);

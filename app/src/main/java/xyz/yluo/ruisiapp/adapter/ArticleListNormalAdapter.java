@@ -11,7 +11,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
@@ -87,19 +87,19 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
 
     //文章列表ViewHolder 如果想创建别的样式还可以创建别的houlder继承自RecyclerView.ViewHolder
     protected  class NormalViewHolder extends BaseViewHolder {
-        @Bind(R.id.article_type)
+        @BindView(R.id.article_type)
         protected TextView article_type;
-        @Bind(R.id.article_title)
+        @BindView(R.id.article_title)
         protected TextView article_title;
-        @Bind(R.id.author_img)
+        @BindView(R.id.author_img)
         protected CircleImageView author_img;
-        @Bind(R.id.author_name)
+        @BindView(R.id.author_name)
         protected TextView author_name;
-        @Bind(R.id.post_time)
+        @BindView(R.id.post_time)
         protected TextView post_time;
-        @Bind(R.id.reply_count)
+        @BindView(R.id.reply_count)
         protected TextView reply_count;
-        @Bind(R.id.view_count)
+        @BindView(R.id.view_count)
         protected TextView view_count;
         //构造
         public NormalViewHolder(View v) {
@@ -161,13 +161,13 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
     //手机版文章列表
     protected   class NormalViewHolderMe extends BaseViewHolder {
 
-        @Bind(R.id.article_title)
+        @BindView(R.id.article_title)
         protected TextView article_title;
-        @Bind(R.id.author_name)
+        @BindView(R.id.author_name)
         protected TextView author_name;
-        @Bind(R.id.is_image)
+        @BindView(R.id.is_image)
         protected TextView is_image;
-        @Bind(R.id.reply_count)
+        @BindView(R.id.reply_count)
         protected TextView reply_count;
 
         //构造

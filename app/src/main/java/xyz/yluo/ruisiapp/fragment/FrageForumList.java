@@ -18,7 +18,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
@@ -34,9 +34,9 @@ import xyz.yluo.ruisiapp.utils.GetId;
  */
 public class FrageForumList extends Fragment {
 
-    @Bind(R.id.refresh_layout)
+    @BindView(R.id.refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
-    @Bind(R.id.exListView)
+    @BindView(R.id.exListView)
     protected ExpandableListView exListView;
 
     private List<FroumListData> datas = null;

@@ -15,7 +15,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
@@ -31,9 +31,9 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
  * 我的主题activity
  */
 public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListener.OnLoadMoreListener{
-    @Bind(R.id.recycler_view)
+    @BindView(R.id.recycler_view)
     protected RecyclerView recyclerView;
-    @Bind(R.id.refresh_layout)
+    @BindView(R.id.refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
 
     private List<SimpleListData> datas;

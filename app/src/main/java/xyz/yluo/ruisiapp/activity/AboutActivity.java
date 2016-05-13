@@ -6,7 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
@@ -20,7 +20,7 @@ import xyz.yluo.ruisiapp.View.MyWebView;
  */
 public class AboutActivity extends BaseActivity {
 
-    @Bind(R.id.mywebview)
+    @BindView(R.id.mywebview)
     protected MyWebView mywebview;
 
 

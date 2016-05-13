@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
@@ -52,13 +52,13 @@ public class FriendAdapter extends RecyclerView.Adapter<BaseViewHolder>{
     }
 
     protected class FriendViewHolder extends BaseViewHolder{
-        @Bind(R.id.main_item_btn_item)
+        @BindView(R.id.main_item_btn_item)
         protected LinearLayout main_item_btn_item;
-        @Bind(R.id.user_image)
+        @BindView(R.id.user_image)
         protected CircleImageView user_image;
-        @Bind(R.id.user_name)
+        @BindView(R.id.user_name)
         protected TextView user_name;
-        @Bind(R.id.user_info)
+        @BindView(R.id.user_info)
         protected TextView user_info;
 
         public FriendViewHolder(View itemView) {

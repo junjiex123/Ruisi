@@ -19,7 +19,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
@@ -34,9 +34,9 @@ import xyz.yluo.ruisiapp.utils.PostHander;
  */
 public class MyReplyView extends LinearLayout{
     private ReplyBarListner listener;
-    @Bind(R.id.input_aera)
+    @BindView(R.id.input_aera)
     protected EditText input;
-    @Bind(R.id.smileys_container)
+    @BindView(R.id.smileys_container)
     protected RecyclerView smiley_container;
 
     public MyReplyView(Context context) {

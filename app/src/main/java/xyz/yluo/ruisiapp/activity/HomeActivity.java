@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.CheckMessageService;
 import xyz.yluo.ruisiapp.PublicData;
@@ -41,19 +41,19 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     protected Toolbar toolbar;
-    @Bind(R.id.drawer_layout)
+    @BindView(R.id.drawer_layout)
     protected DrawerLayout drawer;
-    @Bind(R.id.nav_view)
+    @BindView(R.id.nav_view)
     protected NavigationView navigationView;
-    @Bind(R.id.viewpager)
+    @BindView(R.id.viewpager)
     protected ViewPager viewpager;
-    @Bind(R.id.mytab)
+    @BindView(R.id.mytab)
     protected TabLayout tabLayout;
-    @Bind(R.id.userName)
+    @BindView(R.id.userName)
     protected TextView usernameTitle;
-    @Bind(R.id.userImage)
+    @BindView(R.id.userImage)
     protected CircleImageView userImageTitle;
 
     private ActionBarDrawerToggle toggle;

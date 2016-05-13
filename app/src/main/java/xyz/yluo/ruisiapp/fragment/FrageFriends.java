@@ -19,7 +19,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.FriendAdapter;
@@ -36,9 +36,9 @@ import xyz.yluo.ruisiapp.utils.GetId;
  */
 public class FrageFriends extends Fragment{
 
-    @Bind(R.id.recycler_view)
+    @BindView(R.id.recycler_view)
     protected RecyclerView recycler_view;
-    @Bind(R.id.refresh_layout)
+    @BindView(R.id.refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
     private FriendAdapter adapter;
     private List<FriendData> datas;
