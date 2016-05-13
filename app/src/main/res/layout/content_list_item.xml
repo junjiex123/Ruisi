@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     android:background="@color/bgwhite"
-    android:layout_marginBottom="12dp"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,7 +12,7 @@
         android:padding="16dp"
         android:id="@+id/article_title"
         android:textColor="@color/textColorPrimary"
-        android:textSize="16sp"
+        android:textSize="17sp"
         tools:text="尴尬，Xbox One 2与PS4.5太快推出压力重重"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -46,14 +45,13 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/article_username"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
                     android:textColor="@color/colorAuthor"
                     android:textSize="14sp"
                     tools:text="author" />
                 <TextView
+                    android:layout_marginStart="8dp"
                     android:id="@+id/bt_lable_lz"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -64,24 +62,6 @@
                     android:background="@drawable/type_bg_blue"
                     android:text="楼主" />
 
-                <ImageView
-                    android:layout_marginStart="8dp"
-                    android:id="@+id/btn_share"
-                    android:clickable="true"
-                    android:background="?attr/selectableItemBackground"
-                    android:src="@drawable/ic_menu_share_accent_24dp"
-                    android:padding="@dimen/dimen_4"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp" />
-                <ImageView
-                    android:id="@+id/btn_star"
-                    android:clickable="true"
-                    android:background="?attr/selectableItemBackground"
-                    android:layout_marginStart="8dp"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:padding="@dimen/dimen_4"
-                    android:src="@drawable/ic_favorite_border_black_24dp" />
             </LinearLayout>
 
             <TextView
@@ -96,14 +76,54 @@
 
     </LinearLayout>
 
-    <xyz.yluo.ruisiapp.View.MyWebView
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="12dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:id="@+id/content_webView"
+    <xyz.yluo.ruisiapp.View.MyHtmlTextView
+        android:lineSpacingMultiplier="1.4"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="8dp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:autoLink="web"
+        android:id="@+id/html_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="16sp"/>
+
+    <LinearLayout
+        android:id="@+id/content_divider"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    </xyz.yluo.ruisiapp.View.MyWebView>
+        <LinearLayout
+            android:padding="8dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_marginStart="8dp"
+                android:id="@+id/btn_share"
+                android:clickable="true"
+                android:background="?attr/selectableItemBackground"
+                android:src="@drawable/ic_menu_share_accent_24dp"
+                android:padding="@dimen/dimen_4"
+                android:layout_width="32dp"
+                android:layout_height="32dp" />
+            <ImageView
+                android:id="@+id/btn_star"
+                android:clickable="true"
+                android:background="?attr/selectableItemBackground"
+                android:layout_marginStart="8dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="@dimen/dimen_4"
+                android:src="@drawable/ic_favorite_border_black_24dp" />
+        </LinearLayout>
+        <View
+            android:background="@color/bggrey"
+            android:layout_width="match_parent"
+            android:layout_height="12dp"/>
+    </LinearLayout>
+
 </LinearLayout>
 

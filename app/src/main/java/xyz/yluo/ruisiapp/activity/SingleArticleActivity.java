@@ -142,8 +142,6 @@ public class SingleArticleActivity extends BaseActivity
             }
         });
 
-
-
         try {
             String url =  getIntent().getExtras().getString("url");
             tid = GetId.getTid(url);
@@ -323,30 +321,25 @@ public class SingleArticleActivity extends BaseActivity
                 String posttime = userInfo.select("li.grey.rela").text();
                 String replyUrl = temp.select(".replybtn").select("input").attr("href");
                 Elements contentels = temp.select(".message");
+
                 String finalcontent = contentels.html();
 
                 //是否移除所有样式
                 if(PublicData.ISSHOW_PLAIN){
                     //移除所有style
-                    //移除font所有样式
                     contentels.select("[style]").removeAttr("style");
                     contentels.select("font").removeAttr("color").removeAttr("size").removeAttr("face");
                 }
                 //这是内容
                 if(commentindex.contains("楼主")||commentindex.contains("收藏")){
-                    //修改表情大小 30x30
-                    for (Element tempp : contentels.select("img[src^=static/image/smiley/]")) {
-                        tempp.attr("style", "width:30px;height: 30px;");
-                    }
-                    //替换代码块里面的br
-                    for(Element tempp:contentels.select(".blockcode")){
-                        tempp.select("br").remove();
-                    }
-                    for(Element ttt:contentels.select("a[href*=from=album]")){
-                        ttt.select("img").attr("style","display: block;margin:10px auto;width:80%;");
-                    }
+                    //删除修改日期
+                    contentels.select("i.pstatus").remove();
+                    //for(Element ttt:contentels.select("a[href*=from=album]")){
+                    //    ttt.select("img").attr("style","display: block;margin:10px auto;width:80%;");
+                    //}
+
                     ////替换无意义的 br
-                    finalcontent = contentels.html().replaceAll("(\\s*<br>\\s*){2,}","");
+                    finalcontent = contentels.html().replaceAll("(\\s*<br>\\s*){2,}","<br>");
                     String newtime = posttime.replace("收藏","");
                     data = new SingleArticleData(SingleType.CONTENT,Title,userimg,username,newtime,commentindex,replyUrl,finalcontent);
                 } else {

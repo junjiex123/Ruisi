@@ -17,11 +17,9 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.View.MyHtmlTextView;
-import xyz.yluo.ruisiapp.View.MyWebView;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.LoadMoreType;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
@@ -119,8 +117,8 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         protected TextView article_username;
         @Bind(R.id.article_post_time)
         protected TextView article_post_time;
-        @Bind(R.id.content_webView)
-        protected MyWebView webView;
+        @Bind(R.id.html_text)
+        protected MyHtmlTextView htmlTextView;
 
         public ArticleContentViewHolder(View itemView) {
             super(itemView);
@@ -153,8 +151,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             Picasso.with(activity).load(single.getImg()).resize(44,44).centerCrop().placeholder(R.drawable.image_placeholder).into(article_user_image);
             String post_time = "发表于:"+single.getPostTime();
             article_post_time.setText(post_time);
-            webView.getSettings().setLoadsImagesAutomatically(true);
-            webView.loadDataWithBaseURL(PublicData.BASE_URL,single.getCotent(),"text/html","UTF-8",null);
+            htmlTextView.mySetText(activity,single.getCotent());
         }
 
     }
@@ -184,6 +181,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         @Override
         void setData(final int position) {
             SingleArticleData single = datalist.get(position);
+
             replay_author.setText(single.getUsername());
             //判断是不是楼主
             if(datalist.get(position).getUsername().equals(datalist.get(0).getUsername())){
@@ -198,7 +196,8 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
                 btn_reply_2.setVisibility(View.VISIBLE);
             }
             Picasso.with(activity).load(single.getImg()).resize(44,44).centerCrop().placeholder(R.drawable.image_placeholder).into(replay_image);
-            replay_time.setText(single.getPostTime());
+            String timeText =  "发表于:"+single.getPostTime();
+            replay_time.setText(timeText);
             replay_index.setText(single.getIndex());
             htmlTextView.mySetText(activity, single.getCotent());
         }

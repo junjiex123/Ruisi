@@ -32,6 +32,7 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
+import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.utils.HandleLinkClick;
 
 /**
@@ -201,34 +202,33 @@ public class MyHtmlTextView extends TextView{
     protected class LoadImage extends AsyncTask<Object, Void, Drawable> {
 
         private String s  = "";
-        private float Width = 0;
 
-        public LoadImage(){
-            Width = getMeasuredWidth();
-        }
         @Override
         protected Drawable doInBackground(Object... params) {
             String source = (String) params[0];
+            s = source;
+            String mySource ;
+            if(source.contains("http")){
+                mySource = source;
+            }else{
+                if(source.charAt(0)=='/'){
+                    source = source.substring(1,source.length());
+                }
+                mySource = PublicData.BASE_URL+source;
+            }
             URL url;
             try {
-                s = source;
-                url = new URL(source);
+                url = new URL(mySource);
                 URLConnection conn = url.openConnection();
                 conn.connect();
                 InputStream is = conn.getInputStream();
                 BufferedInputStream bis = new BufferedInputStream(is);
                 Bitmap bm = BitmapFactory.decodeStream(bis);
 
-                int mwidth;
-                int myheight;
+                int mwidth = (int) (bm.getWidth()*2.3);
+                int myheight = (int) (bm.getHeight()*2.3);
+
                 Drawable drawable = new BitmapDrawable(activity.getResources(), bm);
-                if(Width <700){
-                    mwidth = bm.getWidth();
-                    myheight = bm.getHeight();
-                }else {
-                    myheight = (int) (Width/bm.getWidth() * bm.getHeight());
-                    mwidth = (int) Width;
-                }
                 drawable.setBounds(0, 0,mwidth, myheight);
                 bis.close();
                 is.close();
@@ -244,6 +244,7 @@ public class MyHtmlTextView extends TextView{
         protected void onPostExecute(Drawable drawable) {
             super.onPostExecute(drawable);
             drawableMap.put(s,drawable);
+            System.out.println("==ok==");
             setText(getMyStyleHtml(text,myImageGetter));
         }
     }

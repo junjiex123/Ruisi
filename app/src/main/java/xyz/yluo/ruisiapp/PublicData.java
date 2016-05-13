@@ -22,7 +22,7 @@ public class PublicData extends Application {
     //是否显示置顶帖
     public  static boolean ISSHOW_ZHIDIN = false;
     //是否将文章页面的样式删除
-    public static boolean ISSHOW_PLAIN = true;
+    public static boolean ISSHOW_PLAIN = false;
     //user uid
     public static  String USER_UID = "";
     public static String USER_GRADE = "";
