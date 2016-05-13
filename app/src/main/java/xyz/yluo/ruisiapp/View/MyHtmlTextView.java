@@ -25,12 +25,20 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.utils.HandleLinkClick;
@@ -45,7 +53,10 @@ public class MyHtmlTextView extends TextView{
     private Activity activity;
     private String text;
     private Map<String,Drawable> drawableMap = new HashMap<>();
+    private Set<String> haveUrls = new LinkedHashSet<>();
+    private Set<String> TotalUrls = new LinkedHashSet<>();
     private myImageGetter myImageGetter = null;
+    private boolean isStart = false;
 
     public MyHtmlTextView(Context context) {
         super(context);
@@ -186,7 +197,14 @@ public class MyHtmlTextView extends TextView{
                     if(drawableMap.containsKey(source)){
                         return drawableMap.get(source);
                     }else{
-                        new LoadImage().execute(source);
+
+                        TotalUrls.add(source);
+
+                        if(!isStart){
+                            isStart = true;
+                            new LoadImage().execute(source);
+                        }
+
                         return null;
                     }
                 }
@@ -206,6 +224,7 @@ public class MyHtmlTextView extends TextView{
         @Override
         protected Drawable doInBackground(Object... params) {
             String source = (String) params[0];
+            haveUrls.add(source);
             s = source;
             String mySource ;
             if(source.contains("http")){
@@ -216,36 +235,43 @@ public class MyHtmlTextView extends TextView{
                 }
                 mySource = PublicData.BASE_URL+source;
             }
-            URL url;
             try {
-                url = new URL(mySource);
+                URL url = new URL(mySource);
                 URLConnection conn = url.openConnection();
                 conn.connect();
                 InputStream is = conn.getInputStream();
+                /* Buffered is always good for a performance plus. */
                 BufferedInputStream bis = new BufferedInputStream(is);
+                /* Decode url-data to a bitmap. */
                 Bitmap bm = BitmapFactory.decodeStream(bis);
-
                 int mwidth = (int) (bm.getWidth()*2.3);
                 int myheight = (int) (bm.getHeight()*2.3);
 
                 Drawable drawable = new BitmapDrawable(activity.getResources(), bm);
                 drawable.setBounds(0, 0,mwidth, myheight);
-                bis.close();
-                is.close();
+
                 return drawable;
-            } catch (Exception e) {
+
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 
         @Override
         protected void onPostExecute(Drawable drawable) {
-            super.onPostExecute(drawable);
-            drawableMap.put(s,drawable);
-            System.out.println("==ok==");
-            setText(getMyStyleHtml(text,myImageGetter));
+            if(drawable!=null){
+                super.onPostExecute(drawable);
+                drawableMap.put(s,drawable);
+                System.out.println("==ok==");
+                setText(getMyStyleHtml(text,myImageGetter));
+            }
+
+            if(haveUrls.size()<TotalUrls.size()){
+                int i = haveUrls.size();
+                String uurl  = (String) TotalUrls.toArray()[i];
+                new LoadImage().execute(uurl);
+            }
         }
     }
 }
