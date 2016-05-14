@@ -19,9 +19,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SmileyAdapter;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
@@ -32,41 +29,40 @@ import xyz.yluo.ruisiapp.utils.PostHander;
  * Created by free2 on 16-4-28.
  * 自定义回复框View
  */
-public class MyReplyView extends LinearLayout{
+public class MyReplyView extends LinearLayout implements View.OnClickListener{
     private ReplyBarListner listener;
-    @BindView(R.id.input_aera)
-    protected EditText input;
-    @BindView(R.id.smileys_container)
-    protected RecyclerView smiley_container;
+
+    EditText input;
+    RecyclerView smiley_container;
 
     public MyReplyView(Context context) {
         super(context);
-        init();
     }
 
     public MyReplyView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     public MyReplyView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
     }
 
     public void setListener(ReplyBarListner listener) {
         this.listener = listener;
     }
 
-    private void init(){
-
-    }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         View v =  LayoutInflater.from(getContext()).inflate(R.layout.reply_bar,this,false);
-        ButterKnife.bind(this,v);
+
+        input = (EditText) v.findViewById(R.id.input_aera);
+        smiley_container = (RecyclerView) v.findViewById(R.id.smileys_container);
+        input.setOnClickListener(this);
+        v.findViewById(R.id.action_smiley).setOnClickListener(this);
+        v.findViewById(R.id.action_send).setOnClickListener(this);
+
         addView(v);
 
         List<Drawable> ds = getSmileys();
@@ -82,44 +78,6 @@ public class MyReplyView extends LinearLayout{
 
     }
 
-    @OnClick(R.id.action_send)
-    protected void send_click(){
-        smiley_container.setVisibility(View.GONE);
-        String text = input.getText().toString();
-        int len =0;
-        try {
-            len = text.getBytes("UTF-8").length;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        if(len==0){
-            input.setError("你还没写内容呢!");
-        }else if(len<13){
-            input.setError("字数不够啊,最少13个字节!");
-        }else {
-            listener.btnSendClick(text);
-        }
-    }
-
-
-    @OnClick(R.id.action_smiley)
-    protected void smiley_click(){
-        if(smiley_container.getVisibility()==View.VISIBLE){
-            smiley_container.setVisibility(View.GONE);
-        }else{
-            smiley_container.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @OnClick(R.id.input_aera)
-    protected void input_aera_click(){
-        smiley_container.setVisibility(View.GONE);
-    }
-
-    public void clearText(){
-        input.setText("");
-        smiley_container.setVisibility(View.GONE);
-    }
 
     public boolean hideSmiley() {
         if (smiley_container.getVisibility() == View.VISIBLE) {
@@ -137,7 +95,6 @@ public class MyReplyView extends LinearLayout{
         try {
             nameList =  getContext().getAssets().list("static/image/smiley/tieba");
             for(String temp:nameList){
-                System.out.println(temp);
                 InputStream in = getContext().getAssets().open("static/image/smiley/tieba/"+temp);
                 Bitmap bitmap = BitmapFactory.decodeStream(in);
                 Drawable d = new BitmapDrawable(getContext().getResources(),bitmap);
@@ -264,5 +221,60 @@ public class MyReplyView extends LinearLayout{
 
     }
 
+    protected void send_click(){
+        smiley_container.setVisibility(View.GONE);
+        String text = input.getText().toString();
+        int len =0;
+        try {
+            len = text.getBytes("UTF-8").length;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        if(len==0){
+            input.setError("你还没写内容呢!");
+        }else{
+            if(len<13){
+                int need = 14-len;
+                for(int i=0;i<need;i++){
+                    text+=" ";
+                }
+            }
+            listener.btnSendClick(text);
+        }
+    }
 
+
+    protected void smiley_click(){
+        if(smiley_container.getVisibility()==View.VISIBLE){
+            smiley_container.setVisibility(View.GONE);
+        }else{
+            smiley_container.setVisibility(View.VISIBLE);
+        }
+    }
+
+    protected void input_aera_click(){
+        smiley_container.setVisibility(View.GONE);
+    }
+
+    public void clearText(){
+        input.setText("");
+        smiley_container.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.action_send:
+                send_click();
+                break;
+            case R.id.action_smiley:
+                smiley_click();
+                break;
+            case R.id.input_aera:
+                input_aera_click();
+                break;
+            default:
+                break;
+        }
+    }
 }

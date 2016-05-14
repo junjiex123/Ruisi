@@ -168,7 +168,7 @@ public class SettingActivity extends PreferenceActivity {
                     PublicData.ISSHOW_ZHIDIN = sharedPreferences.getBoolean("setting_show_zhidin", false);
                     break;
                 case "setting_show_plain":
-                    PublicData.ISSHOW_PLAIN = sharedPreferences.getBoolean("setting_show_plain", true);
+                    PublicData.ISSHOW_PLAIN = sharedPreferences.getBoolean("setting_show_plain", false);
                     break;
             }
         }

@@ -5,10 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -36,8 +37,8 @@ public class FrageForumList extends Fragment {
 
     @BindView(R.id.refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
-    @BindView(R.id.exListView)
-    protected ExpandableListView exListView;
+    @BindView(R.id.recycler_view)
+    protected RecyclerView recyclerView;
 
     private List<FroumListData> datas = null;
     ForumListAdapter adapter = null;
@@ -48,17 +49,32 @@ public class FrageForumList extends Fragment {
         View view = inflater.inflate(R.layout.frage_forum_list, container, false);
         ButterKnife.bind(this, view);
 
-        datas = new ArrayList<>();
-        adapter = new ForumListAdapter(datas,getActivity());
-        exListView.setAdapter(adapter);
 
         //刷新
+        refreshLayout.setColorSchemeColors(R.color.colorPrimary);
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {
                 refreshLayout.setRefreshing(true);
             }
         });
+
+        datas = new ArrayList<>();
+        adapter = new ForumListAdapter(datas,getActivity());
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),3);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if(adapter.getItemViewType(position)==0){
+                    return 3;
+                }else{
+                    return 1;
+                }
+            }
+        });
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+
 
         getData();
 
@@ -123,14 +139,10 @@ public class FrageForumList extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-            refreshLayout.setRefreshing(false);
             datas.clear();
             datas.addAll(simpledatas);
-            adapter.initData(datas);
-            for(int i = 0; i < adapter.getGroupCount(); i++){
-                exListView.expandGroup(i);
-
-            }
+            adapter.notifyDataSetChanged();
+            refreshLayout.setRefreshing(false);
         }
     }
 }

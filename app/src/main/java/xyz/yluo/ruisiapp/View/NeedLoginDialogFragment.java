@@ -25,7 +25,7 @@ public class NeedLoginDialogFragment extends DialogFragment {
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
+                        dismiss();
                     }
                 });
         return builder.create();

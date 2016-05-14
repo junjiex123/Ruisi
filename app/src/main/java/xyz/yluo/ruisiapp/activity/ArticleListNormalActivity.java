@@ -62,8 +62,6 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
     @Override
     protected void refresh() {
         CurrentPage = 1;
-        datas.clear();
-        mRecyleAdapter.notifyDataSetChanged();
         getData();
     }
 
@@ -99,8 +97,9 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
     public void onLoadMore() {
         if(isEnableLoadMore){
             CurrentPage++;
-            getData();
             isEnableLoadMore = false;
+            getData();
+
         }
     }
 
@@ -161,14 +160,16 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
         protected void onPostExecute(final String res) {
 
             btn_refresh.show();
-            datas.addAll(dataset);
-            refreshLayout.setRefreshing(false);
-            if(CurrentPage!=1){
-                mRecyclerView.getItemAnimator().setAddDuration(0);
+            if(CurrentPage==1){
+                datas.clear();
+                mRecyleAdapter.notifyDataSetChanged();
             }
-            mRecyleAdapter.notifyItemRangeInserted(datas.size() - dataset.size(), dataset.size());
-            isEnableLoadMore = true;
+            int start = datas.size();
+            datas.addAll(dataset);
 
+            mRecyleAdapter.notifyItemRangeInserted(start, dataset.size());
+            isEnableLoadMore = true;
+            refreshLayout.setRefreshing(false);
         }
     }
 
@@ -215,10 +216,15 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
         @Override
         protected void onPostExecute(final String res) {
             btn_refresh.show();
+            if(CurrentPage==1){
+                datas.clear();
+                mRecyleAdapter.notifyDataSetChanged();
+            }
+            int start = datas.size();
             datas.addAll(dataset);
-            refreshLayout.setRefreshing(false);
-            mRecyleAdapter.notifyItemRangeInserted(datas.size() - dataset.size(), dataset.size());
+            mRecyleAdapter.notifyItemRangeInserted(start, dataset.size());
             isEnableLoadMore = true;
+            refreshLayout.setRefreshing(false);
 
         }
     }

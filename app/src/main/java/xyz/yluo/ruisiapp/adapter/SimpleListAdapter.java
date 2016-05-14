@@ -66,7 +66,8 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
         @Override
         void setData(int position) {
-            key.setText(Datas.get(position).getKey());
+            String keystr = Datas.get(position).getKey();
+            key.setText(keystr);
             String values = Datas.get(position).getValue();
             if(values.length()>0){
                 value.setVisibility(View.VISIBLE);

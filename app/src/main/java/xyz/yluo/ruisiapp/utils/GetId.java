@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 public class GetId {
 
     public static String getid(String url){
-        //forum.php?mod=redirect&goto=findpost&ptid=846689&pid=21330831
         Pattern pattern = Pattern.compile("tid=[0-9]{3,}");
         Matcher matcher = pattern.matcher(url);
         String tid ="";
@@ -34,7 +33,6 @@ public class GetId {
     }
 
     public static String getHash(String url){
-        //member.php?mod=logging&action=logout&formhash=cb9f1c2f&mobile=2
         try {
             //fid=[0-9]+
             Pattern pattern = Pattern.compile("formhash=.*&");
@@ -60,8 +58,7 @@ public class GetId {
         String tid ="";
         if (matcher.find()) {
             tid = url.substring(matcher.start()+4,matcher.end());
-            //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
-        }
+           }
         return tid;
     }
 
@@ -72,8 +69,7 @@ public class GetId {
         int  page =1;
         if (matcher.find()) {
             page = Integer.parseInt(url.substring(matcher.start()+5,matcher.end()));
-            //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
-        }
+            }
         return page;
     }
 
@@ -84,8 +80,7 @@ public class GetId {
         String pid ="";
         if (matcher.find()) {
             pid = url.substring(matcher.start()+4,matcher.end());
-            //System.out.println("\ntid is------->>>>>>>>>>>>>>:" +  articleUrl.substring(matcher.start(),matcher.end()));
-        }
+            }
         return pid;
     }
 

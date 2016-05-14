@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
@@ -40,18 +40,22 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <xyz.yluo.ruisiapp.View.MyWebView
-            android:layout_margin="@dimen/dimen_16"
-            android:background="@android:color/white"
-            android:id="@+id/mywebview"
+        <xyz.yluo.ruisiapp.View.MyHtmlTextView
+            android:lineSpacingMultiplier="1.4"
+            android:padding="16dp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:autoLink="web"
+            android:id="@+id/html_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textSize="16sp"/>
 
         <TextView
+            android:id="@+id/version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="25sp"
-            android:text="当前版本1.4 beta"
+            android:textSize="18sp"
+            tools:text="当前版本1.4 beta"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
 

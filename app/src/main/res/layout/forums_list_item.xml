@@ -9,7 +9,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:paddingTop="12dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
@@ -17,36 +17,40 @@
         android:gravity="center_vertical"
         android:background="?attr/selectableItemBackground"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
         <ImageView
-            android:layout_marginEnd="@dimen/dimen_8"
             android:id="@+id/img"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
-            android:src="@drawable/image_placeholder" />
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/image_placeholder"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"/>
 
         <TextView
+            android:layout_marginTop="8dp"
             android:id="@+id/title"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/TitleText"
             android:singleLine="true"
-            tools:text="话题的标题" />
+            tools:text="话题的标题"
+            android:layout_below="@+id/img"
+            android:layout_centerHorizontal="true" />
+
         <TextView
-            android:padding="4dp"
+            android:padding="3dp"
             android:background="@drawable/type_bg_orange"
             android:id="@+id/today_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="10sp"
             android:textColor="#DC5A26"
-            android:layout_marginStart="8dp"
             android:singleLine="true"
-            tools:text="150" />
-    </LinearLayout>
+            tools:text="150"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
 
 
 </LinearLayout>

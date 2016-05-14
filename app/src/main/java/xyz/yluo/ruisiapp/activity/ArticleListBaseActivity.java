@@ -58,6 +58,7 @@ public abstract class ArticleListBaseActivity extends BaseActivity
 
     private void init(){
         btn_refresh.hide();
+        refreshLayout.setColorSchemeColors(R.color.colorPrimary);
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -68,12 +69,6 @@ public abstract class ArticleListBaseActivity extends BaseActivity
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshLayout.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout.setRefreshing(true);
-                    }
-                });
                 prerefresh();
             }
         });

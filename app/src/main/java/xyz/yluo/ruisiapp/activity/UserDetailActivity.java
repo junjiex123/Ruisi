@@ -31,6 +31,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,7 +75,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
     protected ProgressBar progressBar;
 
     private List<SimpleListData> datas = new ArrayList<>();
-    private SimpleListAdapter adapter;
+    private SimpleListAdapter adapter = null;
     private static final String NAME_IMG_AVATAR = "imgAvatar";
     private static String userUid = "";
     private String username = "";
@@ -179,6 +180,17 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
                     if(key.contains("积分")){
                         String grade = GetLevel.getUserLevel(Integer.parseInt(value));
                         datas.add(new SimpleListData("等级",grade,""));
+                    }else if(key.contains("上传量")||key.contains("下载量")){
+                        long a = Long.parseLong(value.trim());
+                        DecimalFormat decimalFormat=new DecimalFormat(".00");
+                        float GBsize = (float) (a/1024/1024/1024.0);
+                        if(GBsize>500){
+                            float TBsize = GBsize/1024.0f;
+                            value = decimalFormat.format(TBsize)+" TB";
+                        }else{
+                            value = decimalFormat.format(GBsize)+" GB";
+                        }
+
                     }
                     datas.add(new SimpleListData(key,value,""));
                 }

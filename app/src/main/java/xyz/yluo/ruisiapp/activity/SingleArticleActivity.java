@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -330,10 +331,13 @@ public class SingleArticleActivity extends BaseActivity
                     contentels.select("[style]").removeAttr("style");
                     contentels.select("font").removeAttr("color").removeAttr("size").removeAttr("face");
                 }
+
+                //删除修改日期
+                contentels.select("i.pstatus").remove();
+
                 //这是内容
                 if(commentindex.contains("楼主")||commentindex.contains("收藏")){
-                    //删除修改日期
-                    contentels.select("i.pstatus").remove();
+
                     //for(Element ttt:contentels.select("a[href*=from=album]")){
                     //    ttt.select("img").attr("style","display: block;margin:10px auto;width:80%;");
                     //}
@@ -395,8 +399,7 @@ public class SingleArticleActivity extends BaseActivity
         switch (v.getId()){
             case R.id.btn_star:
                 if(isNeedLoginDialog()){
-                    Toast.makeText(getApplicationContext(),"正在收藏......",Toast.LENGTH_SHORT).show();
-                    starTask();
+                    starTask(v);
                 }
                 break;
             case R.id.btn_reply_2:
@@ -413,19 +416,31 @@ public class SingleArticleActivity extends BaseActivity
     }
 
     //收藏 任务
-    private void starTask(){
+
+    private void starTask(final View v){
         final String url = UrlUtils.getStarUrl(tid);
         Map<String,String> params = new HashMap<>();
         params.put("favoritesubmit","true");
         params.put("formhash", PublicData.FORMHASH);
         HttpUtil.post(this, url, params, new ResponseHandler() {
+
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
+                boolean isok = false;
                 if(res.contains("成功")){
                     Toast.makeText(getApplicationContext(),"收藏成功",Toast.LENGTH_SHORT).show();
+                    isok = true;
                 }else if(res.contains("您已收藏")){
                     Toast.makeText(getApplicationContext(),"您已收藏请勿重复收藏",Toast.LENGTH_SHORT).show();
+                    isok = true;
+                }
+
+                if(isok){
+                    if(v!=null){
+                        ImageView mv = (ImageView)v;
+                        mv.setImageResource(R.drawable.ic_favorite_border_accent_24dp);
+                    }
                 }
             }
         });
@@ -560,7 +575,7 @@ public class SingleArticleActivity extends BaseActivity
             case R.id.menu_star:
                 if(isNeedLoginDialog()){
                     Toast.makeText(getApplicationContext(),"正在收藏......",Toast.LENGTH_SHORT).show();
-                    starTask();
+                    starTask(null);
                 }
                 break;
             case R.id.menu_jump:

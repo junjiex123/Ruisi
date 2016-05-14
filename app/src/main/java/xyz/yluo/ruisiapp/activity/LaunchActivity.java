@@ -77,7 +77,7 @@ public class LaunchActivity extends BaseActivity{
             boolean isShowZhidin  = shp.getBoolean("setting_show_zhidin",false);
             String tail = shp.getString("setting_user_tail","");
             boolean theme = shp.getBoolean("setting_swich_theme",false);
-            boolean setting_show_plain = shp.getBoolean("setting_show_plain",true);
+            boolean setting_show_plain = shp.getBoolean("setting_show_plain",false);
             boolean isrecieveMessage = shp.getBoolean("setting_show_notify",false);
 
             PublicData.ISSHOW_ZHIDIN = isShowZhidin;

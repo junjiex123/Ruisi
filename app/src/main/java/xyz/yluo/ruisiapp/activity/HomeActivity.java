@@ -10,7 +10,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,12 +50,11 @@ public class HomeActivity extends BaseActivity
     protected ViewPager viewpager;
     @BindView(R.id.mytab)
     protected TabLayout tabLayout;
-    @BindView(R.id.userName)
+    @BindView(R.id.userNameTitle)
     protected TextView usernameTitle;
-    @BindView(R.id.userImage)
+    @BindView(R.id.userImageTitle)
     protected CircleImageView userImageTitle;
 
-    private ActionBarDrawerToggle toggle;
     private int clickId = 0;
     private CircleImageView userImage;
     private long mExitTime;
@@ -73,14 +71,9 @@ public class HomeActivity extends BaseActivity
         if(actionBar!=null){
             actionBar.setDisplayShowTitleEnabled(false);
         }
-
         init();
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        navigationView.setNavigationItemSelectedListener(this);
-
-
         updateLoginView();
+        navigationView.setNavigationItemSelectedListener(this);
         startCheckMessageService();
 
     }
@@ -103,10 +96,9 @@ public class HomeActivity extends BaseActivity
 
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), titles);
         viewpager.setAdapter(viewPagerAdapter);
-        //设置Tab和ViewPager绑定
         tabLayout.setupWithViewPager(viewpager);
 
-        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+        drawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -154,7 +146,21 @@ public class HomeActivity extends BaseActivity
 
                 }
             }
-        };
+        });
+
+        userImageTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawer.openDrawer(GravityCompat.START);
+            }
+        });
+
+        usernameTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawer.openDrawer(GravityCompat.START);
+            }
+        });
 
         final View header = navigationView.getHeaderView(0);
         userImage = (CircleImageView) header.findViewById(R.id.profile_image);
@@ -170,10 +176,7 @@ public class HomeActivity extends BaseActivity
                 }
             }
         });
-
-        updateLoginView();
     }
-
 
 
     @Override
@@ -201,6 +204,7 @@ public class HomeActivity extends BaseActivity
         final View header = navigationView.getHeaderView(0);
         final View nav_header_login = header.findViewById(R.id.nav_header_login);
         final View nav_header_notlogin = header.findViewById(R.id.nav_header_notlogin);
+
         //判断是否登陆
         if (PublicData.ISLOGIN) {
             usernameTitle.setText(PublicData.USER_NAME);
@@ -256,4 +260,6 @@ public class HomeActivity extends BaseActivity
         Intent i = new Intent(this, CheckMessageService.class);
         stopService(i);
     }
+
+
 }

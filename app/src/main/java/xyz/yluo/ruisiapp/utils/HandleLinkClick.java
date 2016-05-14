@@ -17,10 +17,10 @@ import xyz.yluo.ruisiapp.activity.UserDetailActivity;
  */
 public class HandleLinkClick {
     public static void handleClick(Context context, String url){
-        System.out.println("link"+url);
         //点击了图片
         if(url.contains("from=album")){
             //do nothing
+            System.out.println("to do img click");
         }else if (url.contains("forum.php?mod=viewthread&tid=")) { // 帖子
             SingleArticleActivity.open(context,url);
         } else if (url.contains("home.php?mod=space&uid=")) { // 用户
@@ -31,8 +31,11 @@ public class HandleLinkClick {
         }else if(url.contains("member.php?mod=logging&action=login")) {//登陆
             LoginActivity.open(context);
         }else{
-            System.out.println("request b"+url);
-            RequestOpenBrowser.openBroswer(context, PublicData.BASE_URL +url);
+            if(!url.startsWith("http")){
+                url += PublicData.BASE_URL;
+            }
+
+            RequestOpenBrowser.openBroswer(context,url);
         }
     }
 }

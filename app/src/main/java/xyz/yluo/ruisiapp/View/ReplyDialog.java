@@ -62,10 +62,16 @@ public class ReplyDialog extends DialogFragment{
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
-                    if(len<13) {
-                        content.setError("字数不够");
+                    if(len==0) {
+                        content.setError("你还没写内容呢");
                     }else {
-                        dialogListener.onDialogSendClick(ReplyDialog.this,url,text+" ");
+                        if(len<13){
+                            int need = 15-len;
+                            for(int i=0;i<need;i++){
+                                text+=" ";
+                            }
+                        }
+                        dialogListener.onDialogSendClick(ReplyDialog.this,url,text);
                         ReplyDialog.this.getDialog().cancel();
                     }
                 }
