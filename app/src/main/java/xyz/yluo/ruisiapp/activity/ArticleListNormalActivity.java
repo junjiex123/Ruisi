@@ -76,17 +76,22 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
             @Override
             public void onSuccess(byte[] response) {
                 if(PublicData.IS_SCHOOL_NET){
-                    new GetNormalArticleListTaskRs(new String(response)).execute();
+                    new GetNormalArticleListTaskRs().execute(new String(response));
                 }else{
                     //外网
-                    new GetArticleListTaskMe(new String(response)).execute();
+                    new GetArticleListTaskMe().execute(new String(response));
                 }
             }
 
             @Override
             public void onFailure(Throwable e) {
                 Toast.makeText(getApplicationContext(), "网络错误！！", Toast.LENGTH_SHORT).show();
-                refreshLayout.setRefreshing(false);
+                refreshLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshLayout.setRefreshing(false);
+                    }
+                },500);
             }
         });
 
@@ -104,17 +109,11 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
     }
 
     //校园网状态下获得一个普通板块文章列表数据 根据html获得数据
-    public class GetNormalArticleListTaskRs extends AsyncTask<Void, Void, String> {
-
-        private List<ArticleListData> dataset = new ArrayList<>();
-        private String res;
-
-        public GetNormalArticleListTaskRs(String res) {
-            this.res = res;
-        }
-
+    public class GetNormalArticleListTaskRs extends AsyncTask<String, Void, List<ArticleListData>> {
         @Override
-        protected String doInBackground(Void... params) {
+        protected List<ArticleListData> doInBackground(String... params) {
+            String res = params[0];
+            List<ArticleListData> dataset = new ArrayList<>();
             Elements list = Jsoup.parse(res).select("div[id=threadlist]");
             Elements links = list.select("tbody");
             ArticleListData temp;
@@ -142,8 +141,8 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
                     String viewcount = src.getElementsByAttributeValue("class", "num").select("em").text();
                     String replaycount = src.getElementsByAttributeValue("class", "num").select("a").text();
 
-                    if(!PublicData.ISSHOW_ZHIDIN &&type.equals("置顶")){
-
+                    if(!PublicData.ISSHOW_ZHIDIN&&type.equals("置顶")){
+                        System.out.println("ignore zhidin");
                     }else{
                         if (title.length()>0&& author.length()>0) {
                             temp = new ArticleListData(title, titleUrl, type, author, authorUrl, time, viewcount, replaycount);
@@ -153,11 +152,11 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
 
                 }
             }
-            return "";
+            return dataset;
         }
 
         @Override
-        protected void onPostExecute(final String res) {
+        protected void onPostExecute(List<ArticleListData> dataset) {
 
             btn_refresh.show();
             if(CurrentPage==1){
@@ -169,25 +168,24 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
 
             mRecyleAdapter.notifyItemRangeInserted(start, dataset.size());
             isEnableLoadMore = true;
-            refreshLayout.setRefreshing(false);
+            refreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(false);
+                }
+            },500);
         }
     }
 
     //非校园网状态下获得一个板块文章列表数据
     //根据html获得数据
     //调用的手机版
-    public class GetArticleListTaskMe extends AsyncTask<Void, Void, String> {
-
-        private List<ArticleListData> dataset = new ArrayList<>();
-        private String res;
-
-        public GetArticleListTaskMe(String res) {
-            this.res = res;
-        }
-
+    public class GetArticleListTaskMe extends AsyncTask<String, Void, List<ArticleListData>> {
         @Override
-        protected String doInBackground(Void... params) {
+        protected List<ArticleListData> doInBackground(String... params) {
             //chiphell
+            String res = params[0];
+            List<ArticleListData> dataset = new ArrayList<>();
             Document doc = Jsoup.parse(res);
             Elements body = doc.select("div[class=threadlist]"); // 具有 href 属性的链接
 
@@ -205,16 +203,14 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
                 if(img.contains("icon_tu.png")){
                     hasImage = "0";
                 }
-
-                //String type,String title, String titleUrl, String author, String replayCount
                 temp = new ArticleListData(hasImage,title, url, author, replyCount);
                 dataset.add(temp);
             }
-            return "";
+            return dataset;
         }
 
         @Override
-        protected void onPostExecute(final String res) {
+        protected void onPostExecute(List<ArticleListData> dataset) {
             btn_refresh.show();
             if(CurrentPage==1){
                 datas.clear();
@@ -224,7 +220,12 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
             datas.addAll(dataset);
             mRecyleAdapter.notifyItemRangeInserted(start, dataset.size());
             isEnableLoadMore = true;
-            refreshLayout.setRefreshing(false);
+            refreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(false);
+                }
+            },500);
 
         }
     }

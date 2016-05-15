@@ -131,7 +131,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         HttpUtil.get(this, url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
-                new GetUserInfoTask(new String(response)).execute();
+                new GetUserInfoTask().execute(new String(response));
             }
             @Override
             public void onFailure(Throwable e) {
@@ -163,13 +163,10 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
     }
 
     //获得用户个人信息
-    public class GetUserInfoTask extends AsyncTask<Void, Void, String> {
-        private String res;
-        public GetUserInfoTask(String res) {
-            this.res = res;
-        }
+    public class GetUserInfoTask extends AsyncTask<String, Void, String> {
         @Override
-        protected String doInBackground(Void... voids) {
+        protected String doInBackground(String... params) {
+            String res = params[0];
             username = Jsoup.parse(res).select(".user_avatar").select(".name").text();
             Elements lists = Jsoup.parse(res).select(".user_box").select("ul").select("li");
             if(lists!=null){

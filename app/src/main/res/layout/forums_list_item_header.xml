@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:background="@color/bgwhite"
     android:id="@+id/forum_list_item"
     android:gravity="center"
     android:layout_width="match_parent"

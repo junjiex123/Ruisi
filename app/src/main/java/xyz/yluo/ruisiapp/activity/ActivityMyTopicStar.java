@@ -127,9 +127,9 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
             public void onSuccess(byte[] response) {
                 String res= new String(response);
                 if(currentIndex==0){
-                    new GetUserArticleask(res).execute();
+                    new GetUserArticleask().execute(res);
                 }else{
-                    new GetUserStarTask(res).execute();
+                    new GetUserStarTask().execute(res);
                 }
             }
             @Override
@@ -141,14 +141,10 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
     }
 
     //获得主题
-    protected class GetUserArticleask extends AsyncTask<Void, Void, String> {
-        private String res;
-        public GetUserArticleask(String res) {
-            this.res = res;
-        }
-
+    protected class GetUserArticleask extends AsyncTask<String, Void, Void> {
         @Override
-        protected String doInBackground(Void... params) {
+        protected Void doInBackground(String... strings) {
+            String res = strings[0];
             Elements lists = Jsoup.parse(res).select(".threadlist").select("ul").select("li");
             for(Element tmp:lists){
                 String title = tmp.select("a").text();
@@ -161,27 +157,24 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
                 String num = tmp.select(".num").text();
                 datas.add(new SimpleListData(title,num,titleUrl));
             }
-            return "";
+            return null;
         }
 
         @Override
-        protected void onPostExecute(final String res) {
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
             isEnableLoadMore = true;
             CurrentPage++;
             refreshLayout.setRefreshing(false);
             adapter.notifyDataSetChanged();
         }
+
     }
     //获得用户收藏
-    protected class GetUserStarTask extends AsyncTask<Void, Void, String> {
-
-        private String res;
-        public GetUserStarTask(String res) {
-            this.res = res;
-        }
-
+    protected class GetUserStarTask extends AsyncTask<String, Void, Void> {
         @Override
-        protected String doInBackground(Void... params) {
+        protected Void doInBackground(String... params) {
+            String res= params[0];
             Elements lists = Jsoup.parse(res).select(".threadlist").select("ul").select("li");
             for(Element tmp:lists){
                 String key = tmp.select("a").text();
@@ -193,11 +186,11 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
                 String link = tmp.select("a").attr("href");
                 datas.add(new SimpleListData(key,"",link));
             }
-            return "";
+            return null;
         }
 
         @Override
-        protected void onPostExecute(final String res) {
+        protected void onPostExecute(Void avoid) {
             isEnableLoadMore = true;
             CurrentPage++;
             refreshLayout.setRefreshing(false);

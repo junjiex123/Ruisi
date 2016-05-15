@@ -62,13 +62,19 @@ public class ArticleListImageActivity extends ArticleListBaseActivity{
         HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
-                new GetImageArticleListTaskRS(new String(response)).execute();
+                new GetImageArticleListTaskRS().execute(new String(response));
             }
 
             @Override
             public void onFailure(Throwable e) {
                 Toast.makeText(getApplicationContext(), "网络错误！！", Toast.LENGTH_SHORT).show();
-                refreshLayout.setRefreshing(false);
+                refreshLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshLayout.setRefreshing(false);
+                    }
+                },500);
+
             }
         });
     }
@@ -82,15 +88,11 @@ public class ArticleListImageActivity extends ArticleListBaseActivity{
     }
 
     //校园网状态下获得图片板块数据 图片链接、标题等  根据html获得数据
-    public class GetImageArticleListTaskRS extends AsyncTask<Void, Void, String> {
-
-        private String response;
-        public GetImageArticleListTaskRS(String res) {
-            this.response = res;
-        }
+    public class GetImageArticleListTaskRS extends AsyncTask<String, Void, Void> {
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected Void doInBackground(String... params) {
+            String response = params[0];
             Elements list = Jsoup.parse(response).select("ul[id=waterfall]");
             Elements imagelist = list.select("li");
 
@@ -111,10 +113,15 @@ public class ArticleListImageActivity extends ArticleListBaseActivity{
         }
 
         @Override
-        protected void onPostExecute(final String res) {
+        protected void onPostExecute(Void avoid) {
             btn_refresh.show();
-            refreshLayout.setRefreshing(false);
             adapter.notifyDataSetChanged();
+            refreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(false);
+                }
+            },500);
         }
     }
 

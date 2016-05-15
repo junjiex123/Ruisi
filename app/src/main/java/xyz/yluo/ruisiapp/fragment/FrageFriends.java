@@ -55,20 +55,16 @@ public class FrageFriends extends Fragment{
         recycler_view.setAdapter(adapter);
 
         String url = "home.php?mod=space&do=friend&mobile=2";
-        new GetDataTask(url).execute();
+        new GetDataTask().execute(url);
         refreshLayout.setEnabled(false);
         return view;
     }
 
 
-    private class GetDataTask extends AsyncTask<Void,Void,String>{
-        private String url;
-        public GetDataTask(String url) {
-            this.url = url;
-        }
+    private class GetDataTask extends AsyncTask<String,Void,String>{
         @Override
-        protected String doInBackground(Void... voids) {
-            HttpUtil.SyncGet(getContext(), url, new TextResponseHandler() {
+        protected String doInBackground(String... params) {
+            HttpUtil.SyncGet(getContext(), params[0], new TextResponseHandler() {
                 @Override
                 public void onSuccess(String response) {
                     Document document = Jsoup.parse(response);

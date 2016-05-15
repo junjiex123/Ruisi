@@ -33,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/TitleText"
+            android:textSize="15sp"
             android:singleLine="true"
             tools:text="话题的标题"
             android:layout_below="@+id/img"

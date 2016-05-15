@@ -39,6 +39,15 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
     private  final int LOAD_MORE = 2;
     private LoadMoreType loadMoreType = LoadMoreType.LOADING;
 
+    ScrollToSomePosition scrollToSomePosition = null;
+
+    public interface ScrollToSomePosition{
+        void scroolto(int position);
+    }
+
+    public void setScrollToSomePosition(ScrollToSomePosition scrollToSomePosition) {
+        this.scrollToSomePosition = scrollToSomePosition;
+    }
 
     //数据
     private List<SingleArticleData> datalist;
@@ -200,6 +209,29 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             replay_time.setText(timeText);
             replay_index.setText(single.getIndex());
             htmlTextView.mySetText(activity, single.getCotent());
+
+            //处理回复点击问题 跳转
+            htmlTextView.setQuoteSpanClickListener(new MyHtmlTextView.OnQuoteSpanClick() {
+                @Override
+                public void quoteSpanClick(String res) {
+                    if(scrollToSomePosition!=null&&res.contains("回复")&&res.contains("\n")){
+                        String usernaec = res.split("\\n")[0].split(" ")[1].trim();
+                        String contentc = res.split("\\n")[1].trim();
+                        if(contentc.length()>3){
+                            contentc = contentc.substring(0,3);
+                        }
+
+                        System.out.println("user:"+usernaec+"  content:"+contentc);
+                        for(int i = position;i>0;i--){
+                            SingleArticleData singlec = datalist.get(i);
+                            if(singlec.getUsername().equals(usernaec)&&singlec.getCotent().contains(contentc)){
+                                System.out.println("i find"+i);
+                                scrollToSomePosition.scroolto(i);
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         @OnClick(R.id.article_user_image)

@@ -96,37 +96,38 @@ public class FrageMessage extends Fragment{
             public void onSuccess(byte[] response) {
                 String res= new String(response);
                 if(index!=0){
-                    new GetUserPmTask(res).execute();
+                    new GetUserPmTask().execute(res);
                 }else{
-                    new GetUserReplyTask(res).execute();
+                    new GetUserReplyTask().execute(res);
                 }
 
             }
             @Override
             public void onFailure(Throwable e) {
                 e.printStackTrace();
-                refreshLayout.setRefreshing(false);
+                refreshLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshLayout.setRefreshing(false);
+                    }
+                },500);
             }
         });
     }
 
     //获得回复我的
-    public class GetUserReplyTask extends AsyncTask<Void, Void, String> {
-        private String res;
-        private List<MessageData> tempdatas = new ArrayList<>();
-        public GetUserReplyTask(String res) {
-            this.res = res;
-        }
+    public class GetUserReplyTask extends AsyncTask<String, Void, List<MessageData>> {
         @Override
-        protected String doInBackground(Void... params) {
+        protected List<MessageData> doInBackground(String... params) {
             //pmbox
-            Elements lists = Jsoup.parse(res).select(".nts").select("dl.cl");
+            List<MessageData> tempdatas = new ArrayList<>();
+            Elements lists = Jsoup.parse(params[0]).select(".nts").select("dl.cl");
             for(Element tmp:lists){
                 boolean isRead = true;
                 if(tmp.select(".ntc_body").attr("style").contains("bold")){
                     isRead = false;
                 }
-                String content = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").text().replace("查看","");;
+                String content = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").text().replace("查看","");
                 if(content.isEmpty()){
                     continue;
                 }
@@ -136,30 +137,23 @@ public class FrageMessage extends Fragment{
                 String titleUrl =tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
                 tempdatas.add(new MessageData(ListType.REPLAYME,authorTitle,titleUrl,authorImage,time,isRead,content));
             }
-            return "";
+            return tempdatas;
         }
 
         @Override
-        protected void onPostExecute(final String res) {
-            datas.clear();
-            datas.addAll(tempdatas);
-            adapter.notifyDataSetChanged();
-            refreshLayout.setRefreshing(false);
+        protected void onPostExecute(List<MessageData> tempdatas) {
+            finishGetData(tempdatas);
         }
     }
 
     //获得pm消息
-    public class GetUserPmTask extends AsyncTask<Void, Void, String> {
+    public class GetUserPmTask extends AsyncTask<String, Void, List<MessageData>> {
 
-        private String res;
-        private List<MessageData> temdatas = new ArrayList<>();
-        public GetUserPmTask(String res) {
-            this.res = res;
-        }
         @Override
-        protected String doInBackground(Void... params) {
+        protected List<MessageData> doInBackground(String... params) {
             //pmbox
-            Elements lists = Jsoup.parse(res).select(".pmbox").select("ul").select("li");
+            List<MessageData> temdatas = new ArrayList<>();
+            Elements lists = Jsoup.parse(params[0]).select(".pmbox").select("ul").select("li");
             for(Element tmp:lists){
                 boolean isRead = true;
                 if(tmp.select(".num").text().length()>0){
@@ -173,15 +167,24 @@ public class FrageMessage extends Fragment{
                 String titleUrl =tmp.select("a").attr("href");
                 temdatas.add(new MessageData(ListType.MYMESSAGE,title,titleUrl,authorImage,time,isRead,content));
             }
-            return "";
+            return temdatas;
         }
 
         @Override
-        protected void onPostExecute(final String res) {
-            datas.clear();
-            datas.addAll(temdatas);
-            adapter.notifyDataSetChanged();
-            refreshLayout.setRefreshing(false);
+        protected void onPostExecute(List<MessageData> tempdatas) {
+            finishGetData(tempdatas);
         }
+    }
+
+    void finishGetData(List<MessageData> temdatas){
+        datas.clear();
+        datas.addAll(temdatas);
+        adapter.notifyDataSetChanged();
+        refreshLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(false);
+            }
+        },500);
     }
 }

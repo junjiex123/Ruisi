@@ -130,10 +130,9 @@ public class ActivitySearch extends BaseActivity {
                 String res = new String(response);
                 if(res.contains("秒内只能进行一次搜索")){
                     Snackbar.make(main_window,"抱歉，您在 15 秒内只能进行一次搜索",Snackbar.LENGTH_SHORT).show();
-                    refresh_view.setRefreshing(false);
                 }else {
                     actionBar.setTitle("搜索结果");
-                    new GetResultListTaskMe(new String(response)).execute();
+                    new GetResultListTaskMe().execute(new String(response));
                 }
 
             }
@@ -141,23 +140,28 @@ public class ActivitySearch extends BaseActivity {
             @Override
             public void onFailure(Throwable e) {
                 e.printStackTrace();
-                refresh_view.setRefreshing(false);
                 Snackbar.make(main_window,"网络错误",Snackbar.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                refresh_view.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refresh_view.setRefreshing(false);
+                    }
+                },500);
+
             }
         });
     }
 
-    public class GetResultListTaskMe extends AsyncTask<Void, Void, String> {
-
-        private List<SimpleListData> dataset = new ArrayList<>();
-        private String res;
-
-        public GetResultListTaskMe(String res) {
-            this.res = res;
-        }
-
+    public class GetResultListTaskMe extends AsyncTask<String, Void, List<SimpleListData>> {
         @Override
-        protected String doInBackground(Void... params) {
+        protected List<SimpleListData> doInBackground(String... params) {
+            String res = params[0];
+            List<SimpleListData> dataset = new ArrayList<>();
             Document doc = Jsoup.parse(res);
             Elements body = doc.select("div[class=threadlist]"); // 具有 href 属性的链接
             Elements links = body.select("li");
@@ -166,18 +170,23 @@ public class ActivitySearch extends BaseActivity {
                 String title = src.select("a").text();
                 dataset.add(new SimpleListData(title,"",url));
             }
-            return "";
+            return dataset;
         }
 
         @Override
-        protected void onPostExecute(final String res) {
-
-            refresh_view.setRefreshing(false);
+        protected void onPostExecute(List<SimpleListData> dataset) {
             datas.addAll(dataset);
             if(datas.size()==0){
                 datas.add(new SimpleListData("没有搜索到结果","",""));
             }
             adapter.notifyDataSetChanged();
+
+            recycler_view.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refresh_view.setRefreshing(false);
+                }
+            },500);
         }
     }
 }

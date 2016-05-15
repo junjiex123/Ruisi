@@ -99,7 +99,7 @@ public class ChatActivity extends BaseActivity{
             actionBar.setTitle(username);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        new GetDataTask(url).execute();
+        new GetDataTask().execute(url);
         myReplyView.setListener(new ReplyBarListner() {
             @Override
             public void btnSendClick(String input) {
@@ -109,13 +109,10 @@ public class ChatActivity extends BaseActivity{
     }
 
 
-    public class GetDataTask extends AsyncTask<Void,Void,String> {
-        private String url;
-        public GetDataTask(String url) {
-            this.url = url;
-        }
+    public class GetDataTask extends AsyncTask<String,Void,String> {
         @Override
-        protected String doInBackground(Void... params) {
+        protected String doInBackground(String... params) {
+            final String url = params[0];
             HttpUtil.SyncGet(getApplicationContext(),url, new TextResponseHandler() {
                 @Override
                 public void onSuccess(String response) {
@@ -160,7 +157,12 @@ public class ChatActivity extends BaseActivity{
             super.onPostExecute(s);
             adapter.notifyDataSetChanged();
             recycler_view.scrollToPosition(datas.size());
-            refreshLayout.setRefreshing(false);
+            refreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(false);
+                }
+            },500);
         }
     }
 
@@ -174,7 +176,7 @@ public class ChatActivity extends BaseActivity{
 
         datas.clear();
         adapter.notifyDataSetChanged();
-        new GetDataTask(url).execute();
+        new GetDataTask().execute(url);
     }
 
     private void hide_ime(){

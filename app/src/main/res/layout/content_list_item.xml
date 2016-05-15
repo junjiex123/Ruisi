@@ -7,15 +7,32 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:textStyle="bold"
-        android:padding="16dp"
-        android:id="@+id/article_title"
-        android:textColor="@color/textColorPrimary"
-        android:textSize="17sp"
-        tools:text="尴尬，Xbox One 2与PS4.5太快推出压力重重"
+    <LinearLayout
+        android:paddingBottom="12dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="0dp"
+        android:paddingTop="12dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+        <View
+            android:background="@color/colorAccent"
+            android:layout_width="6dp"
+            android:layout_height="24dp"/>
+        <TextView
+            android:paddingTop="4dp"
+            android:layout_marginStart="10dp"
+            android:textStyle="bold"
+            android:id="@+id/article_title"
+            android:textColor="@color/textColorPrimary"
+            android:textSize="17sp"
+            tools:text="尴尬，Xbox One 2与PS4.5太快推出压力重重"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
     <LinearLayout
         android:gravity="center_vertical"
         android:paddingTop="8dp"

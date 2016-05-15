@@ -93,26 +93,28 @@ public class FrageForumList extends Fragment {
         HttpUtil.get(getActivity(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
-                new GetForumList(new String(response)).execute();
+                new GetForumList().execute(new String(response));
             }
 
             @Override
             public void onFailure(Throwable e) {
-                refreshLayout.setRefreshing(false);
+                refreshLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshLayout.setRefreshing(false);
+                    }
+                },500);
             }
         });
     }
 
 
     //获取首页板块数据 板块列表
-    public class GetForumList extends AsyncTask<Void, Void, String> {
-        private String response;
-        private List<FroumListData> simpledatas = new ArrayList<>();
-        public GetForumList(String res) {
-            this.response = res;
-        }
+    public class GetForumList extends AsyncTask<String, Void, List<FroumListData>> {
         @Override
-        protected String doInBackground(Void... voids) {
+        protected List<FroumListData> doInBackground(String... params) {
+            String response = params[0];
+            List<FroumListData> simpledatas = new ArrayList<>();
             Document document = Jsoup.parse(response);
             Elements elements = document.select("div#wp.wp.wm").select("div.bm.bmw.fl");
             //获得hash
@@ -134,15 +136,20 @@ public class FrageForumList extends Fragment {
                     simpledatas.add(new FroumListData(false,title,todayNew,titleUrl));
                 }
             }
-            return null;
+            return simpledatas;
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(List<FroumListData> simpledatas) {
             datas.clear();
             datas.addAll(simpledatas);
             adapter.notifyDataSetChanged();
-            refreshLayout.setRefreshing(false);
+            refreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(false);
+                }
+            },500);
         }
     }
 }

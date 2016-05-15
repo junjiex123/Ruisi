@@ -103,13 +103,13 @@ public class SingleArticleActivity extends BaseActivity
         setContentView(R.layout.activity_article_chat);
         ButterKnife.bind(this);
 
+        refreshLayout.setColorSchemeColors(R.color.colorPrimary);
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {
                 refreshLayout.setRefreshing(true);
             }
         });
-
         actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -127,8 +127,15 @@ public class SingleArticleActivity extends BaseActivity
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyleAdapter = new SingleArticleAdapter(this, this, mydatalist);
+        mRecyleAdapter.setScrollToSomePosition(new SingleArticleAdapter.ScrollToSomePosition() {
+            @Override
+            public void scroolto(int position) {
+                mRecyclerView.scrollToPosition(position);
+            }
+        });
         mRecyclerView.setAdapter(mRecyleAdapter);
         mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this,8));
+
 
         MyReplyView.setListener(new ReplyBarListner() {
             @Override
@@ -165,6 +172,7 @@ public class SingleArticleActivity extends BaseActivity
             e.printStackTrace();
         }
     }
+
 
     private void firstGetData(int page){
         refreshLayout.post(new Runnable() {
@@ -238,7 +246,7 @@ public class SingleArticleActivity extends BaseActivity
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                new DealWithArticleData(res).execute((Void) null);
+                new DealWithArticleData().execute(res);
             }
 
             @Override
@@ -250,24 +258,27 @@ public class SingleArticleActivity extends BaseActivity
         });
     }
 
-    private class DealWithArticleData extends AsyncTask<Void,Void,String>{
-        private List<SingleArticleData> tepdata = new ArrayList<>();
-        private String htmlData;
-        public DealWithArticleData(String htmlData) {
-            this.htmlData = htmlData;
-        }
+    private class DealWithArticleData extends AsyncTask<String,Void,List<SingleArticleData>>{
+
         private String toolBarTitle = "";
         @Override
-        protected String doInBackground(Void... params) {
+        protected List<SingleArticleData> doInBackground(String... params) {
+            List<SingleArticleData> tepdata = new ArrayList<>();
+            String htmlData = params[0];
             //list 所有楼数据
             Document doc = Jsoup.parse(htmlData);
             if(!isSetToolBar){
                 String titleText = doc.select("title").text();
                 String[] array = titleText.split("-");
-                if(array.length>=5){
-                    int len = array.length;
+                int len = array.length;
+                if(len>=5){
                     toolBarTitle = array[len-4].trim();
-                    Title = array[len-5].trim();
+                    for(int lnea=0;lnea<len-4;lnea++){
+                        Title = Title+array[lnea]+"-";
+                        if(lnea==len-5){
+                            Title = Title.substring(0,Title.length()-2);
+                        }
+                    }
                 }
             }
             //获取回复/hash
@@ -323,8 +334,6 @@ public class SingleArticleActivity extends BaseActivity
                 String replyUrl = temp.select(".replybtn").select("input").attr("href");
                 Elements contentels = temp.select(".message");
 
-                String finalcontent = contentels.html();
-
                 //是否移除所有样式
                 if(PublicData.ISSHOW_PLAIN){
                     //移除所有style
@@ -332,8 +341,35 @@ public class SingleArticleActivity extends BaseActivity
                     contentels.select("font").removeAttr("color").removeAttr("size").removeAttr("face");
                 }
 
+                //处理引用
+                Elements blockquotes =  contentels.select(".grey.quote").select("blockquote");
+                if(blockquotes.text().contains("引用:")&&blockquotes.text().contains("发表于")){
+                    System.out.println(blockquotes.text());
+                    String[] arrayb = blockquotes.text().split(" ",6);
+                    if(arrayb.length==6){
+                        String usernameb = arrayb[1];
+                        String contentb = arrayb[5];
+                        blockquotes.html("回复: "+usernameb+"<br>"+contentb);
+                    }
+                }
+
+                for(Element codee:contentels.select(".blockcode")){
+                    codee.html("<code>"+codee.html().trim()+"</code>");
+                }
+
                 //删除修改日期
                 contentels.select("i.pstatus").remove();
+                String finalcontent = contentels.html().trim();
+                //替换开头的br
+                while (finalcontent.startsWith("<br>")){
+                    finalcontent = finalcontent.substring(4,finalcontent.length()).trim();
+                }
+
+                //替换结尾的br
+                while (finalcontent.endsWith("<br>")){
+                    finalcontent = finalcontent.substring(0,finalcontent.length()-4).trim();
+                }
+
 
                 //这是内容
                 if(commentindex.contains("楼主")||commentindex.contains("收藏")){
@@ -341,9 +377,8 @@ public class SingleArticleActivity extends BaseActivity
                     //for(Element ttt:contentels.select("a[href*=from=album]")){
                     //    ttt.select("img").attr("style","display: block;margin:10px auto;width:80%;");
                     //}
-
                     ////替换无意义的 br
-                    finalcontent = contentels.html().replaceAll("(\\s*<br>\\s*){2,}","<br>");
+                    //finalcontent = contentels.html().replaceAll("(\\s*<br>\\s*){2,}","<br>");
                     String newtime = posttime.replace("收藏","");
                     data = new SingleArticleData(SingleType.CONTENT,Title,userimg,username,newtime,commentindex,replyUrl,finalcontent);
                 } else {
@@ -352,12 +387,11 @@ public class SingleArticleActivity extends BaseActivity
                 tepdata.add(data);
             }
 
-            return null;
+            return tepdata;
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+        protected void onPostExecute(List<SingleArticleData> tepdata) {
             if(!isSetToolBar){
                 actionBar.setTitle(toolBarTitle);
                 isSetToolBar = true;
@@ -390,7 +424,13 @@ public class SingleArticleActivity extends BaseActivity
                 mRecyleAdapter.notifyItemChanged(mRecyleAdapter.getItemCount()-1);
             }
             isEnableLoadMore = true;
-            refreshLayout.setRefreshing(false);
+            refreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(false);
+                }
+            },500);
+
         }
     }
 

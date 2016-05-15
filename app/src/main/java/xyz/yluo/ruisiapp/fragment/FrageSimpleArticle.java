@@ -95,30 +95,29 @@ public class FrageSimpleArticle extends Fragment implements LoadMoreListener.OnL
         HttpUtil.get(getActivity(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
-                new GetNewArticleListTaskMe(new String(response)).execute();
+                new GetNewArticleListTaskMe().execute(new String(response));
             }
 
             @Override
             public void onFailure(Throwable e) {
-                refreshLayout.setRefreshing(false);
+                refreshLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshLayout.setRefreshing(false);
+                    }
+                },500);
+
             }
         });
     }
     //非校园网状态下获得一个板块文章列表数据
     //根据html获得数据
     //调用的手机版
-    public class GetNewArticleListTaskMe extends AsyncTask<Void, Void, String> {
-
-        private List<ArticleListData> dataset = new ArrayList<>();
-        private String res;
-
-        public GetNewArticleListTaskMe(String res) {
-            this.res = res;
-        }
-
+    public class GetNewArticleListTaskMe extends AsyncTask<String, Void, List<ArticleListData>> {
         @Override
-        protected String doInBackground(Void... params) {
-            Document doc = Jsoup.parse(res);
+        protected List<ArticleListData> doInBackground(String... params) {
+            List<ArticleListData> dataset = new ArrayList<>();
+            Document doc = Jsoup.parse(params[0]);
             Elements body = doc.select("div[class=threadlist]"); // 具有 href 属性的链接
             ArticleListData temp;
             Elements links = body.select("li");
@@ -137,18 +136,17 @@ public class FrageSimpleArticle extends Fragment implements LoadMoreListener.OnL
                 temp = new ArticleListData(hasImage,title, url, author, replyCount);
                 dataset.add(temp);
             }
-            return "";
+            return dataset;
         }
 
         @Override
-        protected void onPostExecute(final String res) {
+        protected void onPostExecute(List<ArticleListData> dataset) {
             if(CurrentPage==1){
                 //item 增加删除 改变动画
                 mydataset.clear();
             }
             int size = mydataset.size();
             mydataset.addAll(dataset);
-            refreshLayout.setRefreshing(false);
             if(size>0){
                 adapter.notifyItemChanged(size);
                 adapter.notifyItemRangeInserted(size+1, dataset.size());
@@ -156,6 +154,13 @@ public class FrageSimpleArticle extends Fragment implements LoadMoreListener.OnL
                 adapter.notifyDataSetChanged();
             }
             isEnableLoadMore = true;
+
+            refreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(false);
+                }
+            },500);
         }
     }
 
