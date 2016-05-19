@@ -109,7 +109,7 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
     }
 
     //校园网状态下获得一个普通板块文章列表数据 根据html获得数据
-    public class GetNormalArticleListTaskRs extends AsyncTask<String, Void, List<ArticleListData>> {
+    private class GetNormalArticleListTaskRs extends AsyncTask<String, Void, List<ArticleListData>> {
         @Override
         protected List<ArticleListData> doInBackground(String... params) {
             String res = params[0];
@@ -180,7 +180,7 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
     //非校园网状态下获得一个板块文章列表数据
     //根据html获得数据
     //调用的手机版
-    public class GetArticleListTaskMe extends AsyncTask<String, Void, List<ArticleListData>> {
+    private class GetArticleListTaskMe extends AsyncTask<String, Void, List<ArticleListData>> {
         @Override
         protected List<ArticleListData> doInBackground(String... params) {
             //chiphell

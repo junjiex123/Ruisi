@@ -29,9 +29,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
@@ -50,24 +47,11 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class LoginActivity extends BaseActivity {
 
-    @BindView(R.id.login_name)
-    protected EditText ed_username;
-    @BindView(R.id.login_pas)
-    protected EditText ed_pass;
-    @BindView(R.id.btn_login)
-    protected Button btn_login;
-    @BindView(R.id.iv_login_l)
-    protected ImageView imageViewl;
-    @BindView(R.id.iv_login_r)
-    protected ImageView imageViewr;
-    @BindView(R.id.rem_user)
-    protected CheckBox rem_user;
-    @BindView(R.id.rem_pass)
-    protected CheckBox rem_pass;
-    @BindView(R.id.anwser_select)
-    protected Spinner anwser_select;
-    @BindView(R.id.anwser_text)
-    protected EditText anwser_text;
+    private EditText ed_username,ed_pass,anwser_text;
+    private Button btn_login;
+    private ImageView imageViewl,imageViewr;
+    private CheckBox rem_user,rem_pass;
+    private Spinner anwser_select;
     private ProgressDialog progress;
 
     private SharedPreferences perPreferences;
@@ -85,7 +69,23 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_login);
-        ButterKnife.bind(this);
+        ed_username = (EditText) findViewById(R.id.login_name);
+        ed_pass = (EditText) findViewById(R.id.login_pas);
+        btn_login = (Button) findViewById(R.id.btn_login);
+        imageViewl = (ImageView) findViewById(R.id.iv_login_l);
+        imageViewr = (ImageView) findViewById(R.id.iv_login_r);
+        rem_user = (CheckBox) findViewById(R.id.rem_user);
+        rem_pass = (CheckBox) findViewById(R.id.rem_pass);
+        anwser_select = (Spinner) findViewById(R.id.anwser_select);
+        anwser_text = (EditText) findViewById(R.id.anwser_text);
+
+        btn_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                login_click();
+            }
+        });
+
         ActionBar actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -203,8 +203,7 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    @OnClick(R.id.btn_login)
-    protected void login_click() {
+    private void login_click() {
         progress = ProgressDialog.show(this, "正在登陆", "请等待", true);
         final String username = ed_username.getText().toString().trim();
         final String passNo = ed_pass.getText().toString().trim();

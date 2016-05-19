@@ -4,13 +4,15 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import java.io.ByteArrayOutputStream;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-4-13.
@@ -37,75 +39,43 @@ public class CheckNet{
     }
 
     private void request(final CheckNetResponse checkNetResponse){
-        // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
         ConnectivityManager conMgr = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();
-        final String url = "http://rs.xidian.edu.cn/forum.php?mod=guide&view=hot&mobile=2";
-        final String url2 = "http://bbs.rs.xidian.me/forum.php?mod=guide&view=hot&mobile=2";
-
         if (activeNetwork != null && activeNetwork.isConnected()) {
-            //wifi 先检查校园网
-            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
-                //检查校园网
-                String s = getData(url);
-                if (s.contains("西电睿思")) {
-                    checkNetResponse.sendFinishMessage(1,s);
-                }else {
-                    String ss = getData(url2);
-                    if (ss.contains("西电睿思")) {
-                        checkNetResponse.sendFinishMessage(2,ss);
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                checkNetResponse.sendFinishMessage(2,"ok");
+                setData(false);
+            }else{
+                Document doc;
+                try {
+                    doc = Jsoup.connect("http://ip.xidian.cc/index.php").timeout(2000).get();
+                    String content = doc.html();
+                    if(content.contains("是计算流量费的")){
+                        checkNetResponse.sendFinishMessage(2,"ok");
+                        setData(false);
+                    }else if(content.contains("是免流量费的")){
+                        checkNetResponse.sendFinishMessage(1,"ok");
+                        setData(true);
+                    }else{
+                        checkNetResponse.sendFinishMessage(0,"请打开网络连接");
                     }
-                }
-            }else {
-                //检查校外网
-                String s = getData(url2);
-                if (s.contains("西电睿思")) {
-                    checkNetResponse.sendFinishMessage(2,s);
-                }else {
-                    checkNetResponse.sendFinishMessage(0,"error");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    checkNetResponse.sendFinishMessage(0,"请打开网络连接");
                 }
             }
-        }
-
-        else {
-            checkNetResponse.sendFinishMessage(0,"error");
+        }else{
+            checkNetResponse.sendFinishMessage(0,"请打开网络连接");
         }
     }
 
-    private String getData(String url){
-        HttpURLConnection connection;
-        URL resourceUrl;
-        try {
-            resourceUrl = new URL(url);
-            connection = (HttpURLConnection) resourceUrl.openConnection();
-            connection.setConnectTimeout(3000);
-            connection.setUseCaches(false);
-            connection.setInstanceFollowRedirects(false);
-            connection.setRequestMethod("GET");
-            connection.setDoInput(true);
-            int code = connection.getResponseCode();
-            if(code>=200&&code<300){
-                return new String(readFrom(connection.getInputStream()));
-            }
-            return "";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
+    private void setData(boolean isInner){
+        if(isInner){
+            PublicData.IS_SCHOOL_NET = true;
+            PublicData.BASE_URL = UrlUtils.getBaseUrl(true);
+        }else{
+            PublicData.BASE_URL = UrlUtils.getBaseUrl(false);
+            PublicData.IS_SCHOOL_NET = false;
         }
-    }
-
-    private byte[] readFrom(InputStream inputStream) throws IOException {
-        if (inputStream == null) {
-            return new byte[0];
-        }
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        byte[] buffer = new byte[4096];
-        int bytesRead;
-        while ((bytesRead = inputStream.read(buffer, 0, buffer.length)) != -1) {
-            os.write(buffer, 0, bytesRead);
-        }
-        os.flush();
-        os.close();
-        return os.toByteArray();
     }
 }

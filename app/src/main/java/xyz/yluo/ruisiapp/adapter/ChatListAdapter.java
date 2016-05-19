@@ -11,9 +11,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.View.MyHtmlTextView;
@@ -76,18 +73,25 @@ public class ChatListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         return DataSets.size()+1;
     }
 
-    public class MyViewHolder extends BaseViewHolder{
+    private class MyViewHolder extends BaseViewHolder{
 
-        @BindView(R.id.content)
         protected MyHtmlTextView content;
-        @BindView(R.id.user_image)
         protected CircleImageView user_image;
-        @BindView(R.id.post_time)
         protected TextView post_time;
 
-        public MyViewHolder(View itemView) {
+        MyViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            content = (MyHtmlTextView) itemView.findViewById(R.id.content);
+            user_image = (CircleImageView) itemView.findViewById(R.id.user_image);
+            post_time = (TextView) itemView.findViewById(R.id.post_time);
+
+            user_image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String imageUrl = DataSets.get(getAdapterPosition()).getUserImage();
+                    UserDetailActivity.openWithTransitionAnimation(context, "username", user_image,imageUrl);
+                }
+            });
         }
 
         void setData(final int position){
@@ -96,17 +100,11 @@ public class ChatListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
             post_time.setText(single.getTime());
             content.mySetText(context, single.getContent());
         }
-
-        @OnClick(R.id.user_image)
-        protected void user_image_click(){
-            String imageUrl = DataSets.get(getAdapterPosition()).getUserImage();
-            UserDetailActivity.openWithTransitionAnimation(context, "username", user_image,imageUrl);
-        }
     }
 
-    protected class EmptyViewHolder extends BaseViewHolder{
+    private class EmptyViewHolder extends BaseViewHolder{
 
-        public EmptyViewHolder(View itemView) {
+        EmptyViewHolder(View itemView) {
             super(itemView);
         }
 

@@ -5,16 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.activity.ChatActivity;
@@ -51,19 +47,30 @@ public class FriendAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         return datas.size();
     }
 
-    protected class FriendViewHolder extends BaseViewHolder{
-        @BindView(R.id.main_item_btn_item)
-        protected LinearLayout main_item_btn_item;
-        @BindView(R.id.user_image)
+    private class FriendViewHolder extends BaseViewHolder{
         protected CircleImageView user_image;
-        @BindView(R.id.user_name)
         protected TextView user_name;
-        @BindView(R.id.user_info)
-        protected TextView user_info;
+        TextView user_info;
 
-        public FriendViewHolder(View itemView) {
+        FriendViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            user_image= (CircleImageView) itemView.findViewById(R.id.user_image);
+            user_name= (TextView) itemView.findViewById(R.id.user_name);
+            user_info= (TextView) itemView.findViewById(R.id.user_info);
+
+            user_image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    userImage_click();
+                }
+            });
+
+            itemView.findViewById(R.id.main_item_btn_item).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    item_click();
+                }
+            });
         }
 
         @Override
@@ -74,15 +81,13 @@ public class FriendAdapter extends RecyclerView.Adapter<BaseViewHolder>{
             Picasso.with(activity).load(single.getImgUrl()).placeholder(R.drawable.image_placeholder).into(user_image);
         }
 
-        @OnClick(R.id.user_image)
-        protected void userImage_click(){
+        void userImage_click(){
             FriendData single = datas.get(getAdapterPosition());
             String username= single.getUserName();
             String imgUrl = single.getImgUrl();
             UserDetailActivity.openWithTransitionAnimation(activity,username,user_image,imgUrl);
         }
 
-        @OnClick(R.id.main_item_btn_item)
         protected void item_click(){
             String uid = datas.get(getAdapterPosition()).getUid();
             String username = datas.get(getAdapterPosition()).getUserName();

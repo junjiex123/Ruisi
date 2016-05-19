@@ -17,8 +17,6 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.MessageAdapter;
 import xyz.yluo.ruisiapp.data.ListType;
@@ -30,9 +28,7 @@ import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 //回复我的
 public class FrageMessage extends Fragment{
 
-    @BindView(R.id.recycler_view)
     protected RecyclerView recycler_view;
-    @BindView(R.id.refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
     private MessageAdapter adapter;
     private List<MessageData> datas;
@@ -45,7 +41,8 @@ public class FrageMessage extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.simple_list_view, container, false);
-        ButterKnife.bind(this,view);
+        recycler_view = (RecyclerView) view.findViewById(R.id.recycler_view);
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recycler_view.setLayoutManager(layoutManager);
@@ -74,7 +71,7 @@ public class FrageMessage extends Fragment{
     }
 
 
-    protected void refresh() {
+    private void refresh() {
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -116,7 +113,7 @@ public class FrageMessage extends Fragment{
     }
 
     //获得回复我的
-    public class GetUserReplyTask extends AsyncTask<String, Void, List<MessageData>> {
+    private class GetUserReplyTask extends AsyncTask<String, Void, List<MessageData>> {
         @Override
         protected List<MessageData> doInBackground(String... params) {
             //pmbox
@@ -147,7 +144,7 @@ public class FrageMessage extends Fragment{
     }
 
     //获得pm消息
-    public class GetUserPmTask extends AsyncTask<String, Void, List<MessageData>> {
+    private class GetUserPmTask extends AsyncTask<String, Void, List<MessageData>> {
 
         @Override
         protected List<MessageData> doInBackground(String... params) {
@@ -176,7 +173,7 @@ public class FrageMessage extends Fragment{
         }
     }
 
-    void finishGetData(List<MessageData> temdatas){
+    private void finishGetData(List<MessageData> temdatas){
         datas.clear();
         datas.addAll(temdatas);
         adapter.notifyDataSetChanged();

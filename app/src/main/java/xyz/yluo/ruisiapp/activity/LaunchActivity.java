@@ -13,8 +13,6 @@ import android.widget.Toast;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.checknet.CheckNet;
@@ -31,20 +29,14 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 读取相关设置写到{@link PublicData}
  */
 public class LaunchActivity extends BaseActivity{
-
-    private final int TYPE_INNER = 1;
-    private final int TYPE_OUTER = 2;
     private long starttime = 0;
-
-    @BindView(R.id.launch_text) TextView launch_text;
+    private TextView launch_text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
-
-        ButterKnife.bind(this);
-
+        launch_text = (TextView) findViewById(R.id.launch_text);
         starttime = System.currentTimeMillis();
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
@@ -88,15 +80,8 @@ public class LaunchActivity extends BaseActivity{
     }
 
     private void canGetRs(int type){
-        String url = UrlUtils.getLoginUrl(false);
-        if(type==TYPE_INNER){
-            PublicData.IS_SCHOOL_NET = true;
-            PublicData.BASE_URL = UrlUtils.getBaseUrl(true);
-            checklogin(url);
-        }else if(TYPE_OUTER==type){
-            url = UrlUtils.getLoginUrl(false);
-            PublicData.BASE_URL = UrlUtils.getBaseUrl(false);
-            PublicData.IS_SCHOOL_NET = false;
+        if(type==1||type==2){
+            String url = UrlUtils.getLoginUrl(false);
             checklogin(url);
         }else{
             noNetWork();
@@ -135,7 +120,6 @@ public class LaunchActivity extends BaseActivity{
     private void noNetWork(){
         Toast.makeText(getApplicationContext(),"无法连接到服务器请检查网络设置！",Toast.LENGTH_SHORT).show();
     }
-
     private void finishthis(){
         long currenttime = System.currentTimeMillis();
         long delay = 1500-(currenttime-starttime);
@@ -147,7 +131,6 @@ public class LaunchActivity extends BaseActivity{
                 startActivity(new Intent(getApplicationContext(),HomeActivity.class));
                 finish();
             }
-
         }, delay);
 
     }

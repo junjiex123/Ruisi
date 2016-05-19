@@ -7,11 +7,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
+import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.listener.HidingScrollListener;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
@@ -25,19 +23,16 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 public abstract class ArticleListBaseActivity extends BaseActivity
         implements LoadMoreListener.OnLoadMoreListener{
 
-    @BindView(R.id.btn_refresh)
-    protected FloatingActionButton btn_refresh;
-    @BindView(R.id.main_recycler_view)
-    protected RecyclerView mRecyclerView;
-    @BindView(R.id.main_refresh_layout)
+    FloatingActionButton btn_refresh;
+    RecyclerView mRecyclerView;
     protected SwipeRefreshLayout refreshLayout;
 
-    protected static int CurrentFid =72;
-    protected static String CurrentTitle = "首页";
+    static int CurrentFid =72;
+    static String CurrentTitle = "首页";
     //当前页数
-    protected int CurrentPage = 1;
-    protected boolean isEnableLoadMore = false;
-    protected RecyclerView.LayoutManager mLayoutManager;
+    int CurrentPage = 1;
+    boolean isEnableLoadMore = false;
+    RecyclerView.LayoutManager mLayoutManager;
     protected ActionBar actionBar;
 
 
@@ -45,7 +40,18 @@ public abstract class ArticleListBaseActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
-        ButterKnife.bind(this);
+
+        btn_refresh = (FloatingActionButton) findViewById(R.id.btn_refresh);
+        mRecyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.main_refresh_layout);
+
+        btn_refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_refresh_click();
+            }
+        });
+
         actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -102,8 +108,7 @@ public abstract class ArticleListBaseActivity extends BaseActivity
     protected abstract void refresh();
     protected abstract void getData();
 
-    @OnClick(R.id.btn_refresh)
-    protected void btn_refresh_click(){
+    private void btn_refresh_click(){
         prerefresh();
     }
 

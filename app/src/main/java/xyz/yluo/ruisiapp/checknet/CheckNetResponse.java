@@ -12,34 +12,30 @@ public abstract class CheckNetResponse {
     private Handler handler;
     private Looper looper = null;
 
-    public CheckNetResponse() {
+    protected CheckNetResponse() {
         this(null);
     }
 
-    public CheckNetResponse(Looper looper) {
+    private CheckNetResponse(Looper looper) {
         this.looper = (looper == null ? Looper.getMainLooper() : looper);
         handler = new ResponderHandler(this, this.looper);
     }
 
-    protected void handleMessage(Message msg) {
+    private void handleMessage(Message msg) {
         String s =  (String) msg.obj;
         onFinish(msg.what,s);
     }
 
     public abstract void onFinish(int type,String response);
 
-    final protected void sendFinishMessage(int type,String s) {
+    final void sendFinishMessage(int type, String s) {
         handler.sendMessage(obtainMessage(type, s));
     }
 
-    protected Message obtainMessage(int responseMessageId, Object responseMessageData) {
+    private Message obtainMessage(int responseMessageId, Object responseMessageData) {
         return Message.obtain(handler, responseMessageId, responseMessageData);
     }
 
-
-    /**
-     * Avoid leaks by using a non-anonymous handler class.
-     */
     private static class ResponderHandler extends Handler {
         private final CheckNetResponse mResponder;
 

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:background="@color/bggrey"
+<LinearLayout android:background="@color/bggrey"
     android:id="@+id/forum_list_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="88dp">
 
     <RelativeLayout
         android:paddingTop="12dp"
@@ -16,8 +17,10 @@
         android:paddingBottom="12dp"
         android:gravity="center_vertical"
         android:background="?attr/selectableItemBackground"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_width="667dp"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <ImageView
             android:id="@+id/img"
@@ -25,19 +28,22 @@
             android:layout_height="36dp"
             android:src="@drawable/image_placeholder"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            tools:layout_editor_absoluteX="315dp"
+            tools:layout_editor_absoluteY="100dp" />
 
         <TextView
-            android:layout_marginTop="8dp"
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/TitleText"
             android:textSize="15sp"
-            android:singleLine="true"
+            android:maxLines="1"
             tools:text="话题的标题"
             android:layout_below="@+id/img"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            tools:layout_editor_absoluteX="296dp"
+            tools:layout_editor_absoluteY="145dp" />
 
         <TextView
             android:padding="3dp"
@@ -47,10 +53,12 @@
             android:layout_height="wrap_content"
             android:textSize="10sp"
             android:textColor="#DC5A26"
-            android:singleLine="true"
+            android:maxLines="1"
             tools:text="150"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            tools:layout_editor_absoluteX="628dp"
+            tools:layout_editor_absoluteY="100dp" />
     </RelativeLayout>
 
 

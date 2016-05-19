@@ -30,8 +30,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.ArticleJumpDialog;
@@ -61,12 +59,9 @@ public class SingleArticleActivity extends BaseActivity
         implements RecyclerViewClickListener,LoadMoreListener.OnLoadMoreListener,
         ReplyDialog.ReplyDialogListener,ArticleJumpDialog.JumpDialogListener{
 
-    @BindView(R.id.topic_recycler_view)
-    protected RecyclerView mRecyclerView;
-    @BindView(R.id.topic_refresh_layout)
+    private RecyclerView mRecyclerView;
     protected SwipeRefreshLayout refreshLayout;
-    @BindView(R.id.replay_bar)
-    protected MyReplyView MyReplyView;
+    private MyReplyView MyReplyView;
     private ActionBar actionBar;
     private ProgressDialog progress;
 
@@ -101,7 +96,9 @@ public class SingleArticleActivity extends BaseActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_chat);
-        ButterKnife.bind(this);
+        mRecyclerView = (RecyclerView) findViewById(R.id.topic_recycler_view);
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.topic_refresh_layout);
+        MyReplyView = (xyz.yluo.ruisiapp.View.MyReplyView) findViewById(R.id.replay_bar);
 
         refreshLayout.setColorSchemeColors(R.color.colorPrimary);
         refreshLayout.post(new Runnable() {

@@ -19,8 +19,6 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.FriendAdapter;
 import xyz.yluo.ruisiapp.data.FriendData;
@@ -35,10 +33,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * adapter{@link FriendAdapter}
  */
 public class FrageFriends extends Fragment{
-
-    @BindView(R.id.recycler_view)
     protected RecyclerView recycler_view;
-    @BindView(R.id.refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
     private FriendAdapter adapter;
     private List<FriendData> datas;
@@ -47,7 +42,9 @@ public class FrageFriends extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.simple_list_view, container, false);
-        ButterKnife.bind(this,view);
+        recycler_view = (RecyclerView) view.findViewById(R.id.recycler_view);
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
+
         datas = new ArrayList<>();
         adapter = new FriendAdapter(datas,getActivity());
         recycler_view.setHasFixedSize(true);

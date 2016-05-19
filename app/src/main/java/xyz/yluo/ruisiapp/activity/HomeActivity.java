@@ -19,8 +19,6 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.CheckMessageService;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
@@ -40,20 +38,12 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
-    @BindView(R.id.toolbar)
-    protected Toolbar toolbar;
-    @BindView(R.id.drawer_layout)
-    protected DrawerLayout drawer;
-    @BindView(R.id.nav_view)
-    protected NavigationView navigationView;
-    @BindView(R.id.viewpager)
-    protected ViewPager viewpager;
-    @BindView(R.id.mytab)
-    protected TabLayout tabLayout;
-    @BindView(R.id.userNameTitle)
-    protected TextView usernameTitle;
-    @BindView(R.id.userImageTitle)
-    protected CircleImageView userImageTitle;
+    private DrawerLayout drawer;
+    private NavigationView navigationView;
+    private ViewPager viewpager;
+    private TabLayout tabLayout;
+    private TextView usernameTitle;
+    private CircleImageView userImageTitle;
 
     private int clickId = 0;
     private CircleImageView userImage;
@@ -65,17 +55,35 @@ public class HomeActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        ButterKnife.bind(this);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        viewpager = (ViewPager) findViewById(R.id.viewpager);
+        tabLayout = (TabLayout) findViewById(R.id.mytab);
+        usernameTitle = (TextView) findViewById(R.id.userNameTitle);
+        userImageTitle = (CircleImageView) findViewById(R.id.userImageTitle);
+
         ActionBar actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayShowTitleEnabled(false);
         }
+
         init();
-        updateLoginView();
+
+        if(!PublicData.ISLOGIN){
+            drawer.openDrawer(GravityCompat.START);
+        }
+
         navigationView.setNavigationItemSelectedListener(this);
         startCheckMessageService();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        updateLoginView();
     }
 
     private void init(){
@@ -103,7 +111,6 @@ public class HomeActivity extends BaseActivity
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 clickId = 0;
-                updateLoginView();
             }
 
             @Override
@@ -172,7 +179,7 @@ public class HomeActivity extends BaseActivity
                     UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, PublicData.USER_NAME, userImage,url);
                 } else {
                     Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivityForResult(i, 1);
+                    startActivity(i);
                 }
             }
         });
@@ -235,13 +242,6 @@ public class HomeActivity extends BaseActivity
         return true;
     }
 
-    //登陆页面返回结果
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        updateLoginView();
-    }
-
     //是否启动 检查消息 service
     private void startCheckMessageService(){
         SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -260,6 +260,7 @@ public class HomeActivity extends BaseActivity
         Intent i = new Intent(this, CheckMessageService.class);
         stopService(i);
     }
+
 
 
 }

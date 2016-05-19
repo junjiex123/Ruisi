@@ -19,8 +19,6 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
@@ -35,21 +33,18 @@ import xyz.yluo.ruisiapp.utils.GetId;
  */
 public class FrageForumList extends Fragment {
 
-    @BindView(R.id.refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
-    @BindView(R.id.recycler_view)
-    protected RecyclerView recyclerView;
 
     private List<FroumListData> datas = null;
-    ForumListAdapter adapter = null;
+    private ForumListAdapter adapter = null;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frage_forum_list, container, false);
-        ButterKnife.bind(this, view);
 
-
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         //刷新
         refreshLayout.setColorSchemeColors(R.color.colorPrimary);
         refreshLayout.post(new Runnable() {
@@ -61,12 +56,12 @@ public class FrageForumList extends Fragment {
 
         datas = new ArrayList<>();
         adapter = new ForumListAdapter(datas,getActivity());
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),3);
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),4);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
                 if(adapter.getItemViewType(position)==0){
-                    return 3;
+                    return 4;
                 }else{
                     return 1;
                 }
@@ -110,7 +105,7 @@ public class FrageForumList extends Fragment {
 
 
     //获取首页板块数据 板块列表
-    public class GetForumList extends AsyncTask<String, Void, List<FroumListData>> {
+    private class GetForumList extends AsyncTask<String, Void, List<FroumListData>> {
         @Override
         protected List<FroumListData> doInBackground(String... params) {
             String response = params[0];

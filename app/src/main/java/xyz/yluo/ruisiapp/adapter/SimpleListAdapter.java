@@ -10,10 +10,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnLongClick;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.data.ListType;
@@ -53,15 +49,22 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         return Datas.size();
     }
 
-    protected class SimpleVivwHolder extends BaseViewHolder {
-        @BindView(R.id.key)
+    private class SimpleVivwHolder extends BaseViewHolder {
         protected TextView key;
-        @BindView(R.id.value)
         protected TextView value;
 
-        public SimpleVivwHolder(View itemView) {
+        SimpleVivwHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            key = (TextView) itemView.findViewById(R.id.key);
+            value = (TextView) itemView.findViewById(R.id.value);
+            itemView.findViewById(R.id.main_item_btn_item).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    item_click();
+                }
+            });
+
+            System.out.println(type);
         }
 
         @Override
@@ -76,25 +79,12 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
                 value.setVisibility(View.GONE);
             }
         }
-
-        @OnClick(R.id.main_item_btn_item)
-        void item_click(){
-            SimpleListData single_data =  Datas.get(getAdapterPosition());
+        void item_click() {
+            SimpleListData single_data = Datas.get(getAdapterPosition());
             String url = single_data.getExtradata();
-            if(url!=null&&url.length()>0){
-                SingleArticleActivity.open(activity,url);
+            if (url != null && url.length() > 0) {
+                SingleArticleActivity.open(activity, url);
             }
-
-        }
-
-        @OnLongClick(R.id.main_item_btn_item)
-        boolean item_longClick(){
-            SimpleListData single_data =  Datas.get(getAdapterPosition());
-            if(type== ListType.STAR){
-                //TODO 收藏长安取消收藏
-                //Toast.makeText(activity.getApplicationContext(),"long",Toast.LENGTH_SHORT).show();
-            }
-            return true;
         }
     }
 

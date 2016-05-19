@@ -37,9 +37,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.AddFriendDialog;
@@ -59,19 +56,10 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class UserDetailActivity extends BaseActivity implements AddFriendDialog.AddFriendListener{
 
-    @BindView(R.id.toolbar_layout)
-    protected CollapsingToolbarLayout toolbarLayout;
-    @BindView(R.id.recycler_view)
+    private CollapsingToolbarLayout toolbarLayout;
     protected RecyclerView recycler_view;
-    @BindView(R.id.user_detail_img_avatar)
-    protected CircleImageView imageView;
-    @BindView(R.id.main_window)
     protected CoordinatorLayout layout;
-    @BindView(R.id.toolbar)
     protected Toolbar toolbar;
-    @BindView(R.id.fab)
-    protected FloatingActionButton fab;
-    @BindView(R.id.progressBar)
     protected ProgressBar progressBar;
 
     private List<SimpleListData> datas = new ArrayList<>();
@@ -101,7 +89,21 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_detail);
-        ButterKnife.bind(this);
+
+        toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
+        CircleImageView imageView = (CircleImageView) findViewById(R.id.user_detail_img_avatar);
+        layout = (CoordinatorLayout) findViewById(R.id.main_window);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fab_click();
+            }
+        });
 
         ViewCompat.setTransitionName(imageView, NAME_IMG_AVATAR);
         username = getIntent().getStringExtra("loginName");
@@ -141,8 +143,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         });
     }
 
-    @OnClick(R.id.fab)
-    protected void fab_click(){
+    private void fab_click(){
         //如果是自己
         if (userUid.equals(PublicData.USER_UID)){
             ExitLoginDialogFragment dialogFragment = new ExitLoginDialogFragment();
@@ -163,7 +164,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
     }
 
     //获得用户个人信息
-    public class GetUserInfoTask extends AsyncTask<String, Void, String> {
+    private class GetUserInfoTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
             String res = params[0];

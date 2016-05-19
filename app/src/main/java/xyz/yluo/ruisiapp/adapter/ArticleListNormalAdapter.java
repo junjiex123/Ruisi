@@ -11,9 +11,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
@@ -86,25 +83,39 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
     }
 
     //文章列表ViewHolder 如果想创建别的样式还可以创建别的houlder继承自RecyclerView.ViewHolder
-    protected  class NormalViewHolder extends BaseViewHolder {
-        @BindView(R.id.article_type)
-        protected TextView article_type;
-        @BindView(R.id.article_title)
+    private class NormalViewHolder extends BaseViewHolder {
+        TextView article_type;
         protected TextView article_title;
-        @BindView(R.id.author_img)
-        protected CircleImageView author_img;
-        @BindView(R.id.author_name)
-        protected TextView author_name;
-        @BindView(R.id.post_time)
+        CircleImageView author_img;
+        TextView author_name;
         protected TextView post_time;
-        @BindView(R.id.reply_count)
-        protected TextView reply_count;
-        @BindView(R.id.view_count)
-        protected TextView view_count;
+        TextView reply_count;
+        TextView view_count;
         //构造
-        public NormalViewHolder(View v) {
+        NormalViewHolder(View v) {
             super(v);
-            ButterKnife.bind(this, v);
+            article_type = (TextView) v.findViewById(R.id.article_type);
+            article_title = (TextView) v.findViewById(R.id.article_title);
+            author_img = (CircleImageView) v.findViewById(R.id.author_img);
+            author_name = (TextView) v.findViewById(R.id.author_name);
+            post_time = (TextView) v.findViewById(R.id.post_time);
+            reply_count = (TextView) v.findViewById(R.id.reply_count);
+            view_count = (TextView) v.findViewById(R.id.view_count);
+
+            author_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBtnAvatarClick();
+                }
+            });
+
+            v.findViewById(R.id.main_item_btn_item).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBtnItemClick();
+                }
+            });
+
         }
         //设置listItem的数据
         @Override
@@ -129,24 +140,22 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
             reply_count.setText(single.getReplayCount());
         }
 
-        @OnClick(R.id.author_img)
-        protected void onBtnAvatarClick() {
+        void onBtnAvatarClick() {
             //Activity activity, String loginName, ImageView imgAvatar, String avatarUrl
             String imageUrl = UrlUtils.getimageurl(DataSet.get(getAdapterPosition()).getAuthorUrl(),false);
             UserDetailActivity.openWithTransitionAnimation(activity, DataSet.get(getAdapterPosition()).getAuthor(), author_img,imageUrl);
         }
 
-        @OnClick(R.id.main_item_btn_item)
-        protected void onBtnItemClick() {
+        void onBtnItemClick() {
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
             SingleArticleActivity.open(activity,single_data.getTitleUrl());
         }
     }
 
     //加载更多ViewHolder
-    protected class LoadMoreViewHolder extends BaseViewHolder{
+    private class LoadMoreViewHolder extends BaseViewHolder{
 
-        public LoadMoreViewHolder(View itemView) {
+        LoadMoreViewHolder(View itemView) {
             super(itemView);
         }
 
@@ -159,21 +168,25 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
 
 
     //手机版文章列表
-    protected   class NormalViewHolderMe extends BaseViewHolder {
-
-        @BindView(R.id.article_title)
+    private class NormalViewHolderMe extends BaseViewHolder {
         protected TextView article_title;
-        @BindView(R.id.author_name)
-        protected TextView author_name;
-        @BindView(R.id.is_image)
-        protected TextView is_image;
-        @BindView(R.id.reply_count)
-        protected TextView reply_count;
+        TextView author_name;
+        TextView is_image;
+        TextView reply_count;
 
         //构造
-        public NormalViewHolderMe(View v) {
+        NormalViewHolderMe(View v) {
             super(v);
-            ButterKnife.bind(this, v);
+            article_title = (TextView) v.findViewById(R.id.article_title);
+            author_name = (TextView) v.findViewById(R.id.author_name);
+            is_image = (TextView) v.findViewById(R.id.is_image);
+            reply_count = (TextView) v.findViewById(R.id.reply_count);
+            v.findViewById(R.id.main_item_btn_item).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBtnItemClick();
+                }
+            });
         }
         //设置listItem的数据
         @Override
@@ -189,8 +202,8 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
                 is_image.setVisibility(View.GONE);
             }
         }
-        @OnClick(R.id.main_item_btn_item)
-        protected void onBtnItemClick() {
+
+        void onBtnItemClick() {
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
             SingleArticleActivity.open(activity,single_data.getTitleUrl());
         }

@@ -1,5 +1,6 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,10 +31,9 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class NewArticleActivity_2 extends BaseActivity {
 
-    //@Bind(R.id.webView)
-    protected MyWebView myWebView;
+    private MyWebView myWebView;
     private List<String> list = new ArrayList<>();
-    Map<Integer,String> map = new LinkedHashMap<>();
+    private Map<Integer,String> map = new LinkedHashMap<>();
     private static int CURRENT_FID = 72;
 
     public static void open(Context context) {
@@ -42,6 +42,7 @@ public class NewArticleActivity_2 extends BaseActivity {
         context.startActivity(intent);
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

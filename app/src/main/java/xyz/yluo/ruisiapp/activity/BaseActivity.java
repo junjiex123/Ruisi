@@ -39,7 +39,7 @@ public class BaseActivity extends AppCompatActivity{
     }
 
     //判断是否需要弹出登录dialog
-    protected boolean isneed_login(){
+    boolean isneed_login(){
         if(PublicData.ISLOGIN){
             return true;
         }else{

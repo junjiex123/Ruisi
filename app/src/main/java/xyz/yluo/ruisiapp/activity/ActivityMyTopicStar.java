@@ -15,8 +15,6 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
@@ -31,9 +29,7 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
  * 我的主题activity
  */
 public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListener.OnLoadMoreListener{
-    @BindView(R.id.recycler_view)
-    protected RecyclerView recyclerView;
-    @BindView(R.id.refresh_layout)
+    private RecyclerView recyclerView;
     protected SwipeRefreshLayout refreshLayout;
 
     private List<SimpleListData> datas;
@@ -49,7 +45,9 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_list_view);
-        ButterKnife.bind(this);
+
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
 
         try{
             String type =  getIntent().getExtras().getString("type");
@@ -107,7 +105,7 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
     }
 
 
-    protected void refresh() {
+    private void refresh() {
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -141,7 +139,7 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
     }
 
     //获得主题
-    protected class GetUserArticleask extends AsyncTask<String, Void, Void> {
+    private class GetUserArticleask extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... strings) {
             String res = strings[0];
@@ -171,7 +169,7 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
 
     }
     //获得用户收藏
-    protected class GetUserStarTask extends AsyncTask<String, Void, Void> {
+    private class GetUserStarTask extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... params) {
             String res= params[0];

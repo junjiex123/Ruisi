@@ -24,8 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyReplyView;
@@ -45,12 +43,9 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class ChatActivity extends BaseActivity{
 
-    @BindView(R.id.topic_recycler_view)
-    protected RecyclerView recycler_view;
-    @BindView(R.id.replay_bar)
-    protected MyReplyView myReplyView;
-    @BindView(R.id.topic_refresh_layout)
-    protected SwipeRefreshLayout refreshLayout;
+    private RecyclerView recycler_view;
+    private MyReplyView myReplyView;
+    private SwipeRefreshLayout refreshLayout;
 
     private List<ChatListData> datas = new ArrayList<>();
     private ChatListAdapter adapter;
@@ -73,7 +68,11 @@ public class ChatActivity extends BaseActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_chat);
-        ButterKnife.bind(this);
+        recycler_view = (RecyclerView) findViewById(R.id.topic_recycler_view);
+        myReplyView = (MyReplyView) findViewById(R.id.replay_bar);
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.topic_refresh_layout);
+
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         adapter = new ChatListAdapter(this,datas);
         recycler_view.setLayoutManager(layoutManager);
@@ -109,14 +108,14 @@ public class ChatActivity extends BaseActivity{
     }
 
 
-    public class GetDataTask extends AsyncTask<String,Void,String> {
+    private class GetDataTask extends AsyncTask<String,Void,String> {
         @Override
         protected String doInBackground(String... params) {
             final String url = params[0];
             HttpUtil.SyncGet(getApplicationContext(),url, new TextResponseHandler() {
                 @Override
                 public void onSuccess(String response) {
-                    int type = 0;
+                    int type;
                     //list 所有楼数据
                     Document doc = Jsoup.parse(response);
                     String temps = doc.select("form#pmform").attr("action");

@@ -25,9 +25,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
@@ -42,37 +39,21 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class UserDakaActivity extends BaseActivity{
 
-    @BindView(R.id.input)
     protected TextView input;
-    @BindView(R.id.main_window)
     protected CoordinatorLayout main_window;
-    @BindView(R.id.spinner_select)
-    protected Spinner spinner_select;
-    @BindView(R.id.btn_start_sign)
-    protected Button btn_start_sign;
-    @BindView(R.id.user_image)
+    private Spinner spinner_select;
+    private Button btn_start_sign;
     protected CircleImageView user_image;
-    @BindView(R.id.user_name)
     protected TextView user_name;
-    @BindView(R.id.View_have_sign)
-    protected LinearLayout View_have_sign;
-    @BindView(R.id.View_have_sign_2)
-    protected LinearLayout View_have_sign_2;
-    @BindView(R.id.View_not_sign)
-    protected LinearLayout View_not_sign;
-    @BindView(R.id.container)
+    private LinearLayout have_sign_view;
+    private LinearLayout have_sign_view2;
+    private LinearLayout View_not_sign;
     protected LinearLayout container;
-    @BindView(R.id.progressBar)
     protected ProgressBar progressBar;
-    @BindView(R.id.total_sign_day)
-    protected TextView total_sign_day;
-    @BindView(R.id.total_sign_month)
-    protected TextView total_sign_month;
-    @BindView(R.id.information)
-    protected TextView information;
-    @BindView(R.id.info_title)
-    protected TextView info_title;
-    @BindView(R.id.toolbar)
+    private TextView total_sign_day;
+    private TextView total_sign_month;
+    private TextView information;
+    private TextView info_title;
     protected Toolbar toolbar;
 
     private int spinner__select = 0;
@@ -84,7 +65,29 @@ public class UserDakaActivity extends BaseActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_daka);
-        ButterKnife.bind(this);
+
+        input = (TextView) findViewById(R.id.input);
+        main_window = (CoordinatorLayout) findViewById(R.id.main_window);
+        spinner_select = (Spinner) findViewById(R.id.spinner_select);
+        btn_start_sign = (Button) findViewById(R.id.btn_start_sign);
+        user_image = (CircleImageView) findViewById(R.id.user_image);
+        user_name = (TextView) findViewById(R.id.user_name);
+        have_sign_view = (LinearLayout) findViewById(R.id.View_have_sign);
+        have_sign_view2 = (LinearLayout) findViewById(R.id.View_have_sign_2);
+        View_not_sign = (LinearLayout) findViewById(R.id.View_not_sign);
+        container = (LinearLayout) findViewById(R.id.container);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        total_sign_day = (TextView) findViewById(R.id.total_sign_day);
+        total_sign_month = (TextView) findViewById(R.id.total_sign_month);
+        information = (TextView) findViewById(R.id.information);
+        info_title = (TextView) findViewById(R.id.info_title);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        btn_start_sign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sign_click();
+            }
+        });
         user_name.setText(PublicData.USER_NAME);
         Picasso.with(this).load(UrlUtils.getimageurl(PublicData.USER_UID,true)).placeholder(R.drawable.image_placeholder).into(user_image);
         init();
@@ -117,8 +120,8 @@ public class UserDakaActivity extends BaseActivity{
     private void isHaveDaka(){
         container.setVisibility(View.GONE);
         View_not_sign.setVisibility(View.GONE);
-        View_have_sign.setVisibility(View.GONE);
-        View_have_sign_2.setVisibility(View.GONE);
+        have_sign_view.setVisibility(View.GONE);
+        have_sign_view2.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
         String urlget =   "plugin.php?id=dsu_paulsign:sign";
         HttpUtil.get(this, urlget, new ResponseHandler() {
@@ -155,15 +158,15 @@ public class UserDakaActivity extends BaseActivity{
                     }
 
                     isSign = true;
-                    View_have_sign.setVisibility(View.VISIBLE);
-                    View_have_sign_2.setVisibility(View.VISIBLE);
+                    have_sign_view.setVisibility(View.VISIBLE);
+                    have_sign_view2.setVisibility(View.VISIBLE);
                     View_not_sign.setVisibility(View.GONE);
                     btn_start_sign.setText("返回");
                 }else{
                     isSign = false;
                     View_not_sign.setVisibility(View.VISIBLE);
-                    View_have_sign.setVisibility(View.GONE);
-                    View_have_sign_2.setVisibility(View.GONE);
+                    have_sign_view.setVisibility(View.GONE);
+                    have_sign_view2.setVisibility(View.GONE);
                 }
                 container.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
@@ -177,14 +180,13 @@ public class UserDakaActivity extends BaseActivity{
     }
 
     //点击签到按钮
-    @OnClick(R.id.btn_start_sign)
-    protected void btn_sign_click(){
+    private void sign_click(){
         if(isSign){
             finish();
         }else{
             String xinqin = getGroup1_select();
             String formhash = hash;
-            String qdmode = "1";
+            String qdmode;
             String todaysay = "";
             String fastreplay = "0";
 
@@ -207,8 +209,6 @@ public class UserDakaActivity extends BaseActivity{
                 public void onSuccess(byte[] response) {
                     String res = new String(response);
                     if(res.contains("恭喜你签到成功")){
-                        Document doc = Jsoup.parse(res);
-                        String get = doc.select("div[class=c]").text();
                         showNtice("签到成功,点击按钮返回");
                         info_title.setText("恭喜你签到成功");
                         isSign = true;

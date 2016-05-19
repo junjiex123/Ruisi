@@ -12,9 +12,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.ArrowTextView;
 import xyz.yluo.ruisiapp.View.CircleImageView;
@@ -71,21 +68,33 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
 
     //用户消息、回复我的 holder
-    protected class MessageReplyListHolder extends BaseViewHolder{
-        @BindView(R.id.title)
+    private class MessageReplyListHolder extends BaseViewHolder{
         protected TextView title;
-        @BindView(R.id.time)
         protected TextView time;
-        @BindView(R.id.article_user_image)
         protected CircleImageView article_user_image;
-        @BindView(R.id.reply_content)
-        protected ArrowTextView reply_content;
-        @BindView(R.id.is_read)
-        protected TextView isRead;
+        ArrowTextView reply_content;
+        TextView isRead;
         //url
-        public MessageReplyListHolder(View itemView) {
+        MessageReplyListHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            title = (TextView) itemView.findViewById(R.id.title);
+            time = (TextView) itemView.findViewById(R.id.time);
+            article_user_image = (CircleImageView) itemView.findViewById(R.id.article_user_image);
+            reply_content = (ArrowTextView) itemView.findViewById(R.id.reply_content);
+            isRead = (TextView) itemView.findViewById(R.id.is_read);
+
+            article_user_image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    user_click();
+                }
+            });
+            itemView.findViewById(R.id.main_item_btn_item).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    item_click();
+                }
+            });
         }
 
         void setData(int position) {
@@ -101,8 +110,6 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
                 isRead.setVisibility(View.VISIBLE);
             }
         }
-
-        @OnClick(R.id.main_item_btn_item)
         protected void item_click(){
             MessageData single_data =  DataSet.get(getAdapterPosition()-1);
             if(!single_data.isRead()){
@@ -118,22 +125,20 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
             }
 
         }
-        @OnClick(R.id.article_user_image)
-        protected void user_click(){
+        void user_click(){
             MessageData single_data =  DataSet.get(getAdapterPosition()-1);
             String username = single_data.getTitle().replace("我对 ","").replace("说:","").replace(" 对我","").replace(" 回复了我","");
             UserDetailActivity.openWithTransitionAnimation(activity, username, article_user_image,DataSet.get(getAdapterPosition()).getauthorImage());
         }
     }
 
-    protected class ChangeMessageHolder extends BaseViewHolder{
+    private class ChangeMessageHolder extends BaseViewHolder{
 
-        @BindView(R.id.btn_change)
-        protected RadioGroup btn_change;
+        RadioGroup btn_change;
 
-        public ChangeMessageHolder(View itemView) {
+        ChangeMessageHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            btn_change = (RadioGroup) itemView.findViewById(R.id.btn_change);
             btn_change.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int id) {

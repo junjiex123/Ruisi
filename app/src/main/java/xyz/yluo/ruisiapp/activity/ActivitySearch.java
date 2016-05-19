@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -24,9 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
@@ -42,14 +40,10 @@ import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
  */
 public class ActivitySearch extends BaseActivity {
 
-    @BindView(R.id.recycler_view)
     protected RecyclerView recycler_view;
-    @BindView(R.id.search_input)
-    protected EditText search_input;
-    @BindView(R.id.main_window)
+    private EditText search_input;
     protected LinearLayout main_window;
-    @BindView(R.id.refresh_view)
-    protected SwipeRefreshLayout refresh_view;
+    private SwipeRefreshLayout refresh_view;
     private SimpleListAdapter adapter;
 
     private ActionBar actionBar;
@@ -60,7 +54,19 @@ public class ActivitySearch extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        ButterKnife.bind(this);
+
+        recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
+        search_input = (EditText) findViewById(R.id.search_input);
+        main_window = (LinearLayout) findViewById(R.id.main_window);
+        refresh_view = (SwipeRefreshLayout) findViewById(R.id.refresh_view);
+
+        findViewById(R.id.start_search).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                start_search_click();
+            }
+        });
+
 
         adapter = new SimpleListAdapter(ListType.SERRCH,this, datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -99,8 +105,7 @@ public class ActivitySearch extends BaseActivity {
 
     }
 
-    @OnClick(R.id.start_search)
-    protected void start_search_click(){
+    private void start_search_click(){
         datas.clear();
         if (search_input.getText().toString().isEmpty()){
             Snackbar.make(main_window,"你还没写内容呢",Snackbar.LENGTH_SHORT).show();
@@ -157,7 +162,7 @@ public class ActivitySearch extends BaseActivity {
         });
     }
 
-    public class GetResultListTaskMe extends AsyncTask<String, Void, List<SimpleListData>> {
+    private class GetResultListTaskMe extends AsyncTask<String, Void, List<SimpleListData>> {
         @Override
         protected List<SimpleListData> doInBackground(String... params) {
             String res = params[0];

@@ -13,9 +13,6 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 import java.util.Objects;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
@@ -52,24 +49,26 @@ public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListIma
 
 
     //图片板块ViewHolder
-    public class ImageCardViewHolder extends RecyclerView.ViewHolder{
+    class ImageCardViewHolder extends RecyclerView.ViewHolder{
 
-        @BindView(R.id.img_card_image)
-        protected ImageView img_card_image;
+        ImageView img_card_image;
+        TextView img_card_title;
+        TextView img_card_author;
+        TextView img_card_like;
 
-        @BindView(R.id.img_card_title)
-        protected TextView img_card_title;
-
-        @BindView(R.id.img_card_author)
-        protected TextView img_card_author;
-
-        @BindView(R.id.img_card_like)
-        protected TextView img_card_like;
-
-        public ImageCardViewHolder(View itemView) {
+        ImageCardViewHolder(View itemView) {
             super(itemView);
+            img_card_image = (ImageView) itemView.findViewById(R.id.img_card_image);
+            img_card_title = (TextView) itemView.findViewById(R.id.img_card_title);
+            img_card_author = (TextView) itemView.findViewById(R.id.img_card_author);
+            img_card_like = (TextView) itemView.findViewById(R.id.img_card_like);
 
-            ButterKnife.bind(this, itemView);
+            itemView.findViewById(R.id.card_list_item).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    item_click();
+                }
+            });
         }
 
         void setData(int position) {
@@ -84,7 +83,6 @@ public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListIma
 
         }
 
-        @OnClick(R.id.card_list_item)
         protected void item_click() {
             ImageArticleListData single_data =  DataSet.get(getAdapterPosition());
             SingleArticleActivity.open(activity,single_data.getTitleUrl());

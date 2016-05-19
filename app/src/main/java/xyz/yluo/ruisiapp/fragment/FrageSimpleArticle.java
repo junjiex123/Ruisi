@@ -19,8 +19,6 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ArticleListNormalAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
@@ -34,9 +32,7 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
  */
 public class FrageSimpleArticle extends Fragment implements LoadMoreListener.OnLoadMoreListener{
 
-    @BindView(R.id.recycler_view)
     protected RecyclerView recycler_view;
-    @BindView(R.id.refresh_layout)
     protected SwipeRefreshLayout refreshLayout;
 
     private List<ArticleListData> mydataset =new ArrayList<>();
@@ -49,8 +45,8 @@ public class FrageSimpleArticle extends Fragment implements LoadMoreListener.OnL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.simple_list_view, container, false);
-        ButterKnife.bind(this, view);
-
+        recycler_view = (RecyclerView) view.findViewById(R.id.recycler_view);
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recycler_view.setLayoutManager(mLayoutManager);
         adapter = new ArticleListNormalAdapter(getActivity(), mydataset,3);
@@ -113,7 +109,7 @@ public class FrageSimpleArticle extends Fragment implements LoadMoreListener.OnL
     //非校园网状态下获得一个板块文章列表数据
     //根据html获得数据
     //调用的手机版
-    public class GetNewArticleListTaskMe extends AsyncTask<String, Void, List<ArticleListData>> {
+    private class GetNewArticleListTaskMe extends AsyncTask<String, Void, List<ArticleListData>> {
         @Override
         protected List<ArticleListData> doInBackground(String... params) {
             List<ArticleListData> dataset = new ArrayList<>();

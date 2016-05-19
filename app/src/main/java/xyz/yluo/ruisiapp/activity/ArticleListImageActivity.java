@@ -88,7 +88,7 @@ public class ArticleListImageActivity extends ArticleListBaseActivity{
     }
 
     //校园网状态下获得图片板块数据 图片链接、标题等  根据html获得数据
-    public class GetImageArticleListTaskRS extends AsyncTask<String, Void, Void> {
+    private class GetImageArticleListTaskRS extends AsyncTask<String, Void, Void> {
 
         @Override
         protected Void doInBackground(String... params) {

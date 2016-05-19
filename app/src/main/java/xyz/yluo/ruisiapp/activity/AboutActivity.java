@@ -9,9 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyHtmlTextView;
@@ -24,17 +21,11 @@ import xyz.yluo.ruisiapp.utils.RequestSendMail;
  */
 public class AboutActivity extends BaseActivity {
 
-    @BindView(R.id.html_text)
-    MyHtmlTextView myHtmlTextView;
-    @BindView(R.id.version)
-    TextView version;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-
-        ButterKnife.bind(this);
+        TextView version = (TextView) findViewById(R.id.version);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -46,9 +37,7 @@ public class AboutActivity extends BaseActivity {
                 "bug反馈,或者有什么好的建议点击按钮给我发邮件吧<br />或者 <a href=\"home.php?mod=space&uid=252553&do=profile&mobile=2\">" +
                 "@谁用了FREEDOM</a>或者<a href=\"home.php?mod=space&uid=261098&do=profile&mobile=2\">@wangfuyang</a><br />"+
                 "也可以到我的github上留言<a href=\"https://github.com/freedom10086/Ruisi\">点击这儿</a>";
-        myHtmlTextView.mySetText(this,ss);
-
-
+        ((MyHtmlTextView) findViewById(R.id.html_text)).mySetText(this,ss);
         PackageInfo info = null;
         PackageManager manager = getPackageManager();
         try {
@@ -64,22 +53,23 @@ public class AboutActivity extends BaseActivity {
         }
         String a = "版本号："+version_code+"\n版本："+version_name;
         version.setText(a);
-    }
 
-
-    @OnClick(R.id.fab)
-    protected void fab_clidk(View view){
-        Snackbar.make(view, "你要提交bug或者建议吗?", Snackbar.LENGTH_LONG)
-                .setAction("确定", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String user = PublicData.USER_NAME;
-                        if(user!=null){
-                            user = "by:"+user;
-                        }
-                        RequestSendMail.sendMail(getApplicationContext(),user);
-                    }
-                }).show();
+        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, "你要提交bug或者建议吗?", Snackbar.LENGTH_LONG)
+                        .setAction("确定", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                String user = PublicData.USER_NAME;
+                                if(user!=null){
+                                    user = "by:"+user;
+                                }
+                                RequestSendMail.sendMail(getApplicationContext(),user);
+                            }
+                        }).show();
+            }
+        });
     }
 
 }
