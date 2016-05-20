@@ -37,6 +37,7 @@ public class AboutActivity extends BaseActivity {
                 "bug反馈,或者有什么好的建议点击按钮给我发邮件吧<br />或者 <a href=\"home.php?mod=space&uid=252553&do=profile&mobile=2\">" +
                 "@谁用了FREEDOM</a>或者<a href=\"home.php?mod=space&uid=261098&do=profile&mobile=2\">@wangfuyang</a><br />"+
                 "也可以到我的github上留言<a href=\"https://github.com/freedom10086/Ruisi\">点击这儿</a>";
+
         ((MyHtmlTextView) findViewById(R.id.html_text)).mySetText(this,ss);
         PackageInfo info = null;
         PackageManager manager = getPackageManager();
@@ -45,14 +46,13 @@ public class AboutActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        int version_code = 1;
-        String version_name = "1.0";
+
         if(info!=null){
-            version_code = info.versionCode;
-            version_name =  info.versionName;
+            int version_code = info.versionCode;
+            String version_name = info.versionName;
+            String a = "版本号："+version_code+"\n版本："+version_name;
+            version.setText(a);
         }
-        String a = "版本号："+version_code+"\n版本："+version_name;
-        version.setText(a);
 
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override

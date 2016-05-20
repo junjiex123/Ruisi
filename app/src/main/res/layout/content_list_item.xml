@@ -107,7 +107,6 @@
         android:textSize="16sp"/>
 
     <LinearLayout
-        android:id="@+id/content_divider"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

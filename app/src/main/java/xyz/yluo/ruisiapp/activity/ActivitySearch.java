@@ -40,9 +40,9 @@ import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
  */
 public class ActivitySearch extends BaseActivity {
 
-    protected RecyclerView recycler_view;
+    private RecyclerView recycler_view;
     private EditText search_input;
-    protected LinearLayout main_window;
+    private LinearLayout main_window;
     private SwipeRefreshLayout refresh_view;
     private SimpleListAdapter adapter;
 

@@ -51,7 +51,6 @@ public class LoginActivity extends BaseActivity {
     private Button btn_login;
     private ImageView imageViewl,imageViewr;
     private CheckBox rem_user,rem_pass;
-    private Spinner anwser_select;
     private ProgressDialog progress;
 
     private SharedPreferences perPreferences;
@@ -76,7 +75,7 @@ public class LoginActivity extends BaseActivity {
         imageViewr = (ImageView) findViewById(R.id.iv_login_r);
         rem_user = (CheckBox) findViewById(R.id.rem_user);
         rem_pass = (CheckBox) findViewById(R.id.rem_pass);
-        anwser_select = (Spinner) findViewById(R.id.anwser_select);
+        Spinner anwser_select = (Spinner) findViewById(R.id.anwser_select);
         anwser_text = (EditText) findViewById(R.id.anwser_text);
 
         btn_login.setOnClickListener(new View.OnClickListener() {
