@@ -71,7 +71,7 @@ public class CheckMessageService extends Service {
             @Override
             public void run() {
                 while (isRunning){
-                    String url = PublicData.BASE_URL+"home.php?mod=space&do=notice&view=mypost&type=post";
+                    String url = PublicData.getBaseUrl()+"home.php?mod=space&do=notice&view=mypost&type=post";
                     client.get(url,handler);
                     try {
                         Thread.sleep(30000);

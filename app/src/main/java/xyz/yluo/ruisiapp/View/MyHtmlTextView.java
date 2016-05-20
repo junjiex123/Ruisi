@@ -254,7 +254,7 @@ public class MyHtmlTextView extends TextView{
                 if(source.charAt(0)=='/'){
                     source = source.substring(1,source.length());
                 }
-                mySource = PublicData.BASE_URL+source;
+                mySource = PublicData.getBaseUrl()+source;
             }
             try {
                 URL url = new URL(mySource);

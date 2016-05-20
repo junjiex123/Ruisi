@@ -76,7 +76,7 @@ public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListIma
             img_card_title.setText(DataSet.get(position).getTitle());
             img_card_like.setText(DataSet.get(position).getReplyCount());
             if(!Objects.equals(DataSet.get(position).getImage(), "")){
-                Picasso.with(activity).load(PublicData.BASE_URL +DataSet.get(position).getImage()).placeholder(R.drawable.image_placeholder).into(img_card_image);
+                Picasso.with(activity).load(PublicData.getBaseUrl()+DataSet.get(position).getImage()).placeholder(R.drawable.image_placeholder).into(img_card_image);
             }else{
                 img_card_image.setImageResource(R.drawable.image_placeholder);
             }

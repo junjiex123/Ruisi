@@ -82,7 +82,6 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         return DataSet.size() + 1;
     }
 
-    //文章列表ViewHolder 如果想创建别的样式还可以创建别的houlder继承自RecyclerView.ViewHolder
     private class NormalViewHolder extends BaseViewHolder {
         TextView article_type;
         protected TextView article_title;
@@ -133,7 +132,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
             post_time.setText(postTime);
             view_count.setText(single.getViewCount());
 
-            String imageUrl = UrlUtils.getimageurl(single.getAuthorUrl(),false);
+            String imageUrl = UrlUtils.getAvaterurl(single.getAuthorUrl(),false);
             Picasso.with(activity).load(imageUrl).resize(36,36).centerCrop().placeholder(R.drawable.image_placeholder).into(author_img);
             article_title.setText(single.getTitle());
             author_name.setText(single.getAuthor());
@@ -141,8 +140,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         }
 
         void onBtnAvatarClick() {
-            //Activity activity, String loginName, ImageView imgAvatar, String avatarUrl
-            String imageUrl = UrlUtils.getimageurl(DataSet.get(getAdapterPosition()).getAuthorUrl(),false);
+            String imageUrl = UrlUtils.getAvaterurl(DataSet.get(getAdapterPosition()).getAuthorUrl(),false);
             UserDetailActivity.openWithTransitionAnimation(activity, DataSet.get(getAdapterPosition()).getAuthor(), author_img,imageUrl);
         }
 

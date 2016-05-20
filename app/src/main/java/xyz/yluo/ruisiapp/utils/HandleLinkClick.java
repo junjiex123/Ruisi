@@ -5,7 +5,6 @@ import android.content.Intent;
 
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.View.MyHtmlTextView;
-import xyz.yluo.ruisiapp.View.MyWebView;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.NewArticleActivity_2;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
@@ -13,7 +12,7 @@ import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 
 /**
  * Created by free2 on 16-4-12.
- * 处理{@link MyWebView}和 {@link MyHtmlTextView}链接点击
+ * 处理WebView和 {@link MyHtmlTextView}链接点击
  */
 public class HandleLinkClick {
     public static void handleClick(Context context, String url){
@@ -24,7 +23,7 @@ public class HandleLinkClick {
         }else if (url.contains("forum.php?mod=viewthread&tid=")) { // 帖子
             SingleArticleActivity.open(context,url);
         } else if (url.contains("home.php?mod=space&uid=")) { // 用户
-            String imageUrl = UrlUtils.getimageurl(url,true);
+            String imageUrl = UrlUtils.getAvaterurl(url,true);
             UserDetailActivity.open(context,"name",imageUrl);
         } else if(url.contains("forum.php?mod=post&action=newthread")){ //发帖链接
             context.startActivity(new Intent(context,NewArticleActivity_2.class));
@@ -32,7 +31,7 @@ public class HandleLinkClick {
             LoginActivity.open(context);
         }else{
             if(!url.startsWith("http")){
-                url += PublicData.BASE_URL;
+                url += PublicData.getBaseUrl();
             }
 
             RequestOpenBrowser.openBroswer(context,url);

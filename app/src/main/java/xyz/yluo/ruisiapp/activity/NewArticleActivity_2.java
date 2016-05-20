@@ -8,7 +8,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -21,7 +23,8 @@ import java.util.Map;
 
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyWebView;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.PersistentCookieStore;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -31,7 +34,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class NewArticleActivity_2 extends BaseActivity {
 
-    private MyWebView myWebView;
+    private WebView myWebView;
     private List<String> list = new ArrayList<>();
     private Map<Integer,String> map = new LinkedHashMap<>();
     private static int CURRENT_FID = 72;
@@ -48,8 +51,12 @@ public class NewArticleActivity_2 extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_new_article2);
-        myWebView = (MyWebView) findViewById(R.id.mwebView);
+
+        //设置cookie
+
+        myWebView = (WebView) findViewById(R.id.mwebView);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setCookie(this);
 
         map.put(72,"灌水专区");
         map.put(549,"文章天地");
@@ -103,7 +110,7 @@ public class NewArticleActivity_2 extends BaseActivity {
                     e.printStackTrace();
                 }
 
-                myWebView.loadUrl(PublicData.BASE_URL +UrlUtils.getPostUrl(CURRENT_FID));
+                myWebView.loadUrl(UrlUtils.getPostUrl(CURRENT_FID));
             }
 
             @Override
@@ -116,7 +123,7 @@ public class NewArticleActivity_2 extends BaseActivity {
         settings.setJavaScriptEnabled(true);
 
         if(PublicData.ISLOGIN){
-            myWebView.loadUrl(PublicData.BASE_URL + UrlUtils.getPostUrl(CURRENT_FID));
+            myWebView.loadUrl(UrlUtils.getPostUrl(CURRENT_FID));
         }else {
             Toast.makeText(this,"你还没有登陆",Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this,LoginActivity.class));
@@ -125,6 +132,21 @@ public class NewArticleActivity_2 extends BaseActivity {
 
 
 
+    }
+
+    private void setCookie(Context context) {
+
+        PersistentCookieStore cookieStore = HttpUtil.getStore(context);
+        CookieManager cookieManager = CookieManager.getInstance();
+
+        cookieManager.setAcceptCookie(true);
+
+        String domain = ";domain=" + PublicData.getBaseUrl().replace("http://", "").replace("/", "");
+
+        for (String s : cookieStore.getCookie().split(";")) {
+            s = s + domain;
+            cookieManager.setCookie(PublicData.getBaseUrl(), s);
+        }
     }
 
     private Map.Entry<Integer,String> getName(int i){

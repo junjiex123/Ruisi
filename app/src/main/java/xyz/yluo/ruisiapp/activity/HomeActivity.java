@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -22,7 +23,6 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import xyz.yluo.ruisiapp.CheckMessageService;
 import xyz.yluo.ruisiapp.PublicData;
@@ -180,7 +180,7 @@ public class HomeActivity extends BaseActivity
             @Override
             public void onClick(final View v) {
                 if (PublicData.ISLOGIN) {
-                    String url = UrlUtils.getimageurl(PublicData.USER_UID,true);
+                    String url = UrlUtils.getAvaterurl(PublicData.USER_UID,true);
                     UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, PublicData.USER_NAME, userImage,url);
                 } else {
                     Intent i = new Intent(getApplicationContext(), LoginActivity.class);
@@ -214,32 +214,54 @@ public class HomeActivity extends BaseActivity
 
     private void updateLoginView(){
         final View header = navigationView.getHeaderView(0);
-        final View nav_header_login = header.findViewById(R.id.nav_header_login);
-        final View nav_header_notlogin = header.findViewById(R.id.nav_header_notlogin);
+        final Spinner spinner = (Spinner) header.findViewById(R.id.switch_net);
+        ArrayList<String> list = new ArrayList<>();
+        list.add("校园网");list.add("校外网");
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,R.layout.spinner_item,list);
+        arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+
+        spinner.setAdapter(arrayAdapter);
+        spinner.setSelection(PublicData.IS_SCHOOL_NET?0:1);
+
+        final int ii= spinner.getSelectedItemPosition();
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                PublicData.IS_SCHOOL_NET = (i==0);
+                if(i!=ii){
+                    String text = i==0?"切换到校园网":"切换到外网";
+                    Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        TextView userName = (TextView) header.findViewById(R.id.header_user_name);
+        TextView userGrade = (TextView) header.findViewById(R.id.user_grade);
 
         //判断是否登陆
         if (PublicData.ISLOGIN) {
+            userGrade.setVisibility(View.VISIBLE);
             usernameTitle.setText(PublicData.USER_NAME);
-            TextView userName = (TextView) header.findViewById(R.id.header_user_name);
-            TextView userGrade = (TextView) header.findViewById(R.id.user_grade);
             if(PublicData.USER_GRADE.length()>0){
                 userGrade.setText(PublicData.USER_GRADE);
             }
             userName.setText(PublicData.USER_NAME);
-            nav_header_login.setVisibility(View.VISIBLE);
-            nav_header_notlogin.setVisibility(View.GONE);
-            String url = UrlUtils.getimageurl(PublicData.USER_UID,true);
+            String url = UrlUtils.getAvaterurl(PublicData.USER_UID,true);
             Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).resize(80,80).into(userImage);
             Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).resize(32,32).into(userImageTitle);
         } else {
             userImage.setImageResource(R.drawable.image_placeholder);
             userImageTitle.setImageResource(R.drawable.image_placeholder);
             usernameTitle.setText("西电睿思");
-            nav_header_notlogin.setVisibility(View.VISIBLE);
-            nav_header_login.setVisibility(View.GONE);
+            userName.setText("点击头像登陆");
+            userGrade.setVisibility(View.GONE);
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -265,7 +287,4 @@ public class HomeActivity extends BaseActivity
         Intent i = new Intent(this, CheckMessageService.class);
         stopService(i);
     }
-
-
-
 }

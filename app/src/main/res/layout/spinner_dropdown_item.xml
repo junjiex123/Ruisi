@@ -1,14 +1,13 @@
 <CheckedTextView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/text1"
-    android:paddingStart="@dimen/dimen_16"
-    android:paddingEnd="@dimen/dimen_16"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
     android:paddingTop="@dimen/dimen_8"
     android:paddingBottom="@dimen/dimen_8"
     android:textSize="16sp"
-    android:textColor="@android:color/white"
     android:singleLine="true"
-    android:background="@color/colorPrimary"
+    android:background="@android:color/white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:ellipsize="marquee"/>

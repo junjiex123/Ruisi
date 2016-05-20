@@ -367,15 +367,8 @@ public class SingleArticleActivity extends BaseActivity
                     finalcontent = finalcontent.substring(0,finalcontent.length()-4).trim();
                 }
 
-
                 //这是内容
                 if(commentindex.contains("楼主")||commentindex.contains("收藏")){
-
-                    //for(Element ttt:contentels.select("a[href*=from=album]")){
-                    //    ttt.select("img").attr("style","display: block;margin:10px auto;width:80%;");
-                    //}
-                    ////替换无意义的 br
-                    //finalcontent = contentels.html().replaceAll("(\\s*<br>\\s*){2,}","<br>");
                     String newtime = posttime.replace("收藏","");
                     data = new SingleArticleData(SingleType.CONTENT,Title,userimg,username,newtime,commentindex,replyUrl,finalcontent);
                 } else {
@@ -603,7 +596,7 @@ public class SingleArticleActivity extends BaseActivity
         int id = item.getItemId();
         switch (id){
             case R.id.menu_broswer:
-                String url = PublicData.BASE_URL +UrlUtils.getSingleArticleUrl(tid, page_now,false);
+                String url = UrlUtils.getSingleArticleUrl(tid, page_now,false);
                 RequestOpenBrowser.openBroswer(this,url);
                 break;
             case R.id.menu_refresh:

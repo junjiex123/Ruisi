@@ -29,7 +29,6 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
  * 我的主题activity
  */
 public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListener.OnLoadMoreListener{
-    private RecyclerView recyclerView;
     protected SwipeRefreshLayout refreshLayout;
 
     private List<SimpleListData> datas;
@@ -46,7 +45,7 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_list_view);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
 
         try{

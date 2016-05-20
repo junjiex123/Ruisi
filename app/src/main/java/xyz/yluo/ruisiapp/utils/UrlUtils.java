@@ -8,13 +8,7 @@ import xyz.yluo.ruisiapp.PublicData;
  */
 public class UrlUtils {
 
-    public static String getBaseUrl(boolean isInner){
-        if(isInner){
-            return "http://rs.xidian.edu.cn/";
-        }else{
-            return "http://bbs.rs.xidian.me/";
-        }
-    }
+
     public static String getArticleListUrl(int fid,int page,boolean isInner){
         if(isInner){
             return "forum.php?mod=forumdisplay&fid="+fid+"&page="+page;
@@ -29,9 +23,9 @@ public class UrlUtils {
             url+="&page="+page;
         }
         if(isInner){
-            return url;
+            return PublicData.getBaseUrl()+url;
         }else{
-            return url+"&mobile=2";
+            return PublicData.getBaseUrl()+url+"&mobile=2";
         }
 
     }
@@ -57,12 +51,12 @@ public class UrlUtils {
         return url;
     }
 
-    public static String getimageurl(String urlUid,boolean ismiddle){
+    public static String getAvaterurl(String urlUid, boolean ismiddle){
         String uid = urlUid;
         if(urlUid.contains("uid")){
            uid =  GetId.getUid(urlUid);
         }
-        String url = PublicData.BASE_URL +"ucenter/avatar.php?uid="+uid;
+        String url = PublicData.getBaseUrl() +"ucenter/avatar.php?uid="+uid;
         if(ismiddle){
             url+="&size=middle";
         }else {
@@ -76,13 +70,6 @@ public class UrlUtils {
         return "plugin.php?id=dsu_paulsign:sign&operation=qiandao&infloat=1&inajax=1";
     }
 
-    public static String getUserPmUrl(String uid, boolean isInner){
-        if(!isInner){
-            return "home.php?mod=space&do=pm&subop=view&touid="+uid+"&mobile=2";
-        }
-        return "";
-    }
-
     public static String getUserHomeUrl(String uid,boolean isInner){
         if(!isInner){
             return "home.php?mod=space&uid="+uid+"&do=profile&mobile=2";
@@ -94,11 +81,7 @@ public class UrlUtils {
         return "home.php?mod=spacecp&ac=favorite&type=thread&id="+id+"&mobile=2&handlekey=favbtn&inajax=1";
     }
 
-    public static String getBtListUrl(String id,int page){
-        return "bt.php?mod=browse&"+id+"&page="+page;
-    }
-
     public static String getPostUrl(int fid){
-        return "forum.php?mod=post&action=newthread&fid="+fid+"&mobile=2";
+        return PublicData.getBaseUrl()+ "forum.php?mod=post&action=newthread&fid="+fid+"&mobile=2";
     }
 }

@@ -70,12 +70,6 @@ public class CheckNet{
     }
 
     private void setData(boolean isInner){
-        if(isInner){
-            PublicData.IS_SCHOOL_NET = true;
-            PublicData.BASE_URL = UrlUtils.getBaseUrl(true);
-        }else{
-            PublicData.BASE_URL = UrlUtils.getBaseUrl(false);
-            PublicData.IS_SCHOOL_NET = false;
-        }
+        PublicData.IS_SCHOOL_NET = isInner;
     }
 }

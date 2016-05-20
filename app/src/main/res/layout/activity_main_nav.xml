@@ -26,54 +26,28 @@
             app:civ_border_width="1dp"
             app:civ_border_color="@android:color/white"/>
 
-        <Switch
+        <Spinner
+
             android:layout_marginStart="50dp"
-            android:text="Switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/switch1" />
-
-    </LinearLayout>
-    
-
-    <LinearLayout
-        android:id="@+id/nav_header_login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/header_user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            tools:text="用户名"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-        <TextView
-            android:layout_marginTop="4dp"
-            android:textSize="14sp"
-            android:id="@+id/user_grade"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="西电大一" />
+            android:id="@+id/switch_net" />
+
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/nav_header_notlogin"
-        android:visibility="gone"
+
+    <TextView
+        android:id="@+id/header_user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/nav_header_vertical_spacing"
-            android:text="点击头像登陆"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
-    </LinearLayout>
-
-
-
-
+        android:layout_marginTop="16dp"
+        tools:text="点击头像登陆"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+    <TextView
+        android:layout_marginTop="4dp"
+        android:textSize="14sp"
+        android:id="@+id/user_grade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="西电大一" />
 </LinearLayout>

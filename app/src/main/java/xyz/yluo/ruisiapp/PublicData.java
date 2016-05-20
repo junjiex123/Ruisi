@@ -10,7 +10,17 @@ public class PublicData extends Application {
 
     //启动时设定
     //论坛基地址
-    public static String BASE_URL = "http://rs.xidian.edu.cn/";
+    public static final String BASE_URL_ME = "http://bbs.rs.xidian.me/";
+    public static final String BASE_URL_RS = "http://rs.xidian.edu.cn/";
+
+    public static String getBaseUrl(){
+        if(IS_SCHOOL_NET){
+            return BASE_URL_RS;
+        }else {
+            return BASE_URL_ME;
+        }
+    }
+
     //是否为校园网
     public static boolean IS_SCHOOL_NET = false;
     //论坛FORMHASH

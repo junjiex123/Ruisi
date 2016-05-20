@@ -38,16 +38,6 @@ public class NetworkReceiver extends BroadcastReceiver {
         }
     }
     private void checknet(int type){
-        if(type==1){
-            //校园网
-            System.out.println("school net");
-            PublicData.IS_SCHOOL_NET = true;
-            PublicData.BASE_URL = UrlUtils.getBaseUrl(true);
-        }else if(type==2){
-            //外网
-            System.out.println("out net");
-            PublicData.BASE_URL = UrlUtils.getBaseUrl(false);
-            PublicData.IS_SCHOOL_NET = false;
-        }
+        PublicData.IS_SCHOOL_NET = (type == 1);
     }
 }

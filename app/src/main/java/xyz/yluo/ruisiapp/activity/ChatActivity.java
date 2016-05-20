@@ -129,7 +129,7 @@ public class ChatActivity extends BaseActivity{
                     Elements elements = doc.select(".msgbox.b_m");
                     //还没有消息
                     if(elements.text().contains("当前没有相应的短消息")){
-                        String userimg = UrlUtils.getimageurl(touid,false);
+                        String userimg = UrlUtils.getAvaterurl(touid,false);
                         datas.add(new ChatListData(0,userimg,"给我发消息吧...","刚刚"));
                     }else {
                         Elements listdata = elements.select(".cl");
@@ -204,7 +204,7 @@ public class ChatActivity extends BaseActivity{
                     if (res.contains("操作成功")) {
                         hide_ime();
                         progress.dismiss();
-                        String userImage = PublicData.BASE_URL +"ucenter/avatar.php?uid="+ PublicData.USER_UID +"&size=small";
+                        String userImage = UrlUtils.getAvaterurl(PublicData.USER_UID,true);
                         datas.add(new ChatListData(1,userImage,text,"刚刚"));
                         adapter.notifyItemInserted(datas.size()-1);
                         recycler_view.scrollToPosition(datas.size());
