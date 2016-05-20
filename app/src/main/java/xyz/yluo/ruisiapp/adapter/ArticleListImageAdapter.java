@@ -15,12 +15,13 @@ import java.util.Objects;
 
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.activity.ArticleListImage;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.data.ImageArticleListData;
 
 /**
  * Created by free2 on 16-3-31.
- * 图片文章列表adapter 例如摄影天地板块{@link xyz.yluo.ruisiapp.activity.ArticleListImageActivity}
+ * 图片文章列表adapter 例如摄影天地板块{@link ArticleListImage}
  *
  */
 public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListImageAdapter.ImageCardViewHolder> {

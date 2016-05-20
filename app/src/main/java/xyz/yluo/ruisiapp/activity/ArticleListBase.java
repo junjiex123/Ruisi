@@ -17,10 +17,10 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 /**
  * Created by free2 on 16-3-31.
  * 一个板块文章列表基类
- * 一般文章列表{@link ArticleListNormalActivity}
- * 图片文章列表{@link ArticleListImageActivity}
+ * 一般文章列表{@link ArticleList}
+ * 图片文章列表{@link ArticleListImage}
  */
-public abstract class ArticleListBaseActivity extends BaseActivity
+public abstract class ArticleListBase extends BaseActivity
         implements LoadMoreListener.OnLoadMoreListener{
 
     FloatingActionButton btn_refresh;

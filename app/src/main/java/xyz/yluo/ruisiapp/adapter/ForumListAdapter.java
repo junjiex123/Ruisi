@@ -13,8 +13,8 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.activity.ArticleListImageActivity;
-import xyz.yluo.ruisiapp.activity.ArticleListNormalActivity;
+import xyz.yluo.ruisiapp.activity.ArticleListImage;
+import xyz.yluo.ruisiapp.activity.ArticleList;
 import xyz.yluo.ruisiapp.data.FroumListData;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.GetLogoUtils;
@@ -112,9 +112,9 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
                     String fid = GetId.getFroumFid(single.getTitleUrl());
                     //几个特殊的板块
                     if(PublicData.IS_SCHOOL_NET &&(fid.equals("561")||fid.equals("157")||fid.equals("13"))){
-                        ArticleListImageActivity.open(activity,Integer.parseInt(fid),single.getTitle());
+                        ArticleListImage.open(activity,Integer.parseInt(fid),single.getTitle());
                     }else{
-                        ArticleListNormalActivity.open(activity, Integer.parseInt(fid), single.getTitle());
+                        ArticleList.open(activity, Integer.parseInt(fid), single.getTitle());
                     }
                 }
             });

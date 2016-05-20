@@ -2,6 +2,7 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +19,8 @@ import java.util.List;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.adapter.ArticleListNormalAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
+import xyz.yluo.ruisiapp.database.MyDbUtils;
+import xyz.yluo.ruisiapp.database.SQLiteHelper;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
@@ -29,14 +32,15 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 外网时 GetArticleListTaskMe
  * 2个是不同的
  */
-public class ArticleListNormalActivity extends ArticleListBaseActivity{
+public class ArticleList extends ArticleListBase {
 
     //一般板块/图片板块/手机板块数据列表
     private List<ArticleListData> datas;
     private ArticleListNormalAdapter mRecyleAdapter;
+    private MyDbUtils myDbUtils=null;
 
     public static void open(Context context, int fid,String title){
-        Intent intent = new Intent(context, ArticleListNormalActivity.class);
+        Intent intent = new Intent(context, ArticleList.class);
         CurrentFid = fid;
         CurrentTitle = title;
         context.startActivity(intent);
@@ -45,6 +49,8 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        myDbUtils= new MyDbUtils(this,true);//数据库操作辅助类
 
         actionBar.setTitle(CurrentTitle);
         datas = new ArrayList<>();
@@ -108,6 +114,7 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
         }
     }
 
+
     //校园网状态下获得一个普通板块文章列表数据 根据html获得数据
     private class GetNormalArticleListTaskRs extends AsyncTask<String, Void, List<ArticleListData>> {
         @Override
@@ -152,7 +159,9 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
 
                 }
             }
-            return dataset;
+
+            myDbUtils = new MyDbUtils(getApplicationContext(),true);
+            return myDbUtils.handleList(dataset);
         }
 
         @Override
@@ -206,7 +215,8 @@ public class ArticleListNormalActivity extends ArticleListBaseActivity{
                 temp = new ArticleListData(hasImage,title, url, author, replyCount);
                 dataset.add(temp);
             }
-            return dataset;
+            myDbUtils = new MyDbUtils(getApplicationContext(),true);
+            return myDbUtils.handleList(dataset);
         }
 
         @Override

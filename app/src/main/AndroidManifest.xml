@@ -30,13 +30,13 @@
         </activity>
 
         <activity
-            android:name=".activity.ArticleListNormalActivity"
+            android:name=".activity.ArticleList"
             android:theme="@style/AppTheme">
 
         </activity>
 
         <activity
-            android:name=".activity.ArticleListImageActivity"
+            android:name=".activity.ArticleListImage"
             android:theme="@style/AppTheme">
         </activity>
 

@@ -27,7 +27,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * Created by free2 on 16-3-31.
  * 图片文章列表activity 摄影天地等用这个模板
  */
-public class ArticleListImageActivity extends ArticleListBaseActivity{
+public class ArticleListImage extends ArticleListBase {
 
     private List<ImageArticleListData> datas;
     private ArticleListImageAdapter adapter;
@@ -35,7 +35,7 @@ public class ArticleListImageActivity extends ArticleListBaseActivity{
     private int colNum = 2;
 
     public static void open(Context context, int fid, String title){
-        Intent intent = new Intent(context, ArticleListImageActivity.class);
+        Intent intent = new Intent(context, ArticleListImage.class);
         CurrentFid = fid;
         CurrentTitle = title;
         context.startActivity(intent);

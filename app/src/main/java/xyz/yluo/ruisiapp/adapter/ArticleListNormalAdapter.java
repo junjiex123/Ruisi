@@ -1,6 +1,8 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,8 @@ import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ArticleListData;
+import xyz.yluo.ruisiapp.database.MyDbUtils;
+import xyz.yluo.ruisiapp.database.SQLiteHelper;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -25,6 +29,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
+    private MyDbUtils myDbUtils=null;
     private static final int TYPE_NORMAL = 0;
     private static final int TYPE_LOAD_MORE = 1;
     //校外网 手机版
@@ -127,13 +132,17 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
             }else{
                 article_type.setVisibility(View.GONE);
             }
-
             String postTime = "发表于:"+single.getPostTime();
             post_time.setText(postTime);
             view_count.setText(single.getViewCount());
 
             String imageUrl = UrlUtils.getAvaterurl(single.getAuthorUrl(),false);
             Picasso.with(activity).load(imageUrl).resize(36,36).centerCrop().placeholder(R.drawable.image_placeholder).into(author_img);
+            if(single.isRead()){
+                article_title.setTextColor(0xff888888);
+            }else {
+                article_title.setTextColor(0xff000000);
+            }
             article_title.setText(single.getTitle());
             author_name.setText(single.getAuthor());
             reply_count.setText(single.getReplayCount());
@@ -145,8 +154,15 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         }
 
         void onBtnItemClick() {
+            myDbUtils = new MyDbUtils(activity,false);
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
+            myDbUtils.handleSingle(single_data);
+            if(!single_data.isRead()){
+                single_data.setRead(true);
+                notifyItemChanged(getAdapterPosition());
+            }
             SingleArticleActivity.open(activity,single_data.getTitleUrl());
+
         }
     }
 
@@ -190,6 +206,11 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         @Override
         void setData(int position) {
             ArticleListData single = DataSet.get(position);
+            if(single.isRead()){
+                article_title.setTextColor(0xff888888);
+            }else {
+                article_title.setTextColor(0xff000000);
+            }
             article_title.setText(single.getTitle());
             author_name.setText(single.getAuthor());
             reply_count.setText(single.getReplayCount());
@@ -202,7 +223,13 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         }
 
         void onBtnItemClick() {
+            myDbUtils = new MyDbUtils(activity,false);
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
+            myDbUtils.handleSingle(single_data);
+            if(!single_data.isRead()){
+                single_data.setRead(true);
+                notifyItemChanged(getAdapterPosition());
+            }
             SingleArticleActivity.open(activity,single_data.getTitleUrl());
         }
     }

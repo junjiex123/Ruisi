@@ -16,6 +16,9 @@ public class ArticleListData {
     private String postTime;
     private String viewCount;
     private String replayCount;
+    private boolean isRead;
+
+
 
     //一般文章构造器
     public ArticleListData(String title, String titleUrl, String type, String author, String authorUrl, String postTime, String viewCount, String replayCount) {
@@ -36,6 +39,14 @@ public class ArticleListData {
         this.titleUrl = titleUrl;
         this.author = author;
         this.replayCount = replayCount;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
+    }
+
+    public boolean isRead() {
+        return isRead;
     }
 
     public String getReplayCount() {
