@@ -132,6 +132,8 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         }
     }
 
+
+    //切换消息类型
     private class ChangeMessageHolder extends BaseViewHolder{
 
         RadioGroup btn_change;

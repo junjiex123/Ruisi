@@ -28,13 +28,14 @@
             android:layout_centerHorizontal="true" />
 
         <TextView
+            android:gravity="center"
             android:padding="3dp"
-            android:background="@drawable/type_bg_orange"
+            android:background="@drawable/type_bg_circle"
             android:id="@+id/today_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="10sp"
-            android:textColor="#DC5A26"
+            android:textColor="@android:color/white"
             android:maxLines="1"
             tools:text="150"
             android:layout_alignParentTop="true"
