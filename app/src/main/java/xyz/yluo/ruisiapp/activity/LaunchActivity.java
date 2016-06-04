@@ -17,8 +17,6 @@ import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.checknet.CheckNet;
 import xyz.yluo.ruisiapp.checknet.CheckNetResponse;
-import xyz.yluo.ruisiapp.database.MyDbUtils;
-import xyz.yluo.ruisiapp.database.SQLiteHelper;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
@@ -126,18 +124,31 @@ public class LaunchActivity extends BaseActivity{
     private void noNetWork(){
         Toast.makeText(getApplicationContext(),"无法连接到服务器请检查网络设置！",Toast.LENGTH_SHORT).show();
     }
+
+    private Handler mHandler = new Handler();
+
+    private Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            startActivity(new Intent(getApplicationContext(),HomeActivity.class));
+            finish();
+        }
+    };
+
+
+
     private void finishthis(){
         long currenttime = System.currentTimeMillis();
         long delay = 1500-(currenttime-starttime);
         if(delay<0){
             delay = 0;
         }
-        new Handler().postDelayed(new Runnable(){
-            public void run() {
-                startActivity(new Intent(getApplicationContext(),HomeActivity.class));
-                finish();
-            }
-        }, delay);
+        mHandler.postDelayed(mRunnable, delay);
+    }
 
+    @Override
+    protected void onDestroy() {
+        mHandler.removeCallbacks(mRunnable);
+        super.onDestroy();
     }
 }
