@@ -119,7 +119,6 @@ public class MyHtmlTextView extends TextView{
 
         strBuilder.removeSpan(quoteSpan);
         strBuilder.setSpan(new CustomQuoteSpan(), start, end, flags);
-        //strBuilder.setSpan(new ForegroundColorSpan(0xff888888), start, end, flags);
         strBuilder.setSpan(new RelativeSizeSpan(0.9f), start, end, flags);
         strBuilder.setSpan(new ClickableSpan() {
             @Override
@@ -208,9 +207,7 @@ public class MyHtmlTextView extends TextView{
                 //替换表情到本地
                 if (source.contains("static/image/smiley/")) {
                     source = source.substring(source.indexOf("static"));
-                    if(!source.contains("tieba")){
-                        source = source.replace(".gif",".jpg").replace(".png",".jpg").replace(".GIF",".jpg").replace(".png",".jpg");
-                    }
+                    source = source.replace(".gif",".jpg").replace(".GIF",".jpg");
                     Drawable drawable1 = Drawable.createFromStream(activity.getAssets().open(source), null);
                     drawable1.setBounds(0, 0, 70, 70);
                     return drawable1;
@@ -218,9 +215,7 @@ public class MyHtmlTextView extends TextView{
                     if(drawableMap.containsKey(source)){
                         return drawableMap.get(source);
                     }else{
-
                         TotalUrls.add(source);
-
                         if(!isStart){
                             isStart = true;
                             new LoadImage().execute(source);
@@ -266,8 +261,8 @@ public class MyHtmlTextView extends TextView{
                 if(bm==null){
                     return null;
                 }
-                int mwidth = (int) (bm.getWidth()*2.3);
-                int myheight = (int) (bm.getHeight()*2.3);
+                int mwidth = bm.getWidth()*2;
+                int myheight = bm.getHeight()*2;
 
                 Drawable drawable = new BitmapDrawable(activity.getResources(), bm);
                 drawable.setBounds(0, 0,mwidth, myheight);

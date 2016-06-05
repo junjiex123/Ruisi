@@ -2,7 +2,6 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,7 +19,6 @@ import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.adapter.ArticleListNormalAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.database.MyDbUtils;
-import xyz.yluo.ruisiapp.database.SQLiteHelper;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;

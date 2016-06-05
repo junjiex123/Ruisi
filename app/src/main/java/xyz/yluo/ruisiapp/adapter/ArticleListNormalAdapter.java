@@ -1,8 +1,6 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +18,6 @@ import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.database.MyDbUtils;
-import xyz.yluo.ruisiapp.database.SQLiteHelper;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**

@@ -15,13 +15,13 @@ import java.util.ArrayList;
  * 表情处理
  * 格式处理 加粗 斜体等。。。
  */
-public  class PostHander implements TextWatcher {
+public  class PostHandler implements TextWatcher {
 
     private final EditText mEditor;
     private final ArrayList<ImageSpan> mEmoticonsToRemove = new ArrayList<>();
 
 
-    public PostHander(EditText editor) {
+    public PostHandler(EditText editor) {
         mEditor = editor;
         mEditor.addTextChangedListener(this);
     }
