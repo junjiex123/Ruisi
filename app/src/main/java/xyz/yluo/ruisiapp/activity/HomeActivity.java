@@ -155,6 +155,14 @@ public class HomeActivity extends BaseActivity
                             i.putExtra("type","mystar");
                             startActivity(i);
                         }
+                        break;
+                    case R.id.nav_history:
+                        if(isneed_login()){
+                            Intent i = new Intent(getApplicationContext(),ActivityMyTopicStar.class);
+                            i.putExtra("type","myhistory");
+                            startActivity(i);
+                        }
+                        break;
 
                 }
             }

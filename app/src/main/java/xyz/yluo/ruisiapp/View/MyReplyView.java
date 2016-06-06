@@ -5,11 +5,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.design.widget.TabLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.ImageSpan;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +21,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,12 +43,12 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
     private final int SMILEY_TB = 1;
     private final int SMILEY_LDB = 2;
     private final int SMILEY_ACN = 3;
+
     int smiley_type  =SMILEY_TB;
     EditText input;
     LinearLayout smiley_container;
     RecyclerView smiley_listv;
     ImageView btn_send;
-    RadioGroup smiley_change;
     SmileyAdapter adapter;
 
     public MyReplyView(Context context) {
@@ -69,29 +72,48 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         View v =  LayoutInflater.from(getContext()).inflate(R.layout.reply_bar,this,false);
+        TabLayout tabLayout = (TabLayout) v.findViewById(R.id.mytab);
 
-        input = (EditText) v.findViewById(R.id.input_aera);
-        smiley_change =  (RadioGroup) v.findViewById(R.id.smiley_change);
-        smiley_change.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.smiley_tieba));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.smiley_ldb));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.smiley_acn));
+
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int id) {
-                Log.i("smiley check","id "+id);
+            public void onTabSelected(TabLayout.Tab tab) {
+                Log.i("tab check","id "+tab.getPosition());
 
-                switch (id){
-                    case R.id.smiley_tb:
+                switch (tab.getPosition()){
+
+                    case 0:
                         smiley_type = SMILEY_TB;
                         break;
-                    case R.id.smiley_ldb:
+                    case 1:
                         smiley_type = SMILEY_LDB;
                         break;
-                    case R.id.smiley_acn:
+                    case 2:
                         smiley_type = SMILEY_ACN;
                         break;
                 }
 
                 changeSmiley();
             }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
         });
+
+
+        input = (EditText) v.findViewById(R.id.input_aera);
+
         smiley_listv = (RecyclerView) v.findViewById(R.id.smiley_list);
         smiley_container = (LinearLayout) v.findViewById(R.id.smileys_container);
         btn_send = (ImageView) v.findViewById(R.id.action_send);
@@ -922,5 +944,21 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
             default:
                 break;
         }
+    }
+
+
+    //获得带图标的文字
+    private CharSequence getimageTitle(CharSequence text,int id) {
+
+        Drawable ds = getResources().getDrawable(id,null);
+        if(ds==null){
+            return  text;
+        }
+        ds.setBounds(0, 0, ds.getIntrinsicWidth(), ds.getIntrinsicHeight());
+        //这里前面加的空格就是为图片显示
+        SpannableString sp = new SpannableString(text);
+        ImageSpan imageSpan = new ImageSpan(ds, ImageSpan.ALIGN_BOTTOM);
+        sp.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return  sp;
     }
 }

@@ -46,13 +46,11 @@ public class UserDakaActivity extends BaseActivity{
     protected CircleImageView user_image;
     protected TextView user_name;
     private LinearLayout have_sign_view;
-    private LinearLayout have_sign_view2;
-    private LinearLayout View_not_sign;
+    private LinearLayout not_sign_view;
     protected LinearLayout container;
     protected ProgressBar progressBar;
     private TextView total_sign_day;
     private TextView total_sign_month;
-    private TextView information;
     private TextView info_title;
     protected Toolbar toolbar;
 
@@ -72,14 +70,12 @@ public class UserDakaActivity extends BaseActivity{
         btn_start_sign = (Button) findViewById(R.id.btn_start_sign);
         user_image = (CircleImageView) findViewById(R.id.user_image);
         user_name = (TextView) findViewById(R.id.user_name);
-        have_sign_view = (LinearLayout) findViewById(R.id.View_have_sign);
-        have_sign_view2 = (LinearLayout) findViewById(R.id.View_have_sign_2);
-        View_not_sign = (LinearLayout) findViewById(R.id.View_not_sign);
+        not_sign_view = (LinearLayout) findViewById(R.id.not_sign_view);
+        have_sign_view = (LinearLayout) findViewById(R.id.have_sign_view);
         container = (LinearLayout) findViewById(R.id.container);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         total_sign_day = (TextView) findViewById(R.id.total_sign_day);
         total_sign_month = (TextView) findViewById(R.id.total_sign_month);
-        information = (TextView) findViewById(R.id.information);
         info_title = (TextView) findViewById(R.id.info_title);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         btn_start_sign.setOnClickListener(new View.OnClickListener() {
@@ -119,9 +115,8 @@ public class UserDakaActivity extends BaseActivity{
     //看看是否已经签到
     private void isHaveDaka(){
         container.setVisibility(View.GONE);
-        View_not_sign.setVisibility(View.GONE);
+        not_sign_view.setVisibility(View.GONE);
         have_sign_view.setVisibility(View.GONE);
-        have_sign_view2.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
         String urlget =   "plugin.php?id=dsu_paulsign:sign";
         HttpUtil.get(this, urlget, new ResponseHandler() {
@@ -136,12 +131,13 @@ public class UserDakaActivity extends BaseActivity{
                 if(res.contains("您今天已经签到过了或者签到时间还未开始")){
                     //您今天已经签到过了
                     //获得时间
+                    have_sign_view.setVisibility(View.VISIBLE);
                     Calendar c = Calendar.getInstance();
                     int HOUR_OF_DAY = c.get(Calendar.HOUR_OF_DAY);
                     if(7<=HOUR_OF_DAY&&HOUR_OF_DAY<23){
-                        info_title.setText("您今天已经签到过了");
+                        info_title.setText("今日已签到");
                     }else {
-                        info_title.setText("今天的签到还没开始呢");
+                        info_title.setText("不在签到时间内");
                     }
 
                     for(Element temp:doc.select(".mn").select("p")){
@@ -151,22 +147,17 @@ public class UserDakaActivity extends BaseActivity{
                             total_sign_day.setText(temptext.substring(pos));
                         }else if(temptext.contains("您本月已累计签到")){
                             total_sign_month.setText(temptext);
-                        }else {
-                            String newString = information.getText().toString()+"\n"+temptext;
-                            information.setText(newString);
                         }
                     }
 
                     isSign = true;
-                    have_sign_view.setVisibility(View.VISIBLE);
-                    have_sign_view2.setVisibility(View.VISIBLE);
-                    View_not_sign.setVisibility(View.GONE);
+                    not_sign_view.setVisibility(View.GONE);
                     btn_start_sign.setText("返回");
                 }else{
+                    info_title.setText("今日未签到");
                     isSign = false;
-                    View_not_sign.setVisibility(View.VISIBLE);
+                    not_sign_view.setVisibility(View.VISIBLE);
                     have_sign_view.setVisibility(View.GONE);
-                    have_sign_view2.setVisibility(View.GONE);
                 }
                 container.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
@@ -210,7 +201,7 @@ public class UserDakaActivity extends BaseActivity{
                     String res = new String(response);
                     if(res.contains("恭喜你签到成功")){
                         showNtice("签到成功,点击按钮返回");
-                        info_title.setText("恭喜你签到成功");
+                        info_title.setText("签到成功");
                         isSign = true;
                         btn_start_sign.setText("返回");
                     }else{

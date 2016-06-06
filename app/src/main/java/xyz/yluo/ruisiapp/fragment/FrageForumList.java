@@ -126,7 +126,7 @@ public class FrageForumList extends Fragment {
                 for(Element tmp:ele.select("li")){
                     String todayNew = tmp.select("span.num").text();
                     tmp.select("span.num").remove();
-                    String title = tmp.text();
+                    String title = tmp.text().replace("西电睿思","");
                     String titleUrl = tmp.select("a").attr("href");
                     simpledatas.add(new FroumListData(false,title,todayNew,titleUrl));
                 }

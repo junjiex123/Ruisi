@@ -125,10 +125,8 @@ public class FrageSimpleArticle extends Fragment implements LoadMoreListener.OnL
                 src.select("span.num").remove();
                 String title = src.select("a").text();
                 String img = src.select("img").attr("src");
-                String hasImage = "";
-                if(img.contains("icon_tu.png")){
-                    hasImage = "0";
-                }
+                boolean hasImage = img.contains("icon_tu.png");
+
                 temp = new ArticleListData(hasImage,title, url, author, replyCount);
                 dataset.add(temp);
             }

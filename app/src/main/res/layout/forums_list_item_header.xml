@@ -14,7 +14,7 @@
         android:id="@+id/header_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#00BBEF"
+        android:textColor="@color/colorPrimary"
         android:textSize="16sp"
         tools:text="西电生活" />
 </LinearLayout>

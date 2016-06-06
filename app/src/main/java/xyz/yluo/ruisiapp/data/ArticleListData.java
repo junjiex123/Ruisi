@@ -17,6 +17,7 @@ public class ArticleListData {
     private String viewCount;
     private String replayCount;
     private boolean isRead;
+    private boolean ishaveImage;
 
 
 
@@ -33,12 +34,16 @@ public class ArticleListData {
     }
 
     //手机版构造器
-    public ArticleListData(String type,String title, String titleUrl, String author, String replayCount) {
-        this.type = type;//0--have image
+    public ArticleListData(boolean haveImage,String title, String titleUrl, String author, String replayCount) {
+        this.ishaveImage = haveImage;//0--have image
         this.title = title;
         this.titleUrl = titleUrl;
         this.author = author;
         this.replayCount = replayCount;
+    }
+
+    public boolean ishaveImage() {
+        return ishaveImage;
     }
 
     public void setRead(boolean read) {

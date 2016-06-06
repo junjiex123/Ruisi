@@ -19,7 +19,7 @@
         android:layout_width="match_parent">
 
         <ImageView
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="6dp"
             android:id="@+id/img"
             android:layout_width="36dp"
             android:layout_height="36dp"
@@ -48,6 +48,7 @@
             style="@style/TitleText"
             android:textSize="15sp"
             android:maxLines="1"
+            android:maxEms="4"
             tools:text="话题的标题"
             android:layout_below="@+id/img"
             android:layout_centerHorizontal="true"

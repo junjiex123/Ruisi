@@ -135,11 +135,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
 
             String imageUrl = UrlUtils.getAvaterurl(single.getAuthorUrl(),false);
             Picasso.with(activity).load(imageUrl).resize(36,36).centerCrop().placeholder(R.drawable.image_placeholder).into(author_img);
-            if(single.isRead()){
-                article_title.setTextColor(0xff888888);
-            }else {
-                article_title.setTextColor(0xff000000);
-            }
+            article_title.setTextColor(single.isRead()?0xff888888:0xff000000);
             article_title.setText(single.getTitle());
             author_name.setText(single.getAuthor());
             reply_count.setText(single.getReplayCount());
@@ -203,20 +199,11 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         @Override
         void setData(int position) {
             ArticleListData single = DataSet.get(position);
-            if(single.isRead()){
-                article_title.setTextColor(0xff888888);
-            }else {
-                article_title.setTextColor(0xff000000);
-            }
+            article_title.setTextColor(single.isRead()?0xff888888:0xff000000);
             article_title.setText(single.getTitle());
             author_name.setText(single.getAuthor());
             reply_count.setText(single.getReplayCount());
-
-            if(single.getType().equals("0")){
-                is_image.setVisibility(View.VISIBLE);
-            }else {
-                is_image.setVisibility(View.GONE);
-            }
+            is_image.setVisibility(single.ishaveImage()?View.VISIBLE:View.GONE);
         }
 
         void onBtnItemClick() {

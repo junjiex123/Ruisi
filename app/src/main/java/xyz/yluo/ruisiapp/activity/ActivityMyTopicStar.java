@@ -18,16 +18,16 @@ import java.util.List;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
+import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.SimpleListData;
+import xyz.yluo.ruisiapp.database.MyDbUtils;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 
-/**
- * Created by free2 on 16-5-3.
- * 我的主题activity
- */
+
+
 public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListener.OnLoadMoreListener{
     protected SwipeRefreshLayout refreshLayout;
 
@@ -36,6 +36,12 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
     private int CurrentPage = 0;
     private boolean isEnableLoadMore = true;
     private boolean isHaveMore = true;
+
+    /**
+     * 0----wode 主题
+     * 1----我的 收藏
+     * 2----历史纪录  //TODO 复杂的历史纪录
+     */
     private int currentIndex = 0;
 
     private String url;
@@ -52,8 +58,10 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
             String type =  getIntent().getExtras().getString("type");
             if(type!=null&&type.equals("mytopic")){
                 currentIndex = 0;
-            }else {
+            }else if(type!=null&&type.equals("mystar")){
                 currentIndex = 1;
+            }else{
+                currentIndex =2;
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -65,17 +73,26 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
         }
 
         String uid = PublicData.USER_UID;
-        if(currentIndex==0){
-            //主题
-            if(actionBar!=null)
-                actionBar.setTitle("我的帖子");
-            url = "home.php?mod=space&uid="+uid+"&do=thread&view=me&mobile=2";
-        }else{
-            //我的收藏
-            if(actionBar!=null)
-                actionBar.setTitle("我的收藏");
-            url = "home.php?mod=space&uid="+uid+"&do=favorite&view=me&type=thread&mobile=2";
+        switch (currentIndex){
+            case 0:
+                //主题
+                if(actionBar!=null)
+                    actionBar.setTitle("我的帖子");
+                url = "home.php?mod=space&uid="+uid+"&do=thread&view=me&mobile=2";
+                break;
+            case 1:
+                //我的收藏
+                if(actionBar!=null)
+                    actionBar.setTitle("我的收藏");
+                url = "home.php?mod=space&uid="+uid+"&do=favorite&view=me&type=thread&mobile=2";
+                break;
+            default:
+                isEnableLoadMore = false;
+                if(actionBar!=null)
+                    actionBar.setTitle("历史纪录");
+                break;
         }
+
         datas = new ArrayList<>();
         adapter = new SimpleListAdapter(ListType.ARTICLE,this,datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -119,13 +136,34 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
 
     private void getStringFromInternet(String url){
 
+        if(currentIndex==2){
+            //datas.add()
+            MyDbUtils myDbUtils = new MyDbUtils(getApplicationContext(),true);
+            for(ArticleListData data:myDbUtils.getHistory(30)){
+
+                //Log.i("history",data.getTitleUrl());
+                datas.add(new SimpleListData(data.getTitle(),data.getReplayCount(),"tid="+data.getTitleUrl()));
+            }
+            datas.add(new SimpleListData("暂无更多","",""));
+            adapter.notifyDataSetChanged();
+            refreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(false);
+                }
+            });
+            return;
+        }
+
+
         HttpUtil.get(this, url, new ResponseHandler() {
+
             @Override
             public void onSuccess(byte[] response) {
                 String res= new String(response);
                 if(currentIndex==0){
-                    new GetUserArticleask().execute(res);
-                }else{
+                    new GetUserArticles().execute(res);
+                }else if(currentIndex==1){
                     new GetUserStarTask().execute(res);
                 }
             }
@@ -138,7 +176,7 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
     }
 
     //获得主题
-    private class GetUserArticleask extends AsyncTask<String, Void, Void> {
+    private class GetUserArticles extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... strings) {
             String res = strings[0];

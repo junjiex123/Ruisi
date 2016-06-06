@@ -60,8 +60,8 @@ public class LaunchActivity extends BaseActivity{
             }
         });
 
-        //MyDbUtils myDbUtils = new MyDbUtils(this,true);
-        //myDbUtils.showDatabase();
+//        MyDbUtils myDbUtils = new MyDbUtils(this,true);
+//        myDbUtils.getHistory(20);
 
     }
 

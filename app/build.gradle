@@ -3,12 +3,6 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        config {
-            keyAlias 'com.yluo.ruisiapp'
-            keyPassword 'just2351386755'
-            storeFile file('C:/Users/free2/Documents/key.jks')
-            storePassword 'just2351386755'
-        }
     }
     compileSdkVersion 23
     buildToolsVersion '23.0.3'
@@ -16,8 +10,10 @@ android {
         applicationId "com.yluo.ruisiapp"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 8
-        versionName '1.4.2 beta'
+        versionCode 9
+        versionName '1.4.3 beta'
+    }
+    productFlavors {
     }
 }
 repositories {

@@ -7,6 +7,7 @@ import android.util.Log;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -140,6 +141,31 @@ public class MyDbUtils {
         }
         result.close();
         this.db.close();
+    }
+
+    public List<ArticleListData> getHistory(int num){
+        List<ArticleListData> datas = new ArrayList<>();
+        String sql = "SELECT * FROM "+TABLE_NAME+" order by read_time desc limit "+num;
+        Cursor result = this.db.rawQuery(sql, null); 	//执行查询语句
+        for(result.moveToFirst();!result.isAfterLast();result.moveToNext()	)	//采用循环的方式查询数据
+        {
+
+            /**
+             * tid VARCHAR(10) primary key,"
+             + "title VARCHAR(50),"
+             + "uid VARCHAR(10),"
+             + "author VARCHAR(15),"
+             + "time DATETIME,"
+             + "read_time DATETIME,"
+             + "view VARCHAR(10),"
+             + "reply VARCHAR(10)"
+             */
+
+            datas.add(new ArticleListData(false,result.getString(1),result.getString(0),result.getString(3),result.getString(7)));
+        }
+        result.close();
+        this.db.close();
+        return datas;
     }
 
 //    //查询操作,查询表中所有的记录返回列表
