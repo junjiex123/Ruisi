@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.Set;
 
 import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.utils.HandleLinkClick;
 
 /**
@@ -208,9 +209,15 @@ public class MyHtmlTextView extends TextView{
                 if (source.contains("static/image/smiley/")) {
                     source = source.substring(source.indexOf("static"));
                     source = source.replace(".gif",".jpg").replace(".GIF",".jpg");
-                    Drawable drawable1 = Drawable.createFromStream(activity.getAssets().open(source), null);
-                    drawable1.setBounds(0, 0, 70, 70);
-                    return drawable1;
+                    Drawable d = Drawable.createFromStream(activity.getAssets().open(source), null);
+
+                    int height = (int) (getResources().getDimension(R.dimen.textSizeNormal) * 1.5);
+                    int width = (int) ((float) d.getIntrinsicWidth() / (float) d.getIntrinsicHeight()) * height;
+                    if (width == 0) {
+                        width = d.getIntrinsicWidth();
+                    }
+                    d.setBounds(0, 0, width, height);
+                    return d;
                 } else {
                     if(drawableMap.containsKey(source)){
                         return drawableMap.get(source);
@@ -261,8 +268,8 @@ public class MyHtmlTextView extends TextView{
                 if(bm==null){
                     return null;
                 }
-                int mwidth = bm.getWidth()*2;
-                int myheight = bm.getHeight()*2;
+                int mwidth = bm.getWidth()*4;
+                int myheight = bm.getHeight()*4;
 
                 Drawable drawable = new BitmapDrawable(activity.getResources(), bm);
                 drawable.setBounds(0, 0,mwidth, myheight);
