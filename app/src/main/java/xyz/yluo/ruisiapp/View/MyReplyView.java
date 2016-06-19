@@ -28,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SmileyAdapter;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
@@ -907,6 +908,11 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
                     text+=" ";
                 }
             }
+
+            //我自己独有的 广告位
+            if(PublicData.USER_UID.equals("252553")&&!text.contains("[color=#ff0000]-----来自[url=http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=846819]手机睿思[/url][/color]")){
+                text+="[p=30, 2, left][size=1][color=#ff0000]-----来自[url=http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=846819]手机睿思[/url][/color][/size][/p]";
+            }
             listener.btnSendClick(text);
         }
     }
@@ -944,21 +950,5 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
             default:
                 break;
         }
-    }
-
-
-    //获得带图标的文字
-    private CharSequence getimageTitle(CharSequence text,int id) {
-
-        Drawable ds = getResources().getDrawable(id,null);
-        if(ds==null){
-            return  text;
-        }
-        ds.setBounds(0, 0, ds.getIntrinsicWidth(), ds.getIntrinsicHeight());
-        //这里前面加的空格就是为图片显示
-        SpannableString sp = new SpannableString(text);
-        ImageSpan imageSpan = new ImageSpan(ds, ImageSpan.ALIGN_BOTTOM);
-        sp.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return  sp;
     }
 }
