@@ -3,13 +3,16 @@ package xyz.yluo.ruisiapp.checknet;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeoutException;
 
 import xyz.yluo.ruisiapp.PublicData;
 
@@ -45,27 +48,36 @@ public class CheckNet{
                 checkNetResponse.sendFinishMessage(2,"ok");
                 setData(false);
             }else{
-                Document doc;
                 try {
-                    doc = Jsoup.connect("http://ip.xidian.cc/index.php").timeout(2000).get();
-                    String content = doc.html();
-                    if(content.contains("是计算流量费的")){
-                        checkNetResponse.sendFinishMessage(2,"ok");
-                        setData(false);
-                    }else if(content.contains("是免流量费的")){
+                    Connection con1 = Jsoup.connect("http://202.117.119.1/portal.php").timeout(1500);
+
+                    if(con1.get().title().contains("西电睿思")){
                         checkNetResponse.sendFinishMessage(1,"ok");
                         setData(true);
-                    }else{
-                        checkNetResponse.sendFinishMessage(0,"请打开网络连接");
                     }
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
-                    checkNetResponse.sendFinishMessage(0,"请打开网络连接");
+                    Connection con2 = Jsoup.connect("http://bbs.rs.xidian.me/forum.php?mod=guide&view=hot&mobile=2").timeout(1500);
+                    try {
+                        if (con2.get().title().contains("西电睿思")) {
+                            checkNetResponse.sendFinishMessage(2, "ok");
+                            setData(false);
+                        }
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                        checkNetResponse.sendFinishMessage(0, "无法连接服务器");
+                    }
                 }
             }
         }else{
             checkNetResponse.sendFinishMessage(0,"请打开网络连接");
         }
+
+
+        /*
+
+
+        */
     }
 
     private void setData(boolean isInner){

@@ -22,6 +22,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.NewVersionDialog;
 import xyz.yluo.ruisiapp.httpUtil.AsyncHttpClient;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.utils.DataCleanManager;
 import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 
 /**
@@ -57,8 +58,7 @@ public class SettingActivity extends PreferenceActivity {
 
         private SharedPreferences sharedPreferences;
 
-        private Preference about_this;
-        private Preference open_sourse;
+        private Preference about_this,clear_cache,open_sourse;
 
         @Override
         public void onCreate(final Bundle savedInstanceState)
@@ -70,6 +70,7 @@ public class SettingActivity extends PreferenceActivity {
             setting_forums_url = (ListPreference) findPreference("setting_forums_url");
             about_this = findPreference("about_this");
             open_sourse = findPreference("open_sourse");
+            clear_cache = findPreference("clean_cache");
 
             sharedPreferences = getPreferenceScreen().getSharedPreferences();
             sharedPreferences.registerOnSharedPreferenceChangeListener(this);
@@ -142,6 +143,19 @@ public class SettingActivity extends PreferenceActivity {
                     return false;
                 }
             });
+            clear_cache.setSummary("缓存大小："+DataCleanManager.getTotalCacheSize(getActivity()));
+            clear_cache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    DataCleanManager.cleanApplicationData(getActivity());
+
+                    Toast.makeText(getActivity(),"还清清理成功!请重新登陆",Toast.LENGTH_SHORT).show();
+                    clear_cache.setSummary("缓存大小："+DataCleanManager.getTotalCacheSize(getActivity()));
+                    return false;
+                }
+            });
+
+
         }
 
         @Override

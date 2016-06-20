@@ -21,6 +21,7 @@
         </SwitchPreference>
 
         <SwitchPreference
+
             android:key="setting_show_notify"
             android:defaultValue="false"
             android:title="是否接受回复消息提醒"
@@ -51,7 +52,7 @@
 
         <SwitchPreference
             android:key="setting_show_plain"
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:title="是否去掉帖子内容一些样式"
             android:summaryOn="将删除文章内容样式,例如字体大小,颜色等会被删除"
             android:summaryOff="删除文章字体颜色大小等其余样式">
@@ -70,6 +71,12 @@
             android:title="项目地址"
             android:summary="在github上查看本项目">
 
+        </Preference>
+
+        <Preference
+            android:key="clean_cache"
+            android:title="清除缓存"
+            android:summary="当前缓存大小1MB">
         </Preference>
     </PreferenceCategory>
 

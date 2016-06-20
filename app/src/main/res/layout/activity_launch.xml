@@ -20,7 +20,7 @@
     <TextView
         android:id="@+id/launch_text"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="250dp"
+        android:layout_marginTop="200dp"
         android:textColor="@color/colorPrimary"
         android:textSize="25sp"
         android:text="西电睿思"
@@ -29,6 +29,7 @@
         android:layout_height="wrap_content" />
 
     <LinearLayout
+        android:id="@+id/login_view"
         android:layout_gravity="bottom"
         android:gravity="center_horizontal"
         android:layout_width="match_parent"
@@ -41,6 +42,7 @@
             android:layout_height="40dp"
             android:indeterminate="true"
             android:indeterminateDrawable="@drawable/loading" />
+
         <TextView
             android:layout_marginTop="4dp"
             style="@style/SmallText"
@@ -57,6 +59,34 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="©2016 xidianrs.cn" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/login_fail_view"
+        android:padding="16dp"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:text="校园网入口"
+            style="@style/myButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="12sp"
+            android:id="@+id/btn_login_inner"/>
+        <Button
+            android:layout_marginStart="8dp"
+            android:text="外网入口"
+            style="@style/myButton"
+            android:layout_width="0dp"
+            android:textSize="12sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/btn_login_outer"/>
     </LinearLayout>
 
 </FrameLayout>

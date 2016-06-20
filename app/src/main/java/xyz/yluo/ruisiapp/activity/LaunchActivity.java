@@ -5,8 +5,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,8 +39,28 @@ public class LaunchActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
         launch_text = (TextView) findViewById(R.id.launch_text);
+        Button btn_inner = (Button) findViewById(R.id.btn_login_inner);
+        Button btn_outer = (Button) findViewById(R.id.btn_login_outer);
         starttime = System.currentTimeMillis();
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
+        btn_inner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PublicData.ISLOGIN = true;
+                startActivity(new Intent(getApplicationContext(),HomeActivity.class));
+                finish();
+            }
+        });
+        btn_outer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PublicData.ISLOGIN = true;
+                startActivity(new Intent(getApplicationContext(),HomeActivity.class));
+                finish();
+            }
+        });
     }
 
     @Override
@@ -89,6 +111,9 @@ public class LaunchActivity extends BaseActivity{
             checklogin(url);
         }else{
             noNetWork();
+
+            findViewById(R.id.login_view).setVisibility(View.GONE);
+            findViewById(R.id.login_fail_view).setVisibility(View.VISIBLE);
         }
     }
 
