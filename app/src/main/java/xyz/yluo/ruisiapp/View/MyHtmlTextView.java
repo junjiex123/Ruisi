@@ -97,7 +97,12 @@ public class MyHtmlTextView extends TextView{
 
     //获得textView 链接点击
     private CharSequence getMyStyleHtml(String html, Html.ImageGetter getter, Html.TagHandler handler) {
-        Spanned spannedHtml = Html.fromHtml(html, getter, handler);
+        Spanned spannedHtml = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            spannedHtml = Html.fromHtml(html,Html.FROM_HTML_MODE_COMPACT,getter, handler);
+        }else{
+            spannedHtml = Html.fromHtml(html,getter, handler);
+        }
         SpannableStringBuilder strBuilder = new SpannableStringBuilder(spannedHtml);
 
         URLSpan[] urlSpans = strBuilder.getSpans(0, spannedHtml.length(), URLSpan.class);
@@ -329,7 +334,7 @@ public class MyHtmlTextView extends TextView{
                         output.setSpan(new TypefaceSpan("monospace"), startIndex, stopIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         //设置字体前景色
                         output.setSpan(new ForegroundColorSpan(0xff666666), startIndex, stopIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        output.setSpan(new RelativeSizeSpan(0.85f), startIndex, stopIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        output.setSpan(new RelativeSizeSpan(0.80f), startIndex, stopIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
                 }
             }

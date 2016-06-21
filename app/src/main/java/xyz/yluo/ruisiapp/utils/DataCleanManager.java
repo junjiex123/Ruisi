@@ -31,13 +31,11 @@ public class DataCleanManager {
         return getFormatSize(cacheSize);
     }
 
-
     /**      * 清除本应用所有的数据*/
     public static void cleanApplicationData(Context context, String... filepath) {
         cleanInternalCache(context);
         cleanExternalCache(context);
         cleanSharedPreference(context);
-        cleanDatabases(context);
         cleanFiles(context);
         cleanDatabaseByName(context, SQLiteHelper.DATABASE_NAME);
         for (String filePath : filepath) {
@@ -45,9 +43,6 @@ public class DataCleanManager {
         }
     }
 
-    // 获取文件
-    //Context.getExternalFilesDir() --> SDCard/Android/data/你的应用的包名/files/ 目录，一般放一些长时间保存的数据
-    //Context.getExternalCacheDir() --> SDCard/Android/data/你的应用包名/cache/目录，一般存放临时缓存数据
     public static long getFolderSize(File file) throws Exception {
         long size = 0;
         try {
@@ -106,15 +101,11 @@ public class DataCleanManager {
     public static void cleanInternalCache(Context context) {
         deleteFilesByDirectory(context.getCacheDir());
     }
-    /**      * 清除本应用所有数据库(/data/data/com.xxx.xxx/databases)*/
-    public static void cleanDatabases(Context context) {
-        deleteFilesByDirectory(new File("/data/data/"+ context.getPackageName() + "/databases"));
-    }
-    /**      * 清除本应用SharedPreference(/data/data/com.xxx.xxx/shared_prefs)*/
+    /*** 清除本应用SharedPreference(/data/data/com.xxx.xxx/shared_prefs)*/
     public static void cleanSharedPreference(Context context) {
         deleteFilesByDirectory(new File("/data/data/"+context.getPackageName() + "/shared_prefs"));
     }
-    /**      * 按名字清除本应用数据库*/
+    /** 按名字清除本应用数据库*/
     public static void cleanDatabaseByName(Context context, String dbName) {
         context.deleteDatabase(dbName);
     }

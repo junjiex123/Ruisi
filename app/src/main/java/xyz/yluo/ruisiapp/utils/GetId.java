@@ -85,12 +85,24 @@ public class GetId {
     }
 
     public static String getUid(String url){
-        //http://rs.xidian.edu.cn/ucenter/avatar.php?uid=284747&size=small
-        Pattern pattern = Pattern.compile("uid=[0-9]{2,}");
-        Matcher matcher = pattern.matcher(url);
+        if(null==url){
+            return  "";
+        }
         String uid ="";
-        if (matcher.find()) {
-            uid = url.substring(matcher.start()+4,matcher.end());
+        if(url.contains("uid=")){
+            //http://rs.xidian.edu.cn/ucenter/avatar.php?uid=284747&size=small
+            Pattern pattern = Pattern.compile("uid=[0-9]{2,}");
+            Matcher matcher = pattern.matcher(url);
+
+            if (matcher.find()) {
+                uid = url.substring(matcher.start()+4,matcher.end());
+            }
+        }else{
+            Pattern patternNum = Pattern.compile("[0-9]{2,}");
+            Matcher matcherNum = patternNum.matcher(url);
+            if(matcherNum.find()&&url.length()==matcherNum.end()-matcherNum.start()){
+                uid = url;
+            }
         }
         return uid;
     }

@@ -1,8 +1,8 @@
 package xyz.yluo.ruisiapp.View;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -94,7 +94,7 @@ public class ReplyDialog extends DialogFragment{
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
         try {
             dialogListener = (ReplyDialogListener) activity;

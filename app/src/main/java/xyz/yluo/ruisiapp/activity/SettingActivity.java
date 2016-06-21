@@ -12,6 +12,7 @@ import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatDelegate;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -82,6 +83,8 @@ public class SettingActivity extends PreferenceActivity {
             setting_user_tail.setEnabled(b);
             setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail","无小尾巴"));
 
+
+            Log.i("is show tail",""+sharedPreferences.getBoolean("setting_show_tail",false));
             PackageManager manager;
             PackageInfo info = null;
             manager = getActivity().getPackageManager();

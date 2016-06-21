@@ -1,8 +1,8 @@
 package xyz.yluo.ruisiapp.View;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -71,13 +71,15 @@ public class AddFriendDialog extends DialogFragment{
         void OkClick(DialogFragment dialog, String mes);
     }
 
+
+
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            dialogListener = (AddFriendListener) activity;
+            dialogListener = (AddFriendListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(context.toString()
                     + " must implement NoticeDialogListener");
         }
     }
