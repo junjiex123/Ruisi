@@ -1,6 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="一般设置">
+    <PreferenceCategory android:title="浏览设置">
 
         <ListPreference
             android:key="setting_forums_url"
@@ -13,11 +13,27 @@
             android:summary="选择论坛地址"/>
 
         <SwitchPreference
+            android:key="setting_swich_theme"
+            android:defaultValue="true"
+            android:summaryOff="夜间主题"
+            android:summaryOn="日间主题"
+            android:title="切换主题--未完成功能" />
+
+        <SwitchPreference
             android:key="setting_show_zhidin"
             android:defaultValue="false"
             android:title="是否显示置顶帖"
             android:summaryOn="显示置顶帖,注意只对校园网环境有效"
-            android:summaryOff="不显示置顶帖,注意只对校园网环境有效">
+            android:summaryOff="不显示置顶帖">
+        </SwitchPreference>
+
+        <SwitchPreference
+            android:key="setting_show_plain"
+            android:defaultValue="false"
+            android:title="帖子内容文本样式"
+            android:summaryOn="帖子内容为普通文本样式，去除了文字大小颜色等信息"
+            android:summaryOff="帖子内容样式得到保留，保留文字大小颜色等信息">
+
         </SwitchPreference>
 
         <SwitchPreference
@@ -25,41 +41,33 @@
             android:key="setting_show_notify"
             android:defaultValue="false"
             android:title="是否接受回复消息提醒"
-            android:summaryOn="有新的回复时会提醒你"
+            android:summaryOn="有新的回复时会提醒你,目前不建议打开"
             android:summaryOff="有新的回复不提醒">
+        </SwitchPreference>
+
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="小尾巴设置">
+        <SwitchPreference
+            android:key="setting_show_tail"
+            android:defaultValue="false"
+            android:title="是否打开小尾巴"
+            android:summary="不建议添加过长过大的小尾巴">
         </SwitchPreference>
 
         <EditTextPreference
             android:key="setting_user_tail"
-            android:defaultValue="暂不支持，设置了也没用"
+            android:defaultValue="[p=30, 2, left][size=1][color=#ff0000]-----来自[url=http://rs.xidian.edu.cn/forum.php?mod=viewthread&amp;tid=846819]手机睿思[/url][/color][/size][/p]"
             android:capitalize="words"
             android:title="自定义小尾巴"
             android:summary="自定义你的小尾巴"
             android:inputType="textCapWords"
-            android:maxLines="1"
-            android:selectAllOnFocus="true"
-            android:singleLine="true" />
-
+            android:maxLines="3"
+            android:selectAllOnFocus="true" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="主题设置">
-        <SwitchPreference
-            android:key="setting_swich_theme"
-            android:defaultValue="true"
-            android:summary="还没写，点了也没用"
-            android:summaryOff="夜间主题"
-            android:title="切换主题" />
-
-        <SwitchPreference
-            android:key="setting_show_plain"
-            android:defaultValue="false"
-            android:title="是否去掉帖子内容一些样式"
-            android:summaryOn="将删除文章内容样式,例如字体大小,颜色等会被删除"
-            android:summaryOff="删除文章字体颜色大小等其余样式">
-
-        </SwitchPreference>
-
-    </PreferenceCategory>
     <PreferenceCategory android:title="其他信息">
         <Preference
             android:key="about_this"

@@ -92,21 +92,6 @@ public class HomeActivity extends BaseActivity
     }
 
     private void init(){
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewpager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
-
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), titles);
         viewpager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewpager);
@@ -168,14 +153,8 @@ public class HomeActivity extends BaseActivity
             }
         });
 
-        userImageTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                drawer.openDrawer(GravityCompat.START);
-            }
-        });
 
-        usernameTitle.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.toolbar_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 drawer.openDrawer(GravityCompat.START);

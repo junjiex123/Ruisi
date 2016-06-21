@@ -46,7 +46,8 @@ public class FrageForumList extends Fragment {
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         //刷新
-        refreshLayout.setColorSchemeColors(R.color.colorPrimary);
+        refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
+
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {

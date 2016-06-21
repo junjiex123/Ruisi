@@ -53,7 +53,7 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
-
+        refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         try{
             String type =  getIntent().getExtras().getString("type");
             if(type!=null&&type.equals("mytopic")){

@@ -1,10 +1,12 @@
 package xyz.yluo.ruisiapp.View;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,6 +47,8 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
     private final int SMILEY_LDB = 2;
     private final int SMILEY_ACN = 3;
 
+    private boolean isaddtail = false;
+
     int smiley_type  =SMILEY_TB;
     EditText input;
     LinearLayout smiley_container;
@@ -74,13 +78,12 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
         super.onAttachedToWindow();
         View v =  LayoutInflater.from(getContext()).inflate(R.layout.reply_bar,this,false);
         TabLayout tabLayout = (TabLayout) v.findViewById(R.id.mytab);
-
-
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.smiley_tieba));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.smiley_ldb));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.smiley_acn));
 
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        isaddtail =false;
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 Log.i("tab check","id "+tab.getPosition());
@@ -902,16 +905,24 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
         if(len==0){
             input.setError("你还没写内容呢!");
         }else{
+            //小尾巴
+            SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(getContext());
+            if(!isaddtail&&shp.getBoolean("setting_show_tail",false)){
+                String texttail = shp.getString("setting_user_tail","无尾巴").trim();
+                if(!texttail.equals("无尾巴")){
+                    if(!texttail.startsWith("[p")){
+                        texttail = "[p]"+texttail+"[/p]";
+                    }
+                    text+= texttail;
+                }
+            }
+
+            //字数补齐补丁
             if(len<13){
                 int need = 14-len;
                 for(int i=0;i<need;i++){
                     text+=" ";
                 }
-            }
-
-            //我自己独有的 广告位
-            if(PublicData.USER_UID.equals("252553")&&!text.contains("[color=#ff0000]-----来自[url=http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=846819]手机睿思[/url][/color]")){
-                text+="[p=30, 2, left][size=1][color=#ff0000]-----来自[url=http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=846819]手机睿思[/url][/color][/size][/p]";
             }
             listener.btnSendClick(text);
         }

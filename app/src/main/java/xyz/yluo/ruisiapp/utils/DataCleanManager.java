@@ -36,8 +36,8 @@ public class DataCleanManager {
     public static void cleanApplicationData(Context context, String... filepath) {
         cleanInternalCache(context);
         cleanExternalCache(context);
-        cleanDatabases(context);
         cleanSharedPreference(context);
+        cleanDatabases(context);
         cleanFiles(context);
         cleanDatabaseByName(context, SQLiteHelper.DATABASE_NAME);
         for (String filePath : filepath) {

@@ -43,7 +43,7 @@ public class FrageMessage extends Fragment{
         View view = inflater.inflate(R.layout.simple_list_view, container, false);
         recycler_view = (RecyclerView) view.findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
-
+        refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recycler_view.setLayoutManager(layoutManager);
         adapter = new MessageAdapter(getActivity(), datas, new RecyclerViewClickListener() {

@@ -9,6 +9,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.preference.SwitchPreference;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.MenuItem;
@@ -28,7 +29,6 @@ import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 /**
  * Created by free2 on 16-3-6.
  * 设置activity 待完善
- *
  */
 public class SettingActivity extends PreferenceActivity {
 
@@ -51,8 +51,10 @@ public class SettingActivity extends PreferenceActivity {
     public static class MyPreferenceFragment extends PreferenceFragment
             implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-        //小尾巴
+        //小尾巴string
         private EditTextPreference setting_user_tail;
+        private SwitchPreference setting_show_tail;
+
         //论坛地址
         private ListPreference setting_forums_url;
 
@@ -68,12 +70,17 @@ public class SettingActivity extends PreferenceActivity {
 
             setting_user_tail = (EditTextPreference) findPreference("setting_user_tail");
             setting_forums_url = (ListPreference) findPreference("setting_forums_url");
+            setting_show_tail = (SwitchPreference) findPreference("setting_show_tail");
             about_this = findPreference("about_this");
             open_sourse = findPreference("open_sourse");
             clear_cache = findPreference("clean_cache");
 
             sharedPreferences = getPreferenceScreen().getSharedPreferences();
             sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+            boolean b = sharedPreferences.getBoolean("setting_show_tail",false);
+            setting_user_tail.setEnabled(b);
+            setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail","无小尾巴"));
 
             PackageManager manager;
             PackageInfo info = null;
@@ -149,7 +156,7 @@ public class SettingActivity extends PreferenceActivity {
                 public boolean onPreferenceClick(Preference preference) {
                     DataCleanManager.cleanApplicationData(getActivity());
 
-                    Toast.makeText(getActivity(),"还清清理成功!请重新登陆",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"缓存清理成功!请重新登陆",Toast.LENGTH_SHORT).show();
                     clear_cache.setSummary("缓存大小："+DataCleanManager.getTotalCacheSize(getActivity()));
                     return false;
                 }
@@ -175,8 +182,13 @@ public class SettingActivity extends PreferenceActivity {
                     }
 
                     break;
+                case "setting_show_tail":
+                    boolean b = sharedPreferences.getBoolean("setting_show_tail",false);
+                    setting_user_tail.setEnabled(b);
+                    setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail","无小尾巴"));
+                    break;
                 case "setting_user_tail":
-                    setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail", "无小尾巴"));
+                    setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail","无小尾巴"));
                     break;
                 case "setting_show_zhidin":
                     PublicData.ISSHOW_ZHIDIN = sharedPreferences.getBoolean("setting_show_zhidin", false);

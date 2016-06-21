@@ -45,13 +45,9 @@ public class UserDakaActivity extends BaseActivity{
     private Button btn_start_sign;
     protected CircleImageView user_image;
     protected TextView user_name;
-    private LinearLayout have_sign_view;
-    private LinearLayout not_sign_view;
-    protected LinearLayout container;
+    private LinearLayout have_sign_view,not_sign_view,container;
     protected ProgressBar progressBar;
-    private TextView total_sign_day;
-    private TextView total_sign_month;
-    private TextView info_title;
+    private TextView total_sign_day,total_sign_month,info_title;
     protected Toolbar toolbar;
 
     private int spinner__select = 0;

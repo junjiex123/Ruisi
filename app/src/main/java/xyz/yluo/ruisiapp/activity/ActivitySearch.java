@@ -43,7 +43,7 @@ public class ActivitySearch extends BaseActivity {
     private RecyclerView recycler_view;
     private EditText search_input;
     private LinearLayout main_window;
-    private SwipeRefreshLayout refresh_view;
+    private SwipeRefreshLayout refreshLayout;
     private SimpleListAdapter adapter;
 
     private ActionBar actionBar;
@@ -58,8 +58,8 @@ public class ActivitySearch extends BaseActivity {
         recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
         search_input = (EditText) findViewById(R.id.search_input);
         main_window = (LinearLayout) findViewById(R.id.main_window);
-        refresh_view = (SwipeRefreshLayout) findViewById(R.id.refresh_view);
-
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_view);
+        refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         findViewById(R.id.start_search).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,12 +79,12 @@ public class ActivitySearch extends BaseActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        refresh_view.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 datas.clear();
                 if(search_input.getText().toString().equals("")){
-                    refresh_view.setRefreshing(false);
+                    refreshLayout.setRefreshing(false);
                 }else {
                     start_search_click();
                 }
@@ -116,10 +116,10 @@ public class ActivitySearch extends BaseActivity {
 
     private void getData(String str){
 
-        refresh_view.post(new Runnable() {
+        refreshLayout.post(new Runnable() {
             @Override
             public void run() {
-                refresh_view.setRefreshing(true);
+                refreshLayout.setRefreshing(true);
             }
         });
 
@@ -151,10 +151,10 @@ public class ActivitySearch extends BaseActivity {
             @Override
             public void onFinish() {
                 super.onFinish();
-                refresh_view.postDelayed(new Runnable() {
+                refreshLayout.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        refresh_view.setRefreshing(false);
+                        refreshLayout.setRefreshing(false);
                     }
                 },500);
 
@@ -189,7 +189,7 @@ public class ActivitySearch extends BaseActivity {
             recycler_view.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    refresh_view.setRefreshing(false);
+                    refreshLayout.setRefreshing(false);
                 }
             },500);
         }

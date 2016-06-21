@@ -71,7 +71,7 @@ public class ChatActivity extends BaseActivity{
         recycler_view = (RecyclerView) findViewById(R.id.topic_recycler_view);
         myReplyView = (MyReplyView) findViewById(R.id.replay_bar);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.topic_refresh_layout);
-
+        refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         adapter = new ChatListAdapter(this,datas);
