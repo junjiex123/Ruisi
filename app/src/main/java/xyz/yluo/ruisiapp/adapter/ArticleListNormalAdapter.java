@@ -17,7 +17,6 @@ import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ArticleListData;
-import xyz.yluo.ruisiapp.database.MyDbUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -26,7 +25,6 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
-    private MyDbUtils myDbUtils=null;
     private static final int TYPE_NORMAL = 0;
     private static final int TYPE_LOAD_MORE = 1;
     //校外网 手机版
@@ -147,14 +145,12 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         }
 
         void onBtnItemClick() {
-            myDbUtils = new MyDbUtils(activity,false);
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
-            myDbUtils.handleSingle(single_data);
             if(!single_data.isRead()){
                 single_data.setRead(true);
                 notifyItemChanged(getAdapterPosition());
             }
-            SingleArticleActivity.open(activity,single_data.getTitleUrl());
+            SingleArticleActivity.open(activity,single_data.getTitleUrl(),single_data.getTitle(),single_data.getAuthor());
 
         }
     }
@@ -207,14 +203,12 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         }
 
         void onBtnItemClick() {
-            myDbUtils = new MyDbUtils(activity,false);
             ArticleListData single_data =  DataSet.get(getAdapterPosition());
-            myDbUtils.handleSingle(single_data);
             if(!single_data.isRead()){
                 single_data.setRead(true);
                 notifyItemChanged(getAdapterPosition());
             }
-            SingleArticleActivity.open(activity,single_data.getTitleUrl());
+            SingleArticleActivity.open(activity,single_data.getTitleUrl(),single_data.getTitle(),single_data.getAuthor());
         }
     }
 

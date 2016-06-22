@@ -18,12 +18,8 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * Created by free2 on 16-5-20.
  *+ "tid VARCHAR(10) primary key,"
  + "title VARCHAR(50),"
- + "uid VARCHAR(10),"
  + "author VARCHAR(15),"
- + "time DATETIME,"
  + "read_time DATETIME,"
- + "view VARCHAR(10),"
- + "reply VARCHAR(10)"
  */
 public class MyDbUtils {
 
@@ -49,14 +45,19 @@ public class MyDbUtils {
     }
 
     //处理单个点击事件
-    public void handleSingle(ArticleListData data){
+    public void handleSingle(String tid,String title,String author){
 
-        String tid = GetId.getTid(data.getTitleUrl());
+        if(null==title){
+            title = "null";
+        }
+
+        if(null==author){
+            author = "null";
+        }
         if(isRead(tid)){
-            update(tid,data.getTitle(),data.getViewCount(),data.getReplayCount());
+            update(tid,title,author);
         }else{
-            String uid = GetId.getUid(data.getAuthorUrl());
-            insert(tid,data.getTitle(),uid,data.getAuthor(),data.getPostTime(),data.getViewCount(),data.getReplayCount());
+            insert(tid,title,author);
         }
     }
 
@@ -66,7 +67,6 @@ public class MyDbUtils {
         for(ArticleListData data:datas){
             String tid = GetId.getTid(data.getTitleUrl());
             String args[] =new String[]{String.valueOf(tid)};
-
             Cursor result=db.rawQuery(sql,args);
             int count = result.getCount();
             result.close();
@@ -98,28 +98,27 @@ public class MyDbUtils {
         }
     }
     //	//插入操作
-    private void insert(String tid,String title,String uid,String author,String time,String view,String reply)
+    private void insert(String tid,String title,String author)
     {
-        String sql = "INSERT INTO " + TABLE_NAME + " (tid,title,uid,author,time,view,reply,read_time)"
-                + " VALUES(?,?,?,?,?,?,?,?)";
-
+        String sql = "INSERT INTO " + TABLE_NAME + " (tid,title,author,read_time)"
+                + " VALUES(?,?,?,?)";
         String read_time_str = getTime();
-        Object args[]=new Object[]{tid,title,uid,author,time,view,reply,read_time_str};
+        Object args[]=new Object[]{tid,title,author,read_time_str};
         this.db.execSQL(sql, args);
         this.db.close();
         Log.e("mydb",tid+"insert");
     }
 
     //更新操作
-    private void update(String tid,String title,String view,String reply)
+    private void update(String tid,String title,String author)
     {
         String read_time_str = getTime();
-        String sql = "UPDATE " + TABLE_NAME + " SET title=?,view =?,reply =?,read_time=? WHERE tid=?";
-        Object args[]=new Object[]{title,view,reply,read_time_str,tid};
+        String sql = "UPDATE " + TABLE_NAME + " SET title=?,read_time=? WHERE tid=?";
+        Object args[]=new Object[]{title,read_time_str,tid};
         this.db.execSQL(sql, args);
         this.db.close();
 
-        Log.e("mydb",tid+"update");
+        Log.e("mydb",tid+"update"+author);
     }
 
     //删除操作,删除
@@ -136,8 +135,7 @@ public class MyDbUtils {
         Cursor result = this.db.rawQuery(sql, null); 	//执行查询语句
         for(result.moveToFirst();!result.isAfterLast();result.moveToNext()	)	//采用循环的方式查询数据
          {
-             System.out.println(result.getString(0)+","+result.getString(1)+","+result.getString(2)+","+result.getString(3)+","
-                     +result.getString(4)+","+result.getString(5)+","+result.getString(6)+","+result.getString(7));
+             Log.i("show database",result.getString(0)+","+result.getString(1)+","+result.getString(2)+","+result.getString(3));
         }
         result.close();
         this.db.close();
@@ -152,14 +150,12 @@ public class MyDbUtils {
             /**
              * tid VARCHAR(10) primary key,"
              + "title VARCHAR(50),"
-             + "uid VARCHAR(10),"
              + "author VARCHAR(15),"
-             + "time DATETIME,"
              + "read_time DATETIME,"
-             + "view VARCHAR(10),"
-             + "reply VARCHAR(10)"
              */
-            datas.add(new ArticleListData(false,result.getString(1),result.getString(0),result.getString(3),result.getString(7)));
+
+            //boolean haveImage,String title, String titleUrl, String author, String replayCount
+            datas.add(new ArticleListData(false,result.getString(1),result.getString(0),result.getString(2),"null"));
         }
         result.close();
         this.db.close();

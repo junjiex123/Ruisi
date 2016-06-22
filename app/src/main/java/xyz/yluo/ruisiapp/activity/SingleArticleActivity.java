@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +41,7 @@ import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
 import xyz.yluo.ruisiapp.data.LoadMoreType;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
 import xyz.yluo.ruisiapp.data.SingleType;
+import xyz.yluo.ruisiapp.database.MyDbUtils;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
@@ -65,7 +67,6 @@ public class SingleArticleActivity extends BaseActivity
     private ActionBar actionBar;
     private ProgressDialog progress;
 
-
     //上一次回复时间
     private long replyTime = 0;
     //当前第几页
@@ -80,16 +81,24 @@ public class SingleArticleActivity extends BaseActivity
     private SingleArticleAdapter mRecyleAdapter;
     //存储数据 需要填充的列表
     private List<SingleArticleData> mydatalist = new ArrayList<>();
-    private String tid = "";
     private boolean isSetToolBar = false;
     //是否调到指定页数and楼层???
-    private boolean isRedirect  = false;
-    private String Title = "";
+    private boolean isRedirect,isSaveToDataBase  = false;
+    private String Title,Author,Tid= "";
 
-    public static void open(Context context, String url) {
+    public static void open(Context context, String url,String title,String author) {
         Intent intent = new Intent(context, SingleArticleActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("url",url);
+
+        Log.i("open article",title+url+author);
+
+        if(title!=null){
+            intent.putExtra("title",title);
+        }
+        if(author!=null){
+            intent.putExtra("author",author);
+        }
         context.startActivity(intent);
     }
 
@@ -151,7 +160,14 @@ public class SingleArticleActivity extends BaseActivity
 
         try {
             String url =  getIntent().getExtras().getString("url");
-            tid = GetId.getTid(url);
+            if(getIntent().getExtras().containsKey("title")){
+                Title = getIntent().getExtras().getString("title");
+            }
+            if(getIntent().getExtras().containsKey("author")){
+                Author = getIntent().getExtras().getString("author");
+            }
+            Tid = GetId.getTid(url);
+
             if(url!=null&&url.contains("redirect")){
                 if(!PublicData.IS_SCHOOL_NET){
                     url = url+"&mobile=2";
@@ -235,9 +251,9 @@ public class SingleArticleActivity extends BaseActivity
         getArticleData(1);
     }
 
-    //文章一页的html 根据页数 tid
+    //文章一页的html 根据页数 Tid
     private void getArticleData(final int page) {
-        String url = UrlUtils.getSingleArticleUrl(tid,page,false);
+        String url = UrlUtils.getSingleArticleUrl(Tid,page,false);
         if(isRevere){
             url += "&ordertype=1";
         }
@@ -272,10 +288,13 @@ public class SingleArticleActivity extends BaseActivity
                 int len = array.length;
                 if(len>=5){
                     toolBarTitle = array[len-4].trim();
-                    for(int lnea=0;lnea<len-4;lnea++){
-                        Title = Title+array[lnea]+"-";
-                        if(lnea==len-5){
-                            Title = Title.substring(0,Title.length()-2);
+                    if("".equals(Title)){
+                        Title = "";
+                        for(int lnea=0;lnea<len-4;lnea++){
+                            Title = Title+array[lnea]+"-";
+                            if(lnea==len-5){
+                                Title = Title.substring(0,Title.length()-2);
+                            }
                         }
                     }
                 }
@@ -388,6 +407,14 @@ public class SingleArticleActivity extends BaseActivity
                 actionBar.setTitle(toolBarTitle);
                 isSetToolBar = true;
             }
+
+            if(!isSaveToDataBase){
+                //插入数据库
+                Log.i("insert ","tid:"+Tid+"title:"+Title+"author:"+Author);
+                MyDbUtils myDbUtils = new MyDbUtils(getApplicationContext(),false);
+                myDbUtils.handleSingle(Tid,Title,Author);//String Tid,String title,String author
+                isSaveToDataBase = true;
+            }
             int add = tepdata.size();
             if(add>0){
                 if(add%10!=0){
@@ -421,10 +448,11 @@ public class SingleArticleActivity extends BaseActivity
                 public void run() {
                     refreshLayout.setRefreshing(false);
                 }
-            },500);
+            },200);
 
         }
     }
+
 
     @Override
     public void recyclerViewListClicked(View v, int position) {
@@ -450,7 +478,7 @@ public class SingleArticleActivity extends BaseActivity
     //收藏 任务
 
     private void starTask(final View v){
-        final String url = UrlUtils.getStarUrl(tid);
+        final String url = UrlUtils.getStarUrl(Tid);
         Map<String,String> params = new HashMap<>();
         params.put("favoritesubmit","true");
         params.put("formhash", PublicData.FORMHASH);
@@ -598,7 +626,7 @@ public class SingleArticleActivity extends BaseActivity
         int id = item.getItemId();
         switch (id){
             case R.id.menu_broswer:
-                String url = UrlUtils.getSingleArticleUrl(tid, page_now,false);
+                String url = UrlUtils.getSingleArticleUrl(Tid, page_now,false);
                 RequestOpenBrowser.openBroswer(this,url);
                 break;
             case R.id.menu_refresh:
