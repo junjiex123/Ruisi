@@ -102,7 +102,7 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
             title.setText(single_data.getTitle());
             time.setText(single_data.getTime());
             String imageUrl = single_data.getauthorImage();
-            Picasso.with(activity).load(imageUrl).resize(40,40).centerCrop().placeholder(R.drawable.image_placeholder).into(article_user_image);
+            Picasso.with(activity).load(imageUrl).placeholder(R.drawable.image_placeholder).into(article_user_image);
             reply_content.setText(single_data.getcontent());
             if(single_data.isRead()){
                 isRead.setVisibility(View.GONE);

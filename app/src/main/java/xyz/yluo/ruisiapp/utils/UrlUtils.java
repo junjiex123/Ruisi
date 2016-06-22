@@ -51,19 +51,28 @@ public class UrlUtils {
         return url;
     }
 
-    public static String getAvaterurl(String urlUid, boolean ismiddle){
+    public static String getAvaterurls(String urlUid){
         String uid = urlUid;
         if(urlUid.contains("uid")){
            uid =  GetId.getUid(urlUid);
         }
-        String url = PublicData.getBaseUrl() +"ucenter/avatar.php?uid="+uid;
-        if(ismiddle){
-            url+="&size=middle";
-        }else {
-            url+="&size=small";
-        }
+        return PublicData.getBaseUrl() +"ucenter/avatar.php?uid="+uid+"&size=small";
+    }
 
-        return url;
+    public static String getAvaterurlm(String urlUid){
+        String uid = urlUid;
+        if(urlUid.contains("uid")){
+            uid =  GetId.getUid(urlUid);
+        }
+        return PublicData.getBaseUrl() +"ucenter/avatar.php?uid="+uid+"&size=middle";
+    }
+
+    public static String getAvaterurlb(String urlUid){
+        String uid = urlUid;
+        if(urlUid.contains("uid")){
+            uid =  GetId.getUid(urlUid);
+        }
+        return PublicData.getBaseUrl() +"ucenter/avatar.php?uid="+uid+"&size=big";
     }
 
     public static String getSignUrl(){

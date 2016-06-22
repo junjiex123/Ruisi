@@ -22,6 +22,7 @@ import xyz.yluo.ruisiapp.data.LoadMoreType;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
 import xyz.yluo.ruisiapp.data.SingleType;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
+import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-7.
@@ -165,7 +166,8 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             SingleArticleData single = datalist.get(position);
             article_title.setText(single.getTitle());
             article_username.setText(single.getUsername());
-            Picasso.with(activity).load(single.getImg()).resize(44,44).centerCrop().placeholder(R.drawable.image_placeholder).into(article_user_image);
+            String img_url = UrlUtils.getAvaterurlm(single.getImg());
+            Picasso.with(activity).load(img_url).placeholder(R.drawable.image_placeholder).into(article_user_image);
             String post_time = "发表于:"+single.getPostTime();
             article_post_time.setText(post_time);
             htmlTextView.mySetText(activity,single.getCotent());
@@ -217,8 +219,8 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             bt_lable_lz.setVisibility(islz?View.VISIBLE:View.GONE);
             boolean isreply = single.getReplyUrlTitle().contains("action=reply");
             btn_reply_2.setVisibility(isreply?View.VISIBLE:View.GONE);
-
-            Picasso.with(activity).load(single.getImg()).resize(44,44).centerCrop().placeholder(R.drawable.image_placeholder).into(replay_image);
+            String img_url = UrlUtils.getAvaterurlm(single.getImg());
+            Picasso.with(activity).load(img_url).placeholder(R.drawable.image_placeholder).into(replay_image);
             String timeText =  "发表于:"+single.getPostTime();
             replay_time.setText(timeText);
             replay_index.setText(single.getIndex());

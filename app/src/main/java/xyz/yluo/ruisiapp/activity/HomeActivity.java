@@ -29,14 +29,14 @@ import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.adapter.ViewPagerAdapter;
-import xyz.yluo.ruisiapp.fragment.FrageSimpleArticle;
+import xyz.yluo.ruisiapp.fragment.FrageHotNew;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-17.
  * 这是首页 管理4个fragment
  * 1.板块列表{@link HomeActivity}
- * 2.新帖{@link FrageSimpleArticle}
+ * 2.新帖{@link FrageHotNew}
  * 3.消息{@link xyz.yluo.ruisiapp.fragment.FrageMessage}
  * 4.好友{@link xyz.yluo.ruisiapp.fragment.FrageFriends}
  */
@@ -167,7 +167,7 @@ public class HomeActivity extends BaseActivity
             @Override
             public void onClick(final View v) {
                 if (PublicData.ISLOGIN) {
-                    String url = UrlUtils.getAvaterurl(PublicData.USER_UID,true);
+                    String url = UrlUtils.getAvaterurlb(PublicData.USER_UID);
                     UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, PublicData.USER_NAME, userImage,url);
                 } else {
                     Intent i = new Intent(getApplicationContext(), LoginActivity.class);
@@ -238,9 +238,9 @@ public class HomeActivity extends BaseActivity
                 userGrade.setText(PublicData.USER_GRADE);
             }
             userName.setText(PublicData.USER_NAME);
-            String url = UrlUtils.getAvaterurl(PublicData.USER_UID,true);
-            Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).resize(80,80).into(userImage);
-            Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).resize(32,32).into(userImageTitle);
+            String url = UrlUtils.getAvaterurlm(PublicData.USER_UID);
+            Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
+            Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImageTitle);
         } else {
             userImage.setImageResource(R.drawable.image_placeholder);
             userImageTitle.setImageResource(R.drawable.image_placeholder);

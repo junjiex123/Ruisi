@@ -131,8 +131,8 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
             post_time.setText(postTime);
             view_count.setText(single.getViewCount());
 
-            String imageUrl = UrlUtils.getAvaterurl(single.getAuthorUrl(),false);
-            Picasso.with(activity).load(imageUrl).resize(36,36).centerCrop().placeholder(R.drawable.image_placeholder).into(author_img);
+            String imageUrl = UrlUtils.getAvaterurlm(single.getAuthorUrl());
+            Picasso.with(activity).load(imageUrl).placeholder(R.drawable.image_placeholder).into(author_img);
             article_title.setTextColor(single.isRead()?0xff888888:0xff000000);
             article_title.setText(single.getTitle());
             author_name.setText(single.getAuthor());
@@ -140,7 +140,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         }
 
         void onBtnAvatarClick() {
-            String imageUrl = UrlUtils.getAvaterurl(DataSet.get(getAdapterPosition()).getAuthorUrl(),false);
+            String imageUrl = UrlUtils.getAvaterurlb(DataSet.get(getAdapterPosition()).getAuthorUrl());
             UserDetailActivity.openWithTransitionAnimation(activity, DataSet.get(getAdapterPosition()).getAuthor(), author_img,imageUrl);
         }
 

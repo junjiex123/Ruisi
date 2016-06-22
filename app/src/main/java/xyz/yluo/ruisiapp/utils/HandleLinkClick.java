@@ -23,7 +23,7 @@ public class HandleLinkClick {
         }else if (url.contains("forum.php?mod=viewthread&tid=")) { // 帖子
             SingleArticleActivity.open(context,url,"","");
         } else if (url.contains("home.php?mod=space&uid=")) { // 用户
-            String imageUrl = UrlUtils.getAvaterurl(url,true);
+            String imageUrl = UrlUtils.getAvaterurlb(url);
             UserDetailActivity.open(context,"name",imageUrl);
         } else if(url.contains("forum.php?mod=post&action=newthread")){ //发帖链接
             context.startActivity(new Intent(context,NewArticleActivity_2.class));

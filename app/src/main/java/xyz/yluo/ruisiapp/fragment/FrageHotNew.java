@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,41 +17,45 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ArticleListNormalAdapter;
+import xyz.yluo.ruisiapp.adapter.HotNewListAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
+import xyz.yluo.ruisiapp.data.GalleryData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.httpUtil.SyncHttpClient;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 
 /**
  * Created by free2 on 16-3-19.
- * 简单的fragment 首页第二页
+ * 简单的fragment 首页第二页 展示最新的帖子等
  */
-public class FrageSimpleArticle extends Fragment implements LoadMoreListener.OnLoadMoreListener{
+public class FrageHotNew extends Fragment implements LoadMoreListener.OnLoadMoreListener{
 
     protected RecyclerView recycler_view;
     protected SwipeRefreshLayout refreshLayout;
-
+    private List<GalleryData> galleryDatas= new ArrayList<>();
     private List<ArticleListData> mydataset =new ArrayList<>();
-    private ArticleListNormalAdapter adapter;
-
+    private HotNewListAdapter adapter;
     private boolean isEnableLoadMore = false;
     private int CurrentPage = 1;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.simple_list_view, container, false);
+        View view = inflater.inflate(R.layout.frage_new_topic, container, false);
         recycler_view = (RecyclerView) view.findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recycler_view.setLayoutManager(mLayoutManager);
-        adapter = new ArticleListNormalAdapter(getActivity(), mydataset,3);
+        adapter = new HotNewListAdapter(getActivity(),galleryDatas, mydataset);
         recycler_view.setAdapter(adapter);
         recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 10));
 
@@ -61,7 +66,6 @@ public class FrageSimpleArticle extends Fragment implements LoadMoreListener.OnL
             }
         });
 
-
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -70,6 +74,7 @@ public class FrageSimpleArticle extends Fragment implements LoadMoreListener.OnL
         });
 
         getData();
+
         return view;
     }
 
@@ -77,6 +82,7 @@ public class FrageSimpleArticle extends Fragment implements LoadMoreListener.OnL
         CurrentPage= 1 ;
         isEnableLoadMore = false;
         getData();
+
     }
     @Override
     public void onLoadMore() {
@@ -87,7 +93,40 @@ public class FrageSimpleArticle extends Fragment implements LoadMoreListener.OnL
         }
     }
 
+    private class getGalleryTask extends AsyncTask<Void,Void,List<GalleryData>>{
+
+        @Override
+        protected List<GalleryData> doInBackground(Void... voids) {
+            galleryDatas.clear();
+            Log.i("gallery","=====gallery=====");
+            String url = "http://rs.xidian.edu.cn/forum.php";
+            try {
+                Document doc = Jsoup.connect(url).userAgent(SyncHttpClient.DEFAULT_USER_AGENT).get();
+                Elements listgallerys =  doc.select("#wp").select("ul.slideshow");
+                for(Element e:listgallerys.select("li")){
+                    String title = e.text();
+                    String titleurl = e.select("a").attr("href");
+                    String imgurl = e.select("img").attr("src");
+                    Log.i("gallery",title+titleurl+imgurl);
+                    galleryDatas.add(new GalleryData(imgurl,title,titleurl));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return  null;
+        }
+
+        @Override
+        protected void onPostExecute(List<GalleryData> galleryDatas) {
+            super.onPostExecute(galleryDatas);
+            adapter.notifyItemChanged(0);
+        }
+    }
+
     private void getData(){
+        if(PublicData.IS_SCHOOL_NET&&galleryDatas.size()==0){
+            new getGalleryTask().execute();
+        }
         String url = "forum.php?mod=guide&view=new&page="+CurrentPage+"&mobile=2";
         HttpUtil.get(getActivity(), url, new ResponseHandler() {
             @Override
