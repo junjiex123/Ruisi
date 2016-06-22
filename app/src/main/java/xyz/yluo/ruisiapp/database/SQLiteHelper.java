@@ -13,7 +13,7 @@ public class SQLiteHelper extends SQLiteOpenHelper{
 
     public static final String DATABASE_NAME="xidianrs.db";
     //更改版本后数据库将重新创建
-    private static final int  DATABASE_VERSION=1;
+    private static final int  DATABASE_VERSION=2;
     private static final String TABLE_NAME="rs_article_list";
 
 
@@ -33,12 +33,8 @@ public class SQLiteHelper extends SQLiteOpenHelper{
         String sql = "CREATE TABLE " + TABLE_NAME + "("
                 + "tid VARCHAR(10) primary key,"
                 + "title VARCHAR(50),"
-                + "uid VARCHAR(10),"
                 + "author VARCHAR(15),"
-                + "time DATETIME,"
-                + "read_time DATETIME,"
-                + "view VARCHAR(10),"
-                + "reply VARCHAR(10)"
+                + "read_time DATETIME"
                 + ")";
         db.execSQL(sql);
         Log.e("create","数据库创建成功");

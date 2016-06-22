@@ -142,7 +142,7 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
             for(ArticleListData data:myDbUtils.getHistory(30)){
 
                 //Log.i("history",data.getTitleUrl());
-                datas.add(new SimpleListData(data.getTitle(),data.getReplayCount(),"tid="+data.getTitleUrl()));
+                datas.add(new SimpleListData(data.getTitle(),data.getAuthor(),"tid="+data.getTitleUrl()));
             }
             datas.add(new SimpleListData("暂无更多","",""));
             adapter.notifyDataSetChanged();

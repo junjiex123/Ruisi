@@ -19,6 +19,7 @@ import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.checknet.CheckNet;
 import xyz.yluo.ruisiapp.checknet.CheckNetResponse;
+import xyz.yluo.ruisiapp.database.MyDbUtils;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
@@ -82,8 +83,8 @@ public class LaunchActivity extends BaseActivity{
             }
         });
 
-//        MyDbUtils myDbUtils = new MyDbUtils(this,true);
-//        myDbUtils.getHistory(20);
+        MyDbUtils myDbUtils = new MyDbUtils(this,true);
+        myDbUtils.showDatabase();
 
     }
 

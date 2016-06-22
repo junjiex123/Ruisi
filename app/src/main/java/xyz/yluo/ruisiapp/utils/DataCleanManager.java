@@ -47,8 +47,15 @@ public class DataCleanManager {
         long size = 0;
         try {
             File[] fileList = file.listFiles();
+
+            if(fileList==null){
+                return 0;
+            }
             for (File aFileList : fileList) {
                 // 如果下面还有文件
+                if(aFileList==null){
+                    continue;
+                }
                 if (aFileList.isDirectory()) {
                     size = size + getFolderSize(aFileList);
                 } else {

@@ -906,9 +906,7 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
             if(!isaddtail&&shp.getBoolean("setting_show_tail",false)){
                 String texttail = shp.getString("setting_user_tail","无尾巴").trim();
                 if(!texttail.equals("无尾巴")){
-                    if(!texttail.startsWith("[p")){
-                        texttail = "[p]"+texttail+"[/p]";
-                    }
+                    texttail = "     "+texttail;
                     text+= texttail;
                 }
             }

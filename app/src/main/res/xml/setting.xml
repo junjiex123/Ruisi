@@ -59,7 +59,7 @@
 
         <EditTextPreference
             android:key="setting_user_tail"
-            android:defaultValue="[p=30, 2, left][size=1][color=#ff0000]-----来自[url=http://rs.xidian.edu.cn/forum.php?mod=viewthread&amp;tid=846819]手机睿思[/url][/color][/size][/p]"
+            android:defaultValue="[size=1][color=#ff0000]-----来自[url=http://rs.xidian.edu.cn/forum.php?mod=viewthread&amp;tid=846819]手机睿思[/url][/color][/size]"
             android:capitalize="words"
             android:title="自定义小尾巴"
             android:summary="自定义你的小尾巴"
