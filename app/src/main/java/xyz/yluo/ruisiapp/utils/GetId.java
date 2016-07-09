@@ -21,6 +21,18 @@ public class GetId {
         return tid;
     }
 
+    //searchid=1340
+    public static int getSearchId(String url){
+        Pattern pattern = Pattern.compile("searchid=[0-9]{3,}");
+        Matcher matcher = pattern.matcher(url);
+        String id ="0";
+        if (matcher.find()) {
+            id = url.substring(matcher.start()+9,matcher.end());
+        }
+        return Integer.parseInt(id);
+    }
+
+
     public static String getTouid(String url){
         //touid="+userUid
         Pattern pattern = Pattern.compile("touid=[0-9]{3,}");

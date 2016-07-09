@@ -1,48 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView android:background="@android:color/white"
-    android:layout_margin="6dp"
+<LinearLayout
+    android:gravity="center_vertical|center_horizontal"
+    android:background="@color/colorPrimary"
     android:layout_width="match_parent"
-    android:layout_height="46dp"
+    android:layout_height="52dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:background="@android:color/white"
+        android:layout_margin="4dp"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:gravity="start|center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="8dp"
-        android:paddingEnd="@dimen/dimen_8">
+        android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <EditText
-            android:hint="搜索"
-            android:id="@+id/search_input"
-            android:layout_width="0dp"
-            android:layout_height="38dp"
-            android:layout_gravity="start|center_vertical"
-            android:paddingEnd="8dp"
-            android:paddingStart="4dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
+        <LinearLayout
+            android:background="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:gravity="start|center_vertical"
-            android:paddingBottom="4dp"
-            android:paddingTop="4dp"
-            android:singleLine="true"
-            android:textSize="16sp"
-            android:imeOptions="actionSearch">
-        </EditText>
+            android:orientation="horizontal">
+            <ImageView
+                android:background="?attr/selectableItemBackground"
+                android:padding="11dp"
+                android:clickable="true"
+                android:id="@+id/btn_back"
+                android:src="@drawable/ic_arraw_back_gray"
+                android:layout_width="46dp"
+                android:layout_height="46dp" />
+            <EditText
+                android:focusable="true"
+                android:hint="搜索"
+                android:id="@+id/search_input"
+                android:layout_width="0dp"
+                android:layout_height="38dp"
+                android:layout_gravity="start|center_vertical"
+                android:paddingEnd="8dp"
+                android:paddingStart="4dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:gravity="start|center_vertical"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:singleLine="true"
+                android:textSize="16sp"
+                android:imeOptions="actionSearch">
+            </EditText>
 
-        <ImageView
-            android:background="?attr/selectableItemBackground"
-            android:padding="11dp"
-            android:clickable="true"
-            android:id="@+id/start_search"
-            android:src="@drawable/ic_search_gray_24dp"
-            android:layout_width="46dp"
-            android:layout_height="46dp" />
+            <ImageView
+                android:background="?attr/selectableItemBackground"
+                android:padding="11dp"
+                android:clickable="true"
+                android:id="@+id/start_search"
+                android:src="@drawable/ic_search_gray_24dp"
+                android:layout_width="46dp"
+                android:layout_height="46dp" />
 
-    </LinearLayout>
+        </LinearLayout>
 
-</android.support.v7.widget.CardView>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

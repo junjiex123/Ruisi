@@ -29,8 +29,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
@@ -49,6 +47,7 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 import xyz.yluo.ruisiapp.listener.ReplyBarListner;
 import xyz.yluo.ruisiapp.utils.GetId;
+import xyz.yluo.ruisiapp.utils.GetNumber;
 import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
@@ -326,20 +325,14 @@ public class SingleArticleActivity extends BaseActivity
             }
             //获取总页数 和当前页数
             if(doc.select(".pg").text().length()>0){
-                page_now = Integer.parseInt(doc.select(".pg").select("strong").text());
-                Pattern pattern = Pattern.compile("[0-9]+");
-                String s = doc.select(".pg").select("span").attr("title");
-                Matcher matcher = pattern.matcher(s);
-                if (matcher.find()) {
-                    String temps = s.substring(matcher.start(),matcher.end());
-                    try {
-                        int  n = Integer.parseInt(temps);
-                        if(n>0&&n> page_sum){
-                            page_sum = n;
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
+                if(doc.select(".pg").text().length()>0){
+                    page_now = GetNumber.getNumber(doc.select(".pg").select("strong").text());
+                    int n = GetNumber.getNumber(doc.select(".pg").select("span").attr("title"));
+                    if(n>0&&n> page_sum){
+                        page_sum = n;
                     }
+
+                    Log.i("page info",page_now+" "+page_sum);
                 }
             }
             Elements elements = doc.select(".postlist");
