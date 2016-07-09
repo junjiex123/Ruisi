@@ -26,6 +26,18 @@ public class AddFriendDialog extends DialogFragment{
     private String userImage = "";
     private AddFriendListener dialogListener;
 
+
+
+    public static AddFriendDialog newInstance(AddFriendListener var) {
+        AddFriendDialog frag = new AddFriendDialog();
+        frag.setListner(var);
+        return frag;
+    }
+
+
+    private void setListner(AddFriendListener listener){
+        this.dialogListener = listener;
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

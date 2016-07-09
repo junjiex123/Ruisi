@@ -31,24 +31,24 @@
 
         <activity
             android:name=".activity.ArticleList"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
 
         <activity
             android:name=".activity.ArticleListImage"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <activity
             android:name=".activity.AboutActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBarTransStatusBar">
         </activity>
 
         <activity
             android:name=".activity.SingleArticleActivity"
             android:hardwareAccelerated="true"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan">
         </activity>
 
@@ -58,7 +58,7 @@
 
         <activity
             android:name=".activity.UserDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/AppTheme.NoActionBarTransStatusBar"
             android:label="用户信息">
         </activity>
 
@@ -76,7 +76,7 @@
         <activity
             android:name=".activity.ChatActivity"
             android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <activity android:name=".activity.NewArticleActivity_2"

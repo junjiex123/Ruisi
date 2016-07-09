@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -72,7 +73,8 @@ public class ChatActivity extends BaseActivity{
         myReplyView = (MyReplyView) findViewById(R.id.replay_bar);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.topic_refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         adapter = new ChatListAdapter(this,datas);
         recycler_view.setLayoutManager(layoutManager);

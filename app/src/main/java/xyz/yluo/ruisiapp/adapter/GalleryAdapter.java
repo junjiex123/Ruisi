@@ -15,7 +15,6 @@ import java.util.List;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
-import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.data.GalleryData;
 
 /**

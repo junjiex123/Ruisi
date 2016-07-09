@@ -6,21 +6,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
-import java.util.Objects;
 
-import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.activity.ArticleListImage;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.data.GalleryData;
-import xyz.yluo.ruisiapp.data.ImageArticleListData;
 
 /**
  * Created by free2 on 16-3-31.

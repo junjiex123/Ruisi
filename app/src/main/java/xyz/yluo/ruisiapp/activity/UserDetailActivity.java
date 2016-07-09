@@ -264,7 +264,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
                             }
                         }).show();
             }else{
-                AddFriendDialog dialogFragment = new AddFriendDialog();
+                AddFriendDialog dialogFragment = AddFriendDialog.newInstance(this);
                 dialogFragment.setUserName(username);
                 dialogFragment.setUserImage(imageUrl);
                 dialogFragment.show(getFragmentManager(),"add");

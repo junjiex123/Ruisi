@@ -2,7 +2,6 @@ package xyz.yluo.ruisiapp.View;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -27,6 +26,17 @@ public class ReplyDialog extends DialogFragment{
     private String url = "";
     private String reply_ref_text;
     private ReplyDialogListener dialogListener;
+
+    public static ReplyDialog newInstance(ReplyDialogListener var) {
+        ReplyDialog frag = new ReplyDialog();
+        frag.setDialogListener(var);
+        return frag;
+    }
+
+
+    public void setDialogListener(ReplyDialogListener dialogListener) {
+        this.dialogListener = dialogListener;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,6 +64,10 @@ public class ReplyDialog extends DialogFragment{
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(dialogListener==null){
+                    return;
+                }
+
                 if(checkTime()){
                     String text = content.getText().toString();
                     int len = 0;
@@ -93,16 +107,7 @@ public class ReplyDialog extends DialogFragment{
         void onDialogSendClick(DialogFragment dialog, String url,String text);
     }
 
-    @Override
-    public void onAttach(Context activity) {
-        super.onAttach(activity);
-        try {
-            dialogListener = (ReplyDialogListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement NoticeDialogListener");
-        }
-    }
+
 
     public void setTitle(String title) {
         this.title = title;

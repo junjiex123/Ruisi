@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -110,7 +111,7 @@ public class SingleArticleActivity extends BaseActivity
         mRecyclerView = (RecyclerView) findViewById(R.id.topic_recycler_view);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.topic_refresh_layout);
         MyReplyView = (xyz.yluo.ruisiapp.View.MyReplyView) findViewById(R.id.replay_bar);
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         refreshLayout.post(new Runnable() {
             @Override
@@ -118,6 +119,8 @@ public class SingleArticleActivity extends BaseActivity
                 refreshLayout.setRefreshing(true);
             }
         });
+
+        setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -528,7 +531,7 @@ public class SingleArticleActivity extends BaseActivity
 
     //回复层主
     private void ReplyCen(String url,String index,String name,String ref){
-        ReplyDialog fragment = new ReplyDialog();
+        ReplyDialog fragment = ReplyDialog.newInstance(this);
         fragment.setTitle("回复:"+index+" "+name);
         fragment.setUrl(url);
         fragment.setLasttime(replyTime);

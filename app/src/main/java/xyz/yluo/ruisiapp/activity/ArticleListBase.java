@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -40,11 +41,13 @@ public abstract class ArticleListBase extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         btn_refresh = (FloatingActionButton) findViewById(R.id.btn_refresh);
         mRecyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.main_refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
+
+        setSupportActionBar(toolbar);
         btn_refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

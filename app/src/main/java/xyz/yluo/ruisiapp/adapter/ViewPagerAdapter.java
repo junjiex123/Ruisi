@@ -6,8 +6,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import xyz.yluo.ruisiapp.fragment.FrageForumList;
 import xyz.yluo.ruisiapp.fragment.FrageFriends;
-import xyz.yluo.ruisiapp.fragment.FrageMessage;
 import xyz.yluo.ruisiapp.fragment.FrageHotNew;
+import xyz.yluo.ruisiapp.fragment.FrageMessage;
 
 /**
  * Created by free2 on 16-5-3.
