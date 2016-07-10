@@ -92,7 +92,6 @@ public class CheckMessageService extends Service {
         isRunning = false;
         System.out.println("service >>>destroy");
     }
-
     //start service时执行
     //可以start多次
     //通过intent 可以传入数据

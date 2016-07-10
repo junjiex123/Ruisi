@@ -143,6 +143,7 @@ public class MyHtmlTextView extends TextView{
     }
 
 
+    //连接点击事件
     private void replaceLinkSpans(final SpannableStringBuilder strBuilder, final URLSpan urlSpan) {
         int start = strBuilder.getSpanStart(urlSpan);
         int end = strBuilder.getSpanEnd(urlSpan);
@@ -153,6 +154,7 @@ public class MyHtmlTextView extends TextView{
             @Override
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
+                //取消连接下划线
                 ds.setUnderlineText(false);
                 //ds.setColor(0xff529ECC);
             }
