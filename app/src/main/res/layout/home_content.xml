@@ -44,7 +44,7 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp" />
                     <View
-                        android:background="@drawable/bage"
+                        android:background="@drawable/badge"
                         android:layout_gravity="end|top"
                         android:layout_width="8dp"
                         android:layout_height="8dp"/>

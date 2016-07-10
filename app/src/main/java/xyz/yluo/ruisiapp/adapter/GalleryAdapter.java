@@ -19,7 +19,7 @@ import xyz.yluo.ruisiapp.data.GalleryData;
 
 /**
  * Created by free2 on 16-3-31.
- *
+ * 首页gallery 的adaoter 支持无限滚动，小圆点，暂不支持自动滚动
  */
 public class GalleryAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private List<GalleryData> DataSet;
@@ -32,7 +32,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemCount() {
-        return DataSet.size();
+        return Integer.MAX_VALUE;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public void onBindViewHolder(BaseViewHolder holder, int position) {
-        holder.setData(position);
+        holder.setData(position%DataSet.size());
     }
 
 
@@ -74,7 +74,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             Picasso.with(activity).load(imgUrl).placeholder(R.drawable.image_placeholder).into(img_card_image);
         }
         protected void item_click() {
-            GalleryData single_data =  DataSet.get(getAdapterPosition());
+            GalleryData single_data =  DataSet.get(getAdapterPosition()%DataSet.size());
             SingleArticleActivity.open(activity,single_data.getTitleUrl(),"","");
         }
     }

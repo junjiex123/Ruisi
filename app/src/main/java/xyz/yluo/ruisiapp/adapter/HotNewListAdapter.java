@@ -14,17 +14,18 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.data.GalleryData;
+import xyz.yluo.ruisiapp.listener.RecyclerPageChangeListener;
 
 /**
  * Created by free2 on 16-3-31.
- *
+ * 支持 gallery
  */
 public class HotNewListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private List<GalleryData> DataSet_gallery;
     private List<ArticleListData> DataSet;
     private GalleryAdapter galleryAdapter;
     private Activity activity;
-    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_HEADER_GALLERY = 0;
     private static final int TYPE_LOAD_MORE = 1;
     private static final int TYPE_ARTICLE_LIST = 3;
 
@@ -55,7 +56,7 @@ public class HotNewListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     @Override
     public int getItemViewType(int position) {
         if(DataSet_gallery!=null&&position==0){
-            return TYPE_HEADER;
+            return TYPE_HEADER_GALLERY;
         }else if (position>0&& position == getItemCount() - 1) {
             return TYPE_LOAD_MORE;
         }else{
@@ -70,8 +71,8 @@ public class HotNewListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 return new NormalViewHolderMe(LayoutInflater.from(parent.getContext()).inflate(R.layout.main_list_item_me, parent, false));
             case TYPE_LOAD_MORE:
                 return new LoadMoreViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.load_more_item, parent, false));
-            default: // TYPE_HEADER
-                return new GalleryViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.new_hot_header_item, parent, false));
+            default: // TYPE_HEADER_GALLERY
+                return new GalleryViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.new_hot_gallery_item, parent, false));
         }
     }
 
@@ -80,22 +81,30 @@ public class HotNewListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         holder.setData(position);
     }
 
-
-
-
-    //图片板块ViewHolder
-    private class GalleryViewHolder extends BaseViewHolder{
+    //Gallery viewHolder
+    private class GalleryViewHolder extends BaseViewHolder implements RecyclerPageChangeListener.OnPageChange {
         private RecyclerView recyclerGallery;
+        private TextView pageInfo;
 
         GalleryViewHolder(View itemView) {
             super(itemView);
             recyclerGallery = (RecyclerView) itemView.findViewById(R.id.recycler_view_gallery);
-            recyclerGallery.setLayoutManager(new LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,true));
+            pageInfo = (TextView) itemView.findViewById(R.id.gallery_page_info);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,true);
+            recyclerGallery.setLayoutManager(linearLayoutManager);
+            recyclerGallery.addOnScrollListener(new RecyclerPageChangeListener(linearLayoutManager,this));
             recyclerGallery.setAdapter(galleryAdapter);
         }
 
         void setData(int position) {
+            String txt  = getAdapterPosition()%DataSet.size()+1+"/"+DataSet.size();
+            pageInfo.setText(txt);
+        }
 
+        @Override
+        public void onPageChange(int page) {
+            String txt = page%DataSet.size()+1+"/"+DataSet.size();
+            pageInfo.setText(txt);
         }
     }
 
