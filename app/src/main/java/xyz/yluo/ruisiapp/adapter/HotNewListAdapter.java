@@ -55,7 +55,7 @@ public class HotNewListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if(DataSet_gallery!=null&&position==0){
+        if(DataSet_gallery!=null&&position==0&&DataSet_gallery.size()>0){
             return TYPE_HEADER_GALLERY;
         }else if (position>0&& position == getItemCount() - 1) {
             return TYPE_LOAD_MORE;

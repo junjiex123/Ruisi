@@ -32,7 +32,11 @@ public class GalleryAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemCount() {
-        return Integer.MAX_VALUE;
+        if(DataSet.size()>0){
+            return Integer.MAX_VALUE;
+        }else{
+            return 0;
+        }
     }
 
     @Override

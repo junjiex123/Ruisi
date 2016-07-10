@@ -14,19 +14,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-
 import xyz.yluo.ruisiapp.CheckMessageService;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.ChangeNetDialog;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.adapter.ViewPagerAdapter;
 import xyz.yluo.ruisiapp.fragment.FrageHotNew;
@@ -201,29 +197,14 @@ public class HomeActivity extends BaseActivity
 
     private void updateLoginView(){
         final View header = navigationView.getHeaderView(0);
-        final Spinner spinner = (Spinner) header.findViewById(R.id.switch_net);
-        ArrayList<String> list = new ArrayList<>();
-        list.add("校园网");list.add("校外网");
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,R.layout.spinner_item,list);
-        arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 
-        spinner.setAdapter(arrayAdapter);
-        spinner.setSelection(PublicData.IS_SCHOOL_NET?0:1);
-
-        final int ii= spinner.getSelectedItemPosition();
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        //spinner.setSelection(PublicData.IS_SCHOOL_NET?0:1);
+        header.findViewById(R.id.change_net).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                PublicData.IS_SCHOOL_NET = (i==0);
-                if(i!=ii){
-                    String text = i==0?"切换到校园网":"切换到外网";
-                    Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+            public void onClick(View view) {
+                ChangeNetDialog dialog = new ChangeNetDialog();
+                dialog.setNetType(PublicData.IS_SCHOOL_NET);
+                dialog.show(getFragmentManager(), "changeNet");
             }
         });
 
