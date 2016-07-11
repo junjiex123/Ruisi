@@ -1,6 +1,9 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -11,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +29,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.ChangeNetDialog;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.adapter.ViewPagerAdapter;
+import xyz.yluo.ruisiapp.downloadfile.DownloadService;
 import xyz.yluo.ruisiapp.fragment.FrageHotNew;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
@@ -45,6 +50,9 @@ public class HomeActivity extends BaseActivity
     private TabLayout tabLayout;
     private TextView usernameTitle;
     private CircleImageView userImageTitle;
+    private msgReceiver myMsgReceiver;
+    //新消息小红点
+    private View message_badge_toolbar,message_badge_nav;
 
     private int clickId = 0;
     private CircleImageView userImage;
@@ -64,6 +72,7 @@ public class HomeActivity extends BaseActivity
         tabLayout = (TabLayout) findViewById(R.id.mytab);
         usernameTitle = (TextView) findViewById(R.id.userNameTitle);
         userImageTitle = (CircleImageView) findViewById(R.id.userImageTitle);
+        message_badge_toolbar = findViewById(R.id.message_badge_toolbar);
 
         ActionBar actionBar = getSupportActionBar();
         if(actionBar!=null){
@@ -159,6 +168,7 @@ public class HomeActivity extends BaseActivity
 
         final View header = navigationView.getHeaderView(0);
         userImage = (CircleImageView) header.findViewById(R.id.profile_image);
+        message_badge_nav = header.findViewById(R.id.message_badge_nav);
         userImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -171,6 +181,9 @@ public class HomeActivity extends BaseActivity
                 }
             }
         });
+
+        message_badge_nav.setVisibility(View.INVISIBLE);
+        message_badge_toolbar.setVisibility(View.INVISIBLE);
     }
 
 
@@ -237,15 +250,40 @@ public class HomeActivity extends BaseActivity
         return true;
     }
 
-    //是否启动 检查消息 service
+    //启动检查消息后台程序
     private void startCheckMessageService(){
+        //注册检查消息广播
+        myMsgReceiver = new msgReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.ruisi.checkmsg");
+        registerReceiver(myMsgReceiver, intentFilter);
+
+        //启动后台服务
         SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean isrecieveMessage = shp.getBoolean("setting_show_notify",false);
-        System.out.println("isrecieveMessage"+isrecieveMessage);
-        if(isrecieveMessage){
-            Intent i = new Intent(this, CheckMessageService.class);
-            i.putExtra("isRunning",true);
-            startService(i);
+        boolean isNotisfy = shp.getBoolean("setting_show_notify",false);
+        Intent i = new Intent(this, CheckMessageService.class);
+        i.putExtra("isRunning",true);
+        i.putExtra("isNotisfy",isNotisfy);
+        startService(i);
+    }
+
+    /**
+     * 检查消息接收器
+     */
+    public class msgReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //拿到进度，更新UI
+            boolean isHaveMessage =  intent.getBooleanExtra("isHaveMessage",false);
+            Log.i("home msg reciver","收到了新消息广播"+isHaveMessage);
+            if(isHaveMessage){
+                message_badge_nav.setVisibility(View.VISIBLE);
+                message_badge_toolbar.setVisibility(View.VISIBLE);
+            }else{
+                message_badge_nav.setVisibility(View.INVISIBLE);
+                message_badge_toolbar.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
@@ -254,5 +292,9 @@ public class HomeActivity extends BaseActivity
         super.onDestroy();
         Intent i = new Intent(this, CheckMessageService.class);
         stopService(i);
+
+        if(myMsgReceiver!=null){
+            unregisterReceiver(myMsgReceiver);
+        }
     }
 }

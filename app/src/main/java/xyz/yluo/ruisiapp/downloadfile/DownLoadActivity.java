@@ -15,7 +15,7 @@ import xyz.yluo.ruisiapp.R;
 
 public class DownLoadActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
-    private MsgReceiver msgReceiver;
+    private downloadMsgReceiver downloadMsgReceiver;
     private TextView download_info;
     private String fileName = "";
     private TextView btnClose = null;
@@ -51,10 +51,10 @@ public class DownLoadActivity extends AppCompatActivity {
         }
 
         //动态注册广播接收器
-        msgReceiver = new MsgReceiver();
+        downloadMsgReceiver = new downloadMsgReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("com.example.communication.RECEIVER");
-        registerReceiver(msgReceiver, intentFilter);
+        registerReceiver(downloadMsgReceiver, intentFilter);
         download_info.setText("下载"+fileName+" "+progress+"%");
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,8 +73,8 @@ public class DownLoadActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if(msgReceiver!=null){
-            unregisterReceiver(msgReceiver);
+        if(downloadMsgReceiver !=null){
+            unregisterReceiver(downloadMsgReceiver);
         }
         super.onDestroy();
     }
@@ -84,7 +84,7 @@ public class DownLoadActivity extends AppCompatActivity {
      * @author len
      *
      */
-    public class MsgReceiver extends BroadcastReceiver {
+    public class downloadMsgReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -111,6 +111,10 @@ public class DownLoadActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * 下载完成
+     */
     private void download_compete(){
         download_info.setText(fileName+"下载完成！");
         mProgressBar.setProgress(100);
