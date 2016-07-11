@@ -2,8 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="xyz.yluo.ruisiapp">
 
+    <!--联网权限-->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!--检测网络状态变化权限-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 操作sd卡权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".PublicData"
@@ -90,6 +94,10 @@
         <activity android:name=".activity.ActivityMyTopicStar"
             android:theme="@style/AppTheme"/>
 
+        <activity android:name=".downloadfile.DownLoadActivity"
+            android:label="下载文件"
+            android:theme="@style/AppTheme.Dialog"/>
+
         <receiver android:name=".checknet.NetworkReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
@@ -97,6 +105,7 @@
         </receiver>
 
         <service android:name=".CheckMessageService"/>
+        <service android:name=".downloadfile.DownloadService"/>
 
     </application>
 

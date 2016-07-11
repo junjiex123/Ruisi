@@ -10,6 +10,7 @@ import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.NewArticleActivity_2;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
+import xyz.yluo.ruisiapp.downloadfile.DownloadService;
 
 /**
  * Created by free2 on 16-4-12.
@@ -36,14 +37,18 @@ public class HandleLinkClick {
             LoginActivity.open(context);
         }else if(url.contains("forum.php?mod=attachment")){
             //forum.php?mod=attachment&aid=ODk0NjM4fDdmMmIxZjE3fDE0NjgxMjc1Mjl8MjUyNTUzfDg0NjgxOQ%3D%3D&mobile=2
-
+            /**
+             * 启动下载服务
+             */
+            Intent intent = new Intent(context,DownloadService.class);
+            intent.putExtra("download_url",url);
+            context.startService(intent);
         }
 
         else{
             if(!url.startsWith("http")){
                 url = PublicData.getBaseUrl()+url;
             }
-
             RequestOpenBrowser.openBroswer(context,url);
         }
     }

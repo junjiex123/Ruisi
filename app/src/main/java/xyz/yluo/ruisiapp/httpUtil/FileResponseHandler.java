@@ -1,30 +1,29 @@
 package xyz.yluo.ruisiapp.httpUtil;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 
+import xyz.yluo.ruisiapp.downloadfile.FileUtil;
+
 public abstract class FileResponseHandler extends ResponseHandler {
-    protected final File mFile;
+    protected  File mFile=null;
+    private String fileName = "null";
 
-    public FileResponseHandler(File file) {
-        asserts(file != null, "File passed into FileResponseHandler constructor must not be null");
-        asserts(!file.isDirectory(),
-                "File passed into FileResponseHandler constructor must not point to directory");
-        if (!file.getParentFile().isDirectory()) {
-            asserts(file.getParentFile().mkdirs(),
-                    "Cannot create parent directories for requested File location");
-        }
-        this.mFile = file;
-    }
+    public FileResponseHandler(String fileName) {
 
-    private void asserts(final boolean expression, final String failedMessage) {
-        if (!expression) {
-            throw new AssertionError(failedMessage);
+        Log.i("file name info",fileName+"  ");
+        if(!fileName.equals("null")){
+            this.fileName = fileName;
+            mFile =  FileUtil.createFile(fileName);
+            Log.i("==file name info2==",fileName+"  ");
         }
     }
+
 
     @Override
     public void onSuccess(byte[] response) {
@@ -36,39 +35,72 @@ public abstract class FileResponseHandler extends ResponseHandler {
         onFailure(e, getTargetFile());
     }
 
+    @Override
+    public void onStartDownlod(String fileName) {
+        onStartDownLoad(fileName);
+    }
+
     protected File getTargetFile() {
         assert (mFile != null);
         return mFile;
     }
 
+
+    public  abstract void onStartDownLoad(String fileName);
+
     public abstract void onSuccess(File file);
 
     public abstract void onFailure(Throwable throwable, File file);
 
-    public void onProgress(long bytesReceived, long totalBytes) {
+    public  void onProgress(int  progress, long totalBytes) {
         // Do nothing by default
     }
 
     @Override
     protected void processResponse(HttpURLConnection connection) throws IOException {
+        int down_step = 2;// 提示step
+        long totalSize;// 文件总大小
+        long downloadCount = 0;// 已经下载好的大小
+        int updateCount = 0;// 下载进度计数
+
         InputStream instream = connection.getInputStream();
         if (instream == null) {
             throw new IOException("Get InputStream from HttpURLConnection is null.");
         }
+        if (connection.getResponseCode() == 404) {
+            onFailure(new Exception("file 404"), getTargetFile());
+            return;
+        }
 
-        long contentLength = connection.getContentLength();
+        if(mFile==null){
+            if(connection.getHeaderField("Content-Disposition")!=null){
+                Log.i("httputil",connection.getHeaderField("Content-Disposition"));
+                fileName = connection.getHeaderField("Content-Disposition");
+                //attachment; filename="shoujirs_06_24.zip"
+                fileName = fileName.substring(22,fileName.length()-1);
+                mFile = FileUtil.createFile(fileName);
+            }
+        }
+        totalSize = connection.getContentLength();
         FileOutputStream fos = new FileOutputStream(getTargetFile());
 
+        System.out.println("========================");
+        sendStartDownloadMessage(fileName);
+
         try {
-            byte[] tmp = new byte[8192];
-            int len, count = 0;
+            byte[] tmp = new byte[1024];
+            int len;
             // do not send messages if request has been cancelled
             while ((len = instream.read(tmp)) != -1 && !Thread.currentThread().isInterrupted()) {
-                count += len;
+                downloadCount += len;// 时时获取下载到的大小
                 fos.write(tmp, 0, len);
-                sendProgressMessage(count, contentLength);
+                if (updateCount == 0 || (downloadCount * 100 / totalSize - down_step) >= updateCount) {
+                    updateCount += down_step;
+                    // 改变通知栏
+                    sendProgressMessage(updateCount, totalSize);
+                }
             }
-            if (count == contentLength) {
+            if (downloadCount >= totalSize) {
                 onSuccess(getTargetFile());
             } else {
                 onFailure(new Exception("received bytes length is not contentLength"), getTargetFile());

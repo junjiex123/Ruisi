@@ -15,6 +15,7 @@ public abstract class ResponseHandler {
     protected static final int MSG_START = 2;
     protected static final int MSG_FINISH = 3;
     protected static final int MSG_PROGRESS = 4;
+    protected static final int MSG_START_DOWN = 5;
     private Handler handler;
     private Looper looper = null;
 
@@ -31,12 +32,16 @@ public abstract class ResponseHandler {
         // Do nothing by default
     }
 
-    public void onProgress(long bytesReceived, long totalBytes) {
+    public void onProgress(int progress, long totalBytes) {
         // Do nothing by default
     }
 
     public void onFinish() {
         // Do nothing by default
+    }
+
+    public void onStartDownlod(String fileName){
+
     }
 
     public abstract void onSuccess(byte[] response);
@@ -73,8 +78,11 @@ public abstract class ResponseHandler {
             case MSG_PROGRESS:
                 Object[] obj = (Object[]) msg.obj;
                 if (obj != null && obj.length >= 2) {
-                    onProgress((Long) obj[0], (Long) obj[1]);
+                    onProgress((int) obj[0], (Long) obj[1]);
                 }
+                break;
+            case MSG_START_DOWN:
+                onStartDownlod((String)msg.obj);
                 break;
         }
     }
@@ -94,8 +102,12 @@ public abstract class ResponseHandler {
         return os.toByteArray();
     }
 
-    final protected void sendProgressMessage(long bytesWritten, long bytesTotal) {
-        handler.sendMessage(obtainMessage(MSG_PROGRESS, new Object[]{bytesWritten, bytesTotal}));
+    final protected void sendStartDownloadMessage(String fileName){
+        handleMessage(obtainMessage(MSG_START_DOWN,fileName));
+    }
+
+    final protected void sendProgressMessage(int progress, long bytesTotal) {
+        handler.sendMessage(obtainMessage(MSG_PROGRESS, new Object[]{progress, bytesTotal}));
     }
 
     final protected void sendSuccessMessage(byte[] responseBytes) {

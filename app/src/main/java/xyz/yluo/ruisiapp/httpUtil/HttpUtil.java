@@ -22,6 +22,7 @@ public class HttpUtil {
             return PublicData.getBaseUrl()+url;
         }
     }
+
     public static void get(Context context,String url,ResponseHandler handler){
         init(context);
         client.get(getUrl(url),handler);

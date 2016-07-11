@@ -1,5 +1,7 @@
 package xyz.yluo.ruisiapp.httpUtil;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -19,6 +21,7 @@ public class SyncHttpClient {
     public static final String UTF8 = "UTF-8";
     private int connectionTimeout = 8000;
     private final int dataRetrievalTimeout = 8000;
+
     private Map<String, String> headers;
 
     public SyncHttpClient() {
@@ -125,6 +128,8 @@ public class SyncHttpClient {
     void request(final String url, final Method method, final Map<String, String> map,
                  final ResponseHandler handler) {
         HttpURLConnection connection = null;
+        Log.i("httputil","request url "+url);
+
         try {
             connection = buildURLConnection(url, method);
 
@@ -151,6 +156,7 @@ public class SyncHttpClient {
             if(code==302){
                 //如果会重定向，保存302 301重定向地址,然后重新发送请求(模拟请求)
                 String location = connection.getHeaderField("Location");
+                Log.i("httputil","302 new location is "+location);
                 request(PublicData.getBaseUrl() +location,Method.GET,map,handler);
                 return;
             }else{
@@ -161,6 +167,7 @@ public class SyncHttpClient {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             handler.sendFailureMessage(e);
         } finally {
             if (connection != null) {
