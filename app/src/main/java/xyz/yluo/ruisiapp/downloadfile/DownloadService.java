@@ -5,7 +5,9 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -80,8 +82,15 @@ public class DownloadService extends Service {
      * 方法描述：createNotification方法
      * @see     DownloadService
      */
-    public void createNotification(String filename) {
-        Toast.makeText(this,"开始下载"+filename,Toast.LENGTH_SHORT).show();
+    public void createNotification(final String filename) {
+        Handler handler = new Handler(Looper.getMainLooper());
+
+        handler.post(new Runnable() {
+         @Override
+         public void run() {
+               Toast.makeText(getApplicationContext(), "开始下载"+filename,Toast.LENGTH_SHORT).show();
+               }
+        });
         Intent resultIntent = new Intent(this, DownLoadActivity.class);
         resultIntent.putExtra("fileName",filename);
         resultIntent.putExtra("progress",downloadProgress);
