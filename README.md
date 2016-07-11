@@ -7,12 +7,12 @@ bug反馈或者相关建议 2351386755@qq.com
 [校园网访问](http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=846819)
 
 ##软件截图
-![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/1.jpg)
-![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/2.jpg)
-![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/3.jpg)
-![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/4.jpg)
-![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/4.jpg)
-![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/5.jpg)
+![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/1.jpg =300)
+![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/2.jpg =400)
+![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/3.jpg =500)
+![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/4.jpg =600)
+![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/4.jpg =700)
+![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/5.jpg =200)
 
 ##参考和用到的开源库和软件：
 
