@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
-import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.util.Log;
 
 import org.jsoup.Jsoup;
@@ -93,12 +92,14 @@ public class CheckMessageService extends Service {
                         e.printStackTrace();
                     }
                     String url = PublicData.getBaseUrl()+"home.php?mod=space&do=notice&view=mypost&type=post";
+                    if(!PublicData.IS_SCHOOL_NET){
+                        url = url+"&mobile=2";
+                    }
                     client.get(url,handler);
 
                     intent.putExtra("isHaveMessage",isHaveUnreadMessage);
                     sendBroadcast(intent);
                     Log.i(Tag,"发送广播...."+isHaveUnreadMessage);
-
                     try {
                         Thread.sleep(40000);
                     } catch (InterruptedException e) {

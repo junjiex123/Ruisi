@@ -94,10 +94,9 @@ public class LaunchActivity extends BaseActivity{
         try {
             String urlSetting  = shp.getString("setting_forums_url", "0");
             boolean isShowZhidin  = shp.getBoolean("setting_show_zhidin",false);
-            String tail = shp.getString("setting_user_tail","");
-            boolean theme = shp.getBoolean("setting_swich_theme",false);
+            //boolean theme = shp.getBoolean("setting_swich_theme",false);
             boolean setting_show_plain = shp.getBoolean("setting_show_plain",false);
-            boolean isrecieveMessage = shp.getBoolean("setting_show_notify",false);
+            //boolean isrecieveMessage = shp.getBoolean("setting_show_notify",false);
 
             PublicData.ISSHOW_ZHIDIN = isShowZhidin;
             PublicData.ISSHOW_PLAIN = setting_show_plain;

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="xyz.yluo.ruisiapp.activity.HelpActivity">
+
+    <xyz.yluo.ruisiapp.View.MyHtmlTextView
+        android:id="@+id/html_text"
+        android:lineSpacingMultiplier="1.4"
+        android:padding="12dp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:autoLink="web"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="16sp"/>
+</ScrollView>

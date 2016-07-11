@@ -29,7 +29,6 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.ChangeNetDialog;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.adapter.ViewPagerAdapter;
-import xyz.yluo.ruisiapp.downloadfile.DownloadService;
 import xyz.yluo.ruisiapp.fragment.FrageHotNew;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
@@ -152,6 +151,11 @@ public class HomeActivity extends BaseActivity
                             i.putExtra("type","myhistory");
                             startActivity(i);
                         }
+                        break;
+
+                    case R.id.nav_help:
+                        Intent i = new Intent(getApplicationContext(),HelpActivity.class);
+                        startActivity(i);
                         break;
 
                 }

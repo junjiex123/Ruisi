@@ -18,6 +18,7 @@ public class BaseActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id){
+            //返回按钮点击事件
             case android.R.id.home:
                 finish();
                 break;
