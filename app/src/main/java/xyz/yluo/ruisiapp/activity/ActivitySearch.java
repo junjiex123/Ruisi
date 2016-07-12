@@ -36,6 +36,7 @@ import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.GetNumber;
+import xyz.yluo.ruisiapp.utils.ImeUtil;
 
 /**
  * Created by free2 on 16-4-6.
@@ -105,18 +106,26 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ImeUtil.show_ime(this,search_input);
+    }
+
     private void start_search_click(){
+        if (search_input.getText().toString().isEmpty()){
+            Snackbar.make(main_window,"你还没写内容呢",Snackbar.LENGTH_SHORT).show();
+            return;
+        }else {
+            getData(search_input.getText().toString());
+        }
+
+        ImeUtil.hide_ime(this);
         datas.clear();
         adapter.notifyDataSetChanged();
         isEnableLoadMore = true;
         adapter.setShowLoadMore(true);
         searchid = 0;
-
-        if (search_input.getText().toString().isEmpty()){
-            Snackbar.make(main_window,"你还没写内容呢",Snackbar.LENGTH_SHORT).show();
-        }else {
-            getData(search_input.getText().toString());
-        }
     }
 
     private void getData(String str){
@@ -164,6 +173,7 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
             }
         });
     }
+
     private void getSomePageData(int page){
         String url = "search.php?mod=forum&searchid="+searchid+"&orderby=lastpost&ascdesc=desc&searchsubmit=yes&page="+page+"&mobile=2";
 
@@ -248,7 +258,7 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
                 adapter.notifyItemChanged(start);
                 adapter.notifyItemRangeInserted(start+1, dataset.size());
             }
-
+            findViewById(R.id.view_loading).setVisibility(View.GONE);
             recycler_view.postDelayed(new Runnable() {
                 @Override
                 public void run() {

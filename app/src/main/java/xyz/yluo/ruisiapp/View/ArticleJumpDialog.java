@@ -5,8 +5,10 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -14,7 +16,7 @@ import xyz.yluo.ruisiapp.R;
 
 /**
  * Created by free2 on 16-3-14.
- * 快速跳页 dialog
+ * 快速跳页 dialog  启动顺序>>>onCreate>>>onActivityCreated>>>onStart
  *
  */
 public class ArticleJumpDialog extends DialogFragment{
@@ -25,9 +27,13 @@ public class ArticleJumpDialog extends DialogFragment{
     private JumpDialogListener dialogListener;
     private int selectPage = 1;
 
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        Log.i("reply dialog",">>>onActivityCreated");
+        super.onActivityCreated(savedInstanceState);
+        content.requestFocus();
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
     @Override

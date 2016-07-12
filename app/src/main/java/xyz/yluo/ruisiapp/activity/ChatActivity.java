@@ -11,8 +11,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -35,6 +33,7 @@ import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;
 import xyz.yluo.ruisiapp.listener.ReplyBarListner;
 import xyz.yluo.ruisiapp.utils.GetId;
+import xyz.yluo.ruisiapp.utils.ImeUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -180,14 +179,6 @@ public class ChatActivity extends BaseActivity{
         new GetDataTask().execute(url);
     }
 
-    private void hide_ime(){
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
     private void post_reply(final String text){
 
         if(text.isEmpty()){
@@ -204,7 +195,7 @@ public class ChatActivity extends BaseActivity{
                 public void onSuccess(byte[] response) {
                     String res = new String(response);
                     if (res.contains("操作成功")) {
-                        hide_ime();
+                        ImeUtil.hide_ime(ChatActivity.this);
                         progress.dismiss();
                         String userImage = UrlUtils.getAvaterurlm(PublicData.USER_UID);
                         datas.add(new ChatListData(1,userImage,text,"刚刚"));

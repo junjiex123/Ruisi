@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -48,6 +47,7 @@ import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 import xyz.yluo.ruisiapp.listener.ReplyBarListner;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.GetNumber;
+import xyz.yluo.ruisiapp.utils.ImeUtil;
 import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
@@ -150,7 +150,7 @@ public class SingleArticleActivity extends BaseActivity
         MyReplyView.setListener(new ReplyBarListner() {
             @Override
             public void btnSendClick(String input) {
-                hide_ime();
+                ImeUtil.hide_ime(SingleArticleActivity.this);
                 //按钮监听
                 if(isNeedLoginDialog()){
                     if(checkTime()){
@@ -532,14 +532,6 @@ public class SingleArticleActivity extends BaseActivity
         fragment.show(getFragmentManager(),"reply");
     }
 
-    private void hide_ime(){
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
 
     //楼中楼回复回调函数
     @Override
@@ -590,7 +582,7 @@ public class SingleArticleActivity extends BaseActivity
             if (res.contains("成功")||res.contains("层主")) {
                 Toast.makeText(getApplicationContext(), "回复发表成功", Toast.LENGTH_SHORT).show();
                 MyReplyView.clearText();
-                hide_ime();
+                ImeUtil.hide_ime(SingleArticleActivity.this);
                 replyTime = System.currentTimeMillis();
             } else if(res.contains("您两次发表间隔")){
                 Toast.makeText(getApplicationContext(), "您两次发表间隔太短了......", Toast.LENGTH_SHORT).show();

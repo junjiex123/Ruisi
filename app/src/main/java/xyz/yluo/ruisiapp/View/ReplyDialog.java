@@ -4,8 +4,10 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -38,13 +40,18 @@ public class ReplyDialog extends DialogFragment{
         this.dialogListener = dialogListener;
     }
 
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        Log.i("reply dialog",">>>onActivityCreated");
+        super.onActivityCreated(savedInstanceState);
+        content.requestFocus();
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Log.i("reply dialog",">>>creat");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.reply_dialog,null);
