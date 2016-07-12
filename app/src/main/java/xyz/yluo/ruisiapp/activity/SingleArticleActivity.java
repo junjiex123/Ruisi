@@ -449,7 +449,6 @@ public class SingleArticleActivity extends BaseActivity
         }
     }
 
-
     @Override
     public void recyclerViewListClicked(View v, int position) {
         switch (v.getId()){
