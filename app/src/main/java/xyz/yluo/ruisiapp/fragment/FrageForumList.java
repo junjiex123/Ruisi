@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -34,6 +35,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
 public class FrageForumList extends Fragment {
 
     protected SwipeRefreshLayout refreshLayout;
+    private TextView view_loading;
 
     private List<FroumListData> datas = null;
     private ForumListAdapter adapter = null;
@@ -44,6 +46,7 @@ public class FrageForumList extends Fragment {
         View view = inflater.inflate(R.layout.frage_forum_list, container, false);
 
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
+        view_loading = (TextView) view.findViewById(R.id.view_loading);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         //刷新
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
@@ -140,6 +143,8 @@ public class FrageForumList extends Fragment {
             datas.clear();
             datas.addAll(simpledatas);
             adapter.notifyDataSetChanged();
+
+            view_loading.setVisibility(View.GONE);
             refreshLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {

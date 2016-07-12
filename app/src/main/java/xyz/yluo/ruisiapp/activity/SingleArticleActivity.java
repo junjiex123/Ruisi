@@ -331,7 +331,6 @@ public class SingleArticleActivity extends BaseActivity
                     if(n>0&&n> page_sum){
                         page_sum = n;
                     }
-
                     Log.i("page info",page_now+" "+page_sum);
                 }
             }
@@ -403,7 +402,6 @@ public class SingleArticleActivity extends BaseActivity
                 actionBar.setTitle(toolBarTitle);
                 isSetToolBar = true;
             }
-
             if(!isSaveToDataBase){
                 //插入数据库
                 Log.i("insert ","tid:"+Tid+"title:"+Title+"author:"+Author);
@@ -439,12 +437,14 @@ public class SingleArticleActivity extends BaseActivity
                 mRecyleAdapter.notifyItemChanged(mRecyleAdapter.getItemCount()-1);
             }
             isEnableLoadMore = true;
+
+            findViewById(R.id.view_loading).setVisibility(View.GONE);
             refreshLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     refreshLayout.setRefreshing(false);
                 }
-            },200);
+            },300);
 
         }
     }

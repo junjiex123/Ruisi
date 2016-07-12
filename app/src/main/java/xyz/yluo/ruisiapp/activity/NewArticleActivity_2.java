@@ -53,7 +53,6 @@ public class NewArticleActivity_2 extends BaseActivity {
         setContentView(R.layout.activity_new_article2);
 
         //设置cookie
-
         myWebView = (WebView) findViewById(R.id.mwebView);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setCookie(this);
@@ -129,8 +128,6 @@ public class NewArticleActivity_2 extends BaseActivity {
             startActivity(new Intent(this,LoginActivity.class));
             finish();
         }
-
-
 
     }
 

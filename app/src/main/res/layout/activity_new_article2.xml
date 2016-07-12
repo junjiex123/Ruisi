@@ -22,10 +22,10 @@
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
+
     <WebView
         android:layout_marginTop="?attr/actionBarSize"
         android:id="@+id/mwebView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 </android.support.design.widget.CoordinatorLayout>

@@ -29,46 +29,46 @@
         <activity
             android:name=".activity.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity
             android:name=".activity.ArticleList"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activity.ArticleListImage"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activity.AboutActivity"
-            android:theme="@style/AppTheme.NoActionBarTransStatusBar"></activity>
+            android:theme="@style/AppTheme.NoActionBarTransStatusBar"/>
         <activity
             android:name=".activity.SingleArticleActivity"
             android:hardwareAccelerated="true"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".activity.SettingActivity"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".activity.UserDetailActivity"
             android:label="用户信息"
-            android:theme="@style/AppTheme.NoActionBarTransStatusBar"></activity>
+            android:theme="@style/AppTheme.NoActionBarTransStatusBar"/>
         <activity
             android:name=".activity.LoginActivity"
             android:label="登陆"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".activity.UserDakaActivity"
             android:label="签到中心"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activity.ChatActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".activity.NewArticleActivity_2"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activity.ActivitySearch"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activity.ActivityMyTopicStar"
             android:theme="@style/AppTheme" />

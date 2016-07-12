@@ -265,7 +265,6 @@ public class LoginActivity extends BaseActivity {
         if(s.length()>0){
             PublicData.USER_GRADE = s;
         }
-
         //写入到首选项
         SharedPreferences.Editor editor = perPreferences.edit();
         if(rem_pass.isChecked()){
@@ -284,12 +283,15 @@ public class LoginActivity extends BaseActivity {
         }else {
             editor.putBoolean("ISREMUSER",false);
         }
-        editor.apply();
+
         Document doc = Jsoup.parse(res);
         PublicData.USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
         String url = doc.select("a[href^=home.php?mod=space&uid=]").attr("href");
         PublicData.USER_UID = GetId.getUid(url);
 
+        editor.putString("USER_NAME",PublicData.USER_NAME);
+        editor.putString("USER_UID",PublicData.USER_UID);
+        editor.apply();
         //开始获取formhash
         progress.dismiss();
         PublicData.ISLOGIN = true;

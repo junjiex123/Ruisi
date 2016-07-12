@@ -120,7 +120,7 @@ public class DataCleanManager {
     public static void cleanFiles(Context context) {
         deleteFilesByDirectory(context.getFilesDir());
     }
-    /**      * 清除外部cache下的内容(/mnt/sdcard/android/data/com.xxx.xxx/cache)      *       * @param context      */
+    /**      * 清除外部cache下的内容(/mnt/sdcard/android/data/com.xxx.xxx/cache)  */
     public static void cleanExternalCache(Context context) {
         if (Environment.getExternalStorageState().equals( Environment.MEDIA_MOUNTED)) {
             deleteFilesByDirectory(context.getExternalCacheDir());
@@ -131,7 +131,7 @@ public class DataCleanManager {
         deleteFilesByDirectory(new File(filePath));
     }
 
-    /*** 删除方法 这里只会删除某个文件夹下的文件，如果传入的directory是个文件，将不做处理      *       * @param directory      */
+    /*** 删除方法 这里只会删除某个文件夹下的文件，如果传入的directory是个文件，将不做处理 */
     private static void deleteFilesByDirectory(File directory) {
         if (directory != null && directory.exists() && directory.isDirectory()) {
             for (File item : directory.listFiles()) {

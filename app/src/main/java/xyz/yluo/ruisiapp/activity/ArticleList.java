@@ -86,7 +86,6 @@ public class ArticleList extends ArticleListBase {
                     new GetArticleListTaskMe().execute(new String(response));
                 }
             }
-
             @Override
             public void onFailure(Throwable e) {
                 Toast.makeText(getApplicationContext(), "网络错误！！", Toast.LENGTH_SHORT).show();
@@ -111,7 +110,6 @@ public class ArticleList extends ArticleListBase {
 
         }
     }
-
 
     //校园网状态下获得一个普通板块文章列表数据 根据html获得数据
     private class GetNormalArticleListTaskRs extends AsyncTask<String, Void, List<ArticleListData>> {
@@ -164,23 +162,7 @@ public class ArticleList extends ArticleListBase {
 
         @Override
         protected void onPostExecute(List<ArticleListData> dataset) {
-
-            btn_refresh.show();
-            if(CurrentPage==1){
-                datas.clear();
-                mRecyleAdapter.notifyDataSetChanged();
-            }
-            int start = datas.size();
-            datas.addAll(dataset);
-
-            mRecyleAdapter.notifyItemRangeInserted(start, dataset.size());
-            isEnableLoadMore = true;
-            refreshLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    refreshLayout.setRefreshing(false);
-                }
-            },500);
+            getDataCompete(dataset);
         }
     }
 
@@ -216,23 +198,30 @@ public class ArticleList extends ArticleListBase {
 
         @Override
         protected void onPostExecute(List<ArticleListData> dataset) {
-            btn_refresh.show();
-            if(CurrentPage==1){
-                datas.clear();
-                mRecyleAdapter.notifyDataSetChanged();
-            }
-            int start = datas.size();
-            datas.addAll(dataset);
-            mRecyleAdapter.notifyItemRangeInserted(start, dataset.size());
-            isEnableLoadMore = true;
-            refreshLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    refreshLayout.setRefreshing(false);
-                }
-            },500);
-
+            getDataCompete(dataset);
         }
+    }
+
+    private void getDataCompete(List<ArticleListData> dataset){
+        btn_refresh.show();
+        if(CurrentPage==1){
+            datas.clear();
+            mRecyleAdapter.notifyDataSetChanged();
+        }
+        int start = datas.size();
+        datas.addAll(dataset);
+
+        mRecyleAdapter.notifyItemRangeInserted(start, dataset.size());
+        isEnableLoadMore = true;
+
+        //隐藏正在加载的view
+        hide_loading_view();
+        refreshLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(false);
+            }
+        },500);
     }
 
 }

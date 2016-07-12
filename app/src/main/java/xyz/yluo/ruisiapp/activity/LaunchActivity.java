@@ -1,10 +1,13 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
@@ -15,8 +18,15 @@ import android.widget.Toast;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.checknet.CheckNet;
 import xyz.yluo.ruisiapp.checknet.CheckNetResponse;
 import xyz.yluo.ruisiapp.database.MyDbUtils;
@@ -34,6 +44,8 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 public class LaunchActivity extends BaseActivity{
     private long starttime = 0;
     private TextView launch_text;
+    private CircleImageView user_image;
+    private SharedPreferences perUserInfo = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +54,10 @@ public class LaunchActivity extends BaseActivity{
         launch_text = (TextView) findViewById(R.id.launch_text);
         Button btn_inner = (Button) findViewById(R.id.btn_login_inner);
         Button btn_outer = (Button) findViewById(R.id.btn_login_outer);
+        user_image = (CircleImageView) findViewById(R.id.user_image);
+        user_image.setVisibility(View.GONE);
         starttime = System.currentTimeMillis();
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
 
         btn_inner.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,13 +75,12 @@ public class LaunchActivity extends BaseActivity{
                 finish();
             }
         });
+        getSetting();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        getSetting();
 //      AlphaAnimation anima = new AlphaAnimation(0.2f, 1.0f);
 //      anima.setDuration(1000);// 设置动画显示时间
 //      image.startAnimation(anima);
@@ -91,18 +103,27 @@ public class LaunchActivity extends BaseActivity{
     //从首选项读出设置
     private void getSetting(){
         SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(this);
-        try {
-            String urlSetting  = shp.getString("setting_forums_url", "0");
-            boolean isShowZhidin  = shp.getBoolean("setting_show_zhidin",false);
-            //boolean theme = shp.getBoolean("setting_swich_theme",false);
-            boolean setting_show_plain = shp.getBoolean("setting_show_plain",false);
-            //boolean isrecieveMessage = shp.getBoolean("setting_show_notify",false);
+        perUserInfo = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        String uid = perUserInfo.getString("USER_UID","0");
+        Log.i("LaunchActivity",perUserInfo.getString("USER_NAME","null"));
+        Log.i("LaunchActivity",uid);
 
-            PublicData.ISSHOW_ZHIDIN = isShowZhidin;
-            PublicData.ISSHOW_PLAIN = setting_show_plain;
-        }catch (Exception e){
-            e.printStackTrace();
+        if(!uid.equals("0")){
+            Uri uri =   getImageURI(uid);
+            if(uri!=null){
+                user_image.setVisibility(View.VISIBLE);
+                user_image.setImageURI(uri);
+            }
         }
+
+        String urlSetting  = shp.getString("setting_forums_url", "0");
+        boolean isShowZhidin  = shp.getBoolean("setting_show_zhidin",false);
+        //boolean theme = shp.getBoolean("setting_swich_theme",false);
+        boolean setting_show_plain = shp.getBoolean("setting_show_plain",false);
+        boolean isrecieveMessage = shp.getBoolean("setting_show_notify",false);
+
+        PublicData.ISSHOW_ZHIDIN = isShowZhidin;
+        PublicData.ISSHOW_PLAIN = setting_show_plain;
     }
 
     private void canGetRs(int type){
@@ -111,7 +132,6 @@ public class LaunchActivity extends BaseActivity{
             checklogin(url);
         }else{
             noNetWork();
-
             findViewById(R.id.login_view).setVisibility(View.GONE);
             findViewById(R.id.login_fail_view).setVisibility(View.VISIBLE);
         }
@@ -134,6 +154,12 @@ public class LaunchActivity extends BaseActivity{
                     PublicData.USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
                     String url = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").attr("href");
                     PublicData.USER_UID = GetId.getUid(url);
+
+                    SharedPreferences.Editor editor =perUserInfo.edit();
+                    editor.putString("USER_NAME",PublicData.USER_NAME);
+                    editor.putString("USER_UID",PublicData.USER_UID);
+                    editor.apply();
+
                     PublicData.ISLOGIN = true;
                 }
             }
@@ -142,8 +168,6 @@ public class LaunchActivity extends BaseActivity{
                 finishthis();
             }
         });
-
-
     }
     //没网是执行
     private void noNetWork(){
@@ -175,5 +199,52 @@ public class LaunchActivity extends BaseActivity{
     protected void onDestroy() {
         mHandler.removeCallbacks(mRunnable);
         super.onDestroy();
+    }
+
+    /*
+     * 从网络上获取图片，如果图片在本地存在的话就直接拿，如果不存在再去服务器上下载图片
+     * 这里的path是图片的地址
+     */
+    public Uri getImageURI(final String uid){
+        final File file = new File(getFilesDir() + "/" + uid);
+
+        Log.i("launch file",file.toString()+" "+file.exists());
+        // 如果图片存在本地缓存目录，则不去服务器下载
+        if (file.exists()) {
+            return Uri.fromFile(file);//Uri.fromFile(path)这个方法能得到文件的URI
+        } else {
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                    // 从网络上获取图片
+                    URL url = null;
+                    try {
+                        url = new URL(UrlUtils.getAvaterurlb(uid));
+                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                        conn.setConnectTimeout(5000);
+                        conn.setRequestMethod("GET");
+                        conn.setDoInput(true);
+                        if (conn.getResponseCode() == 200) {
+                            InputStream is = conn.getInputStream();
+                            FileOutputStream fos = new FileOutputStream(file);
+                            byte[] buffer = new byte[1024];
+                            int len = 0;
+                            while ((len = is.read(buffer)) != -1) {
+                                fos.write(buffer, 0, len);
+                            }
+                            is.close();
+                            fos.close();
+                            // 返回一个URI对象
+                            conn.disconnect();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        file.delete();
+                    }
+                }
+            }.start();
+            return null;
+        }
     }
 }

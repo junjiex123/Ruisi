@@ -2,7 +2,9 @@ package xyz.yluo.ruisiapp.View;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 
@@ -25,6 +27,12 @@ public class ExitLoginDialogFragment extends DialogFragment {
                         PublicData.ISLOGIN = false;
                         PublicData.USER_NAME = "";
                         PublicData.USER_UID = "";
+
+                        SharedPreferences perUserInfo = getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = perUserInfo.edit();
+                        editor.clear();
+                        editor.apply();
+
                         getActivity().finish();
                     }
                 })
