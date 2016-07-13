@@ -3,11 +3,9 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="4dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:clickable="true"
-    android:background="#eeffffff"
     android:id="@+id/main_item_btn_item">
     <LinearLayout
         android:background="?attr/selectableItemBackground"
@@ -61,4 +59,10 @@
                 tools:text="222"/>
         </LinearLayout>
     </LinearLayout>
+    <View
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:background="#1f000000"
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"/>
 </LinearLayout>

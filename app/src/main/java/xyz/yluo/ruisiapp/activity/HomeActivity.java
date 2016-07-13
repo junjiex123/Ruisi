@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,11 +35,10 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-17.
- * 这是首页 管理4个fragment
+ * 这是首页 管理3个fragment
  * 1.板块列表{@link HomeActivity}
  * 2.新帖{@link FrageHotNew}
- * 3.消息{@link xyz.yluo.ruisiapp.fragment.FrageMessage}
- * 4.好友{@link xyz.yluo.ruisiapp.fragment.FrageFriends}
+ * 3.新闻{@link xyz.yluo.ruisiapp.fragment.FrageNews}
  */
 public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -56,7 +56,7 @@ public class HomeActivity extends BaseActivity
     private int clickId = 0;
     private CircleImageView userImage;
     private long mExitTime;
-    private final String[] titles = {"板块","看帖","消息","好友"};
+    private final String[] titles = {"板块","看帖","新闻"};
 
 
     @Override
@@ -190,6 +190,16 @@ public class HomeActivity extends BaseActivity
                     Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(i);
                 }
+            }
+        });
+
+        ImageView  btn_show_message = (ImageView) header.findViewById(R.id.show_message);
+        btn_show_message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(HomeActivity.this,ActivityWithFrageMent.class);
+                i.putExtra("type",ActivityWithFrageMent.FRAGE_FRIEND);
+                startActivity(i);
             }
         });
 

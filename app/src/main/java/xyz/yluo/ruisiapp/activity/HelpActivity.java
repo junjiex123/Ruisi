@@ -23,8 +23,8 @@ public class HelpActivity extends BaseActivity {
         }
     }
 
-    private final String helpTxt =
-            "本帮助参考 <a href=\"http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid=824705&mobile=2\">【H∀】睿思帮助2.0　viaAH</a> 所有权归<a href=\"home.php?mod=space&uid=285519&do=profile&mobile=2\">@Adolf-Hitler</a>所有<br><hr>\n"+
+    private static final String helpTxt =
+            "本帮助参考 <a href=\"http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid=824705&mobile=2\">【H∀】睿思帮助2.0　viaAH</a><br> 所有权归<a href=\"home.php?mod=space&uid=285519&do=profile&mobile=2\">@Adolf-Hitler</a>所有<br><hr>\n"+
             "<strong>[站点信息]</strong><br>\n" +
             "西电睿思是由西电学生自己创立的校内BT网站，于2009年9月13日上线，是目前西电唯一面向学生的高速免费BT下载站，同时睿思BBS也是最受西电师生欢迎的论坛之一，我们的口号是：爱西电、爱生活、爱睿思。<br>\n" +
             "<br>\n" +

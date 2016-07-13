@@ -11,4 +11,5 @@
     <dimen name="Card">2dp</dimen>
 
     <dimen name="textSizeNormal">16sp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

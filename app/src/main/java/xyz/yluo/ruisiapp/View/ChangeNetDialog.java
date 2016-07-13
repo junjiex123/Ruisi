@@ -34,8 +34,8 @@ public class ChangeNetDialog extends DialogFragment{
         final TextView net_school = (TextView) view.findViewById(R.id.net_school);
         final TextView net_out = (TextView) view.findViewById(R.id.net_out);
 
-        net_school.setVisibility(is_school_net?View.VISIBLE:View.GONE);
-        net_out.setVisibility(is_school_net?View.GONE:View.VISIBLE);
+        net_school.setVisibility(is_school_net?View.VISIBLE:View.INVISIBLE);
+        net_out.setVisibility(is_school_net?View.INVISIBLE:View.VISIBLE);
         TextView btn_ok = (TextView) view.findViewById(R.id.btn_ok);
 
         view.findViewById(R.id.school_net_container).setOnClickListener(new View.OnClickListener() {
@@ -43,7 +43,7 @@ public class ChangeNetDialog extends DialogFragment{
             public void onClick(View view) {
                 PublicData.IS_SCHOOL_NET = true;
                 net_school.setVisibility(View.VISIBLE);
-                net_out.setVisibility(View.GONE);
+                net_out.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -51,7 +51,7 @@ public class ChangeNetDialog extends DialogFragment{
             @Override
             public void onClick(View view) {
                 PublicData.IS_SCHOOL_NET = false;
-                net_school.setVisibility(View.GONE);
+                net_school.setVisibility(View.INVISIBLE);
                 net_out.setVisibility(View.VISIBLE);
             }
         });

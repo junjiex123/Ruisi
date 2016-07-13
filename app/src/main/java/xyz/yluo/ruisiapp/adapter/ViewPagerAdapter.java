@@ -8,6 +8,7 @@ import xyz.yluo.ruisiapp.fragment.FrageForumList;
 import xyz.yluo.ruisiapp.fragment.FrageFriends;
 import xyz.yluo.ruisiapp.fragment.FrageHotNew;
 import xyz.yluo.ruisiapp.fragment.FrageMessage;
+import xyz.yluo.ruisiapp.fragment.FrageNews;
 
 /**
  * Created by free2 on 16-5-3.
@@ -15,7 +16,7 @@ import xyz.yluo.ruisiapp.fragment.FrageMessage;
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter{
     private String[] titles;
-    private  Fragment fragment1,fragment2,fragment3,fragment4;
+    private  Fragment fragment1,fragment2,fragment3;
 
     public ViewPagerAdapter(FragmentManager fm,String[] titles) {
         super(fm);
@@ -37,14 +38,9 @@ public class ViewPagerAdapter extends FragmentPagerAdapter{
                 return fragment2;
             case 2:
                 if(fragment3==null){
-                    fragment3 = new FrageMessage();
+                    fragment3 = new FrageNews();
                 }
                 return fragment3;
-            case 3:
-                if(fragment4==null){
-                    fragment4 = new FrageFriends();
-                }
-                return fragment4;
         }
 
         return null;
