@@ -15,7 +15,7 @@ import xyz.yluo.ruisiapp.fragment.FrageMessage;
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter{
     private String[] titles;
-    private Fragment fragment1,fragment2,fragment3,fragment4;
+    private  Fragment fragment1,fragment2,fragment3,fragment4;
 
     public ViewPagerAdapter(FragmentManager fm,String[] titles) {
         super(fm);

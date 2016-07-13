@@ -2,10 +2,12 @@ package xyz.yluo.ruisiapp.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +29,7 @@ import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 
 //回复我的
 public class FrageMessage extends Fragment{
-
+    private static final  String Tag = "==FrageMessage==";
     protected RecyclerView recycler_view;
     protected SwipeRefreshLayout refreshLayout;
     private MessageAdapter adapter;
@@ -38,8 +40,10 @@ public class FrageMessage extends Fragment{
         datas = new ArrayList<>();
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i(Tag,"onCreateView");
         View view = inflater.inflate(R.layout.simple_list_view, container, false);
         recycler_view = (RecyclerView) view.findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
@@ -65,8 +69,13 @@ public class FrageMessage extends Fragment{
             }
         });
 
-        refresh();
-
+        Handler mHandler = new Handler();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refresh();
+            }
+        }, 500);
         return view;
     }
 

@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -28,6 +29,7 @@ import xyz.yluo.ruisiapp.View.ChangeNetDialog;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.adapter.ViewPagerAdapter;
 import xyz.yluo.ruisiapp.fragment.FrageHotNew;
+import xyz.yluo.ruisiapp.utils.GetUserImage;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -78,7 +80,7 @@ public class HomeActivity extends BaseActivity
 
         init();
 
-        if(!PublicData.ISLOGIN){
+        if(!getIntent().getBooleanExtra("isLogin",false)){
             drawer.openDrawer(GravityCompat.START);
         }
 
@@ -102,6 +104,7 @@ public class HomeActivity extends BaseActivity
     private void init(){
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), titles);
         viewpager.setAdapter(viewPagerAdapter);
+        viewpager.setOffscreenPageLimit(titles.length-1);
         tabLayout.setupWithViewPager(viewpager);
 
         drawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
@@ -218,8 +221,6 @@ public class HomeActivity extends BaseActivity
 
     private void updateLoginView(){
         final View header = navigationView.getHeaderView(0);
-
-        //spinner.setSelection(PublicData.IS_SCHOOL_NET?0:1);
         header.findViewById(R.id.change_net).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -240,9 +241,15 @@ public class HomeActivity extends BaseActivity
                 userGrade.setText(PublicData.USER_GRADE);
             }
             userName.setText(PublicData.USER_NAME);
-            String url = UrlUtils.getAvaterurlm(PublicData.USER_UID);
-            Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
-            Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImageTitle);
+            Uri uri = GetUserImage.getImageURI(getFilesDir(),PublicData.USER_UID);
+            if(uri!=null){//图片存在
+                userImage.setImageURI(uri);
+                userImageTitle.setImageURI(uri);
+            }else{//图片不存在
+                String url = UrlUtils.getAvaterurlm(PublicData.USER_UID);
+                Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
+                Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImageTitle);
+            }
         } else {
             userImage.setImageResource(R.drawable.image_placeholder);
             userImageTitle.setImageResource(R.drawable.image_placeholder);
@@ -257,8 +264,6 @@ public class HomeActivity extends BaseActivity
         getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
     }
-
-
     /**
      * 检查消息接收器
      */

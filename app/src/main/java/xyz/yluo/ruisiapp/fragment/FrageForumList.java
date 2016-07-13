@@ -2,11 +2,11 @@ package xyz.yluo.ruisiapp.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,15 +34,17 @@ import xyz.yluo.ruisiapp.utils.GetId;
  */
 public class FrageForumList extends Fragment {
 
+    private static final  String Tag = "==FrageForumList==";
     protected SwipeRefreshLayout refreshLayout;
     private TextView view_loading;
 
     private List<FroumListData> datas = null;
     private ForumListAdapter adapter = null;
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i(Tag,"onCreateView");
+
         View view = inflater.inflate(R.layout.frage_forum_list, container, false);
 
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);

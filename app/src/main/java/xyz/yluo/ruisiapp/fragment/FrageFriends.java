@@ -2,6 +2,7 @@ package xyz.yluo.ruisiapp.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -51,9 +52,18 @@ public class FrageFriends extends Fragment{
         recycler_view.setLayoutManager(new LinearLayoutManager(getContext()));
         recycler_view.setAdapter(adapter);
 
-        String url = "home.php?mod=space&do=friend&mobile=2";
-        new GetDataTask().execute(url);
+        final String url = "home.php?mod=space&do=friend&mobile=2";
+
         refreshLayout.setEnabled(false);
+
+        Handler mHandler = new Handler();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                new GetDataTask().execute(url);
+            }
+        }, 800);
+
         return view;
     }
 

@@ -2,6 +2,7 @@ package xyz.yluo.ruisiapp.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -72,8 +73,13 @@ public class FrageHotNew extends Fragment implements LoadMoreListener.OnLoadMore
             }
         });
 
-        getData();
-
+        Handler mHandler = new Handler();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getData();
+            }
+        }, 300);
         return view;
     }
 
