@@ -1,10 +1,10 @@
 package xyz.yluo.ruisiapp.fragment;
 
+import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,7 +33,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * 数据{@link FriendData}
  * adapter{@link FriendAdapter}
  */
-public class FrageFriends extends Fragment{
+public class FrageFriends extends Fragment {
     protected RecyclerView recycler_view;
     protected SwipeRefreshLayout refreshLayout;
     private FriendAdapter adapter;
@@ -49,7 +49,7 @@ public class FrageFriends extends Fragment{
         datas = new ArrayList<>();
         adapter = new FriendAdapter(datas,getActivity());
         recycler_view.setHasFixedSize(true);
-        recycler_view.setLayoutManager(new LinearLayoutManager(getContext()));
+        recycler_view.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycler_view.setAdapter(adapter);
 
         final String url = "home.php?mod=space&do=friend&mobile=2";
@@ -71,7 +71,7 @@ public class FrageFriends extends Fragment{
     private class GetDataTask extends AsyncTask<String,Void,String>{
         @Override
         protected String doInBackground(String... params) {
-            HttpUtil.SyncGet(getContext(), params[0], new TextResponseHandler() {
+            HttpUtil.SyncGet(getActivity(), params[0], new TextResponseHandler() {
                 @Override
                 public void onSuccess(String response) {
                     Document document = Jsoup.parse(response);
