@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import xyz.yluo.ruisiapp.CheckMessageService;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
@@ -46,6 +48,8 @@ public class LaunchActivity extends BaseActivity{
     private TextView launch_text;
     private CircleImageView user_image;
     private SharedPreferences perUserInfo = null;
+
+    private boolean isrecieveMessage = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,12 +85,12 @@ public class LaunchActivity extends BaseActivity{
     @Override
     protected void onStart() {
         super.onStart();
-//      AlphaAnimation anima = new AlphaAnimation(0.2f, 1.0f);
-//      anima.setDuration(1000);// 设置动画显示时间
-//      image.startAnimation(anima);
+        AlphaAnimation anima = new AlphaAnimation(0.1f, 1.0f);
+        anima.setDuration(1000);// 设置动画显示时间
         TranslateAnimation animation = new TranslateAnimation(0,0,80,0);
         animation.setDuration(1000);
         launch_text.startAnimation(animation);
+        user_image.startAnimation(anima);
 
         new CheckNet(this).startCheck(new CheckNetResponse() {
             @Override
@@ -120,7 +124,7 @@ public class LaunchActivity extends BaseActivity{
         boolean isShowZhidin  = shp.getBoolean("setting_show_zhidin",false);
         //boolean theme = shp.getBoolean("setting_swich_theme",false);
         boolean setting_show_plain = shp.getBoolean("setting_show_plain",false);
-        boolean isrecieveMessage = shp.getBoolean("setting_show_notify",false);
+        isrecieveMessage = shp.getBoolean("setting_show_notify",false);
 
         PublicData.ISSHOW_ZHIDIN = isShowZhidin;
         PublicData.ISSHOW_PLAIN = setting_show_plain;
@@ -161,6 +165,8 @@ public class LaunchActivity extends BaseActivity{
                     editor.apply();
 
                     PublicData.ISLOGIN = true;
+
+                    startCheckMessageService();
                 }
             }
             @Override
@@ -183,6 +189,14 @@ public class LaunchActivity extends BaseActivity{
             finish();
         }
     };
+
+    private void startCheckMessageService(){
+        //启动后台服务
+        Intent i = new Intent(this, CheckMessageService.class);
+        i.putExtra("isRunning",true);
+        i.putExtra("isNotisfy",isrecieveMessage);
+        startService(i);
+    }
 
 
 
@@ -240,7 +254,7 @@ public class LaunchActivity extends BaseActivity{
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        file.delete();
+                        Log.i("launch","fle delete " +file.delete());
                     }
                 }
             }.start();

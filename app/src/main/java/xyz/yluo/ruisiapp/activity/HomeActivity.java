@@ -4,9 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -85,7 +83,13 @@ public class HomeActivity extends BaseActivity
         }
 
         navigationView.setNavigationItemSelectedListener(this);
-        startCheckMessageService();
+
+
+        //注册检查消息广播
+        myMsgReceiver = new msgReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.ruisi.checkmsg");
+        registerReceiver(myMsgReceiver, intentFilter);
 
     }
 
@@ -254,22 +258,6 @@ public class HomeActivity extends BaseActivity
         return true;
     }
 
-    //启动检查消息后台程序
-    private void startCheckMessageService(){
-        //注册检查消息广播
-        myMsgReceiver = new msgReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("com.ruisi.checkmsg");
-        registerReceiver(myMsgReceiver, intentFilter);
-
-        //启动后台服务
-        SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean isNotisfy = shp.getBoolean("setting_show_notify",false);
-        Intent i = new Intent(this, CheckMessageService.class);
-        i.putExtra("isRunning",true);
-        i.putExtra("isNotisfy",isNotisfy);
-        startService(i);
-    }
 
     /**
      * 检查消息接收器
