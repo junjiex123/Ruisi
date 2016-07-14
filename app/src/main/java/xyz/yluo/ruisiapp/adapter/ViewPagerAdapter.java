@@ -11,6 +11,7 @@ import xyz.yluo.ruisiapp.fragment.FrageNews;
 
 /**
  * Created by free2 on 16-5-3.
+ *
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     private String[] titles;
@@ -27,17 +28,17 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 if (fragment1 == null) {
-                    fragment1 = new FrageForumList();
+                    fragment1 = FrageForumList.newInstance(true);
                 }
                 return fragment1;
             case 1:
                 if (fragment2 == null) {
-                    fragment2 = new FrageHotNew();
+                    fragment2 = FrageHotNew.newInstance(0);
                 }
                 return fragment2;
             case 2:
                 if (fragment3 == null) {
-                    fragment3 = new FrageNews();
+                    fragment3 = FrageNews.newInstance(true);
                 }
                 return fragment3;
         }

@@ -94,20 +94,9 @@ public class HomeActivity extends BaseActivity
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("com.ruisi.checkmsg");
         registerReceiver(myMsgReceiver, intentFilter);
-
-//        Fragment fragment = getFragmentManager().findFragmentById(R.id.fragment_home);
-//        if(fragment instanceof FrageHome){
-//            Log.i("88","88888888888");
-//            frageHome = (FrageHome) fragment;
-//        }
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         updateLoginView();
     }
+
 
     private void init() {
         drawer.addDrawerListener(this);
@@ -201,70 +190,73 @@ public class HomeActivity extends BaseActivity
         // 开启Fragment事务
         FragmentTransaction transaction = fm.beginTransaction();
         Fragment currentFragment = fm.findFragmentById(R.id.fragment_home);
+        toolbarImageContainer.setVisibility(View.GONE);
         switch (id) {
             case FrageType.MESSAGE:
                 usernameTitle.setText("我的消息");
-                toolbarImageContainer.setVisibility(View.GONE);
-                FrageMessage frageMessage = new FrageMessage();
-                // 使用当前Fragment的布局替代id_content的控件
-                transaction.replace(R.id.fragment_home, frageMessage, "MESSAGE");
+                Fragment f = fm.findFragmentByTag("MESSAGE");
+                if(f==null){
+                    f = new FrageMessage();
+                }
+                // 加上tag可以被找到
+                transaction.replace(R.id.fragment_home, f, "MESSAGE");
                 break;
             case FrageType.FRIEND:
                 usernameTitle.setText("我的好友");
-                toolbarImageContainer.setVisibility(View.GONE);
-                FrageFriends frageFriends = new FrageFriends();
-                transaction.replace(R.id.fragment_home, frageFriends, "FRIEND");
+                f = fm.findFragmentByTag("FRIEND");
+                if(f==null){
+                    f = new FrageFriends();
+                }
+                transaction.replace(R.id.fragment_home, f, "FRIEND");
                 break;
             case FrageType.TOPIC:
                 usernameTitle.setText("我的帖子");
-                toolbarImageContainer.setVisibility(View.GONE);
-                FrageTopicStarHistory fragmytopic = new FrageTopicStarHistory();
-                Bundle bundle = new Bundle();
-                bundle.putInt("type", FrageType.TOPIC);
-                fragmytopic.setArguments(bundle);
-                transaction.replace(R.id.fragment_home, fragmytopic, "TOPIC");
+                f =  fm.findFragmentByTag("TOPIC");
+                if(f==null){
+                    f =  FrageTopicStarHistory.newInstance(FrageType.TOPIC);
+                }
+                transaction.replace(R.id.fragment_home, f, "TOPIC");
                 break;
             case FrageType.START:
                 usernameTitle.setText("我的收藏");
-                toolbarImageContainer.setVisibility(View.GONE);
-                FrageTopicStarHistory fragemystar = new FrageTopicStarHistory();
-                bundle = new Bundle();
-                bundle.putInt("type", FrageType.START);
-                fragemystar.setArguments(bundle);
-                transaction.replace(R.id.fragment_home, fragemystar, "STAR");
+                f = fm.findFragmentByTag("STAR");
+                if(f==null){
+                    f = FrageTopicStarHistory.newInstance(FrageType.START);
+                }
+                transaction.replace(R.id.fragment_home, f, "STAR");
                 break;
-
             case FrageType.HISTORY:
                 usernameTitle.setText("浏览历史");
-                toolbarImageContainer.setVisibility(View.GONE);
-                FrageTopicStarHistory fragehistory = new FrageTopicStarHistory();
-                bundle = new Bundle();
-                bundle.putInt("type", FrageType.HISTORY);
-                fragehistory.setArguments(bundle);
-                transaction.replace(R.id.fragment_home, fragehistory, "STAR");
+                f = fm.findFragmentByTag("HISTORY");
+                if(f==null){
+                    f = FrageTopicStarHistory.newInstance(FrageType.HISTORY);
+                }
+                transaction.replace(R.id.fragment_home, f, "HISTORY");
                 break;
-
             case FrageType.HELP:
                 usernameTitle.setText("帮助");
-                toolbarImageContainer.setVisibility(View.GONE);
-                FrageHelp frageHelp = new FrageHelp();
-                transaction.replace(R.id.fragment_home, frageHelp, "HELP");
+                f = fm.findFragmentByTag("HELP");
+                if(f==null){
+                    f = new FrageHelp();
+                }
+                transaction.replace(R.id.fragment_home, f, "HELP");
                 break;
-
             case FrageType.HOME:
                 if (currentFragment instanceof FrageHome) {
                     Log.i("same fragemnt", "do nothing");
                     return;
                 }
+                toolbarImageContainer.setVisibility(View.VISIBLE);
                 if (PublicData.ISLOGIN) {
                     usernameTitle.setText(PublicData.USER_NAME);
                 } else {
                     usernameTitle.setText(getString(R.string.app_name));
                 }
-
-                toolbarImageContainer.setVisibility(View.VISIBLE);
-                FrageHome frageHome = new FrageHome();
-                transaction.replace(R.id.fragment_home, frageHome, "HOME");
+                f = fm.findFragmentByTag("HOME");
+                if(f==null){
+                    f = new FrageHome();
+                }
+                transaction.replace(R.id.fragment_home, f, "HOME");
                 break;
         }
         // 事务提交
@@ -273,7 +265,6 @@ public class HomeActivity extends BaseActivity
 
     @Override
     public void onClick(View view) {
-
         switch (view.getId()) {
             case R.id.toolbar_view:
                 drawer.openDrawer(GravityCompat.START);
@@ -284,7 +275,7 @@ public class HomeActivity extends BaseActivity
                     UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, PublicData.USER_NAME, userImage, url);
                 } else {
                     Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(i);
+                    startActivityForResult(i,0);
                 }
                 break;
             case R.id.change_net:
@@ -296,18 +287,28 @@ public class HomeActivity extends BaseActivity
                 clickId = R.id.show_message;
                 drawer.closeDrawer(GravityCompat.START);
                 break;
-
         }
 
     }
 
     /**
-     * 抽屉监听函数
-     *
-     * @param drawerView
-     * @param slideOffset
+     * 登陆页面返回值
      */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK){
+            Bundle b=data.getExtras(); //data为B中回传的Intent
+            String str=b.getString("status");//str即为回传的值
+            Log.i("login status",str);
+            updateLoginView();
+            //todo 更新view
+        }
+    }
 
+    /**
+     * 抽屉监听函数
+     */
     @Override
     public void onDrawerSlide(View drawerView, float slideOffset) {
     }
@@ -358,6 +359,9 @@ public class HomeActivity extends BaseActivity
                 break;
             case R.id.nav_home:
                 changeFragement(FrageType.HOME);
+                break;
+            case R.id.nav_my_friend:
+                changeFragement(FrageType.FRIEND);
                 break;
 
         }

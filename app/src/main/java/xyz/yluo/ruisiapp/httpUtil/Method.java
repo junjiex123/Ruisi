@@ -1,6 +1,6 @@
 package xyz.yluo.ruisiapp.httpUtil;
 
-publicenumMethod{
+public enum Method{
         GET,
         POST,
         HEAD

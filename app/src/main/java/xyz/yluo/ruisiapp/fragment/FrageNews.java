@@ -34,12 +34,21 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
  */
 public class FrageNews extends Fragment implements LoadMoreListener.OnLoadMoreListener {
 
+    public static final String TAG = FrageNews.class.getSimpleName();
     protected RecyclerView recycler_view;
     protected SwipeRefreshLayout refreshLayout;
     private List<SchoolNewsData> mydataset = new ArrayList<>();
     private NewsListAdapter adapter;
     private boolean isEnableLoadMore = false;
     private int CurrentPage = 1;
+
+    public static FrageNews newInstance(boolean isNeedUpdate) {
+        Bundle args = new Bundle();
+        args.putBoolean("isneedupdate",isNeedUpdate);
+        FrageNews fragment = new FrageNews();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

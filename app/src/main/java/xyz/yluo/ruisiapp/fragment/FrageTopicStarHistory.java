@@ -32,6 +32,7 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 
 /**
  * Created by free2 on 16-7-14.
+ * 收藏/主题/历史纪录
  */
 public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.OnLoadMoreListener {
 
@@ -45,8 +46,12 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
     private int currentIndex = 0;
 
     private String url;
-
-    public FrageTopicStarHistory() {
+    public static FrageTopicStarHistory newInstance(int type) {
+        Bundle args = new Bundle();
+        args.putInt("type",type);
+        FrageTopicStarHistory fragment = new FrageTopicStarHistory();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override

@@ -32,19 +32,17 @@ import java.util.Map;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.ArticleJumpDialog;
-import xyz.yluo.ruisiapp.View.MyReplyView;
-import xyz.yluo.ruisiapp.View.NeedLoginDialogFragment;
-import xyz.yluo.ruisiapp.View.ReplyDialog;
+import xyz.yluo.ruisiapp.View.SinpleReplyDialog;
 import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
 import xyz.yluo.ruisiapp.data.LoadMoreType;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
 import xyz.yluo.ruisiapp.data.SingleType;
 import xyz.yluo.ruisiapp.database.MyDbUtils;
+import xyz.yluo.ruisiapp.fragment.FrageReplyDialog;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
-import xyz.yluo.ruisiapp.listener.ReplyBarListner;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.GetNumber;
 import xyz.yluo.ruisiapp.utils.ImeUtil;
@@ -59,14 +57,12 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class SingleArticleActivity extends BaseActivity
         implements RecyclerViewClickListener, LoadMoreListener.OnLoadMoreListener,
-        ReplyDialog.ReplyDialogListener, ArticleJumpDialog.JumpDialogListener {
+        SinpleReplyDialog.ReplyDialogListener, ArticleJumpDialog.JumpDialogListener {
 
     protected SwipeRefreshLayout refreshLayout;
     private RecyclerView mRecyclerView;
-    private MyReplyView MyReplyView;
     private ActionBar actionBar;
     private ProgressDialog progress;
-
     //上一次回复时间
     private long replyTime = 0;
     //当前第几页
@@ -86,6 +82,13 @@ public class SingleArticleActivity extends BaseActivity
     private boolean isRedirect, isSaveToDataBase = false;
     private String Title, Author, Tid = "";
 
+    //todo
+
+    //if (isNeedLoginDialog()) {
+    //            if (checkTime()) {
+    //                post_reply(input);
+    //            }
+    //        }
     public static void open(Context context, String url, String title, String author) {
         Intent intent = new Intent(context, SingleArticleActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -105,11 +108,10 @@ public class SingleArticleActivity extends BaseActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_article_chat);
+        setContentView(R.layout.activity_single_article);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.topic_recycler_view);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.topic_refresh_layout);
-        MyReplyView = (xyz.yluo.ruisiapp.View.MyReplyView) findViewById(R.id.replay_bar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         refreshLayout.post(new Runnable() {
@@ -147,19 +149,6 @@ public class SingleArticleActivity extends BaseActivity
         mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 8));
 
 
-        MyReplyView.setListener(new ReplyBarListner() {
-            @Override
-            public void btnSendClick(String input) {
-                ImeUtil.hide_ime(SingleArticleActivity.this);
-                //按钮监听
-                if (isNeedLoginDialog()) {
-                    if (checkTime()) {
-                        post_reply(input);
-                    }
-                }
-            }
-        });
-
         try {
             String url = getIntent().getExtras().getString("url");
             if (getIntent().getExtras().containsKey("title")) {
@@ -188,6 +177,16 @@ public class SingleArticleActivity extends BaseActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        findViewById(R.id.btn_test).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isneed_login()){
+                    FrageReplyDialog dialog = FrageReplyDialog.newInstance(replyUrl,0);
+                    dialog.show(getFragmentManager(),"reply");
+                }
+            }
+        });
     }
 
 
@@ -200,16 +199,6 @@ public class SingleArticleActivity extends BaseActivity
         });
         //数据填充
         getArticleData(page);
-    }
-
-    private boolean isNeedLoginDialog() {
-        if (PublicData.ISLOGIN) {
-            return true;
-        } else {
-            NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();
-            dialogFragment.show(getFragmentManager(), "needlogin");
-        }
-        return false;
     }
 
     @Override
@@ -279,12 +268,12 @@ public class SingleArticleActivity extends BaseActivity
     public void recyclerViewListClicked(View v, int position) {
         switch (v.getId()) {
             case R.id.btn_star:
-                if (isNeedLoginDialog()) {
+                if (isneed_login()) {
                     starTask(v);
                 }
                 break;
             case R.id.btn_reply_2:
-                if (isNeedLoginDialog()) {
+                if (isneed_login()) {
                     SingleArticleData single = mydatalist.get(position);
                     String replyUrl = single.getReplyUrlTitle();
                     String replyIndex = single.getIndex();
@@ -296,6 +285,10 @@ public class SingleArticleActivity extends BaseActivity
         }
     }
 
+    /**
+     * 收藏帖子
+     * @param v
+     */
     private void starTask(final View v) {
         final String url = UrlUtils.getStarUrl(Tid);
         Map<String, String> params = new HashMap<>();
@@ -325,31 +318,9 @@ public class SingleArticleActivity extends BaseActivity
         });
     }
 
-    //收藏 任务
-
-    //回复楼主
-    private void post_reply(String text) {
-        progress = ProgressDialog.show(this, "正在发送", "请等待", true);
-        Map<String, String> params = new HashMap<>();
-        params.put("formhash", PublicData.FORMHASH);
-        params.put("message", text);
-        HttpUtil.post(this, replyUrl + "&handlekey=fastpost&loc=1&inajax=1", params, new ResponseHandler() {
-            @Override
-            public void onSuccess(byte[] response) {
-                String res = new String(response);
-                handleReply(true, res);
-            }
-
-            @Override
-            public void onFailure(Throwable e) {
-                handleReply(false, "");
-            }
-        });
-    }
-
     //回复层主
     private void ReplyCen(String url, String index, String name, String ref) {
-        ReplyDialog fragment = ReplyDialog.newInstance(this);
+        SinpleReplyDialog fragment = SinpleReplyDialog.newInstance(this);
         fragment.setTitle("回复:" + index + " " + name);
         fragment.setUrl(url);
         fragment.setLasttime(replyTime);
@@ -406,7 +377,7 @@ public class SingleArticleActivity extends BaseActivity
         if (isok) {
             if (res.contains("成功") || res.contains("层主")) {
                 Toast.makeText(getApplicationContext(), "回复发表成功", Toast.LENGTH_SHORT).show();
-                MyReplyView.clearText();
+                //MyReplyView.clearText();
                 ImeUtil.hide_ime(SingleArticleActivity.this);
                 replyTime = System.currentTimeMillis();
             } else if (res.contains("您两次发表间隔")) {
@@ -428,50 +399,19 @@ public class SingleArticleActivity extends BaseActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_article_normal, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.menu_broswer:
-                String url = UrlUtils.getSingleArticleUrl(Tid, page_now, false);
-                RequestOpenBrowser.openBroswer(this, url);
-                break;
-            case R.id.menu_refresh:
-                refresh();
-                break;
-            case R.id.menu_star:
-                if (isNeedLoginDialog()) {
-                    Toast.makeText(getApplicationContext(), "正在收藏......", Toast.LENGTH_SHORT).show();
-                    starTask(null);
-                }
-                break;
-            case R.id.menu_jump:
-                ArticleJumpDialog dialogFragment = new ArticleJumpDialog();
-                dialogFragment.setCurrentPage(page_now);
-                dialogFragment.setMaxPage(page_sum);
-                dialogFragment.show(getFragmentManager(), "jump");
-                break;
-            case R.id.menu_reverse:
-                isRevere = !isRevere;
-                refresh();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
+    /*
     @Override
     public void onBackPressed() {
         if (!MyReplyView.hideSmiley()) {
             super.onBackPressed();
         }
     }
+    */
 
+    /**
+     * 处理数据类 后台进程
+     */
     private class DealWithArticleData extends AsyncTask<String, Void, List<SingleArticleData>> {
 
         private String toolBarTitle = "";
@@ -645,6 +585,43 @@ public class SingleArticleActivity extends BaseActivity
             }, 300);
 
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_article_normal, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.menu_broswer:
+                String url = UrlUtils.getSingleArticleUrl(Tid, page_now, false);
+                RequestOpenBrowser.openBroswer(this, url);
+                break;
+            case R.id.menu_refresh:
+                refresh();
+                break;
+            case R.id.menu_star:
+                if (isneed_login()) {
+                    Toast.makeText(getApplicationContext(), "正在收藏......", Toast.LENGTH_SHORT).show();
+                    starTask(null);
+                }
+                break;
+            case R.id.menu_jump:
+                ArticleJumpDialog dialogFragment = new ArticleJumpDialog();
+                dialogFragment.setCurrentPage(page_now);
+                dialogFragment.setMaxPage(page_sum);
+                dialogFragment.show(getFragmentManager(), "jump");
+                break;
+            case R.id.menu_reverse:
+                isRevere = !isRevere;
+                refresh();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

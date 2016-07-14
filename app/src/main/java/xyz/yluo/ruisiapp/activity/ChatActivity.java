@@ -25,13 +25,11 @@ import java.util.Map;
 
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyReplyView;
 import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
 import xyz.yluo.ruisiapp.data.ChatListData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;
-import xyz.yluo.ruisiapp.listener.ReplyBarListner;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.ImeUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -44,7 +42,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 public class ChatActivity extends BaseActivity {
 
     private RecyclerView recycler_view;
-    private MyReplyView myReplyView;
+    //private MyReplyView myReplyView;
     private SwipeRefreshLayout refreshLayout;
 
     private List<ChatListData> datas = new ArrayList<>();
@@ -67,9 +65,9 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_article_chat);
+        setContentView(R.layout.activity_chat);
         recycler_view = (RecyclerView) findViewById(R.id.topic_recycler_view);
-        myReplyView = (MyReplyView) findViewById(R.id.replay_bar);
+        //myReplyView = (MyReplyView) findViewById(R.id.replay_bar);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.topic_refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -100,12 +98,12 @@ public class ChatActivity extends BaseActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         new GetDataTask().execute(url);
-        myReplyView.setListener(new ReplyBarListner() {
-            @Override
-            public void btnSendClick(String input) {
-                post_reply(input);
-            }
-        });
+        //myReplyView.setListener(new ReplyBarListner() {
+        //    @Override
+        //    public void btnSendClick(String input) {
+        //        post_reply(input);
+        //    }
+        //});
     }
 
     private void refresh() {
@@ -143,7 +141,7 @@ public class ChatActivity extends BaseActivity {
                         datas.add(new ChatListData(1, userImage, text, "刚刚"));
                         adapter.notifyItemInserted(datas.size() - 1);
                         recycler_view.scrollToPosition(datas.size());
-                        myReplyView.clearText();
+                        //myReplyView.clearText();
                         Toast.makeText(getApplicationContext(), "回复成功！！", Toast.LENGTH_SHORT).show();
                     } else {
                         progress.dismiss();

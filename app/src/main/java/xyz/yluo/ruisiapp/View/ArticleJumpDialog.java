@@ -43,7 +43,6 @@ public class ArticleJumpDialog extends DialogFragment {
         builder.setView(view);
 
         content = (EditText) view.findViewById(R.id.content);
-
         TextView textView = (TextView) view.findViewById(R.id.textpage);
         if (currentPage < 1) {
             currentPage = 1;

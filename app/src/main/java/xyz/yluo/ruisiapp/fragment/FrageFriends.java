@@ -3,7 +3,6 @@ package xyz.yluo.ruisiapp.fragment;
 import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,7 +44,7 @@ public class FrageFriends extends Fragment {
         View view = inflater.inflate(R.layout.simple_list_view, container, false);
         recycler_view = (RecyclerView) view.findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
-
+        refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         datas = new ArrayList<>();
         adapter = new FriendAdapter(datas, getActivity());
         recycler_view.setHasFixedSize(true);
@@ -55,14 +54,14 @@ public class FrageFriends extends Fragment {
         final String url = "home.php?mod=space&do=friend&mobile=2";
 
         refreshLayout.setEnabled(false);
-
-        Handler mHandler = new Handler();
-        mHandler.postDelayed(new Runnable() {
+        refreshLayout.post(new Runnable() {
             @Override
             public void run() {
-                new GetDataTask().execute(url);
+                refreshLayout.setRefreshing(true);
             }
-        }, 800);
+        });
+
+        new GetDataTask().execute(url);
 
         return view;
     }
@@ -99,6 +98,12 @@ public class FrageFriends extends Fragment {
         protected void onPostExecute(String s) {
             adapter.notifyDataSetChanged();
             super.onPostExecute(s);
+            refreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(false);
+                }
+            },500);
         }
     }
 }

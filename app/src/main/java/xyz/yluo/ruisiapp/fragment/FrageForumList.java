@@ -1,6 +1,5 @@
 package xyz.yluo.ruisiapp.fragment;
 
-import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -32,18 +31,27 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * Created by free2 on 16-3-19.
  * 板块列表fragemnt
  */
-public class FrageForumList extends Fragment {
+public class FrageForumList extends BaseFragment {
 
-    private static final String Tag = "==FrageForumList==";
+    public static final String TAG = FrageForumList.class.getSimpleName();
     protected SwipeRefreshLayout refreshLayout;
     private TextView view_loading;
 
     private List<FroumListData> datas = null;
     private ForumListAdapter adapter = null;
 
+    public static FrageForumList newInstance(boolean isLogin) {
+        Bundle args = new Bundle();
+        args.putBoolean("isLogin",isLogin);
+        FrageForumList fragment = new FrageForumList();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(Tag, "onCreateView");
+        Log.i(TAG, "onCreateView");
 
         View view = inflater.inflate(R.layout.frage_forum_list, container, false);
 
@@ -87,6 +95,11 @@ public class FrageForumList extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return 0;
     }
 
     private void getData() {

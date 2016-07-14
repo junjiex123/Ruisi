@@ -1,6 +1,5 @@
 package xyz.yluo.ruisiapp.fragment;
 
-import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,8 +34,9 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
  * Created by free2 on 16-3-19.
  * 简单的fragment 首页第二页 展示最新的帖子等
  */
-public class FrageHotNew extends Fragment implements LoadMoreListener.OnLoadMoreListener {
+public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoadMoreListener {
 
+    public static final String TAG = FrageHotNew.class.getSimpleName();
     protected RecyclerView recycler_view;
     protected SwipeRefreshLayout refreshLayout;
     private List<GalleryData> galleryDatas = new ArrayList<>();
@@ -44,6 +44,14 @@ public class FrageHotNew extends Fragment implements LoadMoreListener.OnLoadMore
     private HotNewListAdapter adapter;
     private boolean isEnableLoadMore = false;
     private int CurrentPage = 1;
+
+    public static FrageHotNew newInstance(int type) {
+        Bundle args = new Bundle();
+        args.putInt("type",type);
+        FrageHotNew fragment = new FrageHotNew();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,6 +87,11 @@ public class FrageHotNew extends Fragment implements LoadMoreListener.OnLoadMore
             }
         }, 300);
         return view;
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return 0;
     }
 
     private void refresh() {

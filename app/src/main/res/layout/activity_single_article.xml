@@ -48,10 +48,19 @@
             android:text="加载中"
             android:textColor="#ffbababa"
             android:textSize="16sp" />
+
+        <LinearLayout
+            android:background="@color/bggrey"
+            android:layout_gravity="bottom"
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <ImageView
+                android:id="@+id/btn_test"
+                android:src="@drawable/ic_settings_24dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+        </LinearLayout>
     </FrameLayout>
-    <!--<xyz.yluo.ruisiapp.View.MyReplyView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="bottom"-->
-    <!--android:id="@+id/replay_bar" />-->
+
 </android.support.design.widget.CoordinatorLayout>

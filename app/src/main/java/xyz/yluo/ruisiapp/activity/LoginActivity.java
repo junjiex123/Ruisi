@@ -296,7 +296,7 @@ public class LoginActivity extends BaseActivity {
         PublicData.ISLOGIN = true;
         Toast.makeText(getApplicationContext(), "欢迎你" + PublicData.USER_NAME + "登陆成功", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
-        intent.putExtra("result", "ok");
+        intent.putExtra("status", "ok");
         //设置返回数据
         LoginActivity.this.setResult(RESULT_OK, intent);
         finish();

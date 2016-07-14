@@ -12,6 +12,7 @@ import xyz.yluo.ruisiapp.View.MyHtmlTextView;
 
 /**
  * Created by free2 on 16-7-14.
+ * 帮助fragment
  */
 public class FrageHelp extends Fragment {
 

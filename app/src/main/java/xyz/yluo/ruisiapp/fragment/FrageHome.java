@@ -15,12 +15,11 @@ import xyz.yluo.ruisiapp.adapter.ViewPagerAdapter;
 
 /**
  * Created by free2 on 16-7-14.
+ * 首页fragment
  */
 public class FrageHome extends Fragment {
 
     private final String[] titles = {"板块", "看帖", "新闻"};
-    private ViewPager viewpager;
-    private TabLayout tabLayout;
 
 
     public FrageHome() {
@@ -32,8 +31,8 @@ public class FrageHome extends Fragment {
 
         Log.i("home fragment", "=====onCreateView=====");
         View view = inflater.inflate(R.layout.fragement_home, container, false);
-        viewpager = (ViewPager) view.findViewById(R.id.viewpager);
-        tabLayout = (TabLayout) view.findViewById(R.id.mytab);
+        ViewPager viewpager = (ViewPager) view.findViewById(R.id.viewpager);
+        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.mytab);
 
         //getChildFragmentManager() 解决 fragment嵌套viewpager 空白问题
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), titles);

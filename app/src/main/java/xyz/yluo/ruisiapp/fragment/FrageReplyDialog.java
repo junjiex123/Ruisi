@@ -1,91 +1,105 @@
-package xyz.yluo.ruisiapp.View;
+package xyz.yluo.ruisiapp.fragment;
 
-import android.content.Context;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SmileyAdapter;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
-import xyz.yluo.ruisiapp.listener.ReplyBarListner;
+import xyz.yluo.ruisiapp.utils.ImeUtil;
 import xyz.yluo.ruisiapp.utils.PostHandler;
 
 /**
- * Created by free2 on 16-4-28.
- * 自定义回复框View
+ * Created by free2 on 16-7-14.
+ * 回复框 dialog
  */
-public class MyReplyView extends LinearLayout implements View.OnClickListener {
+
+public class FrageReplyDialog extends DialogFragment implements View.OnClickListener{
+
+    //onCreateDialog>>onCreateView
     private final int SMILEY_TB = 1;
     private final int SMILEY_LDB = 2;
     private final int SMILEY_ACN = 3;
-    int smiley_type = SMILEY_TB;
-    EditText input;
-    LinearLayout smiley_container;
-    RecyclerView smiley_listv;
-    ImageView btn_send;
-    SmileyAdapter adapter;
-    private ReplyBarListner listener;
-    private boolean isaddtail = false;
+    private int smiley_type = SMILEY_TB;
+    private EditText input;
+    private LinearLayout smiley_container;
+    private ImageView btn_send;
+    private SmileyAdapter adapter;
+    private boolean isEnableTail = false;
     private String[] nameList;
+    private String replyUrl;
+
+    //todo 回复层主移植
+    private int replyType = 0;
     private List<Drawable> ds = new ArrayList<>();
 
-    public MyReplyView(Context context) {
-        super(context);
+    public static FrageReplyDialog newInstance(String url,int type) {
+        Bundle args = new Bundle();
+        args.putString("replyUrl",url);
+        args.putInt("replyType",type);
+        FrageReplyDialog fragment = new FrageReplyDialog();
+        fragment.setArguments(args);
+        return fragment;
     }
 
-    public MyReplyView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-
-    public MyReplyView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    public void setListener(ReplyBarListner listener) {
-        this.listener = listener;
-    }
-
+    @Nullable
     @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        View v = LayoutInflater.from(getContext()).inflate(R.layout.reply_bar, this, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i("replyDialog","====init====");
+        Bundle bundle = getArguments();//从activity传过来的Bundle
+        if (bundle != null) {
+            replyUrl = bundle.getString("replyUrl");
+            replyType = bundle.getInt("replyType",0);
+            Log.i("type is", "==" + replyType + "==");
+        }
+        View v = inflater.inflate(R.layout.reply_bar, null);
         TabLayout tabLayout = (TabLayout) v.findViewById(R.id.mytab);
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.smiley_tieba));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.smiley_ldb));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.smiley_acn));
-
-        isaddtail = false;
+        isEnableTail = false;
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 Log.i("tab check", "id " + tab.getPosition());
-
                 switch (tab.getPosition()) {
-
                     case 0:
                         smiley_type = SMILEY_TB;
                         break;
@@ -96,7 +110,6 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener {
                         smiley_type = SMILEY_ACN;
                         break;
                 }
-
                 changeSmiley();
             }
 
@@ -110,23 +123,18 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener {
 
             }
         });
-
-
         input = (EditText) v.findViewById(R.id.input_aera);
-
-        smiley_listv = (RecyclerView) v.findViewById(R.id.smiley_list);
+        RecyclerView smiley_listv = (RecyclerView) v.findViewById(R.id.smiley_list);
         smiley_container = (LinearLayout) v.findViewById(R.id.smileys_container);
         btn_send = (ImageView) v.findViewById(R.id.action_send);
+        btn_send.setOnClickListener(this);
         input.setOnClickListener(this);
         input.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -139,12 +147,10 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener {
             }
         });
         v.findViewById(R.id.action_smiley).setOnClickListener(this);
-        btn_send.setOnClickListener(this);
-
-        addView(v);
+        hideSmiley();
 
         ds = getSmileys();
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 3, HORIZONTAL, false);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.HORIZONTAL, false);
         adapter = new SmileyAdapter(new RecyclerViewClickListener() {
             @Override
             public void recyclerViewListClicked(View v, int position) {
@@ -153,18 +159,68 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener {
         }, ds);
         smiley_listv.setLayoutManager(layoutManager);
         smiley_listv.setAdapter(adapter);
+        return v;
+    }
 
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Log.i("FrageReplyDialog","onCreateDialog");
+        // 使用不带theme的构造器，获得的dialog边框距离屏幕仍有几毫米的缝隙。
+        // Dialog dialog = new Dialog(getActivity());
+        Dialog dialog = new Dialog(getActivity(), R.style.replyBarDialogStyle);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // must be called before set content
+        dialog.setContentView(R.layout.reply_bar);
+        dialog.setCanceledOnTouchOutside(true);
+
+        // 设置宽度为屏宽、靠近屏幕底部。
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams wlp = window.getAttributes();
+        wlp.gravity = Gravity.BOTTOM;
+        wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        window.setAttributes(wlp);
+        return dialog;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        Log.i("reply dialog", ">>>onActivityCreated");
+        super.onActivityCreated(savedInstanceState);
+        input.requestFocus();
+        if(getDialog().getWindow()!=null){
+            getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.action_send:
+                Log.i("reply","=====click=====");
+                send_click();
+                break;
+            case R.id.action_smiley:
+                if (smiley_container.getVisibility() == View.VISIBLE) {
+                    smiley_container.setVisibility(View.GONE);
+                } else {
+                    smiley_container.setVisibility(View.VISIBLE);
+                }
+                break;
+            case R.id.input_aera:
+                smiley_container.setVisibility(View.GONE);
+                break;
+            default:
+                break;
+        }
     }
 
     private void changeSmiley() {
-
         Log.i("smiley type", "type " + smiley_type);
         ds.clear();
         ds = getSmileys();
         adapter.notifyDataSetChanged();
     }
 
-    public boolean hideSmiley() {
+    private boolean hideSmiley() {
         if (smiley_container.getVisibility() == View.VISIBLE) {
             smiley_container.setVisibility(View.GONE);
             return true;
@@ -184,11 +240,11 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener {
         }
 
         try {
-            nameList = getContext().getAssets().list(smiley_dir);
+            nameList = getActivity().getAssets().list(smiley_dir);
             for (String temp : nameList) {
-                InputStream in = getContext().getAssets().open(smiley_dir + "/" + temp);
+                InputStream in = getActivity().getAssets().open(smiley_dir + "/" + temp);
                 Bitmap bitmap = BitmapFactory.decodeStream(in);
-                Drawable d = new BitmapDrawable(getContext().getResources(), bitmap);
+                Drawable d = new BitmapDrawable(getActivity().getResources(), bitmap);
                 d.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
                 ds.add(d);
             }
@@ -882,7 +938,7 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener {
         handler.insertSmiley("{:" + insertName + ":}", ds.get(position));
     }
 
-    protected void send_click() {
+    private void send_click() {
         smiley_container.setVisibility(View.GONE);
         String text = input.getText().toString();
         int len = 0;
@@ -895,15 +951,14 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener {
             input.setError("你还没写内容呢!");
         } else {
             //小尾巴
-            SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(getContext());
-            if (!isaddtail && shp.getBoolean("setting_show_tail", false)) {
+            SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            if (!isEnableTail && shp.getBoolean("setting_show_tail", false)) {
                 String texttail = shp.getString("setting_user_tail", "无尾巴").trim();
                 if (!texttail.equals("无尾巴")) {
                     texttail = "     " + texttail;
                     text += texttail;
                 }
             }
-
             //字数补齐补丁
             if (len < 13) {
                 int need = 14 - len;
@@ -911,42 +966,45 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener {
                     text += " ";
                 }
             }
-            listener.btnSendClick(text);
+            startReply(text);
         }
     }
 
+    private void startReply(String res){
+        ImeUtil.hide_ime(getDialog().getWindow());
+        //回复楼主
+        //todo send 按钮替换为进度
+        Map<String, String> params = new HashMap<>();
+        params.put("formhash", PublicData.FORMHASH);
+        params.put("message", res);
+        HttpUtil.post(getActivity(), replyUrl + "&handlekey=fastpost&loc=1&inajax=1", params, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                //todo 进度取消
+                handleReply(true, res);
+            }
 
-    protected void smiley_click() {
-        if (smiley_container.getVisibility() == View.VISIBLE) {
-            smiley_container.setVisibility(View.GONE);
+            @Override
+            public void onFailure(Throwable e) {
+                handleReply(false, "");
+            }
+        });
+    }
+
+    private void handleReply(boolean isok, String res) {
+        if (isok) {
+            Log.i("reply resoult",res);
+            if (res.contains("成功") || res.contains("层主")) {
+                Toast.makeText(getActivity(), "回复发表成功", Toast.LENGTH_SHORT).show();
+                input.setText("");
+            } else if (res.contains("您两次发表间隔")) {
+                Toast.makeText(getActivity(), "您两次发表间隔太短了......", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), "由于未知原因发表失败", Toast.LENGTH_SHORT).show();
+            }
         } else {
-            smiley_container.setVisibility(View.VISIBLE);
-        }
-    }
-
-    protected void input_aera_click() {
-        smiley_container.setVisibility(View.GONE);
-    }
-
-    public void clearText() {
-        input.setText("");
-        smiley_container.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.action_send:
-                send_click();
-                break;
-            case R.id.action_smiley:
-                smiley_click();
-                break;
-            case R.id.input_aera:
-                input_aera_click();
-                break;
-            default:
-                break;
+            Toast.makeText(getActivity(), "网络错误", Toast.LENGTH_SHORT).show();
         }
     }
 }

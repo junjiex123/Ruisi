@@ -19,7 +19,7 @@ import xyz.yluo.ruisiapp.R;
  * Created by free2 on 16-3-14.
  * 回复层主dialog
  */
-public class ReplyDialog extends DialogFragment {
+public class SinpleReplyDialog extends DialogFragment {
 
     private EditText content;
     private long lasttime = 0;
@@ -29,8 +29,8 @@ public class ReplyDialog extends DialogFragment {
     private String reply_ref_text;
     private ReplyDialogListener dialogListener;
 
-    public static ReplyDialog newInstance(ReplyDialogListener var) {
-        ReplyDialog frag = new ReplyDialog();
+    public static SinpleReplyDialog newInstance(ReplyDialogListener var) {
+        SinpleReplyDialog frag = new SinpleReplyDialog();
         frag.setDialogListener(var);
         return frag;
     }
@@ -92,8 +92,8 @@ public class ReplyDialog extends DialogFragment {
                                 text += " ";
                             }
                         }
-                        dialogListener.onDialogSendClick(ReplyDialog.this, url, text);
-                        ReplyDialog.this.getDialog().cancel();
+                        dialogListener.onDialogSendClick(SinpleReplyDialog.this, url, text);
+                        SinpleReplyDialog.this.getDialog().cancel();
                     }
                 }
 
