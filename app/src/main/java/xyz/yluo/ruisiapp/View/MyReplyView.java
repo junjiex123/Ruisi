@@ -37,20 +37,20 @@ import xyz.yluo.ruisiapp.utils.PostHandler;
  * Created by free2 on 16-4-28.
  * 自定义回复框View
  */
-public class MyReplyView extends LinearLayout implements View.OnClickListener{
-    private ReplyBarListner listener;
+public class MyReplyView extends LinearLayout implements View.OnClickListener {
     private final int SMILEY_TB = 1;
     private final int SMILEY_LDB = 2;
     private final int SMILEY_ACN = 3;
-
-    private boolean isaddtail = false;
-
-    int smiley_type  =SMILEY_TB;
+    int smiley_type = SMILEY_TB;
     EditText input;
     LinearLayout smiley_container;
     RecyclerView smiley_listv;
     ImageView btn_send;
     SmileyAdapter adapter;
+    private ReplyBarListner listener;
+    private boolean isaddtail = false;
+    private String[] nameList;
+    private List<Drawable> ds = new ArrayList<>();
 
     public MyReplyView(Context context) {
         super(context);
@@ -60,6 +60,7 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
         super(context, attrs);
     }
 
+
     public MyReplyView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
@@ -68,23 +69,22 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
         this.listener = listener;
     }
 
-
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        View v =  LayoutInflater.from(getContext()).inflate(R.layout.reply_bar,this,false);
+        View v = LayoutInflater.from(getContext()).inflate(R.layout.reply_bar, this, false);
         TabLayout tabLayout = (TabLayout) v.findViewById(R.id.mytab);
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.smiley_tieba));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.smiley_ldb));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.smiley_acn));
 
-        isaddtail =false;
+        isaddtail = false;
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                Log.i("tab check","id "+tab.getPosition());
+                Log.i("tab check", "id " + tab.getPosition());
 
-                switch (tab.getPosition()){
+                switch (tab.getPosition()) {
 
                     case 0:
                         smiley_type = SMILEY_TB;
@@ -131,11 +131,11 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
 
             @Override
             public void afterTextChanged(Editable editable) {
-               if(!TextUtils.isEmpty(input.getText())){
-                   btn_send.setImageResource(R.drawable.ic_menu_send_active);
-                }else{
-                   btn_send.setImageResource(R.drawable.ic_menu_send);
-               }
+                if (!TextUtils.isEmpty(input.getText())) {
+                    btn_send.setImageResource(R.drawable.ic_menu_send_active);
+                } else {
+                    btn_send.setImageResource(R.drawable.ic_menu_send);
+                }
             }
         });
         v.findViewById(R.id.action_smiley).setOnClickListener(this);
@@ -144,7 +144,7 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
         addView(v);
 
         ds = getSmileys();
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(),3,HORIZONTAL,false);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 3, HORIZONTAL, false);
         adapter = new SmileyAdapter(new RecyclerViewClickListener() {
             @Override
             public void recyclerViewListClicked(View v, int position) {
@@ -156,44 +156,40 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
 
     }
 
-    private void changeSmiley(){
+    private void changeSmiley() {
 
-        Log.i("smiley type","type "+smiley_type);
+        Log.i("smiley type", "type " + smiley_type);
         ds.clear();
         ds = getSmileys();
         adapter.notifyDataSetChanged();
     }
 
-
     public boolean hideSmiley() {
         if (smiley_container.getVisibility() == View.VISIBLE) {
             smiley_container.setVisibility(View.GONE);
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    private String[] nameList;
-    private List<Drawable> ds = new ArrayList<>();
-
-    private List<Drawable> getSmileys(){
+    private List<Drawable> getSmileys() {
         String smiley_dir = "static/image/smiley/";
-        if(smiley_type==SMILEY_TB){
-            smiley_dir+="tieba";
-        }else if(smiley_type==SMILEY_LDB){
-            smiley_dir+="lindab";
-        }else if(smiley_type==SMILEY_ACN){
-            smiley_dir+="acn";
+        if (smiley_type == SMILEY_TB) {
+            smiley_dir += "tieba";
+        } else if (smiley_type == SMILEY_LDB) {
+            smiley_dir += "lindab";
+        } else if (smiley_type == SMILEY_ACN) {
+            smiley_dir += "acn";
         }
 
         try {
-            nameList =  getContext().getAssets().list(smiley_dir);
-            for(String temp:nameList){
-                InputStream in = getContext().getAssets().open(smiley_dir+"/"+temp);
+            nameList = getContext().getAssets().list(smiley_dir);
+            for (String temp : nameList) {
+                InputStream in = getContext().getAssets().open(smiley_dir + "/" + temp);
                 Bitmap bitmap = BitmapFactory.decodeStream(in);
-                Drawable d = new BitmapDrawable(getContext().getResources(),bitmap);
-                d.setBounds(0,0, bitmap.getWidth(), bitmap.getHeight());
+                Drawable d = new BitmapDrawable(getContext().getResources(), bitmap);
+                d.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
                 ds.add(d);
             }
 
@@ -203,16 +199,16 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
         return ds;
     }
 
-    private void insertSmiley(int position){
-        if(position>nameList.length){
+    private void insertSmiley(int position) {
+        if (position > nameList.length) {
             return;
         }
         String name = nameList[position].split("\\.")[0];
         String insertName = "";
 
-        Log.i("click smiley name","name "+name);
-        if(smiley_type==SMILEY_TB){
-            switch (name){
+        Log.i("click smiley name", "name " + name);
+        if (smiley_type == SMILEY_TB) {
+            switch (name) {
                 case "tb001":
                     insertName = "16_1014";
                     break;
@@ -307,8 +303,8 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
                     insertName = "16_1021";
                     break;
             }
-        }else if(smiley_type==SMILEY_LDB){
-            switch (name){
+        } else if (smiley_type == SMILEY_LDB) {
+            switch (name) {
                 case "ldb033":
                     insertName = "14_860";
                     break;
@@ -424,7 +420,6 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
                     break;
 
 
-
                 case "ldb078":
                     insertName = "14_886";
                     break;
@@ -461,7 +456,6 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
                 case "ldb021":
                     insertName = "14_833";
                     break;
-
 
 
                 case "ldb010":
@@ -575,7 +569,7 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
                     break;
 
             }
-        }else if(smiley_type==SMILEY_ACN) {
+        } else if (smiley_type == SMILEY_ACN) {
             switch (name) {
 
                 case "acn062":
@@ -615,7 +609,6 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
                 case "acn020":
                     insertName = "15_962";
                     break;
-
 
 
                 case "acn072":
@@ -889,33 +882,33 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
         handler.insertSmiley("{:" + insertName + ":}", ds.get(position));
     }
 
-    protected void send_click(){
+    protected void send_click() {
         smiley_container.setVisibility(View.GONE);
         String text = input.getText().toString();
-        int len =0;
+        int len = 0;
         try {
             len = text.getBytes("UTF-8").length;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        if(len==0){
+        if (len == 0) {
             input.setError("你还没写内容呢!");
-        }else{
+        } else {
             //小尾巴
             SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(getContext());
-            if(!isaddtail&&shp.getBoolean("setting_show_tail",false)){
-                String texttail = shp.getString("setting_user_tail","无尾巴").trim();
-                if(!texttail.equals("无尾巴")){
-                    texttail = "     "+texttail;
-                    text+= texttail;
+            if (!isaddtail && shp.getBoolean("setting_show_tail", false)) {
+                String texttail = shp.getString("setting_user_tail", "无尾巴").trim();
+                if (!texttail.equals("无尾巴")) {
+                    texttail = "     " + texttail;
+                    text += texttail;
                 }
             }
 
             //字数补齐补丁
-            if(len<13){
-                int need = 14-len;
-                for(int i=0;i<need;i++){
-                    text+=" ";
+            if (len < 13) {
+                int need = 14 - len;
+                for (int i = 0; i < need; i++) {
+                    text += " ";
                 }
             }
             listener.btnSendClick(text);
@@ -923,26 +916,26 @@ public class MyReplyView extends LinearLayout implements View.OnClickListener{
     }
 
 
-    protected void smiley_click(){
-        if(smiley_container.getVisibility()==View.VISIBLE){
+    protected void smiley_click() {
+        if (smiley_container.getVisibility() == View.VISIBLE) {
             smiley_container.setVisibility(View.GONE);
-        }else{
+        } else {
             smiley_container.setVisibility(View.VISIBLE);
         }
     }
 
-    protected void input_aera_click(){
+    protected void input_aera_click() {
         smiley_container.setVisibility(View.GONE);
     }
 
-    public void clearText(){
+    public void clearText() {
         input.setText("");
         smiley_container.setVisibility(View.GONE);
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.action_send:
                 send_click();
                 break;

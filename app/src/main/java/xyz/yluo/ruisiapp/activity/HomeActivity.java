@@ -1,5 +1,6 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
@@ -46,20 +47,19 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 3.新闻{@link xyz.yluo.ruisiapp.fragment.FrageNews}
  */
 public class HomeActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener,DrawerLayout.DrawerListener{
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, DrawerLayout.DrawerListener {
 
     private DrawerLayout drawer;
     private NavigationView navigationView;
     private TextView usernameTitle;
     private CircleImageView userImageTitle;
     private msgReceiver myMsgReceiver;
+    private View toolbarImageContainer;
     //新消息小红点
-    private View message_badge_toolbar,message_badge_nav;
+    private View message_badge_toolbar, message_badge_nav;
     private int clickId = 0;
     private CircleImageView userImage;
     private long mExitTime;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,19 +69,20 @@ public class HomeActivity extends BaseActivity
         setSupportActionBar(toolbar);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+        toolbarImageContainer = findViewById(R.id.toolbarImageContainer);
 
         usernameTitle = (TextView) findViewById(R.id.userNameTitle);
         userImageTitle = (CircleImageView) findViewById(R.id.userImageTitle);
         message_badge_toolbar = findViewById(R.id.message_badge_toolbar);
 
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar!=null){
+        if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
         }
 
         init();
 
-        if(!getIntent().getBooleanExtra("isLogin",false)){
+        if (!getIntent().getBooleanExtra("isLogin", false)) {
             drawer.openDrawer(GravityCompat.START);
         }
 
@@ -94,6 +95,12 @@ public class HomeActivity extends BaseActivity
         intentFilter.addAction("com.ruisi.checkmsg");
         registerReceiver(myMsgReceiver, intentFilter);
 
+//        Fragment fragment = getFragmentManager().findFragmentById(R.id.fragment_home);
+//        if(fragment instanceof FrageHome){
+//            Log.i("88","88888888888");
+//            frageHome = (FrageHome) fragment;
+//        }
+
     }
 
     @Override
@@ -102,7 +109,7 @@ public class HomeActivity extends BaseActivity
         updateLoginView();
     }
 
-    private void init(){
+    private void init() {
         drawer.addDrawerListener(this);
         findViewById(R.id.toolbar_view).setOnClickListener(this);
 
@@ -113,7 +120,7 @@ public class HomeActivity extends BaseActivity
 
         header.findViewById(R.id.change_net).setOnClickListener(this);
 
-        ImageView  btn_show_message = (ImageView) header.findViewById(R.id.show_message);
+        ImageView btn_show_message = (ImageView) header.findViewById(R.id.show_message);
         btn_show_message.setOnClickListener(this);
 
         message_badge_nav.setVisibility(View.INVISIBLE);
@@ -141,7 +148,7 @@ public class HomeActivity extends BaseActivity
         return true;
     }
 
-    private void updateLoginView(){
+    private void updateLoginView() {
         final View header = navigationView.getHeaderView(0);
         TextView userName = (TextView) header.findViewById(R.id.header_user_name);
         TextView userGrade = (TextView) header.findViewById(R.id.user_grade);
@@ -150,15 +157,15 @@ public class HomeActivity extends BaseActivity
         if (PublicData.ISLOGIN) {
             userGrade.setVisibility(View.VISIBLE);
             usernameTitle.setText(PublicData.USER_NAME);
-            if(PublicData.USER_GRADE.length()>0){
+            if (PublicData.USER_GRADE.length() > 0) {
                 userGrade.setText(PublicData.USER_GRADE);
             }
             userName.setText(PublicData.USER_NAME);
-            Uri uri = GetUserImage.getImageURI(getFilesDir(),PublicData.USER_UID);
-            if(uri!=null){//图片存在
+            Uri uri = GetUserImage.getImageURI(getFilesDir(), PublicData.USER_UID);
+            if (uri != null) {//图片存在
                 userImage.setImageURI(uri);
                 userImageTitle.setImageURI(uri);
-            }else{//图片不存在
+            } else {//图片不存在
                 String url = UrlUtils.getAvaterurlm(PublicData.USER_UID);
                 Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
                 Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImageTitle);
@@ -172,41 +179,16 @@ public class HomeActivity extends BaseActivity
         }
     }
 
-
-
-
-    /**
-     * 检查消息接收器
-     */
-    public class msgReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            //拿到进度，更新UI
-            boolean isHaveMessage =  intent.getBooleanExtra("isHaveMessage",false);
-            Log.i("home msg reciver","收到了新消息广播"+isHaveMessage);
-            if(isHaveMessage){
-                message_badge_nav.setVisibility(View.VISIBLE);
-                message_badge_toolbar.setVisibility(View.VISIBLE);
-            }else{
-                message_badge_nav.setVisibility(View.INVISIBLE);
-                message_badge_toolbar.setVisibility(View.INVISIBLE);
-            }
-        }
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         Intent i = new Intent(this, CheckMessageService.class);
         stopService(i);
 
-        if(myMsgReceiver!=null){
+        if (myMsgReceiver != null) {
             unregisterReceiver(myMsgReceiver);
         }
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -214,59 +196,92 @@ public class HomeActivity extends BaseActivity
         return true;
     }
 
-    private void changeFragement(int id){
+    private void changeFragement(int id) {
         FragmentManager fm = getFragmentManager();
         // 开启Fragment事务
         FragmentTransaction transaction = fm.beginTransaction();
-        switch (id)
-        {
+        Fragment currentFragment = fm.findFragmentById(R.id.fragment_home);
+        switch (id) {
             case FrageType.MESSAGE:
+                usernameTitle.setText("我的消息");
+                toolbarImageContainer.setVisibility(View.GONE);
                 FrageMessage frageMessage = new FrageMessage();
                 // 使用当前Fragment的布局替代id_content的控件
-                transaction.replace(R.id.fragment_home, frageMessage);
+                transaction.replace(R.id.fragment_home, frageMessage, "MESSAGE");
                 break;
             case FrageType.FRIEND:
+                usernameTitle.setText("我的好友");
+                toolbarImageContainer.setVisibility(View.GONE);
                 FrageFriends frageFriends = new FrageFriends();
-                transaction.replace(R.id.fragment_home, frageFriends);
+                transaction.replace(R.id.fragment_home, frageFriends, "FRIEND");
                 break;
             case FrageType.TOPIC:
-            case FrageType.START:
-            case FrageType.HISTORY:
-                FrageTopicStarHistory frageTopicStarHistory = new FrageTopicStarHistory();
+                usernameTitle.setText("我的帖子");
+                toolbarImageContainer.setVisibility(View.GONE);
+                FrageTopicStarHistory fragmytopic = new FrageTopicStarHistory();
                 Bundle bundle = new Bundle();
-                bundle.putInt("type",id);
-                frageTopicStarHistory.setArguments(bundle);
-                transaction.replace(R.id.fragment_home, frageTopicStarHistory);
+                bundle.putInt("type", FrageType.TOPIC);
+                fragmytopic.setArguments(bundle);
+                transaction.replace(R.id.fragment_home, fragmytopic, "TOPIC");
+                break;
+            case FrageType.START:
+                usernameTitle.setText("我的收藏");
+                toolbarImageContainer.setVisibility(View.GONE);
+                FrageTopicStarHistory fragemystar = new FrageTopicStarHistory();
+                bundle = new Bundle();
+                bundle.putInt("type", FrageType.START);
+                fragemystar.setArguments(bundle);
+                transaction.replace(R.id.fragment_home, fragemystar, "STAR");
+                break;
+
+            case FrageType.HISTORY:
+                usernameTitle.setText("浏览历史");
+                toolbarImageContainer.setVisibility(View.GONE);
+                FrageTopicStarHistory fragehistory = new FrageTopicStarHistory();
+                bundle = new Bundle();
+                bundle.putInt("type", FrageType.HISTORY);
+                fragehistory.setArguments(bundle);
+                transaction.replace(R.id.fragment_home, fragehistory, "STAR");
                 break;
 
             case FrageType.HELP:
+                usernameTitle.setText("帮助");
+                toolbarImageContainer.setVisibility(View.GONE);
                 FrageHelp frageHelp = new FrageHelp();
-                transaction.replace(R.id.fragment_home, frageHelp);
+                transaction.replace(R.id.fragment_home, frageHelp, "HELP");
                 break;
 
             case FrageType.HOME:
+                if (currentFragment instanceof FrageHome) {
+                    Log.i("same fragemnt", "do nothing");
+                    return;
+                }
+                if (PublicData.ISLOGIN) {
+                    usernameTitle.setText(PublicData.USER_NAME);
+                } else {
+                    usernameTitle.setText(getString(R.string.app_name));
+                }
+
+                toolbarImageContainer.setVisibility(View.VISIBLE);
                 FrageHome frageHome = new FrageHome();
-                transaction.replace(R.id.fragment_home, frageHome);
+                transaction.replace(R.id.fragment_home, frageHome, "HOME");
                 break;
         }
         // 事务提交
         transaction.commit();
     }
 
-
-
-
     @Override
     public void onClick(View view) {
 
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.toolbar_view:
                 drawer.openDrawer(GravityCompat.START);
                 break;
             case R.id.profile_image:
                 if (PublicData.ISLOGIN) {
                     String url = UrlUtils.getAvaterurlb(PublicData.USER_UID);
-                    UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, PublicData.USER_NAME, userImage,url);
+                    UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, PublicData.USER_NAME, userImage, url);
                 } else {
                     Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(i);
@@ -288,6 +303,7 @@ public class HomeActivity extends BaseActivity
 
     /**
      * 抽屉监听函数
+     *
      * @param drawerView
      * @param slideOffset
      */
@@ -300,44 +316,40 @@ public class HomeActivity extends BaseActivity
     public void onDrawerOpened(View drawerView) {
         clickId = 0;
     }
+
     @Override
     public void onDrawerClosed(View drawerView) {
-        switch (clickId){
+        switch (clickId) {
             case R.id.nav_about:
-                startActivity(new Intent(getApplicationContext(),AboutActivity.class));
+                startActivity(new Intent(getApplicationContext(), AboutActivity.class));
                 break;
             case R.id.nav_setting:
                 startActivity(new Intent(getApplicationContext(), SettingActivity.class));
                 break;
             case R.id.nav_sign:
-                if(PublicData.IS_SCHOOL_NET){
-                    if(isneed_login()){
-                        startActivity(new Intent(getApplicationContext(),UserDakaActivity.class));
+                if (PublicData.IS_SCHOOL_NET) {
+                    if (isneed_login()) {
+                        startActivity(new Intent(getApplicationContext(), UserDakaActivity.class));
                     }
-                }else{
-                    Toast.makeText(getApplicationContext(),"你现在不是校园网无法签到",Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case R.id.nav_post:
-                if(isneed_login()){
-                    startActivity(new Intent(getApplicationContext(),NewArticleActivity_2.class));
+                } else {
+                    Toast.makeText(getApplicationContext(), "你现在不是校园网无法签到", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.show_message:
                 changeFragement(FrageType.MESSAGE);
                 break;
             case R.id.nav_my_topic:
-                if(isneed_login()){
+                if (isneed_login()) {
                     changeFragement(FrageType.TOPIC);
                 }
                 break;
             case R.id.nav_my_star:
-                if(isneed_login()){
+                if (isneed_login()) {
                     changeFragement(FrageType.START);
                 }
                 break;
             case R.id.nav_history:
-                if(isneed_login()){
+                if (isneed_login()) {
                     changeFragement(FrageType.HISTORY);
                 }
                 break;
@@ -354,5 +366,25 @@ public class HomeActivity extends BaseActivity
     @Override
     public void onDrawerStateChanged(int newState) {
 
+    }
+
+    /**
+     * 检查消息接收器
+     */
+    public class msgReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //拿到进度，更新UI
+            boolean isHaveMessage = intent.getBooleanExtra("isHaveMessage", false);
+            Log.i("home msg reciver", "收到了新消息广播" + isHaveMessage);
+            if (isHaveMessage) {
+                message_badge_nav.setVisibility(View.VISIBLE);
+                message_badge_toolbar.setVisibility(View.VISIBLE);
+            } else {
+                message_badge_nav.setVisibility(View.INVISIBLE);
+                message_badge_toolbar.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 }

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:background="@color/bggrey"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/forum_list_item"
-    android:gravity="start|center_vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:background="@color/bggrey"
+    android:gravity="start|center_vertical"
+    android:orientation="horizontal">
+
     <TextView
-        android:paddingStart="16dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:paddingEnd="16dp"
         android:id="@+id/header_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
         android:textColor="@color/colorPrimary"
         android:textSize="12sp"
         tools:text="西电生活" />

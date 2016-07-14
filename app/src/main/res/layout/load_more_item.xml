@@ -2,35 +2,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
-    android:padding="@dimen/dimen_8"
     android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/dimen_8">
 
     <LinearLayout
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="35dp">
+        android:layout_height="35dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
         <ProgressBar
-            android:layout_marginEnd="8dp"
             android:id="@+id/load_more_progress"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginEnd="8dp" />
+
         <TextView
             android:id="@+id/load_more_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:text="正在加载"
             android:textColor="?android:attr/textColorSecondary"
-            android:text="正在加载"/>
+            android:textSize="14sp" />
     </LinearLayout>
 
     <View
-        android:visibility="gone"
         android:id="@+id/load_more_empty"
         android:layout_width="match_parent"
-        android:layout_height="50dp"/>
+        android:layout_height="50dp"
+        android:visibility="gone" />
 
 </LinearLayout>

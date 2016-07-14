@@ -5,7 +5,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 /**
- *监听recyclerview 页数变化回掉函数
+ * 监听recyclerview 页数变化回掉函数
  */
 
 public class RecyclerPageChangeListener extends RecyclerView.OnScrollListener {

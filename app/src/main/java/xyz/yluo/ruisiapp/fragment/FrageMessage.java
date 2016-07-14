@@ -29,12 +29,12 @@ import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 
 //回复我的
 public class FrageMessage extends Fragment {
-    private static final  String Tag = "==FrageMessage==";
+    private static final String Tag = "==FrageMessage==";
     protected RecyclerView recycler_view;
     protected SwipeRefreshLayout refreshLayout;
     private MessageAdapter adapter;
     private List<MessageData> datas;
-    private int index =0;
+    private int index = 0;
 
     public FrageMessage() {
         datas = new ArrayList<>();
@@ -43,7 +43,7 @@ public class FrageMessage extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(Tag,"onCreateView");
+        Log.i(Tag, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_message, container, false);
         recycler_view = (RecyclerView) view.findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
@@ -53,7 +53,7 @@ public class FrageMessage extends Fragment {
         adapter = new MessageAdapter(getActivity(), datas, new RecyclerViewClickListener() {
             @Override
             public void recyclerViewListClicked(View v, int position) {
-                if(position!=index){
+                if (position != index) {
                     index = position;
                     refresh();
                 }
@@ -90,24 +90,25 @@ public class FrageMessage extends Fragment {
         getData();
     }
 
-    private void getData(){
+    private void getData() {
         //reply
         String url = "home.php?mod=space&do=notice&mobile=2";
-        if(index!=0){
+        if (index != 0) {
             //pm
             url = "home.php?mod=space&do=pm&mobile=2";
         }
         HttpUtil.get(getActivity(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
-                String res= new String(response);
-                if(index!=0){
+                String res = new String(response);
+                if (index != 0) {
                     new GetUserPmTask().execute(res);
-                }else{
+                } else {
                     new GetUserReplyTask().execute(res);
                 }
 
             }
+
             @Override
             public void onFailure(Throwable e) {
                 e.printStackTrace();
@@ -116,9 +117,21 @@ public class FrageMessage extends Fragment {
                     public void run() {
                         refreshLayout.setRefreshing(false);
                     }
-                },500);
+                }, 500);
             }
         });
+    }
+
+    private void finishGetData(List<MessageData> temdatas) {
+        datas.clear();
+        datas.addAll(temdatas);
+        adapter.notifyDataSetChanged();
+        refreshLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(false);
+            }
+        }, 500);
     }
 
     //获得回复我的
@@ -128,20 +141,20 @@ public class FrageMessage extends Fragment {
             //pmbox
             List<MessageData> tempdatas = new ArrayList<>();
             Elements lists = Jsoup.parse(params[0]).select(".nts").select("dl.cl");
-            for(Element tmp:lists){
+            for (Element tmp : lists) {
                 boolean isRead = true;
-                if(tmp.select(".ntc_body").attr("style").contains("bold")){
+                if (tmp.select(".ntc_body").attr("style").contains("bold")) {
                     isRead = false;
                 }
-                String content = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").text().replace("查看","");
-                if(content.isEmpty()){
+                String content = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").text().replace("查看", "");
+                if (content.isEmpty()) {
                     continue;
                 }
                 String authorImage = tmp.select(".avt").select("img").attr("src");
-                String authorTitle = tmp.select(".ntc_body").select("a[href^=home.php]").text()+" 回复了我";
+                String authorTitle = tmp.select(".ntc_body").select("a[href^=home.php]").text() + " 回复了我";
                 String time = tmp.select(".xg1.xw0").text();
-                String titleUrl =tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
-                tempdatas.add(new MessageData(ListType.REPLAYME,authorTitle,titleUrl,authorImage,time,isRead,content));
+                String titleUrl = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
+                tempdatas.add(new MessageData(ListType.REPLAYME, authorTitle, titleUrl, authorImage, time, isRead, content));
             }
             return tempdatas;
         }
@@ -160,9 +173,9 @@ public class FrageMessage extends Fragment {
             //pmbox
             List<MessageData> temdatas = new ArrayList<>();
             Elements lists = Jsoup.parse(params[0]).select(".pmbox").select("ul").select("li");
-            for(Element tmp:lists){
+            for (Element tmp : lists) {
                 boolean isRead = true;
-                if(tmp.select(".num").text().length()>0){
+                if (tmp.select(".num").text().length() > 0) {
                     isRead = false;
                 }
                 String title = tmp.select(".cl").select(".name").text();
@@ -170,8 +183,8 @@ public class FrageMessage extends Fragment {
                 tmp.select(".cl.grey").select(".time").remove();
                 String content = tmp.select(".cl.grey").text();
                 String authorImage = tmp.select("img").attr("src");
-                String titleUrl =tmp.select("a").attr("href");
-                temdatas.add(new MessageData(ListType.MYMESSAGE,title,titleUrl,authorImage,time,isRead,content));
+                String titleUrl = tmp.select("a").attr("href");
+                temdatas.add(new MessageData(ListType.MYMESSAGE, title, titleUrl, authorImage, time, isRead, content));
             }
             return temdatas;
         }
@@ -180,17 +193,5 @@ public class FrageMessage extends Fragment {
         protected void onPostExecute(List<MessageData> tempdatas) {
             finishGetData(tempdatas);
         }
-    }
-
-    private void finishGetData(List<MessageData> temdatas){
-        datas.clear();
-        datas.addAll(temdatas);
-        adapter.notifyDataSetChanged();
-        refreshLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(false);
-            }
-        },500);
     }
 }

@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * 表情处理
  * 格式处理 加粗 斜体等。。。
  */
-public  class PostHandler implements TextWatcher {
+public class PostHandler implements TextWatcher {
 
     private final EditText mEditor;
     private final ArrayList<ImageSpan> mEmoticonsToRemove = new ArrayList<>();
@@ -38,9 +38,9 @@ public  class PostHandler implements TextWatcher {
         message.setSpan(span, start, start + emoticon.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
-    public void insertbold(String text){
+    public void insertbold(String text) {
         Editable message = mEditor.getEditableText();
-        message.replace(mEditor.getSelectionStart(),mEditor.getSelectionEnd(), Html.fromHtml("<b>" + text + "</b>"));
+        message.replace(mEditor.getSelectionStart(), mEditor.getSelectionEnd(), Html.fromHtml("<b>" + text + "</b>"));
     }
 
     @Override

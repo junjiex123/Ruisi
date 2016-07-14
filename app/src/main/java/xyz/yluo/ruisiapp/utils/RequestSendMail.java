@@ -10,12 +10,12 @@ import android.net.Uri;
  */
 public class RequestSendMail {
 
-    public static void sendMail(Context activity, String username){
+    public static void sendMail(Context activity, String username) {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Uri to = Uri.parse("mailto:2351386755@qq.com");
         intent.setData(to);
-        intent.putExtra(Intent.EXTRA_SUBJECT, "西电手机睿思bug反馈 "+username);
+        intent.putExtra(Intent.EXTRA_SUBJECT, "西电手机睿思bug反馈 " + username);
         intent.putExtra(Intent.EXTRA_TEXT, "");
 
         activity.startActivity(intent);

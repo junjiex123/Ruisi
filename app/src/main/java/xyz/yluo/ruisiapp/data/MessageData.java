@@ -16,7 +16,7 @@ public class MessageData {
     private boolean isRead = true;
 
     //我的消息 ////回复我的
-    public MessageData(ListType type,String title, String titleUrl, String authorImage, String time, boolean isRead, String content) {
+    public MessageData(ListType type, String title, String titleUrl, String authorImage, String time, boolean isRead, String content) {
         this.type = type;
         this.title = title;
         this.titleUrl = titleUrl;
@@ -26,12 +26,12 @@ public class MessageData {
         this.isRead = isRead;
     }
 
-    public void setRead(boolean read) {
-        isRead = read;
-    }
-
     public boolean isRead() {
         return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
     }
 
     public String getcontent() {

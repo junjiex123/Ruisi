@@ -16,25 +16,23 @@ import xyz.yluo.ruisiapp.R;
  * Created by free2 on 16-3-21.
  * 带小三角的textview
  */
-public class ArrowTextView extends TextView{
-
-
-    public ArrowTextView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public ArrowTextView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
-
-    public ArrowTextView(Context context) {
-        super(context);
-    }
+public class ArrowTextView extends TextView {
 
 
     private int color = ContextCompat.getColor(getContext(), R.color.bluegrey50);
     private Paint paint = new Paint();
     private Path path = new Path();
+
+
+    public ArrowTextView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+    public ArrowTextView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
+    public ArrowTextView(Context context) {
+        super(context);
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -43,16 +41,16 @@ public class ArrowTextView extends TextView{
 
 
         float arrowInHeight = 10;
-        canvas.drawRoundRect(new RectF(0, arrowInHeight, getWidth(),getHeight()), 4, 4, paint);
+        canvas.drawRoundRect(new RectF(0, arrowInHeight, getWidth(), getHeight()), 4, 4, paint);
 
         path.reset();
         path.setFillType(Path.FillType.EVEN_ODD);
-        path.moveTo(80,0);
+        path.moveTo(80, 0);
         path.lineTo(68, arrowInHeight);
         path.lineTo(92, arrowInHeight);
         path.lineTo(80, 0);
         path.close();
-        canvas.drawPath(path,paint);
+        canvas.drawPath(path, paint);
 
         super.onDraw(canvas);
 

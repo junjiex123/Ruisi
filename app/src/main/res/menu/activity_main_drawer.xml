@@ -11,13 +11,9 @@
         android:icon="@drawable/ic_autorenew_black_24dp"
         android:title="签到中心" />
     <item
-        android:id="@+id/nav_post"
-        android:icon="@drawable/ic_edit"
-        android:title="发帖新帖" />
-    <item
         android:id="@+id/nav_my_topic"
         android:icon="@drawable/ic_chat_24dp"
-        android:title="我的主题" />
+        android:title="我的帖子" />
     <item
         android:id="@+id/nav_my_star"
         android:icon="@drawable/ic_favorite_24dp"
@@ -25,7 +21,7 @@
     <item
         android:id="@+id/nav_history"
         android:icon="@drawable/ic_history_black_24dp"
-        android:title="历史纪录" />
+        android:title="浏览历史" />
 
     <item android:title="相关设置">
         <menu>

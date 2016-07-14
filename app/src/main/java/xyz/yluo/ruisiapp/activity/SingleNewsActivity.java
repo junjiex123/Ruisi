@@ -10,7 +10,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.WebView;
 
 import org.jsoup.Jsoup;
@@ -21,7 +20,6 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyHtmlTextView;
 import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 
 /**
@@ -30,21 +28,19 @@ import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
  * 一楼是楼主
  * 其余是评论
  */
-public class SingleNewsActivity extends BaseActivity{
+public class SingleNewsActivity extends BaseActivity {
 
+    private static final String HTML_H = "<!DOCTYPE HTML>\n" + "<html>\n" + "<body>\n";
+    private static final String HTML_T = "</body>\n" + "</html>";
     protected SwipeRefreshLayout refreshLayout;
     private WebView webView;
-    private String Url= "";
+    private String Url = "";
 
-    private static final String HTML_H="<!DOCTYPE HTML>\n" + "<html>\n" + "<body>\n";
-
-    private static final String HTML_T = "</body>\n"+ "</html>" ;
-
-    public static void open(Context context, String url,String title) {
+    public static void open(Context context, String url, String title) {
         Intent intent = new Intent(context, SingleNewsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("url",url);
-        intent.putExtra("title",title);
+        intent.putExtra("url", url);
+        intent.putExtra("title", title);
         context.startActivity(intent);
     }
 
@@ -55,7 +51,7 @@ public class SingleNewsActivity extends BaseActivity{
 
         //http://jwc.xidian.edu.cn/info/1070/4428.htm
         //info/1070/4438.htm
-        Url =  "http://jwc.xidian.edu.cn/"+getIntent().getExtras().getString("url");
+        Url = "http://jwc.xidian.edu.cn/" + getIntent().getExtras().getString("url");
         String title = getIntent().getExtras().getString("title");
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         webView = (WebView) findViewById(R.id.webview);
@@ -70,7 +66,7 @@ public class SingleNewsActivity extends BaseActivity{
 
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar!=null){
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(title);
         }
@@ -87,12 +83,12 @@ public class SingleNewsActivity extends BaseActivity{
 
     }
 
-    private void getData(){
+    private void getData() {
         new GetDataTask().execute();
     }
 
 
-    private void refresh(){
+    private void refresh() {
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -103,8 +99,27 @@ public class SingleNewsActivity extends BaseActivity{
         getData();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_article_normal, menu);
+        return true;
+    }
 
-    private class GetDataTask extends AsyncTask<Void,Void,String>{
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.menu_broswer:
+                RequestOpenBrowser.openBroswer(this, Url);
+                break;
+            case R.id.menu_refresh:
+                refresh();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private class GetDataTask extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... params) {
             Document document = null;
@@ -115,55 +130,34 @@ public class SingleNewsActivity extends BaseActivity{
                 return "";
             }
 
-            Elements article =  document.select("table.winstyle49757");
+            Elements article = document.select("table.winstyle49757");
             Elements patchs = article.select("span.attachfont49757").select("span").select("a");
             String main_content = article.select("#vsb_newscontent").html();
             //todo 处理附件
-            for(Element e:patchs){
-                String url =  e.attr("href");
+            for (Element e : patchs) {
+                String url = e.attr("href");
                 //../../system/_content/download.jsp?urltype=news.DownloadAttachUrl&owner=1070628979&wbfileid=496161
                 //http://jwc.xidian.edu.cn/system/_content/download.jsp?urltype=news.DownloadAttachUrl&owner=1070628979&wbfileid=496161
                 String name = e.text();
-                System.out.println(name+" "+url);
+                System.out.println(name + " " + url);
             }
 
             return main_content;
         }
 
         @Override
-        protected void onPostExecute(String  dataStr) {
+        protected void onPostExecute(String dataStr) {
 
-            String data = HTML_H+dataStr+HTML_T;
-            webView.loadDataWithBaseURL("http://jwc.xidian.edu.cn/",data,"type/html","utf-8",null);
+            String data = HTML_H + dataStr + HTML_T;
+            webView.loadDataWithBaseURL("http://jwc.xidian.edu.cn/", data, "type/html", "utf-8", null);
 
             refreshLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     refreshLayout.setRefreshing(false);
                 }
-            },400);
+            }, 400);
 
         }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_article_normal, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id){
-            case R.id.menu_broswer:
-                RequestOpenBrowser.openBroswer(this,Url);
-                break;
-            case R.id.menu_refresh:
-                refresh();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

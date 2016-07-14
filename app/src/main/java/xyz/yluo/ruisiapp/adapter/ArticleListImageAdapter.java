@@ -22,7 +22,6 @@ import xyz.yluo.ruisiapp.data.ImageArticleListData;
 /**
  * Created by free2 on 16-3-31.
  * 图片文章列表adapter 例如摄影天地板块{@link ArticleListImage}
- *
  */
 public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListImageAdapter.ImageCardViewHolder> {
     private List<ImageArticleListData> DataSet;
@@ -50,7 +49,7 @@ public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListIma
 
 
     //图片板块ViewHolder
-    class ImageCardViewHolder extends RecyclerView.ViewHolder{
+    class ImageCardViewHolder extends RecyclerView.ViewHolder {
 
         ImageView img_card_image;
         TextView img_card_title;
@@ -76,17 +75,17 @@ public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListIma
             img_card_author.setText(DataSet.get(position).getAuthor());
             img_card_title.setText(DataSet.get(position).getTitle());
             img_card_like.setText(DataSet.get(position).getReplyCount());
-            if(!Objects.equals(DataSet.get(position).getImage(), "")){
-                Picasso.with(activity).load(PublicData.getBaseUrl()+DataSet.get(position).getImage()).placeholder(R.drawable.image_placeholder).into(img_card_image);
-            }else{
+            if (!Objects.equals(DataSet.get(position).getImage(), "")) {
+                Picasso.with(activity).load(PublicData.getBaseUrl() + DataSet.get(position).getImage()).placeholder(R.drawable.image_placeholder).into(img_card_image);
+            } else {
                 img_card_image.setImageResource(R.drawable.image_placeholder);
             }
 
         }
 
         protected void item_click() {
-            ImageArticleListData single_data =  DataSet.get(getAdapterPosition());
-            SingleArticleActivity.open(activity,single_data.getTitleUrl(),"","");
+            ImageArticleListData single_data = DataSet.get(getAdapterPosition());
+            SingleArticleActivity.open(activity, single_data.getTitleUrl(), "", "");
         }
     }
 }

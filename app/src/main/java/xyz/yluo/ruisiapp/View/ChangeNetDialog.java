@@ -15,9 +15,10 @@ import xyz.yluo.ruisiapp.R;
  * Created by free2 on 16-3-14.
  * 回复层主dialog
  */
-public class ChangeNetDialog extends DialogFragment{
+public class ChangeNetDialog extends DialogFragment {
 
     private boolean is_school_net = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,15 +28,15 @@ public class ChangeNetDialog extends DialogFragment{
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.change_net_dialog,null);
+        View view = inflater.inflate(R.layout.change_net_dialog, null);
         builder.setView(view);
         builder.setTitle("切换网络");
         //content = (EditText) view.findViewById(R.id.reply_content);
         final TextView net_school = (TextView) view.findViewById(R.id.net_school);
         final TextView net_out = (TextView) view.findViewById(R.id.net_out);
 
-        net_school.setVisibility(is_school_net?View.VISIBLE:View.INVISIBLE);
-        net_out.setVisibility(is_school_net?View.INVISIBLE:View.VISIBLE);
+        net_school.setVisibility(is_school_net ? View.VISIBLE : View.INVISIBLE);
+        net_out.setVisibility(is_school_net ? View.INVISIBLE : View.VISIBLE);
         TextView btn_ok = (TextView) view.findViewById(R.id.btn_ok);
 
         view.findViewById(R.id.school_net_container).setOnClickListener(new View.OnClickListener() {

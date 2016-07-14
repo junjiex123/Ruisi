@@ -22,18 +22,17 @@ import xyz.yluo.ruisiapp.data.SimpleListData;
  * 简单的adapter 比如用户信息
  * 我的收藏 我的帖子,搜索结果
  * 等都用这个
- *
  */
-public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
+public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
-    private boolean showLoadMore = false;
     private static final int CONTENT = 0;
     private static final int LOAD_MORE = 1;
+    private boolean showLoadMore = false;
     private List<SimpleListData> Datas = new ArrayList<>();
     private Activity activity;
     private ListType type;
 
-    public SimpleListAdapter(ListType type,Activity activity, List<SimpleListData> datas) {
+    public SimpleListAdapter(ListType type, Activity activity, List<SimpleListData> datas) {
         Datas = datas;
         this.activity = activity;
         this.type = type;
@@ -45,26 +44,25 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     @Override
     public int getItemCount() {
-        if(Datas.size()==0)
-        {
+        if (Datas.size() == 0) {
             return 0;
         }
-        return Datas.size()+1;
+        return Datas.size() + 1;
     }
 
 
     @Override
     public int getItemViewType(int position) {
-        if(position==getItemCount()-1){
+        if (position == getItemCount() - 1) {
             return LOAD_MORE;
-        }else{
+        } else {
             return CONTENT;
         }
     }
 
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        switch (viewType){
+        switch (viewType) {
             case CONTENT:
                 return new SimpleVivwHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.simple_list_item, parent, false));
             default:
@@ -105,23 +103,24 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
             }
             key.setText(Html.fromHtml(keystr));
             String values = Datas.get(position).getValue();
-            if(values.length()>0){
+            if (values.length() > 0) {
                 value.setVisibility(View.VISIBLE);
                 value.setText(values);
-            }else {
+            } else {
                 value.setVisibility(View.GONE);
             }
         }
+
         void item_click() {
             SimpleListData single_data = Datas.get(getAdapterPosition());
             String url = single_data.getExtradata();
             if (url != null && url.length() > 0) {
-                SingleArticleActivity.open(activity, url,"","");
+                SingleArticleActivity.open(activity, url, "", "");
             }
         }
     }
 
-    private class SimpleLoadMoreViewHolder extends BaseViewHolder{
+    private class SimpleLoadMoreViewHolder extends BaseViewHolder {
 
         public SimpleLoadMoreViewHolder(View itemView) {
             super(itemView);
@@ -129,7 +128,7 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
         @Override
         void setData(int position) {
-            itemView.setVisibility(showLoadMore?View.VISIBLE:View.GONE);
+            itemView.setVisibility(showLoadMore ? View.VISIBLE : View.GONE);
         }
     }
 

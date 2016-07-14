@@ -17,17 +17,17 @@ import xyz.yluo.ruisiapp.PublicData;
  * 判断现在的网络状态
  * 校园网or 外网
  */
-public class CheckNet{
+public class CheckNet {
 
-    private Context context;
     private final ExecutorService threadPool;
+    private Context context;
 
     public CheckNet(Context context) {
         this.context = context;
         threadPool = Executors.newCachedThreadPool();
     }
 
-    public void startCheck(final CheckNetResponse handler){
+    public void startCheck(final CheckNetResponse handler) {
         threadPool.execute(new Runnable() {
             @Override
             public void run() {
@@ -36,19 +36,19 @@ public class CheckNet{
         });
     }
 
-    private void request(final CheckNetResponse checkNetResponse){
-        ConnectivityManager conMgr = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    private void request(final CheckNetResponse checkNetResponse) {
+        ConnectivityManager conMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();
         if (activeNetwork != null && activeNetwork.isConnected()) {
             if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
-                checkNetResponse.sendFinishMessage(2,"ok");
+                checkNetResponse.sendFinishMessage(2, "ok");
                 setData(false);
-            }else{
+            } else {
                 try {
                     Connection con1 = Jsoup.connect("http://202.117.119.1/portal.php").timeout(1500);
 
-                    if(con1.get().title().contains("西电睿思")){
-                        checkNetResponse.sendFinishMessage(1,"ok");
+                    if (con1.get().title().contains("西电睿思")) {
+                        checkNetResponse.sendFinishMessage(1, "ok");
                         setData(true);
                     }
                 } catch (Exception e) {
@@ -65,8 +65,8 @@ public class CheckNet{
                     }
                 }
             }
-        }else{
-            checkNetResponse.sendFinishMessage(0,"请打开网络连接");
+        } else {
+            checkNetResponse.sendFinishMessage(0, "请打开网络连接");
         }
 
 
@@ -76,7 +76,7 @@ public class CheckNet{
         */
     }
 
-    private void setData(boolean isInner){
+    private void setData(boolean isInner) {
         PublicData.IS_SCHOOL_NET = isInner;
     }
 }

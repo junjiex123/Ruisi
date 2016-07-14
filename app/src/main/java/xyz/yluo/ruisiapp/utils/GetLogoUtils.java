@@ -15,15 +15,14 @@ import xyz.yluo.ruisiapp.R;
  */
 public class GetLogoUtils {
 
-    public static Drawable getlogo(Context contex,String url){
+    public static Drawable getlogo(Context contex, String url) {
         try {
 
             String fid = GetId.getFroumFid(url);
-            InputStream ims = contex.getAssets().open("forumlogo/common_"+fid+"_icon.gif");
+            InputStream ims = contex.getAssets().open("forumlogo/common_" + fid + "_icon.gif");
             return Drawable.createFromStream(ims, null);
-        }
-        catch(IOException ex) {
-            return ContextCompat.getDrawable(contex,R.drawable.image_placeholder);
+        } catch (IOException ex) {
+            return ContextCompat.getDrawable(contex, R.drawable.image_placeholder);
         }
     }
 

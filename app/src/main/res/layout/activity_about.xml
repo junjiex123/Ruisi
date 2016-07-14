@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
@@ -15,11 +14,11 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:elevation="4dp"
-            android:background="@drawable/bg02"
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/bg02"
+            android:elevation="4dp"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -35,30 +34,30 @@
     </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
-        android:background="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@android:color/white"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <xyz.yluo.ruisiapp.View.MyHtmlTextView
-            android:lineSpacingMultiplier="1.4"
-            android:padding="16dp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:autoLink="web"
             android:id="@+id/html_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"/>
+            android:autoLink="web"
+            android:lineSpacingMultiplier="1.4"
+            android:padding="16dp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            tools:text="当前版本1.4 beta"
+            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            android:textSize="18sp"
+            tools:text="当前版本1.4 beta" />
 
     </RelativeLayout>
 

@@ -32,9 +32,8 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 
 /**
  * Created by free2 on 16-7-14.
- *
  */
-public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.OnLoadMoreListener{
+public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.OnLoadMoreListener {
 
     protected SwipeRefreshLayout refreshLayout;
     private List<SimpleListData> datas;
@@ -58,11 +57,11 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
 
         Bundle bundle = getArguments();//从activity传过来的Bundle
-        if(bundle!=null){
-            int  type = bundle.getInt("type",-1);
+        if (bundle != null) {
+            int type = bundle.getInt("type", -1);
 
-            Log.i("type is","=="+type+"==");
-            switch (type){
+            Log.i("type is", "==" + type + "==");
+            switch (type) {
                 case FrageType.TOPIC:
                     currentIndex = 0;
                     break;
@@ -70,7 +69,7 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
                     currentIndex = 1;
                     break;
                 default:
-                    currentIndex =2;
+                    currentIndex = 2;
             }
         }
 
@@ -80,18 +79,18 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
 //        }
 
         String uid = PublicData.USER_UID;
-        switch (currentIndex){
+        switch (currentIndex) {
             case 0:
                 //主题
                 //if(actionBar!=null)
                 //    actionBar.setTitle("我的帖子");
-                url = "home.php?mod=space&uid="+uid+"&do=thread&view=me&mobile=2";
+                url = "home.php?mod=space&uid=" + uid + "&do=thread&view=me&mobile=2";
                 break;
             case 1:
                 //我的收藏
                 //if(actionBar!=null)
-                 //   actionBar.setTitle("我的收藏");
-                url = "home.php?mod=space&uid="+uid+"&do=favorite&view=me&type=thread&mobile=2";
+                //   actionBar.setTitle("我的收藏");
+                url = "home.php?mod=space&uid=" + uid + "&do=favorite&view=me&type=thread&mobile=2";
                 break;
             default:
 
@@ -102,9 +101,9 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
         }
 
         datas = new ArrayList<>();
-        adapter = new SimpleListAdapter(ListType.ARTICLE,getActivity(),datas);
+        adapter = new SimpleListAdapter(ListType.ARTICLE, getActivity(), datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) layoutManager, this,10));
+        recyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) layoutManager, this, 10));
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
@@ -121,9 +120,9 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
 
     @Override
     public void onLoadMore() {
-        if(isEnableLoadMore&&isHaveMore){
+        if (isEnableLoadMore && isHaveMore) {
             int a = CurrentPage;
-            String newurl = url+"&page="+(a+1);
+            String newurl = url + "&page=" + (a + 1);
             getStringFromInternet(newurl);
             isEnableLoadMore = false;
         }
@@ -142,24 +141,24 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
         getStringFromInternet(url);
     }
 
-    private void getStringFromInternet(String url){
+    private void getStringFromInternet(String url) {
 
-        if(currentIndex==2){
+        if (currentIndex == 2) {
             //datas.add()
-            MyDbUtils myDbUtils = new MyDbUtils(getActivity(),true);
-            for(ArticleListData data:myDbUtils.getHistory(30)){
+            MyDbUtils myDbUtils = new MyDbUtils(getActivity(), true);
+            for (ArticleListData data : myDbUtils.getHistory(30)) {
 
                 //Log.i("history",data.getTitleUrl());
-                datas.add(new SimpleListData(data.getTitle(),data.getAuthor(),"tid="+data.getTitleUrl()));
+                datas.add(new SimpleListData(data.getTitle(), data.getAuthor(), "tid=" + data.getTitleUrl()));
             }
-            datas.add(new SimpleListData("暂无更多","",""));
+            datas.add(new SimpleListData("暂无更多", "", ""));
             adapter.notifyDataSetChanged();
-            refreshLayout.post(new Runnable() {
+            refreshLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     refreshLayout.setRefreshing(false);
                 }
-            });
+            }, 500);
             return;
         }
 
@@ -168,13 +167,14 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
 
             @Override
             public void onSuccess(byte[] response) {
-                String res= new String(response);
-                if(currentIndex==0){
+                String res = new String(response);
+                if (currentIndex == 0) {
                     new GetUserArticles().execute(res);
-                }else if(currentIndex==1){
+                } else if (currentIndex == 1) {
                     new GetUserStarTask().execute(res);
                 }
             }
+
             @Override
             public void onFailure(Throwable e) {
                 e.printStackTrace();
@@ -189,16 +189,16 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
         protected Void doInBackground(String... strings) {
             String res = strings[0];
             Elements lists = Jsoup.parse(res).select(".threadlist").select("ul").select("li");
-            for(Element tmp:lists){
+            for (Element tmp : lists) {
                 String title = tmp.select("a").text();
-                if(title.isEmpty()){
-                    datas.add(new SimpleListData("暂无更多","",""));
+                if (title.isEmpty()) {
+                    datas.add(new SimpleListData("暂无更多", "", ""));
                     isHaveMore = false;
                     break;
                 }
-                String titleUrl =tmp.select("a").attr("href");
+                String titleUrl = tmp.select("a").attr("href");
                 String num = tmp.select(".num").text();
-                datas.add(new SimpleListData(title,num,titleUrl));
+                datas.add(new SimpleListData(title, num, titleUrl));
             }
             return null;
         }
@@ -208,26 +208,32 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
             super.onPostExecute(aVoid);
             isEnableLoadMore = true;
             CurrentPage++;
-            refreshLayout.setRefreshing(false);
             adapter.notifyDataSetChanged();
+            refreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(false);
+                }
+            }, 500);
         }
 
     }
+
     //获得用户收藏
     private class GetUserStarTask extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... params) {
-            String res= params[0];
+            String res = params[0];
             Elements lists = Jsoup.parse(res).select(".threadlist").select("ul").select("li");
-            for(Element tmp:lists){
+            for (Element tmp : lists) {
                 String key = tmp.select("a").text();
-                if(key.isEmpty()){
-                    datas.add(new SimpleListData("暂无更多","",""));
+                if (key.isEmpty()) {
+                    datas.add(new SimpleListData("暂无更多", "", ""));
                     isHaveMore = false;
                     break;
                 }
                 String link = tmp.select("a").attr("href");
-                datas.add(new SimpleListData(key,"",link));
+                datas.add(new SimpleListData(key, "", link));
             }
             return null;
         }
@@ -236,8 +242,13 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
         protected void onPostExecute(Void avoid) {
             isEnableLoadMore = true;
             CurrentPage++;
-            refreshLayout.setRefreshing(false);
             adapter.notifyDataSetChanged();
+            refreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(false);
+                }
+            }, 500);
         }
     }
 }

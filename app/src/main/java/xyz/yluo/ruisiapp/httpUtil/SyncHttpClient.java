@@ -17,11 +17,10 @@ import xyz.yluo.ruisiapp.PublicData;
 
 public class SyncHttpClient {
     public static final String DEFAULT_USER_AGENT = "myRuisiAsyncLiteHttp/1.0";
-    private static PersistentCookieStore store;
     public static final String UTF8 = "UTF-8";
-    private int connectionTimeout = 8000;
+    private static PersistentCookieStore store;
     private final int dataRetrievalTimeout = 8000;
-
+    private int connectionTimeout = 8000;
     private Map<String, String> headers;
 
     public SyncHttpClient() {
@@ -30,7 +29,7 @@ public class SyncHttpClient {
     }
 
     public void setStore(PersistentCookieStore store) {
-        if(SyncHttpClient.store==null){
+        if (SyncHttpClient.store == null) {
             SyncHttpClient.store = store;
         }
     }
@@ -51,13 +50,13 @@ public class SyncHttpClient {
         headers.remove(name);
     }
 
-    private void getCookie(HttpURLConnection conn){
+    private void getCookie(HttpURLConnection conn) {
         String fullCookie = "";
         String cookieVal;
         String key;
         //取cookie
-        for(int i = 1; (key = conn.getHeaderFieldKey(i)) != null; i++){
-            if(key.equalsIgnoreCase("set-cookie")){
+        for (int i = 1; (key = conn.getHeaderFieldKey(i)) != null; i++) {
+            if (key.equalsIgnoreCase("set-cookie")) {
                 cookieVal = conn.getHeaderField(i);
                 cookieVal = cookieVal.substring(0, cookieVal.indexOf(";"));
                 fullCookie = fullCookie + cookieVal + ";";
@@ -80,13 +79,13 @@ public class SyncHttpClient {
         connection.setDoInput(true);
 
         //加入cookie
-        if (store!=null){
-            connection.setRequestProperty("Cookie",store.getCookie());
+        if (store != null) {
+            connection.setRequestProperty("Cookie", store.getCookie());
         }
 
         // Headers
         for (Map.Entry<String, String> header : headers.entrySet()) {
-            connection.setRequestProperty( header.getKey(), header.getValue());
+            connection.setRequestProperty(header.getKey(), header.getValue());
         }
         return connection;
     }
@@ -121,14 +120,14 @@ public class SyncHttpClient {
         request(url, Method.POST, map, handler);
     }
 
-    public void head(final String url,final ResponseHandler handler){
-        request(url,Method.HEAD,null,handler);
+    public void head(final String url, final ResponseHandler handler) {
+        request(url, Method.HEAD, null, handler);
     }
 
     void request(final String url, final Method method, final Map<String, String> map,
                  final ResponseHandler handler) {
         HttpURLConnection connection = null;
-        Log.i("httputil","request url "+url);
+        Log.i("httputil", "request url " + url);
 
         try {
             connection = buildURLConnection(url, method);
@@ -146,23 +145,23 @@ public class SyncHttpClient {
                 os.write(content);
                 os.flush();
                 os.close();
-            }else if(method==Method.HEAD){
+            } else if (method == Method.HEAD) {
                 String location = connection.getHeaderField("Location");
                 handler.sendSuccessMessage(location.getBytes());
                 return;
             }
 //            处理重定向
             int code = connection.getResponseCode();
-            if(code==302){
+            if (code == 302) {
                 //如果会重定向，保存302 301重定向地址,然后重新发送请求(模拟请求)
                 String location = connection.getHeaderField("Location");
-                Log.i("httputil","302 new location is "+location);
-                request(PublicData.getBaseUrl() +location,Method.GET,map,handler);
+                Log.i("httputil", "302 new location is " + location);
+                request(PublicData.getBaseUrl() + location, Method.GET, map, handler);
                 return;
-            }else{
+            } else {
                 handler.processResponse(connection);
                 //获取cookie
-                if(store!=null){
+                if (store != null) {
                     getCookie(connection);
                 }
             }

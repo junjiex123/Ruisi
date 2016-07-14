@@ -47,7 +47,7 @@ public class FrageFriends extends Fragment {
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
 
         datas = new ArrayList<>();
-        adapter = new FriendAdapter(datas,getActivity());
+        adapter = new FriendAdapter(datas, getActivity());
         recycler_view.setHasFixedSize(true);
         recycler_view.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycler_view.setAdapter(adapter);
@@ -68,7 +68,7 @@ public class FrageFriends extends Fragment {
     }
 
 
-    private class GetDataTask extends AsyncTask<String,Void,String>{
+    private class GetDataTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
             HttpUtil.SyncGet(getActivity(), params[0], new TextResponseHandler() {
@@ -76,16 +76,17 @@ public class FrageFriends extends Fragment {
                 public void onSuccess(String response) {
                     Document document = Jsoup.parse(response);
                     Elements lists = document.select("#friend_ul").select("li");
-                    for(Element element:lists){
+                    for (Element element : lists) {
                         String imgurl = element.select(".avt").select("img").attr("src");
                         String lastOnline = element.select(".avt").select(".gol").attr("title");
                         String userName = element.select("h4").select("a[href^=home.php?mod=space&uid=]").text();
                         String uid = GetId.getUid(imgurl);
                         String info = element.select("p.maxh").text();
                         //userName,imgUrl,info,uid,lastOnlineTime
-                        datas.add(new FriendData(userName,imgurl,info,uid,lastOnline));
+                        datas.add(new FriendData(userName, imgurl, info, uid, lastOnline));
                     }
                 }
+
                 @Override
                 public void onFailure(Throwable e) {
                     super.onFailure(e);

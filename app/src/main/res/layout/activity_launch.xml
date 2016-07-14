@@ -1,91 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    android:background="#ffffffff"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="#ffffffff">
 
     <xyz.yluo.ruisiapp.View.CircleImageView
         android:id="@+id/user_image"
-        app:civ_border_width="2dp"
-        app:civ_border_color="@color/blue50"
-        android:src="@drawable/image_placeholder"
-        android:layout_marginTop="100dp"
-        android:layout_gravity="center_horizontal"
         android:layout_width="120dp"
-        android:layout_height="120dp" />
+        android:layout_height="120dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp"
+        android:src="@drawable/image_placeholder"
+        app:civ_border_color="@color/blue50"
+        app:civ_border_width="2dp" />
 
     <TextView
         android:id="@+id/launch_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="250dp"
-        android:textColor="@color/colorPrimary"
-        android:textSize="25sp"
-        android:text="@string/app_name"
         android:gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:text="@string/app_name"
+        android:textColor="@color/colorPrimary"
+        android:textSize="25sp" />
 
     <LinearLayout
         android:id="@+id/login_view"
-        android:layout_gravity="bottom"
-        android:gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
+
         <ProgressBar
-            android:layout_marginTop="40dp"
             android:id="@+id/progressBar"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_marginTop="40dp"
             android:indeterminate="true"
             android:indeterminateDrawable="@drawable/loading" />
 
         <TextView
-            android:layout_marginTop="4dp"
             style="@style/SmallText"
-            android:layout_marginBottom="4dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
             android:text="正在准备数据" />
 
         <TextView
             style="@style/TitleText"
-            android:textColor="#88333333"
-            android:layout_marginBottom="4dp"
-            android:textSize="15sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="©2016 xidianrs.cn" />
+            android:layout_marginBottom="4dp"
+            android:text="©2016 xidianrs.cn"
+            android:textColor="#88333333"
+            android:textSize="15sp" />
     </LinearLayout>
 
     <LinearLayout
-        android:visibility="gone"
         android:id="@+id/login_fail_view"
-        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:padding="16dp"
+        android:visibility="gone">
 
         <Button
+            android:id="@+id/btn_login_inner"
+            style="@style/myButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="校园网入口"
-            style="@style/myButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="12sp"
-            android:id="@+id/btn_login_inner"/>
+            android:textSize="12sp" />
+
         <Button
-            android:layout_marginStart="8dp"
-            android:text="外网入口"
+            android:id="@+id/btn_login_outer"
             style="@style/myButton"
             android:layout_width="0dp"
-            android:textSize="12sp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:id="@+id/btn_login_outer"/>
+            android:text="外网入口"
+            android:textSize="12sp" />
     </LinearLayout>
 
 </FrameLayout>

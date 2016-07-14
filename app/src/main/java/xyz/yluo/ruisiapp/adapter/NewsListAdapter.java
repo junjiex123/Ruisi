@@ -1,7 +1,6 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,22 +10,18 @@ import android.widget.TextView;
 import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.activity.SingleNewsActivity;
-import xyz.yluo.ruisiapp.data.ArticleListData;
-import xyz.yluo.ruisiapp.data.GalleryData;
 import xyz.yluo.ruisiapp.data.SchoolNewsData;
-import xyz.yluo.ruisiapp.listener.RecyclerPageChangeListener;
 
 /**
  * Created by free2 on 16-3-31.
  * 支持 gallery
  */
 public class NewsListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
-    private List<SchoolNewsData> DataSet;
-    private Activity activity;
     private static final int TYPE_LOAD_MORE = 1;
     private static final int TYPE_NEWS_LIST = 0;
+    private List<SchoolNewsData> DataSet;
+    private Activity activity;
 
     public NewsListAdapter(Activity activity, List<SchoolNewsData> DataSet) {
         this.DataSet = DataSet;
@@ -35,17 +30,17 @@ public class NewsListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemCount() {
-        if(DataSet.size()==0){
+        if (DataSet.size() == 0) {
             return 0;
         }
-        return DataSet.size()+1;
+        return DataSet.size() + 1;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position>0&& position == getItemCount() - 1) {
+        if (position > 0 && position == getItemCount() - 1) {
             return TYPE_LOAD_MORE;
-        }else{
+        } else {
             return TYPE_NEWS_LIST;
         }
     }
@@ -66,7 +61,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     //加载更多ViewHolder
-    private class LoadMoreViewHolder extends BaseViewHolder{
+    private class LoadMoreViewHolder extends BaseViewHolder {
 
         LoadMoreViewHolder(View itemView) {
             super(itemView);
@@ -101,25 +96,26 @@ public class NewsListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 }
             });
         }
+
         //设置listItem的数据
         @Override
         void setData(int position) {
             SchoolNewsData single = DataSet.get(position);
-            article_title.setTextColor(single.isRead()?0xff888888:0xff000000);
+            article_title.setTextColor(single.isRead() ? 0xff888888 : 0xff000000);
             article_title.setText(single.getTitle());
             post_time.setText(single.getPost_time());
-            is_image.setVisibility(single.is_image()?View.VISIBLE:View.GONE);
-            is_patch.setVisibility(single.is_patch()?View.VISIBLE:View.GONE);
+            is_image.setVisibility(single.is_image() ? View.VISIBLE : View.GONE);
+            is_patch.setVisibility(single.is_patch() ? View.VISIBLE : View.GONE);
         }
 
         void onBtnItemClick() {
-            SchoolNewsData single =  DataSet.get(getAdapterPosition());
+            SchoolNewsData single = DataSet.get(getAdapterPosition());
             //todo  数据库支持
 //            if(!single_data.isRead()){
 //                single_data.setRead(true);
 //                notifyItemChanged(getAdapterPosition());
 //            }
-            SingleNewsActivity.open(activity,single.getUrl(),single.getTitle());
+            SingleNewsActivity.open(activity, single.getUrl(), single.getTitle());
         }
     }
 }

@@ -25,7 +25,7 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
- *一般文章列表
+ * 一般文章列表
  * 链接到校园网时 GetNormalArticleListTaskRs
  * 外网时 GetArticleListTaskMe
  * 2个是不同的
@@ -35,9 +35,9 @@ public class ArticleList extends ArticleListBase {
     //一般板块/图片板块/手机板块数据列表
     private List<ArticleListData> datas;
     private ArticleListNormalAdapter mRecyleAdapter;
-    private MyDbUtils myDbUtils=null;
+    private MyDbUtils myDbUtils = null;
 
-    public static void open(Context context, int fid,String title){
+    public static void open(Context context, int fid, String title) {
         Intent intent = new Intent(context, ArticleList.class);
         CurrentFid = fid;
         CurrentTitle = title;
@@ -48,19 +48,19 @@ public class ArticleList extends ArticleListBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        myDbUtils= new MyDbUtils(this,true);//数据库操作辅助类
+        myDbUtils = new MyDbUtils(this, true);//数据库操作辅助类
 
         actionBar.setTitle(CurrentTitle);
         datas = new ArrayList<>();
         mLayoutManager = new LinearLayoutManager(this);
-        mRecyleAdapter = new ArticleListNormalAdapter(this, datas,0);
+        mRecyleAdapter = new ArticleListNormalAdapter(this, datas, 0);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mRecyleAdapter);
         //加载更多
-        mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this,8));
+        mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 8));
         datas.clear();
-}
+    }
 
 
     @Override
@@ -71,21 +71,22 @@ public class ArticleList extends ArticleListBase {
 
     @Override
     protected void getData() {
-        String url = UrlUtils.getArticleListUrl(CurrentFid,CurrentPage,true);
-        if(!PublicData.IS_SCHOOL_NET){
-            url = url + UrlUtils.getArticleListUrl(CurrentFid,CurrentPage,false);
+        String url = UrlUtils.getArticleListUrl(CurrentFid, CurrentPage, true);
+        if (!PublicData.IS_SCHOOL_NET) {
+            url = url + UrlUtils.getArticleListUrl(CurrentFid, CurrentPage, false);
         }
 
         HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
-                if(PublicData.IS_SCHOOL_NET){
+                if (PublicData.IS_SCHOOL_NET) {
                     new GetNormalArticleListTaskRs().execute(new String(response));
-                }else{
+                } else {
                     //外网
                     new GetArticleListTaskMe().execute(new String(response));
                 }
             }
+
             @Override
             public void onFailure(Throwable e) {
                 Toast.makeText(getApplicationContext(), "网络错误！！", Toast.LENGTH_SHORT).show();
@@ -94,7 +95,7 @@ public class ArticleList extends ArticleListBase {
                     public void run() {
                         refreshLayout.setRefreshing(false);
                     }
-                },500);
+                }, 500);
             }
         });
 
@@ -103,12 +104,34 @@ public class ArticleList extends ArticleListBase {
     //加载更多
     @Override
     public void onLoadMore() {
-        if(isEnableLoadMore){
+        if (isEnableLoadMore) {
             CurrentPage++;
             isEnableLoadMore = false;
             getData();
 
         }
+    }
+
+    private void getDataCompete(List<ArticleListData> dataset) {
+        btn_refresh.show();
+        if (CurrentPage == 1) {
+            datas.clear();
+            mRecyleAdapter.notifyDataSetChanged();
+        }
+        int start = datas.size();
+        datas.addAll(dataset);
+
+        mRecyleAdapter.notifyItemRangeInserted(start, dataset.size());
+        isEnableLoadMore = true;
+
+        //隐藏正在加载的view
+        hide_loading_view();
+        refreshLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(false);
+            }
+        }, 500);
     }
 
     //校园网状态下获得一个普通板块文章列表数据 根据html获得数据
@@ -126,13 +149,13 @@ public class ArticleList extends ArticleListBase {
                     String type;
                     if (src.attr("id").contains("stickthread")) {
                         type = "置顶";
-                    }else if(src.select("th").attr("class").contains("lock")){
+                    } else if (src.select("th").attr("class").contains("lock")) {
                         type = "关闭";
-                    }else if(src.select(".icn").select("a").attr("title").contains("投票")){
+                    } else if (src.select(".icn").select("a").attr("title").contains("投票")) {
                         type = "投票";
-                    }else if (src.select("th").select("strong").text().length()>0) {
+                    } else if (src.select("th").select("strong").text().length() > 0) {
                         type = "金币:" + src.select("th").select("strong").text().trim();
-                    }else{
+                    } else {
                         type = "normal";
                     }
 
@@ -144,10 +167,10 @@ public class ArticleList extends ArticleListBase {
                     String viewcount = src.getElementsByAttributeValue("class", "num").select("em").text();
                     String replaycount = src.getElementsByAttributeValue("class", "num").select("a").text();
 
-                    if(!PublicData.ISSHOW_ZHIDIN&&type.equals("置顶")){
+                    if (!PublicData.ISSHOW_ZHIDIN && type.equals("置顶")) {
                         System.out.println("ignore zhidin");
-                    }else{
-                        if (title.length()>0&& author.length()>0) {
+                    } else {
+                        if (title.length() > 0 && author.length() > 0) {
                             temp = new ArticleListData(title, titleUrl, type, author, authorUrl, time, viewcount, replaycount);
                             dataset.add(temp);
                         }
@@ -156,7 +179,7 @@ public class ArticleList extends ArticleListBase {
                 }
             }
 
-            myDbUtils = new MyDbUtils(getApplicationContext(),true);
+            myDbUtils = new MyDbUtils(getApplicationContext(), true);
             return myDbUtils.handleList(dataset);
         }
 
@@ -189,10 +212,10 @@ public class ArticleList extends ArticleListBase {
 
                 String img = src.select("img").attr("src");
                 boolean hasImage = img.contains("icon_tu.png");
-                temp = new ArticleListData(hasImage,title, url, author, replyCount);
+                temp = new ArticleListData(hasImage, title, url, author, replyCount);
                 dataset.add(temp);
             }
-            myDbUtils = new MyDbUtils(getApplicationContext(),true);
+            myDbUtils = new MyDbUtils(getApplicationContext(), true);
             return myDbUtils.handleList(dataset);
         }
 
@@ -200,28 +223,6 @@ public class ArticleList extends ArticleListBase {
         protected void onPostExecute(List<ArticleListData> dataset) {
             getDataCompete(dataset);
         }
-    }
-
-    private void getDataCompete(List<ArticleListData> dataset){
-        btn_refresh.show();
-        if(CurrentPage==1){
-            datas.clear();
-            mRecyleAdapter.notifyDataSetChanged();
-        }
-        int start = datas.size();
-        datas.addAll(dataset);
-
-        mRecyleAdapter.notifyItemRangeInserted(start, dataset.size());
-        isEnableLoadMore = true;
-
-        //隐藏正在加载的view
-        hide_loading_view();
-        refreshLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(false);
-            }
-        },500);
     }
 
 }

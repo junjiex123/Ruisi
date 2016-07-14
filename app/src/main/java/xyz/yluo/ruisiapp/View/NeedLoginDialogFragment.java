@@ -20,7 +20,7 @@ public class NeedLoginDialogFragment extends DialogFragment {
         builder.setMessage("此功能需要登陆,你还没有登陆，要去登陆吗？？？")
                 .setPositiveButton("好的", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        startActivity(new Intent(getActivity(),LoginActivity.class));
+                        startActivity(new Intent(getActivity(), LoginActivity.class));
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {

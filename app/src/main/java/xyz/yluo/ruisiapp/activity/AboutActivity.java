@@ -29,16 +29,16 @@ public class AboutActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar!=null){
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
         String ss = "<b>西电睿思手机客户端</b><br />目前可见bug较多，最近比较忙修复bug速度会很慢的。。。<br />" +
                 "bug反馈,或者有什么好的建议点击按钮给我发邮件吧<br />或者 <a href=\"home.php?mod=space&uid=252553&do=profile&mobile=2\">" +
-                "@谁用了FREEDOM</a>或者<a href=\"home.php?mod=space&uid=261098&do=profile&mobile=2\">@wangfuyang</a><br />"+
+                "@谁用了FREEDOM</a>或者<a href=\"home.php?mod=space&uid=261098&do=profile&mobile=2\">@wangfuyang</a><br />" +
                 "也可以到我的github上留言<a href=\"https://github.com/freedom10086/Ruisi\">点击这儿</a>";
 
-        ((MyHtmlTextView) findViewById(R.id.html_text)).mySetText(this,ss);
+        ((MyHtmlTextView) findViewById(R.id.html_text)).mySetText(this, ss);
         PackageInfo info = null;
         PackageManager manager = getPackageManager();
         try {
@@ -47,10 +47,10 @@ public class AboutActivity extends BaseActivity {
             e.printStackTrace();
         }
 
-        if(info!=null){
+        if (info != null) {
             int version_code = info.versionCode;
             String version_name = info.versionName;
-            String a = "版本号："+version_code+"\n版本："+version_name;
+            String a = "版本号：" + version_code + "\n版本：" + version_name;
             version.setText(a);
         }
 
@@ -62,10 +62,10 @@ public class AboutActivity extends BaseActivity {
                             @Override
                             public void onClick(View view) {
                                 String user = PublicData.USER_NAME;
-                                if(user!=null){
-                                    user = "by:"+user;
+                                if (user != null) {
+                                    user = "by:" + user;
                                 }
-                                RequestSendMail.sendMail(getApplicationContext(),user);
+                                RequestSendMail.sendMail(getApplicationContext(), user);
                             }
                         }).show();
             }

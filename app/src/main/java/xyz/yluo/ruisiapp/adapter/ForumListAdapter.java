@@ -22,9 +22,8 @@ import xyz.yluo.ruisiapp.utils.GetLogoUtils;
 /**
  * Created by free2 on 16-3-19.
  * 板块列表
- *
  */
-public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
+public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     protected Activity activity;
     private List<FroumListData> datas = null;
@@ -36,9 +35,9 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(viewType==0){
-            return new  HeadView(LayoutInflater.from(parent.getContext()).inflate(R.layout.forums_list_item_header, parent, false));
-        }else{
+        if (viewType == 0) {
+            return new HeadView(LayoutInflater.from(parent.getContext()).inflate(R.layout.forums_list_item_header, parent, false));
+        } else {
             return new ChildViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.forums_list_item, parent, false));
         }
     }
@@ -55,19 +54,20 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     @Override
     public int getItemViewType(int position) {
-        if(datas.get(position).isheader()){
+        if (datas.get(position).isheader()) {
             return 0;
-        }else{
+        } else {
             return 1;
         }
     }
 
-    protected class HeadView extends BaseViewHolder{
+    protected class HeadView extends BaseViewHolder {
 
         TextView head;
+
         public HeadView(View itemView) {
             super(itemView);
-            head= (TextView) itemView.findViewById(R.id.header_title);
+            head = (TextView) itemView.findViewById(R.id.header_title);
         }
 
         @Override
@@ -77,7 +77,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
     }
 
 
-    protected class ChildViewHolder extends BaseViewHolder{
+    protected class ChildViewHolder extends BaseViewHolder {
 
         ImageView img;
         TextView title;
@@ -96,10 +96,10 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         void setData(int position) {
             final FroumListData single = datas.get(position);
             title.setText(single.getTitle());
-            if(!single.getTodayNew().isEmpty()){
+            if (!single.getTodayNew().isEmpty()) {
                 today_count.setVisibility(View.VISIBLE);
                 today_count.setText(single.getTodayNew());
-            }else{
+            } else {
                 today_count.setVisibility(View.GONE);
             }
             String url = single.getTitleUrl();
@@ -111,9 +111,9 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
                 public void onClick(View view) {
                     String fid = GetId.getFroumFid(single.getTitleUrl());
                     //几个特殊的板块
-                    if(PublicData.IS_SCHOOL_NET &&(fid.equals("561")||fid.equals("157")||fid.equals("13"))){
-                        ArticleListImage.open(activity,Integer.parseInt(fid),single.getTitle());
-                    }else{
+                    if (PublicData.IS_SCHOOL_NET && (fid.equals("561") || fid.equals("157") || fid.equals("13"))) {
+                        ArticleListImage.open(activity, Integer.parseInt(fid), single.getTitle());
+                    } else {
                         ArticleList.open(activity, Integer.parseInt(fid), single.getTitle());
                     }
                 }

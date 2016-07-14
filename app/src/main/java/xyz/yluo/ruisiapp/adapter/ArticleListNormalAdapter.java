@@ -23,7 +23,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * Created by free2 on 16-3-5.
  * 一般文章列表adapter分校园网和外网
  */
-public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolder>{
+public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private static final int TYPE_NORMAL = 0;
     private static final int TYPE_LOAD_MORE = 1;
@@ -31,30 +31,32 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
     private static final int TYPE_NORMAL_MOBILE = 3;
     //数据
     private List<ArticleListData> DataSet;
-    private int type =3;
+    private int type = 3;
 
     //上下文
     private Activity activity;
+
     public ArticleListNormalAdapter(Activity activity, List<ArticleListData> data, int type) {
         DataSet = data;
-        this.activity =activity;
+        this.activity = activity;
         this.type = type;
     }
 
     @Override
     public int getItemViewType(int position) {
 
-        if (position>0&& position == getItemCount() - 1) {
+        if (position > 0 && position == getItemCount() - 1) {
             return TYPE_LOAD_MORE;
         }
         //手机版
-        if(!PublicData.IS_SCHOOL_NET ||type==TYPE_NORMAL_MOBILE){
+        if (!PublicData.IS_SCHOOL_NET || type == TYPE_NORMAL_MOBILE) {
             return TYPE_NORMAL_MOBILE;
-        }else{
+        } else {
             //一般板块
             return TYPE_NORMAL;
         }
     }
+
     //设置view
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -76,20 +78,21 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
 
     @Override
     public int getItemCount() {
-        if (DataSet.size()==0){
+        if (DataSet.size() == 0) {
             return 0;
         }
         return DataSet.size() + 1;
     }
 
     private class NormalViewHolder extends BaseViewHolder {
-        TextView article_type;
         protected TextView article_title;
+        protected TextView post_time;
+        TextView article_type;
         CircleImageView author_img;
         TextView author_name;
-        protected TextView post_time;
         TextView reply_count;
         TextView view_count;
+
         //构造
         NormalViewHolder(View v) {
             super(v);
@@ -116,24 +119,25 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
             });
 
         }
+
         //设置listItem的数据
         @Override
         void setData(int position) {
             ArticleListData single = DataSet.get(position);
             String type = single.getType();
-            if(!type.equals("normal")){
+            if (!type.equals("normal")) {
                 article_type.setText(type);
                 article_type.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 article_type.setVisibility(View.GONE);
             }
-            String postTime = "发表于:"+single.getPostTime();
+            String postTime = "发表于:" + single.getPostTime();
             post_time.setText(postTime);
             view_count.setText(single.getViewCount());
 
             String imageUrl = UrlUtils.getAvaterurlm(single.getAuthorUrl());
             Picasso.with(activity).load(imageUrl).placeholder(R.drawable.image_placeholder).into(author_img);
-            article_title.setTextColor(single.isRead()?0xff888888:0xff000000);
+            article_title.setTextColor(single.isRead() ? 0xff888888 : 0xff000000);
             article_title.setText(single.getTitle());
             author_name.setText(single.getAuthor());
             reply_count.setText(single.getReplayCount());
@@ -141,22 +145,22 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
 
         void onBtnAvatarClick() {
             String imageUrl = UrlUtils.getAvaterurlb(DataSet.get(getAdapterPosition()).getAuthorUrl());
-            UserDetailActivity.openWithTransitionAnimation(activity, DataSet.get(getAdapterPosition()).getAuthor(), author_img,imageUrl);
+            UserDetailActivity.openWithTransitionAnimation(activity, DataSet.get(getAdapterPosition()).getAuthor(), author_img, imageUrl);
         }
 
         void onBtnItemClick() {
-            ArticleListData single_data =  DataSet.get(getAdapterPosition());
-            if(!single_data.isRead()){
+            ArticleListData single_data = DataSet.get(getAdapterPosition());
+            if (!single_data.isRead()) {
                 single_data.setRead(true);
                 notifyItemChanged(getAdapterPosition());
             }
-            SingleArticleActivity.open(activity,single_data.getTitleUrl(),single_data.getTitle(),single_data.getAuthor());
+            SingleArticleActivity.open(activity, single_data.getTitleUrl(), single_data.getTitle(), single_data.getAuthor());
 
         }
     }
 
     //加载更多ViewHolder
-    private class LoadMoreViewHolder extends BaseViewHolder{
+    private class LoadMoreViewHolder extends BaseViewHolder {
 
         LoadMoreViewHolder(View itemView) {
             super(itemView);
@@ -191,24 +195,25 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
                 }
             });
         }
+
         //设置listItem的数据
         @Override
         void setData(int position) {
             ArticleListData single = DataSet.get(position);
-            article_title.setTextColor(single.isRead()?0xff888888:0xff000000);
+            article_title.setTextColor(single.isRead() ? 0xff888888 : 0xff000000);
             article_title.setText(single.getTitle());
             author_name.setText(single.getAuthor());
             reply_count.setText(single.getReplayCount());
-            is_image.setVisibility(single.ishaveImage()?View.VISIBLE:View.GONE);
+            is_image.setVisibility(single.ishaveImage() ? View.VISIBLE : View.GONE);
         }
 
         void onBtnItemClick() {
-            ArticleListData single_data =  DataSet.get(getAdapterPosition());
-            if(!single_data.isRead()){
+            ArticleListData single_data = DataSet.get(getAdapterPosition());
+            if (!single_data.isRead()) {
                 single_data.setRead(true);
                 notifyItemChanged(getAdapterPosition());
             }
-            SingleArticleActivity.open(activity,single_data.getTitleUrl(),single_data.getTitle(),single_data.getAuthor());
+            SingleArticleActivity.open(activity, single_data.getTitleUrl(), single_data.getTitle(), single_data.getAuthor());
         }
     }
 

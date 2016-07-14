@@ -10,7 +10,7 @@ import android.net.Uri;
  */
 public class RequestOpenBrowser {
 
-    public static void openBroswer(Context activity, String url){
+    public static void openBroswer(Context activity, String url) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Uri content_url = Uri.parse(url);

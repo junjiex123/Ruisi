@@ -25,11 +25,10 @@ public class CheckMessageService extends Service {
     private boolean isNotisfy = false;
     private Intent intent = new Intent("com.ruisi.checkmsg");
     private boolean isHaveUnreadMessage = false;
+    private boolean isRunning = false;
 
     public CheckMessageService() {
     }
-
-    private boolean isRunning = false;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -41,7 +40,7 @@ public class CheckMessageService extends Service {
         super.onCreate();
         isRunning = true;
 
-        Log.i(Tag,"service create");
+        Log.i(Tag, "service create");
 
         final NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.logo)
@@ -58,10 +57,10 @@ public class CheckMessageService extends Service {
             @Override
             public void onSuccess(byte[] response) {
                 Document document = Jsoup.parse(new String(response));
-                Elements elemens  = document.select(".nts").select("dl.cl");
-                for(Element e:elemens){
+                Elements elemens = document.select(".nts").select("dl.cl");
+                for (Element e : elemens) {
                     String s = e.select(".ntc_body").attr("style");
-                    if(s.contains("bold")) {
+                    if (s.contains("bold")) {
                         /**
                          * get message
                          */
@@ -84,22 +83,22 @@ public class CheckMessageService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (isRunning){
-                    Log.i(Tag,"thread running.....check message......");
+                while (isRunning) {
+                    Log.i(Tag, "thread running.....check message......");
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    String url = PublicData.getBaseUrl()+"home.php?mod=space&do=notice&view=mypost&type=post";
-                    if(!PublicData.IS_SCHOOL_NET){
-                        url = url+"&mobile=2";
+                    String url = PublicData.getBaseUrl() + "home.php?mod=space&do=notice&view=mypost&type=post";
+                    if (!PublicData.IS_SCHOOL_NET) {
+                        url = url + "&mobile=2";
                     }
-                    client.get(url,handler);
+                    client.get(url, handler);
 
-                    intent.putExtra("isHaveMessage",isHaveUnreadMessage);
+                    intent.putExtra("isHaveMessage", isHaveUnreadMessage);
                     sendBroadcast(intent);
-                    Log.i(Tag,"发送广播...."+isHaveUnreadMessage);
+                    Log.i(Tag, "发送广播...." + isHaveUnreadMessage);
                     try {
                         Thread.sleep(40000);
                     } catch (InterruptedException e) {
@@ -116,7 +115,7 @@ public class CheckMessageService extends Service {
      * 消息已读设为未读
      * todo 有一些延迟要解决
      */
-    private void clearAllMessage(){
+    private void clearAllMessage() {
         isHaveUnreadMessage = false;
     }
 
@@ -124,24 +123,25 @@ public class CheckMessageService extends Service {
     public void onDestroy() {
         super.onDestroy();
         isRunning = false;
-        Log.i(Tag,"service destroy");
+        Log.i(Tag, "service destroy");
     }
+
     //start service时执行
     //可以start多次
     //通过intent 可以传入数据
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        this.isRunning = intent.getBooleanExtra("isRunning",false);
-        this.isNotisfy = intent.getBooleanExtra("isNotisfy",false);
-        boolean isClearMessage = intent.getBooleanExtra("isClearMessage",false);
+        this.isRunning = intent.getBooleanExtra("isRunning", false);
+        this.isNotisfy = intent.getBooleanExtra("isNotisfy", false);
+        boolean isClearMessage = intent.getBooleanExtra("isClearMessage", false);
         /**
          * todo 消息已读清除
          */
-        if(isClearMessage){
+        if (isClearMessage) {
             clearAllMessage();
         }
 
-        Log.i(Tag,"service start is running"+ isRunning+" is notify "+isNotisfy);
+        Log.i(Tag, "service start is running" + isRunning + " is notify " + isNotisfy);
         return super.onStartCommand(intent, flags, startId);
     }
 }

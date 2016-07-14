@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:layout_marginBottom="4dp"
-    android:background="#eeffffff"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_item_btn_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_marginBottom="4dp"
+    android:background="#eeffffff"
     android:clickable="true"
-    android:id="@+id/main_item_btn_item"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp"
-        android:background="?android:attr/selectableItemBackground">
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="vertical"
+        android:padding="12dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,23 +24,23 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_marginEnd="4dp"
                 android:id="@+id/article_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/type_bg_accent"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
+                android:text="金币"
                 android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:background="@drawable/type_bg_accent"
-                android:text="金币" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/article_title"
+                style="@style/TitleText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                style="@style/TitleText"
                 tools:text="帖子的标题" />
 
         </LinearLayout>
@@ -56,9 +56,9 @@
                 android:id="@+id/author_img"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                app:civ_border_width="1dp"
+                android:src="@drawable/image_placeholder"
                 app:civ_border_color="@android:color/white"
-                android:src="@drawable/image_placeholder"/>
+                app:civ_border_width="1dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -73,57 +73,57 @@
 
                     <TextView
                         android:id="@+id/author_name"
+                        style="@style/SmallText"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="4dp"
-                        style="@style/SmallText"
+                        android:layout_weight="1"
                         android:singleLine="true"
                         tools:text="hahah" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginTop="@dimen/dimen_4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_4"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:gravity="center|start"
-                        android:drawablePadding="4dp"
-                        android:drawableStart="@drawable/ic_time_12dp"
                         android:id="@+id/post_time"
+                        style="@style/SmallText"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="4dp"
-                        style="@style/SmallText"
+                        android:layout_weight="1"
+                        android:drawablePadding="4dp"
+                        android:drawableStart="@drawable/ic_time_12dp"
+                        android:gravity="center|start"
                         android:singleLine="true"
                         tools:text="2015-1-1 19:20:15" />
 
 
                     <TextView
-                        android:gravity="top"
+                        android:id="@+id/view_count"
+                        style="@style/SmallText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:drawablePadding="@dimen/dimen_4"
                         android:drawableStart="@drawable/ic_look_12dp"
-                        android:id="@+id/view_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/SmallText"
+                        android:gravity="top"
                         android:singleLine="true"
-                        tools:text="222"/>
+                        tools:text="222" />
 
                     <TextView
-                        android:layout_marginStart="@dimen/dimen_8"
-                        android:gravity="top"
-                        android:drawablePadding="4dp"
-                        android:drawableStart="@drawable/ic_reply_12dp"
                         android:id="@+id/reply_count"
+                        style="@style/SmallText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/SmallText"
-                        tools:text="111"
-                        android:singleLine="true" />
+                        android:layout_marginStart="@dimen/dimen_8"
+                        android:drawablePadding="4dp"
+                        android:drawableStart="@drawable/ic_reply_12dp"
+                        android:gravity="top"
+                        android:singleLine="true"
+                        tools:text="111" />
                 </LinearLayout>
 
 

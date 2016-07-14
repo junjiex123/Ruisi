@@ -19,7 +19,7 @@ public class SingleArticleData {
     private String title;
 
     //层主
-    public SingleArticleData(SingleType type,String title, String Img, String username, String postTime, String index, String replyUrl, String cotent) {
+    public SingleArticleData(SingleType type, String title, String Img, String username, String postTime, String index, String replyUrl, String cotent) {
         this.type = type;
         this.Img = Img;
         this.username = username;
@@ -33,9 +33,11 @@ public class SingleArticleData {
     public String getTitle() {
         return title;
     }
+
     public String getReplyUrlTitle() {
         return replyUrlTitle;
     }
+
     public String getUsername() {
         return username;
     }

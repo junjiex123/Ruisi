@@ -1,83 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:elevation="8dp"
-    android:layout_gravity="bottom"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_gravity="bottom"
+    android:elevation="8dp"
+    android:orientation="vertical">
+
     <View
-        android:background="#eedddddd"
         android:layout_width="match_parent"
-        android:layout_height="0.8dp"/>
-    <LinearLayout
+        android:layout_height="0.8dp"
+        android:background="#eedddddd" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#f2ffffff"
-        android:padding="@dimen/dimen_4"
         android:orientation="horizontal"
-        xmlns:android="http://schemas.android.com/apk/res/android">
+        android:padding="@dimen/dimen_4">
+
         <ImageButton
-            android:layout_gravity="bottom|start"
             android:id="@+id/action_smiley"
             android:layout_width="44dp"
             android:layout_height="match_parent"
+            android:layout_gravity="bottom|start"
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@null"
             android:src="@drawable/ic_edit_emoticon_24dp" />
+
         <EditText
-            android:hint="回复"
             android:id="@+id/input_aera"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/reply_edittext_background"
+            android:hint="回复"
             android:maxLines="3" />
 
         <ImageView
-            android:layout_gravity="bottom|end"
             android:id="@+id/action_send"
-            android:clickable="true"
-            android:background="?attr/selectableItemBackground"
-            android:layout_marginStart="8dp"
             android:layout_width="44dp"
             android:layout_height="match_parent"
+            android:layout_gravity="bottom|end"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
             android:padding="@dimen/dimen_4"
             android:src="@drawable/ic_menu_send" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:background="#ffffff"
         android:id="@+id/smileys_container"
-        android:visibility="gone"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:orientation="vertical"
+        android:visibility="gone">
+
         <View
-            android:background="#1f000000"
             android:layout_width="match_parent"
-            android:layout_height="0.8dp"/>
+            android:layout_height="0.8dp"
+            android:background="#1f000000" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/smiley_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="horizontal"
-            android:scrollbarSize="2dp">
-        </android.support.v7.widget.RecyclerView>
+            android:scrollbarSize="2dp"
+            android:scrollbars="horizontal"></android.support.v7.widget.RecyclerView>
 
         <View
-            android:background="#1f000000"
             android:layout_width="match_parent"
-            android:layout_height="0.8dp"/>
+            android:layout_height="0.8dp"
+            android:background="#1f000000" />
 
         <android.support.design.widget.TabLayout
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             android:id="@+id/mytab"
             android:layout_width="match_parent"
-            android:layout_height="38dp" />
+            android:layout_height="38dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp" />
     </LinearLayout>
 </LinearLayout>
 

@@ -34,7 +34,7 @@ public class ArticleListImage extends ArticleListBase {
     private StaggeredGridLayoutManager layoutManager;
     private int colNum = 2;
 
-    public static void open(Context context, int fid, String title){
+    public static void open(Context context, int fid, String title) {
         Intent intent = new Intent(context, ArticleListImage.class);
         CurrentFid = fid;
         CurrentTitle = title;
@@ -46,8 +46,8 @@ public class ArticleListImage extends ArticleListBase {
         super.onCreate(savedInstanceState);
 
         actionBar.setTitle(CurrentTitle);
-        datas =  new ArrayList<>();
-        layoutManager = new StaggeredGridLayoutManager(colNum,StaggeredGridLayoutManager.VERTICAL);
+        datas = new ArrayList<>();
+        layoutManager = new StaggeredGridLayoutManager(colNum, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
         adapter = new ArticleListImageAdapter(this, datas);
         mRecyclerView.setAdapter(adapter);
@@ -58,7 +58,7 @@ public class ArticleListImage extends ArticleListBase {
 
     @Override
     protected void getData() {
-        String url = UrlUtils.getArticleListUrl(CurrentFid,CurrentPage,true);
+        String url = UrlUtils.getArticleListUrl(CurrentFid, CurrentPage, true);
         HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -73,7 +73,7 @@ public class ArticleListImage extends ArticleListBase {
                     public void run() {
                         refreshLayout.setRefreshing(false);
                     }
-                },500);
+                }, 500);
 
             }
         });
@@ -85,6 +85,26 @@ public class ArticleListImage extends ArticleListBase {
 
     @Override
     public void onLoadMore() {
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_article_image_list, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_change_col) {
+            if (colNum == 1) {
+                colNum = 2;
+                layoutManager.setSpanCount(2);
+            } else {
+                colNum = 1;
+                layoutManager.setSpanCount(1);
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     //校园网状态下获得图片板块数据 图片链接、标题等  根据html获得数据
@@ -106,7 +126,7 @@ public class ArticleListImage extends ArticleListBase {
                 String replyCount = tmp.select(".xg1.y").select("a[href^=forum.php]").text();
                 tmp.select(".xg1.y").select("a[href^=forum.php]").remove();
 
-                ImageArticleListData tem = new ImageArticleListData(title, url, img, author,replyCount);
+                ImageArticleListData tem = new ImageArticleListData(title, url, img, author, replyCount);
                 datas.add(tem);
             }
             return null;
@@ -121,27 +141,7 @@ public class ArticleListImage extends ArticleListBase {
                 public void run() {
                     refreshLayout.setRefreshing(false);
                 }
-            },500);
+            }, 500);
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_article_image_list, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==R.id.menu_change_col){
-            if(colNum==1){
-                colNum =2;
-                layoutManager.setSpanCount(2);
-            }else {
-                colNum =1;
-                layoutManager.setSpanCount(1);
-            }
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

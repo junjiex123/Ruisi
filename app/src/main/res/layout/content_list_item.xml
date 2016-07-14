@@ -1,65 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:background="@color/bgwhite"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:background="@color/bgwhite"
+    android:orientation="vertical">
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:paddingBottom="12dp"
         android:paddingEnd="16dp"
         android:paddingStart="0dp"
-        android:paddingTop="12dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:paddingTop="12dp">
+
         <View
-            android:background="@color/colorAccent"
             android:layout_width="6dp"
-            android:layout_height="24dp"/>
+            android:layout_height="24dp"
+            android:background="@color/colorAccent" />
+
         <TextView
-            android:paddingTop="4dp"
-            android:layout_marginStart="10dp"
-            android:textStyle="bold"
             android:id="@+id/article_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:paddingTop="4dp"
             android:textColor="@color/textColorPrimary"
             android:textSize="17sp"
-            tools:text="尴尬，Xbox One 2与PS4.5太快推出压力重重"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:textStyle="bold"
+            tools:text="尴尬，Xbox One 2与PS4.5太快推出压力重重" />
     </LinearLayout>
 
 
     <LinearLayout
-        android:gravity="center_vertical"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp">
 
         <xyz.yluo.ruisiapp.View.CircleImageView
             android:id="@+id/article_user_image"
             android:layout_width="44dp"
             android:layout_height="44dp"
-            android:src="@drawable/image_placeholder"/>
+            android:src="@drawable/image_placeholder" />
 
         <LinearLayout
-            android:layout_marginStart="8dp"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/article_username"
                     android:layout_width="wrap_content"
@@ -67,25 +69,26 @@
                     android:textColor="@color/colorAuthor"
                     android:textSize="14sp"
                     tools:text="author" />
+
                 <TextView
-                    android:layout_marginStart="8dp"
                     android:id="@+id/bt_lable_lz"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/type_bg_blue"
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
+                    android:text="楼主"
                     android:textColor="@android:color/white"
-                    android:textSize="12sp"
-                    android:background="@drawable/type_bg_blue"
-                    android:text="楼主" />
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
                 android:id="@+id/article_post_time"
                 style="@style/SmallText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:singleLine="true"
                 tools:text="发布于：2天前" />
 
@@ -94,51 +97,55 @@
     </LinearLayout>
 
     <xyz.yluo.ruisiapp.View.MyHtmlTextView
-        android:lineSpacingMultiplier="1.4"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="8dp"
-        android:textColor="?android:attr/textColorPrimary"
-        android:autoLink="web"
         android:id="@+id/html_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textSize="16sp"/>
+        android:autoLink="web"
+        android:lineSpacingMultiplier="1.4"
+        android:paddingBottom="8dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="4dp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="16sp" />
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
         <LinearLayout
-            android:padding="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:padding="8dp">
+
             <ImageView
-                android:layout_marginStart="8dp"
                 android:id="@+id/btn_share"
-                android:clickable="true"
-                android:background="?attr/selectableItemBackground"
-                android:src="@drawable/ic_menu_share_accent_24dp"
-                android:padding="@dimen/dimen_4"
-                android:layout_width="32dp"
-                android:layout_height="32dp" />
-            <ImageView
-                android:id="@+id/btn_star"
-                android:clickable="true"
-                android:background="?attr/selectableItemBackground"
-                android:layout_marginStart="8dp"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:padding="@dimen/dimen_4"
+                android:src="@drawable/ic_menu_share_accent_24dp" />
+
+            <ImageView
+                android:id="@+id/btn_star"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
                 android:padding="@dimen/dimen_4"
                 android:src="@drawable/ic_favorite_border_black_24dp" />
         </LinearLayout>
+
         <View
-            android:background="@color/bggrey"
             android:layout_width="match_parent"
-            android:layout_height="12dp"/>
+            android:layout_height="12dp"
+            android:background="@color/bggrey" />
     </LinearLayout>
 
 </LinearLayout>

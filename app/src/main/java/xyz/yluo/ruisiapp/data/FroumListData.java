@@ -13,7 +13,7 @@ public class FroumListData {
     //是不是头
     private boolean isheader;
 
-    public FroumListData(boolean isheader,String title, String todayNew, String titleUrl) {
+    public FroumListData(boolean isheader, String title, String todayNew, String titleUrl) {
         this.title = title;
         this.todayNew = todayNew;
         this.titleUrl = titleUrl;
@@ -22,7 +22,7 @@ public class FroumListData {
     }
 
     //板块分类头
-    public FroumListData(boolean isheader,String title) {
+    public FroumListData(boolean isheader, String title) {
         this.title = title;
         this.isheader = isheader;
     }

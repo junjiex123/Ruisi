@@ -1,55 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_item_btn_item"
     android:layout_width="match_parent"
-    android:paddingTop="@dimen/dimen_16"
-    android:paddingStart="16dp"
-    android:paddingEnd="@dimen/dimen_16"
+    android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingEnd="@dimen/dimen_16"
+    android:paddingStart="16dp"
+    android:paddingTop="@dimen/dimen_16">
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <xyz.yluo.ruisiapp.View.CircleImageView
             android:id="@+id/user_image"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginEnd="@dimen/dimen_8"
             android:src="@drawable/image_placeholder"
             app:civ_border_color="@android:color/white"
-            app:civ_border_width="1dp"
-            android:layout_width="48dp"
-            android:layout_height="48dp" />
+            app:civ_border_width="1dp" />
+
         <LinearLayout
-            android:layout_gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/user_name"
+                style="@style/TitleText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
-                style="@style/TitleText"
                 android:singleLine="true"
                 tools:text="hualong95" />
+
             <TextView
                 android:id="@+id/user_info"
-                android:layout_marginTop="@dimen/dimen_4"
+                style="@style/SmallText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
-                style="@style/SmallText"
+                android:layout_marginTop="@dimen/dimen_4"
                 android:singleLine="true"
                 tools:text="木有人买电脑了" />
         </LinearLayout>
     </LinearLayout>
 
-    <View style="@style/DeepLine"
-        android:layout_marginTop="@dimen/dimen_16"
-        android:layout_gravity="bottom" />
+    <View
+        style="@style/DeepLine"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="@dimen/dimen_16" />
 </LinearLayout>

@@ -27,10 +27,10 @@ import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
  * 首页第三页
  * 回复我的 我的消息
  */
-public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
+public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+    protected Activity activity;
     private List<MessageData> DataSet;
     private RecyclerViewClickListener clickListener;
-    protected Activity activity;
 
     public MessageAdapter(Activity activity, List<MessageData> dataSet, RecyclerViewClickListener listener) {
         DataSet = dataSet;
@@ -40,18 +40,18 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(viewType==1){
+        if (viewType == 1) {
             return new MessageReplyListHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.user_message_list_item, parent, false));
-        }else{
+        } else {
             return new ChangeMessageHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.change_message_item, parent, false));
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if(position==0){
+        if (position == 0) {
             return 0;
-        }else{
+        } else {
             return 1;
         }
     }
@@ -63,17 +63,18 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     @Override
     public int getItemCount() {
-        return DataSet.size()+1;
+        return DataSet.size() + 1;
     }
 
 
     //用户消息、回复我的 holder
-    private class MessageReplyListHolder extends BaseViewHolder{
+    private class MessageReplyListHolder extends BaseViewHolder {
         protected TextView title;
         protected TextView time;
         protected CircleImageView article_user_image;
         ArrowTextView reply_content;
         TextView isRead;
+
         //url
         MessageReplyListHolder(View itemView) {
             super(itemView);
@@ -98,43 +99,45 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         }
 
         void setData(int position) {
-            MessageData single_data = DataSet.get(position-1);
+            MessageData single_data = DataSet.get(position - 1);
             title.setText(single_data.getTitle());
             time.setText(single_data.getTime());
             String imageUrl = single_data.getauthorImage();
             Picasso.with(activity).load(imageUrl).placeholder(R.drawable.image_placeholder).into(article_user_image);
             reply_content.setText(single_data.getcontent());
-            if(single_data.isRead()){
+            if (single_data.isRead()) {
                 isRead.setVisibility(View.GONE);
-            }else{
+            } else {
                 isRead.setVisibility(View.VISIBLE);
             }
         }
-        protected void item_click(){
-            MessageData single_data =  DataSet.get(getAdapterPosition()-1);
-            if(!single_data.isRead()){
+
+        protected void item_click() {
+            MessageData single_data = DataSet.get(getAdapterPosition() - 1);
+            if (!single_data.isRead()) {
                 single_data.setRead(true);
                 notifyItemChanged(getAdapterPosition());
             }
-            if(ListType.MYMESSAGE==single_data.getType()){//用户消息pm
-                String username = single_data.getTitle().replace("我对 ","").replace("说:","").replace(" 对我","");
-                ChatActivity.open(activity,username,single_data.getTitleUrl());
+            if (ListType.MYMESSAGE == single_data.getType()) {//用户消息pm
+                String username = single_data.getTitle().replace("我对 ", "").replace("说:", "").replace(" 对我", "");
+                ChatActivity.open(activity, username, single_data.getTitleUrl());
                 single_data.setRead(true);
-            }else if(ListType.REPLAYME==single_data.getType()){//回复我的
-                SingleArticleActivity.open(activity,single_data.getTitleUrl(),"","");
+            } else if (ListType.REPLAYME == single_data.getType()) {//回复我的
+                SingleArticleActivity.open(activity, single_data.getTitleUrl(), "", "");
             }
 
         }
-        void user_click(){
-            MessageData single_data =  DataSet.get(getAdapterPosition()-1);
-            String username = single_data.getTitle().replace("我对 ","").replace("说:","").replace(" 对我","").replace(" 回复了我","");
-            UserDetailActivity.openWithTransitionAnimation(activity, username, article_user_image,DataSet.get(getAdapterPosition()).getauthorImage());
+
+        void user_click() {
+            MessageData single_data = DataSet.get(getAdapterPosition() - 1);
+            String username = single_data.getTitle().replace("我对 ", "").replace("说:", "").replace(" 对我", "").replace(" 回复了我", "");
+            UserDetailActivity.openWithTransitionAnimation(activity, username, article_user_image, DataSet.get(getAdapterPosition()).getauthorImage());
         }
     }
 
 
     //切换消息类型
-    private class ChangeMessageHolder extends BaseViewHolder{
+    private class ChangeMessageHolder extends BaseViewHolder {
 
         RadioGroup btn_change;
 
@@ -144,10 +147,10 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder>{
             btn_change.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int id) {
-                    if(id==R.id.btn_reply){
-                        clickListener.recyclerViewListClicked(radioGroup,0);
-                    }else{
-                        clickListener.recyclerViewListClicked(radioGroup,1);
+                    if (id == R.id.btn_reply) {
+                        clickListener.recyclerViewListClicked(radioGroup, 0);
+                    } else {
+                        clickListener.recyclerViewListClicked(radioGroup, 1);
                     }
                 }
             });

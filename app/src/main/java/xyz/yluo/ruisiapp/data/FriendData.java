@@ -2,7 +2,6 @@ package xyz.yluo.ruisiapp.data;
 
 /**
  * Created by free2 on 16-4-12.
- *
  */
 public class FriendData {
 

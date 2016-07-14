@@ -17,7 +17,7 @@ import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
  * Created by free2 on 16-5-1.
  * 表情adapter
  */
-public class SmileyAdapter extends RecyclerView.Adapter<SmileyAdapter.SmileyViewHolder>{
+public class SmileyAdapter extends RecyclerView.Adapter<SmileyAdapter.SmileyViewHolder> {
 
     private List<Drawable> images = new ArrayList<>();
     private RecyclerViewClickListener itemListener;
@@ -44,21 +44,22 @@ public class SmileyAdapter extends RecyclerView.Adapter<SmileyAdapter.SmileyView
         return images.size();
     }
 
-    protected class SmileyViewHolder extends RecyclerView.ViewHolder{
+    protected class SmileyViewHolder extends RecyclerView.ViewHolder {
         private ImageView image;
+
         public SmileyViewHolder(View itemView) {
             super(itemView);
             image = (ImageView) itemView.findViewById(R.id.smiley);
             image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    itemListener.recyclerViewListClicked(image,getAdapterPosition());
+                    itemListener.recyclerViewListClicked(image, getAdapterPosition());
                 }
             });
         }
 
 
-        private void setSmiley(int position){
+        private void setSmiley(int position) {
             image.setImageDrawable(images.get(position));
         }
 

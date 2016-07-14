@@ -42,11 +42,28 @@ public class SettingActivity extends PreferenceActivity {
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
 
         ActionBar actionBar = getDelegate().getSupportActionBar();
-        if(actionBar!=null){
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle("设置");
         }
 
+    }
+
+    private AppCompatDelegate getDelegate() {
+        if (mDelegate == null) {
+            mDelegate = AppCompatDelegate.create(this, null);
+        }
+        return mDelegate;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public static class MyPreferenceFragment extends PreferenceFragment
@@ -61,11 +78,10 @@ public class SettingActivity extends PreferenceActivity {
 
         private SharedPreferences sharedPreferences;
 
-        private Preference about_this,clear_cache,open_sourse;
+        private Preference about_this, clear_cache, open_sourse;
 
         @Override
-        public void onCreate(final Bundle savedInstanceState)
-        {
+        public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.setting);
 
@@ -79,12 +95,12 @@ public class SettingActivity extends PreferenceActivity {
             sharedPreferences = getPreferenceScreen().getSharedPreferences();
             sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-            boolean b = sharedPreferences.getBoolean("setting_show_tail",false);
+            boolean b = sharedPreferences.getBoolean("setting_show_tail", false);
             setting_user_tail.setEnabled(b);
-            setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail","无小尾巴"));
+            setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail", "无小尾巴"));
 
 
-            Log.i("is show tail",""+sharedPreferences.getBoolean("setting_show_tail",false));
+            Log.i("is show tail", "" + sharedPreferences.getBoolean("setting_show_tail", false));
             PackageManager manager;
             PackageInfo info = null;
             manager = getActivity().getPackageManager();
@@ -95,17 +111,17 @@ public class SettingActivity extends PreferenceActivity {
             }
             int version_code = 1;
             String version_name = "1.0";
-            if(info!=null){
+            if (info != null) {
                 version_code = info.versionCode;
-                version_name =  info.versionName;
+                version_name = info.versionName;
             }
-            about_this.setSummary("当前版本"+version_name);
+            about_this.setSummary("当前版本" + version_name);
 
             final int finalVersion_code = version_code;
             about_this.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    Toast.makeText(getActivity(),"正在检查更新",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "正在检查更新", Toast.LENGTH_SHORT).show();
                     AsyncHttpClient client = new AsyncHttpClient();
                     client.get("http://xidianrs.cn/version.json", new ResponseHandler() {
                         @Override
@@ -114,31 +130,32 @@ public class SettingActivity extends PreferenceActivity {
                             try {
                                 jsonObject = new JSONObject(new String(response));
                                 int get_code = jsonObject.getInt("version_code");
-                                if(get_code> finalVersion_code){
+                                if (get_code > finalVersion_code) {
                                     String get_name = jsonObject.getString("version_name");
                                     JSONArray resultJsonArray = jsonObject.getJSONArray("des");
                                     String info = "";
-                                    for(int i=0;i<resultJsonArray.length();i++){
-                                        info+=(i+1)+":"+resultJsonArray.getJSONObject(i).getString("info");
-                                        if(i!=resultJsonArray.length()-1){
-                                            info+="\n";
+                                    for (int i = 0; i < resultJsonArray.length(); i++) {
+                                        info += (i + 1) + ":" + resultJsonArray.getJSONObject(i).getString("info");
+                                        if (i != resultJsonArray.length() - 1) {
+                                            info += "\n";
                                         }
                                     }
                                     NewVersionDialog dialog = new NewVersionDialog();
                                     dialog.setCode(get_name);
                                     dialog.setMessage(info);
-                                    dialog.show(getFragmentManager(),"new");
-                                }else{
-                                    Toast.makeText(getActivity(),"暂无更新",Toast.LENGTH_SHORT).show();
+                                    dialog.show(getFragmentManager(), "new");
+                                } else {
+                                    Toast.makeText(getActivity(), "暂无更新", Toast.LENGTH_SHORT).show();
                                 }
 
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
+
                         @Override
                         public void onFailure(Throwable e) {
-                            Toast.makeText(getActivity(),"连接服务器失败",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "连接服务器失败", Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -149,18 +166,18 @@ public class SettingActivity extends PreferenceActivity {
             open_sourse.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    RequestOpenBrowser.openBroswer(getActivity(),"https://github.com/freedom10086/Ruisi");
+                    RequestOpenBrowser.openBroswer(getActivity(), "https://github.com/freedom10086/Ruisi");
                     return false;
                 }
             });
-            clear_cache.setSummary("缓存大小："+DataCleanManager.getTotalCacheSize(getActivity()));
+            clear_cache.setSummary("缓存大小：" + DataCleanManager.getTotalCacheSize(getActivity()));
             clear_cache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     DataCleanManager.cleanApplicationData(getActivity());
 
-                    Toast.makeText(getActivity(),"缓存清理成功!请重新登陆",Toast.LENGTH_SHORT).show();
-                    clear_cache.setSummary("缓存大小："+DataCleanManager.getTotalCacheSize(getActivity()));
+                    Toast.makeText(getActivity(), "缓存清理成功!请重新登陆", Toast.LENGTH_SHORT).show();
+                    clear_cache.setSummary("缓存大小：" + DataCleanManager.getTotalCacheSize(getActivity()));
                     return false;
                 }
             });
@@ -186,12 +203,12 @@ public class SettingActivity extends PreferenceActivity {
 
                     break;
                 case "setting_show_tail":
-                    boolean b = sharedPreferences.getBoolean("setting_show_tail",false);
+                    boolean b = sharedPreferences.getBoolean("setting_show_tail", false);
                     setting_user_tail.setEnabled(b);
-                    setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail","无小尾巴"));
+                    setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail", "无小尾巴"));
                     break;
                 case "setting_user_tail":
-                    setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail","无小尾巴"));
+                    setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail", "无小尾巴"));
                     break;
                 case "setting_show_zhidin":
                     PublicData.ISSHOW_ZHIDIN = sharedPreferences.getBoolean("setting_show_zhidin", false);
@@ -201,23 +218,5 @@ public class SettingActivity extends PreferenceActivity {
                     break;
             }
         }
-    }
-
-
-    private AppCompatDelegate getDelegate() {
-        if (mDelegate == null) {
-            mDelegate = AppCompatDelegate.create(this, null);
-        }
-        return mDelegate;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

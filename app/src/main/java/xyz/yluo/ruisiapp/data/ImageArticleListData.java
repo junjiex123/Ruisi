@@ -12,7 +12,7 @@ public class ImageArticleListData {
     private String author;
     private String ReplyCount;
 
-    public ImageArticleListData(String title, String titleUrl, String image, String author,String replyCount) {
+    public ImageArticleListData(String title, String titleUrl, String image, String author, String replyCount) {
         this.title = title;
         this.titleUrl = titleUrl;
         this.image = image;

@@ -86,10 +86,10 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
                 finish();
             }
         });
-        adapter = new SimpleListAdapter(ListType.SERRCH,this, datas);
+        adapter = new SimpleListAdapter(ListType.SERRCH, this, datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recycler_view.setLayoutManager(layoutManager);
-        recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) layoutManager, this,20));
+        recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) layoutManager, this, 20));
         recycler_view.setAdapter(adapter);
 
         search_input.setOnEditorActionListener(new EditText.OnEditorActionListener() {
@@ -109,14 +109,14 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
     @Override
     protected void onStart() {
         super.onStart();
-        ImeUtil.show_ime(this,search_input);
+        ImeUtil.show_ime(this, search_input);
     }
 
-    private void start_search_click(){
-        if (search_input.getText().toString().isEmpty()){
-            Snackbar.make(main_window,"你还没写内容呢",Snackbar.LENGTH_SHORT).show();
+    private void start_search_click() {
+        if (search_input.getText().toString().isEmpty()) {
+            Snackbar.make(main_window, "你还没写内容呢", Snackbar.LENGTH_SHORT).show();
             return;
-        }else {
+        } else {
             getData(search_input.getText().toString());
         }
 
@@ -128,7 +128,7 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
         searchid = 0;
     }
 
-    private void getData(String str){
+    private void getData(String str) {
 
         refreshLayout.post(new Runnable() {
             @Override
@@ -138,18 +138,18 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
         });
 
         String url = "search.php?mod=forum&mobile=2";
-        Map<String,String> paras = new HashMap<>();
+        Map<String, String> paras = new HashMap<>();
         paras.put("formhash", PublicData.FORMHASH);
-        paras.put("searchsubmit","yes");
-        paras.put("srchtxt",str);
+        paras.put("searchsubmit", "yes");
+        paras.put("srchtxt", str);
 
-        HttpUtil.post(this,url,paras,new ResponseHandler(){
+        HttpUtil.post(this, url, paras, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                if(res.contains("秒内只能进行一次搜索")){
-                    Snackbar.make(main_window,"抱歉，您在 15 秒内只能进行一次搜索",Snackbar.LENGTH_SHORT).show();
-                }else {
+                if (res.contains("秒内只能进行一次搜索")) {
+                    Snackbar.make(main_window, "抱歉，您在 15 秒内只能进行一次搜索", Snackbar.LENGTH_SHORT).show();
+                } else {
                     new GetResultListTaskMe().execute(new String(response));
                 }
             }
@@ -157,7 +157,7 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
             @Override
             public void onFailure(Throwable e) {
                 e.printStackTrace();
-                Snackbar.make(main_window,"网络错误",Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(main_window, "网络错误", Snackbar.LENGTH_SHORT).show();
             }
 
             @Override
@@ -168,25 +168,26 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
                     public void run() {
                         refreshLayout.setRefreshing(false);
                     }
-                },500);
+                }, 500);
 
             }
         });
     }
 
-    private void getSomePageData(int page){
-        String url = "search.php?mod=forum&searchid="+searchid+"&orderby=lastpost&ascdesc=desc&searchsubmit=yes&page="+page+"&mobile=2";
+    private void getSomePageData(int page) {
+        String url = "search.php?mod=forum&searchid=" + searchid + "&orderby=lastpost&ascdesc=desc&searchsubmit=yes&page=" + page + "&mobile=2";
 
-        HttpUtil.get(this,url,new ResponseHandler(){
+        HttpUtil.get(this, url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 new GetResultListTaskMe().execute(new String(response));
             }
+
             @Override
             public void onFailure(Throwable e) {
                 isEnableLoadMore = true;
                 e.printStackTrace();
-                Snackbar.make(main_window,"网络错误(Error -2)",Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(main_window, "网络错误(Error -2)", Snackbar.LENGTH_SHORT).show();
             }
         });
     }
@@ -195,12 +196,12 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
     public void onLoadMore() {
         //loadmore 被出发
         //加载更多被电击
-        if(isEnableLoadMore){
+        if (isEnableLoadMore) {
             isEnableLoadMore = false;
             int page = currentPage;
-            if(currentPage < totalPage&&totalPage>1&&searchid>0){
-                Log.i("loadmore",currentPage+"");
-                page= page +1;
+            if (currentPage < totalPage && totalPage > 1 && searchid > 0) {
+                Log.i("loadmore", currentPage + "");
+                page = page + 1;
                 getSomePageData(page);
             }
         }
@@ -215,48 +216,48 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
             Elements body = doc.select("div[class=threadlist]"); // 具有 href 属性的链接
             //获得总页数
             //获取总页数 和当前页数
-            if(doc.select(".pg").text().length()>0){
+            if (doc.select(".pg").text().length() > 0) {
                 Elements pageinfos = doc.select(".pg");
                 currentPage = GetNumber.getNumber(pageinfos.select("strong").text());
                 int n = GetNumber.getNumber(pageinfos.select("span").attr("title"));
-                if(n>0&&n> totalPage){
+                if (n > 0 && n > totalPage) {
                     totalPage = n;
                 }
-                if(totalPage>1){
+                if (totalPage > 1) {
                     //searchid = pageinfos.select("a").attr("href")
-                    searchid =  GetId.getSearchId(pageinfos.select("a").attr("href"));
-                    Log.i("search id",searchid+"");
+                    searchid = GetId.getSearchId(pageinfos.select("a").attr("href"));
+                    Log.i("search id", searchid + "");
                 }
-                Log.i("page info",doc.select(".pg").html());
-                Log.i("page info",currentPage+" "+totalPage);
+                Log.i("page info", doc.select(".pg").html());
+                Log.i("page info", currentPage + " " + totalPage);
             }
 
             Elements links = body.select("li");
             for (Element src : links) {
                 String url = src.select("a").attr("href");
                 String title = src.select("a").html();
-                dataset.add(new SimpleListData(title,"",url));
+                dataset.add(new SimpleListData(title, "", url));
             }
             return dataset;
         }
 
         @Override
         protected void onPostExecute(List<SimpleListData> dataset) {
-            if(dataset.size()==0){
+            if (dataset.size() == 0) {
                 adapter.setShowLoadMore(false);
                 isEnableLoadMore = false;
-            }else{
+            } else {
                 adapter.setShowLoadMore(true);
                 isEnableLoadMore = true;
 
-                if(currentPage>=totalPage){
+                if (currentPage >= totalPage) {
                     adapter.setShowLoadMore(false);
                     isEnableLoadMore = false;
                 }
                 int start = datas.size();
                 datas.addAll(dataset);
                 adapter.notifyItemChanged(start);
-                adapter.notifyItemRangeInserted(start+1, dataset.size());
+                adapter.notifyItemRangeInserted(start + 1, dataset.size());
             }
             findViewById(R.id.view_loading).setVisibility(View.GONE);
             recycler_view.postDelayed(new Runnable() {
@@ -264,7 +265,7 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
                 public void run() {
                     refreshLayout.setRefreshing(false);
                 }
-            },300);
+            }, 300);
         }
     }
 }

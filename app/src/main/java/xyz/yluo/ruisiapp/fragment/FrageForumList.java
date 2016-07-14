@@ -34,7 +34,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
  */
 public class FrageForumList extends Fragment {
 
-    private static final  String Tag = "==FrageForumList==";
+    private static final String Tag = "==FrageForumList==";
     protected SwipeRefreshLayout refreshLayout;
     private TextView view_loading;
 
@@ -43,7 +43,7 @@ public class FrageForumList extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(Tag,"onCreateView");
+        Log.i(Tag, "onCreateView");
 
         View view = inflater.inflate(R.layout.frage_forum_list, container, false);
 
@@ -61,14 +61,14 @@ public class FrageForumList extends Fragment {
         });
 
         datas = new ArrayList<>();
-        adapter = new ForumListAdapter(datas,getActivity());
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(),4);
+        adapter = new ForumListAdapter(datas, getActivity());
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                if(adapter.getItemViewType(position)==0){
+                if (adapter.getItemViewType(position) == 0) {
                     return 4;
-                }else{
+                } else {
                     return 1;
                 }
             }
@@ -89,7 +89,7 @@ public class FrageForumList extends Fragment {
         return view;
     }
 
-    private void getData(){
+    private void getData() {
         String url = "forum.php?forumlist=1&mobile=2";
         HttpUtil.get(getActivity(), url, new ResponseHandler() {
             @Override
@@ -104,7 +104,7 @@ public class FrageForumList extends Fragment {
                     public void run() {
                         refreshLayout.setRefreshing(false);
                     }
-                },500);
+                }, 500);
             }
         });
     }
@@ -120,21 +120,21 @@ public class FrageForumList extends Fragment {
             Elements elements = document.select("div#wp.wp.wm").select("div.bm.bmw.fl");
             //获得hash
             String hash = document.select(".footer").select("a.dialog").attr("href");
-            String ress =  GetId.getHash(hash);
-            if(!ress.isEmpty()){
+            String ress = GetId.getHash(hash);
+            if (!ress.isEmpty()) {
                 PublicData.FORMHASH = ress;
             }
 
-            for(Element ele:elements){
+            for (Element ele : elements) {
                 String header = ele.select("h2").text();
-                simpledatas.add(new FroumListData(true,header));
+                simpledatas.add(new FroumListData(true, header));
 
-                for(Element tmp:ele.select("li")){
+                for (Element tmp : ele.select("li")) {
                     String todayNew = tmp.select("span.num").text();
                     tmp.select("span.num").remove();
-                    String title = tmp.text().replace("西电睿思","");
+                    String title = tmp.text().replace("西电睿思", "");
                     String titleUrl = tmp.select("a").attr("href");
-                    simpledatas.add(new FroumListData(false,title,todayNew,titleUrl));
+                    simpledatas.add(new FroumListData(false, title, todayNew, titleUrl));
                 }
             }
             return simpledatas;
@@ -152,7 +152,7 @@ public class FrageForumList extends Fragment {
                 public void run() {
                     refreshLayout.setRefreshing(false);
                 }
-            },500);
+            }, 500);
         }
     }
 }

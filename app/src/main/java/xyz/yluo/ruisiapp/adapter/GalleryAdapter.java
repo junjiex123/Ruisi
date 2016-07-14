@@ -32,9 +32,9 @@ public class GalleryAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemCount() {
-        if(DataSet.size()>0){
+        if (DataSet.size() > 0) {
             return Integer.MAX_VALUE;
-        }else{
+        } else {
             return 0;
         }
     }
@@ -47,14 +47,12 @@ public class GalleryAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public void onBindViewHolder(BaseViewHolder holder, int position) {
-        holder.setData(position%DataSet.size());
+        holder.setData(position % DataSet.size());
     }
 
 
-
-
     //图片板块ViewHolder
-    private class GalleryViewHolder extends BaseViewHolder{
+    private class GalleryViewHolder extends BaseViewHolder {
 
         ImageView img_card_image;
         TextView img_card_title;
@@ -74,12 +72,13 @@ public class GalleryAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         void setData(int position) {
             img_card_title.setText(DataSet.get(position).getTitle());
-            String imgUrl = PublicData.getBaseUrl()+DataSet.get(position).getImgurl().replace("./","");
+            String imgUrl = PublicData.getBaseUrl() + DataSet.get(position).getImgurl().replace("./", "");
             Picasso.with(activity).load(imgUrl).placeholder(R.drawable.image_placeholder).into(img_card_image);
         }
+
         protected void item_click() {
-            GalleryData single_data =  DataSet.get(getAdapterPosition()%DataSet.size());
-            SingleArticleActivity.open(activity,single_data.getTitleUrl(),"","");
+            GalleryData single_data = DataSet.get(getAdapterPosition() % DataSet.size());
+            SingleArticleActivity.open(activity, single_data.getTitleUrl(), "", "");
         }
     }
 }

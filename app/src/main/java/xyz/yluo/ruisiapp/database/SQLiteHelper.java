@@ -7,19 +7,16 @@ import android.util.Log;
 
 /**
  * Created by free2 on 16-5-20.
- *
  */
-public class SQLiteHelper extends SQLiteOpenHelper{
+public class SQLiteHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME="xidianrs.db";
+    public static final String DATABASE_NAME = "xidianrs.db";
     //更改版本后数据库将重新创建
-    private static final int  DATABASE_VERSION=2;
-    private static final String TABLE_NAME="rs_article_list";
+    private static final int DATABASE_VERSION = 2;
+    private static final String TABLE_NAME = "rs_article_list";
 
 
-
-    public SQLiteHelper(Context context)
-    {
+    public SQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);//继承父类
     }
 
@@ -27,8 +24,7 @@ public class SQLiteHelper extends SQLiteOpenHelper{
     /**
      * 该函数是在第一次创建数据库时执行，只有当其调用getreadabledatebase()
      */
-    public void onCreate(SQLiteDatabase db)
-    {
+    public void onCreate(SQLiteDatabase db) {
 
         String sql = "CREATE TABLE " + TABLE_NAME + "("
                 + "tid VARCHAR(10) primary key,"
@@ -37,15 +33,14 @@ public class SQLiteHelper extends SQLiteOpenHelper{
                 + "read_time DATETIME"
                 + ")";
         db.execSQL(sql);
-        Log.e("create","数据库创建成功");
+        Log.e("create", "数据库创建成功");
     }
 
 
     /**
-     *数据库更新函数，当数据库更新时会执行此函数
+     * 数据库更新函数，当数据库更新时会执行此函数
      */
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-    {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         String sql = "DROP TABLE IF EXISTS " + TABLE_NAME;
         db.execSQL(sql);
         this.onCreate(db);

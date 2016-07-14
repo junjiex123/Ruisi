@@ -21,45 +21,45 @@ import xyz.yluo.ruisiapp.listener.RecyclerPageChangeListener;
  * 支持 gallery
  */
 public class HotNewListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+    private static final int TYPE_HEADER_GALLERY = 0;
+    private static final int TYPE_LOAD_MORE = 1;
+    private static final int TYPE_ARTICLE_LIST = 3;
     private List<GalleryData> DataSet_gallery;
     private List<ArticleListData> DataSet;
     private GalleryAdapter galleryAdapter;
     private Activity activity;
-    private static final int TYPE_HEADER_GALLERY = 0;
-    private static final int TYPE_LOAD_MORE = 1;
-    private static final int TYPE_ARTICLE_LIST = 3;
 
     public HotNewListAdapter(Activity activity, List<GalleryData> dataSetg, List<ArticleListData> DataSet) {
         DataSet_gallery = dataSetg;
         this.DataSet = DataSet;
         this.activity = activity;
 
-        galleryAdapter = new GalleryAdapter(activity,DataSet_gallery);
+        galleryAdapter = new GalleryAdapter(activity, DataSet_gallery);
     }
 
     @Override
     public int getItemCount() {
 
-        if(DataSet_gallery.size()>0){
-            if(DataSet.size()==0){
+        if (DataSet_gallery.size() > 0) {
+            if (DataSet.size() == 0) {
                 return 1;
             }
-            return DataSet.size()+2;
+            return DataSet.size() + 2;
         }
 
-        if(DataSet.size()==0){
+        if (DataSet.size() == 0) {
             return 0;
         }
-        return DataSet.size()+1;
+        return DataSet.size() + 1;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if(DataSet_gallery!=null&&position==0&&DataSet_gallery.size()>0){
+        if (DataSet_gallery != null && position == 0 && DataSet_gallery.size() > 0) {
             return TYPE_HEADER_GALLERY;
-        }else if (position>0&& position == getItemCount() - 1) {
+        } else if (position > 0 && position == getItemCount() - 1) {
             return TYPE_LOAD_MORE;
-        }else{
+        } else {
             return TYPE_ARTICLE_LIST;
         }
     }
@@ -90,26 +90,26 @@ public class HotNewListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             super(itemView);
             recyclerGallery = (RecyclerView) itemView.findViewById(R.id.recycler_view_gallery);
             pageInfo = (TextView) itemView.findViewById(R.id.gallery_page_info);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,true);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, true);
             recyclerGallery.setLayoutManager(linearLayoutManager);
-            recyclerGallery.addOnScrollListener(new RecyclerPageChangeListener(linearLayoutManager,this));
+            recyclerGallery.addOnScrollListener(new RecyclerPageChangeListener(linearLayoutManager, this));
             recyclerGallery.setAdapter(galleryAdapter);
         }
 
         void setData(int position) {
-            String txt  = getAdapterPosition()%DataSet.size()+1+"/"+DataSet.size();
+            String txt = getAdapterPosition() % DataSet.size() + 1 + "/" + DataSet.size();
             pageInfo.setText(txt);
         }
 
         @Override
         public void onPageChange(int page) {
-            String txt = page%DataSet.size()+1+"/"+DataSet.size();
+            String txt = page % DataSet.size() + 1 + "/" + DataSet.size();
             pageInfo.setText(txt);
         }
     }
 
     //加载更多ViewHolder
-    private class LoadMoreViewHolder extends BaseViewHolder{
+    private class LoadMoreViewHolder extends BaseViewHolder {
 
         LoadMoreViewHolder(View itemView) {
             super(itemView);
@@ -144,24 +144,25 @@ public class HotNewListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 }
             });
         }
+
         //设置listItem的数据
         @Override
         void setData(int position) {
             ArticleListData single = DataSet.get(position);
-            article_title.setTextColor(single.isRead()?0xff888888:0xff000000);
+            article_title.setTextColor(single.isRead() ? 0xff888888 : 0xff000000);
             article_title.setText(single.getTitle());
             author_name.setText(single.getAuthor());
             reply_count.setText(single.getReplayCount());
-            is_image.setVisibility(single.ishaveImage()?View.VISIBLE:View.GONE);
+            is_image.setVisibility(single.ishaveImage() ? View.VISIBLE : View.GONE);
         }
 
         void onBtnItemClick() {
-            ArticleListData single_data =  DataSet.get(getAdapterPosition());
-            if(!single_data.isRead()){
+            ArticleListData single_data = DataSet.get(getAdapterPosition());
+            if (!single_data.isRead()) {
                 single_data.setRead(true);
                 notifyItemChanged(getAdapterPosition());
             }
-            SingleArticleActivity.open(activity,single_data.getTitleUrl(),single_data.getTitle(),single_data.getAuthor());
+            SingleArticleActivity.open(activity, single_data.getTitleUrl(), single_data.getTitle(), single_data.getAuthor());
         }
     }
 }

@@ -20,9 +20,8 @@ import xyz.yluo.ruisiapp.data.FriendData;
 /**
  * Created by free2 on 16-4-12.
  * 好友列表
- *
  */
-public class FriendAdapter extends RecyclerView.Adapter<BaseViewHolder>{
+public class FriendAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private List<FriendData> datas;
     private Activity activity;
@@ -47,16 +46,16 @@ public class FriendAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         return datas.size();
     }
 
-    private class FriendViewHolder extends BaseViewHolder{
+    private class FriendViewHolder extends BaseViewHolder {
         protected CircleImageView user_image;
         protected TextView user_name;
         TextView user_info;
 
         FriendViewHolder(View itemView) {
             super(itemView);
-            user_image= (CircleImageView) itemView.findViewById(R.id.user_image);
-            user_name= (TextView) itemView.findViewById(R.id.user_name);
-            user_info= (TextView) itemView.findViewById(R.id.user_info);
+            user_image = (CircleImageView) itemView.findViewById(R.id.user_image);
+            user_name = (TextView) itemView.findViewById(R.id.user_name);
+            user_info = (TextView) itemView.findViewById(R.id.user_info);
 
             user_image.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -81,18 +80,18 @@ public class FriendAdapter extends RecyclerView.Adapter<BaseViewHolder>{
             Picasso.with(activity).load(single.getImgUrl()).placeholder(R.drawable.image_placeholder).into(user_image);
         }
 
-        void userImage_click(){
+        void userImage_click() {
             FriendData single = datas.get(getAdapterPosition());
-            String username= single.getUserName();
+            String username = single.getUserName();
             String imgUrl = single.getImgUrl();
-            UserDetailActivity.openWithTransitionAnimation(activity,username,user_image,imgUrl);
+            UserDetailActivity.openWithTransitionAnimation(activity, username, user_image, imgUrl);
         }
 
-        protected void item_click(){
+        protected void item_click() {
             String uid = datas.get(getAdapterPosition()).getUid();
             String username = datas.get(getAdapterPosition()).getUserName();
-            String url = "home.php?mod=space&do=pm&subop=view&touid="+uid+"&mobile=2";
-            ChatActivity.open(activity,username,url);
+            String url = "home.php?mod=space&do=pm&subop=view&touid=" + uid + "&mobile=2";
+            ChatActivity.open(activity, username, url);
         }
 
     }

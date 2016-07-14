@@ -11,16 +11,16 @@ import java.net.HttpURLConnection;
 import xyz.yluo.ruisiapp.downloadfile.FileUtil;
 
 public abstract class FileResponseHandler extends ResponseHandler {
-    protected  File mFile=null;
+    protected File mFile = null;
     private String fileName = "null";
 
     public FileResponseHandler(String fileName) {
 
-        Log.i("file name info",fileName+"  ");
-        if(!fileName.equals("null")){
+        Log.i("file name info", fileName + "  ");
+        if (!fileName.equals("null")) {
             this.fileName = fileName;
-            mFile =  FileUtil.createFile(fileName);
-            Log.i("==file name info2==",fileName+"  ");
+            mFile = FileUtil.createFile(fileName);
+            Log.i("==file name info2==", fileName + "  ");
         }
     }
 
@@ -41,18 +41,18 @@ public abstract class FileResponseHandler extends ResponseHandler {
     }
 
     protected File getTargetFile() {
-        assert (mFile != null);
+        assert(mFile != null);
         return mFile;
     }
 
 
-    public  abstract void onStartDownLoad(String fileName);
+    public abstract void onStartDownLoad(String fileName);
 
     public abstract void onSuccess(File file);
 
     public abstract void onFailure(Throwable throwable, File file);
 
-    public  void onProgress(int  progress, long totalBytes) {
+    public void onProgress(int progress, long totalBytes) {
         // Do nothing by default
     }
 
@@ -72,12 +72,12 @@ public abstract class FileResponseHandler extends ResponseHandler {
             return;
         }
 
-        if(mFile==null){
-            if(connection.getHeaderField("Content-Disposition")!=null){
-                Log.i("httputil",connection.getHeaderField("Content-Disposition"));
+        if (mFile == null) {
+            if (connection.getHeaderField("Content-Disposition") != null) {
+                Log.i("httputil", connection.getHeaderField("Content-Disposition"));
                 fileName = connection.getHeaderField("Content-Disposition");
                 //attachment; filename="shoujirs_06_24.zip"
-                fileName = fileName.substring(22,fileName.length()-1);
+                fileName = fileName.substring(22, fileName.length() - 1);
                 mFile = FileUtil.createFile(fileName);
             }
         }

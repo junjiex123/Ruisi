@@ -17,73 +17,76 @@ import java.io.IOException;
  * 创建下载的文件
  */
 public class FileUtil {
-    /***********保存升级APK的目录***********/
+    /***********
+     * 保存升级APK的目录
+     ***********/
     public static final String path = "Download/手机睿思下载";
+
     /**
      * 方法描述：createFile方法
      */
     public static File createFile(String filename) {
         boolean isCreateFileSucess = true;
-        File fileDir,downFile = null;
+        File fileDir, downFile = null;
 
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
 
-            fileDir = new File(Environment.getExternalStorageDirectory()+ "/" + path +"/");
+            fileDir = new File(Environment.getExternalStorageDirectory() + "/" + path + "/");
             downFile = new File(fileDir + "/" + filename);
 
             if (!fileDir.exists()) {
-                boolean b =  fileDir.mkdirs();
-                Log.i("create directory",b+fileDir.getPath()+"");
+                boolean b = fileDir.mkdirs();
+                Log.i("create directory", b + fileDir.getPath() + "");
             }
             if (downFile.exists()) {
-                if(downFile.delete()){
+                if (downFile.delete()) {
                     try {
-                        boolean b =  downFile.createNewFile();
+                        boolean b = downFile.createNewFile();
 
-                        Log.i("create file",b+downFile.getPath()+"");
+                        Log.i("create file", b + downFile.getPath() + "");
                     } catch (IOException e) {
                         isCreateFileSucess = false;
                         e.printStackTrace();
                     }
                 }
             }
-        }else{
+        } else {
             isCreateFileSucess = false;
         }
 
-        if(isCreateFileSucess){
-            return  downFile;
-        }else{
+        if (isCreateFileSucess) {
+            return downFile;
+        } else {
             return null;
         }
     }
 
 
-    public static boolean  deleteFile(String filename) {
+    public static boolean deleteFile(String filename) {
         File fileDir = new File(Environment.getExternalStorageDirectory() + "/" + path + "/");
         File file = new File(fileDir + "/" + filename);
-        Log.i("file","delete file");
+        Log.i("file", "delete file");
         return !file.exists() || file.delete();
 
     }
 
-    public static void requestHandleFile(Context context,String fileName){
+    public static void requestHandleFile(Context context, String fileName) {
         File fileDir = new File(Environment.getExternalStorageDirectory() + "/" + path + "/");
         File file = new File(fileDir + "/" + fileName);
-        if(fileName.endsWith(".apk")){
+        if (fileName.endsWith(".apk")) {
             /*********下载完成，点击安装***********/
             Uri uri = Uri.fromFile(file);
             Intent intent = new Intent(Intent.ACTION_VIEW);
             /**********加这个属性是因为使用Context的startActivity方法的话，就需要开启一个新的task**********/
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setDataAndType(uri,"application/vnd.android.package-archive");
+            intent.setDataAndType(uri, "application/vnd.android.package-archive");
             context.startActivity(intent);
-        }else{
+        } else {
             String filetype = fileExt(fileName).substring(1);
             MimeTypeMap myMime = MimeTypeMap.getSingleton();
             Intent newIntent = new Intent(Intent.ACTION_VIEW);
             String mimeType = myMime.getMimeTypeFromExtension(filetype);
-            newIntent.setDataAndType(Uri.fromFile(file),mimeType);
+            newIntent.setDataAndType(Uri.fromFile(file), mimeType);
             newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             try {
                 context.startActivity(newIntent);
@@ -107,24 +110,24 @@ public class FileUtil {
             if (ext.contains("/")) {
                 ext = ext.substring(0, ext.indexOf("/"));
             }
-            Log.i("type",ext.toLowerCase());
+            Log.i("type", ext.toLowerCase());
             return ext.toLowerCase();
         }
     }
 
-    public static String getFileName(String url){
+    public static String getFileName(String url) {
 
         String fileName = url;
-        if(url.contains("/")){
-            fileName =url.substring(url.lastIndexOf(".") + 1);
+        if (url.contains("/")) {
+            fileName = url.substring(url.lastIndexOf(".") + 1);
         }
-        if(fileName.contains(".")){
-            String txt = fileName.substring(fileName.lastIndexOf(".")+1);
-            if(txt.length()>4){
+        if (fileName.contains(".")) {
+            String txt = fileName.substring(fileName.lastIndexOf(".") + 1);
+            if (txt.length() > 4) {
                 return "null";
             }
             return fileName;
-        }else{
+        } else {
             return "null";
         }
     }

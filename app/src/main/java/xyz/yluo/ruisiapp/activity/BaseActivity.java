@@ -12,25 +12,25 @@ import xyz.yluo.ruisiapp.View.NeedLoginDialogFragment;
  * Created by free2 on 16-4-11.
  * 所有activity的基类
  */
-public class BaseActivity extends AppCompatActivity{
+public class BaseActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id){
+        switch (id) {
             //返回按钮点击事件
             case android.R.id.home:
                 finish();
                 break;
             case R.id.menu_setting:
-                startActivity(new Intent(getApplicationContext(),SettingActivity.class));
+                startActivity(new Intent(getApplicationContext(), SettingActivity.class));
                 return true;
             case R.id.new_topic:
-                startActivity(new Intent(getApplicationContext(),NewArticleActivity_2.class));
+                startActivity(new Intent(getApplicationContext(), NewArticleActivity_2.class));
                 return true;
             case R.id.menu_search:
-                if(isneed_login()){
-                    startActivity(new Intent(getApplicationContext(),ActivitySearch.class));
+                if (isneed_login()) {
+                    startActivity(new Intent(getApplicationContext(), ActivitySearch.class));
                     return true;
                 }
 
@@ -40,10 +40,10 @@ public class BaseActivity extends AppCompatActivity{
     }
 
     //判断是否需要弹出登录dialog
-    boolean isneed_login(){
-        if(PublicData.ISLOGIN){
+    boolean isneed_login() {
+        if (PublicData.ISLOGIN) {
             return true;
-        }else{
+        } else {
             NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();
             dialogFragment.show(getFragmentManager(), "needlogin");
         }

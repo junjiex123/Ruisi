@@ -21,7 +21,7 @@ import xyz.yluo.ruisiapp.data.ChatListData;
  * Created by free2 on 16-3-30.
  * 私人消息 adapter
  */
-public class ChatListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
+public class ChatListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private final int LEFT_ITEM = 0;
     private final int RIGHT_ITEM = 1;
@@ -32,17 +32,17 @@ public class ChatListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     public ChatListAdapter(Activity context, List<ChatListData> datas) {
         DataSets = datas;
-        this.context  = context;
+        this.context = context;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if(position==getItemCount()-1){
+        if (position == getItemCount() - 1) {
             return EMPTY_ITEM;
         }
-        if(DataSets.get(position).getType()==0){
+        if (DataSets.get(position).getType() == 0) {
             return LEFT_ITEM;
-        }else{
+        } else {
             return RIGHT_ITEM;
         }
     }
@@ -50,13 +50,13 @@ public class ChatListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        switch (viewType){
+        switch (viewType) {
             case LEFT_ITEM:
                 return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_left_list_item, parent, false));
             case RIGHT_ITEM:
                 return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_right_list_item, parent, false));
             case EMPTY_ITEM:
-                return new EmptyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_list_item,parent,false));
+                return new EmptyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_list_item, parent, false));
         }
         return null;
     }
@@ -67,13 +67,12 @@ public class ChatListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
     }
 
 
-
     @Override
     public int getItemCount() {
-        return DataSets.size()+1;
+        return DataSets.size() + 1;
     }
 
-    private class MyViewHolder extends BaseViewHolder{
+    private class MyViewHolder extends BaseViewHolder {
 
         protected MyHtmlTextView content;
         protected CircleImageView user_image;
@@ -89,12 +88,12 @@ public class ChatListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
                 @Override
                 public void onClick(View v) {
                     String imageUrl = DataSets.get(getAdapterPosition()).getUserImage();
-                    UserDetailActivity.openWithTransitionAnimation(context, "username", user_image,imageUrl);
+                    UserDetailActivity.openWithTransitionAnimation(context, "username", user_image, imageUrl);
                 }
             });
         }
 
-        void setData(final int position){
+        void setData(final int position) {
             ChatListData single = DataSets.get(position);
             Picasso.with(context).load(single.getUserImage()).into(user_image);
             post_time.setText(single.getTime());
@@ -102,7 +101,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         }
     }
 
-    private class EmptyViewHolder extends BaseViewHolder{
+    private class EmptyViewHolder extends BaseViewHolder {
 
         EmptyViewHolder(View itemView) {
             super(itemView);

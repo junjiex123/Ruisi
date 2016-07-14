@@ -15,6 +15,7 @@ import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 public class NewVersionDialog extends DialogFragment {
 
     private String code = "1.0";
+    private String message = "";
 
     public void setCode(String code) {
         this.code = code;
@@ -24,15 +25,14 @@ public class NewVersionDialog extends DialogFragment {
         this.message = message;
     }
 
-    private String message = "";
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("检测到新版本："+code);
+        builder.setTitle("检测到新版本：" + code);
         builder.setMessage(message)
                 .setPositiveButton("去下载", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        RequestOpenBrowser.openBroswer(getActivity(),"http://xidianrs.cn/ruisiapp.apk");
+                        RequestOpenBrowser.openBroswer(getActivity(), "http://xidianrs.cn/ruisiapp.apk");
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {

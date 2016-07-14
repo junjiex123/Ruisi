@@ -11,11 +11,10 @@ import xyz.yluo.ruisiapp.fragment.FrageNews;
 
 /**
  * Created by free2 on 16-5-3.
- *
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     private String[] titles;
-    private Fragment fragment1,fragment2,fragment3;
+    private Fragment fragment1, fragment2, fragment3;
 
     public ViewPagerAdapter(FragmentManager fm, String[] titles) {
         super(fm);
@@ -25,19 +24,19 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        switch (position){
+        switch (position) {
             case 0:
-                if(fragment1==null){
+                if (fragment1 == null) {
                     fragment1 = new FrageForumList();
                 }
                 return fragment1;
             case 1:
-                if(fragment2==null){
+                if (fragment2 == null) {
                     fragment2 = new FrageHotNew();
                 }
                 return fragment2;
             case 2:
-                if(fragment3==null){
+                if (fragment3 == null) {
                     fragment3 = new FrageNews();
                 }
                 return fragment3;

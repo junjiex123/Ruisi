@@ -8,12 +8,12 @@ import java.util.regex.Pattern;
  * 从字符串中获得数字
  */
 public class GetNumber {
-    public static int getNumber(String text){
+    public static int getNumber(String text) {
         Pattern pattern = Pattern.compile("[0-9]+");
         Matcher matcher = pattern.matcher(text);
-        String num ="0";
+        String num = "0";
         if (matcher.find()) {
-            num = text.substring(matcher.start(),matcher.end());
+            num = text.substring(matcher.start(), matcher.end());
         }
         return Integer.parseInt(num);
     }

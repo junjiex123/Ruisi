@@ -32,11 +32,11 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
  * Created by free2 on 16-3-19.
  * 简单的fragment 首页第二页 展示最新的帖子等
  */
-public class FrageNews extends Fragment implements LoadMoreListener.OnLoadMoreListener{
+public class FrageNews extends Fragment implements LoadMoreListener.OnLoadMoreListener {
 
     protected RecyclerView recycler_view;
     protected SwipeRefreshLayout refreshLayout;
-    private List<SchoolNewsData> mydataset =new ArrayList<>();
+    private List<SchoolNewsData> mydataset = new ArrayList<>();
     private NewsListAdapter adapter;
     private boolean isEnableLoadMore = false;
     private int CurrentPage = 1;
@@ -78,23 +78,24 @@ public class FrageNews extends Fragment implements LoadMoreListener.OnLoadMoreLi
         return view;
     }
 
-    private void refresh(){
-        CurrentPage= 1 ;
+    private void refresh() {
+        CurrentPage = 1;
         isEnableLoadMore = false;
         getData();
 
     }
+
     @Override
     public void onLoadMore() {
-        if(isEnableLoadMore){
+        if (isEnableLoadMore) {
             CurrentPage++;
             getData();
             isEnableLoadMore = false;
         }
     }
 
-    private void getData(){
-        String url = "forum.php?mod=guide&view=new&page="+CurrentPage+"&mobile=2";
+    private void getData() {
+        String url = "forum.php?mod=guide&view=new&page=" + CurrentPage + "&mobile=2";
         HttpUtil.get(getActivity(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -108,11 +109,12 @@ public class FrageNews extends Fragment implements LoadMoreListener.OnLoadMoreLi
                     public void run() {
                         refreshLayout.setRefreshing(false);
                     }
-                },500);
+                }, 500);
 
             }
         });
     }
+
     //非校园网状态下获得一个板块文章列表数据
     //根据html获得数据
     //调用的手机版
@@ -129,33 +131,33 @@ public class FrageNews extends Fragment implements LoadMoreListener.OnLoadMoreLi
                 return dataset;
             }
 
-            Elements articlelists =  document.select("table.winstyle49756").select("tr[height=20]");
-            for(Element article:articlelists){
+            Elements articlelists = document.select("table.winstyle49756").select("tr[height=20]");
+            for (Element article : articlelists) {
                 Elements title = article.select("a");
                 String url = title.attr("href");
                 String titleStr = title.text();
                 boolean is_fj = !article.select("img[src=images/fj.gif]").isEmpty();
                 boolean is_image = !article.select("img[src=images/tu-hz.gif]").isEmpty();
-                String time =  article.select("span.timestyle49756").text();
-                Log.i("news task",titleStr+" "+url+" "+is_fj+" "+is_image+" "+time);
+                String time = article.select("span.timestyle49756").text();
+                Log.i("news task", titleStr + " " + url + " " + is_fj + " " + is_image + " " + time);
                 //String url,String title, boolean is_image, boolean is_patch, String post_time
-                dataset.add(new SchoolNewsData(url,titleStr,is_image,is_fj,time));
+                dataset.add(new SchoolNewsData(url, titleStr, is_image, is_fj, time));
             }
             return dataset;
         }
 
         @Override
         protected void onPostExecute(List<SchoolNewsData> dataset) {
-            if(CurrentPage==1){
+            if (CurrentPage == 1) {
                 //item 增加删除 改变动画
                 mydataset.clear();
             }
             int size = mydataset.size();
             mydataset.addAll(dataset);
-            if(size>0){
+            if (size > 0) {
                 adapter.notifyItemChanged(size);
-                adapter.notifyItemRangeInserted(size+1, dataset.size());
-            }else{
+                adapter.notifyItemRangeInserted(size + 1, dataset.size());
+            } else {
                 adapter.notifyDataSetChanged();
             }
             isEnableLoadMore = true;
@@ -165,7 +167,7 @@ public class FrageNews extends Fragment implements LoadMoreListener.OnLoadMoreLi
                 public void run() {
                     refreshLayout.setRefreshing(false);
                 }
-            },500);
+            }, 500);
         }
     }
 

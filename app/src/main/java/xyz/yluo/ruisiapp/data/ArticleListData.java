@@ -2,8 +2,8 @@ package xyz.yluo.ruisiapp.data;
 
 /**
  * Created by free2 on 16-3-7.
- *
- *  各个板块文章列表数据
+ * <p>
+ * 各个板块文章列表数据
  */
 public class ArticleListData {
 
@@ -20,7 +20,6 @@ public class ArticleListData {
     private boolean ishaveImage;
 
 
-
     //一般文章构造器
     public ArticleListData(String title, String titleUrl, String type, String author, String authorUrl, String postTime, String viewCount, String replayCount) {
         this.type = type;//置顶 精华 金币。。。
@@ -34,7 +33,7 @@ public class ArticleListData {
     }
 
     //手机版构造器
-    public ArticleListData(boolean haveImage,String title, String titleUrl, String author, String replayCount) {
+    public ArticleListData(boolean haveImage, String title, String titleUrl, String author, String replayCount) {
         this.ishaveImage = haveImage;//0--have image
         this.title = title;
         this.titleUrl = titleUrl;
@@ -46,12 +45,12 @@ public class ArticleListData {
         return ishaveImage;
     }
 
-    public void setRead(boolean read) {
-        isRead = read;
-    }
-
     public boolean isRead() {
         return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
     }
 
     public String getReplayCount() {

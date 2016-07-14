@@ -3,7 +3,7 @@ package xyz.yluo.ruisiapp.data;
 /**
  * Created by free2 on 16-6-22.
  * gallery data
-*/
+ */
 public class GalleryData {
     private String imgurl;
     private String title;

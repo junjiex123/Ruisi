@@ -34,10 +34,10 @@ public class CheckMessageService extends Service {
         super.onCreate();
 
         final NotificationCompat.Builder mBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_favorite_24dp)
-                        .setContentTitle("回复提醒")
-                        .setContentText("你有新的回复点击查看")
-                        .setAutoCancel(true);
+                .setSmallIcon(R.drawable.ic_favorite_24dp)
+                .setContentTitle("回复提醒")
+                .setContentText("你有新的回复点击查看")
+                .setAutoCancel(true);
 
         final Intent resultIntent = new Intent(this, NewArticleActivity_2.class);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -53,15 +53,16 @@ public class CheckMessageService extends Service {
                 //System.out.println(new String(responseBody));
                 System.out.println(">>>>>>>service running");
                 Document document = Jsoup.parse(new String(response));
-                Elements elemens  = document.select(".nts").select("dl.cl");
-                for(Element e:elemens){
+                Elements elemens = document.select(".nts").select("dl.cl");
+                for (Element e : elemens) {
                     String s = e.select(".ntc_body").attr("style");
-                    if(s.contains("bold")){
+                    if (s.contains("bold")) {
                         mBuilder.setContentText(e.select(".ntc_body").text());
                         mNotifyMgr.notify(1, mBuilder.build());
                     }
                 }
             }
+
             @Override
             public void onFailure(Throwable e) {
             }
@@ -74,11 +75,11 @@ public class CheckMessageService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (true){
-                    if(!MySetting.CONFIG_IS_INNER){
-                        client.get(url2,handler);
-                    }else{
-                        client.get(url1,handler);
+                while (true) {
+                    if (!MySetting.CONFIG_IS_INNER) {
+                        client.get(url2, handler);
+                    } else {
+                        client.get(url1, handler);
                     }
                     try {
                         Thread.sleep(15000);

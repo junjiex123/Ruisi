@@ -22,11 +22,11 @@ public abstract class CheckNetResponse {
     }
 
     private void handleMessage(Message msg) {
-        String s =  (String) msg.obj;
-        onFinish(msg.what,s);
+        String s = (String) msg.obj;
+        onFinish(msg.what, s);
     }
 
-    public abstract void onFinish(int type,String response);
+    public abstract void onFinish(int type, String response);
 
     final void sendFinishMessage(int type, String s) {
         handler.sendMessage(obtainMessage(type, s));

@@ -16,64 +16,63 @@ import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-5-20.
- *+ "tid VARCHAR(10) primary key,"
- + "title VARCHAR(50),"
- + "author VARCHAR(15),"
- + "read_time DATETIME,"
+ * + "tid VARCHAR(10) primary key,"
+ * + "title VARCHAR(50),"
+ * + "author VARCHAR(15),"
+ * + "read_time DATETIME,"
  */
 public class MyDbUtils {
 
     //tid title uid author  time  view reply read_time
     //要操作的数据表的名称
     private static final String TABLE_NAME = "rs_article_list";
-    private SQLiteDatabase db=null;	//数据库操作
-
-    private String getTime(){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.CHINA);
-        Date curDate = new Date(System.currentTimeMillis());
-        return format.format(curDate);
-    }
+    private SQLiteDatabase db = null;    //数据库操作
 
     //构造函数
-    public MyDbUtils(Context context,boolean isRead)
-    {
-        if(isRead){
+    public MyDbUtils(Context context, boolean isRead) {
+        if (isRead) {
             this.db = new SQLiteHelper(context).getReadableDatabase();
-        }else{
+        } else {
             this.db = new SQLiteHelper(context).getWritableDatabase();
         }
     }
 
-    //处理单个点击事件
-    public void handleSingle(String tid,String title,String author){
+    private String getTime() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+        Date curDate = new Date(System.currentTimeMillis());
+        return format.format(curDate);
+    }
 
-        if(null==title){
+    //处理单个点击事件
+    public void handleSingle(String tid, String title, String author) {
+
+        if (null == title) {
             title = "null";
         }
 
-        if(null==author){
+        if (null == author) {
             author = "null";
         }
-        if(isRead(tid)){
-            update(tid,title,author);
-        }else{
-            insert(tid,title,author);
+        if (isRead(tid)) {
+            update(tid, title, author);
+        } else {
+            insert(tid, title, author);
         }
     }
 
     //判断list<> 是否为已读并修改返回
-    public List<ArticleListData> handleList(List<ArticleListData> datas){
-        String sql="SELECT tid from " + TABLE_NAME + " where tid = ?";
-        for(ArticleListData data:datas){
+    public List<ArticleListData> handleList(List<ArticleListData> datas) {
+        String sql = "SELECT tid from " + TABLE_NAME + " where tid = ?";
+        for (ArticleListData data : datas) {
             String tid = GetId.getTid(data.getTitleUrl());
-            String args[] =new String[]{String.valueOf(tid)};
-            Cursor result=db.rawQuery(sql,args);
+            String args[] = new String[]{String.valueOf(tid)};
+            Cursor result = db.rawQuery(sql, args);
             int count = result.getCount();
             result.close();
-            if(count!=0)//判断得到的返回数据是否为空
+            if (count != 0)//判断得到的返回数据是否为空
             {
                 data.setRead(true);
-                Log.e("mydb",tid+"is read");
+                Log.e("mydb", tid + "is read");
             }
         }
         db.close();
@@ -81,71 +80,68 @@ public class MyDbUtils {
     }
 
     //判断插入数据的ID是否已经存在数据库中。
-    private boolean isRead(String tid)
-    {
-        String sql="SELECT tid from " + TABLE_NAME + " where tid = ?";
-        String args[] =new String[]{String.valueOf(tid)};
-        Cursor result=db.rawQuery(sql,args);
+    private boolean isRead(String tid) {
+        String sql = "SELECT tid from " + TABLE_NAME + " where tid = ?";
+        String args[] = new String[]{String.valueOf(tid)};
+        Cursor result = db.rawQuery(sql, args);
         int count = result.getCount();
         result.close();
-        if(count==0)//判断得到的返回数据是否为空
+        if (count == 0)//判断得到的返回数据是否为空
         {
             //db.close();
             return false;
-        }else{
+        } else {
             //db.close();
             return true;
         }
     }
+
     //	//插入操作
-    private void insert(String tid,String title,String author)
-    {
+    private void insert(String tid, String title, String author) {
         String sql = "INSERT INTO " + TABLE_NAME + " (tid,title,author,read_time)"
                 + " VALUES(?,?,?,?)";
         String read_time_str = getTime();
-        Object args[]=new Object[]{tid,title,author,read_time_str};
+        Object args[] = new Object[]{tid, title, author, read_time_str};
         this.db.execSQL(sql, args);
         this.db.close();
-        Log.e("mydb",tid+"insert");
+        Log.e("mydb", tid + "insert");
     }
 
     //更新操作
-    private void update(String tid,String title,String author)
-    {
+    private void update(String tid, String title, String author) {
         String read_time_str = getTime();
         String sql = "UPDATE " + TABLE_NAME + " SET title=?,read_time=? WHERE tid=?";
-        Object args[]=new Object[]{title,read_time_str,tid};
+        Object args[] = new Object[]{title, read_time_str, tid};
         this.db.execSQL(sql, args);
         this.db.close();
 
-        Log.e("mydb",tid+"update"+author);
+        Log.e("mydb", tid + "update" + author);
     }
 
     //删除操作,删除
-    public void delete(int tid)
-    {
-        String sql = "DELETE FROM " + TABLE_NAME +" WHERE tid=?";
-        Object args[]=new Object[]{tid};
+    public void delete(int tid) {
+        String sql = "DELETE FROM " + TABLE_NAME + " WHERE tid=?";
+        Object args[] = new Object[]{tid};
         this.db.execSQL(sql, args);
         this.db.close();
     }
 
-    public void showDatabase(){
+    public void showDatabase() {
         String sql = "SELECT * FROM " + TABLE_NAME;
-        Cursor result = this.db.rawQuery(sql, null); 	//执行查询语句
-        for(result.moveToFirst();!result.isAfterLast();result.moveToNext()	)	//采用循环的方式查询数据
-         {
-             Log.i("show database",result.getString(0)+","+result.getString(1)+","+result.getString(2)+","+result.getString(3));
+        Cursor result = this.db.rawQuery(sql, null);    //执行查询语句
+        for (result.moveToFirst(); !result.isAfterLast(); result.moveToNext())    //采用循环的方式查询数据
+        {
+            Log.i("show database", result.getString(0) + "," + result.getString(1) + "," + result.getString(2) + "," + result.getString(3));
         }
         result.close();
         this.db.close();
     }
 
-    public List<ArticleListData> getHistory(int num){
+    public List<ArticleListData> getHistory(int num) {
         List<ArticleListData> datas = new ArrayList<>();
-        String sql = "SELECT * FROM "+TABLE_NAME+" order by read_time desc limit "+num;
-        Cursor result = this.db.rawQuery(sql, null); 	//执行查询语句
-        for(result.moveToFirst();!result.isAfterLast();result.moveToNext()	)	//采用循环的方式查询数据
+        String sql = "SELECT * FROM " + TABLE_NAME + " order by read_time desc limit " + num;
+        Cursor result = this.db.rawQuery(sql, null);    //执行查询语句
+        for (result.moveToFirst(); !result.isAfterLast(); result.moveToNext())    //采用循环的方式查询数据
         {
             /**
              * tid VARCHAR(10) primary key,"
@@ -155,7 +151,7 @@ public class MyDbUtils {
              */
 
             //boolean haveImage,String title, String titleUrl, String author, String replayCount
-            datas.add(new ArticleListData(false,result.getString(1),result.getString(0),result.getString(2),"null"));
+            datas.add(new ArticleListData(false, result.getString(1), result.getString(0), result.getString(2), "null"));
         }
         result.close();
         this.db.close();

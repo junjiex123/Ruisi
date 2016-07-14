@@ -50,11 +50,11 @@ import xyz.yluo.ruisiapp.utils.HandleLinkClick;
  * 能够显示图片的textview
  * 显示html
  */
-public class MyHtmlTextView extends TextView{
+public class MyHtmlTextView extends TextView {
 
     private Activity activity;
     private String text;
-    private Map<String,Drawable> drawableMap = new HashMap<>();
+    private Map<String, Drawable> drawableMap = new HashMap<>();
     private Set<String> haveUrls = new LinkedHashSet<>();
     private Set<String> TotalUrls = new LinkedHashSet<>();
     private myImageGetter myImageGetter = null;
@@ -62,14 +62,6 @@ public class MyHtmlTextView extends TextView{
     private boolean isStart = false;
     private OnQuoteSpanClick quoteSpanClickListener;
 
-
-    public void setQuoteSpanClickListener(OnQuoteSpanClick quoteSpanClickListener) {
-        this.quoteSpanClickListener = quoteSpanClickListener;
-    }
-
-    public interface OnQuoteSpanClick{
-        void quoteSpanClick(String res);
-    }
 
     public MyHtmlTextView(Context context) {
         super(context);
@@ -83,42 +75,45 @@ public class MyHtmlTextView extends TextView{
         super(context, attrs, defStyleAttr);
     }
 
+    public void setQuoteSpanClickListener(OnQuoteSpanClick quoteSpanClickListener) {
+        this.quoteSpanClickListener = quoteSpanClickListener;
+    }
+
     public void mySetText(Activity activity, String text) {
 
         myImageGetter = new myImageGetter();
         myTagHandle = new myTagHandle();
         this.activity = activity;
         this.text = text;
-        super.setText(getMyStyleHtml(text,myImageGetter,myTagHandle));
+        super.setText(getMyStyleHtml(text, myImageGetter, myTagHandle));
         setMovementMethod(LinkMovementMethod.getInstance());
         setLinkTextColor(0xff529ECC);
     }
-
 
     //获得textView 链接点击
     private CharSequence getMyStyleHtml(String html, Html.ImageGetter getter, Html.TagHandler handler) {
         Spanned spannedHtml = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            spannedHtml = Html.fromHtml(html,Html.FROM_HTML_MODE_COMPACT,getter, handler);
-        }else{
-            spannedHtml = Html.fromHtml(html,getter, handler);
+            spannedHtml = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT, getter, handler);
+        } else {
+            spannedHtml = Html.fromHtml(html, getter, handler);
         }
         SpannableStringBuilder strBuilder = new SpannableStringBuilder(spannedHtml);
 
         URLSpan[] urlSpans = strBuilder.getSpans(0, spannedHtml.length(), URLSpan.class);
-        for(final URLSpan span : urlSpans) {
+        for (final URLSpan span : urlSpans) {
             replaceLinkSpans(strBuilder, span);
         }
 
         QuoteSpan[] quoteSpans = strBuilder.getSpans(0, spannedHtml.length(), QuoteSpan.class);
-        for(final QuoteSpan span : quoteSpans) {
-            replaceQuoteSpans(strBuilder,span);
+        for (final QuoteSpan span : quoteSpans) {
+            replaceQuoteSpans(strBuilder, span);
         }
 
         return strBuilder;
     }
 
-    private void replaceQuoteSpans(final SpannableStringBuilder strBuilder, final QuoteSpan quoteSpan){
+    private void replaceQuoteSpans(final SpannableStringBuilder strBuilder, final QuoteSpan quoteSpan) {
         final int start = strBuilder.getSpanStart(quoteSpan);
         final int end = strBuilder.getSpanEnd(quoteSpan);
         int flags = strBuilder.getSpanFlags(quoteSpan);
@@ -133,15 +128,15 @@ public class MyHtmlTextView extends TextView{
                 ds.setUnderlineText(false);
                 ds.setColor(0xff888888);
             }
+
             @Override
             public void onClick(View view) {
-                if(quoteSpanClickListener!=null){
-                    quoteSpanClickListener.quoteSpanClick(strBuilder.subSequence(start,end).toString());
+                if (quoteSpanClickListener != null) {
+                    quoteSpanClickListener.quoteSpanClick(strBuilder.subSequence(start, end).toString());
                 }
             }
         }, start, end, flags);
     }
-
 
     //连接点击事件
     private void replaceLinkSpans(final SpannableStringBuilder strBuilder, final URLSpan urlSpan) {
@@ -160,13 +155,16 @@ public class MyHtmlTextView extends TextView{
             }
 
             public void onClick(View view) {
-                HandleLinkClick.handleClick(activity,urlSpan.getURL());
+                HandleLinkClick.handleClick(activity, urlSpan.getURL());
             }
         };
         strBuilder.setSpan(clickableSpan, start, end, flags);
     }
 
 
+    public interface OnQuoteSpanClick {
+        void quoteSpanClick(String res);
+    }
 
     protected class CustomQuoteSpan implements LeadingMarginSpan, LineBackgroundSpan {
         private final int backgroundColor;
@@ -175,8 +173,8 @@ public class MyHtmlTextView extends TextView{
         private final float gap;
 
         public CustomQuoteSpan() {
-            this.backgroundColor =Color.argb(200,241,241,241);
-            this.stripeColor = Color.argb(255,238,238,238);
+            this.backgroundColor = Color.argb(200, 241, 241, 241);
+            this.stripeColor = Color.argb(255, 238, 238, 238);
             this.stripeWidth = 10;
             this.gap = 20;
         }
@@ -207,7 +205,7 @@ public class MyHtmlTextView extends TextView{
 
     }
 
-    protected class myImageGetter implements Html.ImageGetter{
+    protected class myImageGetter implements Html.ImageGetter {
 
         @Override
         public Drawable getDrawable(String source) {
@@ -215,7 +213,7 @@ public class MyHtmlTextView extends TextView{
                 //替换表情到本地
                 if (source.contains("static/image/smiley/")) {
                     source = source.substring(source.indexOf("static"));
-                    source = source.replace(".gif",".jpg").replace(".GIF",".jpg");
+                    source = source.replace(".gif", ".jpg").replace(".GIF", ".jpg");
                     Drawable d = Drawable.createFromStream(activity.getAssets().open(source), null);
 
                     int height = (int) (getResources().getDimension(R.dimen.textSizeNormal) * 1.5);
@@ -226,11 +224,11 @@ public class MyHtmlTextView extends TextView{
                     d.setBounds(0, 0, width, height);
                     return d;
                 } else {
-                    if(drawableMap.containsKey(source)){
+                    if (drawableMap.containsKey(source)) {
                         return drawableMap.get(source);
-                    }else{
+                    } else {
                         TotalUrls.add(source);
-                        if(!isStart){
+                        if (!isStart) {
                             isStart = true;
                             new LoadImage().execute(source);
                         }
@@ -249,21 +247,21 @@ public class MyHtmlTextView extends TextView{
     //下载网络图片
     protected class LoadImage extends AsyncTask<Object, Void, Drawable> {
 
-        private String s  = "";
+        private String s = "";
 
         @Override
         protected Drawable doInBackground(Object... params) {
             String source = (String) params[0];
             haveUrls.add(source);
             s = source;
-            String mySource ;
-            if(source.contains("http")){
+            String mySource;
+            if (source.contains("http")) {
                 mySource = source;
-            }else{
-                if(source.charAt(0)=='/'){
-                    source = source.substring(1,source.length());
+            } else {
+                if (source.charAt(0) == '/') {
+                    source = source.substring(1, source.length());
                 }
-                mySource = PublicData.getBaseUrl()+source;
+                mySource = PublicData.getBaseUrl() + source;
             }
             try {
                 URL url = new URL(mySource);
@@ -272,14 +270,14 @@ public class MyHtmlTextView extends TextView{
                 InputStream is = conn.getInputStream();
                 BufferedInputStream bis = new BufferedInputStream(is);
                 Bitmap bm = BitmapFactory.decodeStream(bis);
-                if(bm==null){
+                if (bm == null) {
                     return null;
                 }
-                int mwidth = bm.getWidth()*4;
-                int myheight = bm.getHeight()*4;
+                int mwidth = bm.getWidth() * 4;
+                int myheight = bm.getHeight() * 4;
 
                 Drawable drawable = new BitmapDrawable(activity.getResources(), bm);
-                drawable.setBounds(0, 0,mwidth, myheight);
+                drawable.setBounds(0, 0, mwidth, myheight);
 
                 return drawable;
 
@@ -291,15 +289,15 @@ public class MyHtmlTextView extends TextView{
 
         @Override
         protected void onPostExecute(Drawable drawable) {
-            if(drawable!=null){
+            if (drawable != null) {
                 super.onPostExecute(drawable);
-                drawableMap.put(s,drawable);
-                setText(getMyStyleHtml(text,myImageGetter,myTagHandle));
+                drawableMap.put(s, drawable);
+                setText(getMyStyleHtml(text, myImageGetter, myTagHandle));
             }
 
-            if(haveUrls.size()<TotalUrls.size()){
+            if (haveUrls.size() < TotalUrls.size()) {
                 int i = haveUrls.size();
-                String uurl  = (String) TotalUrls.toArray()[i];
+                String uurl = (String) TotalUrls.toArray()[i];
                 new LoadImage().execute(uurl);
             }
         }
@@ -327,12 +325,12 @@ public class MyHtmlTextView extends TextView{
                     stopIndex++;
                     output.setSpan(new myhrSpan(), startIndex, stopIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
-            }else if(tag.equalsIgnoreCase("code")){
+            } else if (tag.equalsIgnoreCase("code")) {
                 if (opening) {
                     startIndex = output.length();
                 } else {
                     stopIndex = output.length();
-                    if(stopIndex>startIndex){
+                    if (stopIndex > startIndex) {
                         output.setSpan(new TypefaceSpan("monospace"), startIndex, stopIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         //设置字体前景色
                         output.setSpan(new ForegroundColorSpan(0xff666666), startIndex, stopIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -352,7 +350,7 @@ public class MyHtmlTextView extends TextView{
 
                 paint.setStyle(Paint.Style.FILL);
                 paint.setColor(0x1f000000);
-                canvas.drawRect(left, bottom-3, right, bottom, paint);
+                canvas.drawRect(left, bottom - 3, right, bottom, paint);
 
                 paint.setStyle(pstyle);
                 paint.setColor(ppaintColor);

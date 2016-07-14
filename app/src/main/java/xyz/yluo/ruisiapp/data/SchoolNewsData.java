@@ -13,16 +13,12 @@ public class SchoolNewsData {
     private boolean isRead;
 
 
-    public SchoolNewsData(String url,String title, boolean is_image, boolean is_patch, String post_time) {
+    public SchoolNewsData(String url, String title, boolean is_image, boolean is_patch, String post_time) {
         this.title = title;
         this.is_image = is_image;
         this.is_patch = is_patch;
         this.post_time = post_time;
         this.url = url;
-    }
-
-    public void setRead(boolean read) {
-        isRead = read;
     }
 
     public String getTitle() {
@@ -43,6 +39,10 @@ public class SchoolNewsData {
 
     public boolean isRead() {
         return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
     }
 
     public String getUrl() {

@@ -18,14 +18,12 @@ import xyz.yluo.ruisiapp.R;
 /**
  * Created by free2 on 16-3-14.
  * 添加好友diaog
- *
  */
-public class AddFriendDialog extends DialogFragment{
+public class AddFriendDialog extends DialogFragment {
     private EditText content;
     private String userName = "";
     private String userImage = "";
     private AddFriendListener dialogListener;
-
 
 
     public static AddFriendDialog newInstance(AddFriendListener var) {
@@ -35,9 +33,10 @@ public class AddFriendDialog extends DialogFragment{
     }
 
 
-    private void setListner(AddFriendListener listener){
+    private void setListner(AddFriendListener listener) {
         this.dialogListener = listener;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +46,7 @@ public class AddFriendDialog extends DialogFragment{
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.add_friend_dialog,null);
+        View view = inflater.inflate(R.layout.add_friend_dialog, null);
         builder.setView(view);
 
         builder.setTitle("添加好友");
@@ -62,8 +61,8 @@ public class AddFriendDialog extends DialogFragment{
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(checkInput()){
-                    dialogListener.OkClick(AddFriendDialog.this,content.getText().toString());
+                if (checkInput()) {
+                    dialogListener.OkClick(AddFriendDialog.this, content.getText().toString());
                     AddFriendDialog.this.getDialog().cancel();
                 }
             }
@@ -79,12 +78,6 @@ public class AddFriendDialog extends DialogFragment{
         return builder.create();
     }
 
-    public interface AddFriendListener {
-        void OkClick(DialogFragment dialog, String mes);
-    }
-
-
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -96,9 +89,9 @@ public class AddFriendDialog extends DialogFragment{
         }
     }
 
-    private boolean checkInput(){
+    private boolean checkInput() {
         String str = content.getText().toString();
-        if(str.length()>10){
+        if (str.length() > 10) {
             content.setError("字数太多了,最多10个");
             return false;
         }
@@ -111,5 +104,9 @@ public class AddFriendDialog extends DialogFragment{
 
     public void setUserImage(String userImage) {
         this.userImage = userImage;
+    }
+
+    public interface AddFriendListener {
+        void OkClick(DialogFragment dialog, String mes);
     }
 }

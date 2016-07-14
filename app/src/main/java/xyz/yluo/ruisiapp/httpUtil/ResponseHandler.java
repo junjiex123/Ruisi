@@ -40,13 +40,13 @@ public abstract class ResponseHandler {
         // Do nothing by default
     }
 
-    public void onStartDownlod(String fileName){
+    public void onStartDownlod(String fileName) {
 
     }
 
     public abstract void onSuccess(byte[] response);
 
-    public void onFailure(Throwable e){
+    public void onFailure(Throwable e) {
         // Do nothing by default
     }
 
@@ -82,7 +82,7 @@ public abstract class ResponseHandler {
                 }
                 break;
             case MSG_START_DOWN:
-                onStartDownlod((String)msg.obj);
+                onStartDownlod((String) msg.obj);
                 break;
         }
     }
@@ -102,8 +102,8 @@ public abstract class ResponseHandler {
         return os.toByteArray();
     }
 
-    final protected void sendStartDownloadMessage(String fileName){
-        handleMessage(obtainMessage(MSG_START_DOWN,fileName));
+    final protected void sendStartDownloadMessage(String fileName) {
+        handleMessage(obtainMessage(MSG_START_DOWN, fileName));
     }
 
     final protected void sendProgressMessage(int progress, long bytesTotal) {

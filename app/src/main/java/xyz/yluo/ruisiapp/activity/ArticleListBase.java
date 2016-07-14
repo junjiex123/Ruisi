@@ -22,20 +22,18 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
  * 图片文章列表{@link ArticleListImage}
  */
 public abstract class ArticleListBase extends BaseActivity
-        implements LoadMoreListener.OnLoadMoreListener{
+        implements LoadMoreListener.OnLoadMoreListener {
 
+    static int CurrentFid = 72;
+    static String CurrentTitle = "首页";
+    protected SwipeRefreshLayout refreshLayout;
+    protected ActionBar actionBar;
     FloatingActionButton btn_refresh;
     RecyclerView mRecyclerView;
-    protected SwipeRefreshLayout refreshLayout;
-
-    static int CurrentFid =72;
-    static String CurrentTitle = "首页";
     //当前页数
     int CurrentPage = 1;
     boolean isEnableLoadMore = false;
     RecyclerView.LayoutManager mLayoutManager;
-    protected ActionBar actionBar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +54,7 @@ public abstract class ArticleListBase extends BaseActivity
         });
 
         actionBar = getSupportActionBar();
-        if(actionBar!=null){
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
@@ -65,7 +63,7 @@ public abstract class ArticleListBase extends BaseActivity
         getData();
     }
 
-    private void init(){
+    private void init() {
         btn_refresh.hide();
         refreshLayout.post(new Runnable() {
             @Override
@@ -90,6 +88,7 @@ public abstract class ArticleListBase extends BaseActivity
                 int distanceToScroll = btn_refresh.getHeight() + bottomMargin;
                 btn_refresh.animate().translationY(distanceToScroll).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
             }
+
             @Override
             public void onShow() {
                 btn_refresh.animate().translationY(0).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
@@ -97,7 +96,7 @@ public abstract class ArticleListBase extends BaseActivity
         });
     }
 
-    private void prerefresh(){
+    private void prerefresh() {
         btn_refresh.hide();
         refreshLayout.post(new Runnable() {
             @Override
@@ -107,10 +106,12 @@ public abstract class ArticleListBase extends BaseActivity
         });
         refresh();
     }
+
     protected abstract void refresh();
+
     protected abstract void getData();
 
-    private void btn_refresh_click(){
+    private void btn_refresh_click() {
         prerefresh();
     }
 
@@ -120,7 +121,7 @@ public abstract class ArticleListBase extends BaseActivity
         return true;
     }
 
-    protected void hide_loading_view(){
+    protected void hide_loading_view() {
         findViewById(R.id.view_loading).setVisibility(View.GONE);
     }
 }

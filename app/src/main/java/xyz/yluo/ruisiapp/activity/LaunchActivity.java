@@ -38,12 +38,22 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 检查是否登陆
  * 读取相关设置写到{@link PublicData}
  */
-public class LaunchActivity extends BaseActivity{
+public class LaunchActivity extends BaseActivity {
     private long starttime = 0;
     private TextView launch_text;
     private CircleImageView user_image;
     private SharedPreferences perUserInfo = null;
     private boolean isrecieveMessage = false;
+    private Handler mHandler = new Handler();
+    private Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Intent i = new Intent(getApplicationContext(), HomeActivity.class);
+            i.putExtra("isLogin", PublicData.ISLOGIN);
+            startActivity(i);
+            finish();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +71,7 @@ public class LaunchActivity extends BaseActivity{
             @Override
             public void onClick(View view) {
                 PublicData.ISLOGIN = true;
-                startActivity(new Intent(getApplicationContext(),HomeActivity.class));
+                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                 finish();
             }
         });
@@ -69,7 +79,7 @@ public class LaunchActivity extends BaseActivity{
             @Override
             public void onClick(View view) {
                 PublicData.ISLOGIN = true;
-                startActivity(new Intent(getApplicationContext(),HomeActivity.class));
+                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                 finish();
             }
         });
@@ -81,7 +91,7 @@ public class LaunchActivity extends BaseActivity{
         super.onStart();
         AlphaAnimation anima = new AlphaAnimation(0.1f, 1.0f);
         anima.setDuration(1000);// 设置动画显示时间
-        TranslateAnimation animation = new TranslateAnimation(0,0,80,0);
+        TranslateAnimation animation = new TranslateAnimation(0, 0, 80, 0);
         animation.setDuration(1000);
         launch_text.startAnimation(animation);
         user_image.startAnimation(anima);
@@ -93,49 +103,49 @@ public class LaunchActivity extends BaseActivity{
             }
         });
 
-        MyDbUtils myDbUtils = new MyDbUtils(this,true);
+        MyDbUtils myDbUtils = new MyDbUtils(this, true);
         myDbUtils.showDatabase();
 
     }
 
     //从首选项读出设置
-    private void getSetting(){
+    private void getSetting() {
         SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(this);
         perUserInfo = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String uid = perUserInfo.getString("USER_UID","0");
-        Log.i("LaunchActivity",perUserInfo.getString("USER_NAME","null"));
-        Log.i("LaunchActivity",uid);
+        String uid = perUserInfo.getString("USER_UID", "0");
+        Log.i("LaunchActivity", perUserInfo.getString("USER_NAME", "null"));
+        Log.i("LaunchActivity", uid);
 
-        if(!uid.equals("0")){
-            Uri uri = GetUserImage.getImageURI(getFilesDir(),uid);
-            if(uri!=null){
+        if (!uid.equals("0")) {
+            Uri uri = GetUserImage.getImageURI(getFilesDir(), uid);
+            if (uri != null) {
                 user_image.setVisibility(View.VISIBLE);
                 user_image.setImageURI(uri);
             }
         }
 
-        String urlSetting  = shp.getString("setting_forums_url", "0");
-        boolean isShowZhidin  = shp.getBoolean("setting_show_zhidin",false);
+        String urlSetting = shp.getString("setting_forums_url", "0");
+        boolean isShowZhidin = shp.getBoolean("setting_show_zhidin", false);
         //boolean theme = shp.getBoolean("setting_swich_theme",false);
-        boolean setting_show_plain = shp.getBoolean("setting_show_plain",false);
-        isrecieveMessage = shp.getBoolean("setting_show_notify",false);
+        boolean setting_show_plain = shp.getBoolean("setting_show_plain", false);
+        isrecieveMessage = shp.getBoolean("setting_show_notify", false);
 
         PublicData.ISSHOW_ZHIDIN = isShowZhidin;
         PublicData.ISSHOW_PLAIN = setting_show_plain;
     }
 
-    private void canGetRs(int type){
-        if(type==1||type==2){
+    private void canGetRs(int type) {
+        if (type == 1 || type == 2) {
             String url = UrlUtils.getLoginUrl(false);
             checklogin(url);
-        }else{
+        } else {
             noNetWork();
             findViewById(R.id.login_view).setVisibility(View.GONE);
             findViewById(R.id.login_fail_view).setVisibility(View.VISIBLE);
         }
     }
 
-    private void checklogin(String url){
+    private void checklogin(String url) {
         HttpUtil.get(this, url, new TextResponseHandler() {
             @Override
             public void onSuccess(String res) {
@@ -144,18 +154,18 @@ public class LaunchActivity extends BaseActivity{
                     PublicData.ISLOGIN = false;
                 } else {
                     Document doc = Jsoup.parse(res);
-                    int index =  res.indexOf("欢迎您回来");
-                    String s = res.substring(index,index+30).split("，")[1].split(" ")[0].trim();
-                    if(s.length()>0){
+                    int index = res.indexOf("欢迎您回来");
+                    String s = res.substring(index, index + 30).split("，")[1].split(" ")[0].trim();
+                    if (s.length() > 0) {
                         PublicData.USER_GRADE = s;
                     }
                     PublicData.USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
                     String url = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").attr("href");
                     PublicData.USER_UID = GetId.getUid(url);
 
-                    SharedPreferences.Editor editor =perUserInfo.edit();
-                    editor.putString("USER_NAME",PublicData.USER_NAME);
-                    editor.putString("USER_UID",PublicData.USER_UID);
+                    SharedPreferences.Editor editor = perUserInfo.edit();
+                    editor.putString("USER_NAME", PublicData.USER_NAME);
+                    editor.putString("USER_UID", PublicData.USER_UID);
                     editor.apply();
 
                     PublicData.ISLOGIN = true;
@@ -163,43 +173,32 @@ public class LaunchActivity extends BaseActivity{
                     startCheckMessageService();
                 }
             }
+
             @Override
             public void onFinish() {
                 finishthis();
             }
         });
     }
+
     //没网是执行
-    private void noNetWork(){
-        Toast.makeText(getApplicationContext(),"无法连接到服务器请检查网络设置！",Toast.LENGTH_SHORT).show();
+    private void noNetWork() {
+        Toast.makeText(getApplicationContext(), "无法连接到服务器请检查网络设置！", Toast.LENGTH_SHORT).show();
     }
 
-    private Handler mHandler = new Handler();
-
-    private Runnable mRunnable = new Runnable() {
-        @Override
-        public void run() {
-            Intent i = new Intent(getApplicationContext(),HomeActivity.class);
-            i.putExtra("isLogin",PublicData.ISLOGIN);
-            startActivity(i);
-            finish();
-        }
-    };
-
-    private void startCheckMessageService(){
+    private void startCheckMessageService() {
         //启动后台服务
         Intent i = new Intent(this, CheckMessageService.class);
-        i.putExtra("isRunning",true);
-        i.putExtra("isNotisfy",isrecieveMessage);
+        i.putExtra("isRunning", true);
+        i.putExtra("isNotisfy", isrecieveMessage);
         startService(i);
     }
 
 
-
-    private void finishthis(){
+    private void finishthis() {
         long currenttime = System.currentTimeMillis();
-        long delay = 1500-(currenttime-starttime);
-        if(delay<0){
+        long delay = 1500 - (currenttime - starttime);
+        if (delay < 0) {
             delay = 0;
         }
         mHandler.postDelayed(mRunnable, delay);

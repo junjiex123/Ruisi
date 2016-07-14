@@ -17,9 +17,8 @@ import xyz.yluo.ruisiapp.R;
 /**
  * Created by free2 on 16-3-14.
  * 快速跳页 dialog  启动顺序>>>onCreate>>>onActivityCreated>>>onStart
- *
  */
-public class ArticleJumpDialog extends DialogFragment{
+public class ArticleJumpDialog extends DialogFragment {
 
     private EditText content;
     private int currentPage = 1;
@@ -30,7 +29,7 @@ public class ArticleJumpDialog extends DialogFragment{
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        Log.i("reply dialog",">>>onActivityCreated");
+        Log.i("reply dialog", ">>>onActivityCreated");
         super.onActivityCreated(savedInstanceState);
         content.requestFocus();
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -40,16 +39,16 @@ public class ArticleJumpDialog extends DialogFragment{
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.article_jump_dialog,null);
+        View view = inflater.inflate(R.layout.article_jump_dialog, null);
         builder.setView(view);
 
         content = (EditText) view.findViewById(R.id.content);
 
         TextView textView = (TextView) view.findViewById(R.id.textpage);
-        if(currentPage<1){
-            currentPage =1;
+        if (currentPage < 1) {
+            currentPage = 1;
         }
-        String text  = "第"+currentPage+"/"+maxPage+"页";
+        String text = "第" + currentPage + "/" + maxPage + "页";
         textView.setText(text);
         TextView btn_cancel = (TextView) view.findViewById(R.id.btn_cancel);
         TextView btn_send = (TextView) view.findViewById(R.id.btn_send);
@@ -57,8 +56,8 @@ public class ArticleJumpDialog extends DialogFragment{
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(checkInput()){
-                    dialogListener.JumpComfirmClick(ArticleJumpDialog.this,selectPage);
+                if (checkInput()) {
+                    dialogListener.JumpComfirmClick(ArticleJumpDialog.this, selectPage);
                     ArticleJumpDialog.this.getDialog().cancel();
                 }
 
@@ -77,10 +76,6 @@ public class ArticleJumpDialog extends DialogFragment{
         return builder.create();
     }
 
-    public interface JumpDialogListener {
-        void JumpComfirmClick(DialogFragment dialog, int page);
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -96,25 +91,29 @@ public class ArticleJumpDialog extends DialogFragment{
         this.currentPage = page;
     }
 
-    public void setMaxPage(int maxPage){
+    public void setMaxPage(int maxPage) {
         this.maxPage = maxPage;
     }
 
-    private boolean checkInput(){
+    private boolean checkInput() {
         String str = content.getText().toString();
-        if(str.isEmpty()){
+        if (str.isEmpty()) {
             content.setError("不能为空");
             return false;
         }
 
         int a = Integer.parseInt(str);
-        if(a>maxPage||a<1){
+        if (a > maxPage || a < 1) {
             content.setError("请输入正确的页数");
             return false;
-        }else {
+        } else {
             selectPage = a;
         }
 
         return true;
+    }
+
+    public interface JumpDialogListener {
+        void JumpComfirmClick(DialogFragment dialog, int page);
     }
 }

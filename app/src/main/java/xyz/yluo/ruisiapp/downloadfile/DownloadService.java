@@ -20,6 +20,7 @@ import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 
 /***
  * 下载服务 2016 07 11
+ *
  * @author yang
  */
 public class DownloadService extends Service {
@@ -31,7 +32,7 @@ public class DownloadService extends Service {
     private int downloadProgress = 0;
 
     private NotificationCompat.Builder mBuilder;
-    private NotificationManager  mNotifyManager;
+    private NotificationManager mNotifyManager;
     private Intent intent = new Intent("com.example.communication.RECEIVER");
 
     @Override
@@ -51,8 +52,8 @@ public class DownloadService extends Service {
         HttpUtil.get(getApplicationContext(), down_url, new FileResponseHandler(filename) {
             @Override
             public void onStartDownLoad(String fileName) {
-                Log.i("download","====on statt start down load "+fileName);
-                if(filename.equals("null")&&!fileName.equals("null")){
+                Log.i("download", "====on statt start down load " + fileName);
+                if (filename.equals("null") && !fileName.equals("null")) {
                     filename = fileName;
                 }
                 createNotification(filename);
@@ -60,19 +61,21 @@ public class DownloadService extends Service {
 
             @Override
             public void onSuccess(File file) {
-                Log.i("download","success");
-                updateProgress(DOWN_OK,100);
+                Log.i("download", "success");
+                updateProgress(DOWN_OK, 100);
             }
+
             @Override
             public void onFailure(Throwable throwable, File file) {
-                Log.i("download","fail");
-                updateProgress(DOWN_ERROR,0);
+                Log.i("download", "fail");
+                updateProgress(DOWN_ERROR, 0);
             }
+
             @Override
             public void onProgress(int progress, long totalBytes) {
                 super.onProgress(progress, totalBytes);
-                Log.i("download progress",progress+""+totalBytes);
-                updateProgress(DOWNLOADING,progress);
+                Log.i("download progress", progress + "" + totalBytes);
+                updateProgress(DOWNLOADING, progress);
             }
         });
         return super.onStartCommand(intent, flags, startId);
@@ -80,58 +83,60 @@ public class DownloadService extends Service {
 
     /**
      * 方法描述：createNotification方法
-     * @see     DownloadService
+     *
+     * @see DownloadService
      */
     public void createNotification(final String filename) {
         Handler handler = new Handler(Looper.getMainLooper());
 
         handler.post(new Runnable() {
-         @Override
-         public void run() {
-               Toast.makeText(getApplicationContext(), "开始下载"+filename,Toast.LENGTH_SHORT).show();
-               }
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), "开始下载" + filename, Toast.LENGTH_SHORT).show();
+            }
         });
         Intent resultIntent = new Intent(this, DownLoadActivity.class);
-        resultIntent.putExtra("fileName",filename);
-        resultIntent.putExtra("progress",downloadProgress);
+        resultIntent.putExtra("fileName", filename);
+        resultIntent.putExtra("progress", downloadProgress);
         // Creates the PendingIntent
         PendingIntent notifyPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mBuilder = new NotificationCompat.Builder(this);
-        mBuilder.setContentTitle("下载文件"+filename)
+        mBuilder.setContentTitle("下载文件" + filename)
                 .setContentIntent(notifyPendingIntent)
                 .setSmallIcon(R.mipmap.logo);
         mBuilder.setProgress(100, 0, false);
-        mBuilder.setContentText("下载进度："+0+"%");
+        mBuilder.setContentText("下载进度：" + 0 + "%");
         mNotifyManager.notify(0, mBuilder.build());
     }
+
     //type
-    private void updateProgress(int type, int progress){
+    private void updateProgress(int type, int progress) {
         // Start a lengthy operation in a background thread
         /**
          * 发送广播给ui activity
          */
         downloadProgress = progress;
         intent.putExtra("progress", progress);
-        if(progress==100){
+        if (progress == 100) {
             type = DOWN_OK;
         }
-        intent.putExtra("type",type);
+        intent.putExtra("type", type);
         sendBroadcast(intent);
-        Log.i("===发送广播===",type+" "+progress);
-        switch (type){
+        Log.i("===发送广播===", type + " " + progress);
+        switch (type) {
             case DOWN_ERROR:
                 mBuilder.setContentText("文件下载失败！")
                         .setContentIntent(null)
                         // Removes the progress bar
-                        .setProgress(0,0,false);
+                        .setProgress(0, 0, false);
 
                 mNotifyManager.notify(0, mBuilder.build());
                 break;
             case DOWN_OK:
                 mBuilder.setContentText("文件下载完成！")
                         // Removes the progress bar
-                        .setProgress(0,0,false);
+                        .setProgress(0, 0, false);
                 mNotifyManager.notify(0, mBuilder.build());
                 /**
                  * 取消之前的notification 新建
@@ -139,12 +144,12 @@ public class DownloadService extends Service {
                 mNotifyManager.cancel(0);
 
                 Intent okIntent = new Intent(this, DownLoadActivity.class);
-                okIntent.putExtra("fileName",filename);
-                okIntent.putExtra("progress",100);
+                okIntent.putExtra("fileName", filename);
+                okIntent.putExtra("progress", 100);
                 // Creates the PendingIntent
                 PendingIntent notifyPendingIntent = PendingIntent.getActivity(this, 1, okIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                 mBuilder = new NotificationCompat.Builder(this);
-                mBuilder.setContentTitle(filename+"下载完成")
+                mBuilder.setContentTitle(filename + "下载完成")
                         .setContentText("文件下载完成，点击打开！！")
                         .setContentIntent(notifyPendingIntent)
                         .setAutoCancel(true)
@@ -154,7 +159,7 @@ public class DownloadService extends Service {
                 break;
             case DOWNLOADING:
                 mBuilder.setProgress(100, progress, false);
-                mBuilder.setContentText("下载进度："+progress+"%");
+                mBuilder.setContentText("下载进度：" + progress + "%");
                 downloadProgress = progress;
                 //发送Action为com.example.communication.RECEIVER的广播
                 mNotifyManager.notify(0, mBuilder.build());
@@ -166,9 +171,9 @@ public class DownloadService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i("service","destroy");
+        Log.i("service", "destroy");
         //HttpUtil.cancel() /todo 取消下载
-        if(mNotifyManager!=null){
+        if (mNotifyManager != null) {
             FileUtil.deleteFile(filename);
             mNotifyManager.cancelAll();
         }

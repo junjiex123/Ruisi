@@ -12,25 +12,11 @@ import xyz.yluo.ruisiapp.View.MyHtmlTextView;
 
 /**
  * Created by free2 on 16-7-14.
- *
  */
-public class FrageHelp extends Fragment{
-
-    public FrageHelp() {
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.frage_help, container, false);
-        MyHtmlTextView htmlTextView = (MyHtmlTextView) view.findViewById(R.id.html_text);
-        htmlTextView.mySetText(getActivity(),helpTxt);
-
-        return view;
-    }
+public class FrageHelp extends Fragment {
 
     private static final String helpTxt =
-            "本帮助参考 <a href=\"http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid=824705&mobile=2\">【H∀】睿思帮助2.0　viaAH</a><br> 所有权归<a href=\"home.php?mod=space&uid=285519&do=profile&mobile=2\">@Adolf-Hitler</a>所有<br><hr>\n"+
+            "本帮助参考 <a href=\"http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid=824705&mobile=2\">【H∀】睿思帮助2.0　viaAH</a><br> 所有权归<a href=\"home.php?mod=space&uid=285519&do=profile&mobile=2\">@Adolf-Hitler</a>所有<br><hr>\n" +
                     "<strong>[站点信息]</strong><br>\n" +
                     "西电睿思是由西电学生自己创立的校内BT网站，于2009年9月13日上线，是目前西电唯一面向学生的高速免费BT下载站，同时睿思BBS也是最受西电师生欢迎的论坛之一，我们的口号是：爱西电、爱生活、爱睿思。<br>\n" +
                     "<br>\n" +
@@ -233,4 +219,17 @@ public class FrageHelp extends Fragment{
                     "<strong>[系统更新信息]</strong><br>\n" +
                     "2012-12-07 默默上线 <br>\n" +
                     "2014-07-14 论坛升级为X3.2<br>";
+
+    public FrageHelp() {
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.frage_help, container, false);
+        MyHtmlTextView htmlTextView = (MyHtmlTextView) view.findViewById(R.id.html_text);
+        htmlTextView.mySetText(getActivity(), helpTxt);
+
+        return view;
+    }
 }

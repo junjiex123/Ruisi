@@ -1,50 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/forum_list_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:clickable="true">
 
     <LinearLayout
-        android:paddingTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
         android:paddingEnd="8dp"
         android:paddingStart="8dp"
-        android:paddingBottom="10dp"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:paddingTop="8dp">
 
         <ImageView
-            android:layout_marginTop="6dp"
             android:id="@+id/img"
             android:layout_width="36dp"
             android:layout_height="36dp"
+            android:layout_marginTop="6dp"
             android:src="@drawable/image_placeholder" />
 
         <TextView
             android:id="@+id/title"
+            style="@style/SmallText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/SmallText"
+            android:layout_marginTop="8dp"
             android:maxLines="1"
-            tools:text="板块的题目的标题"
-            android:layout_marginTop="8dp" />
+            tools:text="板块的题目的标题" />
     </LinearLayout>
 
     <TextView
-        android:gravity="center"
-        android:layout_margin="6dp"
-        android:layout_gravity="end"
-        android:padding="3dp"
-        android:background="@drawable/type_bg_circle"
         android:id="@+id/today_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="9sp"
-        android:textColor="@android:color/white"
+        android:layout_gravity="end"
+        android:layout_margin="6dp"
+        android:background="@drawable/type_bg_circle"
+        android:gravity="center"
         android:maxLines="1"
+        android:padding="3dp"
+        android:textColor="@android:color/white"
+        android:textSize="9sp"
         tools:text="150" />
 </FrameLayout>

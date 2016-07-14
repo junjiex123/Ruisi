@@ -61,7 +61,7 @@ public class NewArticleActivity extends AppCompatActivity {
         init();
     }
 
-    private void init(){
+    private void init() {
         action_bold.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -88,64 +88,64 @@ public class NewArticleActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.action_emotion)
-    protected void action_emotion(){
+    protected void action_emotion() {
         //todo 可以加入动画
-        if(emotion_container.getVisibility()==View.VISIBLE){
+        if (emotion_container.getVisibility() == View.VISIBLE) {
             emotion_container.setVisibility(View.GONE);
-        }else{
+        } else {
             emotion_container.setVisibility(View.VISIBLE);
         }
     }
 
-    @OnClick({R.id._1000, R.id._1001,R.id._1002,R.id._1003,R.id._1005,
-            R.id._1006,R.id._1007,R.id._1008,R.id._1009,R.id._1010,
-            R.id._1011,R.id._1012,R.id._1013,R.id._1014,R.id._1015,
-            R.id._1016,R.id._1017,R.id._1018,R.id._1019,R.id._1020,
-            R.id._1021,R.id._1022,R.id._1023,R.id._1024,R.id._1025,
-            R.id._1027,R.id._1028,R.id._1029,R.id._1030, R.id._998,
-            R.id._999,R.id._9998,R.id._9999
+    @OnClick({R.id._1000, R.id._1001, R.id._1002, R.id._1003, R.id._1005,
+            R.id._1006, R.id._1007, R.id._1008, R.id._1009, R.id._1010,
+            R.id._1011, R.id._1012, R.id._1013, R.id._1014, R.id._1015,
+            R.id._1016, R.id._1017, R.id._1018, R.id._1019, R.id._1020,
+            R.id._1021, R.id._1022, R.id._1023, R.id._1024, R.id._1025,
+            R.id._1027, R.id._1028, R.id._1029, R.id._1030, R.id._998,
+            R.id._999, R.id._9998, R.id._9999
     })
-    protected void smiley_click(ImageButton btn){
+    protected void smiley_click(ImageButton btn) {
         //插入表情
         //{:16_1021:}
         String tmp = btn.getTag().toString();
-        PostHander hander = new PostHander(getApplicationContext(),(EditText)getCurrentFocus());
+        PostHander hander = new PostHander(getApplicationContext(), (EditText) getCurrentFocus());
         hander.insertSmiley("{:16" + tmp + ":}", btn.getDrawable());
     }
 
     //发帖按钮
     @OnClick(R.id.btn_send)
-    protected void btn_send_click(){
-        if(checkPostInput()){
+    protected void btn_send_click() {
+        if (checkPostInput()) {
             int CURRENT_FID = 72;
             preparePost(CURRENT_FID);
         }
     }
 
-    private boolean checkPostInput(){
-        if (edit_input_title.getText().toString().equals("")){
+    private boolean checkPostInput() {
+        if (edit_input_title.getText().toString().equals("")) {
             postFail("标题不能为空啊");
             return false;
-        }else if(edit_input_content.getText().toString().equals("")){
+        } else if (edit_input_content.getText().toString().equals("")) {
             postFail("内容不能为空啊");
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
     //准备发帖需要的东西
-    private void preparePost(final int fid){
+    private void preparePost(final int fid) {
         progress = ProgressDialog.show(this, "正在发送", "请等待", true);
-        String url = "forum.php?mod=post&action=newthread&fid="+fid+"&mobile=2";
+        String url = "forum.php?mod=post&action=newthread&fid=" + fid + "&mobile=2";
         HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
-                Document doc  = Jsoup.parse(new String(response));
-                String url  = doc.select("#postform").attr("action");
+                Document doc = Jsoup.parse(new String(response));
+                String url = doc.select("#postform").attr("action");
                 String hash = doc.select("input#formhash").attr("value");
                 String time = doc.select("input#posttime").attr("value");
-                begainPost(hash,time);
+                begainPost(hash, time);
             }
 
             @Override
@@ -156,25 +156,25 @@ public class NewArticleActivity extends AppCompatActivity {
     }
 
     //开始发帖
-    private void begainPost(String hash,String time){
+    private void begainPost(String hash, String time) {
 
         String url3 = UrlUtils.getPostUrl(72);
 
-         Map<String,String> params = new HashMap<>();
-        params.put("formhash",hash);
-        params.put("posttime",time);
-        params.put("topicsubmit","yes");
-        params.put("subject",edit_input_title.getText().toString());
-        params.put("message",edit_input_content.getText().toString());
+        Map<String, String> params = new HashMap<>();
+        params.put("formhash", hash);
+        params.put("posttime", time);
+        params.put("topicsubmit", "yes");
+        params.put("subject", edit_input_title.getText().toString());
+        params.put("message", edit_input_content.getText().toString());
         HttpUtil.post(getApplicationContext(), url3, params, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
                 edit_input_content.setText(res);
 
-                if(res.contains("非常感谢")){
+                if (res.contains("非常感谢")) {
                     postSuccess();
-                }else{
+                } else {
                     postFail("由于未知原因发帖失败");
                 }
             }
@@ -187,15 +187,15 @@ public class NewArticleActivity extends AppCompatActivity {
     }
 
     //发帖成功执行
-    private void postSuccess(){
+    private void postSuccess() {
         progress.dismiss();
-        Toast.makeText(getApplicationContext(),"主题发表成功",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "主题发表成功", Toast.LENGTH_SHORT).show();
         //finish();
     }
 
     //发帖失败执行
-    private void postFail(String str){
+    private void postFail(String str) {
         progress.dismiss();
-        Snackbar.make(main_window,str,Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(main_window, str, Snackbar.LENGTH_SHORT).show();
     }
 }

@@ -35,12 +35,12 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
  * Created by free2 on 16-3-19.
  * 简单的fragment 首页第二页 展示最新的帖子等
  */
-public class FrageHotNew extends Fragment implements LoadMoreListener.OnLoadMoreListener{
+public class FrageHotNew extends Fragment implements LoadMoreListener.OnLoadMoreListener {
 
     protected RecyclerView recycler_view;
     protected SwipeRefreshLayout refreshLayout;
-    private List<GalleryData> galleryDatas= new ArrayList<>();
-    private List<ArticleListData> mydataset =new ArrayList<>();
+    private List<GalleryData> galleryDatas = new ArrayList<>();
+    private List<ArticleListData> mydataset = new ArrayList<>();
     private HotNewListAdapter adapter;
     private boolean isEnableLoadMore = false;
     private int CurrentPage = 1;
@@ -53,7 +53,7 @@ public class FrageHotNew extends Fragment implements LoadMoreListener.OnLoadMore
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recycler_view.setLayoutManager(mLayoutManager);
-        adapter = new HotNewListAdapter(getActivity(),galleryDatas, mydataset);
+        adapter = new HotNewListAdapter(getActivity(), galleryDatas, mydataset);
         recycler_view.setAdapter(adapter);
         recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 10));
 
@@ -81,56 +81,27 @@ public class FrageHotNew extends Fragment implements LoadMoreListener.OnLoadMore
         return view;
     }
 
-    private void refresh(){
-        CurrentPage= 1 ;
+    private void refresh() {
+        CurrentPage = 1;
         isEnableLoadMore = false;
         getData();
 
     }
+
     @Override
     public void onLoadMore() {
-        if(isEnableLoadMore){
+        if (isEnableLoadMore) {
             CurrentPage++;
             getData();
             isEnableLoadMore = false;
         }
     }
 
-    private class getGalleryTask extends AsyncTask<Void,Void,List<GalleryData>>{
-
-        @Override
-        protected List<GalleryData> doInBackground(Void... voids) {
-            galleryDatas.clear();
-            Log.i("gallery","=====gallery=====");
-            String url = "http://rs.xidian.edu.cn/forum.php";
-            try {
-                Document doc = Jsoup.connect(url).userAgent(SyncHttpClient.DEFAULT_USER_AGENT).get();
-                Elements listgallerys =  doc.select("#wp").select("ul.slideshow");
-                for(Element e:listgallerys.select("li")){
-                    String title = e.text();
-                    String titleurl = e.select("a").attr("href");
-                    String imgurl = e.select("img").attr("src");
-                    Log.i("gallery",title+titleurl+imgurl);
-                    galleryDatas.add(new GalleryData(imgurl,title,titleurl));
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return  null;
-        }
-
-        @Override
-        protected void onPostExecute(List<GalleryData> galleryDatas) {
-            super.onPostExecute(galleryDatas);
-            adapter.notifyItemChanged(0);
-        }
-    }
-
-    private void getData(){
-        if(PublicData.IS_SCHOOL_NET&&galleryDatas.size()==0){
+    private void getData() {
+        if (PublicData.IS_SCHOOL_NET && galleryDatas.size() == 0) {
             new getGalleryTask().execute();
         }
-        String url = "forum.php?mod=guide&view=new&page="+CurrentPage+"&mobile=2";
+        String url = "forum.php?mod=guide&view=new&page=" + CurrentPage + "&mobile=2";
         HttpUtil.get(getActivity(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -144,11 +115,42 @@ public class FrageHotNew extends Fragment implements LoadMoreListener.OnLoadMore
                     public void run() {
                         refreshLayout.setRefreshing(false);
                     }
-                },500);
+                }, 500);
 
             }
         });
     }
+
+    private class getGalleryTask extends AsyncTask<Void, Void, List<GalleryData>> {
+
+        @Override
+        protected List<GalleryData> doInBackground(Void... voids) {
+            galleryDatas.clear();
+            Log.i("gallery", "=====gallery=====");
+            String url = "http://rs.xidian.edu.cn/forum.php";
+            try {
+                Document doc = Jsoup.connect(url).userAgent(SyncHttpClient.DEFAULT_USER_AGENT).get();
+                Elements listgallerys = doc.select("#wp").select("ul.slideshow");
+                for (Element e : listgallerys.select("li")) {
+                    String title = e.text();
+                    String titleurl = e.select("a").attr("href");
+                    String imgurl = e.select("img").attr("src");
+                    Log.i("gallery", title + titleurl + imgurl);
+                    galleryDatas.add(new GalleryData(imgurl, title, titleurl));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<GalleryData> galleryDatas) {
+            super.onPostExecute(galleryDatas);
+            adapter.notifyItemChanged(0);
+        }
+    }
+
     //非校园网状态下获得一个板块文章列表数据
     //根据html获得数据
     //调用的手机版
@@ -170,7 +172,7 @@ public class FrageHotNew extends Fragment implements LoadMoreListener.OnLoadMore
                 String img = src.select("img").attr("src");
                 boolean hasImage = img.contains("icon_tu.png");
 
-                temp = new ArticleListData(hasImage,title, url, author, replyCount);
+                temp = new ArticleListData(hasImage, title, url, author, replyCount);
                 dataset.add(temp);
             }
             return dataset;
@@ -178,16 +180,16 @@ public class FrageHotNew extends Fragment implements LoadMoreListener.OnLoadMore
 
         @Override
         protected void onPostExecute(List<ArticleListData> dataset) {
-            if(CurrentPage==1){
+            if (CurrentPage == 1) {
                 //item 增加删除 改变动画
                 mydataset.clear();
             }
             int size = mydataset.size();
             mydataset.addAll(dataset);
-            if(size>0){
+            if (size > 0) {
                 adapter.notifyItemChanged(size);
-                adapter.notifyItemRangeInserted(size+1, dataset.size());
-            }else{
+                adapter.notifyItemRangeInserted(size + 1, dataset.size());
+            } else {
                 adapter.notifyDataSetChanged();
             }
             isEnableLoadMore = true;
@@ -197,7 +199,7 @@ public class FrageHotNew extends Fragment implements LoadMoreListener.OnLoadMore
                 public void run() {
                     refreshLayout.setRefreshing(false);
                 }
-            },500);
+            }, 500);
         }
     }
 
