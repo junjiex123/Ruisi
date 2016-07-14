@@ -1,5 +1,7 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,7 +28,12 @@ import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.ChangeNetDialog;
 import xyz.yluo.ruisiapp.View.CircleImageView;
+import xyz.yluo.ruisiapp.data.FrageType;
+import xyz.yluo.ruisiapp.fragment.FrageFriends;
+import xyz.yluo.ruisiapp.fragment.FrageHelp;
 import xyz.yluo.ruisiapp.fragment.FrageHotNew;
+import xyz.yluo.ruisiapp.fragment.FrageMessage;
+import xyz.yluo.ruisiapp.fragment.FrageTopicStarHistory;
 import xyz.yluo.ruisiapp.utils.GetUserImage;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
@@ -38,17 +45,15 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 3.新闻{@link xyz.yluo.ruisiapp.fragment.FrageNews}
  */
 public class HomeActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener,DrawerLayout.DrawerListener{
 
     private DrawerLayout drawer;
     private NavigationView navigationView;
-
     private TextView usernameTitle;
     private CircleImageView userImageTitle;
     private msgReceiver myMsgReceiver;
     //新消息小红点
     private View message_badge_toolbar,message_badge_nav;
-
     private int clickId = 0;
     private CircleImageView userImage;
     private long mExitTime;
@@ -97,108 +102,22 @@ public class HomeActivity extends BaseActivity
     }
 
     private void init(){
-
-
-        drawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                clickId = 0;
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-                switch (clickId){
-                    case R.id.nav_about:
-                        startActivity(new Intent(getApplicationContext(),AboutActivity.class));
-                        break;
-                    case R.id.nav_setting:
-                        startActivity(new Intent(getApplicationContext(), SettingActivity.class));
-                        break;
-                    case R.id.nav_sign:
-                        if(PublicData.IS_SCHOOL_NET){
-                            if(isneed_login()){
-                                startActivity(new Intent(getApplicationContext(),UserDakaActivity.class));
-                            }
-                        }else{
-                            Toast.makeText(getApplicationContext(),"你现在不是校园网无法签到",Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    case R.id.nav_post:
-                        if(isneed_login()){
-                            startActivity(new Intent(getApplicationContext(),NewArticleActivity_2.class));
-                        }
-                        break;
-                    case R.id.nav_my_topic:
-                        if(isneed_login()){
-                            Intent i = new Intent(getApplicationContext(),ActivityMyTopicStar.class);
-                            i.putExtra("type","mytopic");
-                            startActivity(i);
-                        }
-                        break;
-                    case R.id.nav_my_star:
-                        if(isneed_login()){
-                            Intent i = new Intent(getApplicationContext(),ActivityMyTopicStar.class);
-                            i.putExtra("type","mystar");
-                            startActivity(i);
-                        }
-                        break;
-                    case R.id.nav_history:
-                        if(isneed_login()){
-                            Intent i = new Intent(getApplicationContext(),ActivityMyTopicStar.class);
-                            i.putExtra("type","myhistory");
-                            startActivity(i);
-                        }
-                        break;
-
-                    case R.id.nav_help:
-                        Intent i = new Intent(getApplicationContext(),HelpActivity.class);
-                        startActivity(i);
-                        break;
-
-                }
-            }
-        });
-
-
-        findViewById(R.id.toolbar_view).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                drawer.openDrawer(GravityCompat.START);
-            }
-        });
+        drawer.addDrawerListener(this);
+        findViewById(R.id.toolbar_view).setOnClickListener(this);
 
         final View header = navigationView.getHeaderView(0);
         userImage = (CircleImageView) header.findViewById(R.id.profile_image);
         message_badge_nav = header.findViewById(R.id.message_badge_nav);
-        userImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                if (PublicData.ISLOGIN) {
-                    String url = UrlUtils.getAvaterurlb(PublicData.USER_UID);
-                    UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, PublicData.USER_NAME, userImage,url);
-                } else {
-                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(i);
-                }
-            }
-        });
+        userImage.setOnClickListener(this);
+
+        header.findViewById(R.id.change_net).setOnClickListener(this);
 
         ImageView  btn_show_message = (ImageView) header.findViewById(R.id.show_message);
-        btn_show_message.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(HomeActivity.this,ActivityWithFrageMent.class);
-                i.putExtra("type",ActivityWithFrageMent.FRAGE_FRIEND);
-                startActivity(i);
-            }
-        });
+        btn_show_message.setOnClickListener(this);
 
         message_badge_nav.setVisibility(View.INVISIBLE);
         message_badge_toolbar.setVisibility(View.INVISIBLE);
     }
-
 
     @Override
     public void onBackPressed() {
@@ -223,15 +142,6 @@ public class HomeActivity extends BaseActivity
 
     private void updateLoginView(){
         final View header = navigationView.getHeaderView(0);
-        header.findViewById(R.id.change_net).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ChangeNetDialog dialog = new ChangeNetDialog();
-                dialog.setNetType(PublicData.IS_SCHOOL_NET);
-                dialog.show(getFragmentManager(), "changeNet");
-            }
-        });
-
         TextView userName = (TextView) header.findViewById(R.id.header_user_name);
         TextView userGrade = (TextView) header.findViewById(R.id.user_grade);
 
@@ -261,11 +171,9 @@ public class HomeActivity extends BaseActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home, menu);
-        return true;
-    }
+
+
+
     /**
      * 检查消息接收器
      */
@@ -295,5 +203,147 @@ public class HomeActivity extends BaseActivity
         if(myMsgReceiver!=null){
             unregisterReceiver(myMsgReceiver);
         }
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+        return true;
+    }
+
+    private void changeFragement(int id){
+        FragmentManager fm = getFragmentManager();
+        // 开启Fragment事务
+        FragmentTransaction transaction = fm.beginTransaction();
+        switch (id)
+        {
+            case FrageType.MESSAGE:
+                FrageMessage frageMessage = new FrageMessage();
+                // 使用当前Fragment的布局替代id_content的控件
+                transaction.replace(R.id.fragment_home, frageMessage);
+                break;
+            case FrageType.FRIEND:
+                FrageFriends frageFriends = new FrageFriends();
+                transaction.replace(R.id.fragment_home, frageFriends);
+                break;
+            case FrageType.TOPIC:
+            case FrageType.START:
+            case FrageType.HISTORY:
+                FrageTopicStarHistory frageTopicStarHistory = new FrageTopicStarHistory();
+                Bundle bundle = new Bundle();
+                bundle.putInt("type",id);
+                frageTopicStarHistory.setArguments(bundle);
+                transaction.replace(R.id.fragment_home, frageTopicStarHistory);
+                break;
+
+            case FrageType.HELP:
+                FrageHelp frageHelp = new FrageHelp();
+                transaction.replace(R.id.fragment_home, frageHelp);
+                break;
+        }
+        // 事务提交
+        transaction.commit();
+    }
+
+
+
+
+    @Override
+    public void onClick(View view) {
+
+        switch (view.getId()){
+            case R.id.toolbar_view:
+                drawer.openDrawer(GravityCompat.START);
+                break;
+            case R.id.profile_image:
+                if (PublicData.ISLOGIN) {
+                    String url = UrlUtils.getAvaterurlb(PublicData.USER_UID);
+                    UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, PublicData.USER_NAME, userImage,url);
+                } else {
+                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(i);
+                }
+                break;
+            case R.id.change_net:
+                ChangeNetDialog dialog = new ChangeNetDialog();
+                dialog.setNetType(PublicData.IS_SCHOOL_NET);
+                dialog.show(getFragmentManager(), "changeNet");
+                break;
+            case R.id.show_message:
+                clickId = R.id.show_message;
+                drawer.closeDrawer(GravityCompat.START);
+                break;
+
+        }
+
+    }
+
+    /**
+     * 抽屉监听函数
+     * @param drawerView
+     * @param slideOffset
+     */
+
+    @Override
+    public void onDrawerSlide(View drawerView, float slideOffset) {
+    }
+
+    @Override
+    public void onDrawerOpened(View drawerView) {
+        clickId = 0;
+    }
+    @Override
+    public void onDrawerClosed(View drawerView) {
+        switch (clickId){
+            case R.id.nav_about:
+                startActivity(new Intent(getApplicationContext(),AboutActivity.class));
+                break;
+            case R.id.nav_setting:
+                startActivity(new Intent(getApplicationContext(), SettingActivity.class));
+                break;
+            case R.id.nav_sign:
+                if(PublicData.IS_SCHOOL_NET){
+                    if(isneed_login()){
+                        startActivity(new Intent(getApplicationContext(),UserDakaActivity.class));
+                    }
+                }else{
+                    Toast.makeText(getApplicationContext(),"你现在不是校园网无法签到",Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.nav_post:
+                if(isneed_login()){
+                    startActivity(new Intent(getApplicationContext(),NewArticleActivity_2.class));
+                }
+                break;
+            case R.id.show_message:
+                changeFragement(FrageType.MESSAGE);
+                break;
+            case R.id.nav_my_topic:
+                if(isneed_login()){
+                    changeFragement(FrageType.TOPIC);
+                }
+                break;
+            case R.id.nav_my_star:
+                if(isneed_login()){
+                    changeFragement(FrageType.START);
+                }
+                break;
+            case R.id.nav_history:
+                if(isneed_login()){
+                    changeFragement(FrageType.HISTORY);
+                }
+                break;
+            case R.id.nav_help:
+                changeFragement(FrageType.HELP);
+                break;
+
+        }
+    }
+
+    @Override
+    public void onDrawerStateChanged(int newState) {
+
     }
 }

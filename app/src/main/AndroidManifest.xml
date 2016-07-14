@@ -70,16 +70,9 @@
             android:name=".activity.ActivitySearch"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.ActivityMyTopicStar"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".downloadfile.DownLoadActivity"
             android:label="下载文件"
             android:theme="@style/AppTheme.Dialog" />
-        <activity
-            android:name=".activity.HelpActivity"
-            android:label="睿思帮助"
-            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.SingleNewsActivity"
             android:theme="@style/AppTheme.NoActionBar" />

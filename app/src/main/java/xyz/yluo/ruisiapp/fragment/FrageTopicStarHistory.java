@@ -1,12 +1,15 @@
-package xyz.yluo.ruisiapp.activity;
+package xyz.yluo.ruisiapp.fragment;
 
+import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -19,6 +22,7 @@ import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
+import xyz.yluo.ruisiapp.data.FrageType;
 import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.SimpleListData;
 import xyz.yluo.ruisiapp.database.MyDbUtils;
@@ -26,76 +30,80 @@ import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 
+/**
+ * Created by free2 on 16-7-14.
+ *
+ */
+public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.OnLoadMoreListener{
 
-
-public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListener.OnLoadMoreListener{
     protected SwipeRefreshLayout refreshLayout;
-
     private List<SimpleListData> datas;
     private SimpleListAdapter adapter;
     private int CurrentPage = 0;
     private boolean isEnableLoadMore = true;
     private boolean isHaveMore = true;
 
-    /**
-     * 0----wode 主题
-     * 1----我的 收藏
-     * 2----历史纪录  //TODO 复杂的历史纪录
-     */
     private int currentIndex = 0;
 
     private String url;
 
+    public FrageTopicStarHistory() {
+    }
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.simple_list_view);
-
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.simple_list_view, container, false);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
-        try{
-            String type =  getIntent().getExtras().getString("type");
-            if(type!=null&&type.equals("mytopic")){
-                currentIndex = 0;
-            }else if(type!=null&&type.equals("mystar")){
-                currentIndex = 1;
-            }else{
-                currentIndex =2;
+
+        Bundle bundle = getArguments();//从activity传过来的Bundle
+        if(bundle!=null){
+            int  type = bundle.getInt("type",-1);
+
+            Log.i("type is","=="+type+"==");
+            switch (type){
+                case FrageType.TOPIC:
+                    currentIndex = 0;
+                    break;
+                case FrageType.START:
+                    currentIndex = 1;
+                    break;
+                default:
+                    currentIndex =2;
             }
-        }catch (Exception e){
-            e.printStackTrace();
         }
 
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar!=null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+//        ActionBar actionBar = getSupportActionBar();
+//        if(actionBar!=null){
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//        }
 
         String uid = PublicData.USER_UID;
         switch (currentIndex){
             case 0:
                 //主题
-                if(actionBar!=null)
-                    actionBar.setTitle("我的帖子");
+                //if(actionBar!=null)
+                //    actionBar.setTitle("我的帖子");
                 url = "home.php?mod=space&uid="+uid+"&do=thread&view=me&mobile=2";
                 break;
             case 1:
                 //我的收藏
-                if(actionBar!=null)
-                    actionBar.setTitle("我的收藏");
+                //if(actionBar!=null)
+                 //   actionBar.setTitle("我的收藏");
                 url = "home.php?mod=space&uid="+uid+"&do=favorite&view=me&type=thread&mobile=2";
                 break;
             default:
+
                 isEnableLoadMore = false;
-                if(actionBar!=null)
-                    actionBar.setTitle("历史纪录");
+                //if(actionBar!=null)
+                //    actionBar.setTitle("历史纪录");
                 break;
         }
 
         datas = new ArrayList<>();
-        adapter = new SimpleListAdapter(ListType.ARTICLE,this,datas);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        adapter = new SimpleListAdapter(ListType.ARTICLE,getActivity(),datas);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) layoutManager, this,10));
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -108,6 +116,7 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
         });
 
         refresh();
+        return view;
     }
 
     @Override
@@ -119,7 +128,6 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
             isEnableLoadMore = false;
         }
     }
-
 
     private void refresh() {
         refreshLayout.post(new Runnable() {
@@ -138,7 +146,7 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
 
         if(currentIndex==2){
             //datas.add()
-            MyDbUtils myDbUtils = new MyDbUtils(getApplicationContext(),true);
+            MyDbUtils myDbUtils = new MyDbUtils(getActivity(),true);
             for(ArticleListData data:myDbUtils.getHistory(30)){
 
                 //Log.i("history",data.getTitleUrl());
@@ -156,7 +164,7 @@ public class ActivityMyTopicStar extends BaseActivity implements LoadMoreListene
         }
 
 
-        HttpUtil.get(this, url, new ResponseHandler() {
+        HttpUtil.get(getActivity(), url, new ResponseHandler() {
 
             @Override
             public void onSuccess(byte[] response) {
