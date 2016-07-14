@@ -31,6 +31,7 @@ import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.data.FrageType;
 import xyz.yluo.ruisiapp.fragment.FrageFriends;
 import xyz.yluo.ruisiapp.fragment.FrageHelp;
+import xyz.yluo.ruisiapp.fragment.FrageHome;
 import xyz.yluo.ruisiapp.fragment.FrageHotNew;
 import xyz.yluo.ruisiapp.fragment.FrageMessage;
 import xyz.yluo.ruisiapp.fragment.FrageTopicStarHistory;
@@ -242,6 +243,11 @@ public class HomeActivity extends BaseActivity
                 FrageHelp frageHelp = new FrageHelp();
                 transaction.replace(R.id.fragment_home, frageHelp);
                 break;
+
+            case FrageType.HOME:
+                FrageHome frageHome = new FrageHome();
+                transaction.replace(R.id.fragment_home, frageHome);
+                break;
         }
         // 事务提交
         transaction.commit();
@@ -337,6 +343,9 @@ public class HomeActivity extends BaseActivity
                 break;
             case R.id.nav_help:
                 changeFragement(FrageType.HELP);
+                break;
+            case R.id.nav_home:
+                changeFragement(FrageType.HOME);
                 break;
 
         }

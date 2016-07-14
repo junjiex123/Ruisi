@@ -37,8 +37,6 @@ public class FrageHome extends Fragment{
         viewpager.setAdapter(viewPagerAdapter);
         viewpager.setOffscreenPageLimit(titles.length-1);
         tabLayout.setupWithViewPager(viewpager);
-
-
         return view;
     }
 }

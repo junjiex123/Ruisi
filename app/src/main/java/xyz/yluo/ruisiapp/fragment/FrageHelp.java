@@ -22,7 +22,7 @@ public class FrageHelp extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_help, container, false);
+        View view = inflater.inflate(R.layout.frage_help, container, false);
         MyHtmlTextView htmlTextView = (MyHtmlTextView) view.findViewById(R.id.html_text);
         htmlTextView.mySetText(getActivity(),helpTxt);
 

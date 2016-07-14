@@ -77,11 +77,6 @@
             android:name=".activity.SingleNewsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".activity.ActivityWithFrageMent"
-            android:label="fragement容器"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
-
         <receiver android:name=".checknet.NetworkReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
