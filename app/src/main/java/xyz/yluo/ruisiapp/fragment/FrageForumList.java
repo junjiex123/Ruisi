@@ -1,8 +1,8 @@
 package xyz.yluo.ruisiapp.fragment;
 
+import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -62,7 +62,7 @@ public class FrageForumList extends Fragment {
 
         datas = new ArrayList<>();
         adapter = new ForumListAdapter(datas,getActivity());
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),4);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(),4);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {

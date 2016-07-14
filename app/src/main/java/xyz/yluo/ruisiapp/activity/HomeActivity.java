@@ -7,9 +7,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +26,6 @@ import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.ChangeNetDialog;
 import xyz.yluo.ruisiapp.View.CircleImageView;
-import xyz.yluo.ruisiapp.adapter.ViewPagerAdapter;
 import xyz.yluo.ruisiapp.fragment.FrageHotNew;
 import xyz.yluo.ruisiapp.utils.GetUserImage;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -45,8 +42,7 @@ public class HomeActivity extends BaseActivity
 
     private DrawerLayout drawer;
     private NavigationView navigationView;
-    private ViewPager viewpager;
-    private TabLayout tabLayout;
+
     private TextView usernameTitle;
     private CircleImageView userImageTitle;
     private msgReceiver myMsgReceiver;
@@ -56,7 +52,7 @@ public class HomeActivity extends BaseActivity
     private int clickId = 0;
     private CircleImageView userImage;
     private long mExitTime;
-    private final String[] titles = {"板块","看帖","新闻"};
+
 
 
     @Override
@@ -67,8 +63,7 @@ public class HomeActivity extends BaseActivity
         setSupportActionBar(toolbar);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        viewpager = (ViewPager) findViewById(R.id.viewpager);
-        tabLayout = (TabLayout) findViewById(R.id.mytab);
+
         usernameTitle = (TextView) findViewById(R.id.userNameTitle);
         userImageTitle = (CircleImageView) findViewById(R.id.userImageTitle);
         message_badge_toolbar = findViewById(R.id.message_badge_toolbar);
@@ -102,10 +97,7 @@ public class HomeActivity extends BaseActivity
     }
 
     private void init(){
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), titles);
-        viewpager.setAdapter(viewPagerAdapter);
-        viewpager.setOffscreenPageLimit(titles.length-1);
-        tabLayout.setupWithViewPager(viewpager);
+
 
         drawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
             @Override

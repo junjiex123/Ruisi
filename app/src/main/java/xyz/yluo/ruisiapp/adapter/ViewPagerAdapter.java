@@ -1,25 +1,25 @@
 package xyz.yluo.ruisiapp.adapter;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.support.v13.app.FragmentPagerAdapter;
 
 import xyz.yluo.ruisiapp.fragment.FrageForumList;
-import xyz.yluo.ruisiapp.fragment.FrageFriends;
 import xyz.yluo.ruisiapp.fragment.FrageHotNew;
-import xyz.yluo.ruisiapp.fragment.FrageMessage;
 import xyz.yluo.ruisiapp.fragment.FrageNews;
 
 /**
  * Created by free2 on 16-5-3.
  *
  */
-public class ViewPagerAdapter extends FragmentPagerAdapter{
+public class ViewPagerAdapter extends FragmentPagerAdapter {
     private String[] titles;
-    private  Fragment fragment1,fragment2,fragment3;
+    private Fragment fragment1,fragment2,fragment3;
 
-    public ViewPagerAdapter(FragmentManager fm,String[] titles) {
+    public ViewPagerAdapter(FragmentManager fm, String[] titles) {
         super(fm);
+        //super(fm);
         this.titles = titles;
     }
 

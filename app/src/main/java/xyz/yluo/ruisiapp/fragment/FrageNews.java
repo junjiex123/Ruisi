@@ -1,9 +1,9 @@
 package xyz.yluo.ruisiapp.fragment;
 
+import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,7 +23,6 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.NewsListAdapter;
-import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.data.SchoolNewsData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
