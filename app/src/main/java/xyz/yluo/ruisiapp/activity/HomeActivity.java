@@ -302,7 +302,6 @@ public class HomeActivity extends BaseActivity
             String str=b.getString("status");//str即为回传的值
             Log.i("login status",str);
             updateLoginView();
-            //todo 更新view
         }
     }
 

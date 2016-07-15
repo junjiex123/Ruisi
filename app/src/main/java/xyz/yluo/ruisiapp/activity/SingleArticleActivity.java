@@ -9,7 +9,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -96,13 +99,11 @@ public class SingleArticleActivity extends BaseActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_article);
-
         LinearLayout bottom_bar = (LinearLayout) findViewById(R.id.bottom_bar);
         spinner = (Spinner) findViewById(R.id.btn_jump_spinner);
         spinnerAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,pageSpinnerDatas);
         spinnerAdapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
-
         mRecyclerView = (RecyclerView) findViewById(R.id.topic_recycler_view);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.topic_refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
@@ -179,6 +180,33 @@ public class SingleArticleActivity extends BaseActivity
             firstGetData(1);
         }
 
+    }
+
+    private float x,y = 0;
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        switch (event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                //当手指按下的时候
+                x = event.getX();
+                y = event.getY();
+                break;
+            case MotionEvent.ACTION_UP:
+                //当手指离开的时候
+                float x2 = event.getX();
+                if(x2 - x > 100) {
+                    DisplayMetrics dm =getResources().getDisplayMetrics();
+                    int w_screen = dm.widthPixels;
+                    int h_screen = dm.heightPixels;
+                    //Log.i("BASEACTIVITY", "屏幕尺寸：宽度 = " + w_screen + "高度 = " + h_screen + "密度 = " + dm.densityDpi);
+                    if(x2-x>w_screen/4-40){
+                        Log.i("====","========onTouchEvent 向右滑====="+(x2-x));
+                        finish();
+                    }
+                }
+                break;
+        }
+        return super.dispatchTouchEvent(event);
     }
 
 
@@ -350,7 +378,13 @@ public class SingleArticleActivity extends BaseActivity
                 refresh();
                 break;
             case R.id.btn_reverse:
+                ImageView v = (ImageView)view;
                 isRevere = !isRevere;
+                if(isRevere){
+                    v.setImageResource(R.drawable.ic_reverse_ordinary);
+                }else  {
+                    v.setImageResource(R.drawable.ic_normal_ordinary);
+                }
                 refresh();
                 break;
             case R.id.btn_share:

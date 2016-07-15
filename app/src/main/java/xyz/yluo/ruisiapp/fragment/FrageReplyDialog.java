@@ -82,6 +82,7 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
     private boolean isEnableTail = false;
     private String[] nameList;
     private String replyUrl;
+    private LinearLayout loadingView;
 
 
     private List<Drawable> ds = new ArrayList<>();
@@ -111,6 +112,8 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
         input = (EditText) v.findViewById(R.id.input_aera);
         RecyclerView smiley_listv = (RecyclerView) v.findViewById(R.id.smiley_list);
         smiley_container = (LinearLayout) v.findViewById(R.id.smileys_container);
+        loadingView = (LinearLayout) v.findViewById(R.id.loading_view);
+        loadingView.setVisibility(View.GONE);
         notisfy_view = (CoordinatorLayout) v.findViewById(R.id.notisfy_view);
         btn_send = (ImageView) v.findViewById(R.id.action_send);
         btn_send.setOnClickListener(this);
@@ -184,8 +187,6 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.i("FrageReplyDialog","onCreateDialog");
-        // 使用不带theme的构造器，获得的dialog边框距离屏幕仍有几毫米的缝隙。
-        // Dialog dialog = new Dialog(getActivity());
         Dialog dialog = new Dialog(getActivity(), R.style.replyBarDialogStyle);
         dialog.setContentView(R.layout.reply_view);
         dialog.setCanceledOnTouchOutside(true);
@@ -213,17 +214,6 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.action_send:
-                //todo test
-
-                Snackbar.make(notisfy_view, "还没到15s呢，再等等吧！", Snackbar.LENGTH_LONG)
-                        .setAction("确定", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                dismiss();
-                            }
-                        }).show();
-
-                Log.i("reply","=====click=====");
                 hideSmiley();
                 send_click();
                 break;
@@ -251,8 +241,14 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
             e.printStackTrace();
         }
         if (len == 0) {
-            //todo
             //input.setError("你还没写内容呢!");
+            Snackbar.make(notisfy_view, "你还没写内容呢", Snackbar.LENGTH_LONG)
+                    .setAction("确定", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dismiss();
+                        }
+                    }).show();
         } else {
             //时间检测
             if(!checkTime()){
@@ -271,7 +267,6 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
 
             }
 
-
             //字数补齐补丁
             if (len < 13) {
                 int need = 14 - len;
@@ -280,6 +275,8 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
                 }
             }
 
+            loadingView.setVisibility(View.VISIBLE);
+            ImeUtil.hide_ime(getDialog().getWindow());
             switch (replyType){
                 case REPLY_LZ:
                     replyLz(text);
@@ -296,9 +293,6 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
     }
 
     private void replyLz(final String res){
-        ImeUtil.hide_ime(getDialog().getWindow());
-        //回复楼主
-        //todo send 按钮替换为进度
         Map<String, String> params = new HashMap<>();
         params.put("formhash", PublicData.FORMHASH);
         params.put("message", res);
@@ -306,7 +300,6 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                //todo 进度取消
                 handleReply(true, res);
             }
 
@@ -314,11 +307,16 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
             public void onFailure(Throwable e) {
                 handleReply(false, "");
             }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                loadingView.setVisibility(View.GONE);
+            }
         });
     }
 
     private void replyCz(final String txt){
-        //progress = ProgressDialog.show(this, "正在发送", "请等待", true);
         HttpUtil.get(getActivity(), replyUrl, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -354,6 +352,12 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
                         e.printStackTrace();
                         handleReply(false, "");
                     }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        loadingView.setVisibility(View.GONE);
+                    }
                 });
             }
         });
@@ -371,6 +375,7 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
                 Toast.makeText(getActivity(), "回复发表成功", Toast.LENGTH_SHORT).show();
                 sendCallBack(Activity.RESULT_OK,"test");
                 input.setText("");
+                dismiss();
             } else if (res.contains("您两次发表间隔")) {
                 Toast.makeText(getActivity(), "您两次发表间隔太短了......", Toast.LENGTH_SHORT).show();
             } else {
@@ -385,9 +390,13 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
         if (System.currentTimeMillis() - lastReplyTime > 15000) {
             return true;
         } else {
-            //Toast.makeText(this, "还没到15秒呢再等等吧", Toast.LENGTH_SHORT).show();
-
-            //todo
+            Snackbar.make(notisfy_view, "还没到15s呢，再等等吧！", Snackbar.LENGTH_LONG)
+                    .setAction("确定", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dismiss();
+                        }
+                    }).show();
             return false;
         }
     }

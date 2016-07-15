@@ -176,7 +176,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
 
     //手机版文章列表
     private class NormalViewHolderMe extends BaseViewHolder {
-        protected TextView article_title;
+        TextView article_title;
         TextView author_name;
         TextView is_image;
         TextView reply_count;

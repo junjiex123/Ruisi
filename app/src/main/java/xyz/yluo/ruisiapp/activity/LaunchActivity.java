@@ -44,14 +44,18 @@ public class LaunchActivity extends BaseActivity {
     private CircleImageView user_image;
     private SharedPreferences perUserInfo = null;
     private boolean isrecieveMessage = false;
+    private boolean isForeGround = true;
     private Handler mHandler = new Handler();
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
-            Intent i = new Intent(getApplicationContext(), HomeActivity.class);
-            i.putExtra("isLogin", PublicData.ISLOGIN);
-            startActivity(i);
-            finish();
+            if(isForeGround){
+                Intent i = new Intent(getApplicationContext(), HomeActivity.class);
+                i.putExtra("isLogin", PublicData.ISLOGIN);
+                startActivity(i);
+                finish();
+            }
+
         }
     };
 
@@ -134,6 +138,12 @@ public class LaunchActivity extends BaseActivity {
         PublicData.ISSHOW_PLAIN = setting_show_plain;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isForeGround = true;
+    }
+
     private void canGetRs(int type) {
         if (type == 1 || type == 2) {
             String url = UrlUtils.getLoginUrl(false);
@@ -197,11 +207,18 @@ public class LaunchActivity extends BaseActivity {
 
     private void finishthis() {
         long currenttime = System.currentTimeMillis();
-        long delay = 1500 - (currenttime - starttime);
+        long delay = 1200 - (currenttime - starttime);
         if (delay < 0) {
             delay = 0;
         }
         mHandler.postDelayed(mRunnable, delay);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mHandler.removeCallbacks(mRunnable);
+        isForeGround = false;
     }
 
     @Override
