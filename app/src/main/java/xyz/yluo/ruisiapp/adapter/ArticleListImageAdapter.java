@@ -83,9 +83,9 @@ public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListIma
 
         }
 
-        protected void item_click() {
+        void item_click() {
             ImageArticleListData single_data = DataSet.get(getAdapterPosition());
-            SingleArticleActivity.open(activity, single_data.getTitleUrl(), "", "");
+            SingleArticleActivity.open(activity, single_data.getTitleUrl(), single_data.getTitle(),single_data.getAuthor());
         }
     }
 }

@@ -77,12 +77,6 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
                     currentIndex = 2;
             }
         }
-
-//        ActionBar actionBar = getSupportActionBar();
-//        if(actionBar!=null){
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//        }
-
         String uid = PublicData.USER_UID;
         switch (currentIndex) {
             case 0:
@@ -93,15 +87,12 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
                 break;
             case 1:
                 //我的收藏
-                //if(actionBar!=null)
                 //   actionBar.setTitle("我的收藏");
                 url = "home.php?mod=space&uid=" + uid + "&do=favorite&view=me&type=thread&mobile=2";
                 break;
             default:
-
                 isEnableLoadMore = false;
-                //if(actionBar!=null)
-                //    actionBar.setTitle("历史纪录");
+                // "历史纪录"
                 break;
         }
 

@@ -60,7 +60,7 @@ import xyz.yluo.ruisiapp.utils.PostHandler;
 
 public class FrageReplyDialog extends DialogFragment implements View.OnClickListener{
 
-    //onCreateDialog>>onCreateView
+
     private final int SMILEY_TB = 1;
     private final int SMILEY_LDB = 2;
     private final int SMILEY_ACN = 3;
@@ -100,6 +100,8 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
         return fragment;
     }
 
+
+    ////onCreateDialog>>onCreateView
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -185,7 +187,6 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
         // 使用不带theme的构造器，获得的dialog边框距离屏幕仍有几毫米的缝隙。
         // Dialog dialog = new Dialog(getActivity());
         Dialog dialog = new Dialog(getActivity(), R.style.replyBarDialogStyle);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // must be called before set content
         dialog.setContentView(R.layout.reply_view);
         dialog.setCanceledOnTouchOutside(true);
 

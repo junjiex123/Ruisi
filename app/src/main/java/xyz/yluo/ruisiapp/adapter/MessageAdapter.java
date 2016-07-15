@@ -123,7 +123,7 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 ChatActivity.open(activity, username, single_data.getTitleUrl());
                 single_data.setRead(true);
             } else if (ListType.REPLAYME == single_data.getType()) {//回复我的
-                SingleArticleActivity.open(activity, single_data.getTitleUrl(), "", "");
+                SingleArticleActivity.open(activity, single_data.getTitleUrl(), null, null);
             }
 
         }

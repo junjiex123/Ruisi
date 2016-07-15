@@ -76,9 +76,9 @@ public class GalleryAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             Picasso.with(activity).load(imgUrl).placeholder(R.drawable.image_placeholder).into(img_card_image);
         }
 
-        protected void item_click() {
+        void item_click() {
             GalleryData single_data = DataSet.get(getAdapterPosition() % DataSet.size());
-            SingleArticleActivity.open(activity, single_data.getTitleUrl(), "", "");
+            SingleArticleActivity.open(activity, single_data.getTitleUrl(), single_data.getTitle(),null);
         }
     }
 }

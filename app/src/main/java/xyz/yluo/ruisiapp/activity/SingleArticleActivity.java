@@ -11,8 +11,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -27,7 +30,6 @@ import java.util.Map;
 
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.ArticleJumpDialog;
 import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
 import xyz.yluo.ruisiapp.data.LoadMoreType;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
@@ -51,7 +53,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class SingleArticleActivity extends BaseActivity
         implements RecyclerViewClickListener, LoadMoreListener.OnLoadMoreListener,
-        ArticleJumpDialog.JumpDialogListener,FrageReplyDialog.replyCompeteCallBack,View.OnClickListener {
+        FrageReplyDialog.replyCompeteCallBack,View.OnClickListener {
 
     protected SwipeRefreshLayout refreshLayout;
     private RecyclerView mRecyclerView;
@@ -72,15 +74,15 @@ public class SingleArticleActivity extends BaseActivity
     private List<SingleArticleData> mydatalist = new ArrayList<>();
     //是否调到指定页数and楼层???
     private boolean isRedirect, isSaveToDataBase = false;
+    private ArrayAdapter<String> spinnerAdapter;
+    private List<String> pageSpinnerDatas = new ArrayList<>();
     private String Title, Author, Tid = "";
+    private Spinner spinner;
 
-    public static void open(Context context, String url, String title, String author) {
+    public static void open(Context context, String url, @Nullable String title, @Nullable String author) {
         Intent intent = new Intent(context, SingleArticleActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("url", url);
-
-        Log.i("open article", title + url + author);
-
         if (title != null) {
             intent.putExtra("title", title);
         }
@@ -96,6 +98,11 @@ public class SingleArticleActivity extends BaseActivity
         setContentView(R.layout.activity_single_article);
 
         LinearLayout bottom_bar = (LinearLayout) findViewById(R.id.bottom_bar);
+        spinner = (Spinner) findViewById(R.id.btn_jump_spinner);
+        spinnerAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,pageSpinnerDatas);
+        spinnerAdapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
+
         mRecyclerView = (RecyclerView) findViewById(R.id.topic_recycler_view);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.topic_refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
@@ -108,7 +115,9 @@ public class SingleArticleActivity extends BaseActivity
 
         for(int i=0;i<bottom_bar.getChildCount();i++){
             View v = bottom_bar.getChildAt(i);
-            v.setOnClickListener(this);
+            if(v.getId()!=R.id.btn_jump_spinner){
+                v.setOnClickListener(this);
+            }
         }
 
         //下拉刷新
@@ -129,6 +138,19 @@ public class SingleArticleActivity extends BaseActivity
         });
         mRecyclerView.setAdapter(mRecyleAdapter);
         mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 8));
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+                if(!(pos+1==page_now)){
+                    jump_page(pos+1);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
 
         String url = getIntent().getExtras().getString("url");
@@ -136,6 +158,7 @@ public class SingleArticleActivity extends BaseActivity
             Title = getIntent().getExtras().getString("title");
             isGetTitle = true;
         }
+
         if (getIntent().getExtras().containsKey("author")) {
             Author = getIntent().getExtras().getString("author");
         }
@@ -183,9 +206,8 @@ public class SingleArticleActivity extends BaseActivity
         }
     }
 
-    //跳页确认点击回调
-    @Override
-    public void JumpComfirmClick(DialogFragment dialog, int page) {
+    //跳页
+    private void jump_page(int page){
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -236,11 +258,6 @@ public class SingleArticleActivity extends BaseActivity
     @Override
     public void recyclerViewListClicked(View v, int position) {
         switch (v.getId()) {
-            case R.id.btn_star:
-                if (isneed_login()) {
-                    starTask(v);
-                }
-                break;
             case R.id.btn_reply_2:
                 if (isneed_login()) {
                     SingleArticleData single = mydatalist.get(position);
@@ -287,7 +304,7 @@ public class SingleArticleActivity extends BaseActivity
                 if (isok) {
                     if (v != null) {
                         ImageView mv = (ImageView) v;
-                        mv.setImageResource(R.drawable.ic_favorite_border_accent_24dp);
+                        mv.setImageResource(R.drawable.ic_star_accent_24dp);
                     }
                 }
             }
@@ -321,7 +338,7 @@ public class SingleArticleActivity extends BaseActivity
             case R.id.btn_star:
                 if (isneed_login()) {
                     Toast.makeText(getApplicationContext(), "正在收藏......", Toast.LENGTH_SHORT).show();
-                    starTask(null);
+                    starTask(view);
                 }
                 break;
 
@@ -331,12 +348,6 @@ public class SingleArticleActivity extends BaseActivity
                 break;
             case R.id.btn_refresh:
                 refresh();
-                break;
-            case R.id.btn_jump:
-                ArticleJumpDialog dialogFragment = new ArticleJumpDialog();
-                dialogFragment.setCurrentPage(page_now);
-                dialogFragment.setMaxPage(page_sum);
-                dialogFragment.show(getFragmentManager(), "jump");
                 break;
             case R.id.btn_reverse:
                 isRevere = !isRevere;
@@ -363,24 +374,19 @@ public class SingleArticleActivity extends BaseActivity
             String htmlData = params[0];
             //list 所有楼数据
             Document doc = Jsoup.parse(htmlData);
-
             if (!isGetTitle) {
                 String titleText = doc.select("title").text();
                 String[] array = titleText.split("-");
                 int len = array.length;
                 if (len >= 5) {
-                    //todo 这是板块标题 toolBarTitle = array[len - 4].trim();
-                    if ("".equals(Title)) {
-                        Title = "";
-                        for (int lnea = 0; lnea < len - 4; lnea++) {
-                            Title = Title + array[lnea] + "-";
-                            if (lnea == len - 5) {
-                                Title = Title.substring(0, Title.length() - 2);
-                            }
+                    Title = "";
+                    for (int lnea = 0; lnea < len - 4; lnea++) {
+                        Title = Title + array[lnea] + "-";
+                        if (lnea == len - 5) {
+                            Title = Title.substring(0, Title.length() - 2);
                         }
                     }
                 }
-
                 isGetTitle = true;
             }
             //获取回复/hash
@@ -524,6 +530,13 @@ public class SingleArticleActivity extends BaseActivity
                 }
             }, 500);
 
+
+            pageSpinnerDatas .clear();
+            for(int i=1;i<=page_sum;i++){
+                pageSpinnerDatas.add(i+"/"+page_sum+"页");
+            }
+            spinner.setSelection(page_now-1);
+            spinnerAdapter.notifyDataSetChanged();
         }
     }
 

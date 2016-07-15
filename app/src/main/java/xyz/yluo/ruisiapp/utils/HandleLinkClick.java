@@ -27,7 +27,7 @@ public class HandleLinkClick {
             //do nothing
             System.out.println("to do img click");
         } else if (url.contains("forum.php?mod=viewthread&tid=")) { // 帖子
-            SingleArticleActivity.open(context, url, "", "");
+            SingleArticleActivity.open(context, url, null, null);
         } else if (url.contains("home.php?mod=space&uid=")) { // 用户
             String imageUrl = UrlUtils.getAvaterurlb(url);
             UserDetailActivity.open(context, "name", imageUrl);
