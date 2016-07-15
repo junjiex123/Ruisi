@@ -44,10 +44,10 @@ public class SmileyAdapter extends RecyclerView.Adapter<SmileyAdapter.SmileyView
         return images.size();
     }
 
-    protected class SmileyViewHolder extends RecyclerView.ViewHolder {
+    class SmileyViewHolder extends RecyclerView.ViewHolder {
         private ImageView image;
 
-        public SmileyViewHolder(View itemView) {
+        SmileyViewHolder(View itemView) {
             super(itemView);
             image = (ImageView) itemView.findViewById(R.id.smiley);
             image.setOnClickListener(new View.OnClickListener() {

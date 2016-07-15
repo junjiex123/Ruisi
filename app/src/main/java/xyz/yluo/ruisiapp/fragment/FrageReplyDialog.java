@@ -39,6 +39,7 @@ import java.util.Map;
 
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.VerticalTabLayout;
 import xyz.yluo.ruisiapp.adapter.SmileyAdapter;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -90,21 +91,30 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
             Log.i("type is", "==" + replyType + "==");
         }
         View v = inflater.inflate(R.layout.reply_bar, null);
-        TabLayout tabLayout = (TabLayout) v.findViewById(R.id.mytab);
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.smiley_tieba));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.smiley_ldb));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.smiley_acn));
         isEnableTail = false;
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        VerticalTabLayout tabLayout = (VerticalTabLayout) v.findViewById(R.id.smiley_tab);
+        input = (EditText) v.findViewById(R.id.input_aera);
+        RecyclerView smiley_listv = (RecyclerView) v.findViewById(R.id.smiley_list);
+        smiley_container = (LinearLayout) v.findViewById(R.id.smileys_container);
+        btn_send = (ImageView) v.findViewById(R.id.action_send);
+        btn_send.setOnClickListener(this);
+        input.setOnClickListener(this);
+
+        tabLayout.setOnTabSelectedListener(new VerticalTabLayout.OnTabSelectedListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                Log.i("tab check", "id " + tab.getPosition());
-                switch (tab.getPosition()) {
+            public void onTabSelected(int index) {
+
+            }
+
+            @Override
+            public void onTabSelectedChanged(int i) {
+                Log.i("tab check", "id " + i);
+                switch (i) {
                     case 0:
                         smiley_type = SMILEY_TB;
                         break;
                     case 1:
-                        smiley_type = SMILEY_LDB;
+                       smiley_type = SMILEY_LDB;
                         break;
                     case 2:
                         smiley_type = SMILEY_ACN;
@@ -112,23 +122,7 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
                 }
                 changeSmiley();
             }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
         });
-        input = (EditText) v.findViewById(R.id.input_aera);
-        RecyclerView smiley_listv = (RecyclerView) v.findViewById(R.id.smiley_list);
-        smiley_container = (LinearLayout) v.findViewById(R.id.smileys_container);
-        btn_send = (ImageView) v.findViewById(R.id.action_send);
-        btn_send.setOnClickListener(this);
-        input.setOnClickListener(this);
         input.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

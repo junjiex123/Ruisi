@@ -41,7 +41,7 @@ public class ArrowTextView extends TextView {
 
 
         float arrowInHeight = 10;
-        canvas.drawRoundRect(new RectF(0, arrowInHeight, getWidth(), getHeight()), 4, 4, paint);
+        canvas.drawRoundRect(0, arrowInHeight,getWidth(),getHeight(), 4, 4, paint);
 
         path.reset();
         path.setFillType(Path.FillType.EVEN_ODD);

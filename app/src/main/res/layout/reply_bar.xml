@@ -11,7 +11,7 @@
         android:layout_height="0.8dp"
         android:background="#eedddddd" />
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#f2ffffff"
@@ -20,7 +20,7 @@
 
         <ImageButton
             android:id="@+id/action_smiley"
-            android:layout_width="44dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_gravity="bottom|start"
             android:background="?android:attr/selectableItemBackground"
@@ -38,10 +38,10 @@
 
         <ImageView
             android:id="@+id/action_send"
-            android:layout_width="44dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_gravity="bottom|end"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="4dp"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:padding="@dimen/dimen_4"
@@ -49,16 +49,42 @@
 
     </LinearLayout>
 
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="#1f000000" />
     <LinearLayout
         android:id="@+id/smileys_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#ffffff"
-        android:orientation="vertical">
+        android:orientation="horizontal">
+
+        <xyz.yluo.ruisiapp.View.VerticalTabLayout
+            android:id="@+id/smiley_tab"
+            android:padding="4dp"
+            android:layout_width="40dp"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:src="@drawable/smiley_tieba"
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
+            <ImageView
+                android:src="@drawable/smiley_ldb"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+            <ImageView
+                android:src="@drawable/smiley_acn"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+
+        </xyz.yluo.ruisiapp.View.VerticalTabLayout>
 
         <View
-            android:layout_width="match_parent"
-            android:layout_height="0.8dp"
+            android:layout_width="0.8dp"
+            android:layout_height="match_parent"
             android:background="#1f000000" />
 
         <android.support.v7.widget.RecyclerView
@@ -67,17 +93,6 @@
             android:layout_height="wrap_content"
             android:scrollbarSize="2dp"
             android:scrollbars="horizontal"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.8dp"
-            android:background="#1f000000" />
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/mytab"
-            android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp" />
     </LinearLayout>
 </LinearLayout>
 

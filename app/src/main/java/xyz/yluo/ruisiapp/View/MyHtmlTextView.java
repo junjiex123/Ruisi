@@ -166,13 +166,13 @@ public class MyHtmlTextView extends TextView {
         void quoteSpanClick(String res);
     }
 
-    protected class CustomQuoteSpan implements LeadingMarginSpan, LineBackgroundSpan {
+    private class CustomQuoteSpan implements LeadingMarginSpan, LineBackgroundSpan {
         private final int backgroundColor;
         private final int stripeColor;
         private final float stripeWidth;
         private final float gap;
 
-        public CustomQuoteSpan() {
+        CustomQuoteSpan() {
             this.backgroundColor = Color.argb(200, 241, 241, 241);
             this.stripeColor = Color.argb(255, 238, 238, 238);
             this.stripeWidth = 10;
@@ -205,7 +205,7 @@ public class MyHtmlTextView extends TextView {
 
     }
 
-    protected class myImageGetter implements Html.ImageGetter {
+    private class myImageGetter implements Html.ImageGetter {
 
         @Override
         public Drawable getDrawable(String source) {
@@ -245,7 +245,7 @@ public class MyHtmlTextView extends TextView {
     }
 
     //下载网络图片
-    protected class LoadImage extends AsyncTask<Object, Void, Drawable> {
+    private class LoadImage extends AsyncTask<Object, Void, Drawable> {
 
         private String s = "";
 
@@ -303,7 +303,7 @@ public class MyHtmlTextView extends TextView {
         }
     }
 
-    protected class myTagHandle implements Html.TagHandler {
+    private class myTagHandle implements Html.TagHandler {
 
         private int startIndex = 0;
         private int stopIndex = 0;
