@@ -116,8 +116,8 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
 
     //文章内容 楼主ViewHolder
     private class ArticleContentViewHolder extends BaseViewHolder {
-        protected TextView article_title;
-        protected CircleImageView article_user_image;
+        TextView article_title;
+        CircleImageView article_user_image;
         TextView article_username;
         TextView article_post_time;
         MyHtmlTextView htmlTextView;
@@ -130,35 +130,12 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             article_post_time = (TextView) itemView.findViewById(R.id.article_post_time);
             htmlTextView = (MyHtmlTextView) itemView.findViewById(R.id.html_text);
 
-            itemView.findViewById(R.id.btn_star).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemListener.recyclerViewListClicked(v, getLayoutPosition());
-                }
-            });
-
-            itemView.findViewById(R.id.btn_share).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    share_click();
-                }
-            });
-
             article_user_image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     UserDetailActivity.openWithTransitionAnimation(activity, datalist.get(0).getUsername(), article_user_image, datalist.get(0).getImg());
                 }
             });
-        }
-
-        void share_click() {
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_TEXT, datalist.get(getAdapterPosition()).getCotent());
-            shareIntent.setType("text/plain");
-            //设置分享列表的标题，并且每次都显示分享列表
-            activity.startActivity(Intent.createChooser(shareIntent, "分享到文章到:"));
         }
 
         @Override
@@ -254,7 +231,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
 
     //加载更多ViewHolder
     private class LoadMoreViewHolder extends BaseViewHolder {
-        protected ProgressBar progressBar;
+        ProgressBar progressBar;
         TextView load_more_text;
         View load_more_empty;
 
