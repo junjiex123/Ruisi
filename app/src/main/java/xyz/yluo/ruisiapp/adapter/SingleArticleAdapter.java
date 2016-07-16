@@ -17,6 +17,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.View.MyHtmlView.CustomQuoteSpan;
 import xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView;
+import xyz.yluo.ruisiapp.View.MyWebView;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.LoadMoreType;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
@@ -32,9 +33,9 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdapter.BaseViewHolder> {
 
-    private final int CONTENT = 0;
-    private final int COMENT = 1;
-    private final int LOAD_MORE = 2;
+    public static final int CONTENT = 0;
+    public static final int COMENT = 1;
+    public final int LOAD_MORE = 2;
     private LoadMoreType loadMoreType = LoadMoreType.LOADING;
 
     private ScrollToSomePosition scrollToSomePosition = null;
@@ -120,7 +121,8 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         CircleImageView article_user_image;
         TextView article_username;
         TextView article_post_time;
-        MyHtmlTextView htmlTextView;
+       // MyWebView myWebView;
+        MyHtmlTextView myHtmlTextView;
 
         ArticleContentViewHolder(View itemView) {
             super(itemView);
@@ -128,8 +130,8 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             article_user_image = (CircleImageView) itemView.findViewById(R.id.article_user_image);
             article_username = (TextView) itemView.findViewById(R.id.article_username);
             article_post_time = (TextView) itemView.findViewById(R.id.article_post_time);
-            htmlTextView = (MyHtmlTextView) itemView.findViewById(R.id.html_text);
-
+            //myWebView = (MyWebView) itemView.findViewById(R.id.mywebview);
+            myHtmlTextView = (MyHtmlTextView) itemView.findViewById(R.id.html_text);
             article_user_image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -147,7 +149,9 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             Picasso.with(activity).load(img_url).placeholder(R.drawable.image_placeholder).into(article_user_image);
             String post_time = "发表于:" + single.getPostTime();
             article_post_time.setText(post_time);
-            htmlTextView.mySetText(activity, single.getCotent());
+            //myWebView.setContent(single.getCotent());
+            myHtmlTextView.mySetText(activity,single.getCotent());
+
         }
 
     }
@@ -203,29 +207,6 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             replay_time.setText(timeText);
             replay_index.setText(single.getIndex());
             htmlTextView.mySetText(activity, single.getCotent());
-
-            //处理回复点击问题 跳转
-            htmlTextView.setQuoteSpanClickListener(new CustomQuoteSpan.OnQuoteSpanClick() {
-                @Override
-                public void quoteSpanClick(String res) {
-                    if (scrollToSomePosition != null && res.contains("回复") && res.contains("\n")) {
-                        String usernaec = res.split("\\n")[0].split(" ")[1].trim();
-                        String contentc = res.split("\\n")[1].trim();
-                        if (contentc.length() > 3) {
-                            contentc = contentc.substring(0, 3);
-                        }
-
-                        System.out.println("user:" + usernaec + "  content:" + contentc);
-                        for (int i = position; i > 0; i--) {
-                            SingleArticleData singlec = datalist.get(i);
-                            if (singlec.getUsername().equals(usernaec) && singlec.getCotent().contains(contentc)) {
-                                System.out.println("i find" + i);
-                                scrollToSomePosition.scroolto(i);
-                            }
-                        }
-                    }
-                }
-            });
         }
     }
 

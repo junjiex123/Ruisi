@@ -5,27 +5,25 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.text.Editable;
 import android.text.Html;
-import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.LeadingMarginSpan;
 import android.text.style.LineBackgroundSpan;
 import android.text.style.QuoteSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.TypefaceSpan;
 import android.text.style.URLSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -57,11 +55,9 @@ public class MyHtmlTextView extends TextView {
     private Map<String, Drawable> drawableMap = new HashMap<>();
     private Set<String> haveUrls = new LinkedHashSet<>();
     private Set<String> TotalUrls = new LinkedHashSet<>();
-    private myImageGetter myImageGetter = null;
-    private myTagHandle myTagHandle = null;
+    private static myImageGetter myImageGetter = null;
+    private static myTagHandle myTagHandle = null;
     private boolean isStart = false;
-    private CustomQuoteSpan.OnQuoteSpanClick quoteSpanClickListener;
-
 
     public MyHtmlTextView(Context context) {
         super(context);
@@ -75,19 +71,22 @@ public class MyHtmlTextView extends TextView {
         super(context, attrs, defStyleAttr);
     }
 
-    public void setQuoteSpanClickListener(CustomQuoteSpan.OnQuoteSpanClick quoteSpanClickListener) {
-        this.quoteSpanClickListener = quoteSpanClickListener;
-    }
 
     public void mySetText(Activity activity, String text) {
 
-        myImageGetter = new myImageGetter();
-        myTagHandle = new myTagHandle();
+        if(myImageGetter==null){
+            myImageGetter = new myImageGetter();
+        }
+        if(myTagHandle==null){
+            myTagHandle = new myTagHandle();
+        }
+
         this.activity = activity;
         this.text = text;
-        super.setText(getMyStyleHtml(text, myImageGetter, myTagHandle));
         setMovementMethod(LinkMovementMethod.getInstance());
         setLinkTextColor(0xff529ECC);
+        CharSequence charSequence = getMyStyleHtml(text, myImageGetter, myTagHandle);
+        super.setText(charSequence);
     }
 
     //获得textView 链接点击
@@ -106,6 +105,34 @@ public class MyHtmlTextView extends TextView {
             replaceQuoteSpans(strBuilder, span);
         }
 
+        /**
+         * 去掉尾部回车
+         */
+        while (strBuilder.length()>0&&strBuilder.charAt(strBuilder.length()-1)=='\n'){
+            strBuilder = strBuilder.delete(strBuilder.length()-1,strBuilder.length());
+        }
+
+        /**
+         * 去除头部
+         */
+        while (strBuilder.length()>0&&strBuilder.charAt(0)=='\n'){
+            strBuilder = strBuilder.delete(0,1);
+        }
+
+        /**
+         * 去除中间
+         */
+        int lenth = strBuilder.length();
+        for(int i=0;i<lenth;i++){
+            if(strBuilder.charAt(i)=='\n') {
+                if(strBuilder.charAt(i+1)=='\n'){
+                    strBuilder = strBuilder.delete(i,i+1);
+                    i--;
+                    lenth--;
+                }
+            }
+
+        }
         return strBuilder;
     }
 
@@ -117,21 +144,6 @@ public class MyHtmlTextView extends TextView {
         strBuilder.removeSpan(quoteSpan);
         strBuilder.setSpan(new CustomQuoteSpan(), start, end, flags);
         strBuilder.setSpan(new RelativeSizeSpan(0.9f), start, end, flags);
-        strBuilder.setSpan(new ClickableSpan() {
-            @Override
-            public void updateDrawState(TextPaint ds) {
-                super.updateDrawState(ds);
-                ds.setUnderlineText(false);
-                ds.setColor(0xff888888);
-            }
-
-            @Override
-            public void onClick(View view) {
-                if (quoteSpanClickListener != null) {
-                    quoteSpanClickListener.quoteSpanClick(strBuilder.subSequence(start, end).toString());
-                }
-            }
-        }, start, end, flags);
     }
 
     //连接点击事件
@@ -156,8 +168,6 @@ public class MyHtmlTextView extends TextView {
         };
         strBuilder.setSpan(clickableSpan, start, end, flags);
     }
-
-
 
     private class myImageGetter implements Html.ImageGetter {
 

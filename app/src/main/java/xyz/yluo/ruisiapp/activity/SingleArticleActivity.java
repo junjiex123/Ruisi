@@ -1,6 +1,5 @@
 package xyz.yluo.ruisiapp.activity;
 
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -11,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -137,7 +135,10 @@ public class SingleArticleActivity extends BaseActivity
                 mRecyclerView.scrollToPosition(position);
             }
         });
-        mRecyclerView.setAdapter(mRecyleAdapter);
+
+        /**
+         * 缓存数量
+         */
         mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 8));
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -153,6 +154,7 @@ public class SingleArticleActivity extends BaseActivity
             }
         });
 
+        mRecyclerView.setAdapter(mRecyleAdapter);
 
         String url = getIntent().getExtras().getString("url");
         if (getIntent().getExtras().containsKey("title")) {

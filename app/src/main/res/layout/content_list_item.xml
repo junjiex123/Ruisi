@@ -103,6 +103,17 @@
         android:layout_height="0.8dp"
         android:background="#1f000000" />
 
+    <!--卡顿问题还没有解决-->
+    <!--<xyz.yluo.ruisiapp.View.MyWebView-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:layout_marginStart="12dp"-->
+        <!--android:layout_marginEnd="12dp"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:scrollbars="none"-->
+        <!--android:id="@+id/mywebview"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"/>-->
+
     <xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView
         android:layout_marginTop="4dp"
         android:id="@+id/html_text"
@@ -116,6 +127,7 @@
         android:paddingTop="4dp"
         android:textColor="?android:attr/textColorPrimary"
         android:textSize="16sp" />
+
 
     <View
         android:layout_width="match_parent"

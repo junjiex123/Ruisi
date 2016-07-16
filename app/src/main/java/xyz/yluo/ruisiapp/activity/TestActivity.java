@@ -4,11 +4,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -19,31 +16,22 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyHtmlView.getSpanned;
-import xyz.yluo.ruisiapp.data.LoadMoreType;
+import xyz.yluo.ruisiapp.View.MyWebView;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
-import xyz.yluo.ruisiapp.data.SingleType;
-import xyz.yluo.ruisiapp.database.MyDbUtils;
-import xyz.yluo.ruisiapp.fragment.BaseFragment;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
-import xyz.yluo.ruisiapp.utils.GetNumber;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 
 public class TestActivity extends BaseActivity {
-    private TextView textView;
+    private MyWebView myWebView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        textView = (TextView) findViewById(R.id.main_text);
+        myWebView = (MyWebView) findViewById(R.id.mywebview);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -54,7 +42,7 @@ public class TestActivity extends BaseActivity {
             }
         });
 
-        getArticleData("854641");
+        getArticleData("830179");
     }
 
     //文章一页的html 根据页数 Tid
@@ -106,10 +94,8 @@ public class TestActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(Element e) {
-            getSpanned a = new getSpanned();
-            textView.setText(a.getCharSequence(e));
-
-            //textView.setText(e.text());
+            myWebView.setContent(e.outerHtml());
+            Log.i("testActivity",e.outerHtml());
         }
     }
 

@@ -3,18 +3,19 @@ package xyz.yluo.ruisiapp.View.MyHtmlView;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Parcel;
 import android.text.Layout;
-import android.text.TextUtils;
+import android.text.TextPaint;
+import android.text.style.CharacterStyle;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.LineBackgroundSpan;
+import android.text.style.UpdateAppearance;
 
 /**
  * Created by free2 on 16-7-16.
  * <blockquate> span
  */
 
-public class CustomQuoteSpan implements LeadingMarginSpan, LineBackgroundSpan {
+public class CustomQuoteSpan extends CharacterStyle implements LeadingMarginSpan, LineBackgroundSpan {
     private final int backgroundColor;
     private final int stripeColor;
     private final float stripeWidth;
@@ -25,6 +26,12 @@ public class CustomQuoteSpan implements LeadingMarginSpan, LineBackgroundSpan {
         this.stripeColor = Color.argb(255, 238, 238, 238);
         this.stripeWidth = 10;
         this.gap = 20;
+    }
+
+    @Override
+    public void updateDrawState(TextPaint tp) {
+        tp.setUnderlineText(false);
+        tp.setColor(0xff888888);
     }
 
     @Override
@@ -49,9 +56,5 @@ public class CustomQuoteSpan implements LeadingMarginSpan, LineBackgroundSpan {
         p.setColor(backgroundColor);
         c.drawRect(left, top, right, bottom, p);
         p.setColor(paintColor);
-    }
-
-    public interface OnQuoteSpanClick {
-        void quoteSpanClick(String res);
     }
 }

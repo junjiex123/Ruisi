@@ -1,11 +1,7 @@
 package xyz.yluo.ruisiapp.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MenuItem;
 
 import xyz.yluo.ruisiapp.PublicData;
