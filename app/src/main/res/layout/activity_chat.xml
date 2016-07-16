@@ -6,52 +6,69 @@
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        app:elevation="@dimen/AppBar">
+        android:layout_height="200dp"
+        android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
-    </android.support.design.widget.AppBarLayout>
+            android:layout_height="match_parent"
+            android:background="@drawable/user_detail_header_bg"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleGravity="center_horizontal|bottom"
+            app:expandedTitleTextAppearance="@style/ToolBarText"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/topic_refresh_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/topic_recycler_view"
+            <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/bggrey"
-                android:scrollbars="vertical" />
-        </android.support.v4.widget.SwipeRefreshLayout>
+                android:layout_alignBottom="@+id/user_detail_layout_info"
+                android:adjustViewBounds="true" />
 
-        <TextView
-            android:id="@+id/view_loading"
-            android:layout_width="80dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center"
-            android:drawablePadding="16dp"
-            android:drawableTop="@drawable/ic_autorenew_gray_80dp"
-            android:gravity="center"
-            android:text="加载中"
-            android:textColor="#ffbababa"
-            android:textSize="16sp" />
-    </FrameLayout>
-    <xyz.yluo.ruisiapp.View.MyReplyView
+            <xyz.yluo.ruisiapp.View.CircleImageView
+                android:id="@+id/user_detail_img_avatar"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:src="@drawable/image_placeholder"
+                app:civ_border_color="@android:color/white"
+                app:civ_border_width="2dp" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bggrey"
+            android:scrollbars="vertical" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_chat"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:id="@+id/replay_bar" />
+        android:layout_margin="@dimen/dimen_16"
+        android:src="@drawable/ic_reply_white_24dp"
+        app:layout_anchor="@id/refresh_layout"
+        app:layout_anchorGravity="bottom|end" />
+
 </android.support.design.widget.CoordinatorLayout>

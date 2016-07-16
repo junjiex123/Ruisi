@@ -98,9 +98,6 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @Override
         void setData(int position) {
             String keystr = Datas.get(position).getKey();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                key.setText(Html.fromHtml(keystr, 0));
-            }
             key.setText(Html.fromHtml(keystr));
             String values = Datas.get(position).getValue();
             if (values.length() > 0) {

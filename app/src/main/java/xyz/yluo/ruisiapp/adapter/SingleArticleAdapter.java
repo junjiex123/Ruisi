@@ -1,7 +1,6 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,8 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
-import xyz.yluo.ruisiapp.View.MyHtmlTextView;
+import xyz.yluo.ruisiapp.View.MyHtmlView.CustomQuoteSpan;
+import xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.LoadMoreType;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
@@ -205,7 +205,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             htmlTextView.mySetText(activity, single.getCotent());
 
             //处理回复点击问题 跳转
-            htmlTextView.setQuoteSpanClickListener(new MyHtmlTextView.OnQuoteSpanClick() {
+            htmlTextView.setQuoteSpanClickListener(new CustomQuoteSpan.OnQuoteSpanClick() {
                 @Override
                 public void quoteSpanClick(String res) {
                     if (scrollToSomePosition != null && res.contains("回复") && res.contains("\n")) {

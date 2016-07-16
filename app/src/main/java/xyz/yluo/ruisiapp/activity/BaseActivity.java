@@ -38,6 +38,10 @@ public class BaseActivity extends AppCompatActivity {
                     startActivity(new Intent(getApplicationContext(), ActivitySearch.class));
                     return true;
                 }
+                break;
+            case R.id.menu_test:
+                startActivity(new Intent(getApplicationContext(),TestActivity.class));
+                break;
 
         }
         return super.onOptionsItemSelected(item);

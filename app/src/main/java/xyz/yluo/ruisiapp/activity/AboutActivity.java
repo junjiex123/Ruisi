@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyHtmlTextView;
+import xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView;
 import xyz.yluo.ruisiapp.utils.RequestSendMail;
 
 

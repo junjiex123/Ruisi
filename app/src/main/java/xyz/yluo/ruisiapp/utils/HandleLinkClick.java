@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import xyz.yluo.ruisiapp.PublicData;
-import xyz.yluo.ruisiapp.View.MyHtmlTextView;
+import xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.NewArticleActivity_2;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;

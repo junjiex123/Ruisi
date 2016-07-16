@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyHtmlTextView;
+import xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView;
 
 /**
  * Created by free2 on 16-7-14.

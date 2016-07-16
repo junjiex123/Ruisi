@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
@@ -131,9 +132,14 @@ public class CheckMessageService extends Service {
     //通过intent 可以传入数据
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        this.isRunning = intent.getBooleanExtra("isRunning", false);
-        this.isNotisfy = intent.getBooleanExtra("isNotisfy", false);
-        boolean isClearMessage = intent.getBooleanExtra("isClearMessage", false);
+        Bundle b = intent.getExtras();
+        boolean isClearMessage = false;
+        if(b!=null){
+            this.isRunning = b.getBoolean("isRunning", false);
+            this.isNotisfy = b.getBoolean("isNotisfy", false);
+            isClearMessage = b.getBoolean("isClearMessage", false);
+        }
+
         /**
          * todo 消息已读清除
          */

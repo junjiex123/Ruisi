@@ -32,7 +32,7 @@
             android:textSize="12sp"
             tool:text="2015 1 1" />
 
-        <xyz.yluo.ruisiapp.View.MyHtmlTextView
+        <xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView
             android:id="@+id/content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

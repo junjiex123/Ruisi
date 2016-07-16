@@ -3,6 +3,7 @@ package xyz.yluo.ruisiapp.fragment;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -46,12 +47,15 @@ import java.util.Map;
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.VerticalTabLayout;
+import xyz.yluo.ruisiapp.activity.ChatActivity;
 import xyz.yluo.ruisiapp.adapter.SmileyAdapter;
+import xyz.yluo.ruisiapp.data.ChatListData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 import xyz.yluo.ruisiapp.utils.ImeUtil;
 import xyz.yluo.ruisiapp.utils.PostHandler;
+import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-7-14.
@@ -83,6 +87,8 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
     private String[] nameList;
     private String replyUrl;
     private LinearLayout loadingView;
+    //chat时代表touid
+    private String info = "";
 
 
     private List<Drawable> ds = new ArrayList<>();
@@ -127,6 +133,7 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
             isEnableTail = bundle.getBoolean("isEnableTail",false);
             input.setHint(bundle.getString("userName","回复"));
             lastReplyTime = bundle.getLong("lastreplyTime",0);
+            info = bundle.getString("info","0");
             Log.i("type is", "==" + replyType + "==");
         }
 
@@ -242,13 +249,7 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
         }
         if (len == 0) {
             //input.setError("你还没写内容呢!");
-            Snackbar.make(notisfy_view, "你还没写内容呢", Snackbar.LENGTH_LONG)
-                    .setAction("确定", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            dismiss();
-                        }
-                    }).show();
+            Snackbar.make(notisfy_view, "你还没写内容呢", Snackbar.LENGTH_LONG).show();
         } else {
             //时间检测
             if(!checkTime()){
@@ -364,9 +365,41 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
     }
 
     private void replyHy(final String txt){
+        Map<String, String> params = new HashMap<>();
+        params.put("formhash", PublicData.FORMHASH);
+        params.put("touid", info);
+        params.put("message", txt);
+        HttpUtil.post(getActivity(), replyUrl, params, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                if (res.contains("操作成功")) {
+                    Toast.makeText(getActivity(), "回复发表成功", Toast.LENGTH_SHORT).show();
+                    sendCallBack(Activity.RESULT_OK,txt);
+                    input.setText("");
+                    dismiss();
+                } else {
+                    if (res.contains("两次发送短消息太快")) {
+                        Toast.makeText(getActivity(), "两次发送短消息太快，请稍候再发送", Toast.LENGTH_SHORT).show();
+                    } else {
+                        System.out.println(res);
+                        Toast.makeText(getActivity(), "由于未知原因发表失败", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
 
+            @Override
+            public void onFailure(Throwable e) {
+                Toast.makeText(getActivity(), "网络错误！！！", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                loadingView.setVisibility(View.GONE);
+            }
+        });
     }
-
 
     private void handleReply(boolean isok, String res) {
         if (isok) {
@@ -390,13 +423,7 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
         if (System.currentTimeMillis() - lastReplyTime > 15000) {
             return true;
         } else {
-            Snackbar.make(notisfy_view, "还没到15s呢，再等等吧！", Snackbar.LENGTH_LONG)
-                    .setAction("确定", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            dismiss();
-                        }
-                    }).show();
+            Snackbar.make(notisfy_view, "还没到15s呢，再等等吧！", Snackbar.LENGTH_LONG).show();
             return false;
         }
     }

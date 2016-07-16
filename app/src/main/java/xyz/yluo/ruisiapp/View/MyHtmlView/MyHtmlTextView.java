@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.View;
+package xyz.yluo.ruisiapp.View.MyHtmlView;
 
 import android.app.Activity;
 import android.content.Context;
@@ -60,7 +60,7 @@ public class MyHtmlTextView extends TextView {
     private myImageGetter myImageGetter = null;
     private myTagHandle myTagHandle = null;
     private boolean isStart = false;
-    private OnQuoteSpanClick quoteSpanClickListener;
+    private CustomQuoteSpan.OnQuoteSpanClick quoteSpanClickListener;
 
 
     public MyHtmlTextView(Context context) {
@@ -75,7 +75,7 @@ public class MyHtmlTextView extends TextView {
         super(context, attrs, defStyleAttr);
     }
 
-    public void setQuoteSpanClickListener(OnQuoteSpanClick quoteSpanClickListener) {
+    public void setQuoteSpanClickListener(CustomQuoteSpan.OnQuoteSpanClick quoteSpanClickListener) {
         this.quoteSpanClickListener = quoteSpanClickListener;
     }
 
@@ -93,11 +93,7 @@ public class MyHtmlTextView extends TextView {
     //获得textView 链接点击
     private CharSequence getMyStyleHtml(String html, Html.ImageGetter getter, Html.TagHandler handler) {
         Spanned spannedHtml = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            spannedHtml = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT, getter, handler);
-        } else {
-            spannedHtml = Html.fromHtml(html, getter, handler);
-        }
+        spannedHtml = Html.fromHtml(html, getter, handler);
         SpannableStringBuilder strBuilder = new SpannableStringBuilder(spannedHtml);
 
         URLSpan[] urlSpans = strBuilder.getSpans(0, spannedHtml.length(), URLSpan.class);
@@ -162,48 +158,6 @@ public class MyHtmlTextView extends TextView {
     }
 
 
-    public interface OnQuoteSpanClick {
-        void quoteSpanClick(String res);
-    }
-
-    private class CustomQuoteSpan implements LeadingMarginSpan, LineBackgroundSpan {
-        private final int backgroundColor;
-        private final int stripeColor;
-        private final float stripeWidth;
-        private final float gap;
-
-        CustomQuoteSpan() {
-            this.backgroundColor = Color.argb(200, 241, 241, 241);
-            this.stripeColor = Color.argb(255, 238, 238, 238);
-            this.stripeWidth = 10;
-            this.gap = 20;
-        }
-
-        @Override
-        public int getLeadingMargin(boolean first) {
-            return (int) (stripeWidth + gap);
-        }
-
-        @Override
-        public void drawLeadingMargin(Canvas c, Paint p, int x, int dir, int top, int baseline, int bottom, CharSequence text, int start, int end, boolean first, Layout layout) {
-            Paint.Style style = p.getStyle();
-            int paintColor = p.getColor();
-            p.setStyle(Paint.Style.FILL);
-            p.setColor(stripeColor);
-            c.drawRect(x, top, x + dir * stripeWidth, bottom, p);
-            p.setStyle(style);
-            p.setColor(paintColor);
-        }
-
-        @Override
-        public void drawBackground(Canvas c, Paint p, int left, int right, int top, int baseline, int bottom, CharSequence text, int start, int end, int lnum) {
-            int paintColor = p.getColor();
-            p.setColor(backgroundColor);
-            c.drawRect(left, top, right, bottom, p);
-            p.setColor(paintColor);
-        }
-
-    }
 
     private class myImageGetter implements Html.ImageGetter {
 

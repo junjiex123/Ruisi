@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">手机睿思</string>
+    <string name="title_activity_test">TestActivity</string>
 </resources>

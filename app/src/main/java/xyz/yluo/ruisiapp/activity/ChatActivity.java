@@ -6,12 +6,17 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,8 +30,10 @@ import java.util.Map;
 
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
 import xyz.yluo.ruisiapp.data.ChatListData;
+import xyz.yluo.ruisiapp.fragment.FrageReplyDialog;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;
@@ -39,11 +46,11 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 消息聊天 activity
  * TODO 支持翻页。。。。目前只能看最后一页
  */
-public class ChatActivity extends BaseActivity {
+public class ChatActivity extends BaseActivity implements FrageReplyDialog.replyCompeteCallBack{
 
     private RecyclerView recycler_view;
-    //private MyReplyView myReplyView;
     private SwipeRefreshLayout refreshLayout;
+    private FloatingActionButton btn_chat;
 
     private List<ChatListData> datas = new ArrayList<>();
     private ChatListAdapter adapter;
@@ -52,6 +59,9 @@ public class ChatActivity extends BaseActivity {
     private String username = "消息";
     private String url = "";
     private String touid = "";
+    private long replyTime = 0;
+
+    private CircleImageView userImage;
 
     public static void open(Context context, String username, String url) {
         /*isopenfromwebview 是从webview打开的是新建的回话*/
@@ -66,10 +76,11 @@ public class ChatActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        recycler_view = (RecyclerView) findViewById(R.id.topic_recycler_view);
-        //myReplyView = (MyReplyView) findViewById(R.id.replay_bar);
-        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.topic_refresh_layout);
+        recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
+        btn_chat = (FloatingActionButton) findViewById(R.id.btn_chat);
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
+        userImage = (CircleImageView) findViewById(R.id.user_detail_img_avatar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -91,6 +102,16 @@ public class ChatActivity extends BaseActivity {
             e.printStackTrace();
         }
 
+        btn_chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FrageReplyDialog dialog = FrageReplyDialog.newInstance(replyUrl,FrageReplyDialog.REPLY_HY,replyTime,
+                        false,"回复："+username,touid);
+                dialog.setCallBack(ChatActivity.this);
+                dialog.show(getFragmentManager(),"chate");
+            }
+        });
+
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -98,12 +119,6 @@ public class ChatActivity extends BaseActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         new GetDataTask().execute(url);
-        //myReplyView.setListener(new ReplyBarListner() {
-        //    @Override
-        //    public void btnSendClick(String input) {
-        //        post_reply(input);
-        //    }
-        //});
     }
 
     private void refresh() {
@@ -119,48 +134,15 @@ public class ChatActivity extends BaseActivity {
         new GetDataTask().execute(url);
     }
 
-    private void post_reply(final String text) {
-
-        if (text.isEmpty()) {
-            Toast.makeText(getApplicationContext(), "你还没有输入内容！！！", Toast.LENGTH_SHORT).show();
-        } else {
-            final ProgressDialog progress;
-            progress = ProgressDialog.show(this, "正在发送", "请等待", true);
-            Map<String, String> params = new HashMap<>();
-            params.put("formhash", PublicData.FORMHASH);
-            params.put("touid", touid);
-            params.put("message", text);
-            HttpUtil.post(getApplicationContext(), replyUrl, params, new ResponseHandler() {
-                @Override
-                public void onSuccess(byte[] response) {
-                    String res = new String(response);
-                    if (res.contains("操作成功")) {
-                        ImeUtil.hide_ime(ChatActivity.this);
-                        progress.dismiss();
-                        String userImage = UrlUtils.getAvaterurlm(PublicData.USER_UID);
-                        datas.add(new ChatListData(1, userImage, text, "刚刚"));
-                        adapter.notifyItemInserted(datas.size() - 1);
-                        recycler_view.scrollToPosition(datas.size());
-                        //myReplyView.clearText();
-                        Toast.makeText(getApplicationContext(), "回复成功！！", Toast.LENGTH_SHORT).show();
-                    } else {
-                        progress.dismiss();
-                        if (res.contains("两次发送短消息太快")) {
-                            Toast.makeText(getApplicationContext(), "两次发送短消息太快，请稍候再发送", Toast.LENGTH_SHORT).show();
-                        } else {
-                            System.out.println(res);
-                            Toast.makeText(getApplicationContext(), "由于未知原因发表失败", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable e) {
-                    Toast.makeText(getApplicationContext(), "网络错误！！！", Toast.LENGTH_SHORT).show();
-                    progress.dismiss();
-                }
-            });
+    @Override
+    public void onReplyFinish(int status, String txt) {
+        Log.i("reply dialog callbak","status:"+status+" info:"+txt);
+        if(status==RESULT_OK){
+            replyTime = System.currentTimeMillis();
+            String userImage = UrlUtils.getAvaterurlm(PublicData.USER_UID);
+            datas.add(new ChatListData(1, userImage, txt, "刚刚"));
+            adapter.notifyItemInserted(datas.size() - 1);
+            recycler_view.scrollToPosition(datas.size());
         }
     }
 
@@ -211,6 +193,7 @@ public class ChatActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            Picasso.with(ChatActivity.this).load(UrlUtils.getAvaterurlb(touid)).placeholder(R.drawable.image_placeholder).into(userImage);
             adapter.notifyDataSetChanged();
             recycler_view.scrollToPosition(datas.size());
             refreshLayout.postDelayed(new Runnable() {

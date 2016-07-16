@@ -61,7 +61,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.ChatActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/AppTheme.NoActionBarTransStatusBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.NewArticleActivity_2"
@@ -85,6 +85,11 @@
 
         <service android:name=".CheckMessageService" />
         <service android:name=".downloadfile.DownloadService" />
+
+        <activity
+            android:name=".activity.TestActivity"
+            android:label="@string/title_activity_test"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
