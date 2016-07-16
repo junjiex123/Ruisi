@@ -99,12 +99,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             final ChatListData single = DataSets.get(position);
             Picasso.with(context).load(single.getUserImage()).into(user_image);
             post_time.setText(single.getTime());
-            content.setHtmlText(single.getContent(), new MyImageGetter.ImageDownLoadListener() {
-                @Override
-                public void downloadCallBack(String url, Drawable d) {
-                    content.setHtmlText(single.getContent(),null);
-                }
-            });
+            content.setHtmlText(single.getContent(), true);
         }
     }
 

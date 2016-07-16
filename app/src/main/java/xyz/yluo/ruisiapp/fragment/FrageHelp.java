@@ -229,7 +229,7 @@ public class FrageHelp extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frage_help, container, false);
         MyHtmlTextView htmlTextView = (MyHtmlTextView) view.findViewById(R.id.html_text);
-        htmlTextView.setHtmlText(helpTxt,null);
+        htmlTextView.setHtmlText(helpTxt,false);
         return view;
     }
 }

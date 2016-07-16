@@ -242,11 +242,11 @@ public class HomeActivity extends BaseActivity
                 transaction.replace(R.id.fragment_home, f, "HELP");
                 break;
             case FrageType.HOME:
+                toolbarImageContainer.setVisibility(View.VISIBLE);
                 if (currentFragment instanceof FrageHome) {
                     Log.i("same fragemnt", "do nothing");
                     return;
                 }
-                toolbarImageContainer.setVisibility(View.VISIBLE);
                 if (PublicData.ISLOGIN) {
                     usernameTitle.setText(PublicData.USER_NAME);
                 } else {

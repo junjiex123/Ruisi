@@ -4,10 +4,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.Layout;
+import android.text.ParcelableSpan;
 import android.text.TextPaint;
 import android.text.style.CharacterStyle;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.LineBackgroundSpan;
+import android.text.style.QuoteSpan;
+import android.text.style.StyleSpan;
+import android.text.style.TextAppearanceSpan;
 import android.text.style.UpdateAppearance;
 
 /**
@@ -15,7 +19,9 @@ import android.text.style.UpdateAppearance;
  * <blockquate> span
  */
 
-public class CustomQuoteSpan extends CharacterStyle implements LeadingMarginSpan, LineBackgroundSpan {
+//CharacterStyle
+
+public class CustomQuoteSpan extends QuoteSpan implements LeadingMarginSpan, ParcelableSpan, LineBackgroundSpan{
     private final int backgroundColor;
     private final int stripeColor;
     private final float stripeWidth;
@@ -28,11 +34,6 @@ public class CustomQuoteSpan extends CharacterStyle implements LeadingMarginSpan
         this.gap = 20;
     }
 
-    @Override
-    public void updateDrawState(TextPaint tp) {
-        tp.setUnderlineText(false);
-        tp.setColor(0xff888888);
-    }
 
     @Override
     public int getLeadingMargin(boolean first) {

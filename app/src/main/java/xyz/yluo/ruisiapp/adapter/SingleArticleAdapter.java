@@ -159,12 +159,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             String post_time = "发表于:" + single.getPostTime();
             article_post_time.setText(post_time);
             //myWebView.setContent(single.getCotent());
-            myHtmlTextView.setHtmlText(single.getCotent(), new MyImageGetter.ImageDownLoadListener() {
-                @Override
-                public void downloadCallBack(String url, Drawable d) {
-                    myHtmlTextView.setHtmlText(single.getCotent(),null);
-                }
-            });
+            myHtmlTextView.setHtmlText(single.getCotent(), true);
         }
 
     }
@@ -219,12 +214,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             String timeText = "发表于:" + single.getPostTime();
             replay_time.setText(timeText);
             replay_index.setText(single.getIndex());
-            htmlTextView.setHtmlText(single.getCotent(), new MyImageGetter.ImageDownLoadListener() {
-                @Override
-                public void downloadCallBack(String url, Drawable d) {
-                    htmlTextView.setHtmlText(single.getCotent(),null);
-                }
-            });
+            htmlTextView.setHtmlText(single.getCotent(), true);
         }
     }
 

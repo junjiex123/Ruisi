@@ -39,7 +39,7 @@ public class AboutActivity extends BaseActivity {
                 "也可以到我的github上留言<a href=\"https://github.com/freedom10086/Ruisi\">点击这儿</a>";
 
         MyHtmlTextView myHtmlTextView = (MyHtmlTextView) findViewById(R.id.html_text);
-        myHtmlTextView.setHtmlText(ss,null);
+        myHtmlTextView.setHtmlText(ss,false);
 
         PackageInfo info = null;
         PackageManager manager = getPackageManager();
