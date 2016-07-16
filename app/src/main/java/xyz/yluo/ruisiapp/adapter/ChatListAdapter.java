@@ -1,6 +1,7 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import java.util.List;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView;
+import xyz.yluo.ruisiapp.View.MyHtmlView.MyImageGetter;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ChatListData;
 
@@ -94,10 +96,15 @@ public class ChatListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         }
 
         void setData(final int position) {
-            ChatListData single = DataSets.get(position);
+            final ChatListData single = DataSets.get(position);
             Picasso.with(context).load(single.getUserImage()).into(user_image);
             post_time.setText(single.getTime());
-            content.mySetText(context, single.getContent());
+            content.setHtmlText(single.getContent(), new MyImageGetter.ImageDownLoadListener() {
+                @Override
+                public void downloadCallBack(String url, Drawable d) {
+                    content.setHtmlText(single.getContent(),null);
+                }
+            });
         }
     }
 

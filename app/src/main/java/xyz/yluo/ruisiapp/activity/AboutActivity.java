@@ -38,7 +38,9 @@ public class AboutActivity extends BaseActivity {
                 "@谁用了FREEDOM</a>或者<a href=\"home.php?mod=space&uid=261098&do=profile&mobile=2\">@wangfuyang</a><br />" +
                 "也可以到我的github上留言<a href=\"https://github.com/freedom10086/Ruisi\">点击这儿</a>";
 
-        ((MyHtmlTextView) findViewById(R.id.html_text)).mySetText(this, ss);
+        MyHtmlTextView myHtmlTextView = (MyHtmlTextView) findViewById(R.id.html_text);
+        myHtmlTextView.setHtmlText(ss,null);
+
         PackageInfo info = null;
         PackageManager manager = getPackageManager();
         try {

@@ -294,8 +294,7 @@ public class SingleArticleActivity extends BaseActivity
                     String replyUrl = single.getReplyUrlTitle();
                     String replyIndex = single.getIndex();
                     String replyName = single.getUsername();
-                    String ref = Jsoup.parse(single.getCotent()).text();
-
+                    String ref = single.getCotent();
                     String replyUserInfo = "回复:" + replyIndex + " " + replyName;
 
                     //String url,int type,long lastreplyTime,boolean isEnableTail,String userName,String info
@@ -410,6 +409,7 @@ public class SingleArticleActivity extends BaseActivity
             String htmlData = params[0];
             //list 所有楼数据
             Document doc = Jsoup.parse(htmlData);
+            Log.i("==header===",doc.head().html());
             if (!isGetTitle) {
                 String titleText = doc.select("title").text();
                 String[] array = titleText.split("-");
@@ -447,6 +447,7 @@ public class SingleArticleActivity extends BaseActivity
                     }
                 }
             }
+
             //获取总页数 和当前页数
             if (doc.select(".pg").text().length() > 0) {
                 if (doc.select(".pg").text().length() > 0) {
@@ -497,15 +498,7 @@ public class SingleArticleActivity extends BaseActivity
                 //删除修改日期
                 contentels.select("i.pstatus").remove();
                 String finalcontent = contentels.html().trim();
-                //替换开头的br
-                while (finalcontent.startsWith("<br>")) {
-                    finalcontent = finalcontent.substring(4, finalcontent.length()).trim();
-                }
 
-                //替换结尾的br
-                while (finalcontent.endsWith("<br>")) {
-                    finalcontent = finalcontent.substring(0, finalcontent.length() - 4).trim();
-                }
 
                 //这是内容
                 if (commentindex.contains("楼主") || commentindex.contains("收藏")) {
@@ -544,7 +537,8 @@ public class SingleArticleActivity extends BaseActivity
                 if (isRedirect) {
                     isRedirect = false;
                     for (int i = 0; i < mydatalist.size(); i++) {
-                        if (mydatalist.get(i).getCotent().contains(PublicData.USER_NAME)) {
+                        String s = mydatalist.get(i).getCotent().toString();
+                        if (s.contains(PublicData.USER_NAME)) {
                             mRecyclerView.scrollToPosition(i);
                             break;
                         }

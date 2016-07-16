@@ -1,6 +1,7 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +13,13 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Map;
 
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.View.MyHtmlView.CustomQuoteSpan;
 import xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView;
+import xyz.yluo.ruisiapp.View.MyHtmlView.MyImageGetter;
 import xyz.yluo.ruisiapp.View.MyWebView;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.LoadMoreType;
@@ -37,12 +40,18 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
     public static final int COMENT = 1;
     public final int LOAD_MORE = 2;
     private LoadMoreType loadMoreType = LoadMoreType.LOADING;
+    private ScrollToSomePosition scrollToSomePosition;
 
-    private ScrollToSomePosition scrollToSomePosition = null;
+    /**
+     * 保存数据 因为产生比较蛋疼
+     */
+    private List<CharSequence> htmlContents;
+
     //数据
     private List<SingleArticleData> datalist;
     private RecyclerViewClickListener itemListener;
     private Activity activity;
+
     public SingleArticleAdapter(Activity activity, RecyclerViewClickListener itemListener, List<SingleArticleData> datalist) {
         this.datalist = datalist;
         this.activity = activity;
@@ -142,7 +151,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
 
         @Override
         void setData(int position) {
-            SingleArticleData single = datalist.get(position);
+            final SingleArticleData single = datalist.get(position);
             article_title.setText(single.getTitle());
             article_username.setText(single.getUsername());
             String img_url = UrlUtils.getAvaterurlm(single.getImg());
@@ -150,8 +159,12 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             String post_time = "发表于:" + single.getPostTime();
             article_post_time.setText(post_time);
             //myWebView.setContent(single.getCotent());
-            myHtmlTextView.mySetText(activity,single.getCotent());
-
+            myHtmlTextView.setHtmlText(single.getCotent(), new MyImageGetter.ImageDownLoadListener() {
+                @Override
+                public void downloadCallBack(String url, Drawable d) {
+                    myHtmlTextView.setHtmlText(single.getCotent(),null);
+                }
+            });
         }
 
     }
@@ -193,7 +206,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         //设置listItem的数据
         @Override
         void setData(final int position) {
-            SingleArticleData single = datalist.get(position);
+            final SingleArticleData single = datalist.get(position);
 
             replay_author.setText(single.getUsername());
             //判断是不是楼主
@@ -206,7 +219,12 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             String timeText = "发表于:" + single.getPostTime();
             replay_time.setText(timeText);
             replay_index.setText(single.getIndex());
-            htmlTextView.mySetText(activity, single.getCotent());
+            htmlTextView.setHtmlText(single.getCotent(), new MyImageGetter.ImageDownLoadListener() {
+                @Override
+                public void downloadCallBack(String url, Drawable d) {
+                    htmlTextView.setHtmlText(single.getCotent(),null);
+                }
+            });
         }
     }
 

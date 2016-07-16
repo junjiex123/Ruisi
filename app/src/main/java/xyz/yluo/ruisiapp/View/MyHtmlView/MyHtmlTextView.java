@@ -1,46 +1,20 @@
 package xyz.yluo.ruisiapp.View.MyHtmlView;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.text.Editable;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.LineBackgroundSpan;
 import android.text.style.QuoteSpan;
 import android.text.style.RelativeSizeSpan;
-import android.text.style.TypefaceSpan;
 import android.text.style.URLSpan;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import org.xml.sax.XMLReader;
-
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
-import xyz.yluo.ruisiapp.PublicData;
-import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.utils.HandleLinkClick;
 
 /**
@@ -50,54 +24,62 @@ import xyz.yluo.ruisiapp.utils.HandleLinkClick;
  */
 public class MyHtmlTextView extends TextView {
 
-    private Activity activity;
-    private String text;
-    private Map<String, Drawable> drawableMap = new HashMap<>();
-    private Set<String> haveUrls = new LinkedHashSet<>();
-    private Set<String> TotalUrls = new LinkedHashSet<>();
-    private static myImageGetter myImageGetter = null;
-    private static myTagHandle myTagHandle = null;
-    private boolean isStart = false;
+    private Context context;
+    private MyImageGetter myImageGetter;
+    private MyTagHandle myTagHandle;
+    private CharSequence charSequence;
+
+
 
     public MyHtmlTextView(Context context) {
         super(context);
+        init(context);
     }
 
     public MyHtmlTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init(context);
     }
 
     public MyHtmlTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init(context);
     }
 
 
-    public void mySetText(Activity activity, String text) {
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        Log.i("MyHtmlTextView","onDetachedFromWindow");
+    }
 
-        if(myImageGetter==null){
-            myImageGetter = new myImageGetter();
-        }
-        if(myTagHandle==null){
-            myTagHandle = new myTagHandle();
-        }
 
-        this.activity = activity;
-        this.text = text;
+    private void  init(Context context){
+        this.context = context;
         setMovementMethod(LinkMovementMethod.getInstance());
         setLinkTextColor(0xff529ECC);
-        CharSequence charSequence = getMyStyleHtml(text, myImageGetter, myTagHandle);
-        super.setText(charSequence);
+        myTagHandle = new MyTagHandle();
     }
 
+    public void setHtmlText(String txt, MyImageGetter.ImageDownLoadListener listener){
+        if(listener!=null&&myImageGetter==null){
+            myImageGetter = new MyImageGetter(context,listener);
+        }
+
+        charSequence =  getSequence(context,txt, myImageGetter, myTagHandle);
+        setText(charSequence);
+    }
+
+
     //获得textView 链接点击
-    private CharSequence getMyStyleHtml(String html, Html.ImageGetter getter, Html.TagHandler handler) {
+    private  CharSequence getSequence(Context context, String html, MyImageGetter getter, MyTagHandle handler) {
         Spanned spannedHtml = null;
         spannedHtml = Html.fromHtml(html, getter, handler);
         SpannableStringBuilder strBuilder = new SpannableStringBuilder(spannedHtml);
 
         URLSpan[] urlSpans = strBuilder.getSpans(0, spannedHtml.length(), URLSpan.class);
         for (final URLSpan span : urlSpans) {
-            replaceLinkSpans(strBuilder, span);
+            replaceLinkSpans(context,strBuilder, span);
         }
 
         QuoteSpan[] quoteSpans = strBuilder.getSpans(0, spannedHtml.length(), QuoteSpan.class);
@@ -136,7 +118,7 @@ public class MyHtmlTextView extends TextView {
         return strBuilder;
     }
 
-    private void replaceQuoteSpans(final SpannableStringBuilder strBuilder, final QuoteSpan quoteSpan) {
+    private  void replaceQuoteSpans(final SpannableStringBuilder strBuilder, final QuoteSpan quoteSpan) {
         final int start = strBuilder.getSpanStart(quoteSpan);
         final int end = strBuilder.getSpanEnd(quoteSpan);
         int flags = strBuilder.getSpanFlags(quoteSpan);
@@ -147,7 +129,7 @@ public class MyHtmlTextView extends TextView {
     }
 
     //连接点击事件
-    private void replaceLinkSpans(final SpannableStringBuilder strBuilder, final URLSpan urlSpan) {
+    private  void replaceLinkSpans(final Context context, final SpannableStringBuilder strBuilder, final URLSpan urlSpan) {
         int start = strBuilder.getSpanStart(urlSpan);
         int end = strBuilder.getSpanEnd(urlSpan);
         int flags = strBuilder.getSpanFlags(urlSpan);
@@ -163,163 +145,11 @@ public class MyHtmlTextView extends TextView {
             }
 
             public void onClick(View view) {
-                HandleLinkClick.handleClick(activity, urlSpan.getURL());
+                HandleLinkClick.handleClick(context, urlSpan.getURL());
             }
         };
         strBuilder.setSpan(clickableSpan, start, end, flags);
     }
 
-    private class myImageGetter implements Html.ImageGetter {
-
-        @Override
-        public Drawable getDrawable(String source) {
-            try {
-                //替换表情到本地
-                if (source.contains("static/image/smiley/")) {
-                    source = source.substring(source.indexOf("static"));
-                    source = source.replace(".gif", ".jpg").replace(".GIF", ".jpg");
-                    Drawable d = Drawable.createFromStream(activity.getAssets().open(source), null);
-
-                    int height = (int) (getResources().getDimension(R.dimen.textSizeNormal) * 1.5);
-                    int width = (int) ((float) d.getIntrinsicWidth() / (float) d.getIntrinsicHeight()) * height;
-                    if (width == 0) {
-                        width = d.getIntrinsicWidth();
-                    }
-                    d.setBounds(0, 0, width, height);
-                    return d;
-                } else {
-                    if (drawableMap.containsKey(source)) {
-                        return drawableMap.get(source);
-                    } else {
-                        TotalUrls.add(source);
-                        if (!isStart) {
-                            isStart = true;
-                            new LoadImage().execute(source);
-                        }
-
-                        return null;
-                    }
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-    }
-
-    //下载网络图片
-    private class LoadImage extends AsyncTask<Object, Void, Drawable> {
-
-        private String s = "";
-
-        @Override
-        protected Drawable doInBackground(Object... params) {
-            String source = (String) params[0];
-            haveUrls.add(source);
-            s = source;
-            String mySource;
-            if (source.contains("http")) {
-                mySource = source;
-            } else {
-                if (source.charAt(0) == '/') {
-                    source = source.substring(1, source.length());
-                }
-                mySource = PublicData.getBaseUrl() + source;
-            }
-            try {
-                URL url = new URL(mySource);
-                URLConnection conn = url.openConnection();
-                conn.connect();
-                InputStream is = conn.getInputStream();
-                BufferedInputStream bis = new BufferedInputStream(is);
-                Bitmap bm = BitmapFactory.decodeStream(bis);
-                if (bm == null) {
-                    return null;
-                }
-                int mwidth = bm.getWidth() * 4;
-                int myheight = bm.getHeight() * 4;
-
-                Drawable drawable = new BitmapDrawable(activity.getResources(), bm);
-                drawable.setBounds(0, 0, mwidth, myheight);
-
-                return drawable;
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Drawable drawable) {
-            if (drawable != null) {
-                super.onPostExecute(drawable);
-                drawableMap.put(s, drawable);
-                setText(getMyStyleHtml(text, myImageGetter, myTagHandle));
-            }
-
-            if (haveUrls.size() < TotalUrls.size()) {
-                int i = haveUrls.size();
-                String uurl = (String) TotalUrls.toArray()[i];
-                new LoadImage().execute(uurl);
-            }
-        }
-    }
-
-    private class myTagHandle implements Html.TagHandler {
-
-        private int startIndex = 0;
-        private int stopIndex = 0;
-
-        @Override
-        public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
-            if (tag.equalsIgnoreCase("hr")) {
-                if (opening) {
-                    startIndex = output.length();
-                    if (startIndex > 0 && output.charAt(output.length() - 1) != '\n') {
-                        output.append("\n");
-                        startIndex++;
-                    }
-                } else {
-                    stopIndex = output.length();
-                    output.append("\n");
-                    stopIndex++;
-                    output.append("\n");
-                    stopIndex++;
-                    output.setSpan(new myhrSpan(), startIndex, stopIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
-            } else if (tag.equalsIgnoreCase("code")) {
-                if (opening) {
-                    startIndex = output.length();
-                } else {
-                    stopIndex = output.length();
-                    if (stopIndex > startIndex) {
-                        output.setSpan(new TypefaceSpan("monospace"), startIndex, stopIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        //设置字体前景色
-                        output.setSpan(new ForegroundColorSpan(0xff666666), startIndex, stopIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        output.setSpan(new RelativeSizeSpan(0.80f), startIndex, stopIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    }
-                }
-            }
-        }
-
-
-        private class myhrSpan implements LineBackgroundSpan {
-
-            @Override
-            public void drawBackground(Canvas canvas, Paint paint, int left, int right, int top, int baseline, int bottom, CharSequence charSequence, int start, int end, int num) {
-                Paint.Style pstyle = paint.getStyle();
-                int ppaintColor = paint.getColor();
-
-                paint.setStyle(Paint.Style.FILL);
-                paint.setColor(0x1f000000);
-                canvas.drawRect(left, bottom - 3, right, bottom, paint);
-
-                paint.setStyle(pstyle);
-                paint.setColor(ppaintColor);
-            }
-        }
-    }
 
 }

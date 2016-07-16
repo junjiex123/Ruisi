@@ -2,6 +2,7 @@ package xyz.yluo.ruisiapp.data;
 
 /**
  * Created by free2 on 16-3-30.
+ * 聊天数据
  */
 public class ChatListData {
 
