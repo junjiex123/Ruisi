@@ -1,29 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout android:id="@+id/refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/refresh_layout"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-    <TextView
-        android:id="@+id/view_loading"
-        android:layout_width="80dp"
-        android:layout_height="120dp"
-        android:layout_gravity="center"
-        android:drawablePadding="16dp"
-        android:drawableTop="@drawable/ic_autorenew_gray_80dp"
-        android:gravity="center"
-        android:text="加载中"
-        android:textColor="#ffbababa"
-        android:textSize="16sp" />
-
-</FrameLayout>
+        android:layout_height="match_parent" />
+</android.support.v4.widget.SwipeRefreshLayout>

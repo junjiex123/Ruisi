@@ -14,6 +14,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -143,7 +144,7 @@ public class HomeActivity extends BaseActivity
         TextView userGrade = (TextView) header.findViewById(R.id.user_grade);
 
         //判断是否登陆
-        if (PublicData.ISLOGIN) {
+        if (PublicData.ISLOGIN&& !TextUtils.isEmpty(PublicData.USER_NAME)) {
             userGrade.setVisibility(View.VISIBLE);
             usernameTitle.setText(PublicData.USER_NAME);
             if (PublicData.USER_GRADE.length() > 0) {
@@ -270,7 +271,7 @@ public class HomeActivity extends BaseActivity
                 drawer.openDrawer(GravityCompat.START);
                 break;
             case R.id.profile_image:
-                if (PublicData.ISLOGIN) {
+                if (PublicData.ISLOGIN&&!TextUtils.isEmpty(PublicData.USER_NAME)) {
                     String url = UrlUtils.getAvaterurlb(PublicData.USER_UID);
                     UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, PublicData.USER_NAME, userImage, url);
                 } else {
@@ -284,8 +285,11 @@ public class HomeActivity extends BaseActivity
                 dialog.show(getFragmentManager(), "changeNet");
                 break;
             case R.id.show_message:
-                clickId = R.id.show_message;
-                drawer.closeDrawer(GravityCompat.START);
+                if(isneed_login()){
+                    clickId = R.id.show_message;
+                    drawer.closeDrawer(GravityCompat.START);
+                }
+
                 break;
         }
 

@@ -42,6 +42,7 @@ public class FrageForumList extends BaseFragment {
     private List<ForumListData> datas = null;
     private ForumListAdapter adapter = null;
     private boolean isSetForumToDataBase = false;
+    private RecyclerView recyclerView;
 
     public static FrageForumList newInstance(boolean isLogin) {
         Bundle args = new Bundle();
@@ -59,7 +60,7 @@ public class FrageForumList extends BaseFragment {
 
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
         view_loading = (TextView) view.findViewById(R.id.view_loading);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         //刷新
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
 
@@ -90,8 +91,6 @@ public class FrageForumList extends BaseFragment {
         recyclerView.addItemDecoration(new MyGridDivider(2));
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-
-
         getData();
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.SingleNewsActivity;
 import xyz.yluo.ruisiapp.data.SchoolNewsData;
+import xyz.yluo.ruisiapp.database.MyDbUtils;
 
 /**
  * Created by free2 on 16-3-31.
@@ -63,24 +65,29 @@ public class NewsListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     //加载更多ViewHolder
     private class LoadMoreViewHolder extends BaseViewHolder {
 
+        private ProgressBar progressBar;
+        private TextView textView;
         LoadMoreViewHolder(View itemView) {
             super(itemView);
+            progressBar = (ProgressBar) itemView.findViewById(R.id.load_more_progress);
+            textView = (TextView) itemView.findViewById(R.id.load_more_text);
         }
 
         @Override
         void setData(int position) {
-            //TODO
-            //load more 现在没有数据填充
+            progressBar.setVisibility(View.GONE);
+            textView.setText("已无更多");
         }
     }
 
 
-    //手机版文章列表
+    //新闻列表
     private class NewsViewHolderMe extends BaseViewHolder {
         TextView article_title;
         TextView post_time;
         TextView is_image;
         TextView is_patch;
+        View message_badge;
 
         //构造
         NewsViewHolderMe(View v) {
@@ -89,7 +96,9 @@ public class NewsListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             post_time = (TextView) v.findViewById(R.id.time);
             is_image = (TextView) v.findViewById(R.id.is_image);
             is_patch = (TextView) v.findViewById(R.id.is_patch);
-            v.findViewById(R.id.main_item_btn_item).setOnClickListener(new View.OnClickListener() {
+            message_badge = v.findViewById(R.id.message_badge);
+
+            v.findViewById(R.id.main_window).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onBtnItemClick();
@@ -101,7 +110,8 @@ public class NewsListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @Override
         void setData(int position) {
             SchoolNewsData single = DataSet.get(position);
-            article_title.setTextColor(single.isRead() ? 0xff888888 : 0xff000000);
+            message_badge.setVisibility(single.isRead()?View.GONE:View.VISIBLE);
+            article_title.setTextColor(single.isRead()? 0xff888888 : 0xff000000);
             article_title.setText(single.getTitle());
             post_time.setText(single.getPost_time());
             is_image.setVisibility(single.is_image() ? View.VISIBLE : View.GONE);
@@ -110,11 +120,12 @@ public class NewsListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         void onBtnItemClick() {
             SchoolNewsData single = DataSet.get(getAdapterPosition());
-            //todo  数据库支持
-//            if(!single_data.isRead()){
-//                single_data.setRead(true);
-//                notifyItemChanged(getAdapterPosition());
-//            }
+            single.setRead(true);
+            message_badge.setVisibility(View.GONE);
+            article_title.setTextColor(0xff888888);
+
+            MyDbUtils myDbUtils = new MyDbUtils(activity,MyDbUtils.MODE_WRITE);
+            myDbUtils.setSingleNewsRead(single.getUrl());
             SingleNewsActivity.open(activity, single.getUrl(), single.getTitle());
         }
     }

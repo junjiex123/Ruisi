@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffffff">
+    android:background="#dd0070D0">
 
     <xyz.yluo.ruisiapp.View.CircleImageView
         android:id="@+id/user_image"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="50dp"
         android:src="@drawable/image_placeholder"
-        app:civ_border_color="@color/blue50"
+        app:civ_border_color="@color/colorPrimary"
         app:civ_border_width="2dp" />
 
     <TextView
@@ -20,10 +20,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="180dp"
         android:gravity="center"
         android:text="@string/app_name"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorAccent"
         android:textSize="25sp" />
 
     <LinearLayout
@@ -71,21 +71,23 @@
         <Button
             android:id="@+id/btn_login_inner"
             style="@style/myButton"
+            android:layout_marginStart="4dp"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:text="校园网入口"
-            android:textSize="12sp" />
+            android:textSize="13sp" />
 
         <Button
+            android:layout_marginEnd="4dp"
             android:id="@+id/btn_login_outer"
             style="@style/myButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
             android:layout_weight="1"
             android:text="外网入口"
-            android:textSize="12sp" />
+            android:textSize="13sp" />
     </LinearLayout>
 
 </FrameLayout>

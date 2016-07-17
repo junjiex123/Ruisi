@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.File;
@@ -25,6 +26,9 @@ public class ImageUtils {
      * 这里的path是图片的地址
      */
     public static Uri getImageURI(File path, final String uid) {
+        if(TextUtils.isEmpty(uid)){
+            return null;
+        }
         final File file = new File(path + "/" + uid);
         Log.i("launch file", file.toString() + " " + file.exists());
         // 如果图片存在本地缓存目录，则不去服务器下载

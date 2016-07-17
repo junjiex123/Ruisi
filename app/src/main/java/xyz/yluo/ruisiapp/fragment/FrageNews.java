@@ -24,6 +24,7 @@ import java.util.List;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.NewsListAdapter;
 import xyz.yluo.ruisiapp.data.SchoolNewsData;
+import xyz.yluo.ruisiapp.database.MyDbUtils;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
@@ -32,15 +33,13 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
  * Created by free2 on 16-3-19.
  * 简单的fragment 首页第二页 展示最新的帖子等
  */
-public class FrageNews extends Fragment implements LoadMoreListener.OnLoadMoreListener {
+public class FrageNews extends Fragment{
 
     public static final String TAG = FrageNews.class.getSimpleName();
     protected RecyclerView recycler_view;
     protected SwipeRefreshLayout refreshLayout;
     private List<SchoolNewsData> mydataset = new ArrayList<>();
     private NewsListAdapter adapter;
-    private boolean isEnableLoadMore = false;
-    private int CurrentPage = 1;
 
     public static FrageNews newInstance(boolean isNeedUpdate) {
         Bundle args = new Bundle();
@@ -56,12 +55,6 @@ public class FrageNews extends Fragment implements LoadMoreListener.OnLoadMoreLi
         recycler_view = (RecyclerView) view.findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        recycler_view.setLayoutManager(mLayoutManager);
-
-        adapter = new NewsListAdapter(getActivity(), mydataset);
-        recycler_view.setAdapter(adapter);
-        recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 20));
 
         refreshLayout.post(new Runnable() {
             @Override
@@ -77,56 +70,30 @@ public class FrageNews extends Fragment implements LoadMoreListener.OnLoadMoreLi
             }
         });
 
+        //首先从数据库读入数据
+        MyDbUtils myDbUtils = new MyDbUtils(getActivity(),MyDbUtils.MODE_READ);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        recycler_view.setLayoutManager(mLayoutManager);
+        adapter = new NewsListAdapter(getActivity(), myDbUtils.getNewsList(null));
+        recycler_view.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
         Handler mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                getData();
+                refresh();
             }
         }, 300);
         return view;
     }
 
     private void refresh() {
-        CurrentPage = 1;
-        isEnableLoadMore = false;
-        getData();
-
+        new GetNewsListTask().execute();
     }
 
-    @Override
-    public void onLoadMore() {
-        if (isEnableLoadMore) {
-            CurrentPage++;
-            getData();
-            isEnableLoadMore = false;
-        }
-    }
 
-    private void getData() {
-        String url = "forum.php?mod=guide&view=new&page=" + CurrentPage + "&mobile=2";
-        HttpUtil.get(getActivity(), url, new ResponseHandler() {
-            @Override
-            public void onSuccess(byte[] response) {
-                new GetNewsListTask().execute(new String(response));
-            }
-
-            @Override
-            public void onFailure(Throwable e) {
-                refreshLayout.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout.setRefreshing(false);
-                    }
-                }, 500);
-
-            }
-        });
-    }
-
-    //非校园网状态下获得一个板块文章列表数据
-    //根据html获得数据
-    //调用的手机版
     private class GetNewsListTask extends AsyncTask<String, Void, List<SchoolNewsData>> {
         @Override
         protected List<SchoolNewsData> doInBackground(String... params) {
@@ -150,27 +117,20 @@ public class FrageNews extends Fragment implements LoadMoreListener.OnLoadMoreLi
                 String time = article.select("span.timestyle49756").text();
                 Log.i("news task", titleStr + " " + url + " " + is_fj + " " + is_image + " " + time);
                 //String url,String title, boolean is_image, boolean is_patch, String post_time
-                dataset.add(new SchoolNewsData(url, titleStr, is_image, is_fj, time));
+                dataset.add(new SchoolNewsData(url, titleStr, is_image, is_fj, time,false));
             }
+
+            //数据加载完毕，和数据库比对
+            MyDbUtils myDbUtils = new MyDbUtils(getActivity(),MyDbUtils.MODE_WRITE);
+            dataset = myDbUtils.getNewsList(dataset);
             return dataset;
         }
 
         @Override
         protected void onPostExecute(List<SchoolNewsData> dataset) {
-            if (CurrentPage == 1) {
-                //item 增加删除 改变动画
-                mydataset.clear();
-            }
-            int size = mydataset.size();
+            mydataset.clear();
             mydataset.addAll(dataset);
-            if (size > 0) {
-                adapter.notifyItemChanged(size);
-                adapter.notifyItemRangeInserted(size + 1, dataset.size());
-            } else {
-                adapter.notifyDataSetChanged();
-            }
-            isEnableLoadMore = true;
-
+            adapter.notifyDataSetChanged();
             refreshLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {

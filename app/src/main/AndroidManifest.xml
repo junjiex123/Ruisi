@@ -53,8 +53,8 @@
             android:theme="@style/AppTheme.NoActionBarTransStatusBar" />
         <activity
             android:name=".activity.LoginActivity"
-            android:label="登陆"
-            android:theme="@style/AppTheme" />
+            android:label="登陆手机睿思"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.UserDakaActivity"
             android:label="签到中心"
