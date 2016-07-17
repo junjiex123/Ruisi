@@ -16,7 +16,7 @@ import xyz.yluo.ruisiapp.downloadfile.DownloadService;
  * Created by free2 on 16-4-12.
  * 处理WebView和 {@link MyHtmlTextView}链接点击
  * <p>
- * //todo 图片点击事件 展示大图片 下载附件
+ * //todo 图片点击事件 展示大图片
  */
 public class HandleLinkClick {
     public static void handleClick(Context context, String url) {

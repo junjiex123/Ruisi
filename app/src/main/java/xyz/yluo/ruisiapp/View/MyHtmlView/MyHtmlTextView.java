@@ -58,11 +58,20 @@ public class MyHtmlTextView extends TextView implements MyImageGetter.ImageDownL
         init(context);
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if(myImageGetter!=null){
+            myImageGetter.reStart();
+        }
+    }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        Log.i("MyHtmlTextView","onDetachedFromWindow");
+        if(myImageGetter!=null){
+            myImageGetter.setNeedStop(true);
+        }
     }
 
 

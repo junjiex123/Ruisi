@@ -10,6 +10,8 @@ import android.text.Html;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -20,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import xyz.yluo.ruisiapp.PublicData;
-import xyz.yluo.ruisiapp.R;
 
 /**
  * Created by free2 on 16-7-16.
@@ -28,7 +29,17 @@ import xyz.yluo.ruisiapp.R;
  */
 public class MyImageGetter implements Html.ImageGetter{
     private Context context;
-    private boolean isRunning  = false;
+    /**
+     * 标记是否开始下载
+     */
+    private boolean isStart = false;
+
+    /**
+     * 外部程序控制结束
+     */
+    private boolean needStop = false;
+
+
     private List<String> urls;
     /**
      * 每4张更新一次
@@ -48,17 +59,24 @@ public class MyImageGetter implements Html.ImageGetter{
         }
         urls = new ArrayList<>();
     }
+    public void setNeedStop(boolean needStop) {
+        this.needStop = needStop;
+    }
 
-
+    public void reStart(){
+        needStop = false;
+        startDown();
+    }
     private void startDown(){
-        isRunning = true;
+        if(needStop){
+            return;
+        }
+        isStart = true;
         if(listener==null){
-            Log.i("MYIMAGEDOWN","listner not set not down");
             return;
         }
         if(urls!=null&&urls.size()>0){
             String uurl = urls.get(0);
-
             Log.i("MYIMAGEDOWN","LoadImage 启动......");
             new LoadImage().execute(uurl);
         }
@@ -68,30 +86,39 @@ public class MyImageGetter implements Html.ImageGetter{
     @Override
     public Drawable getDrawable(String source) {
         try {
-            //替换表情到本地
             if (source.contains("static/image/smiley/")) {
-                source = source.substring(source.indexOf("static"));
-                source = source.replace(".gif", ".jpg").replace(".GIF", ".jpg");
-                Drawable d = Drawable.createFromStream(context.getAssets().open(source), null);
-
-                int height = (int) (80);
-                int width = (int) (80);
-                d.setBounds(0, 0, width, height);
-                return d;
-            } else {
-                if(haveDown.containsKey(source)){
-                    return haveDown.get(source);
-                }else{
+                File dir = new File(context.getFilesDir()+"/smiley");
+                if(!dir.exists()){
+                    Log.e("MYIMAGEDOWN","成功创建目录"+dir.getPath()+dir.mkdirs());
+                }
+                String fileName = source.substring(source.lastIndexOf('/'));
+                /**
+                 * 缓存表情到本地
+                 */
+                File f = new File(dir+fileName);
+                if(f.exists()){
+                    Drawable d =  Drawable.createFromPath(f.getPath());
+                    Log.e("image getter","获得已经存在本地的表情");
+                    d.setBounds(0, 0, 80, 80);
+                    return d;
                     /**
-                     * 由此添加到队列
+                     * source = source.replace(".gif", ".jpg").replace(".GIF", ".jpg");
+                     Drawable d = Drawable.createFromStream(context.getAssets().open(source), null);
                      */
-                    if(!urls.contains(source)){
-                        urls.add(source);
-                    }
-                    if(!isRunning){
-                        startDown();
-                    }
+                }
+            }
 
+            if(haveDown.containsKey(source)){
+                return haveDown.get(source);
+            }else{
+                /**
+                 * 由此添加到队列
+                 */
+                if(!urls.contains(source)){
+                    urls.add(source);
+                }
+                if(!isStart){
+                    startDown();
                 }
             }
 
@@ -104,7 +131,6 @@ public class MyImageGetter implements Html.ImageGetter{
 
     //下载网络图片
     private class LoadImage extends AsyncTask<Object, Void, Drawable> {
-
         private String s = "";
         private URLConnection conn;
 
@@ -115,6 +141,7 @@ public class MyImageGetter implements Html.ImageGetter{
             if(haveDown.containsKey(source)){
                 return haveDown.get(source);
             }
+
             String mySource;
             if (source.contains("http")) {
                 mySource = source;
@@ -124,11 +151,38 @@ public class MyImageGetter implements Html.ImageGetter{
                 }
                 mySource = PublicData.getBaseUrl() + source;
             }
+
             try {
                 URL url = new URL(mySource);
                 conn= url.openConnection();
                 conn.connect();
                 InputStream is = conn.getInputStream();
+
+                /**
+                 * 这是表情文件 返回的同时还要存入文件
+                 */
+                if(source.startsWith("static/image/smiley")){
+                    File dir = new File(context.getFilesDir()+"/smiley");
+                    String fileName = source.substring(source.lastIndexOf('/'));
+                    File f = new File(dir+fileName);
+                    Log.e("image getter","create new smiley file"+f.getPath()+">>"+f.createNewFile()) ;
+                    FileOutputStream fos = new FileOutputStream(f);
+                    byte[] buffer = new byte[1024];
+                    int len = 0;
+                    while ((len = is.read(buffer)) != -1) {
+                        fos.write(buffer, 0, len);
+                    }
+                    is.close();
+                    fos.flush();
+                    fos.close();
+                    Drawable d = Drawable.createFromPath(f.getPath());
+                    d.setBounds(0,0,80,80);
+                    return Drawable.createFromPath(f.getPath());
+                }
+
+                /**
+                 * 这是一般的图片
+                 */
                 BufferedInputStream bis = new BufferedInputStream(is);
                 Bitmap bm = BitmapFactory.decodeStream(bis);
                 if (bm == null) {
@@ -136,7 +190,6 @@ public class MyImageGetter implements Html.ImageGetter{
                 }
                 Drawable drawable = new BitmapDrawable(context.getResources(), bm);
                 drawable.setBounds(0, 0, drawable.getIntrinsicWidth()*3, drawable.getIntrinsicHeight()*3);
-
                 return drawable;
 
             } catch (IOException e) {
@@ -147,19 +200,20 @@ public class MyImageGetter implements Html.ImageGetter{
 
         @Override
         protected void onPostExecute(Drawable drawable) {
+            super.onPostExecute(drawable);
+            /**
+             * 顺利的返回了drawable
+             */
             if (drawable != null) {
-                super.onPostExecute(drawable);
-
                 successCount++;
-
                 haveDown.put(s,drawable);
                 urls.remove(s);
                 if(urls.size()==0){
-                    Log.i("IMAGEGETTER","SEND CALL BACK");
+                    Log.i("IMAGEGETTER","SEND CALL BACK 全部下载已经完成");
                     listener.downloadCallBack(s,drawable);
                 }else {
                     /**
-                     * 每成功三次开始通知刷新
+                     * 每成功4次开始通知刷新
                      */
                     if(successCount>=STEP){
                         successCount=0;
@@ -169,13 +223,16 @@ public class MyImageGetter implements Html.ImageGetter{
                 }
             }
 
+            /**
+             * 下载队列还存在的话 继续下载
+             */
             if(urls.size()>0){
                 startDown();
             }
         }
     }
 
-    public interface ImageDownLoadListener{
+    interface ImageDownLoadListener{
         void downloadCallBack(String url,Drawable d);
     }
 

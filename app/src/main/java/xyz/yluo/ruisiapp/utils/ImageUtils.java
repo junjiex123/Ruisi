@@ -52,6 +52,7 @@ public class ImageUtils {
                                 fos.write(buffer, 0, len);
                             }
                             is.close();
+                            fos.flush();
                             fos.close();
                             // 返回一个URI对象
                             conn.disconnect();

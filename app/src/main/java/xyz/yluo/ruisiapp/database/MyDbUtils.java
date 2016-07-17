@@ -13,6 +13,7 @@ import java.util.Locale;
 
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.data.ForumListData;
+import xyz.yluo.ruisiapp.data.SchoolNewsData;
 import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
@@ -23,6 +24,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * + "read_time DATETIME,"
  */
 public class MyDbUtils {
+    private Context context;
     public static final int MODE_READ = 0;
     public static final int MODE_WRITE = 1;
 
@@ -38,11 +40,17 @@ public class MyDbUtils {
      */
     static final String TABLE_FORUM_LIST = "rs_forum_list";
 
+    /**
+     * 校内新闻数据表
+     */
+    static final String TABLE_SCHOOL_NEWS = "rs_news";
+
 
     private SQLiteDatabase db = null;    //数据库操作
 
     //构造函数
     public MyDbUtils(Context context, int mode) {
+        this.context = context;
         if (mode==MODE_WRITE) {
             this.db = new SQLiteHelper(context).getWritableDatabase();
         } else {
@@ -64,7 +72,7 @@ public class MyDbUtils {
         if (null == author) {
             author = "null";
         }
-        if (isRead(tid)) {
+        if (isArticleRead(tid)) {
             updateReadHistory(tid, title, author);
         } else {
             insertReadHistory(tid, title, author);
@@ -91,7 +99,7 @@ public class MyDbUtils {
     }
 
     //判断插入数据的ID是否已经存在数据库中。
-    private boolean isRead(String tid) {
+    private boolean isArticleRead(String tid) {
         String sql = "SELECT tid from " + TABLE_READ_HISTORY + " where tid = ?";
         String args[] = new String[]{String.valueOf(tid)};
         Cursor result = db.rawQuery(sql, args);
@@ -127,6 +135,13 @@ public class MyDbUtils {
         this.db.close();
 
         Log.e("mydb", tid + "updateReadHistory" + author);
+    }
+
+    public void clearHistory(){
+        String sql = "DELETE FROM " + TABLE_READ_HISTORY;
+        this.db.execSQL(sql);
+        this.db.close();
+        Log.e("mydb",  "clear TABLE_READ_HISTORY");
     }
 
     //删除操作,删除
@@ -177,6 +192,7 @@ public class MyDbUtils {
     public void setForums(List<ForumListData> datas){
         if(datas!=null&&datas.size()>0){
             clearForums();
+            this.db = new SQLiteHelper(context).getWritableDatabase();
             /**
              * "name VARCHAR(20) primary key,"
              + "fid VARCHAR(10),"
@@ -223,10 +239,80 @@ public class MyDbUtils {
         return datas;
     }
 
+    /**
+     * 清空板块数据库
+     */
     public void clearForums(){
-        String sql = "DELETE * FROM " + TABLE_FORUM_LIST;
+        String sql = "DELETE FROM " + TABLE_FORUM_LIST;
         this.db.execSQL(sql);
         this.db.close();
         Log.e("mydb",  "clear TABLE_FORUM_LIST");
     }
+
+
+    /**
+     * 新闻缓存
+     */
+    public void setNews(List<SchoolNewsData> datas){
+        if(datas!=null&&datas.size()>0){
+            clearForums();
+            /**
+             "title VARCHAR(50) primary key,"
+             + "url VARCHAR(50) NOT NULL,"
+             + "is_image INT,"
+             + "is_patch INT,"
+             + "post_time VARCHAR(20),"
+             + "is_read INT"
+             + ")";
+             */
+            for(SchoolNewsData d:datas){
+                String sql = "INSERT INTO " + TABLE_SCHOOL_NEWS+ " (title,url,is_image,is_patch,post_time,is_read)"
+                        + " VALUES(?,?,?,?,?)";
+                int is_read = d.isRead()?1:0;
+                int is_image = d.is_image()?1:0;
+                int is_patch = d.is_patch()?1:0;
+
+                Object args[] = new Object[]{d.getTitle(),d.getUrl(),is_image,is_patch,d.getPost_time(),is_read};
+                this.db.execSQL(sql, args);
+                Log.e("mydb",  "setNews"+d.getTitle());
+            }
+        }
+
+        this.db.close();
+    }
+
+
+    public void clearNews(){
+        String sql = "DELETE FROM " + TABLE_SCHOOL_NEWS;
+        this.db.execSQL(sql);
+        this.db.close();
+        Log.e("mydb",  "clear TABLE_SCHOOL_NEWS");
+    }
+
+    public void setSingleNewsRead(String url){
+
+        String sql = "UPDATE " + TABLE_SCHOOL_NEWS + " SET is_read =? WHERE url=?";
+        Object args[] = new Object[]{1,url};
+        this.db.execSQL(sql, args);
+        this.db.close();
+
+        Log.e("mydb", url + "setNewsRead");
+    }
+
+    public List<SchoolNewsData> getNewsList(List<SchoolNewsData> datas){
+        if(datas==null||datas.size()==0){
+            //todo return list<>
+        }else{
+            //todo setRead then reyturn
+        }
+
+        return null;
+
+    }
+
+
+
+
+
+
 }

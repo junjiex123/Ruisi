@@ -3,6 +3,7 @@ package xyz.yluo.ruisiapp.adapter;
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,25 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
      * 缓存楼主的一层
      */
     private SpannableStringBuilder strBuilderContent;
+
+    @Override
+    public void onViewDetachedFromWindow(BaseViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        Log.d("===========","===onViewDetachedFromWindow==="+(holder.getAdapterPosition()));
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        Log.d("===========","===onAttachedToRecyclerView===");
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        Log.d("===========","===onDetachedFromRecyclerView===");
+    }
+
 
     //数据
     private List<SingleArticleData> datalist;
@@ -162,6 +182,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             }
 
         }
+
 
     }
 
