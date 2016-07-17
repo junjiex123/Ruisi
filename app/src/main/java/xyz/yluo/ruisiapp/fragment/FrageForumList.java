@@ -23,7 +23,8 @@ import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyGridDivider;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
-import xyz.yluo.ruisiapp.data.FroumListData;
+import xyz.yluo.ruisiapp.data.ForumListData;
+import xyz.yluo.ruisiapp.database.MyDbUtils;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
@@ -34,12 +35,13 @@ import xyz.yluo.ruisiapp.utils.GetId;
  */
 public class FrageForumList extends BaseFragment {
 
-    public static final String TAG = FrageForumList.class.getSimpleName();
+    private static final String TAG = FrageForumList.class.getSimpleName();
     protected SwipeRefreshLayout refreshLayout;
     private TextView view_loading;
 
-    private List<FroumListData> datas = null;
+    private List<ForumListData> datas = null;
     private ForumListAdapter adapter = null;
+    private boolean isSetForumToDataBase = false;
 
     public static FrageForumList newInstance(boolean isLogin) {
         Bundle args = new Bundle();
@@ -48,7 +50,6 @@ public class FrageForumList extends BaseFragment {
         fragment.setArguments(args);
         return fragment;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,7 +70,10 @@ public class FrageForumList extends BaseFragment {
             }
         });
 
-        datas = new ArrayList<>();
+        MyDbUtils myDbUtils = new MyDbUtils(getActivity(),MyDbUtils.MODE_READ);
+        datas = myDbUtils.getForums();
+
+        //先从数据库读出数据
         adapter = new ForumListAdapter(datas, getActivity());
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -127,11 +131,11 @@ public class FrageForumList extends BaseFragment {
 
 
     //获取首页板块数据 板块列表
-    private class GetForumList extends AsyncTask<String, Void, List<FroumListData>> {
+    private class GetForumList extends AsyncTask<String, Void, List<ForumListData>> {
         @Override
-        protected List<FroumListData> doInBackground(String... params) {
+        protected List<ForumListData> doInBackground(String... params) {
             String response = params[0];
-            List<FroumListData> simpledatas = new ArrayList<>();
+            List<ForumListData> simpledatas = new ArrayList<>();
             Document document = Jsoup.parse(response);
             Elements elements = document.select("div#wp.wp.wm").select("div.bm.bmw.fl");
             //获得hash
@@ -143,21 +147,28 @@ public class FrageForumList extends BaseFragment {
 
             for (Element ele : elements) {
                 String header = ele.select("h2").text();
-                simpledatas.add(new FroumListData(true, header));
-
+                simpledatas.add(new ForumListData(true, header,"0",null));
                 for (Element tmp : ele.select("li")) {
                     String todayNew = tmp.select("span.num").text();
                     tmp.select("span.num").remove();
                     String title = tmp.text().replace("西电睿思", "");
                     String titleUrl = tmp.select("a").attr("href");
-                    simpledatas.add(new FroumListData(false, title, todayNew, titleUrl));
+                    String fid = GetId.getFroumFid(titleUrl);
+                    simpledatas.add(new ForumListData(false, title, todayNew, fid));
                 }
             }
+
+            if(!isSetForumToDataBase){
+                MyDbUtils myDbUtils = new MyDbUtils(getActivity(),MyDbUtils.MODE_WRITE);
+                myDbUtils.setForums(simpledatas);
+                isSetForumToDataBase = true;
+            }
+
             return simpledatas;
         }
 
         @Override
-        protected void onPostExecute(List<FroumListData> simpledatas) {
+        protected void onPostExecute(List<ForumListData> simpledatas) {
             datas.clear();
             datas.addAll(simpledatas);
             adapter.notifyDataSetChanged();
@@ -169,6 +180,7 @@ public class FrageForumList extends BaseFragment {
                     refreshLayout.setRefreshing(false);
                 }
             }, 500);
+
         }
     }
 }

@@ -36,7 +36,7 @@ import xyz.yluo.ruisiapp.fragment.FrageHome;
 import xyz.yluo.ruisiapp.fragment.FrageHotNew;
 import xyz.yluo.ruisiapp.fragment.FrageMessage;
 import xyz.yluo.ruisiapp.fragment.FrageTopicStarHistory;
-import xyz.yluo.ruisiapp.utils.GetUserImage;
+import xyz.yluo.ruisiapp.utils.ImageUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -150,7 +150,7 @@ public class HomeActivity extends BaseActivity
                 userGrade.setText(PublicData.USER_GRADE);
             }
             userName.setText(PublicData.USER_NAME);
-            Uri uri = GetUserImage.getImageURI(getFilesDir(), PublicData.USER_UID);
+            Uri uri = ImageUtils.getImageURI(getFilesDir(), PublicData.USER_UID);
             if (uri != null) {//图片存在
                 userImage.setImageURI(uri);
                 userImageTitle.setImageURI(uri);

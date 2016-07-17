@@ -55,8 +55,6 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
     private String touid = "";
     private long replyTime = 0;
 
-    private CircleImageView userImage;
-
     public static void open(Context context, String username, String url) {
         /*isopenfromwebview 是从webview打开的是新建的回话*/
         Intent intent = new Intent(context, ChatActivity.class);
@@ -74,7 +72,6 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
         btn_chat = (FloatingActionButton) findViewById(R.id.btn_chat);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
-        userImage = (CircleImageView) findViewById(R.id.user_detail_img_avatar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -187,8 +184,7 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Picasso.with(ChatActivity.this).load(UrlUtils.getAvaterurlb(touid)).placeholder(R.drawable.image_placeholder).into(userImage);
-            adapter.notifyDataSetChanged();
+             adapter.notifyDataSetChanged();
             recycler_view.scrollToPosition(datas.size());
             refreshLayout.postDelayed(new Runnable() {
                 @Override

@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -36,6 +38,7 @@ public class ArticleList extends ArticleListBase {
     private List<ArticleListData> datas;
     private ArticleListNormalAdapter mRecyleAdapter;
     private MyDbUtils myDbUtils = null;
+    private boolean hideZhidin = true;
 
     public static void open(Context context, int fid, String title) {
         Intent intent = new Intent(context, ArticleList.class);
@@ -48,8 +51,8 @@ public class ArticleList extends ArticleListBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        myDbUtils = new MyDbUtils(this, true);//数据库操作辅助类
 
+        hideZhidin = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("setting_hide_zhidin", true);
         actionBar.setTitle(CurrentTitle);
         datas = new ArrayList<>();
         mLayoutManager = new LinearLayoutManager(this);
@@ -167,9 +170,9 @@ public class ArticleList extends ArticleListBase {
                     String viewcount = src.getElementsByAttributeValue("class", "num").select("em").text();
                     String replaycount = src.getElementsByAttributeValue("class", "num").select("a").text();
 
-                    if (!PublicData.ISSHOW_ZHIDIN && type.equals("置顶")) {
-                        System.out.println("ignore zhidin");
-                    } else {
+                    if(hideZhidin&&type.equals("置顶")){
+                        Log.i("article list","ignore zhidin");
+                    }else {
                         if (title.length() > 0 && author.length() > 0) {
                             temp = new ArticleListData(title, titleUrl, type, author, authorUrl, time, viewcount, replaycount);
                             dataset.add(temp);
@@ -179,8 +182,8 @@ public class ArticleList extends ArticleListBase {
                 }
             }
 
-            myDbUtils = new MyDbUtils(getApplicationContext(), true);
-            return myDbUtils.handleList(dataset);
+            myDbUtils = new MyDbUtils(ArticleList.this, MyDbUtils.MODE_READ);
+            return myDbUtils.handReadHistoryList(dataset);
         }
 
         @Override
@@ -215,8 +218,8 @@ public class ArticleList extends ArticleListBase {
                 temp = new ArticleListData(hasImage, title, url, author, replyCount);
                 dataset.add(temp);
             }
-            myDbUtils = new MyDbUtils(getApplicationContext(), true);
-            return myDbUtils.handleList(dataset);
+            myDbUtils = new MyDbUtils(ArticleList.this, MyDbUtils.MODE_READ);
+            return myDbUtils.handReadHistoryList(dataset);
         }
 
         @Override

@@ -4,28 +4,23 @@ package xyz.yluo.ruisiapp.data;
  * Created by free2 on 16-3-19.
  * 单个板块数据
  */
-public class FroumListData {
+public class ForumListData {
     //title,img,url,actualnew
     private String title;
-    private String titleUrl;
+    private String fid;
     private String todayNew;
-
     //是不是头
     private boolean isheader;
 
-    public FroumListData(boolean isheader, String title, String todayNew, String titleUrl) {
+
+
+    public ForumListData(boolean isheader, String title, String todayNew, String fid) {
         this.title = title;
         this.todayNew = todayNew;
-        this.titleUrl = titleUrl;
-
+        this.fid = fid;
         this.isheader = isheader;
     }
 
-    //板块分类头
-    public FroumListData(boolean isheader, String title) {
-        this.title = title;
-        this.isheader = isheader;
-    }
 
     public boolean isheader() {
         return isheader;
@@ -39,8 +34,8 @@ public class FroumListData {
         this.title = title;
     }
 
-    public String getTitleUrl() {
-        return titleUrl;
+    public String getFid() {
+        return fid;
     }
 
     public String getTodayNew() {

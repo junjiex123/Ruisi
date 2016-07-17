@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -81,6 +82,8 @@ public class SingleArticleActivity extends BaseActivity
     private String Title, Author, Tid = "";
     private Spinner spinner;
 
+    private boolean showPlainText = false;
+
     public static void open(Context context, String url, @Nullable String title, @Nullable String author) {
         Intent intent = new Intent(context, SingleArticleActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -98,6 +101,8 @@ public class SingleArticleActivity extends BaseActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_article);
+
+        showPlainText =  PreferenceManager.getDefaultSharedPreferences(this).getBoolean("setting_show_plain",false);
         LinearLayout bottom_bar = (LinearLayout) findViewById(R.id.bottom_bar);
         spinner = (Spinner) findViewById(R.id.btn_jump_spinner);
         spinnerAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,pageSpinnerDatas);
@@ -467,7 +472,7 @@ public class SingleArticleActivity extends BaseActivity
                 Elements contentels = temp.select(".message");
 
                 //是否移除所有样式
-                if (PublicData.ISSHOW_PLAIN) {
+                if(showPlainText){
                     //移除所有style
                     contentels.select("[style]").removeAttr("style");
                     contentels.select("font").removeAttr("color").removeAttr("size").removeAttr("face");
@@ -515,8 +520,8 @@ public class SingleArticleActivity extends BaseActivity
             if (!isSaveToDataBase) {
                 //插入数据库
                 Log.i("insert ", "tid:" + Tid + "title:" + Title + "author:" + Author);
-                MyDbUtils myDbUtils = new MyDbUtils(getApplicationContext(), false);
-                myDbUtils.handleSingle(Tid, Title, Author);//String Tid,String title,String author
+                MyDbUtils myDbUtils = new MyDbUtils(SingleArticleActivity.this, MyDbUtils.MODE_WRITE);
+                myDbUtils.handSingleReadHistory(Tid, Title, Author);//String Tid,String title,String author
                 isSaveToDataBase = true;
             }
             int add = tepdata.size();

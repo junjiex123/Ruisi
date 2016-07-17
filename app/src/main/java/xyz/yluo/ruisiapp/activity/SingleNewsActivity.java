@@ -101,7 +101,7 @@ public class SingleNewsActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_article_normal, menu);
+        getMenuInflater().inflate(R.menu.menu_single_news, menu);
         return true;
     }
 

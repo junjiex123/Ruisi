@@ -141,10 +141,9 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
 
         if (currentIndex == 2) {
             //datas.add()
-            MyDbUtils myDbUtils = new MyDbUtils(getActivity(), true);
+            MyDbUtils myDbUtils = new MyDbUtils(getActivity(), MyDbUtils.MODE_READ);
             for (ArticleListData data : myDbUtils.getHistory(30)) {
-
-                //Log.i("history",data.getTitleUrl());
+                //Log.i("history",data.getFid());
                 datas.add(new SimpleListData(data.getTitle(), data.getAuthor(), "tid=" + data.getTitleUrl()));
             }
             datas.add(new SimpleListData("暂无更多", "", ""));

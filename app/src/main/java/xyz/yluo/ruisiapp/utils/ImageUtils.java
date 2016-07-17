@@ -1,19 +1,25 @@
 package xyz.yluo.ruisiapp.utils;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import xyz.yluo.ruisiapp.R;
 
 /**
  * Created by free2 on 16-7-13.
  * 获取用户头像
  */
-public class GetUserImage {
+public class ImageUtils {
     /*
      * 从网络上获取图片，如果图片在本地存在的话就直接拿，如果不存在再去服务器上下载图片
      * 这里的path是图片的地址
@@ -57,6 +63,22 @@ public class GetUserImage {
                 }
             }.start();
             return null;
+        }
+    }
+
+
+    /**
+     * 获得板块图标
+     * @param contex
+     * @param fid
+     * @return
+     */
+    public static Drawable getForunlogo(Context contex, String fid) {
+        try {
+            InputStream ims = contex.getAssets().open("forumlogo/common_" + fid + "_icon.gif");
+            return Drawable.createFromStream(ims, null);
+        } catch (IOException ex) {
+            return ContextCompat.getDrawable(contex, R.drawable.image_placeholder);
         }
     }
 }

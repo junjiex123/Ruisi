@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string-array name="setting_switch_url">
-        <item>根据网络自动切换</item>
         <item>内网，校园网环境下才可使用</item>
         <item>外网，移动网络下使用</item>
     </string-array>
     <string-array name="setting_switch_url_value">
-        <item>0</item>
         <item>1</item>
         <item>2</item>
     </string-array>

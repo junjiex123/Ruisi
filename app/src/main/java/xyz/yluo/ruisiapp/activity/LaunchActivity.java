@@ -29,7 +29,7 @@ import xyz.yluo.ruisiapp.database.MyDbUtils;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
-import xyz.yluo.ruisiapp.utils.GetUserImage;
+import xyz.yluo.ruisiapp.utils.ImageUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -63,9 +63,11 @@ public class LaunchActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
+
         launch_text = (TextView) findViewById(R.id.launch_text);
         Button btn_inner = (Button) findViewById(R.id.btn_login_inner);
         Button btn_outer = (Button) findViewById(R.id.btn_login_outer);
+        findViewById(R.id.login_fail_view).setVisibility(View.GONE);
         user_image = (CircleImageView) findViewById(R.id.user_image);
         user_image.setVisibility(View.GONE);
         starttime = System.currentTimeMillis();
@@ -107,8 +109,8 @@ public class LaunchActivity extends BaseActivity {
             }
         });
 
-        MyDbUtils myDbUtils = new MyDbUtils(this, true);
-        myDbUtils.showDatabase();
+        MyDbUtils myDbUtils = new MyDbUtils(this, MyDbUtils.MODE_READ);
+        myDbUtils.showHistoryDatabase();
 
     }
 
@@ -121,21 +123,16 @@ public class LaunchActivity extends BaseActivity {
         Log.i("LaunchActivity", uid);
 
         if (!uid.equals("0")) {
-            Uri uri = GetUserImage.getImageURI(getFilesDir(), uid);
+            Uri uri = ImageUtils.getImageURI(getFilesDir(), uid);
             if (uri != null) {
                 user_image.setVisibility(View.VISIBLE);
                 user_image.setImageURI(uri);
             }
         }
 
-        String urlSetting = shp.getString("setting_forums_url", "0");
-        boolean isShowZhidin = shp.getBoolean("setting_show_zhidin", false);
-        //boolean theme = shp.getBoolean("setting_swich_theme",false);
-        boolean setting_show_plain = shp.getBoolean("setting_show_plain", false);
-        isrecieveMessage = shp.getBoolean("setting_show_notify", false);
 
-        PublicData.ISSHOW_ZHIDIN = isShowZhidin;
-        PublicData.ISSHOW_PLAIN = setting_show_plain;
+        //boolean theme = shp.getBoolean("setting_swich_theme",false);
+        isrecieveMessage = shp.getBoolean("setting_show_notify", false);
     }
 
     @Override

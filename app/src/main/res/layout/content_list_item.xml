@@ -11,7 +11,6 @@
         android:layout_width="6dp"
         android:layout_height="24dp"
         android:background="@color/colorAccent"
-        android:id="@+id/view"
         app:layout_constraintTop_toTopOf="@+id/main_window"
         app:layout_constraintLeft_toLeftOf="@+id/main_window"
         android:layout_marginTop="12dp" />

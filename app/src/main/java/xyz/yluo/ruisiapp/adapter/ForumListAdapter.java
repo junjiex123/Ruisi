@@ -15,9 +15,8 @@ import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.ArticleList;
 import xyz.yluo.ruisiapp.activity.ArticleListImage;
-import xyz.yluo.ruisiapp.data.FroumListData;
-import xyz.yluo.ruisiapp.utils.GetId;
-import xyz.yluo.ruisiapp.utils.GetLogoUtils;
+import xyz.yluo.ruisiapp.data.ForumListData;
+import xyz.yluo.ruisiapp.utils.ImageUtils;
 
 /**
  * Created by free2 on 16-3-19.
@@ -26,9 +25,9 @@ import xyz.yluo.ruisiapp.utils.GetLogoUtils;
 public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     protected Activity activity;
-    private List<FroumListData> datas = null;
+    private List<ForumListData> datas = null;
 
-    public ForumListAdapter(List<FroumListData> dataSet, Activity activity) {
+    public ForumListAdapter(List<ForumListData> dataSet, Activity activity) {
         this.activity = activity;
         this.datas = dataSet;
     }
@@ -94,7 +93,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @Override
         void setData(int position) {
-            final FroumListData single = datas.get(position);
+            final ForumListData single = datas.get(position);
             title.setText(single.getTitle());
             if (!single.getTodayNew().isEmpty()) {
                 today_count.setVisibility(View.VISIBLE);
@@ -102,14 +101,14 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             } else {
                 today_count.setVisibility(View.GONE);
             }
-            String url = single.getTitleUrl();
-            Drawable dra = GetLogoUtils.getlogo(activity, url);
+            String url = single.getFid();
+            Drawable dra = ImageUtils.getForunlogo(activity, url);
             img.setImageDrawable(dra);
 
             container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String fid = GetId.getFroumFid(single.getTitleUrl());
+                    String fid = single.getFid();
                     //几个特殊的板块
                     if (PublicData.IS_SCHOOL_NET && (fid.equals("561") || fid.equals("157") || fid.equals("13"))) {
                         ArticleListImage.open(activity, Integer.parseInt(fid), single.getTitle());

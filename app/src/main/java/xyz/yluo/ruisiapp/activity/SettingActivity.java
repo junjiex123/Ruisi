@@ -9,7 +9,6 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.preference.SwitchPreference;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
@@ -71,13 +70,9 @@ public class SettingActivity extends PreferenceActivity {
 
         //小尾巴string
         private EditTextPreference setting_user_tail;
-        private SwitchPreference setting_show_tail;
-
         //论坛地址
         private ListPreference setting_forums_url;
-
         private SharedPreferences sharedPreferences;
-
         private Preference about_this, clear_cache, open_sourse;
 
         @Override
@@ -87,7 +82,6 @@ public class SettingActivity extends PreferenceActivity {
 
             setting_user_tail = (EditTextPreference) findPreference("setting_user_tail");
             setting_forums_url = (ListPreference) findPreference("setting_forums_url");
-            setting_show_tail = (SwitchPreference) findPreference("setting_show_tail");
             about_this = findPreference("about_this");
             open_sourse = findPreference("open_sourse");
             clear_cache = findPreference("clean_cache");
@@ -98,6 +92,7 @@ public class SettingActivity extends PreferenceActivity {
             boolean b = sharedPreferences.getBoolean("setting_show_tail", false);
             setting_user_tail.setEnabled(b);
             setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail", "无小尾巴"));
+            setting_forums_url.setSummary(PublicData.IS_SCHOOL_NET?"当前网络校园网，点击切换":"当前网络校外网，点击切换");
 
 
             Log.i("is show tail", "" + sharedPreferences.getBoolean("setting_show_tail", false));
@@ -181,26 +176,23 @@ public class SettingActivity extends PreferenceActivity {
                     return false;
                 }
             });
-
-
         }
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             switch (key) {
                 case "setting_forums_url":
-                    switch (sharedPreferences.getString("setting_forums_url", "0")) {
-                        case "0":
-                            setting_forums_url.setSummary("自动切换");
-                            break;
+                    switch (sharedPreferences.getString("setting_forums_url", "2")) {
                         case "1":
-                            setting_forums_url.setSummary("内网:http://rs.xidian.edu.cn/");
+                            setting_forums_url.setSummary("当前网络校园网，点击切换");
+                            PublicData.IS_SCHOOL_NET = true;
                             break;
                         case "2":
-                            setting_forums_url.setSummary("外网:http://bbs.rs.xidian.me/");
+                            setting_forums_url.setSummary("当前网络校外网，点击切换");
+                            PublicData.IS_SCHOOL_NET = false;
                             break;
                     }
-
+                    Toast.makeText(getActivity(),"切换网络成功!",Toast.LENGTH_SHORT).show();
                     break;
                 case "setting_show_tail":
                     boolean b = sharedPreferences.getBoolean("setting_show_tail", false);
@@ -210,11 +202,13 @@ public class SettingActivity extends PreferenceActivity {
                 case "setting_user_tail":
                     setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail", "无小尾巴"));
                     break;
-                case "setting_show_zhidin":
-                    PublicData.ISSHOW_ZHIDIN = sharedPreferences.getBoolean("setting_show_zhidin", false);
+                case "setting_hide_zhidin":
+                    boolean bbbb = sharedPreferences.getBoolean("setting_hide_zhidin",true);
+                    Toast.makeText(getActivity(),bbbb?"帖子列表不显示置顶帖":"帖子列表显示置顶帖",Toast.LENGTH_SHORT).show();
                     break;
                 case "setting_show_plain":
-                    PublicData.ISSHOW_PLAIN = sharedPreferences.getBoolean("setting_show_plain", false);
+                    bbbb = sharedPreferences.getBoolean("setting_show_plain",false);
+                    Toast.makeText(getActivity(),bbbb?"文章显示模式：简洁":"文章显示模式：默认",Toast.LENGTH_SHORT).show();
                     break;
             }
         }

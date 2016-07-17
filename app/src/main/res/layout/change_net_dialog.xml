@@ -9,7 +9,6 @@
     android:paddingTop="@dimen/dimen_8">
 
     <TextView
-        android:id="@+id/reply_ref"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/bluegrey50"

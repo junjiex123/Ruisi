@@ -20,10 +20,6 @@ public class PublicData extends Application {
     public static boolean ISLOGIN = false;
     //用户名
     public static String USER_NAME = "";
-    //是否显示置顶帖
-    public static boolean ISSHOW_ZHIDIN = false;
-    //是否将文章页面的样式删除
-    public static boolean ISSHOW_PLAIN = false;
     //user uid
     public static String USER_UID = "";
     public static String USER_GRADE = "";
