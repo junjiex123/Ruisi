@@ -30,6 +30,11 @@ public class MyImageGetter implements Html.ImageGetter{
     private Context context;
     private boolean isRunning  = false;
     private List<String> urls;
+    /**
+     * 每4张更新一次
+     */
+    private final int STEP = 4;
+
     private int successCount = 0;
 
     private Map<String,Drawable> haveDown;
@@ -130,7 +135,7 @@ public class MyImageGetter implements Html.ImageGetter{
                     return null;
                 }
                 Drawable drawable = new BitmapDrawable(context.getResources(), bm);
-                drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+                drawable.setBounds(0, 0, drawable.getIntrinsicWidth()*3, drawable.getIntrinsicHeight()*3);
 
                 return drawable;
 
@@ -156,7 +161,7 @@ public class MyImageGetter implements Html.ImageGetter{
                     /**
                      * 每成功三次开始通知刷新
                      */
-                    if(successCount>=3){
+                    if(successCount>=STEP){
                         successCount=0;
                         listener.downloadCallBack(s,drawable);
                         Log.i("IMAGEGETTER","SEND CALL BACK");

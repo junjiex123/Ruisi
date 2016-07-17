@@ -21,6 +21,7 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.PublicData;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.MyGridDivider;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
 import xyz.yluo.ruisiapp.data.FroumListData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
@@ -81,6 +82,8 @@ public class FrageForumList extends BaseFragment {
                 }
             }
         });
+
+        recyclerView.addItemDecoration(new MyGridDivider(2));
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 

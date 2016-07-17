@@ -1,8 +1,8 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +13,10 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-import java.util.Map;
 
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
-import xyz.yluo.ruisiapp.View.MyHtmlView.CustomQuoteSpan;
 import xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView;
-import xyz.yluo.ruisiapp.View.MyHtmlView.MyImageGetter;
-import xyz.yluo.ruisiapp.View.MyWebView;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.LoadMoreType;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
@@ -41,11 +37,10 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
     public final int LOAD_MORE = 2;
     private LoadMoreType loadMoreType = LoadMoreType.LOADING;
     private ScrollToSomePosition scrollToSomePosition;
-
     /**
-     * 保存数据 因为产生比较蛋疼
+     * 缓存楼主的一层
      */
-    private List<CharSequence> htmlContents;
+    private SpannableStringBuilder strBuilderContent;
 
     //数据
     private List<SingleArticleData> datalist;
@@ -159,7 +154,13 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             String post_time = "发表于:" + single.getPostTime();
             article_post_time.setText(post_time);
             //myWebView.setContent(single.getCotent());
-            myHtmlTextView.setHtmlText(single.getCotent(), true);
+            if(strBuilderContent==null){
+                myHtmlTextView.setHtmlText(single.getCotent(), true);
+                strBuilderContent = myHtmlTextView.getStrBuilderContent();
+            }else{
+                myHtmlTextView.setSpannedHtmlText(strBuilderContent);
+            }
+
         }
 
     }
@@ -200,7 +201,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
 
         //设置listItem的数据
         @Override
-        void setData(final int position) {
+        void setData(int position) {
             final SingleArticleData single = datalist.get(position);
 
             replay_author.setText(single.getUsername());

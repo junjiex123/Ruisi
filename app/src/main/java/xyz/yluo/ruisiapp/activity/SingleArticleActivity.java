@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -409,20 +410,13 @@ public class SingleArticleActivity extends BaseActivity
             String htmlData = params[0];
             //list 所有楼数据
             Document doc = Jsoup.parse(htmlData);
-            Log.i("==header===",doc.head().html());
+
             if (!isGetTitle) {
-                String titleText = doc.select("title").text();
-                String[] array = titleText.split("-");
-                int len = array.length;
-                if (len >= 5) {
-                    Title = "";
-                    for (int lnea = 0; lnea < len - 4; lnea++) {
-                        Title = Title + array[lnea] + "-";
-                        if (lnea == len - 5) {
-                            Title = Title.substring(0, Title.length() - 2);
-                        }
-                    }
-                }
+                int ih = htmlData.indexOf("keywords");
+                int h_start = htmlData.indexOf('\"',ih+15);
+                int h_end = htmlData.indexOf('\"',h_start+1);
+                Title = htmlData.substring(h_start+1,h_end);
+                Log.i("==title===","================="+Title);
                 isGetTitle = true;
             }
             //获取回复/hash
@@ -503,6 +497,9 @@ public class SingleArticleActivity extends BaseActivity
                 //这是内容
                 if (commentindex.contains("楼主") || commentindex.contains("收藏")) {
                     String newtime = posttime.replace("收藏", "");
+                    if(TextUtils.isEmpty(Author)){
+                        Author = username;
+                    }
                     data = new SingleArticleData(SingleType.CONTENT, Title, userimg, username, newtime, commentindex, replyUrl, finalcontent);
                 } else {
                     data = new SingleArticleData(SingleType.COMMENT, Title, userimg, username, posttime, commentindex, replyUrl, finalcontent);

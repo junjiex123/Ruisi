@@ -36,8 +36,12 @@ public class MyHtmlTextView extends TextView implements MyImageGetter.ImageDownL
     private Context context;
     private MyImageGetter myImageGetter;
     private MyTagHandle myTagHandle;
-    SpannableStringBuilder strBuilderContent;
+    private SpannableStringBuilder strBuilderContent;
 
+
+    public SpannableStringBuilder getStrBuilderContent() {
+        return strBuilderContent;
+    }
 
     public MyHtmlTextView(Context context) {
         super(context);
@@ -73,11 +77,14 @@ public class MyHtmlTextView extends TextView implements MyImageGetter.ImageDownL
         if(isLoadImage&&myImageGetter==null){
             myImageGetter = new MyImageGetter(context,this);
         }
-        if(strBuilderContent==null){
-            Log.i("my htmltext","=====new strBuilderContent=====");
-            strBuilderContent =  getSequence(context,txt, myImageGetter, myTagHandle);
-        }
+        Log.i("my htmltext","=====new strBuilderContent=====");
+        strBuilderContent =  getSequence(context,txt, myImageGetter, myTagHandle);
         setText(strBuilderContent);
+    }
+
+    public void setSpannedHtmlText(SpannableStringBuilder t){
+        this.strBuilderContent = t;
+        setText(t);
     }
 
     private void upDateTextImage(){
@@ -159,9 +166,7 @@ public class MyHtmlTextView extends TextView implements MyImageGetter.ImageDownL
             if(d!=null)
             d.setBounds(0, 0, 80, 80);
         }
-
-
-        strBuilder.setSpan(new ImageSpan(d, src), start, end, flags);
+        strBuilder.setSpan(new CustomImageSpan(d, src), start, end, flags);
     }
 
     private  void replaceQuoteSpans(final SpannableStringBuilder strBuilder, final QuoteSpan quoteSpan) {
