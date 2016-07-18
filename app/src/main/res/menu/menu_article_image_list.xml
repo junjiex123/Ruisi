@@ -6,8 +6,4 @@
         android:icon="@drawable/ic_column_change_24dp"
         android:title="切换列数"
         app:showAsAction="always"/>
-    <item
-        android:id="@+id/menu_setting"
-        android:icon="@drawable/ic_settings_24dp"
-        android:title="设置" />
 </menu>

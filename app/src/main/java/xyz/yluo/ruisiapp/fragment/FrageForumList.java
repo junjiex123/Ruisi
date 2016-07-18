@@ -37,7 +37,6 @@ public class FrageForumList extends BaseFragment {
 
     private static final String TAG = FrageForumList.class.getSimpleName();
     protected SwipeRefreshLayout refreshLayout;
-    private TextView view_loading;
 
     private List<ForumListData> datas = null;
     private ForumListAdapter adapter = null;
@@ -59,7 +58,6 @@ public class FrageForumList extends BaseFragment {
         View view = inflater.inflate(R.layout.frage_forum_list, container, false);
 
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
-        view_loading = (TextView) view.findViewById(R.id.view_loading);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         //刷新
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
@@ -172,7 +170,6 @@ public class FrageForumList extends BaseFragment {
             datas.addAll(simpledatas);
             adapter.notifyDataSetChanged();
 
-            view_loading.setVisibility(View.GONE);
             refreshLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {

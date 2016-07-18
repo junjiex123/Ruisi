@@ -23,9 +23,6 @@ public class BaseActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 break;
-            case R.id.menu_setting:
-                startActivity(new Intent(getApplicationContext(), SettingActivity.class));
-                return true;
             case R.id.new_topic:
                 startActivity(new Intent(getApplicationContext(), NewArticleActivity_2.class));
                 return true;

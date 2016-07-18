@@ -2,6 +2,7 @@ package xyz.yluo.ruisiapp.data;
 
 /**
  * Created by free2 on 16-7-14.
+ * frage 标志
  */
 public class FrageType {
     public static final int START = 0;
@@ -11,4 +12,5 @@ public class FrageType {
     public static final int HELP = 4;
     public static final int TOPIC = 5;
     public static final int HOME = 6;
+    public static final int SETTING = 7;
 }

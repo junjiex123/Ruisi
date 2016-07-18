@@ -68,11 +68,9 @@
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
-    <fragment
-        android:id="@+id/fragment_home"
-        android:name="xyz.yluo.ruisiapp.fragment.FrageHome"
+    <FrameLayout
+        android:id="@+id/fragment_home_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:layout="@layout/fragement_home" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 </android.support.design.widget.CoordinatorLayout>

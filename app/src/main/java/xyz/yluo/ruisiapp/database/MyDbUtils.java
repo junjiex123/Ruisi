@@ -205,7 +205,6 @@ public class MyDbUtils {
                 int isHeader = d.isheader()?1:0;
                 Object args[] = new Object[]{d.getTitle(), d.getFid(), d.getTodayNew(), isHeader};
                 this.db.execSQL(sql, args);
-                Log.e("mydb",  "setForums"+d.getTitle());
             }
         }
 

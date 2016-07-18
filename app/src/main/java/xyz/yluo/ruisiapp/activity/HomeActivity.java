@@ -31,6 +31,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.ChangeNetDialog;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.data.FrageType;
+import xyz.yluo.ruisiapp.fragment.FragSetting;
 import xyz.yluo.ruisiapp.fragment.FrageFriends;
 import xyz.yluo.ruisiapp.fragment.FrageHelp;
 import xyz.yluo.ruisiapp.fragment.FrageHome;
@@ -46,10 +47,14 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 1.板块列表{@link HomeActivity}
  * 2.新帖{@link FrageHotNew}
  * 3.新闻{@link xyz.yluo.ruisiapp.fragment.FrageNews}
+ * 第一次创建 oncreate->onstart->onresume->running
+ * 从别的 activity 退回->restart->onstart->resume->running
+ * 别的activity挡住了但是还能看到  onresume->running
  */
 public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, DrawerLayout.DrawerListener {
 
+    private final String TAG = "HomeActivity";
     private DrawerLayout drawer;
     private NavigationView navigationView;
     private TextView usernameTitle;
@@ -61,10 +66,12 @@ public class HomeActivity extends BaseActivity
     private int clickId = 0;
     private CircleImageView userImage;
     private long mExitTime;
+    private Fragment currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e(TAG,"onCreate");
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -81,68 +88,40 @@ public class HomeActivity extends BaseActivity
             actionBar.setDisplayShowTitleEnabled(false);
         }
 
-        init();
+        drawer.addDrawerListener(this);
+        findViewById(R.id.toolbar_view).setOnClickListener(this);
+        final View header = navigationView.getHeaderView(0);
+        userImage = (CircleImageView) header.findViewById(R.id.profile_image);
+        message_badge_nav = header.findViewById(R.id.message_badge_nav);
+        userImage.setOnClickListener(this);
+        header.findViewById(R.id.change_net).setOnClickListener(this);
+
+        ImageView btn_show_message = (ImageView) header.findViewById(R.id.show_message);
+        btn_show_message.setOnClickListener(this);
+        message_badge_nav.setVisibility(View.INVISIBLE);
+        message_badge_toolbar.setVisibility(View.INVISIBLE);
 
         if (!getIntent().getBooleanExtra("isLogin", false)) {
             drawer.openDrawer(GravityCompat.START);
         }
-
         navigationView.setNavigationItemSelectedListener(this);
-
-
         //注册检查消息广播
         myMsgReceiver = new msgReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("com.ruisi.checkmsg");
         registerReceiver(myMsgReceiver, intentFilter);
-        updateLoginView();
-    }
-
-
-    private void init() {
-        drawer.addDrawerListener(this);
-        findViewById(R.id.toolbar_view).setOnClickListener(this);
-
-        final View header = navigationView.getHeaderView(0);
-        userImage = (CircleImageView) header.findViewById(R.id.profile_image);
-        message_badge_nav = header.findViewById(R.id.message_badge_nav);
-        userImage.setOnClickListener(this);
-
-        header.findViewById(R.id.change_net).setOnClickListener(this);
-
-        ImageView btn_show_message = (ImageView) header.findViewById(R.id.show_message);
-        btn_show_message.setOnClickListener(this);
-
-        message_badge_nav.setVisibility(View.INVISIBLE);
-        message_badge_toolbar.setVisibility(View.INVISIBLE);
+        currentFragment = new FrageHome();
+        String tag = PublicData.ISLOGIN?PublicData.USER_NAME:getString(R.string.app_name);
+        getFragmentManager().beginTransaction().replace(R.id.fragment_home_container,currentFragment,tag).commit();
     }
 
     @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            if ((System.currentTimeMillis() - mExitTime) > 1500) {
-                Toast.makeText(this, "再按一次退出手机睿思", Toast.LENGTH_SHORT).show();
-                mExitTime = System.currentTimeMillis();
-            } else {
-                finish();
-            }
-        }
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        clickId = item.getItemId();
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    private void updateLoginView() {
+    protected void onStart() {
+        super.onStart();
+        Log.e(TAG,"onStart");
         final View header = navigationView.getHeaderView(0);
         TextView userName = (TextView) header.findViewById(R.id.header_user_name);
         TextView userGrade = (TextView) header.findViewById(R.id.user_grade);
-
         //判断是否登陆
         if (PublicData.ISLOGIN&& !TextUtils.isEmpty(PublicData.USER_NAME)) {
             userGrade.setVisibility(View.VISIBLE);
@@ -170,8 +149,27 @@ public class HomeActivity extends BaseActivity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG,"onResume");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e(TAG,"onPause");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e(TAG,"onRestart");
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.e(TAG,"onDestroy");
         Intent i = new Intent(this, CheckMessageService.class);
         stopService(i);
 
@@ -181,87 +179,144 @@ public class HomeActivity extends BaseActivity
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e(TAG,"onStop");
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }else if(!(currentFragment instanceof FrageHome)){
+            changeFragement(FrageType.HOME);
+        }else {
+            if ((System.currentTimeMillis() - mExitTime) > 1500) {
+                Toast.makeText(this, "再按一次退出手机睿思", Toast.LENGTH_SHORT).show();
+                mExitTime = System.currentTimeMillis();
+            } else {
+                finish();
+            }
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        clickId = item.getItemId();
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // super.onSaveInstanceState(outState);
+        //不然保存状态 放置白屏
+    }
+
+
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
     }
 
     private void changeFragement(int id) {
+        /**
+         * replace 一定会执行 子fragment 的 oncreate  oncreateView
+         * 还会执行上一个fragment 的destroy
+         * 所以常用的fragment用show 和 hide 比较好
+         * replace 自己和自己是不会执行任何的函数的
+         */
         FragmentManager fm = getFragmentManager();
         // 开启Fragment事务
-        FragmentTransaction transaction = fm.beginTransaction();
-        Fragment currentFragment = fm.findFragmentById(R.id.fragment_home);
         toolbarImageContainer.setVisibility(View.GONE);
+        Fragment f = null;
+        String Tag = "首页";
         switch (id) {
             case FrageType.MESSAGE:
-                usernameTitle.setText("我的消息");
-                Fragment f = fm.findFragmentByTag("MESSAGE");
+                Tag = "我的消息";
+                f = fm.findFragmentByTag(Tag);
                 if(f==null){
                     f = new FrageMessage();
                 }
-                // 加上tag可以被找到
-                transaction.replace(R.id.fragment_home, f, "MESSAGE");
                 break;
             case FrageType.FRIEND:
-                usernameTitle.setText("我的好友");
-                f = fm.findFragmentByTag("FRIEND");
+                Tag = "我的好友";
+                f = fm.findFragmentByTag(Tag);
                 if(f==null){
                     f = new FrageFriends();
                 }
-                transaction.replace(R.id.fragment_home, f, "FRIEND");
                 break;
+
             case FrageType.TOPIC:
-                usernameTitle.setText("我的帖子");
-                f =  fm.findFragmentByTag("TOPIC");
+                Tag = "我的帖子";
+                f = fm.findFragmentByTag(Tag);
                 if(f==null){
-                    f =  FrageTopicStarHistory.newInstance(FrageType.TOPIC);
+                    f = FrageTopicStarHistory.newInstance(FrageType.TOPIC);
                 }
-                transaction.replace(R.id.fragment_home, f, "TOPIC");
                 break;
             case FrageType.START:
-                usernameTitle.setText("我的收藏");
-                f = fm.findFragmentByTag("STAR");
+                Tag = "我的收藏";
+                f = fm.findFragmentByTag(Tag);
                 if(f==null){
                     f = FrageTopicStarHistory.newInstance(FrageType.START);
                 }
-                transaction.replace(R.id.fragment_home, f, "STAR");
                 break;
             case FrageType.HISTORY:
-                usernameTitle.setText("浏览历史");
-                f = fm.findFragmentByTag("HISTORY");
+                Tag = "浏览历史";
+                f = fm.findFragmentByTag(Tag);
                 if(f==null){
                     f = FrageTopicStarHistory.newInstance(FrageType.HISTORY);
                 }
-                transaction.replace(R.id.fragment_home, f, "HISTORY");
                 break;
             case FrageType.HELP:
-                usernameTitle.setText("帮助");
-                f = fm.findFragmentByTag("HELP");
+                Tag = "帮助";
+                f = fm.findFragmentByTag(Tag);
                 if(f==null){
                     f = new FrageHelp();
                 }
-                transaction.replace(R.id.fragment_home, f, "HELP");
                 break;
             case FrageType.HOME:
                 toolbarImageContainer.setVisibility(View.VISIBLE);
-                if (currentFragment instanceof FrageHome) {
-                    Log.i("same fragemnt", "do nothing");
-                    return;
-                }
                 if (PublicData.ISLOGIN) {
-                    usernameTitle.setText(PublicData.USER_NAME);
+                    Tag = PublicData.USER_NAME;
                 } else {
-                    usernameTitle.setText(getString(R.string.app_name));
+                    Tag = getString(R.string.app_name);
                 }
-                f = fm.findFragmentByTag("HOME");
+                f = fm.findFragmentByTag(Tag);
                 if(f==null){
                     f = new FrageHome();
                 }
-                transaction.replace(R.id.fragment_home, f, "HOME");
+                break;
+            case FrageType.SETTING:
+                Tag = "设置";
+                f = fm.findFragmentByTag(Tag);
+                if(f==null){
+                    f = new FragSetting();
+                }
                 break;
         }
-        // 事务提交
-        transaction.commit();
+        switchContent(f,Tag);
+    }
+
+    private void switchContent(Fragment to, String Tag) {
+        FragmentManager fm = getFragmentManager();
+        if (currentFragment != to) {
+            usernameTitle.setText(Tag);
+            FragmentTransaction transaction = fm.beginTransaction();
+//            .setCustomAnimations(
+//                    android.R.anim.fade_in, R.anim.slide_out);
+            if (!to.isAdded()) {    // 先判断是否被add过
+                Log.e("===","to is not added");
+                transaction.hide(currentFragment).add(R.id.fragment_home_container, to,Tag).commit(); // 隐藏当前的fragment，add下一个到Activity中
+            } else {
+                Log.e("===","to is  added");
+                transaction.hide(currentFragment).show(to).commit(); // 隐藏当前的fragment，显示下一个
+            }
+
+            currentFragment = to;
+        }
     }
 
     @Override
@@ -305,7 +360,6 @@ public class HomeActivity extends BaseActivity
             Bundle b=data.getExtras(); //data为B中回传的Intent
             String str=b.getString("status");//str即为回传的值
             Log.i("login status",str);
-            updateLoginView();
         }
     }
 
@@ -328,7 +382,7 @@ public class HomeActivity extends BaseActivity
                 startActivity(new Intent(getApplicationContext(), AboutActivity.class));
                 break;
             case R.id.nav_setting:
-                startActivity(new Intent(getApplicationContext(), SettingActivity.class));
+                changeFragement(FrageType.SETTING);
                 break;
             case R.id.nav_sign:
                 if (PublicData.IS_SCHOOL_NET) {
