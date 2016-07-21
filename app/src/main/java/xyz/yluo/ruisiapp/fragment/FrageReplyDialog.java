@@ -402,7 +402,7 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
             Log.i("reply resoult",res);
             if (res.contains("成功") || res.contains("层主")) {
                 Toast.makeText(getActivity(), "回复发表成功", Toast.LENGTH_SHORT).show();
-                sendCallBack(Activity.RESULT_OK,"test");
+                sendCallBack(Activity.RESULT_OK,input.getText().toString());
                 input.setText("");
                 dismiss();
             } else if (res.contains("您两次发表间隔")) {
@@ -1159,7 +1159,7 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
 
     private void sendCallBack(int status,String info){
         if(callBack!=null){
-            callBack.onReplyFinish(status,"test");
+            callBack.onReplyFinish(status,info);
         }
     }
 

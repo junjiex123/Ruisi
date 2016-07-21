@@ -11,4 +11,5 @@
     android:singleLine="true"
     android:textAlignment="inherit"
     android:textColor="@android:color/white"
-    android:textSize="18sp" />
+    android:textSize="18sp"
+    android:text="text"/>

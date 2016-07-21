@@ -7,8 +7,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -105,11 +107,7 @@ public class HomeActivity extends BaseActivity
             drawer.openDrawer(GravityCompat.START);
         }
         navigationView.setNavigationItemSelectedListener(this);
-        //注册检查消息广播
-        myMsgReceiver = new msgReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("com.ruisi.checkmsg");
-        registerReceiver(myMsgReceiver, intentFilter);
+
         currentFragment = new FrageHome();
         String tag = PublicData.ISLOGIN?PublicData.USER_NAME:getString(R.string.app_name);
         getFragmentManager().beginTransaction().replace(R.id.fragment_home_container,currentFragment,tag).commit();
@@ -146,43 +144,42 @@ public class HomeActivity extends BaseActivity
             userName.setText("点击头像登陆");
             userGrade.setVisibility(View.GONE);
         }
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.e(TAG,"onResume");
-    }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.e(TAG,"onPause");
+        //注册检查消息广播
+        Log.e("消息广播","注册广播");
+        myMsgReceiver = new msgReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.ruisi.checkmsg");
+        registerReceiver(myMsgReceiver, intentFilter);
+
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.e(TAG,"onRestart");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.e(TAG,"onDestroy");
+        Log.e("消息广播","onRestart重新启动线程");
+        SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean isrecieveMessage = shp.getBoolean("setting_show_notify", false);
+        //启动后台服务
         Intent i = new Intent(this, CheckMessageService.class);
-        stopService(i);
-
-        if (myMsgReceiver != null) {
-            unregisterReceiver(myMsgReceiver);
-        }
+        i.putExtra("isRunning", true);
+        i.putExtra("isNotisfy", isrecieveMessage);
+        startService(i);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.e(TAG,"onStop");
+        Intent i = new Intent(this, CheckMessageService.class);
+        if (myMsgReceiver != null) {
+            unregisterReceiver(myMsgReceiver);
+        }
+        stopService(i);
+        Log.e("消息广播","onStop取消注册广播 停止线程");
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -231,71 +228,42 @@ public class HomeActivity extends BaseActivity
         FragmentManager fm = getFragmentManager();
         // 开启Fragment事务
         toolbarImageContainer.setVisibility(View.GONE);
-        Fragment f = null;
-        String Tag = "首页";
-        switch (id) {
-            case FrageType.MESSAGE:
-                Tag = "我的消息";
-                f = fm.findFragmentByTag(Tag);
-                if(f==null){
-                    f = new FrageMessage();
-                }
-                break;
-            case FrageType.FRIEND:
-                Tag = "我的好友";
-                f = fm.findFragmentByTag(Tag);
-                if(f==null){
-                    f = new FrageFriends();
-                }
-                break;
 
-            case FrageType.TOPIC:
-                Tag = "我的帖子";
-                f = fm.findFragmentByTag(Tag);
-                if(f==null){
+        String Tag = FrageType.TITLE_LIST[id];
+        Fragment f = fm.findFragmentByTag(Tag);
+
+        if(id==FrageType.HOME){
+            Tag = PublicData.ISLOGIN&&(!TextUtils.isEmpty(PublicData.USER_NAME))?PublicData.USER_NAME:getString(R.string.app_name);
+            toolbarImageContainer.setVisibility(View.VISIBLE);
+        }
+
+        if(f==null){
+            switch (id){
+                case FrageType.MESSAGE:
+                    f = new FrageMessage();
+                    break;
+                case FrageType.FRIEND:
+                    f = new FrageFriends();
+                    break;
+                case FrageType.TOPIC:
                     f = FrageTopicStarHistory.newInstance(FrageType.TOPIC);
-                }
-                break;
-            case FrageType.START:
-                Tag = "我的收藏";
-                f = fm.findFragmentByTag(Tag);
-                if(f==null){
+                    break;
+                case FrageType.START:
                     f = FrageTopicStarHistory.newInstance(FrageType.START);
-                }
-                break;
-            case FrageType.HISTORY:
-                Tag = "浏览历史";
-                f = fm.findFragmentByTag(Tag);
-                if(f==null){
+                    break;
+                case FrageType.HISTORY:
                     f = FrageTopicStarHistory.newInstance(FrageType.HISTORY);
-                }
-                break;
-            case FrageType.HELP:
-                Tag = "帮助";
-                f = fm.findFragmentByTag(Tag);
-                if(f==null){
+                    break;
+                case FrageType.HELP:
                     f = new FrageHelp();
-                }
-                break;
-            case FrageType.HOME:
-                toolbarImageContainer.setVisibility(View.VISIBLE);
-                if (PublicData.ISLOGIN) {
-                    Tag = PublicData.USER_NAME;
-                } else {
-                    Tag = getString(R.string.app_name);
-                }
-                f = fm.findFragmentByTag(Tag);
-                if(f==null){
+                    break;
+                case FrageType.HOME:
                     f = new FrageHome();
-                }
-                break;
-            case FrageType.SETTING:
-                Tag = "设置";
-                f = fm.findFragmentByTag(Tag);
-                if(f==null){
+                    break;
+                case FrageType.SETTING:
                     f = new FragSetting();
-                }
-                break;
+                    break;
+            }
         }
         switchContent(f,Tag);
     }

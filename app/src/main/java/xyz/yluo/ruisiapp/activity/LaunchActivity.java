@@ -195,6 +195,7 @@ public class LaunchActivity extends BaseActivity {
 
     private void startCheckMessageService() {
         //启动后台服务
+        Log.e("launch","启动了服务");
         Intent i = new Intent(this, CheckMessageService.class);
         i.putExtra("isRunning", true);
         i.putExtra("isNotisfy", isrecieveMessage);

@@ -24,6 +24,9 @@ public class FrageHome extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        Log.e("FrageHome","onCreateView");
+
         View view = inflater.inflate(R.layout.fragement_home, container, false);
         ViewPager viewpager = (ViewPager) view.findViewById(R.id.viewpager);
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.mytab);

@@ -124,7 +124,7 @@ public class CheckMessageService extends Service {
     public void onDestroy() {
         super.onDestroy();
         isRunning = false;
-        Log.i(Tag, "service destroy");
+        Log.e(Tag, "service destroy");
     }
 
     //start service时执行

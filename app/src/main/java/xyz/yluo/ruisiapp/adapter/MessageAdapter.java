@@ -71,7 +71,7 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private class MessageReplyListHolder extends BaseViewHolder {
         protected TextView title;
         protected TextView time;
-        protected CircleImageView article_user_image;
+        CircleImageView article_user_image;
         ArrowTextView reply_content;
         TextView isRead;
 
@@ -112,7 +112,7 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             }
         }
 
-        protected void item_click() {
+        void item_click() {
             MessageData single_data = DataSet.get(getAdapterPosition() - 1);
             if (!single_data.isRead()) {
                 single_data.setRead(true);
@@ -123,7 +123,7 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 ChatActivity.open(activity, username, single_data.getTitleUrl());
                 single_data.setRead(true);
             } else if (ListType.REPLAYME == single_data.getType()) {//回复我的
-                SingleArticleActivity.open(activity, single_data.getTitleUrl(), null, null);
+                SingleArticleActivity.open(activity, single_data.getTitleUrl(), null);
             }
 
         }

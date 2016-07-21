@@ -2,6 +2,7 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -84,16 +85,11 @@ public class SingleArticleActivity extends BaseActivity
 
     private boolean showPlainText = false;
 
-    public static void open(Context context, String url, @Nullable String title, @Nullable String author) {
+    public static void open(Context context, String url, @Nullable String author) {
         Intent intent = new Intent(context, SingleArticleActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("url", url);
-        if (title != null) {
-            intent.putExtra("title", title);
-        }
-        if (author != null) {
-            intent.putExtra("author", author);
-        }
+        intent.putExtra("author", TextUtils.isEmpty(author)?"null":author);
         context.startActivity(intent);
     }
 
@@ -162,16 +158,23 @@ public class SingleArticleActivity extends BaseActivity
 
         mRecyclerView.setAdapter(mRecyleAdapter);
 
-        String url = getIntent().getExtras().getString("url");
-        if (getIntent().getExtras().containsKey("title")) {
-            Title = getIntent().getExtras().getString("title");
-            isGetTitle = true;
+
+        String url = "";
+        Bundle b = getIntent().getExtras();
+        //通过本应用打开
+        if(b!=null){
+            Log.e("SINGLE","从本应用打开");
+            url = b.getString("url");
+            Author = b.getString("author");
+        }else{
+            Log.e("SINGLE","从浏览器打开");
+            //通过浏览器打开
+            Uri uri = getIntent().getData();
+            Log.e("SingleArticle",uri.toString()+" "+uri.getPath());
         }
 
-        if (getIntent().getExtras().containsKey("author")) {
-            Author = getIntent().getExtras().getString("author");
-        }
         Tid = GetId.getTid(url);
+
         if (url != null && url.contains("redirect")) {
             if (!PublicData.IS_SCHOOL_NET) {
                 url = url + "&mobile=2";

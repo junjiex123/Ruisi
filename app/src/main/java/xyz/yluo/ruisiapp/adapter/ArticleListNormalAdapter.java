@@ -154,7 +154,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
                 single_data.setRead(true);
                 notifyItemChanged(getAdapterPosition());
             }
-            SingleArticleActivity.open(activity, single_data.getTitleUrl(), single_data.getTitle(), single_data.getAuthor());
+            SingleArticleActivity.open(activity, single_data.getTitleUrl(), single_data.getAuthor());
 
         }
     }
@@ -213,7 +213,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
                 single_data.setRead(true);
                 notifyItemChanged(getAdapterPosition());
             }
-            SingleArticleActivity.open(activity, single_data.getTitleUrl(), single_data.getTitle(), single_data.getAuthor());
+            SingleArticleActivity.open(activity, single_data.getTitleUrl(), single_data.getAuthor());
         }
     }
 

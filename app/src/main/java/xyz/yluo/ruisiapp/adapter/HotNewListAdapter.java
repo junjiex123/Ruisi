@@ -125,7 +125,7 @@ public class HotNewListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     //手机版文章列表
     private class NormalViewHolderMe extends BaseViewHolder {
-        protected TextView article_title;
+        TextView article_title;
         TextView author_name;
         TextView is_image;
         TextView reply_count;
@@ -162,7 +162,7 @@ public class HotNewListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 single_data.setRead(true);
                 notifyItemChanged(getAdapterPosition());
             }
-            SingleArticleActivity.open(activity, single_data.getTitleUrl(), single_data.getTitle(), single_data.getAuthor());
+            SingleArticleActivity.open(activity, single_data.getTitleUrl(), single_data.getAuthor());
         }
     }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -47,7 +48,8 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class LoginActivity extends BaseActivity {
 
-    private EditText ed_username, ed_pass, anwser_text;
+    private TextInputEditText ed_username, ed_pass ;
+    private EditText anwser_text;
     private Button btn_login;
     private ImageView imageViewl, imageViewr;
     private CheckBox rem_user, rem_pass;
@@ -69,8 +71,8 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_login);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        ed_username = (EditText) findViewById(R.id.login_name);
-        ed_pass = (EditText) findViewById(R.id.login_pas);
+        ed_username = (TextInputEditText) findViewById(R.id.login_name);
+        ed_pass = (TextInputEditText) findViewById(R.id.login_pas);
         btn_login = (Button) findViewById(R.id.btn_login);
         imageViewl = (ImageView) findViewById(R.id.iv_login_l);
         imageViewr = (ImageView) findViewById(R.id.iv_login_r);

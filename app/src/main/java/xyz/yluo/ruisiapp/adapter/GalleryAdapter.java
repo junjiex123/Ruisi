@@ -78,7 +78,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         void item_click() {
             GalleryData single_data = DataSet.get(getAdapterPosition() % DataSet.size());
-            SingleArticleActivity.open(activity, single_data.getTitleUrl(), single_data.getTitle(),null);
+            SingleArticleActivity.open(activity, single_data.getTitleUrl(),null);
         }
     }
 }

@@ -111,7 +111,7 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             SimpleListData single_data = Datas.get(getAdapterPosition());
             String url = single_data.getExtradata();
             if (url != null && url.length() > 0) {
-                SingleArticleActivity.open(activity, url, single_data.getKey(), single_data.getValue());
+                SingleArticleActivity.open(activity, url, single_data.getValue());
             }
         }
     }
