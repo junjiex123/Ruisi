@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.ArticleList;
 import xyz.yluo.ruisiapp.activity.ArticleListImage;
@@ -110,7 +110,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 public void onClick(View view) {
                     String fid = single.getFid();
                     //几个特殊的板块
-                    if (PublicData.IS_SCHOOL_NET && (fid.equals("561") || fid.equals("157") || fid.equals("13"))) {
+                    if (Config.IS_SCHOOL_NET && (fid.equals("561") || fid.equals("157") || fid.equals("13"))) {
                         ArticleListImage.open(activity, Integer.parseInt(fid), single.getTitle());
                     } else {
                         ArticleList.open(activity, Integer.parseInt(fid), single.getTitle());

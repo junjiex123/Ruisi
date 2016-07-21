@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -268,7 +268,7 @@ public class LoginActivity extends BaseActivity {
         int index = res.indexOf("欢迎您回来");
         String s = res.substring(index, index + 30).split("，")[1].split(" ")[0].trim();
         if (s.length() > 0) {
-            PublicData.USER_GRADE = s;
+            Config.USER_GRADE = s;
         }
         //写入到首选项
         SharedPreferences.Editor editor = perPreferences.edit();
@@ -290,17 +290,17 @@ public class LoginActivity extends BaseActivity {
         }
 
         Document doc = Jsoup.parse(res);
-        PublicData.USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
+        Config.USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
         String url = doc.select("a[href^=home.php?mod=space&uid=]").attr("href");
-        PublicData.USER_UID = GetId.getUid(url);
+        Config.USER_UID = GetId.getUid(url);
 
-        editor.putString("USER_NAME", PublicData.USER_NAME);
-        editor.putString("USER_UID", PublicData.USER_UID);
+        editor.putString("USER_NAME", Config.USER_NAME);
+        editor.putString("USER_UID", Config.USER_UID);
         editor.apply();
         //开始获取formhash
         progress.dismiss();
-        PublicData.ISLOGIN = true;
-        Toast.makeText(getApplicationContext(), "欢迎你" + PublicData.USER_NAME + "登陆成功", Toast.LENGTH_SHORT).show();
+        Config.ISLOGIN = true;
+        Toast.makeText(getApplicationContext(), "欢迎你" + Config.USER_NAME + "登陆成功", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
         intent.putExtra("status", "ok");
         //设置返回数据

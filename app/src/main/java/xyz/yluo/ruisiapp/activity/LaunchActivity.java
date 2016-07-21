@@ -20,7 +20,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import xyz.yluo.ruisiapp.CheckMessageService;
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.checknet.CheckNet;
@@ -36,7 +36,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * Created by free2 on 16-3-19.
  * 启动activity
  * 检查是否登陆
- * 读取相关设置写到{@link PublicData}
+ * 读取相关设置写到{@link Config}
  */
 public class LaunchActivity extends BaseActivity {
     private long starttime = 0;
@@ -51,7 +51,7 @@ public class LaunchActivity extends BaseActivity {
         public void run() {
             if(isForeGround){
                 Intent i = new Intent(getApplicationContext(), HomeActivity.class);
-                i.putExtra("isLogin", PublicData.ISLOGIN);
+                i.putExtra("isLogin", Config.ISLOGIN);
                 startActivity(i);
                 finish();
             }
@@ -76,7 +76,7 @@ public class LaunchActivity extends BaseActivity {
         btn_inner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PublicData.ISLOGIN = true;
+                Config.ISLOGIN = true;
                 startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                 finish();
             }
@@ -84,7 +84,7 @@ public class LaunchActivity extends BaseActivity {
         btn_outer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PublicData.ISLOGIN = true;
+                Config.ISLOGIN = true;
                 startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                 finish();
             }
@@ -156,26 +156,26 @@ public class LaunchActivity extends BaseActivity {
         HttpUtil.get(this, url, new TextResponseHandler() {
             @Override
             public void onSuccess(String res) {
-                PublicData.ISLOGIN = false;
+                Config.ISLOGIN = false;
                 if (res.contains("loginbox")) {
-                    PublicData.ISLOGIN = false;
+                    Config.ISLOGIN = false;
                 } else {
                     Document doc = Jsoup.parse(res);
                     int index = res.indexOf("欢迎您回来");
                     String s = res.substring(index, index + 30).split("，")[1].split(" ")[0].trim();
                     if (s.length() > 0) {
-                        PublicData.USER_GRADE = s;
+                        Config.USER_GRADE = s;
                     }
-                    PublicData.USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
+                    Config.USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
                     String url = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").attr("href");
-                    PublicData.USER_UID = GetId.getUid(url);
+                    Config.USER_UID = GetId.getUid(url);
 
                     SharedPreferences.Editor editor = perUserInfo.edit();
-                    editor.putString("USER_NAME", PublicData.USER_NAME);
-                    editor.putString("USER_UID", PublicData.USER_UID);
+                    editor.putString("USER_NAME", Config.USER_NAME);
+                    editor.putString("USER_UID", Config.USER_UID);
                     editor.apply();
 
-                    PublicData.ISLOGIN = true;
+                    Config.ISLOGIN = true;
 
                     startCheckMessageService();
                 }

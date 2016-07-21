@@ -21,7 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.PersistentCookieStore;
@@ -121,7 +121,7 @@ public class NewArticleActivity_2 extends BaseActivity {
         WebSettings settings = myWebView.getSettings();
         settings.setJavaScriptEnabled(true);
 
-        if (PublicData.ISLOGIN) {
+        if (Config.ISLOGIN) {
             myWebView.loadUrl(UrlUtils.getPostUrl(CURRENT_FID));
         } else {
             Toast.makeText(this, "你还没有登陆", Toast.LENGTH_SHORT).show();
@@ -138,11 +138,11 @@ public class NewArticleActivity_2 extends BaseActivity {
 
         cookieManager.setAcceptCookie(true);
 
-        String domain = ";domain=" + PublicData.getBaseUrl().replace("http://", "").replace("/", "");
+        String domain = ";domain=" + Config.getBaseUrl().replace("http://", "").replace("/", "");
 
         for (String s : cookieStore.getCookie().split(";")) {
             s = s + domain;
-            cookieManager.setCookie(PublicData.getBaseUrl(), s);
+            cookieManager.setCookie(Config.getBaseUrl(), s);
         }
     }
 

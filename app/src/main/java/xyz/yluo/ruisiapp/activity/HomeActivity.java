@@ -28,7 +28,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import xyz.yluo.ruisiapp.CheckMessageService;
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.ChangeNetDialog;
 import xyz.yluo.ruisiapp.View.CircleImageView;
@@ -109,7 +109,7 @@ public class HomeActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         currentFragment = new FrageHome();
-        String tag = PublicData.ISLOGIN?PublicData.USER_NAME:getString(R.string.app_name);
+        String tag = Config.ISLOGIN? Config.USER_NAME:getString(R.string.app_name);
         getFragmentManager().beginTransaction().replace(R.id.fragment_home_container,currentFragment,tag).commit();
     }
 
@@ -121,19 +121,19 @@ public class HomeActivity extends BaseActivity
         TextView userName = (TextView) header.findViewById(R.id.header_user_name);
         TextView userGrade = (TextView) header.findViewById(R.id.user_grade);
         //判断是否登陆
-        if (PublicData.ISLOGIN&& !TextUtils.isEmpty(PublicData.USER_NAME)) {
+        if (Config.ISLOGIN&& !TextUtils.isEmpty(Config.USER_NAME)) {
             userGrade.setVisibility(View.VISIBLE);
-            usernameTitle.setText(PublicData.USER_NAME);
-            if (PublicData.USER_GRADE.length() > 0) {
-                userGrade.setText(PublicData.USER_GRADE);
+            usernameTitle.setText(Config.USER_NAME);
+            if (Config.USER_GRADE.length() > 0) {
+                userGrade.setText(Config.USER_GRADE);
             }
-            userName.setText(PublicData.USER_NAME);
-            Uri uri = ImageUtils.getImageURI(getFilesDir(), PublicData.USER_UID);
+            userName.setText(Config.USER_NAME);
+            Uri uri = ImageUtils.getImageURI(getFilesDir(), Config.USER_UID);
             if (uri != null) {//图片存在
                 userImage.setImageURI(uri);
                 userImageTitle.setImageURI(uri);
             } else {//图片不存在
-                String url = UrlUtils.getAvaterurlm(PublicData.USER_UID);
+                String url = UrlUtils.getAvaterurlm(Config.USER_UID);
                 Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
                 Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImageTitle);
             }
@@ -233,7 +233,7 @@ public class HomeActivity extends BaseActivity
         Fragment f = fm.findFragmentByTag(Tag);
 
         if(id==FrageType.HOME){
-            Tag = PublicData.ISLOGIN&&(!TextUtils.isEmpty(PublicData.USER_NAME))?PublicData.USER_NAME:getString(R.string.app_name);
+            Tag = Config.ISLOGIN&&(!TextUtils.isEmpty(Config.USER_NAME))? Config.USER_NAME:getString(R.string.app_name);
             toolbarImageContainer.setVisibility(View.VISIBLE);
         }
 
@@ -294,9 +294,9 @@ public class HomeActivity extends BaseActivity
                 drawer.openDrawer(GravityCompat.START);
                 break;
             case R.id.profile_image:
-                if (PublicData.ISLOGIN&&!TextUtils.isEmpty(PublicData.USER_NAME)) {
-                    String url = UrlUtils.getAvaterurlb(PublicData.USER_UID);
-                    UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, PublicData.USER_NAME, userImage, url);
+                if (Config.ISLOGIN&&!TextUtils.isEmpty(Config.USER_NAME)) {
+                    String url = UrlUtils.getAvaterurlb(Config.USER_UID);
+                    UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, Config.USER_NAME, userImage, url);
                 } else {
                     Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivityForResult(i,0);
@@ -304,7 +304,7 @@ public class HomeActivity extends BaseActivity
                 break;
             case R.id.change_net:
                 ChangeNetDialog dialog = new ChangeNetDialog();
-                dialog.setNetType(PublicData.IS_SCHOOL_NET);
+                dialog.setNetType(Config.IS_SCHOOL_NET);
                 dialog.show(getFragmentManager(), "changeNet");
                 break;
             case R.id.show_message:
@@ -353,7 +353,7 @@ public class HomeActivity extends BaseActivity
                 changeFragement(FrageType.SETTING);
                 break;
             case R.id.nav_sign:
-                if (PublicData.IS_SCHOOL_NET) {
+                if (Config.IS_SCHOOL_NET) {
                     if (isneed_login()) {
                         startActivity(new Intent(getApplicationContext(), UserDakaActivity.class));
                     }

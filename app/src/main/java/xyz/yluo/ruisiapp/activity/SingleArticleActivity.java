@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
 import xyz.yluo.ruisiapp.data.LoadMoreType;
@@ -176,7 +176,7 @@ public class SingleArticleActivity extends BaseActivity
         Tid = GetId.getTid(url);
 
         if (url != null && url.contains("redirect")) {
-            if (!PublicData.IS_SCHOOL_NET) {
+            if (!Config.IS_SCHOOL_NET) {
                 url = url + "&mobile=2";
             }
             isRedirect = true;
@@ -324,7 +324,7 @@ public class SingleArticleActivity extends BaseActivity
         final String url = UrlUtils.getStarUrl(Tid);
         Map<String, String> params = new HashMap<>();
         params.put("favoritesubmit", "true");
-        params.put("formhash", PublicData.FORMHASH);
+        params.put("formhash", Config.FORMHASH);
         HttpUtil.post(this, url, params, new ResponseHandler() {
 
             @Override
@@ -400,7 +400,7 @@ public class SingleArticleActivity extends BaseActivity
             case R.id.btn_share:
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_TEXT,Title+UrlUtils.getSingleArticleUrl(Tid,page_now,PublicData.IS_SCHOOL_NET));
+                shareIntent.putExtra(Intent.EXTRA_TEXT,Title+UrlUtils.getSingleArticleUrl(Tid,page_now, Config.IS_SCHOOL_NET));
                 shareIntent.setType("text/plain");
                 //设置分享列表的标题，并且每次都显示分享列表
                 startActivity(Intent.createChooser(shareIntent, "分享到文章到:"));
@@ -432,7 +432,7 @@ public class SingleArticleActivity extends BaseActivity
                 replyUrl = doc.select("form#fastpostform").attr("action");
                 String hash = doc.select("input[name=formhash]").attr("value");
                 if (!hash.isEmpty()) {
-                    PublicData.FORMHASH = hash;
+                    Config.FORMHASH = hash;
                 }
             }
 
@@ -543,7 +543,7 @@ public class SingleArticleActivity extends BaseActivity
                     isRedirect = false;
                     for (int i = 0; i < mydatalist.size(); i++) {
                         String s = mydatalist.get(i).getCotent().toString();
-                        if (s.contains(PublicData.USER_NAME)) {
+                        if (s.contains(Config.USER_NAME)) {
                             mRecyclerView.scrollToPosition(i);
                             break;
                         }

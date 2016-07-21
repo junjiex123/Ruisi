@@ -10,7 +10,7 @@ import org.jsoup.Jsoup;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 
 /**
  * Created by free2 on 16-4-13.
@@ -77,6 +77,6 @@ public class CheckNet {
     }
 
     private void setData(boolean isInner) {
-        PublicData.IS_SCHOOL_NET = isInner;
+        Config.IS_SCHOOL_NET = isInner;
     }
 }

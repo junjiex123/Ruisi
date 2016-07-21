@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 
 /**
  * Created by free2 on 16-7-16.
@@ -149,7 +149,7 @@ public class MyImageGetter implements Html.ImageGetter{
                 if (source.charAt(0) == '/') {
                     source = source.substring(1, source.length());
                 }
-                mySource = PublicData.getBaseUrl() + source;
+                mySource = Config.getBaseUrl() + source;
             }
 
             try {

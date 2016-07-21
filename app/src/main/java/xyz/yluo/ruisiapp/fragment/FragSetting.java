@@ -14,7 +14,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.NewVersionDialog;
 import xyz.yluo.ruisiapp.httpUtil.AsyncHttpClient;
@@ -54,7 +54,7 @@ public class FragSetting extends PreferenceFragment
         boolean b = sharedPreferences.getBoolean("setting_show_tail", false);
         setting_user_tail.setEnabled(b);
         setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail", "无小尾巴"));
-        setting_forums_url.setSummary(PublicData.IS_SCHOOL_NET?"当前网络校园网，点击切换":"当前网络校外网，点击切换");
+        setting_forums_url.setSummary(Config.IS_SCHOOL_NET?"当前网络校园网，点击切换":"当前网络校外网，点击切换");
 
 
         Log.i("is show tail", "" + sharedPreferences.getBoolean("setting_show_tail", false));
@@ -147,11 +147,11 @@ public class FragSetting extends PreferenceFragment
                 switch (sharedPreferences.getString("setting_forums_url", "2")) {
                     case "1":
                         setting_forums_url.setSummary("当前网络校园网，点击切换");
-                        PublicData.IS_SCHOOL_NET = true;
+                        Config.IS_SCHOOL_NET = true;
                         break;
                     case "2":
                         setting_forums_url.setSummary("当前网络校外网，点击切换");
-                        PublicData.IS_SCHOOL_NET = false;
+                        Config.IS_SCHOOL_NET = false;
                         break;
                 }
                 Toast.makeText(getActivity(),"切换网络成功!",Toast.LENGTH_SHORT).show();

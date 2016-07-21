@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,7 +18,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyGridDivider;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
@@ -139,7 +138,7 @@ public class FrageForumList extends BaseFragment {
             String hash = document.select(".footer").select("a.dialog").attr("href");
             String ress = GetId.getHash(hash);
             if (!ress.isEmpty()) {
-                PublicData.FORMHASH = ress;
+                Config.FORMHASH = ress;
             }
 
             for (Element ele : elements) {

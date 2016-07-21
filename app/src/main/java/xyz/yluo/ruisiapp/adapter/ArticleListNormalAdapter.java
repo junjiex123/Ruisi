@@ -11,7 +11,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
@@ -49,7 +49,7 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
             return TYPE_LOAD_MORE;
         }
         //手机版
-        if (!PublicData.IS_SCHOOL_NET || type == TYPE_NORMAL_MOBILE) {
+        if (!Config.IS_SCHOOL_NET || type == TYPE_NORMAL_MOBILE) {
             return TYPE_NORMAL_MOBILE;
         } else {
             //一般板块

@@ -18,7 +18,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
@@ -89,7 +89,7 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
                     currentIndex = 2;
             }
         }
-        String uid = PublicData.USER_UID;
+        String uid = Config.USER_UID;
         switch (currentIndex) {
             case 0:
                 //主题

@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.data.GalleryData;
@@ -72,7 +72,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         void setData(int position) {
             img_card_title.setText(DataSet.get(position).getTitle());
-            String imgUrl = PublicData.getBaseUrl() + DataSet.get(position).getImgurl().replace("./", "");
+            String imgUrl = Config.getBaseUrl() + DataSet.get(position).getImgurl().replace("./", "");
             Picasso.with(activity).load(imgUrl).placeholder(R.drawable.image_placeholder).into(img_card_image);
         }
 

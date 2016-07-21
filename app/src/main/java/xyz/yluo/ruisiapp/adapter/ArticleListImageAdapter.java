@@ -13,7 +13,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 import java.util.Objects;
 
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.ArticleListImage;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
@@ -76,7 +76,7 @@ public class ArticleListImageAdapter extends RecyclerView.Adapter<ArticleListIma
             img_card_title.setText(DataSet.get(position).getTitle());
             img_card_like.setText(DataSet.get(position).getReplyCount());
             if (!Objects.equals(DataSet.get(position).getImage(), "")) {
-                Picasso.with(activity).load(PublicData.getBaseUrl() + DataSet.get(position).getImage()).placeholder(R.drawable.image_placeholder).into(img_card_image);
+                Picasso.with(activity).load(Config.getBaseUrl() + DataSet.get(position).getImage()).placeholder(R.drawable.image_placeholder).into(img_card_image);
             } else {
                 img_card_image.setImageResource(R.drawable.image_placeholder);
             }

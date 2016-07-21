@@ -4,10 +4,11 @@ import android.content.Context;
 
 import java.util.Map;
 
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 
 /**
  * Created by free2 on 16-4-4.
+ *
  */
 public class HttpUtil {
     private static AsyncHttpClient client = new AsyncHttpClient();
@@ -18,7 +19,7 @@ public class HttpUtil {
         if (url.startsWith("http")) {
             return url;
         } else {
-            return PublicData.getBaseUrl() + url;
+            return Config.getBaseUrl() + url;
         }
     }
 

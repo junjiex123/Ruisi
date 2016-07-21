@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
 import xyz.yluo.ruisiapp.data.ListType;
@@ -139,7 +139,7 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
 
         String url = "search.php?mod=forum&mobile=2";
         Map<String, String> paras = new HashMap<>();
-        paras.put("formhash", PublicData.FORMHASH);
+        paras.put("formhash", Config.FORMHASH);
         paras.put("searchsubmit", "yes");
         paras.put("srchtxt", str);
 

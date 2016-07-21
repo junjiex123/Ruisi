@@ -91,8 +91,8 @@ public class CheckMessageService extends Service {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    String url = PublicData.getBaseUrl() + "home.php?mod=space&do=notice&view=mypost&type=post";
-                    if (!PublicData.IS_SCHOOL_NET) {
+                    String url = Config.getBaseUrl() + "home.php?mod=space&do=notice&view=mypost&type=post";
+                    if (!Config.IS_SCHOOL_NET) {
                         url = url + "&mobile=2";
                     }
                     client.get(url, handler);

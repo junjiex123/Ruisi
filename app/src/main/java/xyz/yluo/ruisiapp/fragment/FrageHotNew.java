@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.HotNewListAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
@@ -111,7 +111,7 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
     }
 
     private void getData() {
-        if (PublicData.IS_SCHOOL_NET && galleryDatas.size() == 0) {
+        if (Config.IS_SCHOOL_NET && galleryDatas.size() == 0) {
             new getGalleryTask().execute();
         }
         String url = "forum.php?mod=guide&view=new&page=" + CurrentPage + "&mobile=2";

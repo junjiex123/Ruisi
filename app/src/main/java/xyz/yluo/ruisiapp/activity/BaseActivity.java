@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.NeedLoginDialogFragment;
 
@@ -43,7 +43,7 @@ public class BaseActivity extends AppCompatActivity {
 
     //判断是否需要弹出登录dialog
     boolean isneed_login() {
-        if (PublicData.ISLOGIN) {
+        if (Config.ISLOGIN) {
             return true;
         } else {
             NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();

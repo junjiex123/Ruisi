@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 
 /**
@@ -24,9 +24,9 @@ public class ExitLoginDialogFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         //删除cookie
                         HttpUtil.exit();
-                        PublicData.ISLOGIN = false;
-                        PublicData.USER_NAME = "";
-                        PublicData.USER_UID = "";
+                        Config.ISLOGIN = false;
+                        Config.USER_NAME = "";
+                        Config.USER_UID = "";
 
                         SharedPreferences perUserInfo = getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = perUserInfo.edit();

@@ -1,6 +1,6 @@
 package xyz.yluo.ruisiapp.utils;
 
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 
 /**
  * Created by free2 on 16-4-1.
@@ -23,15 +23,15 @@ public class UrlUtils {
             url += "&page=" + page;
         }
         if (isInner) {
-            return PublicData.getBaseUrl() + url;
+            return Config.getBaseUrl() + url;
         } else {
-            return PublicData.getBaseUrl() + url + "&mobile=2";
+            return Config.getBaseUrl() + url + "&mobile=2";
         }
 
     }
 
     public static String getAddFrirndUrl(String uid) {
-        if (PublicData.IS_SCHOOL_NET) {
+        if (Config.IS_SCHOOL_NET) {
             return "home.php?mod=spacecp&ac=friend&op=add&uid=" + uid + "&inajax=1";
         } else {
             return "home.php?mod=spacecp&ac=friend&op=add&uid=" + uid + "&inajax=1&mobile=2";
@@ -56,7 +56,7 @@ public class UrlUtils {
         if (urlUid.contains("uid")) {
             uid = GetId.getUid(urlUid);
         }
-        return PublicData.getBaseUrl() + "ucenter/avatar.php?uid=" + uid + "&size=small";
+        return Config.getBaseUrl() + "ucenter/avatar.php?uid=" + uid + "&size=small";
     }
 
     public static String getAvaterurlm(String urlUid) {
@@ -64,7 +64,7 @@ public class UrlUtils {
         if (urlUid.contains("uid")) {
             uid = GetId.getUid(urlUid);
         }
-        return PublicData.getBaseUrl() + "ucenter/avatar.php?uid=" + uid + "&size=middle";
+        return Config.getBaseUrl() + "ucenter/avatar.php?uid=" + uid + "&size=middle";
     }
 
     public static String getAvaterurlb(String urlUid) {
@@ -72,7 +72,7 @@ public class UrlUtils {
         if (urlUid.contains("uid")) {
             uid = GetId.getUid(urlUid);
         }
-        return PublicData.getBaseUrl() + "ucenter/avatar.php?uid=" + uid + "&size=big";
+        return Config.getBaseUrl() + "ucenter/avatar.php?uid=" + uid + "&size=big";
     }
 
     public static String getSignUrl() {
@@ -91,6 +91,6 @@ public class UrlUtils {
     }
 
     public static String getPostUrl(int fid) {
-        return PublicData.getBaseUrl() + "forum.php?mod=post&action=newthread&fid=" + fid + "&mobile=2";
+        return Config.getBaseUrl() + "forum.php?mod=post&action=newthread&fid=" + fid + "&mobile=2";
     }
 }

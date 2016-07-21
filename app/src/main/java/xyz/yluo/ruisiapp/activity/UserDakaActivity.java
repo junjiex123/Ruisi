@@ -25,7 +25,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
@@ -78,8 +78,8 @@ public class UserDakaActivity extends BaseActivity {
                 sign_click();
             }
         });
-        user_name.setText(PublicData.USER_NAME);
-        Picasso.with(this).load(UrlUtils.getAvaterurlb(PublicData.USER_UID)).placeholder(R.drawable.image_placeholder).into(user_image);
+        user_name.setText(Config.USER_NAME);
+        Picasso.with(this).load(UrlUtils.getAvaterurlb(Config.USER_UID)).placeholder(R.drawable.image_placeholder).into(user_image);
         init();
         isHaveDaka();
         final String[] mItems = {"开心", "难过", "郁闷", "无聊", "怒", "擦汗", "奋斗", "慵懒", "衰"};

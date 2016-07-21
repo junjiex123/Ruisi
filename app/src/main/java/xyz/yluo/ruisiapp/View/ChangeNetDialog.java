@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import xyz.yluo.ruisiapp.PublicData;
+import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 
 /**
@@ -42,7 +42,7 @@ public class ChangeNetDialog extends DialogFragment {
         view.findViewById(R.id.school_net_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PublicData.IS_SCHOOL_NET = true;
+                Config.IS_SCHOOL_NET = true;
                 net_school.setVisibility(View.VISIBLE);
                 net_out.setVisibility(View.INVISIBLE);
             }
@@ -51,7 +51,7 @@ public class ChangeNetDialog extends DialogFragment {
         view.findViewById(R.id.out_net_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PublicData.IS_SCHOOL_NET = false;
+                Config.IS_SCHOOL_NET = false;
                 net_school.setVisibility(View.INVISIBLE);
                 net_out.setVisibility(View.VISIBLE);
             }

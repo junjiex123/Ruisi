@@ -1,12 +1,25 @@
 package xyz.yluo.ruisiapp;
 
 import android.app.Application;
+import android.content.Context;
 
 /**
  * Created by free2 on 16-3-11.
- * 共享的全局数据 //todo 更好的实现？？？
+ * 共享的全局数据
  */
-public class PublicData extends Application {
+public class Config extends Application {
+
+    private  Context context;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        this.context = getApplicationContext();
+    }
+
+    public  Context getContext() {
+        return context;
+    }
 
     //启动时设定
     //论坛基地址
