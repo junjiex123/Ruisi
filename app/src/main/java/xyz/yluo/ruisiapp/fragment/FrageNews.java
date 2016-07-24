@@ -25,9 +25,6 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.NewsListAdapter;
 import xyz.yluo.ruisiapp.data.SchoolNewsData;
 import xyz.yluo.ruisiapp.database.MyDbUtils;
-import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
-import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
-import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 
 /**
  * Created by free2 on 16-3-19.

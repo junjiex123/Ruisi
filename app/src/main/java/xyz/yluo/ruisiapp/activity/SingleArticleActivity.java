@@ -332,7 +332,6 @@ public class SingleArticleActivity extends BaseActivity
 
     /**
      * 收藏帖子
-     * @param v
      */
     private void starTask(final View v) {
         final String url = UrlUtils.getStarUrl(Tid);

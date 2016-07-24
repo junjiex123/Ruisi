@@ -1,7 +1,6 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +14,6 @@ import java.util.List;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView;
-import xyz.yluo.ruisiapp.View.MyHtmlView.MyImageGetter;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ChatListData;
 
