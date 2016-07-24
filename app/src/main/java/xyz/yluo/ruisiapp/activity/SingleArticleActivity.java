@@ -99,7 +99,7 @@ public class SingleArticleActivity extends BaseActivity
         setContentView(R.layout.activity_single_article);
 
         showPlainText =  PreferenceManager.getDefaultSharedPreferences(this).getBoolean("setting_show_plain",false);
-        LinearLayout bottom_bar = (LinearLayout) findViewById(R.id.bottom_bar);
+
         spinner = (Spinner) findViewById(R.id.btn_jump_spinner);
         spinnerAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,pageSpinnerDatas);
         spinnerAdapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
@@ -114,12 +114,19 @@ public class SingleArticleActivity extends BaseActivity
             }
         });
 
-        for(int i=0;i<bottom_bar.getChildCount();i++){
-            View v = bottom_bar.getChildAt(i);
+        LinearLayout bottom_bar_top = (LinearLayout) findViewById(R.id.bottom_bar_top);
+        for(int i=0;i<bottom_bar_top.getChildCount();i++){
+            View v = bottom_bar_top.getChildAt(i);
             if(v.getId()!=R.id.btn_jump_spinner){
                 v.setOnClickListener(this);
             }
         }
+        LinearLayout bottom_bar_bottom = (LinearLayout) findViewById(R.id.bottom_bar_bottom);
+        for(int i=0;i<bottom_bar_bottom.getChildCount();i++){
+            View v = bottom_bar_bottom.getChildAt(i);
+            v.setOnClickListener(this);
+        }
+        bottom_bar_bottom.setVisibility(View.GONE);
 
         //下拉刷新
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -198,9 +205,17 @@ public class SingleArticleActivity extends BaseActivity
     public boolean dispatchTouchEvent(MotionEvent event) {
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
+                View bottomBar_bottom = findViewById(R.id.bottom_bar_c);
                 //当手指按下的时候
                 x = event.getX();
                 y = event.getY();
+                if(y<bottomBar_bottom.getTop()){
+                    View v = findViewById(R.id.bottom_bar_bottom);
+                    if(v.getVisibility()==View.VISIBLE){
+                        v.setVisibility(View.GONE);
+                        //失去焦点后隐藏
+                    }
+                }
                 break;
             case MotionEvent.ACTION_UP:
                 //当手指离开的时候
@@ -210,8 +225,8 @@ public class SingleArticleActivity extends BaseActivity
                     int w_screen = dm.widthPixels;
                     int h_screen = dm.heightPixels;
                     //Log.i("BASEACTIVITY", "屏幕尺寸：宽度 = " + w_screen + "高度 = " + h_screen + "密度 = " + dm.densityDpi);
-                    if(x2-x>w_screen/4-40){
-                        Log.i("====","========onTouchEvent 向右滑====="+(x2-x));
+                    if(x2-x>w_screen/4){
+                        //Log.i("====","========onTouchEvent 向右滑====="+(x2-x));
                         finish();
                     }
                 }
@@ -219,7 +234,6 @@ public class SingleArticleActivity extends BaseActivity
         }
         return super.dispatchTouchEvent(event);
     }
-
 
     private void firstGetData(int page) {
         refreshLayout.post(new Runnable() {
@@ -405,6 +419,14 @@ public class SingleArticleActivity extends BaseActivity
                 //设置分享列表的标题，并且每次都显示分享列表
                 startActivity(Intent.createChooser(shareIntent, "分享到文章到:"));
                 break;
+            case R.id.btn_more:
+                View bottomBar_bottom = findViewById(R.id.bottom_bar_bottom);
+                bottomBar_bottom.setVisibility((bottomBar_bottom.getVisibility()==View.VISIBLE)?View.GONE:View.VISIBLE);
+                break;
+            case R.id.btn_back_top:
+                mRecyclerView.scrollToPosition(0);
+                break;
+
         }
     }
 
