@@ -11,15 +11,10 @@ import android.preference.PreferenceFragment;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.NewVersionDialog;
-import xyz.yluo.ruisiapp.httpUtil.AsyncHttpClient;
-import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
-import xyz.yluo.ruisiapp.utils.DataCleanManager;
+import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
+import xyz.yluo.ruisiapp.utils.DataManager;
 import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 
 /**
@@ -79,43 +74,22 @@ public class FragSetting extends PreferenceFragment
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 Toast.makeText(getActivity(), "正在检查更新", Toast.LENGTH_SHORT).show();
-                AsyncHttpClient client = new AsyncHttpClient();
-                client.get("http://xidianrs.cn/version.json", new ResponseHandler() {
-                    @Override
-                    public void onSuccess(byte[] response) {
-                        JSONObject jsonObject;
-                        try {
-                            jsonObject = new JSONObject(new String(response));
-                            int get_code = jsonObject.getInt("version_code");
-                            if (get_code > finalVersion_code) {
-                                String get_name = jsonObject.getString("version_name");
-                                JSONArray resultJsonArray = jsonObject.getJSONArray("des");
-                                String info = "";
-                                for (int i = 0; i < resultJsonArray.length(); i++) {
-                                    info += (i + 1) + ":" + resultJsonArray.getJSONObject(i).getString("info");
-                                    if (i != resultJsonArray.length() - 1) {
-                                        info += "\n";
-                                    }
+                //todo 从我的帖子里获得更新
+                boolean isHaveNew = true;
+                String info = "XXXXXX";
+
+                if(isHaveNew){
+                    new MyAlertDialog(getActivity(),MyAlertDialog.WARNING_TYPE)
+                            .setTitleText("检测到新版本")
+                            .setCancelText("取消")
+                            .setContentText("更新内容\n"+info)
+                            .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
+                                @Override
+                                public void onClick(MyAlertDialog myAlertDialog) {
+                                    RequestOpenBrowser.openBroswer(getActivity(), "http://xidianrs.cn/ruisiapp.apk");
                                 }
-                                NewVersionDialog dialog = new NewVersionDialog();
-                                dialog.setCode(get_name);
-                                dialog.setMessage(info);
-                                dialog.show(getFragmentManager(), "new");
-                            } else {
-                                Toast.makeText(getActivity(), "暂无更新", Toast.LENGTH_SHORT).show();
-                            }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Throwable e) {
-                        Toast.makeText(getActivity(), "连接服务器失败", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
+                            }).show();
+                }
                 return false;
             }
         });
@@ -127,14 +101,14 @@ public class FragSetting extends PreferenceFragment
                 return false;
             }
         });
-        clear_cache.setSummary("缓存大小：" + DataCleanManager.getTotalCacheSize(getActivity()));
+        clear_cache.setSummary("缓存大小：" + DataManager.getTotalCacheSize(getActivity()));
         clear_cache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                DataCleanManager.cleanApplicationData(getActivity());
+                DataManager.cleanApplicationData(getActivity());
 
                 Toast.makeText(getActivity(), "缓存清理成功!请重新登陆", Toast.LENGTH_SHORT).show();
-                clear_cache.setSummary("缓存大小：" + DataCleanManager.getTotalCacheSize(getActivity()));
+                clear_cache.setSummary("缓存大小：" + DataManager.getTotalCacheSize(getActivity()));
                 return false;
             }
         });

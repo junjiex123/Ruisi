@@ -1,6 +1,5 @@
 package xyz.yluo.ruisiapp.activity;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,6 +32,7 @@ import java.util.Map;
 
 import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.MyAlertDialog.MyProgressDialog;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
@@ -53,12 +53,15 @@ public class LoginActivity extends BaseActivity {
     private Button btn_login;
     private ImageView imageViewl, imageViewr;
     private CheckBox rem_user, rem_pass;
-    private ProgressDialog progress;
 
     private SharedPreferences perPreferences;
     private List<String> list = new ArrayList<>();
     private String loginUrl;
     private int answerSelect = 0;
+    private MyProgressDialog dialog;
+    private long startTime = System.currentTimeMillis();
+
+
 
     public static void open(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -87,6 +90,7 @@ public class LoginActivity extends BaseActivity {
                 login_click();
             }
         });
+        dialog = new MyProgressDialog(this).setLoadingText("登 陆 中 . . . . . . ");
 
 
         setSupportActionBar(toolbar);
@@ -208,7 +212,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login_click() {
-        progress = ProgressDialog.show(this, "正在登陆", "请等待", true);
+        dialog.show();
         final String username = ed_username.getText().toString().trim();
         final String passNo = ed_pass.getText().toString().trim();
         String url = UrlUtils.getLoginUrl(false);
@@ -239,7 +243,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onFailure(Throwable e) {
                 login_fail("网络异常！！！");
-                progress.dismiss();
+                dialog.dismiss();
             }
         });
     }
@@ -298,7 +302,7 @@ public class LoginActivity extends BaseActivity {
         editor.putString("USER_UID", Config.USER_UID);
         editor.apply();
         //开始获取formhash
-        progress.dismiss();
+        dialog.dismiss();
         Config.ISLOGIN = true;
         Toast.makeText(getApplicationContext(), "欢迎你" + Config.USER_NAME + "登陆成功", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
@@ -310,7 +314,7 @@ public class LoginActivity extends BaseActivity {
 
     //登陆失败执行
     private void login_fail(String res) {
-        progress.dismiss();
+        dialog.dismiss();
         Toast.makeText(getApplicationContext(), res, Toast.LENGTH_SHORT).show();
     }
 }

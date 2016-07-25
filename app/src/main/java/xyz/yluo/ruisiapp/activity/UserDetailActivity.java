@@ -47,6 +47,7 @@ import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.SimpleListData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.utils.DataManager;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.GetLevel;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -152,6 +153,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
                     .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
                         @Override
                         public void onClick(MyAlertDialog myAlertDialog) {
+                            DataManager.cleanApplicationData(UserDetailActivity.this);
                             finish();
                         }
                     }).show();

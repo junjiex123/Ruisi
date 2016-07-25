@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.TextView;
@@ -95,12 +97,16 @@ public class LaunchActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        AlphaAnimation anima = new AlphaAnimation(0.1f, 1.0f);
+        AlphaAnimation anima = new AlphaAnimation(0.0f, 1.0f);
         anima.setDuration(1000);// 设置动画显示时间
         TranslateAnimation animation = new TranslateAnimation(0, 0, 80, 0);
         animation.setDuration(1000);
+
+        // 初始化需要加载的动画资源
+        RotateAnimation rotateAnimation = (RotateAnimation) AnimationUtils.loadAnimation(this, R.anim.always_rotate);
         launch_text.startAnimation(animation);
         user_image.startAnimation(anima);
+        findViewById(R.id.loading_view).startAnimation(rotateAnimation);
 
         new CheckNet(this).startCheck(new CheckNetResponse() {
             @Override
@@ -129,7 +135,6 @@ public class LaunchActivity extends BaseActivity {
                 user_image.setImageURI(uri);
             }
         }
-
 
         //boolean theme = shp.getBoolean("setting_swich_theme",false);
         isrecieveMessage = shp.getBoolean("setting_show_notify", false);
