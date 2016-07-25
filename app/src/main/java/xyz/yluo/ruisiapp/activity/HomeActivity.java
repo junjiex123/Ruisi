@@ -7,10 +7,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -155,22 +153,10 @@ public class HomeActivity extends BaseActivity
 
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.e("消息广播","onRestart重新启动线程");
-        SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean isrecieveMessage = shp.getBoolean("setting_show_notify", false);
-        //启动后台服务
-        Intent i = new Intent(this, CheckMessageService.class);
-        i.putExtra("isRunning", true);
-        i.putExtra("isNotisfy", isrecieveMessage);
-        startService(i);
-    }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         Intent i = new Intent(this, CheckMessageService.class);
         if (myMsgReceiver != null) {
             unregisterReceiver(myMsgReceiver);

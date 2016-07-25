@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import xyz.yluo.ruisiapp.Config;
+import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.NewArticleActivity_2;
@@ -19,7 +20,7 @@ import xyz.yluo.ruisiapp.downloadfile.DownloadService;
  * //todo 图片点击事件 展示大图片
  */
 public class HandleLinkClick {
-    public static void handleClick(Context context, String url) {
+    public static void handleClick(final Context context, String url) {
 
         Log.i("handle the link", url);
         //点击了图片
@@ -37,12 +38,25 @@ public class HandleLinkClick {
             LoginActivity.open(context);
         } else if (url.contains("forum.php?mod=attachment")) {
             //forum.php?mod=attachment&aid=ODk0NjM4fDdmMmIxZjE3fDE0NjgxMjc1Mjl8MjUyNTUzfDg0NjgxOQ%3D%3D&mobile=2
+            final String finalUrl = url;
             /**
              * 启动下载服务
              */
-            Intent intent = new Intent(context, DownloadService.class);
-            intent.putExtra("download_url", url);
-            context.startService(intent);
+            new MyAlertDialog(context, MyAlertDialog.NORMAL_TYPE)
+                    .setTitleText("下载附件")
+                    .setContentText("你要开始下载此附件吗？")
+                    .setCancelText("取消")
+                    .setConfirmText("下载")
+                    .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
+                        @Override
+                        public void onClick(MyAlertDialog myAlertDialog) {
+                            Intent intent = new Intent(context, DownloadService.class);
+                            intent.putExtra("download_url", finalUrl);
+                            context.startService(intent);
+                        }
+                    })
+                    .show();
+
         } else {
             if (!url.startsWith("http")) {
                 url = Config.getBaseUrl() + url;

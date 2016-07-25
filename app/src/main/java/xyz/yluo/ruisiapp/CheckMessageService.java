@@ -1,7 +1,6 @@
 package xyz.yluo.ruisiapp;
 
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -15,9 +14,14 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
+import xyz.yluo.ruisiapp.database.MyDbUtils;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.httpUtil.SyncHttpClient;
+
+
+/**
+ * 一分钟检擦一次有没有未读消息
+ */
 
 public class CheckMessageService extends Service {
 
@@ -46,11 +50,10 @@ public class CheckMessageService extends Service {
         final NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.logo)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setContentTitle("回复提醒")
-                .setContentText("你有新的回复点击查看")
+                .setContentTitle("未读消息提醒")
+                .setContentText("你有未读的消息哦,去我的消息页面查看吧！")
                 .setAutoCancel(true);
 
-        final Intent resultIntent = new Intent(this, SingleArticleActivity.class);
         final NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         final SyncHttpClient client = new SyncHttpClient();
@@ -65,20 +68,29 @@ public class CheckMessageService extends Service {
                         /**
                          * get message
                          */
-                        if (isNotisfy) {
-                            String url = e.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
-                            resultIntent.putExtra("url", url);
-                            PendingIntent rIntent = PendingIntent.getActivity(getApplicationContext(), 1, resultIntent, 0);
-                            builder.setContentText(e.select(".ntc_body").text());
-                            builder.setContentIntent(rIntent);
-                            builder.setFullScreenIntent(rIntent, true);
-                            mNotifyMgr.notify(2, builder.build());
-                            break;
-                        }
-                        isHaveUnreadMessage = true;
+                        String url = e.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
+                        String info = e.select(".ntc_body").text();
+                        //只要有未读的就插入 到数据库在判断
+                        MyDbUtils myDbUtils = new MyDbUtils(getApplicationContext(), MyDbUtils.MODE_WRITE);
+                        myDbUtils.insertMessage(url,info);
                     }
                 }
+
+                MyDbUtils myDbUtilsR = new MyDbUtils(getApplicationContext(), MyDbUtils.MODE_READ);
+                if(myDbUtilsR.isHaveUnReadMessage()){
+                    isHaveUnreadMessage = true;
+                    if (isNotisfy) {
+                        mNotifyMgr.notify(10, builder.build());
+                        Log.e("message","发送未读消息弹窗");
+                    }
+                }
+                intent.putExtra("isHaveMessage", isHaveUnreadMessage);
+                sendBroadcast(intent);
+                Log.i(Tag, "发送广播...." + isHaveUnreadMessage);
+
             }
+
+
         };
 
         new Thread(new Runnable() {
@@ -87,7 +99,7 @@ public class CheckMessageService extends Service {
                 while (isRunning) {
                     Log.i(Tag, "thread running.....check message......");
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(1500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -97,11 +109,9 @@ public class CheckMessageService extends Service {
                     }
                     client.get(url, handler);
 
-                    intent.putExtra("isHaveMessage", isHaveUnreadMessage);
-                    sendBroadcast(intent);
-                    Log.i(Tag, "发送广播...." + isHaveUnreadMessage);
+
                     try {
-                        Thread.sleep(40000);
+                        Thread.sleep(58500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -145,8 +155,8 @@ public class CheckMessageService extends Service {
          */
         if (isClearMessage) {
             clearAllMessage();
+            Log.e("clear_ALL","已将所有消息已读");
         }
-
         Log.i(Tag, "service start is running" + isRunning + " is notify " + isNotisfy);
         return super.onStartCommand(intent, flags, startId);
     }

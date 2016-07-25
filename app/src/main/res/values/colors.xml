@@ -5,6 +5,7 @@
     <color name="background">#fefefe</color>
     <color name="colorAccent">#FF4081</color>
     <color name="bgwhite">#F8F9F9</color>
+    <color name="white">#ffffff</color>
     <color name="bggrey">#F1F1F1</color>
     <color name="textColorPrimary">#303030</color>
     <color name="colorAuthor">#8f529ECC</color>
@@ -14,4 +15,19 @@
     <color name="green_light">#ff99cc00</color>
     <color name="blue_light">#ff33b5e5</color>
     <color name="orange_light">#ffffbb33</color>
+
+
+    <!--alert dialog-->
+    <color name="gray_btn_bg_color">#D0D0D0</color>
+    <color name="gray_btn_bg_pressed_color">#B6B6B6</color>
+    <color name="blue_btn_bg_color">#AEDEF4</color>
+    <color name="blue_btn_bg_pressed_color">#96BFD2</color>
+    <color name="red_btn_bg_color">#DD6B55</color>
+    <color name="red_btn_bg_pressed_color">#CD5B55</color>
+    <color name="error_stroke_color">#F27474</color>
+    <color name="success_stroke_color">#A5DC86</color>
+    <color name="trans_success_stroke_color">#33A5DC86</color>
+    <color name="warning_stroke_color">#F8BB86</color>
 </resources>
+
+

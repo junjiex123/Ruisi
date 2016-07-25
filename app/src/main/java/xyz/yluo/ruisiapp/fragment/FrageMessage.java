@@ -1,9 +1,12 @@
 package xyz.yluo.ruisiapp.fragment;
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,10 +22,12 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import xyz.yluo.ruisiapp.CheckMessageService;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.MessageAdapter;
 import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.MessageData;
+import xyz.yluo.ruisiapp.database.MyDbUtils;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
@@ -126,6 +131,7 @@ public class FrageMessage extends Fragment {
         datas.clear();
         datas.addAll(temdatas);
         adapter.notifyDataSetChanged();
+
         refreshLayout.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -133,6 +139,8 @@ public class FrageMessage extends Fragment {
             }
         }, 500);
     }
+
+
 
     //获得回复我的
     private class GetUserReplyTask extends AsyncTask<String, Void, List<MessageData>> {
@@ -142,10 +150,7 @@ public class FrageMessage extends Fragment {
             List<MessageData> tempdatas = new ArrayList<>();
             Elements lists = Jsoup.parse(params[0]).select(".nts").select("dl.cl");
             for (Element tmp : lists) {
-                boolean isRead = true;
-                if (tmp.select(".ntc_body").attr("style").contains("bold")) {
-                    isRead = false;
-                }
+
                 String content = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").text().replace("查看", "");
                 if (content.isEmpty()) {
                     continue;
@@ -154,6 +159,16 @@ public class FrageMessage extends Fragment {
                 String authorTitle = tmp.select(".ntc_body").select("a[href^=home.php]").text() + " 回复了我";
                 String time = tmp.select(".xg1.xw0").text();
                 String titleUrl = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
+                boolean isRead = true;
+                if (tmp.select(".ntc_body").attr("style").contains("bold")) {
+                    isRead = false;
+                }else{
+                    MyDbUtils myDbUtils = new MyDbUtils(getActivity(), MyDbUtils.MODE_READ);
+                    int i = myDbUtils.isMessageRead(titleUrl);
+                    if(i==0){
+                        isRead = false;
+                    }
+                }
                 tempdatas.add(new MessageData(ListType.REPLAYME, authorTitle, titleUrl, authorImage, time, isRead, content));
             }
             return tempdatas;
@@ -162,6 +177,8 @@ public class FrageMessage extends Fragment {
         @Override
         protected void onPostExecute(List<MessageData> tempdatas) {
             finishGetData(tempdatas);
+            clearMessage(0);
+
         }
     }
 
@@ -192,6 +209,26 @@ public class FrageMessage extends Fragment {
         @Override
         protected void onPostExecute(List<MessageData> tempdatas) {
             finishGetData(tempdatas);
+            clearMessage(1);
+        }
+    }
+
+    private void clearMessage(int type){
+        MyDbUtils myDbUtils = new MyDbUtils(getActivity(), MyDbUtils.MODE_WRITE);
+        myDbUtils.setAllMessageRead(type);
+
+        MyDbUtils myDbUtils2 = new MyDbUtils(getActivity(),MyDbUtils.MODE_READ);
+        //查看是否有未读消息
+        //如果没有则清楚
+        if(!myDbUtils2.isHaveUnReadMessage()){
+            SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            boolean isrecieveMessage = shp.getBoolean("setting_show_notify", false);
+            //启动后台服务
+            Intent i = new Intent(getActivity(), CheckMessageService.class);
+            i.putExtra("isRunning", true);
+            i.putExtra("isNotisfy", isrecieveMessage);
+            i.putExtra("isClearMessage",true);
+            getActivity().startService(i);
         }
     }
 }

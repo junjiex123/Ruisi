@@ -41,7 +41,7 @@ import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.AddFriendDialog;
 import xyz.yluo.ruisiapp.View.CircleImageView;
-import xyz.yluo.ruisiapp.View.ExitLoginDialogFragment;
+import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
 import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.SimpleListData;
@@ -144,10 +144,18 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
     }
 
     private void fab_click() {
-        //如果是自己
+        //如果是自己 退出登录
         if (userUid.equals(Config.USER_UID)) {
-            ExitLoginDialogFragment dialogFragment = new ExitLoginDialogFragment();
-            dialogFragment.show(getFragmentManager(), "exit");
+            new MyAlertDialog(this,MyAlertDialog.WARNING_TYPE)
+                    .setTitleText("退出登录")
+                    .setContentText("你确定要注销吗？")
+                    .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
+                        @Override
+                        public void onClick(MyAlertDialog myAlertDialog) {
+                            finish();
+                        }
+                    }).show();
+
         } else if (Config.ISLOGIN) {
             String url = "home.php?mod=space&do=pm&subop=view&touid=" + userUid + "&mobile=2";
             ChatActivity.open(this, username, url);

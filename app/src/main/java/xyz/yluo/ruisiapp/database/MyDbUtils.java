@@ -3,6 +3,7 @@ package xyz.yluo.ruisiapp.database;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.sql.Date;
@@ -44,6 +45,13 @@ public class MyDbUtils {
      * 校内新闻数据表
      */
     static final String TABLE_SCHOOL_NEWS = "rs_news";
+
+    /**
+     * 消息列表
+     */
+    static final String TABLE_MESSAGE = "rs_message";
+
+
 
 
     private SQLiteDatabase db = null;    //数据库操作
@@ -352,8 +360,6 @@ public class MyDbUtils {
             return datasIn;
         }
     }
-
-
     private void insertNews(SchoolNewsData d){
         /**
          "url VARCHAR(50) primary key,"
@@ -373,4 +379,88 @@ public class MyDbUtils {
         Log.e("mydb",  "插入新闻数据库"+d.getTitle());
     }
 
+
+    /**
+     * 以下处理消息数据库
+     * id primary key  //存储tid huozhe to uid
+     * + "url VARCHAR(50) ,"
+     + "info VARCHAR(80),"
+     + "type INT,"  0----表示回复提醒
+                    1----表示pm提醒
+     + "isread INT,"
+     + "time DATETIME"
+     + ")";
+     */
+
+    public void insertMessage(String url,String info){
+        String sql = "INSERT INTO " + TABLE_MESSAGE + " (id,url,info,type,isread,time)"
+                + " VALUES(?,?,?,?,?,?)";
+        String read_time_str = getTime();
+        String id = "";
+        int type = 0;
+        if(url.contains("tid=")){
+            id = GetId.getTid(url);
+            type = 0;
+        }else if(url.contains("touid=")){
+            id = GetId.getTouid(url);
+            type = 1;
+        }
+        if(!TextUtils.isEmpty(id)){
+            Object args[] = new Object[]{id,url, info, type,0,read_time_str};
+            this.db.execSQL(sql, args);
+            Log.e("mydb", "插入未读消息"+url);
+        }
+        this.db.close();
+    }
+
+    //-1 代表不存在
+    //0 未读
+    //1 已读
+    public int isMessageRead(String url){
+        String id = "";
+        if(url.contains("tid=")){
+            id = GetId.getTid(url);
+        }else if(url.contains("touid=")){
+            id = GetId.getTouid(url);
+        }
+        String sql = "SELECT * from " + TABLE_MESSAGE + " where id = ?";
+        String args[] = new String[]{String.valueOf(id)};
+        Cursor result = db.rawQuery(sql, args);
+        int count = result.getCount();
+        result.moveToFirst();
+
+        if (count <= 0){//db.close();
+            //如果不存在说明未读
+            result.close();
+            return -1;
+        } else {
+            int i = result.getInt(4);
+            result.close();
+            return i;
+        }
+    }
+
+    public boolean isHaveUnReadMessage(){
+        String sql = "SELECT * from " + TABLE_MESSAGE + " where isread = ?";
+        String args[] = new String[]{String.valueOf(0)};
+        Cursor result = db.rawQuery(sql, args);
+        int count = result.getCount();
+        result.moveToFirst();
+
+        if (count <= 0){//db.close();
+            //如果不存在说明未读
+            result.close();
+            return false;
+        } else {
+            return  true;
+        }
+    }
+
+    public void setAllMessageRead(int type){
+        String sql = "UPDATE " + TABLE_MESSAGE + " SET isread=? WHERE id=?";
+        Object args[] = new Object[]{1, type};
+        this.db.execSQL(sql, args);
+        this.db.close();
+        Log.e("mydb", "message set read"+type);
+    }
 }

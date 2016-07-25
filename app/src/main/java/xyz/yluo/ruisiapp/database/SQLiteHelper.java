@@ -71,6 +71,21 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         Log.e("DATABASE", "创建数据库 TABLE_SCHOOL_NEWS");
 
 
+        /**
+         *  消息列表 解决睿思消息已读未读问题
+         */
+        String sql4 = "CREATE TABLE " + MyDbUtils.TABLE_MESSAGE + "("
+                + "id VARCHAR(15) primary key,"
+                + "url VARCHAR(100),"
+                + "info VARCHAR(80),"
+                + "type INT,"
+                + "isread INT,"
+                + "time DATETIME"
+                + ")";
+        db.execSQL(sql4);
+        Log.e("DATABASE", "创建数据库 TABLE_MESSAGE");
+
+
     }
 
 

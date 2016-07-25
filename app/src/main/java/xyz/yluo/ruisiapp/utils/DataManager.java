@@ -1,18 +1,21 @@
 package xyz.yluo.ruisiapp.utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Environment;
 
 import java.io.File;
 import java.math.BigDecimal;
 
+import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.database.SQLiteHelper;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 
 /**
  * Created by free2 on 16-6-20.
  * 计算和清除缓存
  */
-public class DataCleanManager {
+public class DataManager {
 
     public static String getTotalCacheSize(Context context) {
         long cacheSize = 0;
@@ -43,6 +46,15 @@ public class DataCleanManager {
         for (String filePath : filepath) {
             cleanCustomCache(filePath);
         }
+        //删除cookie
+        HttpUtil.exit();
+        Config.ISLOGIN = false;
+        Config.USER_NAME = "";
+        Config.USER_UID = "";
+        SharedPreferences perUserInfo = context.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = perUserInfo.edit();
+        editor.clear();
+        editor.apply();
     }
 
     public static long getFolderSize(File file) throws Exception {

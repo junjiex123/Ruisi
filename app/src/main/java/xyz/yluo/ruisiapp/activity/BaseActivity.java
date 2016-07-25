@@ -6,14 +6,13 @@ import android.view.MenuItem;
 
 import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.NeedLoginDialogFragment;
+import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 
 /**
  * Created by free2 on 16-4-11.
  * 所有activity的基类
  */
 public class BaseActivity extends AppCompatActivity {
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -46,8 +45,16 @@ public class BaseActivity extends AppCompatActivity {
         if (Config.ISLOGIN) {
             return true;
         } else {
-            NeedLoginDialogFragment dialogFragment = new NeedLoginDialogFragment();
-            dialogFragment.show(getFragmentManager(), "needlogin");
+            new MyAlertDialog(this,MyAlertDialog.WARNING_TYPE)
+                    .setTitleText("需要登录登陆")
+                    .setCancelText("取消")
+                    .setContentText("你还没有登陆，要去登陆吗？？")
+                    .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
+                        @Override
+                        public void onClick(MyAlertDialog myAlertDialog) {
+                            startActivity(new Intent(BaseActivity.this, LoginActivity.class));
+                        }
+                    }).show();
         }
         return false;
     }
