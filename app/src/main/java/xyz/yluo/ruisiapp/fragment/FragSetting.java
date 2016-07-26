@@ -14,6 +14,9 @@ import android.widget.Toast;
 import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
+import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.DataManager;
 import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 
@@ -67,29 +70,50 @@ public class FragSetting extends PreferenceFragment
             version_code = info.versionCode;
             version_name = info.versionName;
         }
-        about_this.setSummary("当前版本" + version_name);
+        about_this.setSummary("当前版本" + version_name+"  version code:"+version_code);
 
-        final int finalVersion_code = version_code;
+        //约定一个标题格式[2016 xxx更新][version:1.9.2]
+        final String finalVersion_name = version_name;
         about_this.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 Toast.makeText(getActivity(), "正在检查更新", Toast.LENGTH_SHORT).show();
-                //todo 从我的帖子里获得更新
-                boolean isHaveNew = true;
-                String info = "XXXXXX";
+                final String url = "forum.php?mod=viewthread&tid=846819&mobile=2";
+                HttpUtil.get(getActivity(), url, new ResponseHandler() {
+                    @Override
+                    public void onSuccess(byte[] response) {
+                        String res = new String(response);
+                        int ih = res.indexOf("keywords");
+                        int h_start = res.indexOf('\"',ih+15);
+                        int h_end = res.indexOf('\"',h_start+1);
+                        String title  = res.substring(h_start+1,h_end);
 
-                if(isHaveNew){
-                    new MyAlertDialog(getActivity(),MyAlertDialog.WARNING_TYPE)
-                            .setTitleText("检测到新版本")
-                            .setCancelText("取消")
-                            .setContentText("更新内容\n"+info)
-                            .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
-                                @Override
-                                public void onClick(MyAlertDialog myAlertDialog) {
-                                    RequestOpenBrowser.openBroswer(getActivity(), "http://xidianrs.cn/ruisiapp.apk");
-                                }
-                            }).show();
-                }
+                        Log.e("title","title is "+title);
+                        int vh = title.indexOf("[version:");
+                        if(vh>0){
+                            int ve = title.indexOf("]",vh+8);
+                            String newVerName = title.substring(vh+9,ve);
+                            if(!newVerName.equals(finalVersion_name)){
+                                new MyAlertDialog(getActivity(),MyAlertDialog.WARNING_TYPE)
+                                        .setTitleText("检测到新版本")
+                                        .setCancelText("取消")
+                                        .setContentText(title)
+                                        .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
+                                            @Override
+                                            public void onClick(MyAlertDialog myAlertDialog) {
+                                                //RequestOpenBrowser.openBroswer(getActivity(), "http://xidianrs.cn/ruisiapp.apk");
+                                                SingleArticleActivity.open(getActivity(),url,null);
+                                            }
+                                        }).show();
+                            }else{
+                                Toast.makeText(getActivity(), "暂无更新", Toast.LENGTH_SHORT).show();
+                            }
+                        }else{
+                            Toast.makeText(getActivity(), "暂无更新", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
                 return false;
             }
         });

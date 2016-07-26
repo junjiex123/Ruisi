@@ -168,18 +168,9 @@ public class SingleArticleActivity extends BaseActivity
 
         String url = "";
         Bundle b = getIntent().getExtras();
-        //通过本应用打开
-        if(b!=null){
-            Log.e("SINGLE","从本应用打开");
-            url = b.getString("url");
-            Author = b.getString("author");
-        }else{
-            Log.e("SINGLE","从浏览器打开");
-            //通过浏览器打开
-            Uri uri = getIntent().getData();
-            Log.e("SingleArticle",uri.toString()+" "+uri.getPath());
-        }
-
+        Log.e("SINGLE","从本应用打开");
+        url = b.getString("url");
+        Author = b.getString("author");
         Tid = GetId.getTid(url);
 
         if (url != null && url.contains("redirect")) {

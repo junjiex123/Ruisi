@@ -2,9 +2,11 @@ package xyz.yluo.ruisiapp.database;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.ExpandableListView;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -391,7 +393,6 @@ public class MyDbUtils {
      + "time DATETIME"
      + ")";
      */
-
     public void insertMessage(String url,String info){
         String sql = "INSERT INTO " + TABLE_MESSAGE + " (id,url,info,type,isread,time)"
                 + " VALUES(?,?,?,?,?,?)";
@@ -407,8 +408,15 @@ public class MyDbUtils {
         }
         if(!TextUtils.isEmpty(id)){
             Object args[] = new Object[]{id,url, info, type,0,read_time_str};
-            this.db.execSQL(sql, args);
-            Log.e("mydb", "插入未读消息"+url);
+            try {
+                this.db.execSQL(sql, args);
+                Log.e("mydb", "插入未读消息"+url);
+            }catch (SQLiteConstraintException e){
+                e.printStackTrace();
+                Log.e("mydb", "error消息重复"+url);
+            }
+
+
         }
         this.db.close();
     }
@@ -457,10 +465,17 @@ public class MyDbUtils {
     }
 
     public void setAllMessageRead(int type){
-        String sql = "UPDATE " + TABLE_MESSAGE + " SET isread=? WHERE id=?";
+        String sql = "UPDATE " + TABLE_MESSAGE + " SET isread=? WHERE type=?";
         Object args[] = new Object[]{1, type};
         this.db.execSQL(sql, args);
         this.db.close();
         Log.e("mydb", "message set read"+type);
+    }
+
+    public void clearMessageDataBase(){
+        String sql = "DELETE FROM " + TABLE_MESSAGE;
+        this.db.execSQL(sql);
+        this.db.close();
+        Log.e("mydb",  "clear TABLE_MESSAGE");
     }
 }

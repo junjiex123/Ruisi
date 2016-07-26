@@ -119,30 +119,31 @@ public class HomeActivity extends BaseActivity
         TextView userName = (TextView) header.findViewById(R.id.header_user_name);
         TextView userGrade = (TextView) header.findViewById(R.id.user_grade);
         //判断是否登陆
-        if (Config.ISLOGIN&& !TextUtils.isEmpty(Config.USER_NAME)) {
-            userGrade.setVisibility(View.VISIBLE);
-            usernameTitle.setText(Config.USER_NAME);
-            if (Config.USER_GRADE.length() > 0) {
-                userGrade.setText(Config.USER_GRADE);
+        if(currentFragment instanceof FrageHome){
+            if (Config.ISLOGIN&& !TextUtils.isEmpty(Config.USER_NAME)) {
+                userGrade.setVisibility(View.VISIBLE);
+                usernameTitle.setText(Config.USER_NAME);
+                if (Config.USER_GRADE.length() > 0) {
+                    userGrade.setText(Config.USER_GRADE);
+                }
+                userName.setText(Config.USER_NAME);
+                Uri uri = ImageUtils.getImageURI(getFilesDir(), Config.USER_UID);
+                if (uri != null) {//图片存在
+                    userImage.setImageURI(uri);
+                    userImageTitle.setImageURI(uri);
+                } else {//图片不存在
+                    String url = UrlUtils.getAvaterurlm(Config.USER_UID);
+                    Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
+                    Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImageTitle);
+                }
+            } else {
+                userImage.setImageResource(R.drawable.image_placeholder);
+                userImageTitle.setImageResource(R.drawable.image_placeholder);
+                usernameTitle.setText("西电睿思");
+                userName.setText("点击头像登陆");
+                userGrade.setVisibility(View.GONE);
             }
-            userName.setText(Config.USER_NAME);
-            Uri uri = ImageUtils.getImageURI(getFilesDir(), Config.USER_UID);
-            if (uri != null) {//图片存在
-                userImage.setImageURI(uri);
-                userImageTitle.setImageURI(uri);
-            } else {//图片不存在
-                String url = UrlUtils.getAvaterurlm(Config.USER_UID);
-                Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
-                Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImageTitle);
-            }
-        } else {
-            userImage.setImageResource(R.drawable.image_placeholder);
-            userImageTitle.setImageResource(R.drawable.image_placeholder);
-            usernameTitle.setText("西电睿思");
-            userName.setText("点击头像登陆");
-            userGrade.setVisibility(View.GONE);
         }
-
 
         //注册检查消息广播
         Log.e("消息广播","注册广播");
@@ -150,7 +151,6 @@ public class HomeActivity extends BaseActivity
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("com.ruisi.checkmsg");
         registerReceiver(myMsgReceiver, intentFilter);
-
     }
 
 
@@ -215,13 +215,15 @@ public class HomeActivity extends BaseActivity
         // 开启Fragment事务
         toolbarImageContainer.setVisibility(View.GONE);
 
-        String Tag = FrageType.TITLE_LIST[id];
-        Fragment f = fm.findFragmentByTag(Tag);
 
+        String Tag = FrageType.TITLE_LIST[id];
         if(id==FrageType.HOME){
+            Log.e("test","id  is home");
             Tag = Config.ISLOGIN&&(!TextUtils.isEmpty(Config.USER_NAME))? Config.USER_NAME:getString(R.string.app_name);
             toolbarImageContainer.setVisibility(View.VISIBLE);
         }
+
+        Fragment f = fm.findFragmentByTag(Tag);
 
         if(f==null){
             switch (id){
@@ -245,6 +247,7 @@ public class HomeActivity extends BaseActivity
                     break;
                 case FrageType.HOME:
                     f = new FrageHome();
+                    Log.e("test","new home");
                     break;
                 case FrageType.SETTING:
                     f = new FragSetting();

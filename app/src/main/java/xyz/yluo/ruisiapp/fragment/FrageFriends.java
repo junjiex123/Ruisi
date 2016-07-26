@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import xyz.yluo.ruisiapp.adapter.FriendAdapter;
 import xyz.yluo.ruisiapp.data.FriendData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;
+import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
@@ -32,11 +34,14 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * 数据{@link FriendData}
  * adapter{@link FriendAdapter}
  */
-public class FrageFriends extends Fragment {
+public class FrageFriends extends Fragment implements LoadMoreListener.OnLoadMoreListener{
     protected RecyclerView recycler_view;
     protected SwipeRefreshLayout refreshLayout;
     private FriendAdapter adapter;
     private List<FriendData> datas;
+    private int CurrentPage = 1;
+    private int TotalPage = Integer.MAX_VALUE;
+    private boolean isEnableLoadMore = true;
 
     @Nullable
     @Override
@@ -48,7 +53,9 @@ public class FrageFriends extends Fragment {
         datas = new ArrayList<>();
         adapter = new FriendAdapter(datas, getActivity());
         recycler_view.setHasFixedSize(true);
-        recycler_view.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager lm = new LinearLayoutManager(getActivity());
+        recycler_view.setLayoutManager(lm);
+        recycler_view.addOnScrollListener(new LoadMoreListener(lm, this, 12));
         recycler_view.setAdapter(adapter);
 
         final String url = "home.php?mod=space&do=friend&mobile=2";
@@ -66,6 +73,21 @@ public class FrageFriends extends Fragment {
         return view;
     }
 
+    @Override
+    public void onLoadMore() {
+        //加载更多被电击
+        if (isEnableLoadMore) {
+            Log.e("loadmore","loadmore");
+            isEnableLoadMore = false;
+            CurrentPage = CurrentPage+1;
+            if(CurrentPage>1&&CurrentPage<=TotalPage){
+                String url = "home.php?mod=space&do=friend&mobile=2"+"&page="+CurrentPage;
+                new GetDataTask().execute(url);
+                Log.e("loadmore",""+CurrentPage);
+            }
+        }
+    }
+
 
     private class GetDataTask extends AsyncTask<String, Void, String> {
         @Override
@@ -75,15 +97,22 @@ public class FrageFriends extends Fragment {
                 public void onSuccess(String response) {
                     Document document = Jsoup.parse(response);
                     Elements lists = document.select("#friend_ul").select("li");
-                    for (Element element : lists) {
-                        String imgurl = element.select(".avt").select("img").attr("src");
-                        String lastOnline = element.select(".avt").select(".gol").attr("title");
-                        String userName = element.select("h4").select("a[href^=home.php?mod=space&uid=]").text();
-                        String uid = GetId.getUid(imgurl);
-                        String info = element.select("p.maxh").text();
-                        //userName,imgUrl,info,uid,lastOnlineTime
-                        datas.add(new FriendData(userName, imgurl, info, uid, lastOnline));
+                    if(lists.size()<=0){
+                        CurrentPage = CurrentPage-1;
+                        TotalPage = CurrentPage;
+                        Log.e("好友","暂无更多，总页数"+TotalPage);
+                    }else{
+                        for (Element element : lists) {
+                            String imgurl = element.select(".avt").select("img").attr("src");
+                            String lastOnline = element.select(".avt").select(".gol").attr("title");
+                            String userName = element.select("h4").select("a[href^=home.php?mod=space&uid=]").text();
+                            String uid = GetId.getUid(imgurl);
+                            String info = element.select("p.maxh").text();
+                            //userName,imgUrl,info,uid,lastOnlineTime
+                            datas.add(new FriendData(userName, imgurl, info, uid, lastOnline));
+                        }
                     }
+
                 }
 
                 @Override
@@ -98,6 +127,7 @@ public class FrageFriends extends Fragment {
         protected void onPostExecute(String s) {
             adapter.notifyDataSetChanged();
             super.onPostExecute(s);
+            isEnableLoadMore = true;
             refreshLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {

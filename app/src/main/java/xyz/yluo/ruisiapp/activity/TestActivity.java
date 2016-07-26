@@ -1,11 +1,13 @@
 package xyz.yluo.ruisiapp.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyProgressDialog;
+import xyz.yluo.ruisiapp.database.MyDbUtils;
 
 public class TestActivity extends BaseActivity implements View.OnClickListener {
 
@@ -54,6 +56,11 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
                         .setTitleText("Good job!")
                         .setContentText("You clicked the btn_blue_bg!")
                         .show();
+                break;
+            case R.id.btn_6:
+                MyDbUtils myDbUtils = new MyDbUtils(getApplicationContext(), MyDbUtils.MODE_WRITE);
+                myDbUtils.insertMessage("http://www.baidu.com/tid=64645645","这是描述");
+                Log.e("插入","success");
                 break;
 
 

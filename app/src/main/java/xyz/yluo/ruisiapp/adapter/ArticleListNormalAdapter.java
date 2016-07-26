@@ -168,8 +168,6 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
 
         @Override
         void setData(int position) {
-            //TODO
-            //load more 现在没有数据填充
         }
     }
 

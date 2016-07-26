@@ -42,7 +42,9 @@ public class DataManager {
         cleanExternalCache(context);
         cleanSharedPreference(context);
         cleanFiles(context);
+
         cleanDatabaseByName(context, SQLiteHelper.DATABASE_NAME);
+
         for (String filePath : filepath) {
             cleanCustomCache(filePath);
         }
