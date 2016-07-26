@@ -1,5 +1,8 @@
 package xyz.yluo.ruisiapp.utils;
 
+import android.graphics.Color;
+import android.util.Log;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -141,5 +144,27 @@ public class GetId {
 
             return "0";
         }
+    }
+
+    public static int getColor(String str) {
+        //<a href="forum.php?mod=viewthread&amp;tid=829659&amp;extra=page%3D1&amp;mobile=2" style="color: #EC1282;">
+        int color = 0xff000000;
+        if(str.contains("color")){
+            int start = str.indexOf("color");
+            int end = str.indexOf(";",start);
+            String temp = str.substring(start,end);
+
+            int start_c = temp.indexOf("#");
+
+            String colorStr = temp.substring(start_c).trim();
+            try {
+                color =  Color.parseColor(colorStr);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            //Long.valueOf(s, 16)
+            Log.e("===color===",color+"");
+        }
+        return color;
     }
 }

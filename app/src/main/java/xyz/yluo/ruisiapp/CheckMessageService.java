@@ -124,7 +124,6 @@ public class CheckMessageService extends Service {
 
     /**
      * 消息已读设为未读
-     * todo 有一些延迟要解决
      */
     private void clearAllMessage() {
         isHaveUnreadMessage = false;
@@ -151,7 +150,7 @@ public class CheckMessageService extends Service {
         }
 
         /**
-         * todo 消息已读清除
+         * 消息已读清除
          */
         if (isClearMessage) {
             clearAllMessage();

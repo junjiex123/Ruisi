@@ -29,6 +29,7 @@ import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.httpUtil.SyncHttpClient;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
+import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-3-19.
@@ -177,6 +178,11 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
             Elements links = body.select("li");
             for (Element src : links) {
                 String url = src.select("a").attr("href");
+
+                int titleColor = GetId.getColor(src.select("a").attr("style"));
+                Log.e("style",src.select("a").attr("style"));
+                Log.e("titleColor",titleColor+"");
+
                 String author = src.select(".by").text();
                 src.select("span.by").remove();
                 String replyCount = src.select("span.num").text();
@@ -185,7 +191,7 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
                 String img = src.select("img").attr("src");
                 boolean hasImage = img.contains("icon_tu.png");
 
-                temp = new ArticleListData(hasImage, title, url, author, replyCount);
+                temp = new ArticleListData(hasImage, title, url, author, replyCount,titleColor);
                 dataset.add(temp);
             }
             return dataset;

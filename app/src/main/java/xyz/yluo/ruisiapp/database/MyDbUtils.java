@@ -187,7 +187,7 @@ public class MyDbUtils {
              */
 
             //boolean haveImage,String title, String titleUrl, String author, String replayCount
-            datas.add(new ArticleListData(false, result.getString(1), result.getString(0), result.getString(2), "null"));
+            datas.add(new ArticleListData(false, result.getString(1), result.getString(0), result.getString(2), "null",0xff888888));
         }
         result.close();
         this.db.close();

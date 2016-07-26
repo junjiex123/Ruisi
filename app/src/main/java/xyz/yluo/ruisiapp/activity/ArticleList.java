@@ -24,6 +24,7 @@ import xyz.yluo.ruisiapp.database.MyDbUtils;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
+import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -148,7 +149,6 @@ public class ArticleList extends ArticleListBase {
             ArticleListData temp;
             for (Element src : links) {
                 if (src.getElementsByAttributeValue("class", "by").first() != null) {
-
                     String type;
                     if (src.attr("id").contains("stickthread")) {
                         type = "置顶";
@@ -162,8 +162,15 @@ public class ArticleList extends ArticleListBase {
                         type = "normal";
                     }
 
-                    String title = src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]").text();
-                    String titleUrl = src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]").attr("href");
+                    Elements tempEles = src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]");
+
+                    String title = tempEles.text();
+                    String titleUrl = tempEles.attr("href");
+                    int titleColor = GetId.getColor(tempEles.attr("style"));
+
+                    Log.e("style",src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]").attr("style"));
+                    Log.e("titleColor",titleColor+"");
+
                     String author = src.getElementsByAttributeValue("class", "by").first().select("a").text();
                     String authorUrl = src.getElementsByAttributeValue("class", "by").first().select("a").attr("href");
                     String time = src.getElementsByAttributeValue("class", "by").first().select("em").text().trim();
@@ -174,7 +181,7 @@ public class ArticleList extends ArticleListBase {
                         Log.i("article list","ignore zhidin");
                     }else {
                         if (title.length() > 0 && author.length() > 0) {
-                            temp = new ArticleListData(title, titleUrl, type, author, authorUrl, time, viewcount, replaycount);
+                            temp = new ArticleListData(type,title, titleUrl, author, authorUrl, time, viewcount, replaycount,titleColor);
                             dataset.add(temp);
                         }
                     }
@@ -208,14 +215,15 @@ public class ArticleList extends ArticleListBase {
             Elements links = body.select("li");
             for (Element src : links) {
                 String url = src.select("a").attr("href");
+
+                int titleColor = GetId.getColor(src.select("a").attr("style"));
                 String author = src.select(".by").text();
                 src.select("span.by").remove();
                 String title = src.select("a").text();
                 String replyCount = src.select("span.num").text();
-
                 String img = src.select("img").attr("src");
                 boolean hasImage = img.contains("icon_tu.png");
-                temp = new ArticleListData(hasImage, title, url, author, replyCount);
+                temp = new ArticleListData(hasImage, title, url, author, replyCount,titleColor);
                 dataset.add(temp);
             }
             myDbUtils = new MyDbUtils(ArticleList.this, MyDbUtils.MODE_READ);

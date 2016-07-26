@@ -137,7 +137,10 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
 
             String imageUrl = UrlUtils.getAvaterurlm(single.getAuthorUrl());
             Picasso.with(activity).load(imageUrl).placeholder(R.drawable.image_placeholder).into(author_img);
-            article_title.setTextColor(single.isRead() ? 0xff888888 : 0xff000000);
+
+            int color = single.getTitleColor();
+            article_title.setTextColor(single.isRead()?0xff888888 :color);
+
             article_title.setText(single.getTitle());
             author_name.setText(single.getAuthor());
             reply_count.setText(single.getReplayCount());
@@ -198,7 +201,8 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         @Override
         void setData(int position) {
             ArticleListData single = DataSet.get(position);
-            article_title.setTextColor(single.isRead() ? 0xff888888 : 0xff000000);
+            int color = single.getTitleColor();
+            article_title.setTextColor(single.isRead()?0xff888888 :color);
             article_title.setText(single.getTitle());
             author_name.setText(single.getAuthor());
             reply_count.setText(single.getReplayCount());

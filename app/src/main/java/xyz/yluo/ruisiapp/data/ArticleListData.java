@@ -7,10 +7,14 @@ package xyz.yluo.ruisiapp.data;
  */
 public class ArticleListData {
 
+    public static final int TYPE_NORMAL = 0;
+    public static final int TYPE_ZHIDINL = 1;
+    public static final int TYPE_GOLD = 2;
+
     //主页面文章列表item
     private String title;
     private String titleUrl;
-    private String type;// TODO 置顶精华
+    private String type; //置顶 金币 普通
     private String author;
     private String authorUrl;
     private String postTime;
@@ -19,9 +23,11 @@ public class ArticleListData {
     private boolean isRead;
     private boolean ishaveImage;
 
+    private int titleColor = 0xff000000;//文章颜色
+
 
     //一般文章构造器
-    public ArticleListData(String title, String titleUrl, String type, String author, String authorUrl, String postTime, String viewCount, String replayCount) {
+    public ArticleListData(String type, String title, String titleUrl, String author, String authorUrl, String postTime, String viewCount, String replayCount,int titleColor) {
         this.type = type;//置顶 精华 金币。。。
         this.title = title;
         this.titleUrl = titleUrl;
@@ -30,15 +36,17 @@ public class ArticleListData {
         this.postTime = postTime;
         this.viewCount = viewCount;
         this.replayCount = replayCount;
+        this.titleColor = titleColor;
     }
 
     //手机版构造器
-    public ArticleListData(boolean haveImage, String title, String titleUrl, String author, String replayCount) {
+    public ArticleListData(boolean haveImage, String title, String titleUrl, String author, String replayCount,int titleColor) {
         this.ishaveImage = haveImage;//0--have image
         this.title = title;
         this.titleUrl = titleUrl;
         this.author = author;
         this.replayCount = replayCount;
+        this.titleColor = titleColor;
     }
 
     public boolean ishaveImage() {
@@ -47,6 +55,10 @@ public class ArticleListData {
 
     public boolean isRead() {
         return isRead;
+    }
+
+    public int getTitleColor() {
+        return titleColor;
     }
 
     public void setRead(boolean read) {
