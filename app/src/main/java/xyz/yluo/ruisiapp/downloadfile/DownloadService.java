@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -35,6 +36,8 @@ public class DownloadService extends Service {
     private NotificationManager mNotifyManager;
     private Intent intent = new Intent("com.example.communication.RECEIVER");
 
+    private FileResponseHandler handler;
+
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
@@ -45,11 +48,31 @@ public class DownloadService extends Service {
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        //取消下载按钮被电击
+        if(intent.getExtras().containsKey("cancel")){
+            Log.e("取消下载","=====ok=====");
+            if(handler!=null){
+                handler.cancelDownoad();
+                if(mNotifyManager!=null){
+                    mNotifyManager.cancel(0);
+                    FileUtil.deleteFile(filename);
+                }
+            }
+            return super.onStartCommand(intent, flags, startId);
+        }
+
+        //开始下载
         downloadProgress = 0;
+        //判断sd卡
+        if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+            Toast.makeText(getApplicationContext(),"SD卡不存在无法下载...",Toast.LENGTH_SHORT).show();
+            return super.onStartCommand(intent, flags, startId);
+        }
+
         down_url = intent.getStringExtra("download_url");
         filename = FileUtil.getFileName(down_url);
-
-        HttpUtil.get(getApplicationContext(), down_url, new FileResponseHandler(filename) {
+        handler = new FileResponseHandler(filename) {
             @Override
             public void onStartDownLoad(String fileName) {
                 Log.i("download", "====on statt start down load " + fileName);
@@ -57,6 +80,13 @@ public class DownloadService extends Service {
                     filename = fileName;
                 }
                 createNotification(filename);
+            }
+
+            @Override
+            public void onProgress(int progress, long totalBytes) {
+                super.onProgress(progress, totalBytes);
+                Log.i("download progress", progress + "" + totalBytes);
+                updateProgress(DOWNLOADING, progress);
             }
 
             @Override
@@ -70,14 +100,8 @@ public class DownloadService extends Service {
                 Log.i("download", "fail");
                 updateProgress(DOWN_ERROR, 0);
             }
-
-            @Override
-            public void onProgress(int progress, long totalBytes) {
-                super.onProgress(progress, totalBytes);
-                Log.i("download progress", progress + "" + totalBytes);
-                updateProgress(DOWNLOADING, progress);
-            }
-        });
+        };
+        HttpUtil.get(getApplicationContext(), down_url, handler);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -118,9 +142,6 @@ public class DownloadService extends Service {
          */
         downloadProgress = progress;
         intent.putExtra("progress", progress);
-        if (progress == 100) {
-            type = DOWN_OK;
-        }
         intent.putExtra("type", type);
         sendBroadcast(intent);
         Log.i("===发送广播===", type + " " + progress);
@@ -134,6 +155,8 @@ public class DownloadService extends Service {
                 mNotifyManager.notify(0, mBuilder.build());
                 break;
             case DOWN_OK:
+                Toast.makeText(getApplicationContext(),"文件下载完成",Toast.LENGTH_SHORT).show();
+
                 mBuilder.setContentText("文件下载完成！")
                         // Removes the progress bar
                         .setProgress(0, 0, false);
@@ -164,18 +187,6 @@ public class DownloadService extends Service {
                 //发送Action为com.example.communication.RECEIVER的广播
                 mNotifyManager.notify(0, mBuilder.build());
                 break;
-        }
-    }
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.i("service", "destroy");
-        //HttpUtil.cancel() /todo 取消下载
-        if (mNotifyManager != null) {
-            FileUtil.deleteFile(filename);
-            mNotifyManager.cancelAll();
         }
     }
 }

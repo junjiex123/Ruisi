@@ -13,9 +13,14 @@ import xyz.yluo.ruisiapp.downloadfile.FileUtil;
 public abstract class FileResponseHandler extends ResponseHandler {
     protected File mFile = null;
     private String fileName = "null";
+    private boolean isCancel = false;
+
+
+    public void cancelDownoad() {
+        isCancel = true;
+    }
 
     public FileResponseHandler(String fileName) {
-
         Log.i("file name info", fileName + "  ");
         if (!fileName.equals("null")) {
             this.fileName = fileName;
@@ -64,9 +69,6 @@ public abstract class FileResponseHandler extends ResponseHandler {
         int updateCount = 0;// 下载进度计数
 
         InputStream instream = connection.getInputStream();
-        if (instream == null) {
-            throw new IOException("Get InputStream from HttpURLConnection is null.");
-        }
         if (connection.getResponseCode() == 404) {
             onFailure(new Exception("file 404"), getTargetFile());
             return;
@@ -74,7 +76,6 @@ public abstract class FileResponseHandler extends ResponseHandler {
 
         if (mFile == null) {
             if (connection.getHeaderField("Content-Disposition") != null) {
-                Log.i("httputil", connection.getHeaderField("Content-Disposition"));
                 fileName = connection.getHeaderField("Content-Disposition");
                 //attachment; filename="shoujirs_06_24.zip"
                 fileName = fileName.substring(22, fileName.length() - 1);
@@ -83,15 +84,12 @@ public abstract class FileResponseHandler extends ResponseHandler {
         }
         totalSize = connection.getContentLength();
         FileOutputStream fos = new FileOutputStream(getTargetFile());
-
-        System.out.println("========================");
         sendStartDownloadMessage(fileName);
-
         try {
             byte[] tmp = new byte[1024];
             int len;
             // do not send messages if request has been cancelled
-            while ((len = instream.read(tmp)) != -1 && !Thread.currentThread().isInterrupted()) {
+            while ((len = instream.read(tmp)) != -1 && !Thread.currentThread().isInterrupted()&&(!isCancel)) {
                 downloadCount += len;// 时时获取下载到的大小
                 fos.write(tmp, 0, len);
                 if (updateCount == 0 || (downloadCount * 100 / totalSize - down_step) >= updateCount) {
@@ -100,15 +98,12 @@ public abstract class FileResponseHandler extends ResponseHandler {
                     sendProgressMessage(updateCount, totalSize);
                 }
             }
-            if (downloadCount >= totalSize) {
-                onSuccess(getTargetFile());
-            } else {
-                onFailure(new Exception("received bytes length is not contentLength"), getTargetFile());
-            }
-        } finally {
             fos.flush();
             fos.close();
             instream.close();
+            onSuccess(getTargetFile());
+        }catch (Exception e){
+            onFailure(new Exception("received bytes length is not contentLength"), getTargetFile());
         }
     }
 

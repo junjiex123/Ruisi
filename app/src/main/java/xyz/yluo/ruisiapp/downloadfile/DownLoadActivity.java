@@ -27,7 +27,6 @@ public class DownLoadActivity extends AppCompatActivity {
         setContentView(R.layout.activity_download);
         fileName = getIntent().getStringExtra("fileName");
         int progress = getIntent().getIntExtra("progress", 0);
-
         //FileUtil.requestHandleFile(this,fileName);
         Log.i("fileInfo", fileName);
         TextView downPath = (TextView) findViewById(R.id.down_path);
@@ -67,7 +66,8 @@ public class DownLoadActivity extends AppCompatActivity {
     private void cancelDown() {
         //to do
         Intent intent = new Intent(this, DownloadService.class);
-        stopService(intent);
+        intent.putExtra("cancel",true);
+        startService(intent);
         finish();
     }
 
