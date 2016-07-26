@@ -313,6 +313,10 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
         });
     }
 
+    /**
+     * 回复层主
+     * @param txt
+     */
     private void replyCz(final String txt){
         HttpUtil.get(getActivity(), replyUrl, new ResponseHandler() {
             @Override
@@ -360,6 +364,10 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
         });
     }
 
+    /**
+     * 回复哈好友
+     * @param txt
+     */
     private void replyHy(final String txt){
         Map<String, String> params = new HashMap<>();
         params.put("formhash", Config.FORMHASH);
@@ -397,6 +405,11 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
         });
     }
 
+    /**
+     * 回复楼主
+     * @param isok
+     * @param res
+     */
     private void handleReply(boolean isok, String res) {
         if (isok) {
             Log.i("reply resoult",res);

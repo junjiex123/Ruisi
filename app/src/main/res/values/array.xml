@@ -8,4 +8,28 @@
         <item>1</item>
         <item>2</item>
     </string-array>
+
+    <string-array name="forums">
+        <item>灌水专区</item>
+        <item>文章天地</item>
+        <item>我是女生</item>
+        <item>西电问答</item>
+        <item>心灵花园</item>
+        <item>普通交易</item>
+        <item>缘聚睿思</item>
+        <item>失物招领</item>
+        <item>我要毕业啦</item>
+        <item>技术博客</item>
+        <item>学习交流</item>
+        <item>我爱运动</item>
+        <item>考研交流</item>
+        <item>就业交流</item>
+        <item>软件交流</item>
+        <item>嵌入式交流</item>
+        <item>竞赛交流</item>
+        <item>原创精品</item>
+        <item>西电后街</item>
+        <item>音乐纵贯线</item>
+        <item>绝对漫域</item>
+    </string-array>
 </resources>

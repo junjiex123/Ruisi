@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_8"
-        android:background="@drawable/reply_edittext_background"
+        android:background="@drawable/edittext_bg"
         android:hint="填写留言，最多10个字（选填）"
         android:maxLines="1"
         android:textSize="16sp" />

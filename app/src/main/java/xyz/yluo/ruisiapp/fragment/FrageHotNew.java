@@ -22,7 +22,6 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.activity.ArticleList;
 import xyz.yluo.ruisiapp.adapter.HotNewListAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.data.GalleryData;

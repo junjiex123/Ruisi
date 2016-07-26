@@ -77,6 +77,11 @@
             android:name=".activity.NewArticleActivity_2"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.NewArticleActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.ActivitySearch"
             android:theme="@style/AppTheme"

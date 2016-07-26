@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.ExpandableListView;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;

@@ -2,7 +2,6 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,7 +27,6 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.checknet.CheckNet;
 import xyz.yluo.ruisiapp.checknet.CheckNetResponse;
-import xyz.yluo.ruisiapp.checknet.NetworkReceiver;
 import xyz.yluo.ruisiapp.database.MyDbUtils;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/edit_bar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@color/bgwhite"
+    android:padding="@dimen/dimen_4">
+    <CheckBox android:id="@+id/action_bold"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="@dimen/dimen_8"
+        android:background="@drawable/editer_bar_bold_bg"
+        android:button="@null"
+        android:checked="false" />
+    <CheckBox android:id="@+id/action_italic"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="@dimen/dimen_8"
+        android:background="@drawable/editer_bar_italic_bg"
+        android:button="@null" />
+
+    <CheckBox android:id="@+id/action_color_text"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="@dimen/dimen_8"
+        android:background="@drawable/editer_bar_color_text_bg"
+        android:button="@null" />
+
+    <CheckBox android:id="@+id/action_emotion"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="@dimen/dimen_8"
+        android:background="@drawable/editer_bar_emotion_bg"
+        android:button="@null"
+        android:clickable="true" />
+
+    <CheckBox android:id="@+id/action_quote"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="@dimen/dimen_8"
+        android:background="@drawable/editer_bar_quote_bg"
+        android:button="@null"
+        android:clickable="true" />
+
+    <View
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="24dp"/>
+
+    <ImageView android:id="@+id/action_backspace"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/editer_bar_back_space_bg"
+        android:button="@null"
+        android:clickable="true" />
+</LinearLayout>
+
+
+

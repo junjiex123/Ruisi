@@ -50,7 +50,7 @@ public class NewArticleActivity_2 extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_new_article2);
+        setContentView(R.layout.activity_new_topic2);
 
         //设置cookie
         myWebView = (WebView) findViewById(R.id.mwebView);
