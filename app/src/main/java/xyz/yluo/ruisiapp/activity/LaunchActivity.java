@@ -2,6 +2,7 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.checknet.CheckNet;
 import xyz.yluo.ruisiapp.checknet.CheckNetResponse;
+import xyz.yluo.ruisiapp.checknet.NetworkReceiver;
 import xyz.yluo.ruisiapp.database.MyDbUtils;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;
@@ -92,6 +94,17 @@ public class LaunchActivity extends BaseActivity {
             }
         });
         getSetting();
+
+
+        MyDbUtils myDbUtils = new MyDbUtils(this, MyDbUtils.MODE_READ);
+        myDbUtils.showHistoryDatabase();
+
+        new CheckNet(this).startCheck(new CheckNetResponse() {
+            @Override
+            public void onFinish(int type, String response) {
+                canGetRs(type);
+            }
+        });
     }
 
     @Override
@@ -101,23 +114,11 @@ public class LaunchActivity extends BaseActivity {
         anima.setDuration(1000);// 设置动画显示时间
         TranslateAnimation animation = new TranslateAnimation(0, 0, 80, 0);
         animation.setDuration(1000);
-
         // 初始化需要加载的动画资源
         RotateAnimation rotateAnimation = (RotateAnimation) AnimationUtils.loadAnimation(this, R.anim.always_rotate);
         launch_text.startAnimation(animation);
         user_image.startAnimation(anima);
         findViewById(R.id.loading_view).startAnimation(rotateAnimation);
-
-        new CheckNet(this).startCheck(new CheckNetResponse() {
-            @Override
-            public void onFinish(int type, String response) {
-                canGetRs(type);
-            }
-        });
-
-        MyDbUtils myDbUtils = new MyDbUtils(this, MyDbUtils.MODE_READ);
-        myDbUtils.showHistoryDatabase();
-
     }
 
     //从首选项读出设置

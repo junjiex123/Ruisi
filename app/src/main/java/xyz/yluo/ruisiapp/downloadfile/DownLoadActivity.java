@@ -109,7 +109,6 @@ public class DownLoadActivity extends AppCompatActivity {
      * @author len
      */
     public class downloadMsgReceiver extends BroadcastReceiver {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             //拿到进度，更新UI

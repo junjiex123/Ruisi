@@ -22,9 +22,11 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.activity.ArticleList;
 import xyz.yluo.ruisiapp.adapter.HotNewListAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.data.GalleryData;
+import xyz.yluo.ruisiapp.database.MyDbUtils;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.httpUtil.SyncHttpClient;
@@ -178,11 +180,9 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
             Elements links = body.select("li");
             for (Element src : links) {
                 String url = src.select("a").attr("href");
-
                 int titleColor = GetId.getColor(src.select("a").attr("style"));
                 Log.e("style",src.select("a").attr("style"));
-                Log.e("titleColor",titleColor+"");
-
+                //Log.e("titleColor",titleColor+"");
                 String author = src.select(".by").text();
                 src.select("span.by").remove();
                 String replyCount = src.select("span.num").text();
@@ -190,11 +190,12 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
                 String title = src.select("a").text();
                 String img = src.select("img").attr("src");
                 boolean hasImage = img.contains("icon_tu.png");
-
                 temp = new ArticleListData(hasImage, title, url, author, replyCount,titleColor);
                 dataset.add(temp);
             }
-            return dataset;
+
+            MyDbUtils myDbUtils = new MyDbUtils(getActivity(), MyDbUtils.MODE_READ);
+            return myDbUtils.handReadHistoryList(dataset);
         }
 
         @Override

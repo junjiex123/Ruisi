@@ -2,6 +2,10 @@ package xyz.yluo.ruisiapp;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.IntentFilter;
+import android.util.Log;
+
+import xyz.yluo.ruisiapp.checknet.NetworkReceiver;
 
 /**
  * Created by free2 on 16-3-11.
@@ -10,11 +14,29 @@ import android.content.Context;
 public class Config extends Application {
 
     private  Context context;
+    private NetworkReceiver receiver= new NetworkReceiver();
 
     @Override
     public void onCreate() {
         super.onCreate();
         this.context = getApplicationContext();
+
+        //注册网络变化广播
+        Log.e("application create消息广播","注册广播");
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(receiver, intentFilter);
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+
+        //注册网络变化广播
+        if(receiver!=null){
+            Log.e("application onTerminate","取消注册广播");
+            unregisterReceiver(receiver);
+        }
     }
 
     public  Context getContext() {
@@ -23,8 +45,8 @@ public class Config extends Application {
 
     //启动时设定
     //论坛基地址
-    public static final String BASE_URL_ME = "http://bbs.rs.xidian.me/";
-    public static final String BASE_URL_RS = "http://rs.xidian.edu.cn/";
+    private static final String BASE_URL_ME = "http://bbs.rs.xidian.me/";
+    private static final String BASE_URL_RS = "http://rs.xidian.edu.cn/";
     //是否为校园网
     public static boolean IS_SCHOOL_NET = false;
     //论坛FORMHASH

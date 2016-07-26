@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 import android.widget.Toast;
 
 import xyz.yluo.ruisiapp.Config;
@@ -16,6 +17,7 @@ import xyz.yluo.ruisiapp.Config;
 public class NetworkReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
+        Log.e("check net","网络变化");
         checkNetWork(context);
     }
 

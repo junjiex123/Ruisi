@@ -161,9 +161,7 @@ public class ArticleList extends ArticleListBase {
                     } else {
                         type = "normal";
                     }
-
                     Elements tempEles = src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]");
-
                     String title = tempEles.text();
                     String titleUrl = tempEles.attr("href");
                     int titleColor = GetId.getColor(tempEles.attr("style"));
@@ -210,12 +208,10 @@ public class ArticleList extends ArticleListBase {
             List<ArticleListData> dataset = new ArrayList<>();
             Document doc = Jsoup.parse(res);
             Elements body = doc.select("div[class=threadlist]"); // 具有 href 属性的链接
-
             ArticleListData temp;
             Elements links = body.select("li");
             for (Element src : links) {
                 String url = src.select("a").attr("href");
-
                 int titleColor = GetId.getColor(src.select("a").attr("style"));
                 String author = src.select(".by").text();
                 src.select("span.by").remove();
