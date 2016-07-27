@@ -34,6 +34,8 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
         findViewById(R.id.btn_2).setOnClickListener(this);
         findViewById(R.id.btn_3).setOnClickListener(this);
         tv_out = (TextView) findViewById(R.id.tv_out);
+
+
     }
 
     @Override

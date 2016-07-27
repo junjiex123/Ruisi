@@ -1,8 +1,9 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,42 +12,38 @@ import android.widget.TextView;
 import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.MyGuildView;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.data.GalleryData;
-import xyz.yluo.ruisiapp.listener.RecyclerPageChangeListener;
 
 /**
  * Created by free2 on 16-3-31.
  * 支持 gallery
  */
 public class HotNewListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
-    private static final int TYPE_HEADER_GALLERY = 0;
     private static final int TYPE_LOAD_MORE = 1;
     private static final int TYPE_ARTICLE_LIST = 3;
-    private List<GalleryData> DataSet_gallery;
+    private static final int TYPE_ARTICLE_HEADER = 2;
+
     private List<ArticleListData> DataSet;
-    private GalleryAdapter galleryAdapter;
+    private List<GalleryData> galleryDatas;
     private Activity activity;
 
-    public HotNewListAdapter(Activity activity, List<GalleryData> dataSetg, List<ArticleListData> DataSet) {
-        DataSet_gallery = dataSetg;
+    public HotNewListAdapter(Activity activity, List<ArticleListData> DataSet, @Nullable List<GalleryData> galleryDatas) {
         this.DataSet = DataSet;
         this.activity = activity;
-
-        galleryAdapter = new GalleryAdapter(activity, DataSet_gallery);
+        this.galleryDatas = galleryDatas;
     }
 
     @Override
     public int getItemCount() {
-
-        if (DataSet_gallery.size() > 0) {
+        if (galleryDatas!=null&&galleryDatas.size() > 0) {
             if (DataSet.size() == 0) {
                 return 1;
             }
             return DataSet.size() + 2;
         }
-
         if (DataSet.size() == 0) {
             return 0;
         }
@@ -55,11 +52,11 @@ public class HotNewListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (DataSet_gallery != null && position == 0 && DataSet_gallery.size() > 0) {
-            return TYPE_HEADER_GALLERY;
+        if (galleryDatas != null && position == 0 && galleryDatas.size() > 0) {
+            return TYPE_ARTICLE_HEADER;
         } else if (position > 0 && position == getItemCount() - 1) {
             return TYPE_LOAD_MORE;
-        } else {
+        }else {
             return TYPE_ARTICLE_LIST;
         }
     }
@@ -71,41 +68,14 @@ public class HotNewListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 return new NormalViewHolderMe(LayoutInflater.from(parent.getContext()).inflate(R.layout.main_list_item_me, parent, false));
             case TYPE_LOAD_MORE:
                 return new LoadMoreViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.load_more_item, parent, false));
-            default: // TYPE_HEADER_GALLERY
-                return new GalleryViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.new_hot_gallery_item, parent, false));
+            default:
+                return new HeadViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.gallery_list_item, parent, false));
         }
     }
 
     @Override
     public void onBindViewHolder(BaseViewHolder holder, int position) {
         holder.setData(position);
-    }
-
-    //Gallery viewHolder
-    private class GalleryViewHolder extends BaseViewHolder implements RecyclerPageChangeListener.OnPageChange {
-        private RecyclerView recyclerGallery;
-        private TextView pageInfo;
-
-        GalleryViewHolder(View itemView) {
-            super(itemView);
-            recyclerGallery = (RecyclerView) itemView.findViewById(R.id.recycler_view_gallery);
-            pageInfo = (TextView) itemView.findViewById(R.id.gallery_page_info);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, true);
-            recyclerGallery.setLayoutManager(linearLayoutManager);
-            recyclerGallery.addOnScrollListener(new RecyclerPageChangeListener(linearLayoutManager, this));
-            recyclerGallery.setAdapter(galleryAdapter);
-        }
-
-        void setData(int position) {
-            String txt = getAdapterPosition() % DataSet.size() + 1 + "/" + DataSet.size();
-            pageInfo.setText(txt);
-        }
-
-        @Override
-        public void onPageChange(int page) {
-            String txt = page % DataSet.size() + 1 + "/" + DataSet.size();
-            pageInfo.setText(txt);
-        }
     }
 
     //加载更多ViewHolder
@@ -121,7 +91,6 @@ public class HotNewListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             //load more 现在没有数据填充
         }
     }
-
 
     //手机版文章列表
     private class NormalViewHolderMe extends BaseViewHolder {
@@ -163,6 +132,29 @@ public class HotNewListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 notifyItemChanged(getAdapterPosition());
             }
             SingleArticleActivity.open(activity, single_data.getTitleUrl(), single_data.getAuthor());
+        }
+    }
+
+    //图片切换view
+    private class HeadViewHolder extends BaseViewHolder{
+        private MyGuildView guildView;
+        public HeadViewHolder(View itemView) {
+            super(itemView);
+            guildView  = (MyGuildView) itemView.findViewById(R.id.myGuideView);
+
+        }
+        @Override
+        void setData(int position) {
+            guildView.setData(galleryDatas);
+            guildView.setListener(new MyGuildView.OnItemClickListener() {
+                @Override
+                public void onBannerItemClick(View view, int position) {
+                    String titleUrl = galleryDatas.get(position).getTitleUrl();
+                    if(!TextUtils.isEmpty(titleUrl)){
+                        SingleArticleActivity.open(activity,titleUrl,null);
+                    }
+                }
+            });
         }
     }
 }

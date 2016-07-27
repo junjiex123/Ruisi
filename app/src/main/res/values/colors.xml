@@ -4,6 +4,14 @@
     <color name="colorPrimaryDark">#005FAB</color>
     <color name="background">#fefefe</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorYellow">#ff9c00</color>
+    <color name="colorTextPrimary">#DE000000</color>
+    <color name="colorTextSecondry">#8A000000</color>
+    <color name="colorDisableHintIcon">#61000000</color>
+    <color name="colorTextWhite">#ffffff</color>
+    <color name="colorTextRed">#f51B1B</color>
+    <color name="colorTextOrange">#F27474</color>
+    <color name="colorDivider">#1F000000</color>
     <color name="bgwhite">#F8F9F9</color>
     <color name="white">#ffffff</color>
     <color name="bggrey">#F1F1F1</color>

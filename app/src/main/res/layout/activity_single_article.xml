@@ -49,12 +49,6 @@
             android:layout_width="match_parent"
             android:layout_height="40dp">
 
-            <Spinner
-                android:background="@null"
-                android:id="@+id/btn_jump_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
             <TextView
                 android:padding="8dp"
                 android:gravity="center"
@@ -81,6 +75,11 @@
                 android:id="@+id/btn_refresh"
                 android:layout_width="40dp"
                 android:layout_height="40dp" />
+            <Spinner
+                android:background="@null"
+                android:id="@+id/btn_jump_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"/>
             <ImageView
                 android:padding="8dp"
                 android:src="@drawable/ic_more_vert_black_24dp"
@@ -134,7 +133,4 @@
                 android:layout_height="40dp" />
         </LinearLayout>
     </LinearLayout>
-
-
-
 </android.support.design.widget.CoordinatorLayout>

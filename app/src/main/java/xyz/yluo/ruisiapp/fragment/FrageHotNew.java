@@ -57,13 +57,24 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.frage_new_topic, container, false);
+        View view = inflater.inflate(R.layout.frage_hot_new_list, container, false);
         recycler_view = (RecyclerView) view.findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
+
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recycler_view.setLayoutManager(mLayoutManager);
-        adapter = new HotNewListAdapter(getActivity(), galleryDatas, mydataset);
+
+        /**
+         * todo remove later
+         */
+        galleryDatas.add(new GalleryData("http://pic25.nipic.com/20121112/5955207_224247025000_2.jpg","标题1","http://www.baidu.com"));
+        galleryDatas.add(new GalleryData("http://img05.tooopen.com/images/20140604/sy_62331342149.jpg","标题22","http://www.baidu.com"));
+        galleryDatas.add(new GalleryData("http://d.3987.com/wmribz_140527/009.jpg","标题333","http://www.baidu.com"));
+        galleryDatas.add(new GalleryData("http://img3.imgtn.bdimg.com/it/u=1406668637,2493237568&fm=21&gp=0.jpg","标题444","http://www.baidu.com"));
+        adapter = new HotNewListAdapter(getActivity(), mydataset,galleryDatas);
+
+
         recycler_view.setAdapter(adapter);
         recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 10));
 
@@ -88,6 +99,7 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
                 getData();
             }
         }, 300);
+
         return view;
     }
 
@@ -136,10 +148,10 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
         });
     }
 
-    private class getGalleryTask extends AsyncTask<Void, Void, List<GalleryData>> {
+    private class getGalleryTask extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected List<GalleryData> doInBackground(Void... voids) {
+        protected Void doInBackground(Void... voids) {
             galleryDatas.clear();
             Log.i("gallery", "=====gallery=====");
             String url = "http://rs.xidian.edu.cn/forum.php";
@@ -160,10 +172,12 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
         }
 
         @Override
-        protected void onPostExecute(List<GalleryData> galleryDatas) {
-            super.onPostExecute(galleryDatas);
+        protected void onPreExecute() {
+            // todo
             adapter.notifyItemChanged(0);
         }
+
+
     }
 
     //非校园网状态下获得一个板块文章列表数据

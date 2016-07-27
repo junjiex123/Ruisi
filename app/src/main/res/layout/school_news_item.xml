@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_window"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bgwhite"
-    android:foreground="?attr/selectableItemBackground"
+    android:background="?attr/selectableItemBackground"
     android:clickable="true">
-
-    <View
-        android:id="@+id/message_badge"
-        android:layout_width="8dp"
-        android:layout_height="8dp"
-        android:background="@drawable/badge"
-        app:layout_constraintLeft_toLeftOf="@+id/main_window"
-        app:layout_constraintTop_toTopOf="@+id/main_window"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="24dp" />
 
     <TextView
         android:layout_marginTop="8dp"
@@ -26,14 +16,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:paddingEnd="12dp"
         android:paddingBottom="12dp"
-        android:paddingStart="4dp"
         tools:text="话题的标题"
-        android:layout_marginStart="14dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginStart="12dp"
         app:layout_constraintLeft_toLeftOf="@+id/main_window"
         app:layout_constraintTop_toTopOf="@+id/main_window"
         app:layout_constraintRight_toRightOf="@+id/main_window"/>
+
+    <View
+        android:id="@+id/message_badge"
+        android:layout_width="6dp"
+        android:layout_height="6dp"
+        android:background="@drawable/badge"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintLeft_toLeftOf="@+id/main_window"
+        app:layout_constraintBottom_toBottomOf="@+id/main_window"
+        android:layout_marginStart="12dp" />
 
     <TextView
         android:id="@+id/time"

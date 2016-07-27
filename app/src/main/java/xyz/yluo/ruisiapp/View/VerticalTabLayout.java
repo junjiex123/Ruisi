@@ -23,7 +23,7 @@ public class VerticalTabLayout extends ViewGroup {
      */
 
     private int indicateColor = ContextCompat.getColor(getContext(), R.color.colorAccent);
-    private int indicateWidth = 12;
+    private int indicateWidth = 8;
     private int currentSelect = 0;
 
 

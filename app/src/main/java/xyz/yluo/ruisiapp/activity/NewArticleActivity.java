@@ -29,7 +29,6 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 /**
  * Created by free2 on 16-3-6.
  * 发帖activity
- * 暂时不能用，绕不过验证码
  */
 public class NewArticleActivity extends BaseActivity{
 
@@ -162,8 +161,7 @@ public class NewArticleActivity extends BaseActivity{
         return true;
     }
 
-
-    //    //准备发帖需要的东西
+//    //准备发帖需要的东西
 //    private void preparePost(final int fid) {
 //        progress = ProgressDialog.show(this, "正在发送", "请等待", true);
 //        String url = "forum.php?mod=post&action=newthread&fid=" + fid + "&mobile=2";
