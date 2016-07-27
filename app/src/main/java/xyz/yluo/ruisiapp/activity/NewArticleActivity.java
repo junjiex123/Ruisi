@@ -2,13 +2,14 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -28,10 +29,9 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * Created by free2 on 16-3-6.
  * 发帖activity
  */
-public class NewArticleActivity extends BaseActivity{
+public class NewArticleActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener{
 
     private EditText ed_title,ed_content;
-    private CoordinatorLayout main_window;
     private MyProgressDialog dialog;
     private MyToolBar myToolBar;
 
@@ -60,13 +60,9 @@ public class NewArticleActivity extends BaseActivity{
             }
         });
 
-
         Spinner choose_froums = (Spinner) findViewById(R.id.choose_froums);
         ed_title = (EditText) findViewById(R.id.ed_title);
         ed_content = (EditText) findViewById(R.id.ed_content);
-        main_window = (CoordinatorLayout) findViewById(R.id.main_window);
-
-
         choose_froums.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -82,14 +78,40 @@ public class NewArticleActivity extends BaseActivity{
 
             }
         });
+        LinearLayout edit_bar = (LinearLayout) findViewById(R.id.edit_bar);
+        edit_bar.findViewById(R.id.action_backspace).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int start = ed_content.getSelectionStart();
+                int end = ed_content.getSelectionEnd();
+                if(start==0){
+                    return;
+                }
+                if((start==end)&&start>0){
+                    start = start-1;
+                }
+                ed_content.getText().delete(start,end);
+                Log.e("eeee",start+"|"+end);
+            }
+        });
+        for(int i = 0;i<edit_bar.getChildCount();i++){
+            View c = edit_bar.getChildAt(i);
+            if(c instanceof CheckBox){
+                ((CheckBox)c).setOnCheckedChangeListener(this);
+            }
+        }
+
+
     }
 
     private boolean checkPostInput() {
         if(TextUtils.isEmpty(ed_title.getText().toString().trim())){
-            Snackbar.make(main_window, "标题不能为空啊", Snackbar.LENGTH_SHORT).show();
+            Toast.makeText(this, "标题不能为空啊", Toast.LENGTH_SHORT).show();
+            //Snackbar.make(main_window, "标题不能为空啊", Snackbar.LENGTH_SHORT).show();
             return false;
         }else if(TextUtils.isEmpty(ed_content.getText().toString().trim())){
-            Snackbar.make(main_window, "内容不能为空啊", Snackbar.LENGTH_SHORT).show();
+            //Snackbar.make(main_window, "内容不能为空啊", Snackbar.LENGTH_SHORT).show();
+            Toast.makeText(this, "内容不能为空啊", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -129,7 +151,7 @@ public class NewArticleActivity extends BaseActivity{
     //发帖成功执行
     private void postSuccess() {
         dialog.dismiss();
-        Toast.makeText(getApplicationContext(), "主题发表成功", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "主题发表成功", Toast.LENGTH_SHORT).show();
         //finish();
         new MyAlertDialog(this,MyAlertDialog.SUCCESS_TYPE)
                 .setTitleText("发帖成功")
@@ -148,7 +170,40 @@ public class NewArticleActivity extends BaseActivity{
     //发帖失败执行
     private void postFail(String str) {
         dialog.dismiss();
-        Toast.makeText(getApplicationContext(), "发帖失败", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "发帖失败", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        switch (compoundButton.getId()){
+            case R.id.action_bold:
+                handleInsert(b?"[b]":"[/b]");
+                break;
+            case R.id.action_italic:
+                handleInsert(b?"[i]":"[/i]");
+                break;
+            case R.id.action_quote:
+                handleInsert(b?"[quote]":"[/quote]");
+                break;
+            case R.id.action_color_text:
+                break;
+            case R.id.action_emotion:
+                break;
+        }
+    }
+
+    private void handleInsert(String s){
+        if(!s.contains("/")){
+            ed_content.append(s);
+        }else{
+            String temp = s.replace("[/","[");
+            if(ed_content.getText().toString().endsWith(temp)){
+                int len = ed_content.getText().length();
+                ed_content.getText().delete(len-temp.length(),len);
+            }else{
+                ed_content.append(s);
+            }
+        }
     }
 
 

@@ -49,7 +49,6 @@ public class PostHandler implements TextWatcher {
             int end = start + count;
             Editable message = mEditor.getEditableText();
             ImageSpan[] list = message.getSpans(start, end, ImageSpan.class);
-
             for (ImageSpan span : list) {
                 int spanStart = message.getSpanStart(span);
                 int spanEnd = message.getSpanEnd(span);

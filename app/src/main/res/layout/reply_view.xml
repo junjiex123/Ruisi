@@ -46,6 +46,7 @@
         android:layout_height="wrap_content"
         android:background="#f2ffffff"
         android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:padding="@dimen/dimen_4">
 
         <ImageButton
@@ -66,16 +67,16 @@
             android:hint="回复"
             android:maxLines="3" />
 
-        <ImageView
-            android:id="@+id/action_send"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom|end"
+        <Button
             android:layout_marginStart="4dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:padding="@dimen/dimen_4"
-            android:src="@drawable/ic_menu_send" />
+            android:id="@+id/action_send"
+            android:enabled="false"
+            android:background="@drawable/btn_light_blue_bg"
+            android:text="发表"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:layout_width="48dp"
+            android:layout_height="30dp" />
 
     </LinearLayout>
 

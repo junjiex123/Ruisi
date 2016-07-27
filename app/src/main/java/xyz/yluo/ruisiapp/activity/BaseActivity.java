@@ -2,11 +2,9 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 import android.view.View;
 
 import xyz.yluo.ruisiapp.Config;
-import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyToolBar;
 

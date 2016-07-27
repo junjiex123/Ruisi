@@ -29,13 +29,14 @@ public class FrageHome extends Fragment {
 
         View view = inflater.inflate(R.layout.fragement_home, container, false);
         ViewPager viewpager = (ViewPager) view.findViewById(R.id.viewpager);
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.mytab);
+        final TabLayout tabLayout = (TabLayout) view.findViewById(R.id.mytab);
 
         //getChildFragmentManager() 解决 fragment嵌套viewpager 空白问题
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), titles);
         viewpager.setAdapter(viewPagerAdapter);
         viewpager.setOffscreenPageLimit(titles.length - 1);
         tabLayout.setupWithViewPager(viewpager);
+
         return view;
     }
 }

@@ -26,8 +26,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -77,7 +77,7 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
     private EditText input;
     private LinearLayout smiley_container;
     private CoordinatorLayout notisfy_view;
-    private ImageView btn_send;
+    private Button btn_send;
     private SmileyAdapter adapter;
     private boolean isEnableTail = false;
     private String[] nameList;
@@ -117,7 +117,7 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
         loadingView = (LinearLayout) v.findViewById(R.id.loading_view);
         loadingView.setVisibility(View.GONE);
         notisfy_view = (CoordinatorLayout) v.findViewById(R.id.notisfy_view);
-        btn_send = (ImageView) v.findViewById(R.id.action_send);
+        btn_send = (Button) v.findViewById(R.id.action_send);
         btn_send.setOnClickListener(this);
         input.setOnClickListener(this);
         hideSmiley();
@@ -167,9 +167,9 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
             @Override
             public void afterTextChanged(Editable editable) {
                 if (!TextUtils.isEmpty(input.getText())) {
-                    btn_send.setImageResource(R.drawable.ic_menu_send_active);
+                    btn_send.setEnabled(true);
                 } else {
-                    btn_send.setImageResource(R.drawable.ic_menu_send);
+                    btn_send.setEnabled(false);
                 }
             }
         });

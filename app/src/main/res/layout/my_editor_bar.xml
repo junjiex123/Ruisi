@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/edit_bar"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/edit_bar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center_vertical"
     android:background="@color/bgwhite"
     android:padding="@dimen/dimen_4">
+
     <CheckBox android:id="@+id/action_bold"
         android:layout_width="24dp"
         android:layout_height="24dp"
@@ -48,7 +50,8 @@
         android:layout_width="0dp"
         android:layout_height="24dp"/>
 
-    <ImageView android:id="@+id/action_backspace"
+    <ImageView
+        android:id="@+id/action_backspace"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginTop="8dp"
