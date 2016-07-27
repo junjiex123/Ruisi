@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -33,6 +31,7 @@ import java.util.Map;
 import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyProgressDialog;
+import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
@@ -59,7 +58,7 @@ public class LoginActivity extends BaseActivity {
     private String loginUrl;
     private int answerSelect = 0;
     private MyProgressDialog dialog;
-    private long startTime = System.currentTimeMillis();
+    private MyToolBar myToolBar;
 
 
 
@@ -73,7 +72,8 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_login);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        myToolBar = (MyToolBar) findViewById(R.id.myToolBar);
         ed_username = (TextInputEditText) findViewById(R.id.login_name);
         ed_pass = (TextInputEditText) findViewById(R.id.login_pas);
         btn_login = (Button) findViewById(R.id.btn_login);
@@ -92,12 +92,8 @@ public class LoginActivity extends BaseActivity {
         });
         dialog = new MyProgressDialog(this).setLoadingText("登 陆 中 . . . . . . ");
 
-
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        myToolBar.setTitle("登陆");
+        myToolBar.setHomeEnable(this);
 
         perPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         boolean isRemUser = perPreferences.getBoolean("ISREMUSER", false);

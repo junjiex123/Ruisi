@@ -119,7 +119,7 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
             title.setSingleLine(true);
             title.setEllipsize(TextUtils.TruncateAt.END);
             title.setTextColor(Color.WHITE);
-            title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+            title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
             dotContainer.addView(title,lpt);
 
             LinearLayout.LayoutParams lpp = new LinearLayout.LayoutParams(LWC, LWC);
@@ -148,8 +148,12 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
             ((TextView)dotContainer.getChildAt(0)).setText(datas.get(pos).getTitle());
             for (int i = 1; i < dotContainer.getChildCount(); i++) {
                 dotContainer.getChildAt(i).setEnabled(false);
+                dotContainer.getChildAt(i).setScaleX(1.0f);
+                dotContainer.getChildAt(i).setScaleY(1.0f);
             }
             dotContainer.getChildAt(pos+1).setEnabled(true);
+            dotContainer.getChildAt(pos+1).setScaleX(1.3f);
+            dotContainer.getChildAt(pos+1).setScaleY(1.3f);
         }
     }
 
@@ -172,13 +176,13 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         current_position = position;
-        //todo change dot
     }
 
 
     @Override
     public void onPageSelected(int position) {
         position = position % datas.size();
+        current_position = position;
         changeView(position);
     }
 

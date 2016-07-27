@@ -16,6 +16,7 @@ import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ChatListData;
+import xyz.yluo.ruisiapp.utils.DimmenUtils;
 
 /**
  * Created by free2 on 16-3-30.
@@ -56,7 +57,9 @@ public class ChatListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             case RIGHT_ITEM:
                 return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_right_list_item, parent, false));
             case EMPTY_ITEM:
-                return new EmptyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_list_item, parent, false));
+                View view =new View(parent.getContext());
+                view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DimmenUtils.dip2px(parent.getContext(),48)));
+                return new EmptyViewHolder(view);
         }
         return null;
     }

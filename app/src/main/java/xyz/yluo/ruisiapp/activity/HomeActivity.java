@@ -12,12 +12,11 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +29,7 @@ import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.ChangeNetDialog;
 import xyz.yluo.ruisiapp.View.CircleImageView;
+import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.data.FrageType;
 import xyz.yluo.ruisiapp.fragment.FragSetting;
 import xyz.yluo.ruisiapp.fragment.FrageFriends;
@@ -57,55 +57,46 @@ public class HomeActivity extends BaseActivity
     private final String TAG = "HomeActivity";
     private DrawerLayout drawer;
     private NavigationView navigationView;
-    private TextView usernameTitle;
-    private CircleImageView userImageTitle;
     private msgReceiver myMsgReceiver;
-    private View toolbarImageContainer;
-    //新消息小红点
-    private View message_badge_toolbar, message_badge_nav;
     private int clickId = 0;
-    private CircleImageView userImage;
     private long mExitTime;
     private Fragment currentFragment;
+    private MyToolBar myToolBar;
+    private CircleImageView userImage;
+    //新消息小红点
+    private View message_bage;
+    private View toolBarImagContainer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.e(TAG,"onCreate");
         setContentView(R.layout.activity_home);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        myToolBar = (MyToolBar) findViewById(R.id.myToolBar);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        toolbarImageContainer = findViewById(R.id.toolbarImageContainer);
-
-        usernameTitle = (TextView) findViewById(R.id.userNameTitle);
-        userImageTitle = (CircleImageView) findViewById(R.id.userImageTitle);
-        message_badge_toolbar = findViewById(R.id.message_badge_toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-        }
-
         drawer.addDrawerListener(this);
-        findViewById(R.id.toolbar_view).setOnClickListener(this);
-        final View header = navigationView.getHeaderView(0);
-        userImage = (CircleImageView) header.findViewById(R.id.profile_image);
-        message_badge_nav = header.findViewById(R.id.message_badge_nav);
-        userImage.setOnClickListener(this);
-        header.findViewById(R.id.change_net).setOnClickListener(this);
-
-        ImageView btn_show_message = (ImageView) header.findViewById(R.id.show_message);
-        btn_show_message.setOnClickListener(this);
-        message_badge_nav.setVisibility(View.INVISIBLE);
-        message_badge_toolbar.setVisibility(View.INVISIBLE);
-
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        ImageView iv =  myToolBar.setIcon(R.drawable.ic_menu_24dp);
+        iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawer.openDrawer(GravityCompat.START);
+            }
+        });
+        toolBarImagContainer = LayoutInflater.from(this).inflate(R.layout.user_img_with_meessage,null,false);
+        userImage = (CircleImageView) toolBarImagContainer.findViewById(R.id.toolbar_user_image);
+        message_bage = toolBarImagContainer.findViewById(R.id.toolbar_message_bage);
+        message_bage.setVisibility(View.INVISIBLE);
+        myToolBar.addView(toolBarImagContainer);
+        myToolBar.addMenu(R.drawable.ic_bug_report_white_24dp,"DEBUG");
+        myToolBar.addMenu(R.drawable.ic_search_white_24dp,"SEARCH");
+        myToolBar.addMenu(R.drawable.ic_edit,"POST");
+        setToolBarMenuClick(myToolBar);
         if (!getIntent().getBooleanExtra("isLogin", false)) {
             drawer.openDrawer(GravityCompat.START);
         }
         navigationView.setNavigationItemSelectedListener(this);
-
         currentFragment = new FrageHome();
         String tag = Config.ISLOGIN? Config.USER_NAME:getString(R.string.app_name);
         getFragmentManager().beginTransaction().replace(R.id.fragment_home_container,currentFragment,tag).commit();
@@ -115,33 +106,14 @@ public class HomeActivity extends BaseActivity
     protected void onStart() {
         super.onStart();
         Log.e(TAG,"onStart");
-        final View header = navigationView.getHeaderView(0);
-        TextView userName = (TextView) header.findViewById(R.id.header_user_name);
-        TextView userGrade = (TextView) header.findViewById(R.id.user_grade);
-        //判断是否登陆
-        if(currentFragment instanceof FrageHome){
-            if (Config.ISLOGIN&& !TextUtils.isEmpty(Config.USER_NAME)) {
-                userGrade.setVisibility(View.VISIBLE);
-                usernameTitle.setText(Config.USER_NAME);
-                if (Config.USER_GRADE.length() > 0) {
-                    userGrade.setText(Config.USER_GRADE);
-                }
-                userName.setText(Config.USER_NAME);
-                Uri uri = ImageUtils.getImageURI(getFilesDir(), Config.USER_UID);
-                if (uri != null) {//图片存在
-                    userImage.setImageURI(uri);
-                    userImageTitle.setImageURI(uri);
-                } else {//图片不存在
-                    String url = UrlUtils.getAvaterurlm(Config.USER_UID);
-                    Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
-                    Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImageTitle);
-                }
-            } else {
-                userImage.setImageResource(R.drawable.image_placeholder);
-                userImageTitle.setImageResource(R.drawable.image_placeholder);
-                usernameTitle.setText("西电睿思");
-                userName.setText("点击头像登陆");
-                userGrade.setVisibility(View.GONE);
+        if(Config.ISLOGIN&& !TextUtils.isEmpty(Config.USER_NAME)){
+            myToolBar.setTitle(Config.USER_NAME);
+            Uri uri = ImageUtils.getImageURI(getFilesDir(), Config.USER_UID);
+            if (uri != null) {//图片存在
+                userImage.setImageURI(uri);
+            } else {//图片不存在
+                String url = UrlUtils.getAvaterurlm(Config.USER_UID);
+                Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
             }
         }
 
@@ -164,8 +136,6 @@ public class HomeActivity extends BaseActivity
         stopService(i);
         Log.e("消息广播","onStop取消注册广播 停止线程");
     }
-
-
 
     @Override
     public void onBackPressed() {
@@ -196,35 +166,21 @@ public class HomeActivity extends BaseActivity
         //不然保存状态 放置白屏
     }
 
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home, menu);
-        return true;
-    }
-
     private void changeFragement(int id) {
         /**
-         * replace 一定会执行 子fragment 的 oncreate  oncreateView
-         * 还会执行上一个fragment 的destroy
          * 所以常用的fragment用show 和 hide 比较好
          * replace 自己和自己是不会执行任何的函数的
          */
         FragmentManager fm = getFragmentManager();
         // 开启Fragment事务
-        toolbarImageContainer.setVisibility(View.GONE);
-
-
+        toolBarImagContainer.setVisibility(View.GONE);
         String Tag = FrageType.TITLE_LIST[id];
         if(id==FrageType.HOME){
             Log.e("test","id  is home");
             Tag = Config.ISLOGIN&&(!TextUtils.isEmpty(Config.USER_NAME))? Config.USER_NAME:getString(R.string.app_name);
-            toolbarImageContainer.setVisibility(View.VISIBLE);
+            toolBarImagContainer.setVisibility(View.VISIBLE);
         }
-
         Fragment f = fm.findFragmentByTag(Tag);
-
         if(f==null){
             switch (id){
                 case FrageType.MESSAGE:
@@ -247,7 +203,6 @@ public class HomeActivity extends BaseActivity
                     break;
                 case FrageType.HOME:
                     f = new FrageHome();
-                    Log.e("test","new home");
                     break;
                 case FrageType.SETTING:
                     f = new FragSetting();
@@ -260,32 +215,25 @@ public class HomeActivity extends BaseActivity
     private void switchContent(Fragment to, String Tag) {
         FragmentManager fm = getFragmentManager();
         if (currentFragment != to) {
-            usernameTitle.setText(Tag);
             FragmentTransaction transaction = fm.beginTransaction();
-//            .setCustomAnimations(
-//                    android.R.anim.fade_in, R.anim.slide_out);
+//            .setCustomAnimations(android.R.anim.fade_in, R.anim.slide_out);
             if (!to.isAdded()) {    // 先判断是否被add过
-                Log.e("===","to is not added");
                 transaction.hide(currentFragment).add(R.id.fragment_home_container, to,Tag).commit(); // 隐藏当前的fragment，add下一个到Activity中
             } else {
-                Log.e("===","to is  added");
                 transaction.hide(currentFragment).show(to).commit(); // 隐藏当前的fragment，显示下一个
             }
-
             currentFragment = to;
+            myToolBar.setTitle(Tag);
         }
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.toolbar_view:
-                drawer.openDrawer(GravityCompat.START);
-                break;
             case R.id.profile_image:
                 if (Config.ISLOGIN&&!TextUtils.isEmpty(Config.USER_NAME)) {
                     String url = UrlUtils.getAvaterurlb(Config.USER_UID);
-                    UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, Config.USER_NAME, userImage, url);
+                    UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, Config.USER_NAME, (CircleImageView)view, url);
                 } else {
                     Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivityForResult(i,0);
@@ -330,6 +278,31 @@ public class HomeActivity extends BaseActivity
     @Override
     public void onDrawerOpened(View drawerView) {
         clickId = 0;
+        final View header = navigationView.getHeaderView(0);
+        findViewById(R.id.message_badge_nav).setVisibility(message_bage.getVisibility());
+        CircleImageView userImage = (CircleImageView) header.findViewById(R.id.profile_image);
+        TextView userGrade = (TextView) header.findViewById(R.id.user_grade);
+        TextView userName = (TextView) header.findViewById(R.id.header_user_name);
+        header.findViewById(R.id.change_net).setOnClickListener(this);
+        ImageView btn_show_message = (ImageView) header.findViewById(R.id.show_message);
+        btn_show_message.setOnClickListener(this);
+        userImage.setOnClickListener(this);
+        if(Config.ISLOGIN&& !TextUtils.isEmpty(Config.USER_NAME)){
+            userGrade.setVisibility(View.VISIBLE);
+            userGrade.setText(Config.USER_GRADE);
+            userName.setText(Config.USER_NAME);
+            Uri uri = ImageUtils.getImageURI(getFilesDir(), Config.USER_UID);
+            if (uri != null) {//图片存在
+                userImage.setImageURI(uri);
+            } else {//图片不存在
+                String url = UrlUtils.getAvaterurlm(Config.USER_UID);
+                Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
+            }
+        }else{
+            userImage.setImageResource(R.drawable.image_placeholder);
+            userName.setText("点击头像登陆");
+            userGrade.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -397,12 +370,16 @@ public class HomeActivity extends BaseActivity
             boolean isHaveMessage = intent.getBooleanExtra("isHaveMessage", false);
             Log.i("home msg reciver", "收到了新消息广播" + isHaveMessage);
             if (isHaveMessage) {
-                message_badge_nav.setVisibility(View.VISIBLE);
-                message_badge_toolbar.setVisibility(View.VISIBLE);
+                message_bage.setVisibility(View.VISIBLE);
             } else {
-                message_badge_nav.setVisibility(View.INVISIBLE);
-                message_badge_toolbar.setVisibility(View.INVISIBLE);
+                message_bage.setVisibility(View.INVISIBLE);
             }
         }
+    }
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
     }
 }

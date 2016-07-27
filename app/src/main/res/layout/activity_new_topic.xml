@@ -1,30 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_window"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <android.support.design.widget.AppBarLayout
+    <xyz.yluo.ruisiapp.View.MyToolBar
+        android:id="@+id/myToolBar"
+        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        app:elevation="@dimen/AppBar">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
-    </android.support.design.widget.AppBarLayout>
-
+        android:layout_height="@dimen/ToolBarHeight"/>
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/main"
+        android:id="@+id/main"
+        android:layout_marginTop="@dimen/ToolBarHeight"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:orientation="vertical">
         <LinearLayout
             android:padding="4dp"
             android:orientation="horizontal"
@@ -63,15 +53,5 @@
             android:gravity="top|start"
             android:hint="内容" />
     </LinearLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/btn_submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dimen_16"
-        android:src="@drawable/ic_menu_send_white"
-        app:layout_anchor="@id/main"
-        app:layout_anchorGravity="bottom|end" />
-
 </android.support.design.widget.CoordinatorLayout>
 

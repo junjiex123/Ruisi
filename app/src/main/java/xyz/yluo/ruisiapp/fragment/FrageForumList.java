@@ -52,10 +52,7 @@ public class FrageForumList extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView");
-
         View view = inflater.inflate(R.layout.frage_forum_list, container, false);
-
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         //刷新
@@ -85,11 +82,10 @@ public class FrageForumList extends BaseFragment {
             }
         });
 
-        recyclerView.addItemDecoration(new MyGridDivider(2));
+        recyclerView.addItemDecoration(new MyGridDivider(1));
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         getData();
-
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

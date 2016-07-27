@@ -47,6 +47,7 @@
                     android:src="@drawable/ic_mail_24dp" />
 
                 <View
+                    android:visibility="invisible"
                     android:id="@+id/message_badge_nav"
                     android:layout_width="8dp"
                     android:layout_height="8dp"

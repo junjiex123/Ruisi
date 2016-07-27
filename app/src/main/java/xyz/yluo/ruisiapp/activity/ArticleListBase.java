@@ -4,14 +4,12 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.listener.HidingScrollListener;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 
@@ -27,36 +25,33 @@ public abstract class ArticleListBase extends BaseActivity
     static int CurrentFid = 72;
     static String CurrentTitle = "首页";
     protected SwipeRefreshLayout refreshLayout;
-    protected ActionBar actionBar;
-    FloatingActionButton btn_refresh;
+     FloatingActionButton btn_refresh;
     RecyclerView mRecyclerView;
     //当前页数
     int CurrentPage = 1;
     boolean isEnableLoadMore = false;
     RecyclerView.LayoutManager mLayoutManager;
+    protected MyToolBar myToolBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        myToolBar = (MyToolBar) findViewById(R.id.myToolBar);
         btn_refresh = (FloatingActionButton) findViewById(R.id.btn_refresh);
         mRecyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.main_refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
 
-        setSupportActionBar(toolbar);
+        myToolBar.setHomeEnable(this);
+        setToolBarMenuClick(myToolBar);
+
         btn_refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 btn_refresh_click();
             }
         });
-
-        actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         init();
         //子类实现获取数据
@@ -115,11 +110,6 @@ public abstract class ArticleListBase extends BaseActivity
         prerefresh();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home, menu);
-        return true;
-    }
 
     void hide_loading_view() {
         findViewById(R.id.view_loading).setVisibility(View.GONE);

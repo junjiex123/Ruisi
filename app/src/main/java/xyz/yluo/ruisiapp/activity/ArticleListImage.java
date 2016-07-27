@@ -5,8 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -44,8 +43,9 @@ public class ArticleListImage extends ArticleListBase {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        myToolBar.setTitle(CurrentTitle);
+        myToolBar.addMenu(R.drawable.ic_column_change_24dp,"CHANGE_COLUMN");
 
-        actionBar.setTitle(CurrentTitle);
         datas = new ArrayList<>();
         layoutManager = new StaggeredGridLayoutManager(colNum, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -55,6 +55,19 @@ public class ArticleListImage extends ArticleListBase {
         refreshLayout.setEnabled(false);
     }
 
+    @Override
+    protected boolean OnToolBarMenuItemClick(View view,String tag) {
+        if(tag.equals("CHANGE_COLUMN")){
+            if (colNum == 1) {
+                colNum = 2;
+                layoutManager.setSpanCount(2);
+            } else {
+                colNum = 1;
+                layoutManager.setSpanCount(1);
+            }
+        }
+        return  super.OnToolBarMenuItemClick(view,tag);
+    }
 
     @Override
     protected void getData() {
@@ -87,25 +100,7 @@ public class ArticleListImage extends ArticleListBase {
     public void onLoadMore() {
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_article_image_list, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_change_col) {
-            if (colNum == 1) {
-                colNum = 2;
-                layoutManager.setSpanCount(2);
-            } else {
-                colNum = 1;
-                layoutManager.setSpanCount(1);
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     //校园网状态下获得图片板块数据 图片链接、标题等  根据html获得数据
     private class GetImageArticleListTaskRS extends AsyncTask<String, Void, Void> {

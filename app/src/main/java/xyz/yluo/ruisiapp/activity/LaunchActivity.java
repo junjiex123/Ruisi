@@ -108,14 +108,17 @@ public class LaunchActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        AlphaAnimation anima = new AlphaAnimation(0.0f, 1.0f);
-        anima.setDuration(1000);// 设置动画显示时间
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
+        alphaAnimation.setDuration(1200);// 设置动画显示时间
+
         TranslateAnimation animation = new TranslateAnimation(0, 0, 80, 0);
         animation.setDuration(1000);
+
         // 初始化需要加载的动画资源
         RotateAnimation rotateAnimation = (RotateAnimation) AnimationUtils.loadAnimation(this, R.anim.always_rotate);
+
         launch_text.startAnimation(animation);
-        user_image.startAnimation(anima);
+        user_image.startAnimation(alphaAnimation);
         findViewById(R.id.loading_view).startAnimation(rotateAnimation);
     }
 

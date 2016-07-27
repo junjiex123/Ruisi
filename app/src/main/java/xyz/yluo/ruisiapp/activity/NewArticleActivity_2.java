@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebSettings;
@@ -23,14 +21,15 @@ import java.util.Map;
 
 import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.PersistentCookieStore;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-4-2.
- * todo 替换webview发帖。。。。
  * 无法绕过验证码
+ * 备份的发帖
  */
 public class NewArticleActivity_2 extends BaseActivity {
 
@@ -38,6 +37,7 @@ public class NewArticleActivity_2 extends BaseActivity {
     private WebView myWebView;
     private List<String> list = new ArrayList<>();
     private Map<Integer, String> map = new LinkedHashMap<>();
+    private MyToolBar myToolBar;
 
     public static void open(Context context) {
         Intent intent = new Intent(context, NewArticleActivity_2.class);
@@ -51,10 +51,10 @@ public class NewArticleActivity_2 extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_new_topic2);
+        myToolBar = (MyToolBar) findViewById(R.id.myToolBar);
 
         //设置cookie
         myWebView = (WebView) findViewById(R.id.mwebView);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setCookie(this);
 
         map.put(72, "灌水专区");
@@ -88,16 +88,9 @@ public class NewArticleActivity_2 extends BaseActivity {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, list);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
-
-        setSupportActionBar(toolbar);
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle("请选择分区");
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-        if (toolbar != null) {
-            toolbar.addView(spinner);
-        }
+        myToolBar.setTitle("发表新帖");
+        myToolBar.setHomeEnable(this);
+        myToolBar.addView(spinner);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

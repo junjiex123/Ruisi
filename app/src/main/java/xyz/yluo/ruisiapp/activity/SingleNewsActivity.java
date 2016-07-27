@@ -6,10 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
 
 import org.jsoup.Jsoup;
@@ -20,6 +17,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
 
 /**
@@ -35,6 +33,7 @@ public class SingleNewsActivity extends BaseActivity {
     protected SwipeRefreshLayout refreshLayout;
     private WebView webView;
     private String Url = "";
+    private MyToolBar myToolBar;
 
     public static void open(Context context, String url, String title) {
         Intent intent = new Intent(context, SingleNewsActivity.class);
@@ -48,14 +47,13 @@ public class SingleNewsActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_single);
-
+        myToolBar = (MyToolBar) findViewById(R.id.myToolBar);
         //http://jwc.xidian.edu.cn/info/1070/4428.htm
         //info/1070/4438.htm
         Url = "http://jwc.xidian.edu.cn/" + getIntent().getExtras().getString("url");
         String title = getIntent().getExtras().getString("title");
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         webView = (WebView) findViewById(R.id.webview);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         refreshLayout.post(new Runnable() {
             @Override
@@ -64,12 +62,25 @@ public class SingleNewsActivity extends BaseActivity {
             }
         });
 
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(title);
-        }
+        myToolBar.setTitle(title);
+        myToolBar.setHomeEnable(this);
+        myToolBar.addMenu(R.drawable.ic_open_in_browser_24dp,"NEWS_OPEN_IN_BROWSER");
+        myToolBar.addMenu(R.drawable.ic_refresh_24dp,"NEWS_REFRESH");
+        myToolBar.setToolBarClickListener(new MyToolBar.OnToolBarItemClick() {
+            @Override
+            public void OnItemClick(View v, String Tag) {
+                switch (Tag){
+                    case "NEWS_OPEN_IN_BROWSER":
+                        RequestOpenBrowser.openBroswer(SingleNewsActivity.this, Url);
+                        break;
+                    case "NEWS_REFRESH":
+                        refresh();
+                        break;
+
+                }
+            }
+        });
+
 
         //下拉刷新
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -99,25 +110,6 @@ public class SingleNewsActivity extends BaseActivity {
         getData();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_single_news, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.menu_broswer:
-                RequestOpenBrowser.openBroswer(this, Url);
-                break;
-            case R.id.menu_refresh:
-                refresh();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     private class GetDataTask extends AsyncTask<Void, Void, String> {
         @Override

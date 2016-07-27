@@ -7,10 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
@@ -24,6 +22,7 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
 import xyz.yluo.ruisiapp.data.ChatListData;
 import xyz.yluo.ruisiapp.fragment.FrageReplyDialog;
@@ -51,6 +50,7 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
     private String url = "";
     private String touid = "";
     private long replyTime = 0;
+    private MyToolBar myToolBar;
 
     public static void open(Context context, String username, String url) {
         /*isopenfromwebview 是从webview打开的是新建的回话*/
@@ -65,12 +65,12 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        myToolBar = (MyToolBar) findViewById(R.id.myToolBar);
         recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
         btn_chat = (FloatingActionButton) findViewById(R.id.btn_chat);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         adapter = new ChatListAdapter(this, datas);
         recycler_view.setLayoutManager(layoutManager);
@@ -100,12 +100,8 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
             }
         });
 
-        // Show the Up button in the action bar.
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(username);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        myToolBar.setTitle(username);
+        myToolBar.setHomeEnable(this);
         new GetDataTask().execute(url);
     }
 

@@ -4,11 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -22,6 +19,7 @@ import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyProgressDialog;
+import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -32,10 +30,10 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class NewArticleActivity extends BaseActivity{
 
-    private Spinner choose_froums;
     private EditText ed_title,ed_content;
     private CoordinatorLayout main_window;
     private MyProgressDialog dialog;
+    private MyToolBar myToolBar;
 
     private int fid = 72;
     private int[] fids = new int[]{72, 549, 108, 551, 550, 110, 217, 142, 552,
@@ -45,20 +43,29 @@ public class NewArticleActivity extends BaseActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_topic);
+        myToolBar = (MyToolBar) findViewById(R.id.myToolBar);
 
-        choose_froums = (Spinner) findViewById(R.id.choose_froums);
+        myToolBar.setTitle("发表新帖");
+        myToolBar.setHomeEnable(this);
+        myToolBar.addButton("发表",R.drawable.btn_light_red_bg,"BTN_SUBMIT");
+        myToolBar.setToolBarClickListener(new MyToolBar.OnToolBarItemClick() {
+            @Override
+            public void OnItemClick(View v, String Tag) {
+                if(Tag.equals("BTN_SUBMIT")&&checkPostInput()){
+                    dialog = new MyProgressDialog(NewArticleActivity.this).setLoadingText("发贴中请稍后 ...");
+                    dialog.show();
+                    begainPost(Config.FORMHASH);
+
+                }
+            }
+        });
+
+
+        Spinner choose_froums = (Spinner) findViewById(R.id.choose_froums);
         ed_title = (EditText) findViewById(R.id.ed_title);
         ed_content = (EditText) findViewById(R.id.ed_content);
         main_window = (CoordinatorLayout) findViewById(R.id.main_window);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        // Show the Up button in the action bar.
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle("发帖");
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         choose_froums.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -73,17 +80,6 @@ public class NewArticleActivity extends BaseActivity{
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
-            }
-        });
-
-        findViewById(R.id.btn_submit).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(checkPostInput()){
-                    dialog = new MyProgressDialog(NewArticleActivity.this).setLoadingText("发贴中请稍后 ...");
-                    dialog.show();
-                    begainPost(Config.FORMHASH);
-                }
             }
         });
     }
@@ -155,11 +151,6 @@ public class NewArticleActivity extends BaseActivity{
         Toast.makeText(getApplicationContext(), "发帖失败", Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_post, menu);
-        return true;
-    }
 
 //    //准备发帖需要的东西
 //    private void preparePost(final int fid) {

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xyz.yluo.ruisiapp.Config;
+import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ArticleListNormalAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.database.MyDbUtils;
@@ -51,16 +52,19 @@ public class ArticleList extends ArticleListBase {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         hideZhidin = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("setting_hide_zhidin", true);
-        actionBar.setTitle(CurrentTitle);
         datas = new ArrayList<>();
         mLayoutManager = new LinearLayoutManager(this);
         mRecyleAdapter = new ArticleListNormalAdapter(this, datas, 0);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mRecyleAdapter);
+        myToolBar.setTitle(CurrentTitle);
+
+        myToolBar.addMenu(R.drawable.ic_search_white_24dp,"SEARCH");
+        myToolBar.addMenu(R.drawable.ic_edit,"POST");
+
+
         //加载更多
         mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 8));
         datas.clear();

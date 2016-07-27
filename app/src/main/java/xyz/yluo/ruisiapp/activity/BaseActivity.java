@@ -3,46 +3,18 @@ package xyz.yluo.ruisiapp.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 
 import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
+import xyz.yluo.ruisiapp.View.MyToolBar;
 
 /**
  * Created by free2 on 16-4-11.
  * 所有activity的基类
  */
 public class BaseActivity extends AppCompatActivity {
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            //返回按钮点击事件
-            case android.R.id.home:
-                finish();
-                break;
-            case R.id.new_topic:
-                startActivity(new Intent(getApplicationContext(), NewArticleActivity.class));
-                return true;
-            case R.id.menu_search:
-                if (isneed_login()) {
-                    startActivity(new Intent(getApplicationContext(), ActivitySearch.class));
-                    return true;
-                }
-                break;
-            case R.id.menu_test:
-                startActivity(new Intent(getApplicationContext(),TestActivity.class));
-                break;
-            case R.id.new_topic_2:
-                startActivity(new Intent(getApplicationContext(), NewArticleActivity_2.class));
-                return true;
-
-        }
-        return super.onOptionsItemSelected(item);
-
-    }
 
     //判断是否需要弹出登录dialog
     boolean isneed_login() {
@@ -60,6 +32,38 @@ public class BaseActivity extends AppCompatActivity {
                         }
                     }).show();
         }
+        return false;
+    }
+
+
+    protected void setToolBarMenuClick(MyToolBar myToolBar){
+        myToolBar.setToolBarClickListener(new MyToolBar.OnToolBarItemClick() {
+            @Override
+            public void OnItemClick(View v, String Tag) {
+                OnToolBarMenuItemClick(v,Tag);
+            }
+        });
+    }
+
+    protected  boolean OnToolBarMenuItemClick(View view,String tag){
+        switch (tag){
+            case "SEARCH":
+                if(isneed_login())
+                startActivity(new Intent(this,ActivitySearch.class));
+                return true;
+            case "POST":
+                if(isneed_login())
+                startActivity(new Intent(this,NewArticleActivity.class));
+                return true;
+            case "POST2":
+                if(isneed_login())
+                startActivity(new Intent(this, NewArticleActivity_2.class));
+                return true;
+            case "DEBUG":
+                startActivity(new Intent(this, TestActivity.class));
+                return true;
+        }
+
         return false;
     }
 }
