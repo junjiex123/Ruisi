@@ -162,8 +162,13 @@ public class GetId {
             }catch (Exception e){
                 e.printStackTrace();
             }
-            //Long.valueOf(s, 16)
-            Log.e("===color===",color+"");
+        }else if(str.startsWith("#")){
+            try {
+                color =  Color.parseColor(str);
+            }catch (Exception e){
+                Log.e("color",color+"");
+                e.printStackTrace();
+            }
         }
         return color;
     }
