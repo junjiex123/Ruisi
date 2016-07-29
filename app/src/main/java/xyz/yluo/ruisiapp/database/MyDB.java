@@ -7,9 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 
-import java.sql.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -18,25 +19,15 @@ import xyz.yluo.ruisiapp.data.ForumListData;
 import xyz.yluo.ruisiapp.data.SchoolNewsData;
 import xyz.yluo.ruisiapp.utils.GetId;
 
-/**
- * Created by free2 on 16-5-20.
- * + "tid VARCHAR(10) primary key,"
- * + "title VARCHAR(50),"
- * + "author VARCHAR(15),"
- * + "read_time DATETIME,"
- */
-public class MyDbUtils {
+
+public class MyDB {
     private Context context;
     public static final int MODE_READ = 0;
     public static final int MODE_WRITE = 1;
-
-    //tid title uid author  time  view reply read_time
-
     /**
      * 浏览历史表
      */
     static final String TABLE_READ_HISTORY = "rs_article_list";
-
     /**
      * 板块列表 表
      */
@@ -52,13 +43,11 @@ public class MyDbUtils {
      */
     static final String TABLE_MESSAGE = "rs_message";
 
-
-
-
     private SQLiteDatabase db = null;    //数据库操作
 
+
     //构造函数
-    public MyDbUtils(Context context, int mode) {
+    public MyDB(Context context, int mode) {
         this.context = context;
         if (mode==MODE_WRITE) {
             this.db = new SQLiteHelper(context).getWritableDatabase();
@@ -67,10 +56,33 @@ public class MyDbUtils {
         }
     }
 
+    public void clearAllDataBase(){
+        String sql = "DELETE FROM " + TABLE_READ_HISTORY;
+        this.db.execSQL(sql);
+        Log.e("mydb",  "clear TABLE_READ_HISTORY");
+
+        String sql2 = "DELETE FROM " + TABLE_READ_HISTORY;
+        this.db.execSQL(sql2);
+
+        String sql3 = "DELETE FROM " + TABLE_SCHOOL_NEWS;
+        this.db.execSQL(sql3);
+
+        String sql4= "DELETE FROM " + TABLE_MESSAGE;
+        this.db.execSQL(sql4);
+        Log.e("mydb",  "clear all TABLE_MESSAGE");
+    }
+
     private String getTime() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
         Date curDate = new Date(System.currentTimeMillis());
+
         return format.format(curDate);
+    }
+
+    private Date getDate(String str) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+
+        return format.parse(str);
     }
 
     //处理单个点击事件 判断是更新还是插入
@@ -103,7 +115,6 @@ public class MyDbUtils {
                 Log.e("mydb", tid + "is read");
             }
         }
-        db.close();
         return datas;
     }
 
@@ -114,14 +125,7 @@ public class MyDbUtils {
         Cursor result = db.rawQuery(sql, args);
         int count = result.getCount();
         result.close();
-        if (count == 0)//判断得到的返回数据是否为空
-        {
-            //db.close();
-            return false;
-        } else {
-            //db.close();
-            return true;
-        }
+        return count != 0;
     }
 
     //	//插入操作
@@ -131,7 +135,6 @@ public class MyDbUtils {
         String read_time_str = getTime();
         Object args[] = new Object[]{tid, title, author, read_time_str};
         this.db.execSQL(sql, args);
-        this.db.close();
         Log.e("mydb", tid + "insertReadHistory");
     }
 
@@ -141,24 +144,7 @@ public class MyDbUtils {
         String sql = "UPDATE " + TABLE_READ_HISTORY + " SET title=?,read_time=? WHERE tid=?";
         Object args[] = new Object[]{title, read_time_str, tid};
         this.db.execSQL(sql, args);
-        this.db.close();
-
         Log.e("mydb", tid + "updateReadHistory" + author);
-    }
-
-    public void clearHistory(){
-        String sql = "DELETE FROM " + TABLE_READ_HISTORY;
-        this.db.execSQL(sql);
-        this.db.close();
-        Log.e("mydb",  "clear TABLE_READ_HISTORY");
-    }
-
-    //删除操作,删除
-    public void deleteHistory(int tid) {
-        String sql = "DELETE FROM " + TABLE_READ_HISTORY + " WHERE tid=?";
-        Object args[] = new Object[]{tid};
-        this.db.execSQL(sql, args);
-        this.db.close();
     }
 
     public void showHistoryDatabase() {
@@ -169,7 +155,26 @@ public class MyDbUtils {
             Log.i("show database", result.getString(0) + "," + result.getString(1) + "," + result.getString(2) + "," + result.getString(3));
         }
         result.close();
-        this.db.close();
+    }
+
+    public void deleteOldHistory(int num){
+        //最长缓存2000条数据
+        Cursor cursor = this.db.rawQuery("SELECT COUNT(*) FROM "+TABLE_READ_HISTORY,null);
+        cursor.moveToFirst();
+        int count = cursor.getInt(0);
+        cursor.close();
+
+        int a = count-num;
+        if(a>0){
+            //DELETE FROM XXX WHERE tid IN (SELECT TOP 100 PurchaseOrderDetailID FROM Purchasing.PurchaseOrderDetail
+            //ORDER BY DueDate DESC);
+            String sql  = "DELETE FROM "+TABLE_READ_HISTORY+" WHERE tid IN (SELECT tid FROM "+TABLE_READ_HISTORY
+                    +"  ORDER BY read_time ASC limit "+a+")";
+            this.db.rawQuery(sql,null);
+
+            Log.e("阅读历史","删除了最后"+a+"条记录");
+        }
+
     }
 
     public List<ArticleListData> getHistory(int num) {
@@ -189,40 +194,34 @@ public class MyDbUtils {
             datas.add(new ArticleListData(false, result.getString(1), result.getString(0), result.getString(2), "null",0xff888888));
         }
         result.close();
-        this.db.close();
         return datas;
     }
 
 
     /**
      * 设置板块列表到数据库
-     * @param datas
      */
     public void setForums(List<ForumListData> datas){
         if(datas!=null&&datas.size()>0){
             clearForums();
             this.db = new SQLiteHelper(context).getWritableDatabase();
-            /**
-             * "name VARCHAR(20) primary key,"
-             + "fid VARCHAR(10),"
-             + "todayNew VARCHAR(10),"
-             + "isHeader INT NOT NULL"
-             */
             for(ForumListData d:datas){
                 String sql = "INSERT INTO " + TABLE_FORUM_LIST + " (name,fid,todayNew,isHeader)"
                         + " VALUES(?,?,?,?)";
                 int isHeader = d.isheader()?1:0;
                 Object args[] = new Object[]{d.getTitle(), d.getFid(), d.getTodayNew(), isHeader};
-                this.db.execSQL(sql, args);
+                try {
+                    this.db.execSQL(sql, args);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
             }
         }
-
-        this.db.close();
     }
 
     /**
      * 获得板块列表
-     * @return
      */
     public List<ForumListData> getForums(){
         List<ForumListData> datas = new ArrayList<>();
@@ -243,7 +242,6 @@ public class MyDbUtils {
             datas.add(new ForumListData(isHeader,name,todayNew,fid));
         }
         result.close();
-        this.db.close();
         return datas;
     }
 
@@ -253,38 +251,23 @@ public class MyDbUtils {
     public void clearForums(){
         String sql = "DELETE FROM " + TABLE_FORUM_LIST;
         this.db.execSQL(sql);
-        this.db.close();
-        Log.e("mydb",  "clear TABLE_FORUM_LIST");
     }
 
 
     /**
      * 新闻缓存
      */
-
-    public void clearNews(){
-        String sql = "DELETE FROM " + TABLE_SCHOOL_NEWS;
-        this.db.execSQL(sql);
-        this.db.close();
-        Log.e("mydb",  "clear TABLE_SCHOOL_NEWS");
-    }
-
     public void setSingleNewsRead(String url){
-
         String sql = "UPDATE " + TABLE_SCHOOL_NEWS + " SET is_read =? WHERE url=?";
         Object args[] = new Object[]{1,url};
         this.db.execSQL(sql, args);
-        this.db.close();
-
-        Log.e("mydb", url + "setNewsRead");
     }
-
     private boolean isNewsInDataBase(String url){
         String sql = "SELECT * from " + TABLE_SCHOOL_NEWS + " where url = ?";
         String args[] = new String[]{String.valueOf(url)};
         Cursor result = db.rawQuery(sql, args);
         int count = result.getCount();
-        if (count == 0){//db.close();
+        if (count == 0){
             result.close();
             return false;
         } else {
@@ -292,14 +275,12 @@ public class MyDbUtils {
             return true;
         }
     }
-
     private boolean isNewsRead(String url){
         String sql = "SELECT * from " + TABLE_SCHOOL_NEWS + " where url = ?";
         String args[] = new String[]{String.valueOf(url)};
         Cursor result = db.rawQuery(sql, args);
         int count = result.getCount();
         result.moveToFirst();
-
         if (count <= 0){//db.close();
             result.close();
             return false;
@@ -316,14 +297,6 @@ public class MyDbUtils {
      */
     public List<SchoolNewsData> getNewsList(List<SchoolNewsData> datasIn){
         List<SchoolNewsData> datas = new ArrayList<>();
-        /**
-         "url VARCHAR(50) primary key,"
-         + "title VARCHAR(50) NOT NULL,"
-         + "is_image INT,"
-         + "is_patch INT,"
-         + "post_time VARCHAR(20),"
-         + "is_read INT"
-         */
         String sql = "SELECT * FROM " + TABLE_SCHOOL_NEWS;
         Cursor result = this.db.rawQuery(sql, null);    //执行查询语句
         for (result.moveToFirst(); !result.isAfterLast(); result.moveToNext())    //采用循环的方式查询数据
@@ -340,7 +313,6 @@ public class MyDbUtils {
 
         result.close();
         if(datasIn==null||datasIn.size()==0) {
-            this.db.close();
             return datas;
         }else{
             //传入参数不为空
@@ -356,20 +328,10 @@ public class MyDbUtils {
                     }
                 }
             }
-
-            this.db.close();
             return datasIn;
         }
     }
     private void insertNews(SchoolNewsData d){
-        /**
-         "url VARCHAR(50) primary key,"
-         + "title VARCHAR(50) NOT NULL,"
-         + "is_image INT,"
-         + "is_patch INT,"
-         + "post_time VARCHAR(20),"
-         + "is_read INT"
-         */
         String sql = "INSERT INTO " + TABLE_SCHOOL_NEWS+ " (title,url,is_image,is_patch,post_time,is_read)"
                 + " VALUES(?,?,?,?,?,?)";
         int is_read = d.isRead()?1:0;
@@ -377,9 +339,7 @@ public class MyDbUtils {
         int is_patch = d.is_patch()?1:0;
         Object args[] = new Object[]{d.getTitle(),d.getUrl(),is_image,is_patch,d.getPost_time(),is_read};
         this.db.execSQL(sql, args);
-        Log.e("mydb",  "插入新闻数据库"+d.getTitle());
     }
-
 
     /**
      * 以下处理消息数据库
@@ -417,7 +377,6 @@ public class MyDbUtils {
 
 
         }
-        this.db.close();
     }
 
     //-1 代表不存在
@@ -467,14 +426,12 @@ public class MyDbUtils {
         String sql = "UPDATE " + TABLE_MESSAGE + " SET isread=? WHERE type=?";
         Object args[] = new Object[]{1, type};
         this.db.execSQL(sql, args);
-        this.db.close();
         Log.e("mydb", "message set read"+type);
     }
 
-    public void clearMessageDataBase(){
-        String sql = "DELETE FROM " + TABLE_MESSAGE;
+    public void deleteOldMessage(){
+        String sql = "DELETE FROM " + TABLE_MESSAGE +" WHERE isread =1" ;
         this.db.execSQL(sql);
-        this.db.close();
-        Log.e("mydb",  "clear TABLE_MESSAGE");
+        Log.e("mydb",  "clear old TABLE_MESSAGE");
     }
 }

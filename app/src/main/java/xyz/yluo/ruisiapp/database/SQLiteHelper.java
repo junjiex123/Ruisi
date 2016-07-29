@@ -17,7 +17,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 2;
 
 
-    SQLiteHelper(Context context) {
+    public SQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);//继承父类
     }
 
@@ -30,11 +30,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         /**
          * 浏览历史表
          */
-        String sql = "CREATE TABLE " + MyDbUtils.TABLE_READ_HISTORY + "("
+        String sql = "CREATE TABLE " + MyDB.TABLE_READ_HISTORY + "("
                 + "tid VARCHAR(10) primary key,"
-                + "title VARCHAR(50) NOT NULL,"
-                + "author VARCHAR(15),"
-                + "read_time DATETIME"
+                + "title VARCHAR(150) NOT NULL,"
+                + "author VARCHAR(15) NOT NULL,"
+                + "read_time DATETIME NOT NULL"
                 + ")";
         db.execSQL(sql);
         Log.e("DATABASE", "TABLE_READ_HISTORY数据表创建成功");
@@ -43,10 +43,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         /**
          *  板块列表
          */
-        String sql2 = "CREATE TABLE " + MyDbUtils.TABLE_FORUM_LIST + "("
+        String sql2 = "CREATE TABLE " + MyDB.TABLE_FORUM_LIST + "("
                 + "name VARCHAR(20) primary key,"
                 + "fid VARCHAR(10),"
-                + "todayNew VARCHAR(10),"
+                + "todayNew VARCHAR(5),"
                 + "isHeader INT NOT NULL"
                 + ")";
         db.execSQL(sql2);
@@ -59,7 +59,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
          private String post_time;
          private boolean isRead;
          */
-        String sql3 = "CREATE TABLE " + MyDbUtils.TABLE_SCHOOL_NEWS + "("
+        String sql3 = "CREATE TABLE " + MyDB.TABLE_SCHOOL_NEWS + "("
                 + "url VARCHAR(50) primary key,"
                 + "title VARCHAR(50) NOT NULL,"
                 + "is_image INT,"
@@ -74,7 +74,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         /**
          *  消息列表 解决睿思消息已读未读问题
          */
-        String sql4 = "CREATE TABLE " + MyDbUtils.TABLE_MESSAGE + "("
+        String sql4 = "CREATE TABLE " + MyDB.TABLE_MESSAGE + "("
                 + "id VARCHAR(15) primary key,"
                 + "url VARCHAR(100),"
                 + "info VARCHAR(80),"
@@ -93,10 +93,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
      * 数据库更新函数，当数据库更新时会执行此函数
      */
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        String sql = "DROP TABLE IF EXISTS " + MyDbUtils.TABLE_READ_HISTORY;
+        String sql = "DROP TABLE IF EXISTS " + MyDB.TABLE_READ_HISTORY;
         db.execSQL(sql);
 
-        String sql2 = "DROP TABLE IF EXISTS " + MyDbUtils.TABLE_FORUM_LIST;
+        String sql2 = "DROP TABLE IF EXISTS " + MyDB.TABLE_FORUM_LIST;
         db.execSQL(sql2);
 
         this.onCreate(db);

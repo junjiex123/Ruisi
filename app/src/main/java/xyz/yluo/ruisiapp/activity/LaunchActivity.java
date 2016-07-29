@@ -27,7 +27,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.checknet.CheckNet;
 import xyz.yluo.ruisiapp.checknet.CheckNetResponse;
-import xyz.yluo.ruisiapp.database.MyDbUtils;
+import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
@@ -94,8 +94,8 @@ public class LaunchActivity extends BaseActivity {
         getSetting();
 
 
-        MyDbUtils myDbUtils = new MyDbUtils(this, MyDbUtils.MODE_READ);
-        myDbUtils.showHistoryDatabase();
+        MyDB myDB = new MyDB(this, MyDB.MODE_READ);
+        myDB.showHistoryDatabase();
 
         new CheckNet(this).startCheck(new CheckNetResponse() {
             @Override

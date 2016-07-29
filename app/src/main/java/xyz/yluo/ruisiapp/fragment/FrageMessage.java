@@ -27,7 +27,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.MessageAdapter;
 import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.MessageData;
-import xyz.yluo.ruisiapp.database.MyDbUtils;
+import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
@@ -140,8 +140,6 @@ public class FrageMessage extends Fragment {
         }, 500);
     }
 
-
-
     //获得回复我的
     private class GetUserReplyTask extends AsyncTask<String, Void, List<MessageData>> {
         @Override
@@ -163,8 +161,8 @@ public class FrageMessage extends Fragment {
                 if (tmp.select(".ntc_body").attr("style").contains("bold")) {
                     isRead = false;
                 }else{
-                    MyDbUtils myDbUtils = new MyDbUtils(getActivity(), MyDbUtils.MODE_READ);
-                    int i = myDbUtils.isMessageRead(titleUrl);
+                    MyDB myDB = new MyDB(getActivity(), MyDB.MODE_READ);
+                    int i = myDB.isMessageRead(titleUrl);
                     if(i==0){
                         isRead = false;
                     }
@@ -214,13 +212,13 @@ public class FrageMessage extends Fragment {
     }
 
     private void clearMessage(int type){
-        MyDbUtils myDbUtils = new MyDbUtils(getActivity(), MyDbUtils.MODE_WRITE);
-        myDbUtils.setAllMessageRead(type);
+        MyDB myDB = new MyDB(getActivity(), MyDB.MODE_WRITE);
+        myDB.setAllMessageRead(type);
 
-        MyDbUtils myDbUtils2 = new MyDbUtils(getActivity(),MyDbUtils.MODE_READ);
+        MyDB myDB2 = new MyDB(getActivity(), MyDB.MODE_READ);
         //查看是否有未读消息
         //如果没有则清楚
-        if(!myDbUtils2.isHaveUnReadMessage()){
+        if(!myDB2.isHaveUnReadMessage()){
             SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(getActivity());
             boolean isrecieveMessage = shp.getBoolean("setting_show_notify", false);
             //启动后台服务

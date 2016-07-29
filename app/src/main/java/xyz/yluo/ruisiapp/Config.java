@@ -6,6 +6,8 @@ import android.content.IntentFilter;
 import android.util.Log;
 
 import xyz.yluo.ruisiapp.checknet.NetworkReceiver;
+import xyz.yluo.ruisiapp.database.MyDB;
+import xyz.yluo.ruisiapp.database.SQLiteHelper;
 
 /**
  * Created by free2 on 16-3-11.
@@ -26,6 +28,12 @@ public class Config extends Application {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(receiver, intentFilter);
+
+        //清空消息数据库
+        MyDB myDB = new MyDB(context,MyDB.MODE_WRITE);
+        myDB.deleteOldMessage();
+        //最多缓存2000条历史纪录
+        myDB.deleteOldHistory(2000);
     }
 
     @Override
@@ -37,6 +45,10 @@ public class Config extends Application {
             Log.e("application onTerminate","取消注册广播");
             unregisterReceiver(receiver);
         }
+
+        //关闭数据库
+        new SQLiteHelper(context).close();
+
     }
 
     public  Context getContext() {

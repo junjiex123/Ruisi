@@ -14,7 +14,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import xyz.yluo.ruisiapp.database.MyDbUtils;
+import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.httpUtil.SyncHttpClient;
 
@@ -46,7 +46,7 @@ public class CheckMessageService extends Service {
         isRunning = true;
 
         Log.i(Tag, "service create");
-
+        final MyDB myDB = new MyDB(getApplicationContext(), MyDB.MODE_WRITE);
         final NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.logo)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
@@ -71,13 +71,11 @@ public class CheckMessageService extends Service {
                         String url = e.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
                         String info = e.select(".ntc_body").text();
                         //只要有未读的就插入 到数据库在判断
-                        MyDbUtils myDbUtils = new MyDbUtils(getApplicationContext(), MyDbUtils.MODE_WRITE);
-                        myDbUtils.insertMessage(url,info);
+
+                        myDB.insertMessage(url,info);
                     }
                 }
-
-                MyDbUtils myDbUtilsR = new MyDbUtils(getApplicationContext(), MyDbUtils.MODE_READ);
-                if(myDbUtilsR.isHaveUnReadMessage()){
+                if(myDB.isHaveUnReadMessage()){
                     isHaveUnreadMessage = true;
                     if (isNotisfy) {
                         mNotifyMgr.notify(10, builder.build());

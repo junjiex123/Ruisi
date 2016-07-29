@@ -1,10 +1,15 @@
 package xyz.yluo.ruisiapp.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +27,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyGridDivider;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
 import xyz.yluo.ruisiapp.data.ForumListData;
-import xyz.yluo.ruisiapp.database.MyDbUtils;
+import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
@@ -32,14 +37,15 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * 板块列表fragemnt
  */
 public class FrageForumList extends BaseFragment {
-
-    private static final String TAG = FrageForumList.class.getSimpleName();
     protected SwipeRefreshLayout refreshLayout;
-
     private List<ForumListData> datas = null;
     private ForumListAdapter adapter = null;
     private boolean isSetForumToDataBase = false;
     private RecyclerView recyclerView;
+    private SharedPreferences sharedPreferences;
+    //10分钟的缓存时间
+    private static final int UPDATE_TIME = 1000*600;
+    private static final String KEY = "FORUM_UPDATE_KEY";
 
     public static FrageForumList newInstance(boolean isLogin) {
         Bundle args = new Bundle();
@@ -50,22 +56,20 @@ public class FrageForumList extends BaseFragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        MyDB myDB = new MyDB(getActivity(), MyDB.MODE_READ);
+        datas = myDB.getForums();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frage_forum_list, container, false);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         //刷新
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
-
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        });
-
-        MyDbUtils myDbUtils = new MyDbUtils(getActivity(),MyDbUtils.MODE_READ);
-        datas = myDbUtils.getForums();
 
         //先从数据库读出数据
         adapter = new ForumListAdapter(datas, getActivity());
@@ -84,7 +88,7 @@ public class FrageForumList extends BaseFragment {
         recyclerView.addItemDecoration(new MyGridDivider(1));
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-        getData();
+
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -92,6 +96,20 @@ public class FrageForumList extends BaseFragment {
             }
         });
 
+
+        //判断是否真正的需要请求服务器
+        //获得新的数据
+        long time =  sharedPreferences.getLong(KEY,0);
+        if(System.currentTimeMillis()-time>UPDATE_TIME){
+            Log.e("板块列表","过了缓存时间需要刷新");
+            refreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(true);
+                }
+            });
+            getData();
+        }
         return view;
     }
 
@@ -150,11 +168,13 @@ public class FrageForumList extends BaseFragment {
             }
 
             if(!isSetForumToDataBase){
-                MyDbUtils myDbUtils = new MyDbUtils(getActivity(),MyDbUtils.MODE_WRITE);
-                myDbUtils.setForums(simpledatas);
+                MyDB myDB = new MyDB(getActivity(), MyDB.MODE_WRITE);
+                myDB.setForums(simpledatas);
                 isSetForumToDataBase = true;
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putLong(KEY,System.currentTimeMillis());
+                editor.apply();
             }
-
             return simpledatas;
         }
 
@@ -170,7 +190,6 @@ public class FrageForumList extends BaseFragment {
                     refreshLayout.setRefreshing(false);
                 }
             }, 500);
-
         }
     }
 }

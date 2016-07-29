@@ -25,7 +25,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.HotNewListAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.data.GalleryData;
-import xyz.yluo.ruisiapp.database.MyDbUtils;
+import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.httpUtil.SyncHttpClient;
@@ -207,8 +207,8 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
                 dataset.add(temp);
             }
 
-            MyDbUtils myDbUtils = new MyDbUtils(getActivity(), MyDbUtils.MODE_READ);
-            return myDbUtils.handReadHistoryList(dataset);
+            MyDB myDB = new MyDB(getActivity(), MyDB.MODE_READ);
+            return myDB.handReadHistoryList(dataset);
         }
 
         @Override

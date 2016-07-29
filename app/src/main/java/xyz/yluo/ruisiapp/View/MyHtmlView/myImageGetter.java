@@ -165,7 +165,13 @@ public class MyImageGetter implements Html.ImageGetter{
                     File dir = new File(context.getFilesDir()+"/smiley");
                     String fileName = source.substring(source.lastIndexOf('/'));
                     File f = new File(dir+fileName);
-                    Log.e("image getter","create new smiley file"+f.getPath()+">>"+f.createNewFile()) ;
+                    if(f.exists()){
+                        Log.e("image getter","表情文件存在直接返回");
+                        Drawable d = Drawable.createFromPath(f.getPath());
+                        d.setBounds(0,0,80,80);
+                        return Drawable.createFromPath(f.getPath());
+                    }
+                    Log.e("image getter","表情文件不存在 创建"+f.getPath()+">>"+f.createNewFile()) ;
                     FileOutputStream fos = new FileOutputStream(f);
                     byte[] buffer = new byte[1024];
                     int len = 0;

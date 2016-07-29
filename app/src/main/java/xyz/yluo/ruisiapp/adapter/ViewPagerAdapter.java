@@ -38,7 +38,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
                 return fragment2;
             case 2:
                 if (fragment3 == null) {
-                    fragment3 = FrageNews.newInstance(true);
+                    fragment3 = new FrageNews();
                 }
                 return fragment3;
         }

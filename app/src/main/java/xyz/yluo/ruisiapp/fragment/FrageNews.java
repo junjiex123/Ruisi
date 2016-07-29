@@ -1,6 +1,8 @@
 package xyz.yluo.ruisiapp.fragment;
 
 import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,7 +26,7 @@ import java.util.List;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.NewsListAdapter;
 import xyz.yluo.ruisiapp.data.SchoolNewsData;
-import xyz.yluo.ruisiapp.database.MyDbUtils;
+import xyz.yluo.ruisiapp.database.MyDB;
 
 /**
  * Created by free2 on 16-3-19.
@@ -35,15 +37,20 @@ public class FrageNews extends Fragment{
     public static final String TAG = FrageNews.class.getSimpleName();
     protected RecyclerView recycler_view;
     protected SwipeRefreshLayout refreshLayout;
-    private List<SchoolNewsData> mydataset = new ArrayList<>();
+    private List<SchoolNewsData> datas = new ArrayList<>();
     private NewsListAdapter adapter;
+    private SharedPreferences sharedPreferences;
+    private MyDB myDB;
+    //30分钟的缓存时间
+    private static final int UPDATE_TIME = 1000*1800;
+    private static final String KEY = "NEWS_UPDATE_KEY";
 
-    public static FrageNews newInstance(boolean isNeedUpdate) {
-        Bundle args = new Bundle();
-        args.putBoolean("isneedupdate",isNeedUpdate);
-        FrageNews fragment = new FrageNews();
-        fragment.setArguments(args);
-        return fragment;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        myDB = new MyDB(getActivity(), MyDB.MODE_WRITE);
+        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        datas = myDB.getNewsList(null);
     }
 
     @Override
@@ -52,37 +59,33 @@ public class FrageNews extends Fragment{
         recycler_view = (RecyclerView) view.findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
-
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        });
-
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refresh();
             }
         });
-
-        //首先从数据库读入数据
-        MyDbUtils myDbUtils = new MyDbUtils(getActivity(),MyDbUtils.MODE_READ);
-
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recycler_view.setLayoutManager(mLayoutManager);
-        adapter = new NewsListAdapter(getActivity(), myDbUtils.getNewsList(null));
+        adapter = new NewsListAdapter(getActivity(), datas);
         recycler_view.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
-        Handler mHandler = new Handler();
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                refresh();
-            }
-        }, 300);
+        //判断是否真正的需要请求服务器
+        //获得新的数据
+        long time =  sharedPreferences.getLong(KEY,0);
+        if(System.currentTimeMillis()-time>UPDATE_TIME||datas==null||datas.size()==0){
+            //延迟是为了避免密集的http请求
+            Log.e("新闻","过了缓存时间需要刷新");
+            Handler mHandler = new Handler();
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refresh();
+                    refreshLayout.setRefreshing(true);
+                }
+            }, 200);
+        }
         return view;
     }
 
@@ -103,7 +106,6 @@ public class FrageNews extends Fragment{
                 e.printStackTrace();
                 return dataset;
             }
-
             Elements articlelists = document.select("table.winstyle49756").select("tr[height=20]");
             for (Element article : articlelists) {
                 Elements title = article.select("a");
@@ -118,15 +120,17 @@ public class FrageNews extends Fragment{
             }
 
             //数据加载完毕，和数据库比对
-            MyDbUtils myDbUtils = new MyDbUtils(getActivity(),MyDbUtils.MODE_WRITE);
-            dataset = myDbUtils.getNewsList(dataset);
+            dataset = myDB.getNewsList(dataset);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putLong(KEY,System.currentTimeMillis());
+            editor.apply();
             return dataset;
         }
 
         @Override
         protected void onPostExecute(List<SchoolNewsData> dataset) {
-            mydataset.clear();
-            mydataset.addAll(dataset);
+            datas.clear();
+            datas.addAll(dataset);
             adapter.notifyDataSetChanged();
             refreshLayout.postDelayed(new Runnable() {
                 @Override

@@ -21,7 +21,7 @@ import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ArticleListNormalAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
-import xyz.yluo.ruisiapp.database.MyDbUtils;
+import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
@@ -39,7 +39,7 @@ public class ArticleList extends ArticleListBase {
     //一般板块/图片板块/手机板块数据列表
     private List<ArticleListData> datas;
     private ArticleListNormalAdapter mRecyleAdapter;
-    private MyDbUtils myDbUtils = null;
+    private MyDB myDB = null;
     private boolean hideZhidin = true;
 
     public static void open(Context context, int fid, String title) {
@@ -64,7 +64,7 @@ public class ArticleList extends ArticleListBase {
         myToolBar.addMenu(R.drawable.ic_search_white_24dp,"SEARCH");
         myToolBar.addMenu(R.drawable.ic_edit,"POST");
 
-
+        myDB = new MyDB(ArticleList.this, MyDB.MODE_READ);
         //加载更多
         mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 8));
         datas.clear();
@@ -190,9 +190,7 @@ public class ArticleList extends ArticleListBase {
 
                 }
             }
-
-            myDbUtils = new MyDbUtils(ArticleList.this, MyDbUtils.MODE_READ);
-            return myDbUtils.handReadHistoryList(dataset);
+            return myDB.handReadHistoryList(dataset);
         }
 
         @Override
@@ -226,8 +224,7 @@ public class ArticleList extends ArticleListBase {
                 temp = new ArticleListData(hasImage, title, url, author, replyCount,titleColor);
                 dataset.add(temp);
             }
-            myDbUtils = new MyDbUtils(ArticleList.this, MyDbUtils.MODE_READ);
-            return myDbUtils.handReadHistoryList(dataset);
+            return myDB.handReadHistoryList(dataset);
         }
 
         @Override

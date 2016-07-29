@@ -13,7 +13,7 @@ import java.util.List;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.SingleNewsActivity;
 import xyz.yluo.ruisiapp.data.SchoolNewsData;
-import xyz.yluo.ruisiapp.database.MyDbUtils;
+import xyz.yluo.ruisiapp.database.MyDB;
 
 /**
  * Created by free2 on 16-3-31.
@@ -124,8 +124,8 @@ public class NewsListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             message_badge.setVisibility(View.GONE);
             article_title.setTextColor(0xff888888);
 
-            MyDbUtils myDbUtils = new MyDbUtils(activity,MyDbUtils.MODE_WRITE);
-            myDbUtils.setSingleNewsRead(single.getUrl());
+            MyDB myDB = new MyDB(activity, MyDB.MODE_WRITE);
+            myDB.setSingleNewsRead(single.getUrl());
             SingleNewsActivity.open(activity, single.getUrl(), single.getTitle());
         }
     }

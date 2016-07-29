@@ -37,7 +37,7 @@ import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
 import xyz.yluo.ruisiapp.data.LoadMoreType;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
 import xyz.yluo.ruisiapp.data.SingleType;
-import xyz.yluo.ruisiapp.database.MyDbUtils;
+import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.fragment.FrageReplyDialog;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -534,8 +534,8 @@ public class SingleArticleActivity extends BaseActivity
             if (!isSaveToDataBase) {
                 //插入数据库
                 Log.i("insert ", "tid:" + Tid + "title:" + Title + "author:" + Author);
-                MyDbUtils myDbUtils = new MyDbUtils(SingleArticleActivity.this, MyDbUtils.MODE_WRITE);
-                myDbUtils.handSingleReadHistory(Tid, Title, Author);//String Tid,String title,String author
+                MyDB myDB = new MyDB(SingleArticleActivity.this, MyDB.MODE_WRITE);
+                myDB.handSingleReadHistory(Tid, Title, Author);//String Tid,String title,String author
                 isSaveToDataBase = true;
             }
             int add = tepdata.size();

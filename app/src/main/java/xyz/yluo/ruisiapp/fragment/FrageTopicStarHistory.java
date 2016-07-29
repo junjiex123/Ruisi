@@ -25,7 +25,7 @@ import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.data.FrageType;
 import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.SimpleListData;
-import xyz.yluo.ruisiapp.database.MyDbUtils;
+import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
@@ -153,8 +153,8 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
 
         if (currentIndex == 2) {
             //datas.add()
-            MyDbUtils myDbUtils = new MyDbUtils(getActivity(), MyDbUtils.MODE_READ);
-            for (ArticleListData data : myDbUtils.getHistory(30)) {
+            MyDB myDB = new MyDB(getActivity(), MyDB.MODE_READ);
+            for (ArticleListData data : myDB.getHistory(30)) {
                 //Log.i("history",data.getFid());
                 datas.add(new SimpleListData(data.getTitle(), data.getAuthor(), "tid=" + data.getTitleUrl()));
             }

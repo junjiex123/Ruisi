@@ -99,6 +99,13 @@ public class HomeActivity extends BaseActivity
         currentFragment = new FrageHome();
         String tag = Config.ISLOGIN? Config.USER_NAME:getString(R.string.app_name);
         getFragmentManager().beginTransaction().replace(R.id.fragment_home_container,currentFragment,tag).commit();
+
+        //注册检查消息广播
+        Log.e("消息广播","注册广播");
+        myMsgReceiver = new msgReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.ruisi.checkmsg");
+        registerReceiver(myMsgReceiver, intentFilter);
     }
 
     @Override
@@ -115,13 +122,6 @@ public class HomeActivity extends BaseActivity
                 Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
             }
         }
-
-        //注册检查消息广播
-        Log.e("消息广播","注册广播");
-        myMsgReceiver = new msgReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("com.ruisi.checkmsg");
-        registerReceiver(myMsgReceiver, intentFilter);
     }
 
 
