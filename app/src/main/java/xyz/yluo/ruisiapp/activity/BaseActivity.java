@@ -6,7 +6,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import xyz.yluo.ruisiapp.App;
-import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyToolBar;
 

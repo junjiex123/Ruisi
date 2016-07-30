@@ -1,6 +1,7 @@
 package xyz.yluo.ruisiapp.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -11,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -21,9 +23,11 @@ import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyColorPicker;
+import xyz.yluo.ruisiapp.View.MySmileyPicker;
 import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.utils.PostHandler;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -35,7 +39,8 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
     private EditText ed_title,ed_content;
     private MyAlertDialog dialog;
     private MyToolBar myToolBar;
-    private MyColorPicker picker;
+    private MyColorPicker myColorPicker;
+    private MySmileyPicker smileyPicker;
 
     private int fid = 72;
     private int[] fids = new int[]{72, 549, 108, 551, 550, 110, 217, 142, 552,
@@ -46,7 +51,8 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_topic);
         myToolBar = (MyToolBar) findViewById(R.id.myToolBar);
-        picker= new MyColorPicker(this);
+        myColorPicker = new MyColorPicker(this);
+        smileyPicker = new MySmileyPicker(this);
         myToolBar.setTitle("发表新帖");
         myToolBar.setHomeEnable(this);
 
@@ -121,14 +127,20 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
         });
 
 
-        picker.setListener(new MyColorPicker.OnItemSelectListener() {
+        myColorPicker.setListener(new MyColorPicker.OnItemSelectListener() {
             @Override
             public void itemClick(int pos, View v, String color) {
                 handleInsert("[color="+color+"][/color]");
             }
         });
 
-
+        smileyPicker.setListener(new MySmileyPicker.OnItemClickListener() {
+            @Override
+            public void itemClick(String str, Drawable a) {
+                PostHandler handler = new PostHandler(ed_content);
+                handler.insertSmiley("{:" + str + ":}", a);
+            }
+        });
     }
 
     private boolean checkPostInput() {
@@ -197,7 +209,6 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
         Toast.makeText(this, "发帖失败", Toast.LENGTH_SHORT).show();
     }
 
-
     private void handleInsert(String s){
         int start = ed_content.getSelectionStart();
         Editable edit = ed_content.getEditableText();//获取EditText的文字
@@ -214,7 +225,7 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(final View view) {
         switch (view.getId()){
             case R.id.action_bold:
                 handleInsert("[b][/b]");
@@ -226,10 +237,17 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
                 handleInsert("[quote][/quote]");
                 break;
             case R.id.action_color_text:
-                picker.showAsDropDown(view, 0, 10);
+                myColorPicker.showAsDropDown(view, 0, 10);
                 break;
             case R.id.action_emotion:
-                Toast.makeText(this,"还没写，蛋疼",Toast.LENGTH_SHORT).show();
+                ((ImageView)view).setImageResource(R.drawable.ic_edit_emoticon_primary_24dp);
+                smileyPicker.showAsDropDown(view,0,10);
+                smileyPicker.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        ((ImageView)view).setImageResource(R.drawable.editer_bar_emotion_bg);
+                    }
+                });
                 break;
             case R.id.action_backspace:
                 int start = ed_content.getSelectionStart();

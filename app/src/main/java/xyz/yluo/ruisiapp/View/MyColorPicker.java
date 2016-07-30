@@ -27,8 +27,6 @@ public class MyColorPicker extends PopupWindow implements AdapterView.OnItemClic
     private MyAdapter adapter;
     private String[][] colorDatas =null;
 
-
-
     public MyColorPicker(Context context)
     {
         super(context);
