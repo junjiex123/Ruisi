@@ -98,7 +98,7 @@ public class FrageForumList extends BaseFragment {
         //判断是否真正的需要请求服务器
         //获得新的数据
         long time =  sharedPreferences.getLong(KEY,0);
-        if(System.currentTimeMillis()-time>UPDATE_TIME){
+        if(System.currentTimeMillis()-time>UPDATE_TIME||datas==null||datas.size()==0){
             Log.e("板块列表","过了缓存时间需要刷新");
             refreshLayout.post(new Runnable() {
                 @Override

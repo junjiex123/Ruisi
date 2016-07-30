@@ -11,12 +11,14 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -49,9 +51,10 @@ import xyz.yluo.ruisiapp.utils.ImeUtil;
  * Created by free2 on 16-4-6.
  * 搜索activity
  * 搜索换页目的是获得searchid这个参数，然后加上page 参数即可
- * http://bbs.rs.xidian.me/search.php?mod=forum&amp;searchid=1268&amp;orderby=lastpost&amp;ascdesc=desc&amp;searchsubmit=yes&amp;page=20&amp;mobile=2
+ * http://bbs.rs.xidian.me/search.php?mod=forum&amp;searchid=1268&amp;
+ * orderby=lastpost&amp;ascdesc=desc&amp;searchsubmit=yes&amp;page=20&amp;mobile=2
  */
-public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnLoadMoreListener {
+public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnLoadMoreListener,View.OnClickListener{
 
 
     private int totalPage = 1;
@@ -67,6 +70,7 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
     private List<SimpleListData> datas = new ArrayList<>();
     private CardView search_card;
     private Animator animator;
+    private TextView nav_title;
 
 
     @Override
@@ -74,33 +78,24 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        ImageView btn_back = (ImageView) findViewById(R.id.btn_back);
+        findViewById(R.id.btn_back).setOnClickListener(this);
         recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
         search_input = (EditText) findViewById(R.id.search_input);
         main_window = (CoordinatorLayout) findViewById(R.id.main_window);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_view);
         search_card = (CardView) findViewById(R.id.search_card);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
-        findViewById(R.id.start_search).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                start_search_click();
-            }
-        });
+        findViewById(R.id.start_search).setOnClickListener(this);
+        findViewById(R.id.nav_search).setOnClickListener(this);
         refreshLayout.setEnabled(false);
         search_input.setHint("请输入搜索内容！");
-
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
         adapter = new SimpleListAdapter(ListType.SERRCH, this, datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recycler_view.setLayoutManager(layoutManager);
         recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) layoutManager, this, 20));
         recycler_view.setAdapter(adapter);
+        nav_title = (TextView) findViewById(R.id.nav_title);
+        findViewById(R.id.nav_back).setOnClickListener(this);
 
         search_input.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
@@ -113,62 +108,111 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
                 return handled;
             }
         });
-
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             search_card.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
                 @Override
                 public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                     v.removeOnLayoutChangeListener(this);
-                    animator = ViewAnimationUtils.createCircularReveal(
-                            search_card,
-                            search_card.getWidth(),
-                            0,
-                            0,
-                            (float) Math.hypot(search_card.getWidth(), search_card.getHeight()));
-
-                    animator.setInterpolator(new AccelerateInterpolator());
-                    animator.setDuration(450);
-                    animator.start();
-
-                    animator.addListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animator) {
-
-                        }
-                        @Override
-                        public void onAnimationEnd(Animator animator) {
-                            ImeUtil.show_ime(ActivitySearch.this, search_input);
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animator) {
-
-                        }
-                        @Override
-                        public void onAnimationRepeat(Animator animator) {
-
-                        }
-                    });
+                    show_search_view();
                 }
             });
-        }else{
+        }else {
             ImeUtil.show_ime(ActivitySearch.this, search_input);
         }
     }
 
+    private void show_search_view(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            search_card.setVisibility(View.VISIBLE);
+            animator = ViewAnimationUtils.createCircularReveal(
+                    search_card,
+                    search_card.getWidth(),
+                    0,
+                    0,
+                    (float) Math.hypot(search_card.getWidth(), search_card.getHeight()));
+
+            animator.setInterpolator(new AccelerateInterpolator());
+            animator.setDuration(300);
+            animator.start();
+            animator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    ImeUtil.show_ime(ActivitySearch.this, search_input);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+
+                }
+            });
+        }else{
+            search_card.setVisibility(View.VISIBLE);
+            ImeUtil.show_ime(ActivitySearch.this, search_input);
+        }
+    }
+
+    private void hide_search_view(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            animator = ViewAnimationUtils.createCircularReveal(
+                    search_card,
+                    search_card.getWidth(),
+                    0,
+                    (float) Math.hypot(search_card.getWidth(), search_card.getHeight()),
+                    0);
+
+            animator.setInterpolator(new DecelerateInterpolator());
+            animator.setDuration(300);
+            animator.start();
+            animator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    search_card.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+
+                }
+            });
+        }else{
+            search_card.setVisibility(View.GONE);
+        }
+    }
+
     private void start_search_click() {
-        if (search_input.getText().toString().isEmpty()) {
+        String str = search_input.getText().toString();
+        if (TextUtils.isEmpty(str)) {
             Snackbar.make(main_window, "你还没写内容呢", Snackbar.LENGTH_SHORT).show();
             return;
         } else {
-            getData(search_input.getText().toString());
+            nav_title.setText("搜索:"+str);
+            hide_search_view();
+            getData(str);
         }
 
         ImeUtil.hide_ime(this);
@@ -255,6 +299,22 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
                 page = page + 1;
                 getSomePageData(page);
             }
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.nav_back:
+            case R.id.btn_back:
+                finish();
+                break;
+            case R.id.nav_search:
+                show_search_view();
+                break;
+            case R.id.start_search:
+                start_search_click();
+                break;
         }
     }
 

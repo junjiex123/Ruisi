@@ -152,7 +152,7 @@ public class SyncHttpClient {
             }
 //            处理重定向
             int code = connection.getResponseCode();
-            if (code == 302) {
+            if (code == 302||code==301) {
                 //如果会重定向，保存302 301重定向地址,然后重新发送请求(模拟请求)
                 String location = connection.getHeaderField("Location");
                 Log.i("httputil", "302 new location is " + location);

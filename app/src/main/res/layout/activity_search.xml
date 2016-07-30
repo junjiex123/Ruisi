@@ -7,16 +7,49 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="50dp"
         android:background="@color/colorPrimary"
         android:gravity="center_vertical|center_horizontal">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/nav_back"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="13dp"
+                android:clickable="true"
+                android:src="@drawable/ic_arraw_back_white"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+            <TextView
+                android:maxLines="1"
+                android:id="@+id/nav_title"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:text="搜索"
+                android:textSize="18sp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <ImageView
+                android:id="@+id/nav_search"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="13dp"
+                android:clickable="true"
+                android:src="@drawable/ic_search_white_24dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+        </LinearLayout>
+
         <android.support.v7.widget.CardView
             android:id="@+id/search_card"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="4dp"
+            android:layout_margin="3dp"
             android:background="@android:color/white">
 
             <LinearLayout
@@ -47,6 +80,7 @@
                     android:focusable="true"
                     android:gravity="start|center_vertical"
                     android:hint="搜索"
+                    android:inputType="text"
                     android:imeOptions="actionSearch"
                     android:paddingBottom="4dp"
                     android:paddingEnd="8dp"
@@ -67,7 +101,7 @@
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
-    </LinearLayout>
+    </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
