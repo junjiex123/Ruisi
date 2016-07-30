@@ -1,16 +1,23 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.animation.Animator;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -58,6 +65,8 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
     private SwipeRefreshLayout refreshLayout;
     private SimpleListAdapter adapter;
     private List<SimpleListData> datas = new ArrayList<>();
+    private CardView search_card;
+    private Animator animator;
 
 
     @Override
@@ -70,6 +79,7 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
         search_input = (EditText) findViewById(R.id.search_input);
         main_window = (CoordinatorLayout) findViewById(R.id.main_window);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_view);
+        search_card = (CardView) findViewById(R.id.search_card);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         findViewById(R.id.start_search).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,12 +114,53 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
             }
         });
 
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        ImeUtil.show_ime(this, search_input);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            search_card.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                @Override
+                public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                    v.removeOnLayoutChangeListener(this);
+                    animator = ViewAnimationUtils.createCircularReveal(
+                            search_card,
+                            search_card.getWidth(),
+                            0,
+                            0,
+                            (float) Math.hypot(search_card.getWidth(), search_card.getHeight()));
+
+                    animator.setInterpolator(new AccelerateInterpolator());
+                    animator.setDuration(450);
+                    animator.start();
+
+                    animator.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animator) {
+
+                        }
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+                            ImeUtil.show_ime(ActivitySearch.this, search_input);
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animator) {
+
+                        }
+                        @Override
+                        public void onAnimationRepeat(Animator animator) {
+
+                        }
+                    });
+                }
+            });
+        }else{
+            ImeUtil.show_ime(ActivitySearch.this, search_input);
+        }
     }
 
     private void start_search_click() {

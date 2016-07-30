@@ -3,6 +3,7 @@ package xyz.yluo.ruisiapp.fragment;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -26,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -205,7 +207,6 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        Log.i("reply dialog", ">>>onActivityCreated");
         super.onActivityCreated(savedInstanceState);
         input.requestFocus();
         if(getDialog().getWindow()!=null){
@@ -225,6 +226,9 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
                     smiley_container.setVisibility(View.GONE);
                 } else {
                     smiley_container.setVisibility(View.VISIBLE);
+                    final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if(getView()!=null)
+                    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
                 }
                 break;
             case R.id.input_aera:
