@@ -13,7 +13,7 @@ import xyz.yluo.ruisiapp.database.SQLiteHelper;
  * Created by free2 on 16-3-11.
  * 共享的全局数据
  */
-public class Config extends Application {
+public class App extends Application {
 
     private  Context context;
     private NetworkReceiver receiver= new NetworkReceiver();

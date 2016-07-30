@@ -4,12 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +20,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import xyz.yluo.ruisiapp.Config;
+import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyGridDivider;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
@@ -151,7 +149,7 @@ public class FrageForumList extends BaseFragment {
             String hash = document.select(".footer").select("a.dialog").attr("href");
             String ress = GetId.getHash(hash);
             if (!ress.isEmpty()) {
-                Config.FORMHASH = ress;
+                App.FORMHASH = ress;
             }
 
             for (Element ele : elements) {

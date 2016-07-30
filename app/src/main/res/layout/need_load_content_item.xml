@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:id="@+id/need_loading_item"
+    android:background="?attr/selectableItemBackground">
+
+    <TextView
+        android:background="@drawable/rec_bottom_bg"
+        android:padding="16dp"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:text="点此查看全文"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

@@ -20,7 +20,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import xyz.yluo.ruisiapp.Config;
+import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
@@ -123,7 +123,7 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
         Log.i("reply dialog callbak","status:"+status+" info:"+txt);
         if(status==RESULT_OK){
             replyTime = System.currentTimeMillis();
-            String userImage = UrlUtils.getAvaterurlm(Config.USER_UID);
+            String userImage = UrlUtils.getAvaterurlm(App.USER_UID);
             datas.add(new ChatListData(1, userImage, txt, "刚刚"));
             adapter.notifyItemInserted(datas.size() - 1);
             recycler_view.scrollToPosition(datas.size());

@@ -43,7 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import xyz.yluo.ruisiapp.Config;
+import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.VerticalTabLayout;
 import xyz.yluo.ruisiapp.adapter.SmileyAdapter;
@@ -291,7 +291,7 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
 
     private void replyLz(final String res){
         Map<String, String> params = new HashMap<>();
-        params.put("formhash", Config.FORMHASH);
+        params.put("formhash", App.FORMHASH);
         params.put("message", res);
         HttpUtil.post(getActivity(), replyUrl + "&handlekey=fastpost&loc=1&inajax=1", params, new ResponseHandler() {
             @Override
@@ -370,7 +370,7 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
      */
     private void replyHy(final String txt){
         Map<String, String> params = new HashMap<>();
-        params.put("formhash", Config.FORMHASH);
+        params.put("formhash", App.FORMHASH);
         params.put("touid", info);
         params.put("message", txt);
         HttpUtil.post(getActivity(), replyUrl, params, new ResponseHandler() {

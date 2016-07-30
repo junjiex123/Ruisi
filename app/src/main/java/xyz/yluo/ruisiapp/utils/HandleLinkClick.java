@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import xyz.yluo.ruisiapp.Config;
+import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
@@ -59,7 +59,7 @@ public class HandleLinkClick {
 
         } else {
             if (!url.startsWith("http")) {
-                url = Config.getBaseUrl() + url;
+                url = App.getBaseUrl() + url;
             }
             RequestOpenBrowser.openBroswer(context, url);
         }

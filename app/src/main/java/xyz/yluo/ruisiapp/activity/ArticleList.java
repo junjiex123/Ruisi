@@ -17,7 +17,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import xyz.yluo.ruisiapp.Config;
+import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ArticleListNormalAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
@@ -80,14 +80,14 @@ public class ArticleList extends ArticleListBase {
     @Override
     protected void getData() {
         String url = UrlUtils.getArticleListUrl(CurrentFid, CurrentPage, true);
-        if (!Config.IS_SCHOOL_NET) {
+        if (!App.IS_SCHOOL_NET) {
             url = url + UrlUtils.getArticleListUrl(CurrentFid, CurrentPage, false);
         }
 
         HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
-                if (Config.IS_SCHOOL_NET) {
+                if (App.IS_SCHOOL_NET) {
                     new GetNormalArticleListTaskRs().execute(new String(response));
                 } else {
                     //外网

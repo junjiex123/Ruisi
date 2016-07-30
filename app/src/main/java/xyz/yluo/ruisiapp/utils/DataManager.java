@@ -7,7 +7,7 @@ import android.os.Environment;
 import java.io.File;
 import java.math.BigDecimal;
 
-import xyz.yluo.ruisiapp.Config;
+import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.database.SQLiteHelper;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 
@@ -50,9 +50,9 @@ public class DataManager {
         }
         //删除cookie
         HttpUtil.exit();
-        Config.ISLOGIN = false;
-        Config.USER_NAME = "";
-        Config.USER_UID = "";
+        App.ISLOGIN = false;
+        App.USER_NAME = "";
+        App.USER_UID = "";
         SharedPreferences perUserInfo = context.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = perUserInfo.edit();
         editor.clear();

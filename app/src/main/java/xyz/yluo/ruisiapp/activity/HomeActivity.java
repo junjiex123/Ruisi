@@ -23,8 +23,8 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.CheckMessageService;
-import xyz.yluo.ruisiapp.Config;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.ChangeNetDialog;
 import xyz.yluo.ruisiapp.View.CircleImageView;
@@ -65,6 +65,7 @@ public class HomeActivity extends BaseActivity
     //新消息小红点
     private View message_bage;
     private View toolBarImagContainer;
+    private boolean isNeewRefreshDrawView = true;
 
 
     @Override
@@ -92,12 +93,9 @@ public class HomeActivity extends BaseActivity
         myToolBar.addMenu(R.drawable.ic_search_white_24dp,"SEARCH");
         myToolBar.addMenu(R.drawable.ic_edit,"POST");
         setToolBarMenuClick(myToolBar);
-        if (!getIntent().getBooleanExtra("isLogin", false)) {
-            drawer.openDrawer(GravityCompat.START);
-        }
         navigationView.setNavigationItemSelectedListener(this);
         currentFragment = new FrageHome();
-        String tag = Config.ISLOGIN? Config.USER_NAME:getString(R.string.app_name);
+        String tag = App.ISLOGIN? App.USER_NAME:getString(R.string.app_name);
         getFragmentManager().beginTransaction().replace(R.id.fragment_home_container,currentFragment,tag).commit();
 
         //注册检查消息广播
@@ -112,13 +110,13 @@ public class HomeActivity extends BaseActivity
     protected void onStart() {
         super.onStart();
         Log.e(TAG,"onStart");
-        if(Config.ISLOGIN&& !TextUtils.isEmpty(Config.USER_NAME)){
-            myToolBar.setTitle(Config.USER_NAME);
-            Uri uri = ImageUtils.getImageURI(getFilesDir(), Config.USER_UID);
+        if(App.ISLOGIN&& !TextUtils.isEmpty(App.USER_NAME)){
+            myToolBar.setTitle(App.USER_NAME);
+            Uri uri = ImageUtils.getImageURI(getFilesDir(), App.USER_UID);
             if (uri != null) {//图片存在
                 userImage.setImageURI(uri);
             } else {//图片不存在
-                String url = UrlUtils.getAvaterurlm(Config.USER_UID);
+                String url = UrlUtils.getAvaterurlm(App.USER_UID);
                 Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
             }
         }
@@ -176,7 +174,7 @@ public class HomeActivity extends BaseActivity
         String Tag = FrageType.TITLE_LIST[id];
         if(id==FrageType.HOME){
             Log.e("test","id  is home");
-            Tag = Config.ISLOGIN&&(!TextUtils.isEmpty(Config.USER_NAME))? Config.USER_NAME:getString(R.string.app_name);
+            Tag = App.ISLOGIN&&(!TextUtils.isEmpty(App.USER_NAME))? App.USER_NAME:getString(R.string.app_name);
             toolBarImagContainer.setVisibility(View.VISIBLE);
         }
         Fragment f = fm.findFragmentByTag(Tag);
@@ -230,17 +228,17 @@ public class HomeActivity extends BaseActivity
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.profile_image:
-                if (Config.ISLOGIN&&!TextUtils.isEmpty(Config.USER_NAME)) {
-                    String url = UrlUtils.getAvaterurlb(Config.USER_UID);
-                    UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, Config.USER_NAME, (CircleImageView)view, url);
+                if (App.ISLOGIN&&!TextUtils.isEmpty(App.USER_NAME)) {
+                    String url = UrlUtils.getAvaterurlb(App.USER_UID);
+                    UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, App.USER_NAME, (CircleImageView)view, url);
                 } else {
-                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                    Intent i = new Intent(HomeActivity.this, LoginActivity.class);
                     startActivityForResult(i,0);
                 }
                 break;
             case R.id.change_net:
                 ChangeNetDialog dialog = new ChangeNetDialog();
-                dialog.setNetType(Config.IS_SCHOOL_NET);
+                dialog.setNetType(App.IS_SCHOOL_NET);
                 dialog.show(getFragmentManager(), "changeNet");
                 break;
             case R.id.show_message:
@@ -248,7 +246,6 @@ public class HomeActivity extends BaseActivity
                     clickId = R.id.show_message;
                     drawer.closeDrawer(GravityCompat.START);
                 }
-
                 break;
         }
 
@@ -261,9 +258,35 @@ public class HomeActivity extends BaseActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK){
-            Bundle b=data.getExtras(); //data为B中回传的Intent
-            String str=b.getString("status");//str即为回传的值
-            Log.i("login status",str);
+            initDrawView();
+        }
+    }
+
+    private void initDrawView(){
+        final View header = navigationView.getHeaderView(0);
+        findViewById(R.id.message_badge_nav).setVisibility(message_bage.getVisibility());
+        CircleImageView userImage = (CircleImageView) header.findViewById(R.id.profile_image);
+        TextView userGrade = (TextView) header.findViewById(R.id.user_grade);
+        TextView userName = (TextView) header.findViewById(R.id.header_user_name);
+        header.findViewById(R.id.change_net).setOnClickListener(this);
+        ImageView btn_show_message = (ImageView) header.findViewById(R.id.show_message);
+        btn_show_message.setOnClickListener(this);
+        userImage.setOnClickListener(this);
+        if(App.ISLOGIN&& !TextUtils.isEmpty(App.USER_NAME)){
+            userGrade.setVisibility(View.VISIBLE);
+            userGrade.setText(App.USER_GRADE);
+            userName.setText(App.USER_NAME);
+            Uri uri = ImageUtils.getImageURI(getFilesDir(), App.USER_UID);
+            if (uri != null) {//图片存在
+                userImage.setImageURI(uri);
+            } else {//图片不存在
+                String url = UrlUtils.getAvaterurlm(App.USER_UID);
+                Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
+            }
+        }else{
+            userImage.setImageResource(R.drawable.image_placeholder);
+            userName.setText("点击头像登陆");
+            userGrade.setVisibility(View.GONE);
         }
     }
 
@@ -277,49 +300,29 @@ public class HomeActivity extends BaseActivity
     @Override
     public void onDrawerOpened(View drawerView) {
         clickId = 0;
-        final View header = navigationView.getHeaderView(0);
-        findViewById(R.id.message_badge_nav).setVisibility(message_bage.getVisibility());
-        CircleImageView userImage = (CircleImageView) header.findViewById(R.id.profile_image);
-        TextView userGrade = (TextView) header.findViewById(R.id.user_grade);
-        TextView userName = (TextView) header.findViewById(R.id.header_user_name);
-        header.findViewById(R.id.change_net).setOnClickListener(this);
-        ImageView btn_show_message = (ImageView) header.findViewById(R.id.show_message);
-        btn_show_message.setOnClickListener(this);
-        userImage.setOnClickListener(this);
-        if(Config.ISLOGIN&& !TextUtils.isEmpty(Config.USER_NAME)){
-            userGrade.setVisibility(View.VISIBLE);
-            userGrade.setText(Config.USER_GRADE);
-            userName.setText(Config.USER_NAME);
-            Uri uri = ImageUtils.getImageURI(getFilesDir(), Config.USER_UID);
-            if (uri != null) {//图片存在
-                userImage.setImageURI(uri);
-            } else {//图片不存在
-                String url = UrlUtils.getAvaterurlm(Config.USER_UID);
-                Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
-            }
-        }else{
-            userImage.setImageResource(R.drawable.image_placeholder);
-            userName.setText("点击头像登陆");
-            userGrade.setVisibility(View.GONE);
+        if(isNeewRefreshDrawView){
+            initDrawView();
+            isNeewRefreshDrawView = false;
         }
+
     }
 
     @Override
     public void onDrawerClosed(View drawerView) {
         switch (clickId) {
             case R.id.nav_about:
-                startActivity(new Intent(getApplicationContext(), AboutActivity.class));
+                startActivity(new Intent(this, AboutActivity.class));
                 break;
             case R.id.nav_setting:
                 changeFragement(FrageType.SETTING);
                 break;
             case R.id.nav_sign:
-                if (Config.IS_SCHOOL_NET) {
+                if (App.IS_SCHOOL_NET) {
                     if (isneed_login()) {
-                        startActivity(new Intent(getApplicationContext(), UserDakaActivity.class));
+                        startActivity(new Intent(this, UserDakaActivity.class));
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "你现在不是校园网无法签到", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "你现在不是校园网无法签到", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.show_message:

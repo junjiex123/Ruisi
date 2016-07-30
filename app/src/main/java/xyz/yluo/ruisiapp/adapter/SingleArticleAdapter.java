@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -33,33 +34,16 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdapter.BaseViewHolder> {
 
-    public static final int CONTENT = 0;
-    public static final int COMENT = 1;
-    public final int LOAD_MORE = 2;
+    private static final int CONTENT = 0;
+    private static final int COMENT = 1;
+    private final int LOAD_MORE = 2;
+    private final int HEADER = 3;
+
     private LoadMoreType loadMoreType = LoadMoreType.LOADING;
-    private ScrollToSomePosition scrollToSomePosition;
     /**
      * 缓存楼主的一层
      */
     private SpannableStringBuilder strBuilderContent;
-
-    @Override
-    public void onViewDetachedFromWindow(BaseViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-        Log.d("===========","===onViewDetachedFromWindow==="+(holder.getAdapterPosition()));
-    }
-
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        Log.d("===========","===onAttachedToRecyclerView===");
-    }
-
-    @Override
-    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView);
-        Log.d("===========","===onDetachedFromRecyclerView===");
-    }
 
 
     //数据
@@ -73,9 +57,6 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         this.itemListener = itemListener;
     }
 
-    public void setScrollToSomePosition(ScrollToSomePosition scrollToSomePosition) {
-        this.scrollToSomePosition = scrollToSomePosition;
-    }
 
     public void setLoadMoreType(LoadMoreType loadMoreType) {
         this.loadMoreType = loadMoreType;
@@ -87,7 +68,9 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             return LOAD_MORE;
         } else if (datalist.get(position).getType() == SingleType.CONTENT) {
             return CONTENT;
-        } else {
+        } else if(datalist.get(position).getType()==SingleType.HEADER){
+            return HEADER;
+        }else{
             return COMENT;
         }
     }
@@ -100,6 +83,8 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
                 return new ArticleContentViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.content_list_item, viewGroup, false));
             case LOAD_MORE:
                 return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.load_more_item, viewGroup, false));
+            case HEADER:
+                return new HeaderViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.need_load_content_item, viewGroup, false));
             default: // TYPE_COMMENT
                 return new CommentViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.comment_item, viewGroup, false));
         }
@@ -117,10 +102,6 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             return 0;
         }
         return datalist.size() + 1;
-    }
-
-    public interface ScrollToSomePosition {
-        void scroolto(int position);
     }
 
     abstract class BaseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -276,6 +257,24 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
                 progressBar.setVisibility(View.GONE);
                 load_more_empty.setVisibility(View.VISIBLE);
             }
+        }
+    }
+
+    private class HeaderViewHolder extends BaseViewHolder{
+
+        HeaderViewHolder(View itemView) {
+            super(itemView);
+            itemView.findViewById(R.id.need_loading_item).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    itemListener.recyclerViewListClicked(view, getLayoutPosition());
+                }
+            });
+        }
+
+        @Override
+        void setData(int position) {
+
         }
     }
 }

@@ -17,10 +17,9 @@ import android.widget.Toast;
 import java.util.HashMap;
 import java.util.Map;
 
-import xyz.yluo.ruisiapp.Config;
+import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
-import xyz.yluo.ruisiapp.View.MyAlertDialog.MyProgressDialog;
 import xyz.yluo.ruisiapp.View.MyColorPicker;
 import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
@@ -34,7 +33,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 public class NewArticleActivity extends BaseActivity implements View.OnClickListener{
 
     private EditText ed_title,ed_content;
-    private MyProgressDialog dialog;
+    private MyAlertDialog dialog;
     private MyToolBar myToolBar;
     private MyColorPicker picker;
 
@@ -57,9 +56,10 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
             @Override
             public void OnItemClick(View v, String Tag) {
                 if(Tag.equals("BTN_SUBMIT")&&checkPostInput()){
-                    dialog = new MyProgressDialog(NewArticleActivity.this).setLoadingText("发贴中请稍后 ...");
+                    dialog = new MyAlertDialog(NewArticleActivity.this,MyAlertDialog.PROGRESS_TYPE)
+                    .setTitleText("发贴中,请稍后......");
                     dialog.show();
-                    begainPost(Config.FORMHASH);
+                    begainPost(App.FORMHASH);
 
                 }else if(Tag.equals("BTN_SUBMIT_2")){
                     new MyAlertDialog(NewArticleActivity.this,MyAlertDialog.WARNING_TYPE)

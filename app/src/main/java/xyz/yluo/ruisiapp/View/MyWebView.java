@@ -7,7 +7,7 @@ import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import xyz.yluo.ruisiapp.Config;
+import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.PersistentCookieStore;
 import xyz.yluo.ruisiapp.utils.HandleLinkClick;
@@ -66,7 +66,7 @@ public class MyWebView extends WebView{
     public void setContent(String data) {
         Log.i(TAG,"setContent");
         data = HTML_0 + HTML_CSS + HTML_1 + data + "\n" + HTML_2;
-        String baseUrl = Config.getBaseUrl();
+        String baseUrl = App.getBaseUrl();
         loadDataWithBaseURL(baseUrl, data, "text/html", "utf-8", null);
     }
 
@@ -93,11 +93,11 @@ public class MyWebView extends WebView{
 
         cookieManager.setAcceptCookie(true);
 
-        String domain = ";domain=" + Config.getBaseUrl().replace("http://", "").replace("/", "");
+        String domain = ";domain=" + App.getBaseUrl().replace("http://", "").replace("/", "");
 
         for (String s : cookieStore.getCookie().split(";")) {
             s = s + domain;
-            cookieManager.setCookie(Config.getBaseUrl(), s);
+            cookieManager.setCookie(App.getBaseUrl(), s);
         }
     }
 }

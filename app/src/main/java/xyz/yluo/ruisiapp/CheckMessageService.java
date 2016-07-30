@@ -71,7 +71,6 @@ public class CheckMessageService extends Service {
                         String url = e.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
                         String info = e.select(".ntc_body").text();
                         //只要有未读的就插入 到数据库在判断
-
                         myDB.insertMessage(url,info);
                     }
                 }
@@ -101,8 +100,8 @@ public class CheckMessageService extends Service {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    String url = Config.getBaseUrl() + "home.php?mod=space&do=notice&view=mypost&type=post";
-                    if (!Config.IS_SCHOOL_NET) {
+                    String url = App.getBaseUrl() + "home.php?mod=space&do=notice&view=mypost&type=post";
+                    if (!App.IS_SCHOOL_NET) {
                         url = url + "&mobile=2";
                     }
                     client.get(url, handler);

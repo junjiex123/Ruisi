@@ -8,7 +8,7 @@ import android.net.NetworkInfo;
 import android.util.Log;
 import android.widget.Toast;
 
-import xyz.yluo.ruisiapp.Config;
+import xyz.yluo.ruisiapp.App;
 
 /**
  * Created by free2 on 16-4-13.
@@ -39,6 +39,6 @@ public class NetworkReceiver extends BroadcastReceiver {
     }
 
     private void checknet(int type) {
-        Config.IS_SCHOOL_NET = (type == 1);
+        App.IS_SCHOOL_NET = (type == 1);
     }
 }

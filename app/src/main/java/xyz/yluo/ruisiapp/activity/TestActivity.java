@@ -15,7 +15,6 @@ import java.util.Map;
 
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
-import xyz.yluo.ruisiapp.View.MyAlertDialog.MyProgressDialog;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -42,8 +41,8 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_1:
-                new MyProgressDialog(this)
-                        .setLoadingText("加 载 中 . . . . . .")
+                new MyAlertDialog(this,MyAlertDialog.PROGRESS_TYPE)
+                        .setTitleText("加载中,请稍后......")
                         .show();
                 break;
             case R.id.btn_2:
@@ -53,7 +52,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
                         .show();
                 break;
             case R.id.btn_3:
-                //begainPost(Config.FORMHASH);
+                //begainPost(App.FORMHASH);
                 startActivity(new Intent(this,NewArticleActivity.class));
                 break;
 

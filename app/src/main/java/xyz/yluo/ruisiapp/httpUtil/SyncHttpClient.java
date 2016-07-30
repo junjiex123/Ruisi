@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import xyz.yluo.ruisiapp.Config;
+import xyz.yluo.ruisiapp.App;
 
 public class SyncHttpClient {
     public static final String DEFAULT_USER_AGENT = "myRuisiAsyncLiteHttp/1.0";
@@ -156,7 +156,7 @@ public class SyncHttpClient {
                 //如果会重定向，保存302 301重定向地址,然后重新发送请求(模拟请求)
                 String location = connection.getHeaderField("Location");
                 Log.i("httputil", "302 new location is " + location);
-                request(Config.getBaseUrl() + location, Method.GET, map, handler);
+                request(App.getBaseUrl() + location, Method.GET, map, handler);
                 return;
             } else {
                 handler.processResponse(connection);

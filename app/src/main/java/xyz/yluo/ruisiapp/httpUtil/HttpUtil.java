@@ -4,7 +4,7 @@ import android.content.Context;
 
 import java.util.Map;
 
-import xyz.yluo.ruisiapp.Config;
+import xyz.yluo.ruisiapp.App;
 
 /**
  * Created by free2 on 16-4-4.
@@ -19,7 +19,7 @@ public class HttpUtil {
         if (url.startsWith("http")) {
             return url;
         } else {
-            return Config.getBaseUrl() + url;
+            return App.getBaseUrl() + url;
         }
     }
 

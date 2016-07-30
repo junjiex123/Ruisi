@@ -6,5 +6,6 @@ package xyz.yluo.ruisiapp.data;
  */
 public enum SingleType{
         CONTENT,
-        COMMENT
+        COMMENT,
+        HEADER
         }

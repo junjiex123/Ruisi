@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import xyz.yluo.ruisiapp.Config;
+import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView;
 import xyz.yluo.ruisiapp.utils.RequestSendMail;
@@ -63,7 +63,7 @@ public class AboutActivity extends BaseActivity {
                         .setAction("确定", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                String user = Config.USER_NAME;
+                                String user = App.USER_NAME;
                                 if (user != null) {
                                     user = "by:" + user;
                                 }

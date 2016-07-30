@@ -2,9 +2,11 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 
-import xyz.yluo.ruisiapp.Config;
+import xyz.yluo.ruisiapp.App;
+import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyToolBar;
 
@@ -16,7 +18,7 @@ public class BaseActivity extends AppCompatActivity {
 
     //判断是否需要弹出登录dialog
     boolean isneed_login() {
-        if (Config.ISLOGIN) {
+        if (App.ISLOGIN) {
             return true;
         } else {
             new MyAlertDialog(this,MyAlertDialog.WARNING_TYPE)
@@ -33,6 +35,16 @@ public class BaseActivity extends AppCompatActivity {
         return false;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case  android.R.id.home:
+            finish();
+            break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     protected void setToolBarMenuClick(MyToolBar myToolBar){
         myToolBar.setToolBarClickListener(new MyToolBar.OnToolBarItemClick() {

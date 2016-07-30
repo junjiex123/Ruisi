@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import xyz.yluo.ruisiapp.Config;
+import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.AddFriendDialog;
 import xyz.yluo.ruisiapp.View.CircleImageView;
@@ -122,7 +122,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         recycler_view.setAdapter(adapter);
         userUid = GetId.getUid(imageUrl);
         //如果是自己
-        if (userUid.equals(Config.USER_UID)) {
+        if (userUid.equals(App.USER_UID)) {
             fab.setImageResource(R.drawable.ic_exit_24dp);
         }
         String url0 = UrlUtils.getUserHomeUrl(userUid, false);
@@ -146,7 +146,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
 
     private void fab_click() {
         //如果是自己 退出登录
-        if (userUid.equals(Config.USER_UID)) {
+        if (userUid.equals(App.USER_UID)) {
             new MyAlertDialog(this,MyAlertDialog.WARNING_TYPE)
                     .setTitleText("退出登录")
                     .setContentText("你确定要注销吗？")
@@ -158,7 +158,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
                         }
                     }).show();
 
-        } else if (Config.ISLOGIN) {
+        } else if (App.ISLOGIN) {
             String url = "home.php?mod=space&do=pm&subop=view&touid=" + userUid + "&mobile=2";
             ChatActivity.open(this, username, url);
         } else {
@@ -182,7 +182,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         Map<String, String> paras = new HashMap<>();
         paras.put("addsubmit", "true");
         paras.put("handlekey", "friend_" + userUid);
-        paras.put("formhash", Config.FORMHASH);
+        paras.put("formhash", App.FORMHASH);
         paras.put("note", mes);
         paras.put("gid", "1");
         paras.put("addsubmit_btn", "true");
@@ -220,10 +220,10 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_add) {
-            if (userUid.equals(Config.USER_UID)) {
+            if (userUid.equals(App.USER_UID)) {
                 Toast.makeText(this, "你不能添加自己为好友", Toast.LENGTH_SHORT).show();
                 return super.onOptionsItemSelected(item);
-            } else if (!Config.ISLOGIN) {
+            } else if (!App.ISLOGIN) {
                 Snackbar.make(layout, "你还没有登陆，无法进行操作", Snackbar.LENGTH_LONG)
                         .setAction("点我登陆", new View.OnClickListener() {
                             @Override

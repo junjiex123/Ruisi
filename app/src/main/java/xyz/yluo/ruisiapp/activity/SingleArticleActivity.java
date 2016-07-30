@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import xyz.yluo.ruisiapp.Config;
+import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
 import xyz.yluo.ruisiapp.data.LoadMoreType;
@@ -137,13 +137,6 @@ public class SingleArticleActivity extends BaseActivity
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyleAdapter = new SingleArticleAdapter(this, this, mydatalist);
-        mRecyleAdapter.setScrollToSomePosition(new SingleArticleAdapter.ScrollToSomePosition() {
-            @Override
-            public void scroolto(int position) {
-                mRecyclerView.scrollToPosition(position);
-            }
-        });
-
         /**
          * 缓存数量
          */
@@ -163,17 +156,12 @@ public class SingleArticleActivity extends BaseActivity
         });
 
         mRecyclerView.setAdapter(mRecyleAdapter);
-
-
-        String url = "";
         Bundle b = getIntent().getExtras();
-        Log.e("SINGLE","从本应用打开");
-        url = b.getString("url");
+        String url = b.getString("url");
         Author = b.getString("author");
         Tid = GetId.getTid(url);
-
         if (url != null && url.contains("redirect")) {
-            if (!Config.IS_SCHOOL_NET) {
+            if (!App.IS_SCHOOL_NET) {
                 url = url + "&mobile=2";
             }
             isRedirect = true;
@@ -203,23 +191,24 @@ public class SingleArticleActivity extends BaseActivity
                     View v = findViewById(R.id.bottom_bar_bottom);
                     if(v.getVisibility()==View.VISIBLE){
                         v.setVisibility(View.GONE);
-                        //失去焦点后隐藏
                     }
                 }
                 break;
             case MotionEvent.ACTION_UP:
                 //当手指离开的时候
-                float x2 = event.getX();
-                if(x2 - x > 100) {
+                float dx = event.getX()-x;
+                float dy = event.getY()-y;
+                if(dx>100&&dx>dy) {
                     DisplayMetrics dm =getResources().getDisplayMetrics();
                     int w_screen = dm.widthPixels;
                     int h_screen = dm.heightPixels;
                     //Log.i("BASEACTIVITY", "屏幕尺寸：宽度 = " + w_screen + "高度 = " + h_screen + "密度 = " + dm.densityDpi);
-                    if(x2-x>w_screen/4){
-                        //Log.i("====","========onTouchEvent 向右滑====="+(x2-x));
+                    if((dx>w_screen/4)&&(x<w_screen/2)){
                         finish();
                     }
                 }
+                x = event.getX();
+                y = event.getY();
                 break;
         }
         return super.dispatchTouchEvent(event);
@@ -309,13 +298,15 @@ public class SingleArticleActivity extends BaseActivity
                     String replyName = single.getUsername();
                     String ref = single.getCotent();
                     String replyUserInfo = "回复:" + replyIndex + " " + replyName;
-
                     //String url,int type,long lastreplyTime,boolean isEnableTail,String userName,String info
                     FrageReplyDialog dialog = FrageReplyDialog.newInstance(replyUrl,FrageReplyDialog.REPLY_CZ,replyTime,
                             true,replyUserInfo,ref);
                     dialog.setCallBack(SingleArticleActivity.this);
                     dialog.show(getFragmentManager(),"reply");
                 }
+                break;
+            case R.id.need_loading_item:
+                refresh();
                 break;
         }
     }
@@ -327,7 +318,7 @@ public class SingleArticleActivity extends BaseActivity
         final String url = UrlUtils.getStarUrl(Tid);
         Map<String, String> params = new HashMap<>();
         params.put("favoritesubmit", "true");
-        params.put("formhash", Config.FORMHASH);
+        params.put("formhash", App.FORMHASH);
         HttpUtil.post(this, url, params, new ResponseHandler() {
 
             @Override
@@ -357,7 +348,6 @@ public class SingleArticleActivity extends BaseActivity
      */
     @Override
     public void onReplyFinish(int status, String info) {
-        Log.i("reply dialog callbak","status:"+status+" info:"+info);
         if(status==RESULT_OK){
             replyTime = System.currentTimeMillis();
         }
@@ -403,7 +393,7 @@ public class SingleArticleActivity extends BaseActivity
             case R.id.btn_share:
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_TEXT,Title+UrlUtils.getSingleArticleUrl(Tid,page_now, Config.IS_SCHOOL_NET));
+                shareIntent.putExtra(Intent.EXTRA_TEXT,Title+UrlUtils.getSingleArticleUrl(Tid,page_now, App.IS_SCHOOL_NET));
                 shareIntent.setType("text/plain");
                 //设置分享列表的标题，并且每次都显示分享列表
                 startActivity(Intent.createChooser(shareIntent, "分享到文章到:"));
@@ -429,13 +419,11 @@ public class SingleArticleActivity extends BaseActivity
             String htmlData = params[0];
             //list 所有楼数据
             Document doc = Jsoup.parse(htmlData);
-
             if (!isGetTitle) {
                 int ih = htmlData.indexOf("keywords");
                 int h_start = htmlData.indexOf('\"',ih+15);
                 int h_end = htmlData.indexOf('\"',h_start+1);
                 Title = htmlData.substring(h_start+1,h_end);
-                Log.i("==title===","================="+Title);
                 isGetTitle = true;
             }
             //获取回复/hash
@@ -443,10 +431,9 @@ public class SingleArticleActivity extends BaseActivity
                 replyUrl = doc.select("form#fastpostform").attr("action");
                 String hash = doc.select("input[name=formhash]").attr("value");
                 if (!hash.isEmpty()) {
-                    Config.FORMHASH = hash;
+                    App.FORMHASH = hash;
                 }
             }
-
             int index = 0;
             if ((page_now == 1 && mydatalist.size() == 0) || page_now < page_sum) {
                 index = 0;
@@ -460,7 +447,6 @@ public class SingleArticleActivity extends BaseActivity
                     }
                 }
             }
-
             //获取总页数 和当前页数
             if (doc.select(".pg").text().length() > 0) {
                 if (doc.select(".pg").text().length() > 0) {
@@ -484,14 +470,12 @@ public class SingleArticleActivity extends BaseActivity
                 String posttime = userInfo.select("li.grey.rela").text();
                 String replyUrl = temp.select(".replybtn").select("input").attr("href");
                 Elements contentels = temp.select(".message");
-
                 //是否移除所有样式
                 if(showPlainText){
                     //移除所有style
                     contentels.select("[style]").removeAttr("style");
                     contentels.select("font").removeAttr("color").removeAttr("size").removeAttr("face");
                 }
-
                 //处理引用
                 Elements blockquotes = contentels.select(".grey.quote").select("blockquote");
                 if (blockquotes.text().contains("引用:") && blockquotes.text().contains("发表于")) {
@@ -511,8 +495,6 @@ public class SingleArticleActivity extends BaseActivity
                 //删除修改日期
                 contentels.select("i.pstatus").remove();
                 String finalcontent = contentels.html().trim();
-
-
                 //这是内容
                 if (commentindex.contains("楼主") || commentindex.contains("收藏")) {
                     String newtime = posttime.replace("收藏", "");
@@ -533,7 +515,6 @@ public class SingleArticleActivity extends BaseActivity
         protected void onPostExecute(List<SingleArticleData> tepdata) {
             if (!isSaveToDataBase) {
                 //插入数据库
-                Log.i("insert ", "tid:" + Tid + "title:" + Title + "author:" + Author);
                 MyDB myDB = new MyDB(SingleArticleActivity.this, MyDB.MODE_WRITE);
                 myDB.handSingleReadHistory(Tid, Title, Author);//String Tid,String title,String author
                 isSaveToDataBase = true;
@@ -547,20 +528,27 @@ public class SingleArticleActivity extends BaseActivity
                 }
                 int start = mydatalist.size();
                 mydatalist.addAll(tepdata);
+                if(mydatalist.size()>0&&(mydatalist.get(0).getType()!=SingleType.CONTENT)&&
+                        (mydatalist.get(0).getType()!=SingleType.HEADER)){
+                    mydatalist.add(0,new SingleArticleData(SingleType.HEADER,Title,null,null,null,null,null,null));
+                    mRecyleAdapter.notifyItemInserted(0);
+                }
                 mRecyleAdapter.notifyItemChanged(start);
                 mRecyleAdapter.notifyItemRangeInserted(start + 1, add);
 
                 if (isRedirect) {
                     isRedirect = false;
                     for (int i = 0; i < mydatalist.size(); i++) {
-                        String s = mydatalist.get(i).getCotent().toString();
-                        if (s.contains(Config.USER_NAME)) {
-                            mRecyclerView.scrollToPosition(i);
-                            break;
+                        SingleArticleData s = mydatalist.get(i);
+                        if(s.getType()==SingleType.COMMENT){
+                            String str = s.getCotent();
+                            if (str.contains(App.USER_NAME)) {
+                                mRecyclerView.scrollToPosition(i);
+                                break;
+                            }
                         }
                     }
                 }
-
             } else {
                 //add = 0 没有添加
                 mRecyleAdapter.setLoadMoreType(LoadMoreType.NOTHING);
@@ -576,8 +564,7 @@ public class SingleArticleActivity extends BaseActivity
                 }
             }, 500);
 
-
-            pageSpinnerDatas .clear();
+            pageSpinnerDatas.clear();
             for(int i=1;i<=page_sum;i++){
                 pageSpinnerDatas.add(i+"/"+page_sum+"页");
             }

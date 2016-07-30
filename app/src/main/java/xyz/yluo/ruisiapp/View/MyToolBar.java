@@ -168,9 +168,11 @@ public class MyToolBar extends LinearLayout implements View.OnClickListener{
         Button button = new Button(context);
         button.setText(name);
         button.setTag(Tag);
-        button.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
+        button.setTextSize(TypedValue.COMPLEX_UNIT_SP,12);
         button.setTextColor(Color.WHITE);
         button.setBackgroundResource(bg);
+        button.setGravity(Gravity.CENTER);
+        button.setPadding(0,0,0,0);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(DimmenUtils.dip2px(context,52),DimmenUtils.dip2px(context,30));
         lp.setMarginEnd(toolBarPadding);
         button.setLayoutParams(lp);

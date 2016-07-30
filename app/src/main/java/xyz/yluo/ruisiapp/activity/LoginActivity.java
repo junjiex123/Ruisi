@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -28,9 +29,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import xyz.yluo.ruisiapp.Config;
+import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyAlertDialog.MyProgressDialog;
+import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -57,7 +58,7 @@ public class LoginActivity extends BaseActivity {
     private List<String> list = new ArrayList<>();
     private String loginUrl;
     private int answerSelect = 0;
-    private MyProgressDialog dialog;
+    private MyAlertDialog dialog;
     private MyToolBar myToolBar;
 
 
@@ -90,8 +91,6 @@ public class LoginActivity extends BaseActivity {
                 login_click();
             }
         });
-        dialog = new MyProgressDialog(this).setLoadingText("登 陆 中 . . . . . . ");
-
         myToolBar.setTitle("登陆");
         myToolBar.setHomeEnable(this);
 
@@ -208,6 +207,8 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login_click() {
+        dialog = new  MyAlertDialog(this,MyAlertDialog.PROGRESS_TYPE)
+                .setTitleText("登陆中，请稍后......");
         dialog.show();
         final String username = ed_username.getText().toString().trim();
         final String passNo = ed_pass.getText().toString().trim();
@@ -268,7 +269,7 @@ public class LoginActivity extends BaseActivity {
         int index = res.indexOf("欢迎您回来");
         String s = res.substring(index, index + 30).split("，")[1].split(" ")[0].trim();
         if (s.length() > 0) {
-            Config.USER_GRADE = s;
+            App.USER_GRADE = s;
         }
         //写入到首选项
         SharedPreferences.Editor editor = perPreferences.edit();
@@ -290,17 +291,17 @@ public class LoginActivity extends BaseActivity {
         }
 
         Document doc = Jsoup.parse(res);
-        Config.USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
+        App.USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
         String url = doc.select("a[href^=home.php?mod=space&uid=]").attr("href");
-        Config.USER_UID = GetId.getUid(url);
+        App.USER_UID = GetId.getUid(url);
 
-        editor.putString("USER_NAME", Config.USER_NAME);
-        editor.putString("USER_UID", Config.USER_UID);
+        editor.putString("USER_NAME", App.USER_NAME);
+        editor.putString("USER_UID", App.USER_UID);
         editor.apply();
         //开始获取formhash
         dialog.dismiss();
-        Config.ISLOGIN = true;
-        Toast.makeText(getApplicationContext(), "欢迎你" + Config.USER_NAME + "登陆成功", Toast.LENGTH_SHORT).show();
+        App.ISLOGIN = true;
+        Toast.makeText(getApplicationContext(), "欢迎你" + App.USER_NAME + "登陆成功", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
         intent.putExtra("status", "ok");
         //设置返回数据
