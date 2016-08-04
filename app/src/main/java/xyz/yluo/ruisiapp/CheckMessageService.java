@@ -138,6 +138,9 @@ public class CheckMessageService extends Service {
     //通过intent 可以传入数据
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if(intent ==null){
+            return super.onStartCommand(intent, flags, startId);
+        }
         Bundle b = intent.getExtras();
         boolean isClearMessage = false;
         if(b!=null){

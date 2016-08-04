@@ -1,6 +1,5 @@
 package xyz.yluo.ruisiapp.data;
 
-import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -32,6 +31,11 @@ public class SingleArticleData {
         this.title = title;
         this.pid = pid;
         this.uid = uid;
+    }
+
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getImg(){
@@ -76,6 +80,10 @@ public class SingleArticleData {
 
     public SingleType getType() {
         return type;
+    }
+
+    public void setCotent(String cotent) {
+        this.cotent = cotent;
     }
 
     public void setType(SingleType type) {

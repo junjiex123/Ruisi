@@ -38,99 +38,62 @@ import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.PostHandler;
-import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
- * Created by free2 on 16-3-6.
- * 发帖activity
+ * Created by free2 on 16-8-4.
+ * 编辑activity
  */
-public class NewArticleActivity extends BaseActivity implements View.OnClickListener{
+public class EditActivity extends BaseActivity implements View.OnClickListener{
 
     private EditText ed_title,ed_content;
     private MyAlertDialog dialog;
-    private MySpinner forum_spinner,typeid_spinner;
+    private MySpinner typeid_spinner;
     private MyColorPicker myColorPicker;
     private MySmileyPicker smileyPicker;
-    private TextView tv_select_forum,tv_select_type;
+    private TextView tv_select_type;
     private List<Pair<String,String>> typeiddatas;
     private View type_id_container;
     private String typeId = "";
-
-    private  final int[] fids = new int[]{
-            72, 549, 108, 551, 550,
-            110, 217, 142, 552, 560,
-            554,548, 216, 91, 555,
-            145, 144, 152, 147, 215,
-            125, 140};
-    private  final String[] forums = new String[]{
-            "灌水专区", "文章天地", "我是女生", "西电问答", "心灵花园",
-            "普通交易", "缘聚睿思", "失物招领", "我要毕业啦", "技术博客",
-            "就业信息发布","学习交流", "我爱运动", "考研交流", "就业交流", "软件交流",
-            "嵌入式交流", "竞赛交流", "原创精品", "西电后街", "音乐纵贯线",
-            "绝对漫域"};
-    private int fid = fids[0];
+    private String fid,pid,tid;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_topic);
+
+        Bundle b = getIntent().getExtras();
+        if(b!=null){
+            pid = b.getString("PID");
+            tid = b.getString("TID");
+        }else {
+            showToast("参数异常无法编辑");
+        }
         MyToolBar myToolBar = (MyToolBar) findViewById(R.id.myToolBar);
         myColorPicker = new MyColorPicker(this);
         smileyPicker = new MySmileyPicker(this);
-        myToolBar.setTitle("发表新帖");
+        myToolBar.setTitle("编辑帖子");
         myToolBar.setBackEnable(this);
-        forum_spinner = new MySpinner(this);
         typeid_spinner = new MySpinner(this);
         typeiddatas = new ArrayList<>();
-        myToolBar.addButton("备用",R.drawable.btn_gray_bg,"BTN_SUBMIT_2");
-        myToolBar.addButton("发表",R.drawable.btn_light_red_bg,"BTN_SUBMIT");
+        myToolBar.addButton("提交",R.drawable.btn_light_red_bg,"BTN_SUBMIT");
         myToolBar.setToolBarClickListener(new MyToolBar.OnToolBarItemClick() {
             @Override
             public void OnItemClick(View v, String Tag) {
                 if(Tag.equals("BTN_SUBMIT")&&checkPostInput()){
-                    dialog = new MyAlertDialog(NewArticleActivity.this,MyAlertDialog.PROGRESS_TYPE)
-                    .setTitleText("发贴中,请稍后......");
+                    dialog = new MyAlertDialog(EditActivity.this,MyAlertDialog.PROGRESS_TYPE)
+                    .setTitleText("提交中,请稍后......");
                     dialog.show();
-                    begainPost(App.FORMHASH);
-
-                }else if(Tag.equals("BTN_SUBMIT_2")){
-                    new MyAlertDialog(NewArticleActivity.this,MyAlertDialog.WARNING_TYPE)
-                            .setTitleText("备用发帖地址")
-                            .setContentText("当本页发帖出现错误时，你可以切换到备用发帖地址")
-                            .setConfirmText("切换")
-                            .setCancelText("取消")
-                            .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
-                                @Override
-                                public void onClick(MyAlertDialog myAlertDialog) {
-                                    startActivity(new Intent(NewArticleActivity.this,NewArticleActivity_2.class));
-                                }
-                            }).show();
+                    start_post();
                 }
             }
         });
+        findViewById(R.id.forum_container).setVisibility(View.GONE);
         type_id_container = findViewById(R.id.type_id_container);
         type_id_container.setVisibility(View.GONE);
-        tv_select_forum = (TextView) findViewById(R.id.tv_select_forum);
         tv_select_type = (TextView) findViewById(R.id.tv_select_type);
-        tv_select_forum.setOnClickListener(this);
-        tv_select_forum.setText(forums[0]);
         tv_select_type.setOnClickListener(this);
         ed_title = (EditText) findViewById(R.id.ed_title);
         ed_content = (EditText) findViewById(R.id.ed_content);
-
-        forum_spinner.setData(forums);
-        forum_spinner.setListener(new MySpinner.OnItemSelectListener() {
-            @Override
-            public void onItemSelectChanged(int pos, View v) {
-                if(pos>=fids.length){
-                    return;
-                }else{
-                    fid = fids[pos];
-                    tv_select_forum.setText(forums[pos]);
-                    switch_fid(fid);
-                }
-            }
-        });
         typeid_spinner.setListener(new MySpinner.OnItemSelectListener() {
             @Override
             public void onItemSelectChanged(int pos, View v) {
@@ -183,80 +146,98 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
             }
         });
 
-        switch_fid(fids[0]);
+        start_edit();
     }
 
-    private boolean checkPostInput() {
-
-        if(!TextUtils.isEmpty(typeId)&&typeId.equals("0")){
-            Toast.makeText(this, "请选择主题分类", Toast.LENGTH_SHORT).show();
-            return false;
-        }else if(TextUtils.isEmpty(ed_title.getText().toString().trim())){
-            Toast.makeText(this, "标题不能为空啊", Toast.LENGTH_SHORT).show();
-            return false;
-        }else if(TextUtils.isEmpty(ed_content.getText().toString().trim())){
-            Toast.makeText(this, "内容不能为空啊", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        return true;
-    }
-
-    //开始发帖
-    private void begainPost(String hash  /*, String time*/) {
-        String url = UrlUtils.getPostUrl(fid);
-        Map<String, String> params = new HashMap<>();
-        params.put("formhash", hash);
-        //params.put("posttime", time);
-        params.put("topicsubmit", "yes");
-        if(!TextUtils.isEmpty(typeId)&&!typeId.equals("0")){
-            params.put("typeid",typeId);
-        }
-        params.put("subject", ed_title.getText().toString());
-        params.put("message", ed_content.getText().toString());
-        HttpUtil.post(getApplicationContext(), url, params, new ResponseHandler() {
+    private void start_edit(){
+        //没有分类 http://bbs.rs.xidian.me/forum.php?mod=post&action=edit&fid=72&tid=879072&pid=22185602&mobile=2
+        //有分类 http://bbs.rs.xidian.me/forum.php?mod=post&action=edit&fid=72&tid=879783&pid=22201972&mobile=2
+        String url =  "forum.php?mod=post&action=edit&tid="+tid+"&pid="+pid+"&mobile=2";
+        HttpUtil.get(this, url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
-                String res = new String(response);
-                //// TODO: 16-7-26 delete it later
-                //ed_content.setText(res);
-                //逆向工程 反向判断有没有发帖成功
-                Log.e("post",res);
-                if(res.contains("已经被系统拒绝")){
-                    postFail("由于未知原因发帖失败");
+                Document document = Jsoup.parse(new String(response));
+                Elements content = document.select("#e_textarea");
+                Elements title = document.select("input#needsubject");
+                String hash = document.select("#formhash").attr("value");
+                if(!TextUtils.isEmpty(hash)){
+                    App.FORMHASH = hash;
+                }
+                fid = document.select("#fid").attr("value");
+                if(TextUtils.isEmpty(title.attr("value"))){
+                    ed_title.setVisibility(View.GONE);
                 }else{
-                    postSuccess();
+                    ed_title.setText(title.attr("value"));
+                }
+
+                ed_content.setText(content.html());
+
+                Elements types = document.select("#typeid").select("option");
+                for(Element e:types){
+                    typeiddatas.add(new Pair<>(e.attr("value"),e.text()));
+                }
+                if(typeiddatas.size()>0){
+                    type_id_container.setVisibility(View.VISIBLE);
+                    tv_select_type.setText(typeiddatas.get(0).second);
+                    typeId = typeiddatas.get(0).first;
+                }else{
+                    type_id_container.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onFailure(Throwable e) {
-                postFail("由于未知原因发帖失败");
+                super.onFailure(e);
+
+                showToast("网络错误");
             }
         });
     }
 
-    //发帖成功执行
-    private void postSuccess() {
-        dialog.dismiss();
-        Toast.makeText(this, "主题发表成功", Toast.LENGTH_SHORT).show();
-        new MyAlertDialog(this,MyAlertDialog.SUCCESS_TYPE)
-                .setTitleText("发帖成功")
-                .setContentText("要离开此页面吗？")
-                .setCancelText("取消")
-                .setConfirmText("离开")
-                .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
-                    @Override
-                    public void onClick(MyAlertDialog myAlertDialog) {
-                        finish();
+    private void start_post(){
+        String url = "forum.php?mod=post&action=edit&extra=&editsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
+        Map<String, String> params = new HashMap<>();
+        params.put("formhash", App.FORMHASH);
+        //params.put("posttime", time);
+        params.put("editsubmit", "yes");
+        if(!TextUtils.isEmpty(typeId)&&!typeId.equals("0")){
+            params.put("typeid",typeId);
+        }
+        params.put("fid",fid);
+        params.put("tid",tid);
+        params.put("pid",pid);
+        params.put("page","");
+        params.put("subject", ed_title.getText().toString());
+        params.put("message", ed_content.getText().toString());
+        HttpUtil.post(this,url,params, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                Log.e("resoult",res);
+                if(res.contains("帖子编辑成功")){
+                    dialog.dismiss();
+                    showToast("帖子编辑成功");
+                    Intent i = new Intent();
+                    if(ed_title.getVisibility()==View.VISIBLE){
+                        i.putExtra("TITLE",ed_title.getText().toString());
                     }
-                });
+                    i.putExtra("CONTENT",ed_content.getText().toString());
+                    setResult(RESULT_OK,i);
+                    EditActivity.this.finish();
+                }else{
+                    int start = res.indexOf("<p>");
+                    String ss = res.substring(start+3,start+20);
+                    postFail(ss);
+                }
+            }
 
-    }
-//
-    //发帖失败执行
-    private void postFail(String str) {
-        dialog.dismiss();
-        Toast.makeText(this, "发帖失败", Toast.LENGTH_SHORT).show();
+            @Override
+            public void onFailure(Throwable e) {
+                super.onFailure(e);
+                dialog.dismiss();
+                showToast("网络错误");
+            }
+        });
     }
 
     private void handleInsert(String s){
@@ -310,11 +291,6 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
                 }
                 ed_content.getText().delete(start,end);
                 break;
-            case R.id.tv_select_forum:
-                forum_spinner.setWidth(view.getWidth());
-                //MySpinner.setWidth(mTView.getWidth());
-                forum_spinner.showAsDropDown(view, 0, 15);
-                break;
             case R.id.tv_select_type:
                 String[] names = new String[typeiddatas.size()];
                 for(int i=0;i<typeiddatas.size();i++){
@@ -326,27 +302,24 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    private void switch_fid(int fid){
-        typeiddatas.clear();
-        typeId = "";
-        String url = "forum.php?mod=post&action=newthread&fid="+fid+"&mobile=2";
-        HttpUtil.get(this, url, new ResponseHandler() {
-            @Override
-            public void onSuccess(byte[] response) {
-                Document document = Jsoup.parse(new String(response));
-                Elements types = document.select("#typeid").select("option");
-                for(Element e:types){
-                    typeiddatas.add(new Pair<>(e.attr("value"),e.text()));
-                }
-                if(typeiddatas.size()>0){
-                    type_id_container.setVisibility(View.VISIBLE);
-                    tv_select_type.setText(typeiddatas.get(0).second);
-                    typeId = typeiddatas.get(0).first;
-                }else{
-                    type_id_container.setVisibility(View.GONE);
-                }
-            }
-        });
+    private boolean checkPostInput() {
+
+        if(!TextUtils.isEmpty(typeId)&&typeId.equals("0")){
+            Toast.makeText(this, "请选择主题分类", Toast.LENGTH_SHORT).show();
+            return false;
+        }else if(TextUtils.isEmpty(ed_title.getText().toString().trim())){
+            Toast.makeText(this, "标题不能为空啊", Toast.LENGTH_SHORT).show();
+            return false;
+        }else if(TextUtils.isEmpty(ed_content.getText().toString().trim())){
+            Toast.makeText(this, "内容不能为空啊", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
+    //发帖失败执行
+    private void postFail(String str) {
+        dialog.dismiss();
+        showToast(str);
+    }
 }

@@ -102,7 +102,10 @@
 
         <activity
             android:name=".activity.TestActivity"
-            android:label="@string/title_activity_test"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".activity.EditActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"/>
 
         <service android:name=".CheckMessageService" />

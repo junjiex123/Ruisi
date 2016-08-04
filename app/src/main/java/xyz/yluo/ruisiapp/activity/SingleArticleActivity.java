@@ -33,6 +33,7 @@ import java.util.Map;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
 import xyz.yluo.ruisiapp.data.LoadMoreType;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
@@ -65,6 +66,7 @@ public class SingleArticleActivity extends BaseActivity
     //当前第几页
     private int page_now = 1;
     private int page_sum = 1;
+    private int edit_pos = -1;
     private boolean isGetTitle = false;
     //是否倒序
     private boolean isRevere = false;
@@ -288,7 +290,7 @@ public class SingleArticleActivity extends BaseActivity
     }
 
     @Override
-    public void recyclerViewListClicked(View v, int position) {
+    public void recyclerViewListClicked(View v, final int position) {
         switch (v.getId()) {
             case R.id.btn_reply_2:
                 if (isneed_login()) {
@@ -308,6 +310,59 @@ public class SingleArticleActivity extends BaseActivity
             case R.id.need_loading_item:
                 refresh();
                 break;
+            case R.id.tv_edit:
+                edit_pos = position;
+                Intent i = new Intent(this,EditActivity.class);
+                i.putExtra("PID",mydatalist.get(position).getPid());
+                i.putExtra("TID",Tid);
+                startActivityForResult(i,0);
+                break;
+            case R.id.tv_remove:
+                edit_pos = position;
+                if(mydatalist.get(edit_pos).getType()==SingleType.CONTENT){
+                    new MyAlertDialog(this,MyAlertDialog.WARNING_TYPE)
+                            .setTitleText("删除帖子!")
+                            .setConfirmText("删除")
+                            .setCancelText("取消")
+                            .setContentText("只能够删除没有回复的帖子，你要删除本贴吗？")
+                            .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
+                                @Override
+                                public void onClick(MyAlertDialog myAlertDialog) {
+                                    removeItem(position);
+                                }
+                            }).show();
+                }else{
+                    new MyAlertDialog(this,MyAlertDialog.WARNING_TYPE)
+                            .setTitleText("删除回复!")
+                            .setContentText("你要删除此条回复吗？")
+                            .setConfirmText("删除")
+                            .setCancelText("取消")
+                            .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
+                                @Override
+                                public void onClick(MyAlertDialog myAlertDialog) {
+                                    removeItem(position);
+                                }
+                            }).show();
+                }
+
+                break;
+        }
+    }
+
+    //编辑Activity返回
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK){
+            Log.e("onActivityResult","=====");
+            Bundle b = data.getExtras();
+            String title = b.getString("TITLE","");
+            String content = b.getString("CONTENT","");
+            if(edit_pos==0&&!TextUtils.isEmpty(title)){
+                mydatalist.get(0).setTitle(title);
+            }
+            mydatalist.get(edit_pos).setCotent(content);
+            mRecyleAdapter.notifyItemChanged(edit_pos);
         }
     }
 
@@ -560,6 +615,48 @@ public class SingleArticleActivity extends BaseActivity
             spinner.setSelection(page_now-1);
             spinnerAdapter.notifyDataSetChanged();
         }
+    }
+
+
+    //删除帖子或者回复
+    private void removeItem(final int pos){
+        String url = "forum.php?mod=post&action=edit&extra=&editsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
+        Map<String, String> params = new HashMap<>();
+        params.put("formhash", App.FORMHASH);
+        //params.put("posttime", time);
+        params.put("editsubmit", "yes");
+        //params.put("fid",);
+        params.put("tid",Tid);
+        params.put("pid",mydatalist.get(pos).getPid());
+        params.put("delete","1");
+        HttpUtil.post(this,url,params, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                Log.e("resoult",res);
+                if(res.contains("主题删除成功")){
+                    if(mydatalist.get(pos).getType()==SingleType.CONTENT){
+                        showToast("主题删除成功");
+                        finish();
+                    }else{
+                        showToast("回复删除成功");
+                        mydatalist.remove(pos);
+                        mRecyleAdapter.notifyItemRemoved(pos);
+                    }
+                }else{
+                    int start = res.indexOf("<p>");
+                    String ss = res.substring(start+3,start+20);
+                    showToast(ss);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                super.onFailure(e);
+                showToast("网络错误,删除失败！");
+            }
+        });
     }
 
 }

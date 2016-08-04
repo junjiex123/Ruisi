@@ -3,6 +3,7 @@ package xyz.yluo.ruisiapp.adapter;
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView;
@@ -113,7 +115,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         @Override
         public void onClick(View v) {
             //getItemCount()
-            itemListener.recyclerViewListClicked(v, this.getLayoutPosition());
+            itemListener.recyclerViewListClicked(v, this.getAdapterPosition());
         }
 
     }
@@ -123,12 +125,14 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         TextView article_title;
         CircleImageView article_user_image;
         TextView article_username;
-        TextView article_post_time;
+        TextView article_post_time,tv_remove,tv_edit;
        // MyWebView myWebView;
         MyHtmlTextView myHtmlTextView;
 
         ArticleContentViewHolder(View itemView) {
             super(itemView);
+            tv_remove = (TextView) itemView.findViewById(R.id.tv_remove);
+            tv_edit = (TextView) itemView.findViewById(R.id.tv_edit);
             article_title = (TextView) itemView.findViewById(R.id.article_title);
             article_user_image = (CircleImageView) itemView.findViewById(R.id.article_user_image);
             article_username = (TextView) itemView.findViewById(R.id.article_username);
@@ -141,6 +145,9 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
                     UserDetailActivity.openWithTransitionAnimation(activity, datalist.get(0).getUsername(), article_user_image, datalist.get(0).getImg());
                 }
             });
+
+            tv_remove.setOnClickListener(this);
+            tv_edit.setOnClickListener(this);
         }
 
         @Override
@@ -160,22 +167,37 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
                 myHtmlTextView.setSpannedHtmlText(strBuilderContent);
             }
 
+            //判断是不是自己
+            if(!TextUtils.isEmpty(App.USER_UID)&&single.getUid().equals(App.USER_UID)){
+                tv_edit.setVisibility(View.VISIBLE);
+                if(getItemCount()>2){
+                    tv_remove.setVisibility(View.GONE);
+                }else{
+                    tv_remove.setVisibility(View.VISIBLE);
+                }
+            }else{
+                tv_remove.setVisibility(View.GONE);
+                tv_edit.setVisibility(View.GONE);
+            }
+
         }
 
 
     }
 
-    private class CommentViewHolder extends BaseViewHolder {
+    private class CommentViewHolder extends BaseViewHolder{
         ImageView replay_image;
         ImageView btn_reply_2;
         TextView replay_author;
         TextView replay_index;
         TextView replay_time;
         MyHtmlTextView htmlTextView;
-        TextView bt_lable_lz;
+        TextView bt_lable_lz,tv_remove,tv_edit;
 
         CommentViewHolder(View itemView) {
             super(itemView);
+            tv_remove = (TextView) itemView.findViewById(R.id.tv_remove);
+            tv_edit = (TextView) itemView.findViewById(R.id.tv_edit);
             replay_image = (ImageView) itemView.findViewById(R.id.article_user_image);
             btn_reply_2 = (ImageView) itemView.findViewById(R.id.btn_reply_2);
             replay_author = (TextView) itemView.findViewById(R.id.replay_author);
@@ -191,19 +213,16 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
                 }
             });
 
-            btn_reply_2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemListener.recyclerViewListClicked(v, getLayoutPosition());
-                }
-            });
+            tv_remove.setOnClickListener(this);
+            tv_edit.setOnClickListener(this);
+
+            btn_reply_2.setOnClickListener(this);
         }
 
         //设置listItem的数据
         @Override
         void setData(int position) {
             final SingleArticleData single = datalist.get(position);
-
             replay_author.setText(single.getUsername());
             //判断是不是楼主
             boolean islz = datalist.get(position).getUsername().equals(datalist.get(0).getUsername());
@@ -216,6 +235,20 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             replay_time.setText(timeText);
             replay_index.setText(single.getIndex());
             htmlTextView.setHtmlText(single.getCotent(), true);
+
+            //判断是不是自己
+            if(!TextUtils.isEmpty(App.USER_UID)&&single.getUid().equals(App.USER_UID)){
+                tv_remove.setVisibility(View.VISIBLE);
+                tv_edit.setVisibility(View.VISIBLE);
+            }else{
+                tv_remove.setVisibility(View.GONE);
+                tv_edit.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            super.onClick(v);
         }
     }
 
@@ -224,7 +257,6 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         ProgressBar progressBar;
         TextView load_more_text;
         View load_more_empty;
-
 
         LoadMoreViewHolder(View itemView) {
             super(itemView);

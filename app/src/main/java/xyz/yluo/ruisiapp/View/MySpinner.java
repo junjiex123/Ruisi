@@ -13,9 +13,6 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-
-import java.util.List;
-
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.utils.DimmenUtils;
 
