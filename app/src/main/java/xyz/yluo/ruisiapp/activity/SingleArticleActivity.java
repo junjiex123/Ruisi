@@ -79,7 +79,7 @@ public class SingleArticleActivity extends BaseActivity
     private boolean isRedirect, isSaveToDataBase = false;
     private ArrayAdapter<String> spinnerAdapter;
     private List<String> pageSpinnerDatas = new ArrayList<>();
-    private String Title, Author, Tid = "";
+    private String Title, AuthorName,AuthorUid, Tid = "";
     private Spinner spinner;
 
     private boolean showPlainText = false;
@@ -158,7 +158,7 @@ public class SingleArticleActivity extends BaseActivity
         mRecyclerView.setAdapter(mRecyleAdapter);
         Bundle b = getIntent().getExtras();
         String url = b.getString("url");
-        Author = b.getString("author");
+        AuthorName = b.getString("author");
         Tid = GetId.getTid(url);
         if (url != null && url.contains("redirect")) {
             if (!App.IS_SCHOOL_NET) {
@@ -359,7 +359,7 @@ public class SingleArticleActivity extends BaseActivity
             case R.id.btn_reply:
                 if(isneed_login()){
                     //String url,int type,long lastreplyTime,boolean isEnableTail,String userName,String info
-                    String hint = "回复："+Author;
+                    String hint = "回复："+ AuthorName;
                     FrageReplyDialog dialog = FrageReplyDialog.newInstance(replyUrl,FrageReplyDialog.REPLY_LZ,replyTime,true,hint,Title);
                     dialog.setCallBack(SingleArticleActivity.this);
                     dialog.show(getFragmentManager(),"reply");
@@ -455,15 +455,16 @@ public class SingleArticleActivity extends BaseActivity
                     if (n > 0 && n > page_sum) {
                         page_sum = n;
                     }
-                    Log.i("page info", page_now + " " + page_sum);
                 }
             }
             Elements elements = doc.select(".postlist");
             Elements postlist = elements.select("div[id^=pid]");
-            for (int i = index; i < postlist.size(); i++) {
+            int size = postlist.size();
+            for (int i = index; i < size; i++) {
                 Element temp = postlist.get(i);
                 SingleArticleData data;
-                String userimg = temp.select("span[class=avatar]").select("img").attr("src");
+                String pid = temp.attr("id").substring(3);
+                String uid = GetId.getUid(temp.select("span[class=avatar]").select("img").attr("src"));
                 Elements userInfo = temp.select("ul.authi");
                 String commentindex = userInfo.select("li.grey").select("em").text();
                 String username = userInfo.select("a[href^=home.php?mod=space&uid=]").text();
@@ -476,35 +477,17 @@ public class SingleArticleActivity extends BaseActivity
                     contentels.select("[style]").removeAttr("style");
                     contentels.select("font").removeAttr("color").removeAttr("size").removeAttr("face");
                 }
-                //处理引用
-                Elements blockquotes = contentels.select(".grey.quote").select("blockquote");
-                if (blockquotes.text().contains("引用:") && blockquotes.text().contains("发表于")) {
-                    System.out.println(blockquotes.text());
-                    String[] arrayb = blockquotes.text().split(" ", 6);
-                    if (arrayb.length == 6) {
-                        String usernameb = arrayb[1];
-                        String contentb = arrayb[5];
-                        blockquotes.html("回复: " + usernameb + "<br>" + contentb);
-                    }
-                }
-
+                /**
+                 * 处理代码
+                 */
                 for (Element codee : contentels.select(".blockcode")) {
                     codee.html("<code>" + codee.html().trim() + "</code>");
                 }
-
                 //删除修改日期
                 contentels.select("i.pstatus").remove();
                 String finalcontent = contentels.html().trim();
-                //这是内容
-                if (commentindex.contains("楼主") || commentindex.contains("收藏")) {
-                    String newtime = posttime.replace("收藏", "");
-                    if(TextUtils.isEmpty(Author)){
-                        Author = username;
-                    }
-                    data = new SingleArticleData(SingleType.CONTENT, Title, userimg, username, newtime, commentindex, replyUrl, finalcontent);
-                } else {
-                    data = new SingleArticleData(SingleType.COMMENT, Title, userimg, username, posttime, commentindex, replyUrl, finalcontent);
-                }
+                data = new SingleArticleData(SingleType.COMMENT, Title, uid,
+                        username, posttime, commentindex, replyUrl, finalcontent,pid);
                 tepdata.add(data);
             }
 
@@ -513,10 +496,17 @@ public class SingleArticleActivity extends BaseActivity
 
         @Override
         protected void onPostExecute(List<SingleArticleData> tepdata) {
+            if(page_now==1&&tepdata.get(0).getIndex().contains("收藏")){
+                SingleArticleData data = tepdata.get(0);
+                data.setType(SingleType.CONTENT);
+                data.setIndex(data.getIndex().replace("收藏",""));
+                AuthorName = data.getUsername();
+                AuthorUid = data.getUid();
+            }
             if (!isSaveToDataBase) {
                 //插入数据库
                 MyDB myDB = new MyDB(SingleArticleActivity.this, MyDB.MODE_WRITE);
-                myDB.handSingleReadHistory(Tid, Title, Author);//String Tid,String title,String author
+                myDB.handSingleReadHistory(Tid, Title, AuthorName);
                 isSaveToDataBase = true;
             }
             int add = tepdata.size();
@@ -530,7 +520,7 @@ public class SingleArticleActivity extends BaseActivity
                 mydatalist.addAll(tepdata);
                 if(mydatalist.size()>0&&(mydatalist.get(0).getType()!=SingleType.CONTENT)&&
                         (mydatalist.get(0).getType()!=SingleType.HEADER)){
-                    mydatalist.add(0,new SingleArticleData(SingleType.HEADER,Title,null,null,null,null,null,null));
+                    mydatalist.add(0,new SingleArticleData(SingleType.HEADER,Title,null,null,null,null,null,null,null));
                     mRecyleAdapter.notifyItemInserted(0);
                 }
                 mRecyleAdapter.notifyItemChanged(start);

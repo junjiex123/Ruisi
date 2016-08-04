@@ -50,7 +50,6 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
 
     private EditText ed_title,ed_content;
     private MyAlertDialog dialog;
-    private MyToolBar myToolBar;
     private MySpinner forum_spinner,typeid_spinner;
     private MyColorPicker myColorPicker;
     private MySmileyPicker smileyPicker;
@@ -77,7 +76,7 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_topic);
-        myToolBar = (MyToolBar) findViewById(R.id.myToolBar);
+        MyToolBar myToolBar = (MyToolBar) findViewById(R.id.myToolBar);
         myColorPicker = new MyColorPicker(this);
         smileyPicker = new MySmileyPicker(this);
         myToolBar.setTitle("发表新帖");
