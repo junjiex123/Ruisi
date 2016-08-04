@@ -77,8 +77,8 @@ public class HomeActivity extends BaseActivity
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.addDrawerListener(this);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        ImageView iv =  myToolBar.setIcon(R.drawable.ic_menu_24dp);
-        iv.setOnClickListener(new View.OnClickListener() {
+
+        myToolBar.setIcon(R.drawable.ic_menu_24dp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 drawer.openDrawer(GravityCompat.START);

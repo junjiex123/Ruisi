@@ -89,7 +89,7 @@ public class NewArticleActivity_2 extends BaseActivity {
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
         myToolBar.setTitle("发表新帖");
-        myToolBar.setHomeEnable(this);
+        myToolBar.setBackEnable(this);
         myToolBar.addView(spinner);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

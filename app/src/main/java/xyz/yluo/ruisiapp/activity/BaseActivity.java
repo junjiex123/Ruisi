@@ -2,12 +2,20 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import xyz.yluo.ruisiapp.App;
+import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyToolBar;
+import xyz.yluo.ruisiapp.utils.DimmenUtils;
 
 /**
  * Created by free2 on 16-4-11.
@@ -15,6 +23,7 @@ import xyz.yluo.ruisiapp.View.MyToolBar;
  */
 public class BaseActivity extends AppCompatActivity {
 
+    private static Toast mToast;
     //判断是否需要弹出登录dialog
     boolean isneed_login() {
         if (App.ISLOGIN) {
@@ -74,5 +83,16 @@ public class BaseActivity extends AppCompatActivity {
         }
 
         return false;
+    }
+
+    protected void showToast(String str){
+        if(mToast == null) {
+            mToast = Toast.makeText(this,str, Toast.LENGTH_SHORT);
+            mToast.setGravity(Gravity.TOP,0,DimmenUtils.dip2px(this,56));
+        } else {
+            mToast.setText(str);
+            mToast.setDuration(Toast.LENGTH_SHORT);
+        }
+        mToast.show();
     }
 }

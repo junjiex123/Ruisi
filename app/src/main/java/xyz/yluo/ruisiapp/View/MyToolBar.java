@@ -121,7 +121,7 @@ public class MyToolBar extends LinearLayout implements View.OnClickListener{
         return iv;
     }
 
-    public void setHomeEnable(final Activity activity) {
+    public void setBackEnable(final Activity activity) {
         if(isSetTitleMargin){
             LinearLayout.LayoutParams lpt = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT,1);
             this.title.setLayoutParams(lpt);

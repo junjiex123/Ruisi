@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -14,9 +17,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import xyz.yluo.ruisiapp.App;
@@ -24,6 +35,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyColorPicker;
 import xyz.yluo.ruisiapp.View.MySmileyPicker;
+import xyz.yluo.ruisiapp.View.MySpinner;
 import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -39,12 +51,27 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
     private EditText ed_title,ed_content;
     private MyAlertDialog dialog;
     private MyToolBar myToolBar;
+    private MySpinner forum_spinner,typeid_spinner;
     private MyColorPicker myColorPicker;
     private MySmileyPicker smileyPicker;
+    private TextView tv_select_forum,tv_select_type;
+    private List<Pair<String,String>> typeiddatas;
+    private View type_id_container;
+    private String typeId = "";
 
-    private int fid = 72;
-    private int[] fids = new int[]{72, 549, 108, 551, 550, 110, 217, 142, 552,
-            560, 548, 216, 91, 555, 145, 144, 152, 147, 215, 125, 140};
+    private  final int[] fids = new int[]{
+            72, 549, 108, 551, 550,
+            110, 217, 142, 552, 560,
+            554,548, 216, 91, 555,
+            145, 144, 152, 147, 215,
+            125, 140};
+    private  final String[] forums = new String[]{
+            "灌水专区", "文章天地", "我是女生", "西电问答", "心灵花园",
+            "普通交易", "缘聚睿思", "失物招领", "我要毕业啦", "技术博客",
+            "就业信息发布","学习交流", "我爱运动", "考研交流", "就业交流", "软件交流",
+            "嵌入式交流", "竞赛交流", "原创精品", "西电后街", "音乐纵贯线",
+            "绝对漫域"};
+    private int fid = fids[0];
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,8 +81,10 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
         myColorPicker = new MyColorPicker(this);
         smileyPicker = new MySmileyPicker(this);
         myToolBar.setTitle("发表新帖");
-        myToolBar.setHomeEnable(this);
-
+        myToolBar.setBackEnable(this);
+        forum_spinner = new MySpinner(this);
+        typeid_spinner = new MySpinner(this);
+        typeiddatas = new ArrayList<>();
         myToolBar.addButton("备用",R.drawable.btn_gray_bg,"BTN_SUBMIT_2");
         myToolBar.addButton("发表",R.drawable.btn_light_red_bg,"BTN_SUBMIT");
         myToolBar.setToolBarClickListener(new MyToolBar.OnToolBarItemClick() {
@@ -82,23 +111,38 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
                 }
             }
         });
-
-        Spinner choose_froums = (Spinner) findViewById(R.id.choose_froums);
+        type_id_container = findViewById(R.id.type_id_container);
+        type_id_container.setVisibility(View.GONE);
+        tv_select_forum = (TextView) findViewById(R.id.tv_select_forum);
+        tv_select_type = (TextView) findViewById(R.id.tv_select_type);
+        tv_select_forum.setOnClickListener(this);
+        tv_select_forum.setText(forums[0]);
+        tv_select_type.setOnClickListener(this);
         ed_title = (EditText) findViewById(R.id.ed_title);
         ed_content = (EditText) findViewById(R.id.ed_content);
-        choose_froums.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+        forum_spinner.setData(forums);
+        forum_spinner.setListener(new MySpinner.OnItemSelectListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i>=fids.length){
+            public void onItemSelectChanged(int pos, View v) {
+                if(pos>=fids.length){
                     return;
                 }else{
-                    fid = fids[i];
-                    Log.e("fid",fid+"");
+                    fid = fids[pos];
+                    tv_select_forum.setText(forums[pos]);
+                    switch_fid(fid);
                 }
             }
+        });
+        typeid_spinner.setListener(new MySpinner.OnItemSelectListener() {
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+            public void onItemSelectChanged(int pos, View v) {
+                if(pos>typeiddatas.size()){
+                    return;
+                }else{
+                    typeId = typeiddatas.get(pos).first;
+                    tv_select_type.setText(typeiddatas.get(pos).second);
+                }
             }
         });
         final LinearLayout edit_bar = (LinearLayout) findViewById(R.id.edit_bar);
@@ -144,7 +188,11 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
     }
 
     private boolean checkPostInput() {
-        if(TextUtils.isEmpty(ed_title.getText().toString().trim())){
+
+        if(!TextUtils.isEmpty(typeId)&&typeId.equals("0")){
+            Toast.makeText(this, "请选择主题分类", Toast.LENGTH_SHORT).show();
+            return false;
+        }else if(TextUtils.isEmpty(ed_title.getText().toString().trim())){
             Toast.makeText(this, "标题不能为空啊", Toast.LENGTH_SHORT).show();
             return false;
         }else if(TextUtils.isEmpty(ed_content.getText().toString().trim())){
@@ -161,6 +209,9 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
         params.put("formhash", hash);
         //params.put("posttime", time);
         params.put("topicsubmit", "yes");
+        if(!TextUtils.isEmpty(typeId)&&!typeId.equals("0")){
+            params.put("typeid",typeId);
+        }
         params.put("subject", ed_title.getText().toString());
         params.put("message", ed_content.getText().toString());
         HttpUtil.post(getApplicationContext(), url, params, new ResponseHandler() {
@@ -260,29 +311,43 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
                 }
                 ed_content.getText().delete(start,end);
                 break;
+            case R.id.tv_select_forum:
+                forum_spinner.setWidth(view.getWidth());
+                //MySpinner.setWidth(mTView.getWidth());
+                forum_spinner.showAsDropDown(view, 0, 15);
+                break;
+            case R.id.tv_select_type:
+                String[] names = new String[typeiddatas.size()];
+                for(int i=0;i<typeiddatas.size();i++){
+                    names[i] = typeiddatas.get(i).second;
+                }
+                typeid_spinner.setData(names);
+                typeid_spinner.setWidth(view.getWidth());
+                typeid_spinner.showAsDropDown(view, 0, 15);
         }
     }
 
-
-//    //准备发帖需要的东西
-//    private void preparePost(final int fid) {
-//        progress = ProgressDialog.show(this, "正在发送", "请等待", true);
-//        String url = "forum.php?mod=post&action=newthread&fid=" + fid + "&mobile=2";
-//        HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
-//            @Override
-//            public void onSuccess(byte[] response) {
-//                Document doc = Jsoup.parse(new String(response));
-//                String url = doc.select("#postform").attr("action");
-//                String hash = doc.select("input#formhash").attr("value");
-//                String time = doc.select("input#posttime").attr("value");
-//                begainPost(hash, time);
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable e) {
-//                postFail("网络错误");
-//            }
-//        });
-//    }
+    private void switch_fid(int fid){
+        typeiddatas.clear();
+        typeId = "";
+        String url = "forum.php?mod=post&action=newthread&fid="+fid+"&mobile=2";
+        HttpUtil.get(this, url, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                Document document = Jsoup.parse(new String(response));
+                Elements types = document.select("#typeid").select("option");
+                for(Element e:types){
+                    typeiddatas.add(new Pair<>(e.attr("value"),e.text()));
+                }
+                if(typeiddatas.size()>0){
+                    type_id_container.setVisibility(View.VISIBLE);
+                    tv_select_type.setText(typeiddatas.get(0).second);
+                    typeId = typeiddatas.get(0).first;
+                }else{
+                    type_id_container.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
 
 }

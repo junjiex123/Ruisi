@@ -63,7 +63,7 @@ public class SingleNewsActivity extends BaseActivity {
         });
 
         myToolBar.setTitle(title);
-        myToolBar.setHomeEnable(this);
+        myToolBar.setBackEnable(this);
         myToolBar.addMenu(R.drawable.ic_open_in_browser_24dp,"NEWS_OPEN_IN_BROWSER");
         myToolBar.addMenu(R.drawable.ic_refresh_24dp,"NEWS_REFRESH");
         myToolBar.setToolBarClickListener(new MyToolBar.OnToolBarItemClick() {

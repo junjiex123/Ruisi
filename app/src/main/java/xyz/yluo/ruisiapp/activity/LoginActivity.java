@@ -47,7 +47,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class LoginActivity extends BaseActivity {
 
-    private TextInputEditText ed_username, ed_pass ;
+    private EditText ed_username, ed_pass ;
     private EditText anwser_text;
     private Button btn_login;
     private ImageView imageViewl, imageViewr;
@@ -74,8 +74,8 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.layout_login);
 
         myToolBar = (MyToolBar) findViewById(R.id.myToolBar);
-        ed_username = (TextInputEditText) findViewById(R.id.login_name);
-        ed_pass = (TextInputEditText) findViewById(R.id.login_pas);
+        ed_username = (EditText) findViewById(R.id.login_name);
+        ed_pass = (EditText) findViewById(R.id.login_pas);
         btn_login = (Button) findViewById(R.id.btn_login);
         imageViewl = (ImageView) findViewById(R.id.iv_login_l);
         imageViewr = (ImageView) findViewById(R.id.iv_login_r);
@@ -91,7 +91,7 @@ public class LoginActivity extends BaseActivity {
             }
         });
         myToolBar.setTitle("登陆");
-        myToolBar.setHomeEnable(this);
+        myToolBar.setBackEnable(this);
 
         perPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         boolean isRemUser = perPreferences.getBoolean("ISREMUSER", false);

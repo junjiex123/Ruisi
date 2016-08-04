@@ -101,7 +101,7 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
         });
 
         myToolBar.setTitle(username);
-        myToolBar.setHomeEnable(this);
+        myToolBar.setBackEnable(this);
         new GetDataTask().execute(url);
     }
 
