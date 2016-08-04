@@ -75,7 +75,8 @@
                 android:id="@+id/reply_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="3"
+                android:maxLines="4"
+                android:ellipsize="end"
                 android:padding="6dp"
                 tools:text="1111\n测试呵呵哈哈哈。。。" />
 

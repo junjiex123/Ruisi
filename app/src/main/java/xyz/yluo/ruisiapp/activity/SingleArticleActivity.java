@@ -497,7 +497,7 @@ public class SingleArticleActivity extends BaseActivity
         @Override
         protected void onPostExecute(List<SingleArticleData> tepdata) {
             //这是楼主
-            if(page_now==1&&tepdata.get(0).getIndex().contains("收藏")){
+            if(page_now==1&&tepdata.size()>0&&tepdata.get(0).getIndex().contains("收藏")){
                 SingleArticleData data = tepdata.get(0);
                 data.setType(SingleType.CONTENT);
                 data.setIndex(data.getIndex().replace("收藏",""));

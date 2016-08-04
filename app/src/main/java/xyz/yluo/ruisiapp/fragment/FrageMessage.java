@@ -22,6 +22,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.CheckMessageService;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.MessageAdapter;
@@ -148,14 +149,22 @@ public class FrageMessage extends Fragment {
             List<MessageData> tempdatas = new ArrayList<>();
             Elements lists = Jsoup.parse(params[0]).select(".nts").select("dl.cl");
             for (Element tmp : lists) {
+                String authorImage = tmp.select(".avt").select("img").attr("src");
+                String time = tmp.select(".xg1.xw0").text();
+                String authorTitle  ="";
+                String titleUrl = "";
                 String content = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").text().replace("查看", "");
                 if (content.isEmpty()) {
-                    continue;
+                    //这是系统消息
+                    authorTitle = "系统消息";
+                    titleUrl = tmp.select(".ntc_body").select("a").attr("href");
+                    authorImage = App.getBaseUrl()+authorImage;
+                    content = tmp.select(".ntc_body").text();
+                }else{
+                    //这是回复消息
+                    authorTitle = tmp.select(".ntc_body").select("a[href^=home.php]").text() + " 回复了我";
+                    titleUrl = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
                 }
-                String authorImage = tmp.select(".avt").select("img").attr("src");
-                String authorTitle = tmp.select(".ntc_body").select("a[href^=home.php]").text() + " 回复了我";
-                String time = tmp.select(".xg1.xw0").text();
-                String titleUrl = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
                 boolean isRead = true;
                 if (tmp.select(".ntc_body").attr("style").contains("bold")) {
                     isRead = false;
@@ -175,7 +184,6 @@ public class FrageMessage extends Fragment {
         protected void onPostExecute(List<MessageData> tempdatas) {
             finishGetData(tempdatas);
             clearMessage(0);
-
         }
     }
 
