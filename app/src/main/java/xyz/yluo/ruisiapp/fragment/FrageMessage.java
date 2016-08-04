@@ -148,7 +148,6 @@ public class FrageMessage extends Fragment {
             List<MessageData> tempdatas = new ArrayList<>();
             Elements lists = Jsoup.parse(params[0]).select(".nts").select("dl.cl");
             for (Element tmp : lists) {
-
                 String content = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").text().replace("查看", "");
                 if (content.isEmpty()) {
                     continue;

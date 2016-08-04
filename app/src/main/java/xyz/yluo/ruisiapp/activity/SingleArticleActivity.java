@@ -76,10 +76,10 @@ public class SingleArticleActivity extends BaseActivity
     //存储数据 需要填充的列表
     private List<SingleArticleData> mydatalist = new ArrayList<>();
     //是否调到指定页数and楼层???
-    private boolean isRedirect, isSaveToDataBase = false;
+    private boolean  isSaveToDataBase = false;
     private ArrayAdapter<String> spinnerAdapter;
     private List<String> pageSpinnerDatas = new ArrayList<>();
-    private String Title, AuthorName,AuthorUid, Tid = "";
+    private String Title, AuthorName,AuthorUid, Tid ,RedirectPid= "";
     private Spinner spinner;
 
     private boolean showPlainText = false;
@@ -161,10 +161,10 @@ public class SingleArticleActivity extends BaseActivity
         AuthorName = b.getString("author");
         Tid = GetId.getTid(url);
         if (url != null && url.contains("redirect")) {
+            RedirectPid = GetId.getPid(url);
             if (!App.IS_SCHOOL_NET) {
                 url = url + "&mobile=2";
             }
-            isRedirect = true;
             HttpUtil.head(this, url, new ResponseHandler() {
                 @Override
                 public void onSuccess(byte[] response) {
@@ -496,6 +496,7 @@ public class SingleArticleActivity extends BaseActivity
 
         @Override
         protected void onPostExecute(List<SingleArticleData> tepdata) {
+            //这是楼主
             if(page_now==1&&tepdata.get(0).getIndex().contains("收藏")){
                 SingleArticleData data = tepdata.get(0);
                 data.setType(SingleType.CONTENT);
@@ -526,18 +527,16 @@ public class SingleArticleActivity extends BaseActivity
                 mRecyleAdapter.notifyItemChanged(start);
                 mRecyleAdapter.notifyItemRangeInserted(start + 1, add);
 
-                if (isRedirect) {
-                    isRedirect = false;
+                //精确定位到某一层
+                if (!TextUtils.isEmpty(RedirectPid)) {
                     for (int i = 0; i < mydatalist.size(); i++) {
-                        SingleArticleData s = mydatalist.get(i);
-                        if(s.getType()==SingleType.COMMENT){
-                            String str = s.getCotent();
-                            if (str.contains(App.USER_NAME)) {
-                                mRecyclerView.scrollToPosition(i);
-                                break;
-                            }
+                        if(!TextUtils.isEmpty(mydatalist.get(i).getPid())
+                                && mydatalist.get(i).getPid().equals(RedirectPid)){
+                            mRecyclerView.scrollToPosition(i);
+                            break;
                         }
                     }
+                    RedirectPid = "";
                 }
             } else {
                 //add = 0 没有添加
