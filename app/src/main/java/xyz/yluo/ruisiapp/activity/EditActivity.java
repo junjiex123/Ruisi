@@ -22,6 +22,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -169,7 +170,10 @@ public class EditActivity extends BaseActivity implements View.OnClickListener{
                 }else{
                     ed_title.setText(title.attr("value"));
                 }
-
+                if(TextUtils.isEmpty(content.html())){
+                    showToast("本贴不支持编辑！");
+                    finish();
+                }
                 ed_content.setText(content.html());
 
                 Elements types = document.select("#typeid").select("option");
@@ -307,7 +311,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener{
         if(!TextUtils.isEmpty(typeId)&&typeId.equals("0")){
             Toast.makeText(this, "请选择主题分类", Toast.LENGTH_SHORT).show();
             return false;
-        }else if(TextUtils.isEmpty(ed_title.getText().toString().trim())){
+        }else if((ed_title.getVisibility()==View.VISIBLE)&&TextUtils.isEmpty(ed_title.getText().toString().trim())){
             Toast.makeText(this, "标题不能为空啊", Toast.LENGTH_SHORT).show();
             return false;
         }else if(TextUtils.isEmpty(ed_content.getText().toString().trim())){
