@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bgwhite"
-    android:foreground="?android:attr/selectableItemBackground"
-    android:id="@+id/main_window">
-
+    android:id="@+id/main_window"
+    android:background="@color/bgwhite">
     <xyz.yluo.ruisiapp.View.CircleImageView
         android:layout_marginTop="8dp"
         android:id="@+id/article_user_image"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/image_placeholder"
-        app:layout_constraintLeft_toLeftOf="@+id/main_window"
         android:layout_marginStart="12dp"
-        app:layout_constraintTop_toTopOf="@+id/main_window" />
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/replay_author"
@@ -25,10 +22,9 @@
         android:textColor="@color/colorAuthor"
         android:textSize="14sp"
         tools:text="authorName"
-        app:layout_constraintLeft_toRightOf="@+id/article_user_image"
         android:layout_marginStart="8dp"
-        app:layout_constraintTop_toTopOf="@+id/article_user_image"
-        android:layout_marginTop="4dp" />
+        android:layout_alignTop="@+id/article_user_image"
+        android:layout_toEndOf="@+id/article_user_image" />
 
     <TextView
         android:id="@+id/bt_lable_lz"
@@ -40,13 +36,11 @@
         android:text="楼主"
         android:textColor="@android:color/white"
         android:textSize="12sp"
-        app:layout_constraintLeft_toRightOf="@+id/replay_author"
         android:layout_marginStart="8dp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/replay_author" />
-
+        android:layout_alignBaseline="@+id/replay_author"
+        android:layout_toEndOf="@+id/replay_author" />
 
     <ImageView
-        android:layout_margin="6dp"
         android:id="@+id/btn_reply_2"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -55,8 +49,9 @@
         android:clickable="true"
         android:padding="8dp"
         android:src="@drawable/ic_reply_grey_24dp"
-        app:layout_constraintRight_toRightOf="@+id/main_window"
-        app:layout_constraintTop_toTopOf="@+id/main_window" />
+        android:layout_margin="4dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:id="@+id/replay_index"
@@ -65,9 +60,9 @@
         android:layout_height="wrap_content"
         android:maxLines="1"
         tools:text="1楼"
-        app:layout_constraintLeft_toLeftOf="@+id/replay_author"
-        app:layout_constraintTop_toBottomOf="@+id/replay_author"
-        android:layout_marginTop="4dp" />
+        android:layout_marginTop="4dp"
+        android:layout_below="@+id/bt_lable_lz"
+        android:layout_alignStart="@+id/replay_author" />
 
     <TextView
         android:id="@+id/replay_time"
@@ -76,9 +71,9 @@
         android:layout_height="wrap_content"
         android:maxLines="1"
         tools:text="1小时前"
-        app:layout_constraintLeft_toRightOf="@+id/replay_index"
         android:layout_marginStart="8dp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/replay_index" />
+        android:layout_alignBaseline="@+id/replay_index"
+        android:layout_toEndOf="@+id/replay_index" />
 
     <xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView
         android:id="@+id/html_text"
@@ -87,57 +82,48 @@
         android:autoLink="web"
         android:lineSpacingMultiplier="1.4"
         android:textColor="?android:attr/textColorPrimary"
-        android:textSize="15sp"
+        android:textSize="16sp"
         android:paddingTop="8dp"
-        android:paddingStart="64dp"
         android:paddingBottom="8dp"
-        android:paddingEnd="16dp"
+        android:layout_marginEnd="12dp"
         tools:text="在点(110,10)处绘制一个宽和高均为50像素的正方形边框 context.strokeRect(110,10,50,50); //在点(30,10)处绘制一个宽和高均为50像素的正方形边框 "
-        app:layout_constraintLeft_toLeftOf="@+id/main_window"
-        app:layout_constraintTop_toBottomOf="@+id/article_user_image"
-        app:layout_constraintRight_toRightOf="@+id/main_window" />
+        android:layout_alignStart="@+id/replay_author"
+        android:layout_below="@+id/article_user_image"/>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:id="@+id/edit_container"
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:id="@+id/tv_edit"
+        android:text="编辑"
+        android:textSize="14sp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:padding="8dp"
+        android:textColor="@color/colorAuthor"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="end"
-        app:layout_constraintTop_toBottomOf="@+id/html_text">
-        <TextView
-            android:id="@+id/tv_remove"
-            android:text="删除"
-            android:textSize="14sp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:padding="8dp"
-            android:textColor="@color/colorAuthor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:id="@+id/tv_edit"
-            android:text="编辑"
-            android:textSize="14sp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:padding="8dp"
-            android:textColor="@color/colorAuthor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/html_text"/>
+
+    <TextView
+        android:id="@+id/tv_remove"
+        android:text="删除"
+        android:textSize="14sp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:padding="8dp"
+        android:textColor="@color/colorAuthor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tv_edit"
+        android:layout_toStartOf="@+id/tv_edit" />
 
     <View
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0.8dp"
         android:background="#1f000000"
-        app:layout_constraintLeft_toLeftOf="@+id/main_window"
-        app:layout_constraintTop_toBottomOf="@+id/edit_container"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="12dp"
-        android:layout_marginStart="60dp"
-        app:layout_constraintRight_toRightOf="@+id/main_window" />
-</android.support.constraint.ConstraintLayout>
-
-
+        android:layout_alignStart="@+id/replay_author"
+        android:layout_below="@+id/tv_edit"/>
+</RelativeLayout>

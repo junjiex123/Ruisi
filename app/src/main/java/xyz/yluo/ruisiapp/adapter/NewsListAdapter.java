@@ -85,7 +85,6 @@ public class NewsListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private class NewsViewHolderMe extends BaseViewHolder {
         TextView article_title;
         TextView post_time;
-        TextView is_image;
         TextView is_patch;
         View message_badge;
 
@@ -94,7 +93,6 @@ public class NewsListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             super(v);
             article_title = (TextView) v.findViewById(R.id.article_title);
             post_time = (TextView) v.findViewById(R.id.time);
-            is_image = (TextView) v.findViewById(R.id.is_image);
             is_patch = (TextView) v.findViewById(R.id.is_patch);
             message_badge = v.findViewById(R.id.message_badge);
 
@@ -114,7 +112,6 @@ public class NewsListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             article_title.setTextColor(single.isRead()? 0xff888888 : 0xff000000);
             article_title.setText(single.getTitle());
             post_time.setText(single.getPost_time());
-            is_image.setVisibility(single.is_image() ? View.VISIBLE : View.GONE);
             is_patch.setVisibility(single.is_patch() ? View.VISIBLE : View.GONE);
         }
 
