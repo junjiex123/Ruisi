@@ -13,7 +13,7 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
-import xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView;
+import xyz.yluo.ruisiapp.View.MyHtmlView.HtmlView;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ChatListData;
 import xyz.yluo.ruisiapp.utils.DimmenUtils;
@@ -77,13 +77,13 @@ public class ChatListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private class MyViewHolder extends BaseViewHolder {
 
-        protected MyHtmlTextView content;
+        protected HtmlView content;
         protected CircleImageView user_image;
         protected TextView post_time;
 
         MyViewHolder(View itemView) {
             super(itemView);
-            content = (MyHtmlTextView) itemView.findViewById(R.id.content);
+            content = (HtmlView) itemView.findViewById(R.id.content);
             user_image = (CircleImageView) itemView.findViewById(R.id.user_image);
             post_time = (TextView) itemView.findViewById(R.id.post_time);
 

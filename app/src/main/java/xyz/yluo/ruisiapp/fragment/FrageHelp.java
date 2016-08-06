@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView;
+import xyz.yluo.ruisiapp.View.MyHtmlView.HtmlView;
 
 /**
  * Created by free2 on 16-7-14.
@@ -228,7 +228,7 @@ public class FrageHelp extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frage_help, container, false);
-        MyHtmlTextView htmlTextView = (MyHtmlTextView) view.findViewById(R.id.html_text);
+        HtmlView htmlTextView = (HtmlView) view.findViewById(R.id.html_text);
         htmlTextView.setHtmlText(helpTxt,false);
         return view;
     }

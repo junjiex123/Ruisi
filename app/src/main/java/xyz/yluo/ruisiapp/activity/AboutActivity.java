@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView;
+import xyz.yluo.ruisiapp.View.MyHtmlView.HtmlView;
 import xyz.yluo.ruisiapp.utils.RequestSendMail;
 
 
@@ -38,8 +38,8 @@ public class AboutActivity extends BaseActivity {
                 "@谁用了FREEDOM</a>或者<a href=\"home.php?mod=space&uid=261098&do=profile&mobile=2\">@wangfuyang</a><br />" +
                 "也可以到我的github上留言<a href=\"https://github.com/freedom10086/Ruisi\">点击这儿</a>";
 
-        MyHtmlTextView myHtmlTextView = (MyHtmlTextView) findViewById(R.id.html_text);
-        myHtmlTextView.setHtmlText(ss,false);
+        HtmlView htmlView = (HtmlView) findViewById(R.id.html_text);
+        htmlView.setHtmlText(ss,false);
 
         PackageInfo info = null;
         PackageManager manager = getPackageManager();

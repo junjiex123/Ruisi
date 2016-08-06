@@ -18,7 +18,7 @@ import java.util.List;
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
-import xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView;
+import xyz.yluo.ruisiapp.View.MyHtmlView.HtmlView;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.LoadMoreType;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
@@ -141,7 +141,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         TextView article_username;
         TextView article_post_time,tv_remove,tv_edit;
        // MyWebView myWebView;
-        MyHtmlTextView myHtmlTextView;
+        HtmlView htmlView;
 
         ArticleContentViewHolder(View itemView) {
             super(itemView);
@@ -152,7 +152,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             article_username = (TextView) itemView.findViewById(R.id.article_username);
             article_post_time = (TextView) itemView.findViewById(R.id.article_post_time);
             //myWebView = (MyWebView) itemView.findViewById(R.id.mywebview);
-            myHtmlTextView = (MyHtmlTextView) itemView.findViewById(R.id.html_text);
+            htmlView = (HtmlView) itemView.findViewById(R.id.html_text);
             article_user_image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -175,10 +175,10 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             article_post_time.setText(post_time);
             //myWebView.setContent(single.getCotent());
             if(strBuilderContent==null){
-                myHtmlTextView.setHtmlText(single.getCotent(), true);
-                strBuilderContent = myHtmlTextView.getStrBuilderContent();
+                htmlView.setHtmlText(single.getCotent(), true);
+                strBuilderContent = htmlView.getStrBuilderContent();
             }else{
-                myHtmlTextView.setSpannedHtmlText(strBuilderContent);
+                htmlView.setSpannedHtmlText(strBuilderContent);
             }
 
             //判断是不是自己
@@ -205,7 +205,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         TextView replay_author;
         TextView replay_index;
         TextView replay_time;
-        MyHtmlTextView htmlTextView;
+        HtmlView htmlTextView;
         TextView bt_lable_lz,tv_remove,tv_edit;
 
         CommentViewHolder(View itemView) {
@@ -217,7 +217,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             replay_author = (TextView) itemView.findViewById(R.id.replay_author);
             replay_index = (TextView) itemView.findViewById(R.id.replay_index);
             replay_time = (TextView) itemView.findViewById(R.id.replay_time);
-            htmlTextView = (MyHtmlTextView) itemView.findViewById(R.id.html_text);
+            htmlTextView = (HtmlView) itemView.findViewById(R.id.html_text);
             bt_lable_lz = (TextView) itemView.findViewById(R.id.bt_lable_lz);
 
             replay_image.setOnClickListener(new View.OnClickListener() {

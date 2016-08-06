@@ -89,6 +89,12 @@ public class HomeActivity extends BaseActivity
         message_bage = toolBarImagContainer.findViewById(R.id.toolbar_message_bage);
         message_bage.setVisibility(View.INVISIBLE);
         myToolBar.addView(toolBarImagContainer);
+        toolBarImagContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawer.openDrawer(GravityCompat.START);
+            }
+        });
         myToolBar.addMenu(R.drawable.ic_bug_report_white_24dp,"DEBUG");
         myToolBar.addMenu(R.drawable.ic_search_white_24dp,"SEARCH");
         myToolBar.addMenu(R.drawable.ic_edit,"POST");
@@ -374,7 +380,10 @@ public class HomeActivity extends BaseActivity
             if (isHaveMessage) {
                 message_bage.setVisibility(View.VISIBLE);
             } else {
-                message_bage.setVisibility(View.INVISIBLE);
+                if(message_bage.getVisibility()==View.VISIBLE){
+                    message_bage.setVisibility(View.INVISIBLE);
+                }
+
             }
         }
     }

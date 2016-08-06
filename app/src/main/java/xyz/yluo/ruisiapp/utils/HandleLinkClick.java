@@ -6,7 +6,7 @@ import android.util.Log;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
-import xyz.yluo.ruisiapp.View.MyHtmlView.MyHtmlTextView;
+import xyz.yluo.ruisiapp.View.MyHtmlView.HtmlView;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.NewArticleActivity_2;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
@@ -15,7 +15,7 @@ import xyz.yluo.ruisiapp.downloadfile.DownloadService;
 
 /**
  * Created by free2 on 16-4-12.
- * 处理WebView和 {@link MyHtmlTextView}链接点击
+ * 处理WebView和 {@link HtmlView}链接点击
  * <p>
  * //todo 图片点击事件 展示大图片
  */

@@ -27,7 +27,7 @@ import xyz.yluo.ruisiapp.App;
  * Created by free2 on 16-7-16.
  * 图片下载
  */
-public class MyImageGetter implements Html.ImageGetter{
+public class ImageGetter implements Html.ImageGetter{
     private Context context;
     /**
      * 标记是否开始下载
@@ -51,7 +51,7 @@ public class MyImageGetter implements Html.ImageGetter{
     private Map<String,Drawable> haveDown;
     private ImageDownLoadListener listener;
 
-    public MyImageGetter(Context context,ImageDownLoadListener listener) {
+    public ImageGetter(Context context, ImageDownLoadListener listener) {
         this.context = context;
         this.listener = listener;
         if(haveDown==null){

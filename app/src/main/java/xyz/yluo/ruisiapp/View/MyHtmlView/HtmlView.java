@@ -27,11 +27,11 @@ import xyz.yluo.ruisiapp.utils.HandleLinkClick;
  * 能够显示图片的textview
  * 显示html
  */
-public class MyHtmlTextView extends TextView implements MyImageGetter.ImageDownLoadListener {
+public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListener {
 
     private Context context;
-    private MyImageGetter myImageGetter;
-    private MyTagHandle myTagHandle;
+    private ImageGetter imageGetter;
+    private TagHandle tagHandle;
     private SpannableStringBuilder strBuilderContent;
 
 
@@ -39,17 +39,17 @@ public class MyHtmlTextView extends TextView implements MyImageGetter.ImageDownL
         return strBuilderContent;
     }
 
-    public MyHtmlTextView(Context context) {
+    public HtmlView(Context context) {
         super(context);
         init(context);
     }
 
-    public MyHtmlTextView(Context context, AttributeSet attrs) {
+    public HtmlView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public MyHtmlTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public HtmlView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
@@ -57,16 +57,16 @@ public class MyHtmlTextView extends TextView implements MyImageGetter.ImageDownL
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if(myImageGetter!=null){
-            myImageGetter.reStart();
+        if(imageGetter !=null){
+            imageGetter.reStart();
         }
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if(myImageGetter!=null){
-            myImageGetter.setNeedStop(true);
+        if(imageGetter !=null){
+            imageGetter.setNeedStop(true);
         }
     }
 
@@ -75,15 +75,15 @@ public class MyHtmlTextView extends TextView implements MyImageGetter.ImageDownL
         this.context = context;
         setMovementMethod(LinkMovementMethod.getInstance());
         setLinkTextColor(0xff529ECC);
-        myTagHandle = new MyTagHandle();
+        tagHandle = new TagHandle();
     }
 
     public void setHtmlText(String txt, boolean isLoadImage){
-        if(isLoadImage&&myImageGetter==null){
-            myImageGetter = new MyImageGetter(context,this);
+        if(isLoadImage&& imageGetter ==null){
+            imageGetter = new ImageGetter(context,this);
         }
         Log.i("my htmltext","=====new strBuilderContent=====");
-        strBuilderContent =  getSequence(context,txt, myImageGetter, myTagHandle);
+        strBuilderContent =  getSequence(context,txt, imageGetter, tagHandle);
         setText(strBuilderContent);
     }
 
@@ -103,7 +103,7 @@ public class MyHtmlTextView extends TextView implements MyImageGetter.ImageDownL
 
 
     //获得textView 链接点击
-    private  SpannableStringBuilder getSequence(Context context, String html, MyImageGetter getter, MyTagHandle handler) {
+    private  SpannableStringBuilder getSequence(Context context, String html, ImageGetter getter, TagHandle handler) {
         Spanned spannedHtml = null;
         spannedHtml = Html.fromHtml(html, getter, handler);
         SpannableStringBuilder strBuilder = new SpannableStringBuilder(spannedHtml);
@@ -162,8 +162,8 @@ public class MyHtmlTextView extends TextView implements MyImageGetter.ImageDownL
 
         String src = imageSpan.getSource();
         Drawable d = null;
-        if (myImageGetter != null) {
-            d = myImageGetter.getDrawable(src);
+        if (imageGetter != null) {
+            d = imageGetter.getDrawable(src);
         }
 
         if (d == null) {

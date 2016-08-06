@@ -16,7 +16,7 @@ import org.xml.sax.XMLReader;
  * Created by free2 on 16-7-16.
  * taghandle
  */
-public class MyTagHandle implements Html.TagHandler{
+public class TagHandle implements Html.TagHandler{
 
     private int startIndex = 0;
     private int stopIndex = 0;
