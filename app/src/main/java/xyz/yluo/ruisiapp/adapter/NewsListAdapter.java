@@ -22,24 +22,35 @@ import xyz.yluo.ruisiapp.database.MyDB;
 public class NewsListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final int TYPE_LOAD_MORE = 1;
     private static final int TYPE_NEWS_LIST = 0;
+    private static final int TYPE_PLACE_HOLDER = 2;
     private List<SchoolNewsData> DataSet;
     private Activity activity;
+    private String placeHolderString = "Loading......";
 
     public NewsListAdapter(Activity activity, List<SchoolNewsData> DataSet) {
         this.DataSet = DataSet;
         this.activity = activity;
     }
 
+    public void setPlaceHolderString(String placeHolderString) {
+        this.placeHolderString = placeHolderString;
+        notifyItemChanged(0);
+    }
+
     @Override
     public int getItemCount() {
         if (DataSet.size() == 0) {
-            return 0;
+            return 1;
         }
         return DataSet.size() + 1;
     }
 
     @Override
     public int getItemViewType(int position) {
+        if(getItemCount()==1){
+            return TYPE_PLACE_HOLDER;
+        }
+
         if (position > 0 && position == getItemCount() - 1) {
             return TYPE_LOAD_MORE;
         } else {
@@ -124,6 +135,21 @@ public class NewsListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             MyDB myDB = new MyDB(activity, MyDB.MODE_WRITE);
             myDB.setSingleNewsRead(single.getUrl());
             SingleNewsActivity.open(activity, single.getUrl(), single.getTitle());
+        }
+    }
+
+
+    //place holder
+    private class PlaceHolderViewHolder extends BaseViewHolder{
+        private TextView textView;
+        public PlaceHolderViewHolder(View itemView) {
+            super(itemView);
+            textView = (TextView) itemView.findViewById(R.id.text);
+        }
+
+        @Override
+        void setData(int position) {
+            textView.setText(placeHolderString);
         }
     }
 }

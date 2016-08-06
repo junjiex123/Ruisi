@@ -36,8 +36,16 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
 
     private static final int CONTENT = 0;
     private static final int COMENT = 1;
-    private final int LOAD_MORE = 2;
-    private final int HEADER = 3;
+    private static final int LOAD_MORE = 2;
+    private static final int HEADER = 3;
+    private static final int PLACEHOLDER = 4;
+
+    private String placeHolderString = "Loading......";
+
+    public void setPlaceHolderString(String placeHolderString) {
+        this.placeHolderString = placeHolderString;
+        notifyItemChanged(0);
+    }
 
     private LoadMoreType loadMoreType = LoadMoreType.LOADING;
     /**
@@ -64,6 +72,10 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
 
     @Override
     public int getItemViewType(int position) {
+        if(getItemCount()==1){//nodata
+            return PLACEHOLDER;
+        }
+
         if (position == getItemCount() - 1) {
             return LOAD_MORE;
         } else if (datalist.get(position).getType() == SingleType.CONTENT) {
@@ -85,6 +97,8 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
                 return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.load_more_item, viewGroup, false));
             case HEADER:
                 return new HeaderViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.need_load_content_item, viewGroup, false));
+            case PLACEHOLDER:
+                return new PlaceHolderViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.place_holder_recycler_item,viewGroup,false));
             default: // TYPE_COMMENT
                 return new CommentViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.comment_item, viewGroup, false));
         }
@@ -99,7 +113,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
     @Override
     public int getItemCount() {
         if (datalist.size() == 0) {
-            return 0;
+            return 1;
         }
         return datalist.size() + 1;
     }
@@ -290,6 +304,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         }
     }
 
+    //header
     private class HeaderViewHolder extends BaseViewHolder{
 
         HeaderViewHolder(View itemView) {
@@ -305,6 +320,20 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         @Override
         void setData(int position) {
 
+        }
+    }
+
+    //placeholder ViewHolder
+    private class PlaceHolderViewHolder extends BaseViewHolder{
+        TextView textView;
+        PlaceHolderViewHolder(View itemView) {
+            super(itemView);
+            textView = (TextView) itemView.findViewById(R.id.text);
+        }
+
+        @Override
+        void setData(int position) {
+            textView.setText(placeHolderString);
         }
     }
 }

@@ -61,7 +61,7 @@
         android:maxLines="1"
         tools:text="1楼"
         android:layout_marginTop="4dp"
-        android:layout_below="@+id/bt_lable_lz"
+        android:layout_below="@+id/replay_author"
         android:layout_alignStart="@+id/replay_author" />
 
     <TextView

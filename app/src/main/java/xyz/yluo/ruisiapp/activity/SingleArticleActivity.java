@@ -284,7 +284,8 @@ public class SingleArticleActivity extends BaseActivity
             public void onFailure(Throwable e) {
                 isEnableLoadMore = true;
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "网络错误(Error -1)", Toast.LENGTH_SHORT).show();
+                mRecyleAdapter.setPlaceHolderString("加载失败......");
+                Toast.makeText(getApplicationContext(), "加载失败(Error -1)", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -354,7 +355,6 @@ public class SingleArticleActivity extends BaseActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK){
-            Log.e("onActivityResult","=====");
             Bundle b = data.getExtras();
             String title = b.getString("TITLE","");
             String content = b.getString("CONTENT","");
@@ -555,7 +555,7 @@ public class SingleArticleActivity extends BaseActivity
             if(page_now==1&&tepdata.size()>0&&tepdata.get(0).getIndex().contains("收藏")){
                 SingleArticleData data = tepdata.get(0);
                 data.setType(SingleType.CONTENT);
-                data.setIndex(data.getIndex().replace("收藏",""));
+                data.setPostTime(data.getPostTime().replace("收藏",""));
                 AuthorName = data.getUsername();
                 AuthorUid = data.getUid();
             }
@@ -599,8 +599,6 @@ public class SingleArticleActivity extends BaseActivity
                 mRecyleAdapter.notifyItemChanged(mRecyleAdapter.getItemCount() - 1);
             }
             isEnableLoadMore = true;
-
-            findViewById(R.id.view_loading).setVisibility(View.GONE);
             refreshLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {

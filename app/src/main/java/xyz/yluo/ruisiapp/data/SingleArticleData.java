@@ -54,8 +54,8 @@ public class SingleArticleData {
         return replyUrlTitle;
     }
 
-    public void setIndex(String index){
-        this.index = index;
+    public void setPostTime(String postTime) {
+        this.postTime = postTime;
     }
 
     public String getUsername() {

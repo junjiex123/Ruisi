@@ -121,8 +121,9 @@
         android:layout_toStartOf="@+id/tv_edit" />
 
     <View
+        android:layout_marginTop="4dp"
         android:layout_below="@+id/tv_edit"
-        android:background="@color/colorDivider"
+        android:background="@color/bggrey"
         android:layout_width="match_parent"
         android:layout_height="12dp"/>
 </RelativeLayout>

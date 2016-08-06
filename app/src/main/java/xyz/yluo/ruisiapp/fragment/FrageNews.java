@@ -129,9 +129,14 @@ public class FrageNews extends Fragment{
 
         @Override
         protected void onPostExecute(List<SchoolNewsData> dataset) {
-            datas.clear();
-            datas.addAll(dataset);
-            adapter.notifyDataSetChanged();
+            if(dataset.size()==0){
+                adapter.setPlaceHolderString("加载失败......");
+            }else{
+                datas.clear();
+                datas.addAll(dataset);
+                adapter.notifyDataSetChanged();
+            }
+
             refreshLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {
