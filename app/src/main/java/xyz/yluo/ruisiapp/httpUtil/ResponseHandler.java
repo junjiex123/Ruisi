@@ -10,12 +10,12 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 
 public abstract class ResponseHandler {
-    protected static final int MSG_SUCCESS = 0;
-    protected static final int MSG_FAILURE = 1;
-    protected static final int MSG_START = 2;
-    protected static final int MSG_FINISH = 3;
-    protected static final int MSG_PROGRESS = 4;
-    protected static final int MSG_START_DOWN = 5;
+    private static final int MSG_SUCCESS = 0;
+    private static final int MSG_FAILURE = 1;
+    private static final int MSG_START = 2;
+    private static final int MSG_FINISH = 3;
+    private static final int MSG_PROGRESS = 4;
+    private static final int MSG_START_DOWN = 5;
     private Handler handler;
     private Looper looper = null;
 
@@ -61,7 +61,7 @@ public abstract class ResponseHandler {
         }
     }
 
-    protected void handleMessage(Message msg) {
+    private void handleMessage(Message msg) {
         switch (msg.what) {
             case MSG_SUCCESS:
                 onSuccess((byte[]) msg.obj);
@@ -87,7 +87,7 @@ public abstract class ResponseHandler {
         }
     }
 
-    byte[] readFrom(InputStream inputStream, long length) throws IOException {
+    private byte[] readFrom(InputStream inputStream, long length) throws IOException {
         if (inputStream == null) {
             return new byte[0];
         }
@@ -102,31 +102,31 @@ public abstract class ResponseHandler {
         return os.toByteArray();
     }
 
-    final protected void sendStartDownloadMessage(String fileName) {
+    final void sendStartDownloadMessage(String fileName) {
         handleMessage(obtainMessage(MSG_START_DOWN, fileName));
     }
 
-    final protected void sendProgressMessage(int progress, long bytesTotal) {
+    final void sendProgressMessage(int progress, long bytesTotal) {
         handler.sendMessage(obtainMessage(MSG_PROGRESS, new Object[]{progress, bytesTotal}));
     }
 
-    final protected void sendSuccessMessage(byte[] responseBytes) {
+    final void sendSuccessMessage(byte[] responseBytes) {
         handler.sendMessage(obtainMessage(MSG_SUCCESS, responseBytes));
     }
 
-    final protected void sendFailureMessage(Throwable throwable) {
+    final void sendFailureMessage(Throwable throwable) {
         handler.sendMessage(obtainMessage(MSG_FAILURE, throwable));
     }
 
-    final protected void sendStartMessage() {
+    final void sendStartMessage() {
         handler.sendMessage(obtainMessage(MSG_START, null));
     }
 
-    final protected void sendFinishMessage() {
+    final void sendFinishMessage() {
         handler.sendMessage(obtainMessage(MSG_FINISH, null));
     }
 
-    protected Message obtainMessage(int responseMessageId, Object responseMessageData) {
+    private Message obtainMessage(int responseMessageId, Object responseMessageData) {
         return Message.obtain(handler, responseMessageId, responseMessageData);
     }
 
