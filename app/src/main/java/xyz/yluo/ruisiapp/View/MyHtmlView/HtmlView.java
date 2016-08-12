@@ -2,6 +2,7 @@ package xyz.yluo.ruisiapp.View.MyHtmlView;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.ParcelableSpan;
 import android.text.Spannable;
@@ -167,7 +168,7 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
         }
 
         if (d == null) {
-            d = context.getDrawable(R.drawable.image_placeholder);
+            d = ContextCompat.getDrawable(context,R.drawable.image_placeholder);
             if(d!=null)
             d.setBounds(0, 0, 80, 80);
         }

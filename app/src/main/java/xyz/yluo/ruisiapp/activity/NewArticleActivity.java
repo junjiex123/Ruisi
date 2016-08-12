@@ -324,6 +324,7 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
                 typeid_spinner.setWidth(view.getWidth());
                 typeid_spinner.showAsDropDown(view, 0, 15);
         }
+
     }
 
     private void switch_fid(int fid){
