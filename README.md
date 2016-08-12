@@ -6,7 +6,7 @@ bug反馈或者相关建议 2351386755@qq.com
 [校外网访问](http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid=846819&mobile=2)
 [校园网访问](http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=846819)
 
-## 软件截图
+### 软件截图
 ![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/1.jpg)
 ![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/2.jpg)
 ![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/3.jpg)
@@ -14,7 +14,7 @@ bug反馈或者相关建议 2351386755@qq.com
 ![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/5.jpg)
 ![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/6.jpg)
 
-## 参考和用到的开源库和软件：
+### 参考和用到的开源库和软件：
 
 [AsyncLiteHttp](https://github.com/luck-apple/AsyncLiteHttp)
 
@@ -28,7 +28,7 @@ bug反馈或者相关建议 2351386755@qq.com
 
 [material-design-icons](https://github.com/google/material-design-icons)
 
-## License
+### License
 
     Copyright 2016 freedom10086
 
