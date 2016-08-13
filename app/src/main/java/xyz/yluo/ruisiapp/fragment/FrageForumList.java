@@ -57,7 +57,7 @@ public class FrageForumList extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-        MyDB myDB = new MyDB(getActivity(), MyDB.MODE_READ);
+        MyDB myDB = new MyDB(getActivity().getApplicationContext(), MyDB.MODE_READ);
         datas = myDB.getForums();
     }
 
@@ -166,7 +166,7 @@ public class FrageForumList extends BaseFragment {
             }
 
             if(!isSetForumToDataBase){
-                MyDB myDB = new MyDB(getActivity(), MyDB.MODE_WRITE);
+                MyDB myDB = new MyDB(getActivity().getApplicationContext(), MyDB.MODE_WRITE);
                 myDB.setForums(simpledatas);
                 isSetForumToDataBase = true;
                 SharedPreferences.Editor editor = sharedPreferences.edit();

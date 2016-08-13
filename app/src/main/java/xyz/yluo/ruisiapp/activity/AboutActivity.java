@@ -39,7 +39,7 @@ public class AboutActivity extends BaseActivity {
                 "也可以到我的github上留言<a href=\"https://github.com/freedom10086/Ruisi\">点击这儿</a>";
 
         HtmlView htmlView = (HtmlView) findViewById(R.id.html_text);
-        htmlView.setHtmlText(ss,false);
+        htmlView.setHtmlText(ss, false);
 
         PackageInfo info = null;
         PackageManager manager = getPackageManager();
@@ -69,7 +69,8 @@ public class AboutActivity extends BaseActivity {
                                 }
                                 RequestSendMail.sendMail(getApplicationContext(), user);
                             }
-                        }).show();
+                        })
+                        .show();
             }
         });
     }

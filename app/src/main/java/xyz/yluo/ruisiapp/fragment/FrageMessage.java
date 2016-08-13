@@ -169,7 +169,7 @@ public class FrageMessage extends Fragment {
                 if (tmp.select(".ntc_body").attr("style").contains("bold")) {
                     isRead = false;
                 }else{
-                    MyDB myDB = new MyDB(getActivity(), MyDB.MODE_READ);
+                    MyDB myDB = new MyDB(getActivity().getApplicationContext(), MyDB.MODE_READ);
                     int i = myDB.isMessageRead(titleUrl);
                     if(i==0){
                         isRead = false;
