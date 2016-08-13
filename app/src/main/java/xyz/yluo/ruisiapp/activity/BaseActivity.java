@@ -19,12 +19,13 @@ import xyz.yluo.ruisiapp.utils.DimmenUtils;
 public class BaseActivity extends AppCompatActivity {
 
     private static Toast mToast;
+
     //判断是否需要弹出登录dialog
-    boolean isneed_login() {
+    boolean isLogin() {
         if (App.ISLOGIN) {
             return true;
         } else {
-            new MyAlertDialog(this,MyAlertDialog.WARNING_TYPE)
+            new MyAlertDialog(this, MyAlertDialog.WARNING_TYPE)
                     .setTitleText("需要登录登陆")
                     .setCancelText("取消")
                     .setContentText("你还没有登陆，要去登陆吗？？")
@@ -40,37 +41,37 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case  android.R.id.home:
-            finish();
-            break;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
 
         }
         return super.onOptionsItemSelected(item);
     }
 
-    protected void setToolBarMenuClick(MyToolBar myToolBar){
+    protected void setToolBarMenuClick(MyToolBar myToolBar) {
         myToolBar.setToolBarClickListener(new MyToolBar.OnToolBarItemClick() {
             @Override
             public void OnItemClick(View v, String Tag) {
-                OnToolBarMenuItemClick(v,Tag);
+                OnToolBarMenuItemClick(v, Tag);
             }
         });
     }
 
-    protected  boolean OnToolBarMenuItemClick(View view,String tag){
-        switch (tag){
+    protected boolean OnToolBarMenuItemClick(View view, String tag) {
+        switch (tag) {
             case "SEARCH":
-                if(isneed_login())
-                startActivity(new Intent(this,ActivitySearch.class));
+                if (isLogin())
+                    startActivity(new Intent(this, ActivitySearch.class));
                 return true;
             case "POST":
-                if(isneed_login())
-                startActivity(new Intent(this,NewArticleActivity.class));
+                if (isLogin())
+                    startActivity(new Intent(this, NewArticleActivity.class));
                 return true;
             case "POST2":
-                if(isneed_login())
-                startActivity(new Intent(this, NewArticleActivity_2.class));
+                if (isLogin())
+                    startActivity(new Intent(this, NewArticleActivity_2.class));
                 return true;
             case "DEBUG":
                 startActivity(new Intent(this, TestActivity.class));
@@ -80,10 +81,10 @@ public class BaseActivity extends AppCompatActivity {
         return false;
     }
 
-    protected void showToast(String str){
-        if(mToast == null) {
-            mToast = Toast.makeText(this,str, Toast.LENGTH_SHORT);
-            mToast.setGravity(Gravity.TOP,0,DimmenUtils.dip2px(this,56));
+    protected void showToast(String str) {
+        if (mToast == null) {
+            mToast = Toast.makeText(this, str, Toast.LENGTH_SHORT);
+            mToast.setGravity(Gravity.TOP, 0, DimmenUtils.dip2px(this, 56));
         } else {
             mToast.setText(str);
             mToast.setDuration(Toast.LENGTH_SHORT);

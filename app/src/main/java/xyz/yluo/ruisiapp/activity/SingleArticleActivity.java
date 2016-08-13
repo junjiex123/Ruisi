@@ -57,7 +57,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class SingleArticleActivity extends BaseActivity
         implements RecyclerViewClickListener, LoadMoreListener.OnLoadMoreListener,
-        FrageReplyDialog.replyCompeteCallBack,View.OnClickListener {
+        FrageReplyDialog.replyCompeteCallBack, View.OnClickListener {
 
     protected SwipeRefreshLayout refreshLayout;
     private RecyclerView mRecyclerView;
@@ -78,10 +78,10 @@ public class SingleArticleActivity extends BaseActivity
     //存储数据 需要填充的列表
     private List<SingleArticleData> mydatalist = new ArrayList<>();
     //是否调到指定页数and楼层???
-    private boolean  isSaveToDataBase = false;
+    private boolean isSaveToDataBase = false;
     private ArrayAdapter<String> spinnerAdapter;
     private List<String> pageSpinnerDatas = new ArrayList<>();
-    private String Title, AuthorName,AuthorUid, Tid ,RedirectPid= "";
+    private String Title, AuthorName, AuthorUid, Tid, RedirectPid = "";
     private Spinner spinner;
 
     private boolean showPlainText = false;
@@ -90,7 +90,7 @@ public class SingleArticleActivity extends BaseActivity
         Intent intent = new Intent(context, SingleArticleActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("url", url);
-        intent.putExtra("author", TextUtils.isEmpty(author)?"null":author);
+        intent.putExtra("author", TextUtils.isEmpty(author) ? "null" : author);
         context.startActivity(intent);
     }
 
@@ -99,11 +99,11 @@ public class SingleArticleActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_article);
 
-        showPlainText =  PreferenceManager.getDefaultSharedPreferences(this).getBoolean("setting_show_plain",false);
+        showPlainText = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("setting_show_plain", false);
 
         spinner = (Spinner) findViewById(R.id.btn_jump_spinner);
-        spinnerAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,pageSpinnerDatas);
-        spinnerAdapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
+        spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, pageSpinnerDatas);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
         mRecyclerView = (RecyclerView) findViewById(R.id.topic_recycler_view);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.topic_refresh_layout);
@@ -116,14 +116,14 @@ public class SingleArticleActivity extends BaseActivity
         });
 
         LinearLayout bottom_bar_top = (LinearLayout) findViewById(R.id.bottom_bar_top);
-        for(int i=0;i<bottom_bar_top.getChildCount();i++){
+        for (int i = 0; i < bottom_bar_top.getChildCount(); i++) {
             View v = bottom_bar_top.getChildAt(i);
-            if(v.getId()!=R.id.btn_jump_spinner){
+            if (v.getId() != R.id.btn_jump_spinner) {
                 v.setOnClickListener(this);
             }
         }
         LinearLayout bottom_bar_bottom = (LinearLayout) findViewById(R.id.bottom_bar_bottom);
-        for(int i=0;i<bottom_bar_bottom.getChildCount();i++){
+        for (int i = 0; i < bottom_bar_bottom.getChildCount(); i++) {
             View v = bottom_bar_bottom.getChildAt(i);
             v.setOnClickListener(this);
         }
@@ -146,8 +146,8 @@ public class SingleArticleActivity extends BaseActivity
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
-                if(!(pos+1==page_now)){
-                    jump_page(pos+1);
+                if (!(pos + 1 == page_now)) {
+                    jump_page(pos + 1);
                 }
             }
 
@@ -180,32 +180,33 @@ public class SingleArticleActivity extends BaseActivity
 
     }
 
-    private float x,y = 0;
+    private float x, y = 0;
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        switch (event.getAction()){
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 View bottomBar_bottom = findViewById(R.id.bottom_bar_c);
                 //当手指按下的时候
                 x = event.getX();
                 y = event.getY();
-                if(y<bottomBar_bottom.getTop()){
+                if (y < bottomBar_bottom.getTop()) {
                     View v = findViewById(R.id.bottom_bar_bottom);
-                    if(v.getVisibility()==View.VISIBLE){
+                    if (v.getVisibility() == View.VISIBLE) {
                         v.setVisibility(View.GONE);
                     }
                 }
                 break;
             case MotionEvent.ACTION_UP:
                 //当手指离开的时候
-                float dx = event.getX()-x;
-                float dy = event.getY()-y;
-                if(dx>100&&dx>dy) {
-                    DisplayMetrics dm =getResources().getDisplayMetrics();
+                float dx = event.getX() - x;
+                float dy = event.getY() - y;
+                if (dx > 100 && dx > dy) {
+                    DisplayMetrics dm = getResources().getDisplayMetrics();
                     int w_screen = dm.widthPixels;
                     int h_screen = dm.heightPixels;
                     //Log.i("BASEACTIVITY", "屏幕尺寸：宽度 = " + w_screen + "高度 = " + h_screen + "密度 = " + dm.densityDpi);
-                    if((dx>w_screen/4)&&(x<w_screen/2)){
+                    if ((dx > w_screen / 4) && (x < w_screen / 2)) {
                         finish();
                     }
                 }
@@ -241,7 +242,7 @@ public class SingleArticleActivity extends BaseActivity
     }
 
     //跳页
-    private void jump_page(int page){
+    private void jump_page(int page) {
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -294,7 +295,7 @@ public class SingleArticleActivity extends BaseActivity
     public void recyclerViewListClicked(View v, final int position) {
         switch (v.getId()) {
             case R.id.btn_reply_2:
-                if (isneed_login()) {
+                if (isLogin()) {
                     SingleArticleData single = mydatalist.get(position);
                     String replyUrl = single.getReplyUrlTitle();
                     String replyIndex = single.getIndex();
@@ -302,10 +303,10 @@ public class SingleArticleActivity extends BaseActivity
                     String ref = single.getCotent();
                     String replyUserInfo = "回复:" + replyIndex + " " + replyName;
                     //String url,int type,long lastreplyTime,boolean isEnableTail,String userName,String info
-                    FrageReplyDialog dialog = FrageReplyDialog.newInstance(replyUrl,FrageReplyDialog.REPLY_CZ,replyTime,
-                            true,replyUserInfo,ref);
+                    FrageReplyDialog dialog = FrageReplyDialog.newInstance(replyUrl, FrageReplyDialog.REPLY_CZ, replyTime,
+                            true, replyUserInfo, ref);
                     dialog.setCallBack(SingleArticleActivity.this);
-                    dialog.show(getFragmentManager(),"reply");
+                    dialog.show(getFragmentManager(), "reply");
                 }
                 break;
             case R.id.need_loading_item:
@@ -313,15 +314,15 @@ public class SingleArticleActivity extends BaseActivity
                 break;
             case R.id.tv_edit:
                 edit_pos = position;
-                Intent i = new Intent(this,EditActivity.class);
-                i.putExtra("PID",mydatalist.get(position).getPid());
-                i.putExtra("TID",Tid);
-                startActivityForResult(i,0);
+                Intent i = new Intent(this, EditActivity.class);
+                i.putExtra("PID", mydatalist.get(position).getPid());
+                i.putExtra("TID", Tid);
+                startActivityForResult(i, 0);
                 break;
             case R.id.tv_remove:
                 edit_pos = position;
-                if(mydatalist.get(edit_pos).getType()==SingleType.CONTENT){
-                    new MyAlertDialog(this,MyAlertDialog.WARNING_TYPE)
+                if (mydatalist.get(edit_pos).getType() == SingleType.CONTENT) {
+                    new MyAlertDialog(this, MyAlertDialog.WARNING_TYPE)
                             .setTitleText("删除帖子!")
                             .setConfirmText("删除")
                             .setCancelText("取消")
@@ -332,20 +333,19 @@ public class SingleArticleActivity extends BaseActivity
                                     removeItem(position);
                                 }
                             }).show();
-                }else{
-                    new MyAlertDialog(this,MyAlertDialog.WARNING_TYPE)
-                            .setTitleText("删除回复!")
-                            .setContentText("你要删除此条回复吗？")
-                            .setConfirmText("删除")
-                            .setCancelText("取消")
-                            .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
-                                @Override
-                                public void onClick(MyAlertDialog myAlertDialog) {
-                                    removeItem(position);
-                                }
-                            }).show();
+                    break;
                 }
-
+                new MyAlertDialog(this, MyAlertDialog.WARNING_TYPE)
+                        .setTitleText("删除回复!")
+                        .setContentText("你要删除此条回复吗？")
+                        .setConfirmText("删除")
+                        .setCancelText("取消")
+                        .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
+                            @Override
+                            public void onClick(MyAlertDialog myAlertDialog) {
+                                removeItem(position);
+                            }
+                        }).show();
                 break;
         }
     }
@@ -354,11 +354,11 @@ public class SingleArticleActivity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==RESULT_OK){
+        if (resultCode == RESULT_OK) {
             Bundle b = data.getExtras();
-            String title = b.getString("TITLE","");
-            String content = b.getString("CONTENT","");
-            if(edit_pos==0&&!TextUtils.isEmpty(title)){
+            String title = b.getString("TITLE", "");
+            String content = b.getString("CONTENT", "");
+            if (edit_pos == 0 && !TextUtils.isEmpty(title)) {
                 mydatalist.get(0).setTitle(title);
             }
             mydatalist.get(edit_pos).setCotent(content);
@@ -399,30 +399,30 @@ public class SingleArticleActivity extends BaseActivity
     }
 
     /**
-     *  回复dialog完成回掉函数
+     * 回复dialog完成回掉函数
      */
     @Override
     public void onReplyFinish(int status, String info) {
-        if(status==RESULT_OK){
+        if (status == RESULT_OK) {
             replyTime = System.currentTimeMillis();
         }
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.btn_reply:
-                if(isneed_login()){
+                if (isLogin()) {
                     //String url,int type,long lastreplyTime,boolean isEnableTail,String userName,String info
-                    String hint = "回复："+ AuthorName;
-                    FrageReplyDialog dialog = FrageReplyDialog.newInstance(replyUrl,FrageReplyDialog.REPLY_LZ,replyTime,true,hint,Title);
+                    String hint = "回复：" + AuthorName;
+                    FrageReplyDialog dialog = FrageReplyDialog.newInstance(replyUrl, FrageReplyDialog.REPLY_LZ, replyTime, true, hint, Title);
                     dialog.setCallBack(SingleArticleActivity.this);
-                    dialog.show(getFragmentManager(),"reply");
+                    dialog.show(getFragmentManager(), "reply");
                 }
 
                 break;
             case R.id.btn_star:
-                if (isneed_login()) {
+                if (isLogin()) {
                     Toast.makeText(getApplicationContext(), "正在收藏......", Toast.LENGTH_SHORT).show();
                     starTask(view);
                 }
@@ -436,11 +436,11 @@ public class SingleArticleActivity extends BaseActivity
                 refresh();
                 break;
             case R.id.btn_reverse:
-                ImageView v = (ImageView)view;
+                ImageView v = (ImageView) view;
                 isRevere = !isRevere;
-                if(isRevere){
+                if (isRevere) {
                     v.setImageResource(R.drawable.ic_reverse_ordinary);
-                }else  {
+                } else {
                     v.setImageResource(R.drawable.ic_normal_ordinary);
                 }
                 refresh();
@@ -448,14 +448,14 @@ public class SingleArticleActivity extends BaseActivity
             case R.id.btn_share:
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_TEXT,Title+UrlUtils.getSingleArticleUrl(Tid,page_now, App.IS_SCHOOL_NET));
+                shareIntent.putExtra(Intent.EXTRA_TEXT, Title + UrlUtils.getSingleArticleUrl(Tid, page_now, App.IS_SCHOOL_NET));
                 shareIntent.setType("text/plain");
                 //设置分享列表的标题，并且每次都显示分享列表
                 startActivity(Intent.createChooser(shareIntent, "分享到文章到:"));
                 break;
             case R.id.btn_more:
                 View bottomBar_bottom = findViewById(R.id.bottom_bar_bottom);
-                bottomBar_bottom.setVisibility((bottomBar_bottom.getVisibility()==View.VISIBLE)?View.GONE:View.VISIBLE);
+                bottomBar_bottom.setVisibility((bottomBar_bottom.getVisibility() == View.VISIBLE) ? View.GONE : View.VISIBLE);
                 break;
             case R.id.btn_back_top:
                 mRecyclerView.scrollToPosition(0);
@@ -476,9 +476,9 @@ public class SingleArticleActivity extends BaseActivity
             Document doc = Jsoup.parse(htmlData);
             if (!isGetTitle) {
                 int ih = htmlData.indexOf("keywords");
-                int h_start = htmlData.indexOf('\"',ih+15);
-                int h_end = htmlData.indexOf('\"',h_start+1);
-                Title = htmlData.substring(h_start+1,h_end);
+                int h_start = htmlData.indexOf('\"', ih + 15);
+                int h_end = htmlData.indexOf('\"', h_start + 1);
+                Title = htmlData.substring(h_start + 1, h_end);
                 isGetTitle = true;
             }
             //获取回复/hash
@@ -527,7 +527,7 @@ public class SingleArticleActivity extends BaseActivity
                 String replyUrl = temp.select(".replybtn").select("input").attr("href");
                 Elements contentels = temp.select(".message");
                 //是否移除所有样式
-                if(showPlainText){
+                if (showPlainText) {
                     //移除所有style
                     contentels.select("[style]").removeAttr("style");
                     contentels.select("font").removeAttr("color").removeAttr("size").removeAttr("face");
@@ -542,7 +542,7 @@ public class SingleArticleActivity extends BaseActivity
                 contentels.select("i.pstatus").remove();
                 String finalcontent = contentels.html().trim();
                 data = new SingleArticleData(SingleType.COMMENT, Title, uid,
-                        username, posttime, commentindex, replyUrl, finalcontent,pid);
+                        username, posttime, commentindex, replyUrl, finalcontent, pid);
                 tepdata.add(data);
             }
 
@@ -552,10 +552,10 @@ public class SingleArticleActivity extends BaseActivity
         @Override
         protected void onPostExecute(List<SingleArticleData> tepdata) {
             //这是楼主
-            if(page_now==1&&tepdata.size()>0&&tepdata.get(0).getIndex().contains("收藏")){
+            if (page_now == 1 && tepdata.size() > 0 && tepdata.get(0).getIndex().contains("收藏")) {
                 SingleArticleData data = tepdata.get(0);
                 data.setType(SingleType.CONTENT);
-                data.setPostTime(data.getPostTime().replace("收藏",""));
+                data.setPostTime(data.getPostTime().replace("收藏", ""));
                 AuthorName = data.getUsername();
                 AuthorUid = data.getUid();
             }
@@ -574,9 +574,9 @@ public class SingleArticleActivity extends BaseActivity
                 }
                 int start = mydatalist.size();
                 mydatalist.addAll(tepdata);
-                if(mydatalist.size()>0&&(mydatalist.get(0).getType()!=SingleType.CONTENT)&&
-                        (mydatalist.get(0).getType()!=SingleType.HEADER)){
-                    mydatalist.add(0,new SingleArticleData(SingleType.HEADER,Title,null,null,null,null,null,null,null));
+                if (mydatalist.size() > 0 && (mydatalist.get(0).getType() != SingleType.CONTENT) &&
+                        (mydatalist.get(0).getType() != SingleType.HEADER)) {
+                    mydatalist.add(0, new SingleArticleData(SingleType.HEADER, Title, null, null, null, null, null, null, null));
                     mRecyleAdapter.notifyItemInserted(0);
                 }
                 mRecyleAdapter.notifyItemChanged(start);
@@ -585,8 +585,8 @@ public class SingleArticleActivity extends BaseActivity
                 //精确定位到某一层
                 if (!TextUtils.isEmpty(RedirectPid)) {
                     for (int i = 0; i < mydatalist.size(); i++) {
-                        if(!TextUtils.isEmpty(mydatalist.get(i).getPid())
-                                && mydatalist.get(i).getPid().equals(RedirectPid)){
+                        if (!TextUtils.isEmpty(mydatalist.get(i).getPid())
+                                && mydatalist.get(i).getPid().equals(RedirectPid)) {
                             mRecyclerView.scrollToPosition(i);
                             break;
                         }
@@ -607,43 +607,43 @@ public class SingleArticleActivity extends BaseActivity
             }, 500);
 
             pageSpinnerDatas.clear();
-            for(int i=1;i<=page_sum;i++){
-                pageSpinnerDatas.add(i+"/"+page_sum+"页");
+            for (int i = 1; i <= page_sum; i++) {
+                pageSpinnerDatas.add(i + "/" + page_sum + "页");
             }
-            spinner.setSelection(page_now-1);
+            spinner.setSelection(page_now - 1);
             spinnerAdapter.notifyDataSetChanged();
         }
     }
 
 
     //删除帖子或者回复
-    private void removeItem(final int pos){
+    private void removeItem(final int pos) {
         String url = "forum.php?mod=post&action=edit&extra=&editsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
         Map<String, String> params = new HashMap<>();
         params.put("formhash", App.FORMHASH);
         //params.put("posttime", time);
         params.put("editsubmit", "yes");
         //params.put("fid",);
-        params.put("tid",Tid);
-        params.put("pid",mydatalist.get(pos).getPid());
-        params.put("delete","1");
-        HttpUtil.post(this,url,params, new ResponseHandler() {
+        params.put("tid", Tid);
+        params.put("pid", mydatalist.get(pos).getPid());
+        params.put("delete", "1");
+        HttpUtil.post(this, url, params, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                Log.e("resoult",res);
-                if(res.contains("主题删除成功")){
-                    if(mydatalist.get(pos).getType()==SingleType.CONTENT){
+                Log.e("resoult", res);
+                if (res.contains("主题删除成功")) {
+                    if (mydatalist.get(pos).getType() == SingleType.CONTENT) {
                         showToast("主题删除成功");
                         finish();
-                    }else{
+                    } else {
                         showToast("回复删除成功");
                         mydatalist.remove(pos);
                         mRecyleAdapter.notifyItemRemoved(pos);
                     }
-                }else{
+                } else {
                     int start = res.indexOf("<p>");
-                    String ss = res.substring(start+3,start+20);
+                    String ss = res.substring(start + 3, start + 20);
                     showToast(ss);
                 }
 
