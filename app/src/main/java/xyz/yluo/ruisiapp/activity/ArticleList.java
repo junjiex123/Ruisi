@@ -64,7 +64,7 @@ public class ArticleList extends ArticleListBase {
         myToolBar.addMenu(R.drawable.ic_search_white_24dp,"SEARCH");
         myToolBar.addMenu(R.drawable.ic_edit,"POST");
 
-        myDB = new MyDB(ArticleList.this, MyDB.MODE_READ);
+        myDB = new MyDB(ArticleList.this.getApplicationContext(), MyDB.MODE_READ);
         //加载更多
         mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 8));
         datas.clear();

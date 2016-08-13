@@ -248,7 +248,7 @@ public class HomeActivity extends BaseActivity
                 dialog.show(getFragmentManager(), "changeNet");
                 break;
             case R.id.show_message:
-                if(isneed_login()){
+                if(isLogin()){
                     clickId = R.id.show_message;
                     drawer.closeDrawer(GravityCompat.START);
                 }
@@ -324,7 +324,7 @@ public class HomeActivity extends BaseActivity
                 break;
             case R.id.nav_sign:
                 if (App.IS_SCHOOL_NET) {
-                    if (isneed_login()) {
+                    if (isLogin()) {
                         startActivity(new Intent(this, UserDakaActivity.class));
                     }
                 } else {
@@ -335,17 +335,17 @@ public class HomeActivity extends BaseActivity
                 changeFragement(FrageType.MESSAGE);
                 break;
             case R.id.nav_my_topic:
-                if (isneed_login()) {
+                if (isLogin()) {
                     changeFragement(FrageType.TOPIC);
                 }
                 break;
             case R.id.nav_my_star:
-                if (isneed_login()) {
+                if (isLogin()) {
                     changeFragement(FrageType.START);
                 }
                 break;
             case R.id.nav_history:
-                if (isneed_login()) {
+                if (isLogin()) {
                     changeFragement(FrageType.HISTORY);
                 }
                 break;
