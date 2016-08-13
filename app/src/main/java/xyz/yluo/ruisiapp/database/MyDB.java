@@ -49,17 +49,17 @@ public class MyDB {
     //构造函数
     public MyDB(Context context, int mode) {
         this.context = context;
-        if (mode==MODE_WRITE) {
+        if (mode == MODE_WRITE) {
             this.db = new SQLiteHelper(context).getWritableDatabase();
         } else {
             this.db = new SQLiteHelper(context).getReadableDatabase();
         }
     }
 
-    public void clearAllDataBase(){
+    public void clearAllDataBase() {
         String sql = "DELETE FROM " + TABLE_READ_HISTORY;
         this.db.execSQL(sql);
-        Log.e("mydb",  "clear TABLE_READ_HISTORY");
+        Log.e("mydb", "clear TABLE_READ_HISTORY");
 
         String sql2 = "DELETE FROM " + TABLE_READ_HISTORY;
         this.db.execSQL(sql2);
@@ -67,9 +67,9 @@ public class MyDB {
         String sql3 = "DELETE FROM " + TABLE_SCHOOL_NEWS;
         this.db.execSQL(sql3);
 
-        String sql4= "DELETE FROM " + TABLE_MESSAGE;
+        String sql4 = "DELETE FROM " + TABLE_MESSAGE;
         this.db.execSQL(sql4);
-        Log.e("mydb",  "clear all TABLE_MESSAGE");
+        Log.e("mydb", "clear all TABLE_MESSAGE");
     }
 
     private String getTime() {
@@ -157,22 +157,22 @@ public class MyDB {
         result.close();
     }
 
-    public void deleteOldHistory(int num){
+    public void deleteOldHistory(int num) {
         //最长缓存2000条数据
-        Cursor cursor = this.db.rawQuery("SELECT COUNT(*) FROM "+TABLE_READ_HISTORY,null);
+        Cursor cursor = this.db.rawQuery("SELECT COUNT(*) FROM " + TABLE_READ_HISTORY, null);
         cursor.moveToFirst();
         int count = cursor.getInt(0);
         cursor.close();
 
-        int a = count-num;
-        if(a>0){
+        int a = count - num;
+        if (a > 0) {
             //DELETE FROM XXX WHERE tid IN (SELECT TOP 100 PurchaseOrderDetailID FROM Purchasing.PurchaseOrderDetail
             //ORDER BY DueDate DESC);
-            String sql  = "DELETE FROM "+TABLE_READ_HISTORY+" WHERE tid IN (SELECT tid FROM "+TABLE_READ_HISTORY
-                    +"  ORDER BY read_time ASC limit "+a+")";
-            this.db.rawQuery(sql,null);
+            String sql = "DELETE FROM " + TABLE_READ_HISTORY + " WHERE tid IN (SELECT tid FROM " + TABLE_READ_HISTORY
+                    + "  ORDER BY read_time ASC limit " + a + ")";
+            this.db.rawQuery(sql, null);
 
-            Log.e("阅读历史","删除了最后"+a+"条记录");
+            Log.e("阅读历史", "删除了最后" + a + "条记录");
         }
 
     }
@@ -191,7 +191,7 @@ public class MyDB {
              */
 
             //boolean haveImage,String title, String titleUrl, String author, String replayCount
-            datas.add(new ArticleListData(false, result.getString(1), result.getString(0), result.getString(2), "null",0xff888888));
+            datas.add(new ArticleListData(false, result.getString(1), result.getString(0), result.getString(2), "null", 0xff888888));
         }
         result.close();
         return datas;
@@ -201,18 +201,18 @@ public class MyDB {
     /**
      * 设置板块列表到数据库
      */
-    public void setForums(List<ForumListData> datas){
-        if(datas!=null&&datas.size()>0){
+    public void setForums(List<ForumListData> datas) {
+        if (datas != null && datas.size() > 0) {
             clearForums();
             this.db = new SQLiteHelper(context).getWritableDatabase();
-            for(ForumListData d:datas){
+            for (ForumListData d : datas) {
                 String sql = "INSERT INTO " + TABLE_FORUM_LIST + " (name,fid,todayNew,isHeader)"
                         + " VALUES(?,?,?,?)";
-                int isHeader = d.isheader()?1:0;
+                int isHeader = d.isheader() ? 1 : 0;
                 Object args[] = new Object[]{d.getTitle(), d.getFid(), d.getTodayNew(), isHeader};
                 try {
                     this.db.execSQL(sql, args);
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -223,7 +223,7 @@ public class MyDB {
     /**
      * 获得板块列表
      */
-    public List<ForumListData> getForums(){
+    public List<ForumListData> getForums() {
         List<ForumListData> datas = new ArrayList<>();
         String sql = "SELECT * FROM " + TABLE_FORUM_LIST;
         Cursor result = this.db.rawQuery(sql, null);    //执行查询语句
@@ -231,15 +231,15 @@ public class MyDB {
         {
 
             boolean isHeader = false;
-            int isheader =  result.getInt(3);
-            if(isheader==1){
+            int isheader = result.getInt(3);
+            if (isheader == 1) {
                 isHeader = true;
             }
             String fid = result.getString(1);
             String name = result.getString(0);
             String todayNew = result.getString(2);
             //String todayNew, String titleUrl
-            datas.add(new ForumListData(isHeader,name,todayNew,fid));
+            datas.add(new ForumListData(isHeader, name, todayNew, fid));
         }
         result.close();
         return datas;
@@ -248,7 +248,7 @@ public class MyDB {
     /**
      * 清空板块数据库
      */
-    public void clearForums(){
+    public void clearForums() {
         String sql = "DELETE FROM " + TABLE_FORUM_LIST;
         this.db.execSQL(sql);
     }
@@ -257,17 +257,18 @@ public class MyDB {
     /**
      * 新闻缓存
      */
-    public void setSingleNewsRead(String url){
+    public void setSingleNewsRead(String url) {
         String sql = "UPDATE " + TABLE_SCHOOL_NEWS + " SET is_read =? WHERE url=?";
-        Object args[] = new Object[]{1,url};
+        Object args[] = new Object[]{1, url};
         this.db.execSQL(sql, args);
     }
-    private boolean isNewsInDataBase(String url){
+
+    private boolean isNewsInDataBase(String url) {
         String sql = "SELECT * from " + TABLE_SCHOOL_NEWS + " where url = ?";
         String args[] = new String[]{String.valueOf(url)};
         Cursor result = db.rawQuery(sql, args);
         int count = result.getCount();
-        if (count == 0){
+        if (count == 0) {
             result.close();
             return false;
         } else {
@@ -275,13 +276,14 @@ public class MyDB {
             return true;
         }
     }
-    private boolean isNewsRead(String url){
+
+    private boolean isNewsRead(String url) {
         String sql = "SELECT * from " + TABLE_SCHOOL_NEWS + " where url = ?";
         String args[] = new String[]{String.valueOf(url)};
         Cursor result = db.rawQuery(sql, args);
         int count = result.getCount();
         result.moveToFirst();
-        if (count <= 0){//db.close();
+        if (count <= 0) {//db.close();
             result.close();
             return false;
         } else {
@@ -295,7 +297,7 @@ public class MyDB {
      * 传入为空 则返回所有的内容
      * 传入不为空 和传入的参数做比较，标记已读
      */
-    public List<SchoolNewsData> getNewsList(List<SchoolNewsData> datasIn){
+    public List<SchoolNewsData> getNewsList(List<SchoolNewsData> datasIn) {
         List<SchoolNewsData> datas = new ArrayList<>();
         String sql = "SELECT * FROM " + TABLE_SCHOOL_NEWS;
         Cursor result = this.db.rawQuery(sql, null);    //执行查询语句
@@ -303,27 +305,27 @@ public class MyDB {
         {
             String url = result.getString(0);
             String title = result.getString(1);
-            boolean isImage = (result.getInt(2)==1);
-            boolean is_patch = (result.getInt(3)==1);
+            boolean isImage = (result.getInt(2) == 1);
+            boolean is_patch = (result.getInt(3) == 1);
             String post_time = result.getString(4);
-            boolean is_read = (result.getInt(5)==1);
+            boolean is_read = (result.getInt(5) == 1);
             //String url, String title, boolean is_image, boolean is_patch, String post_time
-            datas.add(new SchoolNewsData(url,title,isImage,is_patch,post_time,is_read));
+            datas.add(new SchoolNewsData(url, title, isImage, is_patch, post_time, is_read));
         }
 
         result.close();
-        if(datasIn==null||datasIn.size()==0) {
+        if (datasIn == null || datasIn.size() == 0) {
             return datas;
-        }else{
+        } else {
             //传入参数不为空
             //插入新的数据
-            for(SchoolNewsData d:datasIn){
+            for (SchoolNewsData d : datasIn) {
                 //不在数据库
-                if(!isNewsInDataBase(d.getUrl())){
+                if (!isNewsInDataBase(d.getUrl())) {
                     insertNews(d);
-                }else{
+                } else {
                     //在数据库 设置是否已读
-                    if(isNewsRead(d.getUrl())){
+                    if (isNewsRead(d.getUrl())) {
                         d.setRead(true);
                     }
                 }
@@ -331,13 +333,14 @@ public class MyDB {
             return datasIn;
         }
     }
-    private void insertNews(SchoolNewsData d){
-        String sql = "INSERT INTO " + TABLE_SCHOOL_NEWS+ " (title,url,is_image,is_patch,post_time,is_read)"
+
+    private void insertNews(SchoolNewsData d) {
+        String sql = "INSERT INTO " + TABLE_SCHOOL_NEWS + " (title,url,is_image,is_patch,post_time,is_read)"
                 + " VALUES(?,?,?,?,?,?)";
-        int is_read = d.isRead()?1:0;
-        int is_image = d.is_image()?1:0;
-        int is_patch = d.is_patch()?1:0;
-        Object args[] = new Object[]{d.getTitle(),d.getUrl(),is_image,is_patch,d.getPost_time(),is_read};
+        int is_read = d.isRead() ? 1 : 0;
+        int is_image = d.is_image() ? 1 : 0;
+        int is_patch = d.is_patch() ? 1 : 0;
+        Object args[] = new Object[]{d.getTitle(), d.getUrl(), is_image, is_patch, d.getPost_time(), is_read};
         this.db.execSQL(sql, args);
     }
 
@@ -345,34 +348,34 @@ public class MyDB {
      * 以下处理消息数据库
      * id primary key  //存储tid huozhe to uid
      * + "url VARCHAR(50) ,"
-     + "info VARCHAR(80),"
-     + "type INT,"  0----表示回复提醒
-                    1----表示pm提醒
-     + "isread INT,"
-     + "time DATETIME"
-     + ")";
+     * + "info VARCHAR(80),"
+     * + "type INT,"  0----表示回复提醒
+     * 1----表示pm提醒
+     * + "isread INT,"
+     * + "time DATETIME"
+     * + ")";
      */
-    public void insertMessage(String url,String info){
+    public void insertMessage(String url, String info) {
         String sql = "INSERT INTO " + TABLE_MESSAGE + " (id,url,info,type,isread,time)"
                 + " VALUES(?,?,?,?,?,?)";
         String read_time_str = getTime();
         String id = "";
         int type = 0;
-        if(url.contains("tid=")){
+        if (url.contains("tid=")) {
             id = GetId.getTid(url);
             type = 0;
-        }else if(url.contains("touid=")){
+        } else if (url.contains("touid=")) {
             id = GetId.getTouid(url);
             type = 1;
         }
-        if(!TextUtils.isEmpty(id)){
-            Object args[] = new Object[]{id,url, info, type,0,read_time_str};
+        if (!TextUtils.isEmpty(id)) {
+            Object args[] = new Object[]{id, url, info, type, 0, read_time_str};
             try {
                 this.db.execSQL(sql, args);
-                Log.e("mydb", "插入未读消息"+url);
-            }catch (SQLiteConstraintException e){
+                Log.e("mydb", "插入未读消息" + url);
+            } catch (SQLiteConstraintException e) {
                 e.printStackTrace();
-                Log.e("mydb", "error消息重复"+url);
+                Log.e("mydb", "error消息重复" + url);
             }
 
 
@@ -382,11 +385,11 @@ public class MyDB {
     //-1 代表不存在
     //0 未读
     //1 已读
-    public int isMessageRead(String url){
+    public int isMessageRead(String url) {
         String id = "";
-        if(url.contains("tid=")){
+        if (url.contains("tid=")) {
             id = GetId.getTid(url);
-        }else if(url.contains("touid=")){
+        } else if (url.contains("touid=")) {
             id = GetId.getTouid(url);
         }
         String sql = "SELECT * from " + TABLE_MESSAGE + " where id = ?";
@@ -395,7 +398,7 @@ public class MyDB {
         int count = result.getCount();
         result.moveToFirst();
 
-        if (count <= 0){//db.close();
+        if (count <= 0) {//db.close();
             //如果不存在说明未读
             result.close();
             return -1;
@@ -406,32 +409,32 @@ public class MyDB {
         }
     }
 
-    public boolean isHaveUnReadMessage(){
+    public boolean isHaveUnReadMessage() {
         String sql = "SELECT * from " + TABLE_MESSAGE + " where isread = ?";
         String args[] = new String[]{String.valueOf(0)};
         Cursor result = db.rawQuery(sql, args);
         int count = result.getCount();
         result.moveToFirst();
 
-        if (count <= 0){//db.close();
+        if (count <= 0) {//db.close();
             //如果不存在说明未读
             result.close();
             return false;
         } else {
-            return  true;
+            return true;
         }
     }
 
-    public void setAllMessageRead(int type){
+    public void setAllMessageRead(int type) {
         String sql = "UPDATE " + TABLE_MESSAGE + " SET isread=? WHERE type=?";
         Object args[] = new Object[]{1, type};
         this.db.execSQL(sql, args);
-        Log.e("mydb", "message set read"+type);
+        Log.e("mydb", "message set read" + type);
     }
 
-    public void deleteOldMessage(){
-        String sql = "DELETE FROM " + TABLE_MESSAGE +" WHERE isread =1" ;
+    public void deleteOldMessage() {
+        String sql = "DELETE FROM " + TABLE_MESSAGE + " WHERE isread =1";
         this.db.execSQL(sql);
-        Log.e("mydb",  "clear old TABLE_MESSAGE");
+        Log.e("mydb", "clear old TABLE_MESSAGE");
     }
 }

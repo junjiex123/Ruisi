@@ -36,7 +36,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 消息聊天 activity
  * TODO 支持翻页。。。。目前只能看最后一页
  */
-public class ChatActivity extends BaseActivity implements FrageReplyDialog.replyCompeteCallBack{
+public class ChatActivity extends BaseActivity implements FrageReplyDialog.replyCompeteCallBack {
 
     private RecyclerView recycler_view;
     private SwipeRefreshLayout refreshLayout;
@@ -82,21 +82,16 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
                 refresh();
             }
         });
-        try {
-            Bundle bundle = this.getIntent().getExtras();
-            username = bundle.getString("username");
-            url = bundle.getString("url");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        Bundle bundle = this.getIntent().getExtras();
+        username = bundle.getString("username");
+        url = bundle.getString("url");
         btn_chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FrageReplyDialog dialog = FrageReplyDialog.newInstance(replyUrl,FrageReplyDialog.REPLY_HY,replyTime,
-                        false,"回复："+username,touid);
+                FrageReplyDialog dialog = FrageReplyDialog.newInstance(replyUrl, FrageReplyDialog.REPLY_HY, replyTime,
+                        false, "回复：" + username, touid);
                 dialog.setCallBack(ChatActivity.this);
-                dialog.show(getFragmentManager(),"chate");
+                dialog.show(getFragmentManager(), "chate");
             }
         });
 
@@ -120,8 +115,8 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
 
     @Override
     public void onReplyFinish(int status, String txt) {
-        Log.i("reply dialog callbak","status:"+status+" info:"+txt);
-        if(status==RESULT_OK){
+        Log.i("reply dialog callbak", "status:" + status + " info:" + txt);
+        if (status == RESULT_OK) {
             replyTime = System.currentTimeMillis();
             String userImage = UrlUtils.getAvaterurlm(App.USER_UID);
             datas.add(new ChatListData(1, userImage, txt, "刚刚"));
@@ -177,7 +172,7 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-             adapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();
             recycler_view.scrollToPosition(datas.size());
             refreshLayout.postDelayed(new Runnable() {
                 @Override
