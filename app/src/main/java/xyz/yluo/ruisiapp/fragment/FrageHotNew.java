@@ -65,13 +65,6 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recycler_view.setLayoutManager(mLayoutManager);
 
-        /**
-         * todo remove later
-         */
-        galleryDatas.add(new GalleryData("http://pic25.nipic.com/20121112/5955207_224247025000_2.jpg","标题1","http://www.baidu.com"));
-        galleryDatas.add(new GalleryData("http://img05.tooopen.com/images/20140604/sy_62331342149.jpg","标题22","http://www.baidu.com"));
-        galleryDatas.add(new GalleryData("http://d.3987.com/wmribz_140527/009.jpg","标题333","http://www.baidu.com"));
-        galleryDatas.add(new GalleryData("http://img3.imgtn.bdimg.com/it/u=1406668637,2493237568&fm=21&gp=0.jpg","标题444","http://www.baidu.com"));
         adapter = new HotNewListAdapter(getActivity(), mydataset,galleryDatas);
 
 

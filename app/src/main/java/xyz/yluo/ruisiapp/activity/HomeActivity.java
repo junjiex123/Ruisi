@@ -95,7 +95,6 @@ public class HomeActivity extends BaseActivity
                 drawer.openDrawer(GravityCompat.START);
             }
         });
-        myToolBar.addMenu(R.drawable.ic_bug_report_white_24dp,"DEBUG");
         myToolBar.addMenu(R.drawable.ic_search_white_24dp,"SEARCH");
         myToolBar.addMenu(R.drawable.ic_edit,"POST");
         setToolBarMenuClick(myToolBar);

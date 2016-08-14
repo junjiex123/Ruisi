@@ -26,7 +26,7 @@ public class BaseActivity extends AppCompatActivity {
             return true;
         } else {
             new MyAlertDialog(this, MyAlertDialog.WARNING_TYPE)
-                    .setTitleText("需要登录登陆")
+                    .setTitleText("需要登陆")
                     .setCancelText("取消")
                     .setContentText("你还没有登陆，要去登陆吗？？")
                     .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
@@ -72,9 +72,6 @@ public class BaseActivity extends AppCompatActivity {
             case "POST2":
                 if (isLogin())
                     startActivity(new Intent(this, NewArticleActivity_2.class));
-                return true;
-            case "DEBUG":
-                startActivity(new Intent(this, TestActivity.class));
                 return true;
         }
 

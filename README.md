@@ -35,6 +35,8 @@
 
 [material-design-icons](https://github.com/google/material-design-icons)
 
+[sweet-alert-dialog](https://github.com/pedant/sweet-alert-dialog)
+
 ### License
 
     Copyright 2016 freedom10086
