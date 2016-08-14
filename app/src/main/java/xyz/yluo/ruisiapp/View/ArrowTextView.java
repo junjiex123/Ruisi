@@ -5,6 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RectF;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.TextView;
@@ -26,9 +28,11 @@ public class ArrowTextView extends TextView {
     public ArrowTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
+
     public ArrowTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
+
     public ArrowTextView(Context context) {
         super(context);
     }
@@ -40,7 +44,7 @@ public class ArrowTextView extends TextView {
 
 
         float arrowInHeight = 10;
-        canvas.drawRoundRect(0, arrowInHeight,getWidth(),getHeight(), 4, 4, paint);
+        drawRound(canvas, arrowInHeight);
 
         path.reset();
         path.setFillType(Path.FillType.EVEN_ODD);
@@ -53,6 +57,19 @@ public class ArrowTextView extends TextView {
 
         super.onDraw(canvas);
 
+    }
+
+    /**
+     * @param canvas 画布
+     * @param arrowInHeight 箭头高度
+     */
+    private void drawRound(Canvas canvas, float arrowInHeight) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            canvas.drawRoundRect(0, arrowInHeight, getWidth(), getHeight(), 4, 4, paint);
+            return;
+        }
+        RectF rectF = new RectF(0, arrowInHeight, getWidth(), getHeight());
+        canvas.drawRoundRect(rectF, 4, 4, paint);
     }
 
 }

@@ -8,7 +8,7 @@
     android:paddingStart="16dp"
     android:paddingTop="12dp">
 
-    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    <RadioGroup
         android:id="@+id/btn_change"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

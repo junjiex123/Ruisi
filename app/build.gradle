@@ -2,6 +2,14 @@ apply plugin: 'com.android.application'
 
 
 android {
+    signingConfigs {
+        config {
+            keyPassword 'just2351386755'
+            storeFile file('../key.jks')
+            storePassword 'just2351386755'
+            keyAlias 'xyz.yluo.ruisi'
+        }
+    }
     compileSdkVersion 24
     buildToolsVersion '24.0.1'
     defaultConfig {
@@ -10,6 +18,15 @@ android {
         targetSdkVersion 24
         versionCode 15
         versionName '1.6.1 beta'
+    }
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.config
+            zipAlignEnabled false
+        }
+        release {
+            signingConfig signingConfigs.config
+        }
     }
 }
 
