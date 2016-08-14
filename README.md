@@ -4,6 +4,7 @@
 ### 更新地址:
 #### fir.im
 ![image](fir.png)
+[直接下载](http://fir.im/c5xt)
 
 #### 论坛下载
 [校外网访问](http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid=846819&mobile=2)
