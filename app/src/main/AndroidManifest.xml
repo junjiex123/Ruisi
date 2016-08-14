@@ -100,10 +100,6 @@
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
 
-        <activity
-            android:name=".activity.TestActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
         <activity android:name=".activity.EditActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"/>
