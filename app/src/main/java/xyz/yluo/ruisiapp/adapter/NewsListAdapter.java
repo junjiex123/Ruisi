@@ -64,7 +64,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             case TYPE_LOAD_MORE:
                 return new LoadMoreViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.load_more_item, parent, false));
             case TYPE_PLACE_HOLDER:
-                return new PlaceHolderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.place_holder_recycler_item, parent, false));
+                return new PlaceHolderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_place_holder_item, parent, false));
             default: // TYPE_NEWS_LIST
                 return new NewsViewHolderMe(LayoutInflater.from(parent.getContext()).inflate(R.layout.school_news_item, parent, false));
         }

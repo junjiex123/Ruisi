@@ -2,14 +2,7 @@ apply plugin: 'com.android.application'
 
 
 android {
-    signingConfigs {
-        config {
-            keyPassword 'just2351386755'
-            storeFile file('../key.jks')
-            storePassword 'just2351386755'
-            keyAlias 'xyz.yluo.ruisi'
-        }
-    }
+
     compileSdkVersion 24
     buildToolsVersion '24.0.1'
     defaultConfig {
@@ -18,15 +11,6 @@ android {
         targetSdkVersion 24
         versionCode 15
         versionName '1.6.1 beta'
-    }
-    buildTypes {
-        debug {
-            signingConfig signingConfigs.config
-            zipAlignEnabled false
-        }
-        release {
-            signingConfig signingConfigs.config
-        }
     }
 }
 
@@ -38,11 +22,11 @@ repositories {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.android.support:support-v13:24.1.1'
-    compile 'com.android.support:design:24.1.1'
-    compile 'com.android.support:support-v4:24.1.1'
-    compile 'com.android.support:appcompat-v7:24.1.1'
-    compile 'com.android.support:cardview-v7:24.1.1'
-    compile 'com.android.support:recyclerview-v7:24.1.1'
+    compile 'com.android.support:support-v13:24.2.0'
+    compile 'com.android.support:design:24.2.0'
+    compile 'com.android.support:support-v4:24.2.0'
+    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:cardview-v7:24.2.0'
+    compile 'com.android.support:recyclerview-v7:24.2.0'
     compile 'org.jsoup:jsoup:1.9.2'
 }

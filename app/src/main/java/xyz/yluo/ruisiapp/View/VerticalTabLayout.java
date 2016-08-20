@@ -46,7 +46,7 @@ public class VerticalTabLayout extends ViewGroup {
 
     @Override
     protected void onLayout(boolean b, int left, int top, int right, int bottom) {
-        //left、top以及右下角right、bottom
+        //chat_bg_left、top以及右下角right、bottom
         // 动态获取子View实例
         left = left+getPaddingStart();
         right = right-getPaddingEnd();

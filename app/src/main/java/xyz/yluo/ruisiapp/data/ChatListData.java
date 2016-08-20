@@ -6,7 +6,7 @@ package xyz.yluo.ruisiapp.data;
  */
 public class ChatListData {
 
-    private int type;//left or right
+    private int type;//chat_bg_left or chat_bg_right
     private String UserImage;
 
     private String content;

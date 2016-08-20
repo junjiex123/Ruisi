@@ -97,7 +97,7 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             case HEADER:
                 return new HeaderViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.need_load_content_item, viewGroup, false));
             case PLACEHOLDER:
-                return new PlaceHolderViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.place_holder_recycler_item,viewGroup,false));
+                return new PlaceHolderViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_place_holder_item,viewGroup,false));
             default: // TYPE_COMMENT
                 return new CommentViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.comment_item, viewGroup, false));
         }

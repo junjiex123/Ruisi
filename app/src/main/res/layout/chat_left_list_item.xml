@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:autoLink="web"
-            android:background="@drawable/left"
+            android:background="@drawable/chat_bg_left"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             tool:text="test test test" />

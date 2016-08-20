@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:autoLink="web"
-            android:background="@drawable/right"
+            android:background="@drawable/chat_bg_right"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             tool:text="1122211" />
