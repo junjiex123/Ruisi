@@ -6,8 +6,9 @@
     android:gravity="center">
 
     <TextView
+        android:layout_margin="16dp"
         android:id="@+id/text"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textColor="@color/colorDivider"
         android:text="Loading......"
         android:layout_width="wrap_content"

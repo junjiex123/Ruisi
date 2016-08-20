@@ -1,5 +1,6 @@
 package xyz.yluo.ruisiapp.httpUtil;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.IOException;
@@ -22,10 +23,13 @@ public class SyncHttpClient {
     private final int dataRetrievalTimeout = 8000;
     private int connectionTimeout = 8000;
     private Map<String, String> headers;
+    //重定向地址
+    private String Location = null;
 
     public SyncHttpClient() {
         headers = Collections.synchronizedMap(new LinkedHashMap<String, String>());
         setUserAgent(DEFAULT_USER_AGENT);
+        Location = null;
     }
 
     public void setStore(PersistentCookieStore store) {
@@ -128,7 +132,6 @@ public class SyncHttpClient {
                  final ResponseHandler handler) {
         HttpURLConnection connection = null;
         Log.i("httputil", "request url " + url);
-
         try {
             connection = buildURLConnection(url, method);
 
@@ -156,7 +159,13 @@ public class SyncHttpClient {
                 //如果会重定向，保存302 301重定向地址,然后重新发送请求(模拟请求)
                 String location = connection.getHeaderField("Location");
                 Log.i("httputil", "302 new location is " + location);
-                request(App.getBaseUrl() + location, Method.GET, map, handler);
+                if(TextUtils.isEmpty(Location)||(!Location.equals(location))){
+                    Location = location;
+                    request(App.getBaseUrl() + location, Method.GET, map, handler);
+                }else{
+                    handler.sendFailureMessage(new Throwable("重定向错误"));
+                }
+                connection.disconnect();
                 return;
             } else {
                 handler.processResponse(connection);

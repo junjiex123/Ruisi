@@ -513,6 +513,21 @@ public class SingleArticleActivity extends BaseActivity
                 }
             }
             Elements elements = doc.select(".postlist");
+            if(elements.size()<=0){
+                //有可能没有列表处理错误
+                String errorstr = doc.select(".jump_c").text();
+                if(TextUtils.isEmpty(errorstr)) {
+                    errorstr = "network error  !!!";
+                }
+                final String finalErrorstr = errorstr;
+                mRecyclerView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mRecyleAdapter.setPlaceHolderString(finalErrorstr);
+                    }
+                });
+                return tepdata;
+            }
             Elements postlist = elements.select("div[id^=pid]");
             int size = postlist.size();
             for (int i = index; i < size; i++) {

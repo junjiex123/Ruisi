@@ -39,7 +39,6 @@ public class FrageForumList extends BaseFragment {
     private List<ForumListData> datas = null;
     private ForumListAdapter adapter = null;
     private boolean isSetForumToDataBase = false;
-    private RecyclerView recyclerView;
     private SharedPreferences sharedPreferences;
     //10分钟的缓存时间
     private static final int UPDATE_TIME = 1000*600;
@@ -65,7 +64,7 @@ public class FrageForumList extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frage_forum_list, container, false);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         //刷新
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
 
