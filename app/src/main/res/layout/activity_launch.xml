@@ -42,7 +42,7 @@
             android:layout_marginTop="40dp" />
 
         <TextView
-            style="@style/SmallText"
+            style="@style/text_12_sec"
             android:textColor="#88333333"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
             android:text="正在准备数据" />
 
         <TextView
-            style="@style/TitleText"
+            style="@style/text_16_pri"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"

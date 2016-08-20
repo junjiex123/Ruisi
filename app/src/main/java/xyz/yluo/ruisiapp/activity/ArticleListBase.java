@@ -110,9 +110,4 @@ public abstract class ArticleListBase extends BaseActivity
         prerefresh();
     }
 
-
-    void hide_loading_view() {
-        findViewById(R.id.view_loading).setVisibility(View.GONE);
-    }
-
 }

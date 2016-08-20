@@ -12,36 +12,18 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/ToolBarHeight"/>
 
-    <FrameLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_marginTop="@dimen/ToolBarHeight"
+        android:id="@+id/main_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/ToolBarHeight">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/view_loading"
-            android:layout_width="80dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center"
-            android:drawablePadding="16dp"
-            android:drawableTop="@drawable/ic_autorenew_gray_80dp"
-            android:gravity="center"
-            android:text="加载中"
-            android:textColor="#ffbababa"
-            android:textSize="16sp" />
-
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/main_refresh_layout"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/main_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/main_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical" />
-        </android.support.v4.widget.SwipeRefreshLayout>
-
-    </FrameLayout>
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btn_refresh"

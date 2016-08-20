@@ -16,7 +16,7 @@
 
         <TextView
             android:id="@+id/article_title"
-            style="@style/TitleText"
+            style="@style/text_16_pri"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="话题的标题" />
@@ -41,7 +41,7 @@
 
             <TextView
                 android:id="@+id/author_name"
-                style="@style/SmallText"
+                style="@style/text_12_sec"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -53,7 +53,7 @@
 
             <TextView
                 android:id="@+id/reply_count"
-                style="@style/SmallText"
+                style="@style/text_12_sec"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="8dp"

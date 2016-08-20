@@ -42,7 +42,7 @@
 
                 <TextView
                     android:id="@+id/title"
-                    style="@style/TitleText"
+                    style="@style/text_16_pri"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -51,7 +51,7 @@
 
                 <TextView
                     android:id="@+id/time"
-                    style="@style/SmallText"
+                    style="@style/text_12_sec"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="2015-01-01" />
@@ -85,7 +85,7 @@
     </LinearLayout>
 
     <View
-        style="@style/DeepLine"
+        style="@style/Divider"
         android:layout_gravity="bottom" />
 
 </LinearLayout>

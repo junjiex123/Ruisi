@@ -25,12 +25,12 @@
             android:background="@drawable/selector_home_radio"
             android:button="@null"
             android:gravity="center"
-            android:paddingBottom="2dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="2dp"
+            android:paddingBottom="3dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="3dp"
             android:text="回复"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/text_primary_white"
             android:textSize="13sp" />
 
         <RadioButton
@@ -40,17 +40,17 @@
             android:background="@drawable/selector_home_radio"
             android:button="@null"
             android:gravity="center"
-            android:paddingBottom="2dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="2dp"
+            android:paddingBottom="3dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="3dp"
             android:text="消息"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/text_primary_white"
             android:textSize="13sp" />
     </RadioGroup>
 
     <View
-        style="@style/DeepLine"
+        style="@style/Divider"
         android:layout_gravity="bottom"
         android:layout_marginTop="12dp" />
 </LinearLayout>

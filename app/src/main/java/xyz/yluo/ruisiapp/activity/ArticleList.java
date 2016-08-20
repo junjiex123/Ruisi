@@ -132,8 +132,6 @@ public class ArticleList extends ArticleListBase {
         mRecyleAdapter.notifyItemRangeInserted(start, dataset.size());
         isEnableLoadMore = true;
 
-        //隐藏正在加载的view
-        hide_loading_view();
         refreshLayout.postDelayed(new Runnable() {
             @Override
             public void run() {

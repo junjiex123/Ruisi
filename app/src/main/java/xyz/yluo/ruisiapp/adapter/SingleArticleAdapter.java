@@ -75,7 +75,6 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
         if(getItemCount()==1){//nodata
             return PLACEHOLDER;
         }
-
         if (position == getItemCount() - 1) {
             return LOAD_MORE;
         } else if (datalist.get(position).getType() == SingleType.CONTENT) {

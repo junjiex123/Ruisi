@@ -24,7 +24,7 @@
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleGravity="center_horizontal|bottom"
             app:expandedTitleMarginTop="@dimen/dimen_8"
-            app:expandedTitleTextAppearance="@style/ToolBarText"
+            app:expandedTitleTextAppearance="@style/text_20_white"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <LinearLayout
@@ -122,7 +122,7 @@
                 android:padding="@dimen/dimen_16">
 
                 <TextView
-                    style="@style/TitleText"
+                    style="@style/text_16_pri"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="选择心情："

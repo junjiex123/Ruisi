@@ -5,6 +5,7 @@ import android.view.View;
 
 /**
  * Created by free2 on 16-4-7.
+ * base view holder
  */
 public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 

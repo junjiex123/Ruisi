@@ -37,7 +37,7 @@
 
             <TextView
                 android:id="@+id/article_title"
-                style="@style/TitleText"
+                style="@style/text_16_pri"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
@@ -73,7 +73,7 @@
 
                     <TextView
                         android:id="@+id/author_name"
-                        style="@style/SmallText"
+                        style="@style/text_12_sec"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="4dp"
@@ -90,7 +90,7 @@
 
                     <TextView
                         android:id="@+id/post_time"
-                        style="@style/SmallText"
+                        style="@style/text_12_sec"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="4dp"
@@ -104,7 +104,7 @@
 
                     <TextView
                         android:id="@+id/view_count"
-                        style="@style/SmallText"
+                        style="@style/text_12_sec"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawablePadding="@dimen/dimen_4"
@@ -115,7 +115,7 @@
 
                     <TextView
                         android:id="@+id/reply_count"
-                        style="@style/SmallText"
+                        style="@style/text_12_sec"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dimen_8"

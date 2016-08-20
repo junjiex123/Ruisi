@@ -34,7 +34,7 @@
 
             <TextView
                 android:id="@+id/user_name"
-                style="@style/TitleText"
+                style="@style/text_16_pri"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
@@ -43,7 +43,7 @@
 
             <TextView
                 android:id="@+id/user_info"
-                style="@style/SmallText"
+                style="@style/text_12_sec"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
@@ -54,7 +54,7 @@
     </LinearLayout>
 
     <View
-        style="@style/DeepLine"
+        style="@style/Divider"
         android:layout_gravity="bottom"
         android:layout_marginTop="@dimen/dimen_16" />
 </LinearLayout>
