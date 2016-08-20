@@ -42,6 +42,8 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class LaunchActivity extends BaseActivity {
     private long starttime = 0;
+    //等待时间
+    private final static int WAIT_TIME = 800;
     private TextView launch_text;
     private CircleImageView user_image;
     private SharedPreferences perUserInfo = null;
@@ -109,10 +111,10 @@ public class LaunchActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-        alphaAnimation.setDuration(1200);// 设置动画显示时间
+        alphaAnimation.setDuration((long) (WAIT_TIME*0.85));// 设置动画显示时间
 
         TranslateAnimation animation = new TranslateAnimation(0, 0, 80, 0);
-        animation.setDuration(1000);
+        animation.setDuration((long) (WAIT_TIME*0.8));
 
         // 初始化需要加载的动画资源
         RotateAnimation rotateAnimation = (RotateAnimation) AnimationUtils.loadAnimation(this, R.anim.always_rotate);
@@ -197,7 +199,7 @@ public class LaunchActivity extends BaseActivity {
 
     //没网是执行
     private void noNetWork() {
-        Toast.makeText(getApplicationContext(), "无法连接到服务器请检查网络设置！", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "无法连接到服务器请检查网络设置！", Toast.LENGTH_SHORT).show();
     }
 
     private void startCheckMessageService() {
@@ -212,11 +214,13 @@ public class LaunchActivity extends BaseActivity {
 
     private void finishthis() {
         long currenttime = System.currentTimeMillis();
-        long delay = 1200 - (currenttime - starttime);
+        long delay = WAIT_TIME - (currenttime - starttime);
         if (delay < 0) {
-            delay = 0;
+            mHandler.post(mRunnable);
+        }else{
+            mHandler.postDelayed(mRunnable, delay);
         }
-        mHandler.postDelayed(mRunnable, delay);
+
     }
 
     @Override
