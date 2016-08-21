@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,11 +33,10 @@ public class FrageHome extends Fragment {
         final TabLayout tabLayout = (TabLayout) view.findViewById(R.id.mytab);
 
         //getChildFragmentManager() 解决 fragment嵌套viewpager 空白问题
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), titles);
-        viewpager.setAdapter(viewPagerAdapter);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager(), titles);
+        viewpager.setAdapter(adapter);
         viewpager.setOffscreenPageLimit(titles.length - 1);
         tabLayout.setupWithViewPager(viewpager);
-
         return view;
     }
 }
