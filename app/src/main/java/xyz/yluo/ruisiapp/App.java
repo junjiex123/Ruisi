@@ -31,7 +31,6 @@ public class App extends Application {
 
         //清空消息数据库
         MyDB myDB = new MyDB(context,MyDB.MODE_WRITE);
-        myDB.deleteOldMessage();
         //最多缓存2000条历史纪录
         myDB.deleteOldHistory(2000);
     }
@@ -79,5 +78,13 @@ public class App extends Application {
         }
     }
 
+
+    /**
+     * config
+     * todo 把一些常量移到这儿来
+     */
+
+    //记录上次未读消息的id
+    public static final String NOTICE_MESSAGE_KEY = "message_notice";
 
 }

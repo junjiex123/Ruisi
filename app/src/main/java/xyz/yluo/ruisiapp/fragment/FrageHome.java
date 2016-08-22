@@ -4,9 +4,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,19 +18,14 @@ import xyz.yluo.ruisiapp.adapter.ViewPagerAdapter;
  */
 public class FrageHome extends Fragment {
 
-    private final String[] titles = {"板块", "看帖", "新闻"};
+    private final String[] titles = {"板块列表", "看帖", "教务新闻"};
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        Log.e("FrageHome","onCreateView");
-
         View view = inflater.inflate(R.layout.fragement_home, container, false);
         ViewPager viewpager = (ViewPager) view.findViewById(R.id.viewpager);
         final TabLayout tabLayout = (TabLayout) view.findViewById(R.id.mytab);
-
-        //getChildFragmentManager() 解决 fragment嵌套viewpager 空白问题
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager(), titles);
         viewpager.setAdapter(adapter);
         viewpager.setOffscreenPageLimit(titles.length - 1);

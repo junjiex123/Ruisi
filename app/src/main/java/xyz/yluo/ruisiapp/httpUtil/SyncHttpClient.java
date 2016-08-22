@@ -18,7 +18,7 @@ import xyz.yluo.ruisiapp.App;
 
 public class SyncHttpClient {
     public static final String DEFAULT_USER_AGENT = "myRuisiAsyncLiteHttp/1.0";
-    public static final String UTF8 = "UTF-8";
+    static final String UTF8 = "UTF-8";
     private static PersistentCookieStore store;
     private final int dataRetrievalTimeout = 8000;
     private int connectionTimeout = 8000;
@@ -26,7 +26,7 @@ public class SyncHttpClient {
     //重定向地址
     private String Location = null;
 
-    public SyncHttpClient() {
+    SyncHttpClient() {
         headers = Collections.synchronizedMap(new LinkedHashMap<String, String>());
         setUserAgent(DEFAULT_USER_AGENT);
         Location = null;
@@ -66,7 +66,6 @@ public class SyncHttpClient {
                 fullCookie = fullCookie + cookieVal + ";";
             }
         }
-
         store.addCookie(fullCookie);
     }
 

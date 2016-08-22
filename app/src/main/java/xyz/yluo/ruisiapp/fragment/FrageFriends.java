@@ -106,7 +106,7 @@ public class FrageFriends extends Fragment implements LoadMoreListener.OnLoadMor
                             String imgurl = element.select(".avt").select("img").attr("src");
                             String lastOnline = element.select(".avt").select(".gol").attr("title");
                             String userName = element.select("h4").select("a[href^=home.php?mod=space&uid=]").text();
-                            String uid = GetId.getUid(imgurl);
+                            String uid = GetId.getid("uid=",imgurl);
                             String info = element.select("p.maxh").text();
                             //userName,imgUrl,info,uid,lastOnlineTime
                             datas.add(new FriendData(userName, imgurl, info, uid, lastOnline));

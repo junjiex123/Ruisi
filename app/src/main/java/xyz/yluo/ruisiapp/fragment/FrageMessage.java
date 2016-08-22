@@ -1,7 +1,6 @@
 package xyz.yluo.ruisiapp.fragment;
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,12 +26,13 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.MessageAdapter;
 import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.MessageData;
-import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 
 //回复我的
+//// TODO: 16-8-22  add 提到我的home.php?mod=space&do=notice&view=mypost&type=at&mobile=2
+
 public class FrageMessage extends Fragment {
     private static final String Tag = "==FrageMessage==";
     protected RecyclerView recycler_view;
@@ -40,7 +40,8 @@ public class FrageMessage extends Fragment {
     private MessageAdapter adapter;
     private List<MessageData> datas;
     private int index = 0;
-
+    int last_message_id  = 0;
+    int current_noticeid = 1;
     public FrageMessage() {
         datas = new ArrayList<>();
     }
@@ -66,7 +67,6 @@ public class FrageMessage extends Fragment {
             }
         });
         recycler_view.setAdapter(adapter);
-
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -86,6 +86,11 @@ public class FrageMessage extends Fragment {
 
 
     private void refresh() {
+        //记录上次已读消息游标
+        last_message_id = PreferenceManager.getDefaultSharedPreferences(getActivity()).
+                getInt(App.NOTICE_MESSAGE_KEY, 0);
+        current_noticeid = last_message_id;
+        Log.d("id id",last_message_id+"");
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -147,7 +152,8 @@ public class FrageMessage extends Fragment {
             //pmbox
             List<MessageData> tempdatas = new ArrayList<>();
             Elements lists = Jsoup.parse(params[0]).select(".nts").select("dl.cl");
-            for (Element tmp : lists) {
+            for (Element tmp:lists) {
+                int  noticeId = Integer.parseInt(tmp.attr("notice"));
                 String authorImage = tmp.select(".avt").select("img").attr("src");
                 String time = tmp.select(".xg1.xw0").text();
                 String authorTitle  ="";
@@ -164,17 +170,19 @@ public class FrageMessage extends Fragment {
                     authorTitle = tmp.select(".ntc_body").select("a[href^=home.php]").text() + " 回复了我";
                     titleUrl = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
                 }
-                boolean isRead = true;
-                if (tmp.select(".ntc_body").attr("style").contains("bold")) {
-                    isRead = false;
-                }else{
-                    MyDB myDB = new MyDB(getActivity().getApplicationContext(), MyDB.MODE_READ);
-                    int i = myDB.isMessageRead(titleUrl);
-                    if(i==0){
-                        isRead = false;
-                    }
+
+                boolean isRead = (noticeId<=last_message_id);
+                if(noticeId>current_noticeid){
+                    current_noticeid = noticeId;
                 }
                 tempdatas.add(new MessageData(ListType.REPLAYME, authorTitle, titleUrl, authorImage, time, isRead, content));
+            }
+
+            if(last_message_id<current_noticeid){
+                SharedPreferences prf =  PreferenceManager.getDefaultSharedPreferences(getActivity());
+                SharedPreferences.Editor editor =  prf.edit();
+                editor.putInt(App.NOTICE_MESSAGE_KEY,current_noticeid);
+                editor.apply();
             }
             return tempdatas;
         }
@@ -218,7 +226,8 @@ public class FrageMessage extends Fragment {
     }
 
     private void clearMessage(int type){
-        MyDB myDB = new MyDB(getActivity(), MyDB.MODE_WRITE);
-        myDB.setAllMessageRead(type);
+//        MyDB myDB = new MyDB(getActivity(), MyDB.MODE_WRITE);
+//        myDB.setAllMessageRead(type);
+        //// TODO: 16-8-22  clear
     }
 }

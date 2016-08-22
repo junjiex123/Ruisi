@@ -2,9 +2,7 @@ package xyz.yluo.ruisiapp.database;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.TextUtils;
 import android.util.Log;
 
 import java.text.ParseException;
@@ -104,7 +102,7 @@ public class MyDB {
     public List<ArticleListData> handReadHistoryList(List<ArticleListData> datas) {
         String sql = "SELECT tid from " + TABLE_READ_HISTORY + " where tid = ?";
         for (ArticleListData data : datas) {
-            String tid = GetId.getTid(data.getTitleUrl());
+            String tid = GetId.getid("tid=",data.getTitleUrl());
             String args[] = new String[]{String.valueOf(tid)};
             Cursor result = db.rawQuery(sql, args);
             int count = result.getCount();
@@ -158,7 +156,7 @@ public class MyDB {
     }
 
     public void deleteOldHistory(int num) {
-        //最长缓存2000条数据
+        //最长缓存2000条数据 num 2000
         Cursor cursor = this.db.rawQuery("SELECT COUNT(*) FROM " + TABLE_READ_HISTORY, null);
         cursor.moveToFirst();
         int count = cursor.getInt(0);
@@ -166,6 +164,8 @@ public class MyDB {
 
         int a = count - num;
         if (a > 0) {
+            //大于就一次性删除1/5
+            a = num/5;
             //DELETE FROM XXX WHERE tid IN (SELECT TOP 100 PurchaseOrderDetailID FROM Purchasing.PurchaseOrderDetail
             //ORDER BY DueDate DESC);
             String sql = "DELETE FROM " + TABLE_READ_HISTORY + " WHERE tid IN (SELECT tid FROM " + TABLE_READ_HISTORY
@@ -175,6 +175,7 @@ public class MyDB {
             Log.e("阅读历史", "删除了最后" + a + "条记录");
         }
 
+        this.db.close();
     }
 
     public List<ArticleListData> getHistory(int num) {
@@ -344,97 +345,4 @@ public class MyDB {
         this.db.execSQL(sql, args);
     }
 
-    /**
-     * 以下处理消息数据库
-     * id primary key  //存储tid huozhe to uid
-     * + "url VARCHAR(50) ,"
-     * + "info VARCHAR(80),"
-     * + "type INT,"  0----表示回复提醒
-     * 1----表示pm提醒
-     * + "isread INT,"
-     * + "time DATETIME"
-     * + ")";
-     */
-    public void insertMessage(String url, String info) {
-        String sql = "INSERT INTO " + TABLE_MESSAGE + " (id,url,info,type,isread,time)"
-                + " VALUES(?,?,?,?,?,?)";
-        String read_time_str = getTime();
-        String id = "";
-        int type = 0;
-        if (url.contains("tid=")) {
-            id = GetId.getTid(url);
-            type = 0;
-        } else if (url.contains("touid=")) {
-            id = GetId.getTouid(url);
-            type = 1;
-        }
-        if (!TextUtils.isEmpty(id)) {
-            Object args[] = new Object[]{id, url, info, type, 0, read_time_str};
-            try {
-                this.db.execSQL(sql, args);
-                Log.e("mydb", "插入未读消息" + url);
-            } catch (SQLiteConstraintException e) {
-                e.printStackTrace();
-                Log.e("mydb", "error消息重复" + url);
-            }
-
-
-        }
-    }
-
-    //-1 代表不存在
-    //0 未读
-    //1 已读
-    public int isMessageRead(String url) {
-        String id = "";
-        if (url.contains("tid=")) {
-            id = GetId.getTid(url);
-        } else if (url.contains("touid=")) {
-            id = GetId.getTouid(url);
-        }
-        String sql = "SELECT * from " + TABLE_MESSAGE + " where id = ?";
-        String args[] = new String[]{String.valueOf(id)};
-        Cursor result = db.rawQuery(sql, args);
-        int count = result.getCount();
-        result.moveToFirst();
-
-        if (count <= 0) {//db.close();
-            //如果不存在说明未读
-            result.close();
-            return -1;
-        } else {
-            int i = result.getInt(4);
-            result.close();
-            return i;
-        }
-    }
-
-    public boolean isHaveUnReadMessage() {
-        String sql = "SELECT * from " + TABLE_MESSAGE + " where isread = ?";
-        String args[] = new String[]{String.valueOf(0)};
-        Cursor result = db.rawQuery(sql, args);
-        int count = result.getCount();
-        result.moveToFirst();
-
-        if (count <= 0) {//db.close();
-            //如果不存在说明未读
-            result.close();
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public void setAllMessageRead(int type) {
-        String sql = "UPDATE " + TABLE_MESSAGE + " SET isread=? WHERE type=?";
-        Object args[] = new Object[]{1, type};
-        this.db.execSQL(sql, args);
-        Log.e("mydb", "message set read" + type);
-    }
-
-    public void deleteOldMessage() {
-        String sql = "DELETE FROM " + TABLE_MESSAGE + " WHERE isread =1";
-        this.db.execSQL(sql);
-        Log.e("mydb", "clear old TABLE_MESSAGE");
-    }
 }

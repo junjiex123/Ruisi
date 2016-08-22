@@ -34,7 +34,6 @@ import xyz.yluo.ruisiapp.database.MyDB;
  */
 public class FrageNews extends Fragment{
 
-    public static final String TAG = FrageNews.class.getSimpleName();
     protected RecyclerView recycler_view;
     protected SwipeRefreshLayout refreshLayout;
     private List<SchoolNewsData> datas = new ArrayList<>();
@@ -114,8 +113,6 @@ public class FrageNews extends Fragment{
                 boolean is_fj = !article.select("img[src=images/fj.gif]").isEmpty();
                 boolean is_image = !article.select("img[src=images/tu-hz.gif]").isEmpty();
                 String time = article.select("span.timestyle49756").text();
-                Log.i("news task", titleStr + " " + url + " " + is_fj + " " + is_image + " " + time);
-                //String url,String title, boolean is_image, boolean is_patch, String post_time
                 dataset.add(new SchoolNewsData(url, titleStr, is_image, is_fj, time,false));
             }
 

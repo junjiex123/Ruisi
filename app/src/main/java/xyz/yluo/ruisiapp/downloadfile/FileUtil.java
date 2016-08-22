@@ -13,15 +13,13 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * 类描述：FileUtil
- * 创建下载的文件
+ * 下载附件的处理文件处理函数
  */
 public class FileUtil {
     /***********
      * 保存升级APK的目录
      ***********/
     public static final String path = "Download/手机睿思下载";
-
     /**
      * 方法描述：createFile方法
      */
@@ -36,13 +34,11 @@ public class FileUtil {
 
             if (!fileDir.exists()) {
                 boolean b = fileDir.mkdirs();
-                Log.i("create directory", b + fileDir.getPath() + "");
             }
             if (downFile.exists()) {
                 if (downFile.delete()) {
                     try {
                         boolean b = downFile.createNewFile();
-
                         Log.i("create file", b + downFile.getPath() + "");
                     } catch (IOException e) {
                         isCreateFileSucess = false;
@@ -91,7 +87,7 @@ public class FileUtil {
             try {
                 context.startActivity(newIntent);
             } catch (ActivityNotFoundException e) {
-                Toast.makeText(context, "无法打开此类型文件~~~~~~", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "请选择打开此文件的应用程序~~~~~~", Toast.LENGTH_SHORT).show();
             }
         }
     }

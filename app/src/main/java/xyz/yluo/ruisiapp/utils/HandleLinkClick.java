@@ -61,7 +61,7 @@ public class HandleLinkClick {
             if (!url.startsWith("http")) {
                 url = App.getBaseUrl() + url;
             }
-            RequestOpenBrowser.openBroswer(context, url);
+            IntentUtils.openBroswer(context, url);
         }
     }
 }

@@ -45,8 +45,7 @@ import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 import xyz.yluo.ruisiapp.utils.GetId;
-import xyz.yluo.ruisiapp.utils.GetNumber;
-import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
+import xyz.yluo.ruisiapp.utils.IntentUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -161,9 +160,9 @@ public class SingleArticleActivity extends BaseActivity
         Bundle b = getIntent().getExtras();
         String url = b.getString("url");
         AuthorName = b.getString("author");
-        Tid = GetId.getTid(url);
+        Tid = GetId.getid("tid=",url);
         if (url != null && url.contains("redirect")) {
-            RedirectPid = GetId.getPid(url);
+            RedirectPid = GetId.getid("pid=",url);
             if (!App.IS_SCHOOL_NET) {
                 url = url + "&mobile=2";
             }
@@ -430,7 +429,7 @@ public class SingleArticleActivity extends BaseActivity
 
             case R.id.btn_browser:
                 String url = UrlUtils.getSingleArticleUrl(Tid, page_now, false);
-                RequestOpenBrowser.openBroswer(this, url);
+                IntentUtils.openBroswer(this, url);
                 break;
             case R.id.btn_refresh:
                 refresh();
@@ -505,8 +504,8 @@ public class SingleArticleActivity extends BaseActivity
             //获取总页数 和当前页数
             if (doc.select(".pg").text().length() > 0) {
                 if (doc.select(".pg").text().length() > 0) {
-                    page_now = GetNumber.getNumber(doc.select(".pg").select("strong").text());
-                    int n = GetNumber.getNumber(doc.select(".pg").select("span").attr("title"));
+                    page_now = GetId.getNumber(doc.select(".pg").select("strong").text());
+                    int n = GetId.getNumber(doc.select(".pg").select("span").attr("title"));
                     if (n > 0 && n > page_sum) {
                         page_sum = n;
                     }
@@ -534,7 +533,7 @@ public class SingleArticleActivity extends BaseActivity
                 Element temp = postlist.get(i);
                 SingleArticleData data;
                 String pid = temp.attr("id").substring(3);
-                String uid = GetId.getUid(temp.select("span[class=avatar]").select("img").attr("src"));
+                String uid = GetId.getid("uid=",temp.select("span[class=avatar]").select("img").attr("src"));
                 Elements userInfo = temp.select("ul.authi");
                 String commentindex = userInfo.select("li.grey").select("em").text();
                 String username = userInfo.select("a[href^=home.php?mod=space&uid=]").text();

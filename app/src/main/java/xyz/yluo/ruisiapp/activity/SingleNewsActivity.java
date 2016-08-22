@@ -18,7 +18,7 @@ import java.io.IOException;
 
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyToolBar;
-import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
+import xyz.yluo.ruisiapp.utils.IntentUtils;
 
 /**
  * Created by free2 on 16-3-6.
@@ -71,7 +71,7 @@ public class SingleNewsActivity extends BaseActivity {
             public void OnItemClick(View v, String Tag) {
                 switch (Tag){
                     case "NEWS_OPEN_IN_BROWSER":
-                        RequestOpenBrowser.openBroswer(SingleNewsActivity.this, Url);
+                        IntentUtils.openBroswer(SingleNewsActivity.this, Url);
                         break;
                     case "NEWS_REFRESH":
                         refresh();

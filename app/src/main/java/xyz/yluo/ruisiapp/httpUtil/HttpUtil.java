@@ -23,6 +23,12 @@ public class HttpUtil {
         }
     }
 
+    public static void get(String url, ResponseHandler handler) {
+        init(null);
+        client.get(getUrl(url), handler);
+    }
+
+
     public static void get(Context context, String url, ResponseHandler handler) {
         init(context);
         client.get(getUrl(url), handler);
@@ -40,7 +46,7 @@ public class HttpUtil {
 
     private static void init(Context context) {
         client.setConnectionTimeout(5000);
-        if (store == null) {
+        if (context!=null&&store == null) {
             store = new PersistentCookieStore(context);
             client.setStore(store);
         }

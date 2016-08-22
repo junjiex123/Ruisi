@@ -101,8 +101,8 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             } else {
                 today_count.setVisibility(View.GONE);
             }
-            String url = single.getFid();
-            Drawable dra = ImageUtils.getForunlogo(activity, url);
+            String fid = single.getFid();
+            Drawable dra = ImageUtils.getForunlogo(activity, fid);
             img.setImageDrawable(dra);
 
             container.setOnClickListener(new View.OnClickListener() {

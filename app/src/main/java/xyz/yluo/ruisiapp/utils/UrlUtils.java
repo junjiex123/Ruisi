@@ -36,8 +36,6 @@ public class UrlUtils {
         } else {
             return "home.php?mod=spacecp&ac=friend&op=add&uid=" + uid + "&inajax=1&mobile=2";
         }
-
-
     }
 
     public static String getLoginUrl(boolean isInner) {
@@ -54,7 +52,7 @@ public class UrlUtils {
     public static String getAvaterurls(String urlUid) {
         String uid = urlUid;
         if (urlUid.contains("uid")) {
-            uid = GetId.getUid(urlUid);
+            uid = GetId.getid("uid=",urlUid);
         }
         return App.getBaseUrl() + "ucenter/avatar.php?uid=" + uid + "&size=small";
     }
@@ -62,7 +60,7 @@ public class UrlUtils {
     public static String getAvaterurlm(String urlUid) {
         String uid = urlUid;
         if (urlUid.contains("uid")) {
-            uid = GetId.getUid(urlUid);
+            uid = GetId.getid("uid=",urlUid);
         }
         return App.getBaseUrl() + "ucenter/avatar.php?uid=" + uid + "&size=middle";
     }
@@ -70,7 +68,7 @@ public class UrlUtils {
     public static String getAvaterurlb(String urlUid) {
         String uid = urlUid;
         if (urlUid.contains("uid")) {
-            uid = GetId.getUid(urlUid);
+            uid = GetId.getid("uid=",urlUid);
         }
         return App.getBaseUrl() + "ucenter/avatar.php?uid=" + uid + "&size=big";
     }

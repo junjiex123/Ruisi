@@ -70,22 +70,6 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(sql3);
         Log.e("DATABASE", "创建数据库 TABLE_SCHOOL_NEWS");
 
-
-        /**
-         *  消息列表 解决睿思消息已读未读问题
-         */
-        String sql4 = "CREATE TABLE " + MyDB.TABLE_MESSAGE + "("
-                + "id VARCHAR(15) primary key,"
-                + "url VARCHAR(100),"
-                + "info VARCHAR(80),"
-                + "type INT,"
-                + "isread INT,"
-                + "time DATETIME"
-                + ")";
-        db.execSQL(sql4);
-        Log.e("DATABASE", "创建数据库 TABLE_MESSAGE");
-
-
     }
 
 
@@ -98,6 +82,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
         String sql2 = "DROP TABLE IF EXISTS " + MyDB.TABLE_FORUM_LIST;
         db.execSQL(sql2);
+
+        String sql3 = "DROP TABLE IF EXISTS " + MyDB.TABLE_SCHOOL_NEWS;
+        db.execSQL(sql3);
 
         this.onCreate(db);
         Log.e("DATABASE", "数据库已更新");

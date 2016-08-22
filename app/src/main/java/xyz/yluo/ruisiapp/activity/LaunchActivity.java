@@ -3,11 +3,8 @@ package xyz.yluo.ruisiapp.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
@@ -17,6 +14,8 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -30,7 +29,6 @@ import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
-import xyz.yluo.ruisiapp.utils.ImageUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -46,7 +44,6 @@ public class LaunchActivity extends BaseActivity {
     private TextView launch_text;
     private CircleImageView user_image;
     private SharedPreferences perUserInfo = null;
-    private boolean isrecieveMessage = false;
     private boolean isForeGround = true;
     private Handler mHandler = new Handler();
     private Runnable mRunnable = new Runnable() {
@@ -125,22 +122,13 @@ public class LaunchActivity extends BaseActivity {
 
     //从首选项读出设置
     private void getSetting() {
-        SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(this);
         perUserInfo = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         String uid = perUserInfo.getString("USER_UID", "0");
-        Log.i("LaunchActivity", perUserInfo.getString("USER_NAME", "null"));
-        Log.i("LaunchActivity", uid);
-
         if (!uid.equals("0")) {
-            Uri uri = ImageUtils.getImageURI(getFilesDir(), uid);
-            if (uri != null) {
-                user_image.setVisibility(View.VISIBLE);
-                user_image.setImageURI(uri);
-            }
+            String url = UrlUtils.getAvaterurlm(uid);
+            Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(user_image);
+            user_image.setVisibility(View.VISIBLE);
         }
-
-        //boolean theme = shp.getBoolean("setting_swich_theme",false);
-        isrecieveMessage = shp.getBoolean("setting_show_notify", false);
     }
 
     @Override
@@ -176,8 +164,7 @@ public class LaunchActivity extends BaseActivity {
                     }
                     App.USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
                     String url = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").attr("href");
-                    App.USER_UID = GetId.getUid(url);
-
+                    App.USER_UID = GetId.getid("uid=",url);
                     SharedPreferences.Editor editor = perUserInfo.edit();
                     editor.putString("USER_NAME", App.USER_NAME);
                     editor.putString("USER_UID", App.USER_UID);

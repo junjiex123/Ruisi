@@ -18,7 +18,7 @@ import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.DataManager;
-import xyz.yluo.ruisiapp.utils.RequestOpenBrowser;
+import xyz.yluo.ruisiapp.utils.IntentUtils;
 
 /**
  * Created by free2 on 16-7-18.
@@ -121,7 +121,7 @@ public class FragSetting extends PreferenceFragment
         open_sourse.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                RequestOpenBrowser.openBroswer(getActivity(), "https://github.com/freedom10086/Ruisi");
+                IntentUtils.openBroswer(getActivity(), "https://github.com/freedom10086/Ruisi");
                 return false;
             }
         });

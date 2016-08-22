@@ -1,7 +1,5 @@
 package xyz.yluo.ruisiapp.httpUtil;
 
-import android.util.Log;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,7 +9,7 @@ import java.net.HttpURLConnection;
 import xyz.yluo.ruisiapp.downloadfile.FileUtil;
 
 public abstract class FileResponseHandler extends ResponseHandler {
-    protected File mFile = null;
+    private File mFile = null;
     private String fileName = "null";
     private boolean isCancel = false;
 
@@ -20,12 +18,10 @@ public abstract class FileResponseHandler extends ResponseHandler {
         isCancel = true;
     }
 
-    public FileResponseHandler(String fileName) {
-        Log.i("file name info", fileName + "  ");
+    protected FileResponseHandler(String fileName) {
         if (!fileName.equals("null")) {
             this.fileName = fileName;
             mFile = FileUtil.createFile(fileName);
-            Log.i("==file name info2==", fileName + "  ");
         }
     }
 
@@ -73,7 +69,6 @@ public abstract class FileResponseHandler extends ResponseHandler {
             onFailure(new Exception("file 404"), getTargetFile());
             return;
         }
-
         if (mFile == null) {
             if (connection.getHeaderField("Content-Disposition") != null) {
                 fileName = connection.getHeaderField("Content-Disposition");

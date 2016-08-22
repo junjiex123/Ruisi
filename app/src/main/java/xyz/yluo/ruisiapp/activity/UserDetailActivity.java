@@ -120,7 +120,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recycler_view.setLayoutManager(layoutManager);
         recycler_view.setAdapter(adapter);
-        userUid = GetId.getUid(imageUrl);
+        userUid = GetId.getid("uid=",imageUrl);
         //如果是自己
         if (userUid.equals(App.USER_UID)) {
             fab.setImageResource(R.drawable.ic_exit_24dp);

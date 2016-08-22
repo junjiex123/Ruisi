@@ -1,6 +1,7 @@
 package xyz.yluo.ruisiapp.utils;
 
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.regex.Matcher;
@@ -15,37 +16,27 @@ import java.util.regex.Pattern;
 public class GetId {
 
     public static String getid(String url) {
-        Pattern pattern = Pattern.compile("tid=[0-9]{3,}");
-        Matcher matcher = pattern.matcher(url);
-        String tid = "";
-        if (matcher.find()) {
-            tid = url.substring(matcher.start() + 4, matcher.end());
-        }
-        return tid;
+        return getid("",url);
     }
 
-    //searchid=1340
-    public static int getSearchId(String url) {
-        Pattern pattern = Pattern.compile("searchid=[0-9]{3,}");
-        Matcher matcher = pattern.matcher(url);
-        String id = "0";
-        if (matcher.find()) {
-            id = url.substring(matcher.start() + 9, matcher.end());
+    public static String getid(String prefix, String url) {
+        Pattern pattern = null;
+        int len = 0;
+        if(TextUtils.isEmpty(prefix)){
+            pattern = Pattern.compile("[0-9]+");
+        }else{
+            len = prefix.length();
+            pattern = Pattern.compile(prefix+"[0-9]+");
         }
-        return Integer.parseInt(id);
+        Matcher matcher = pattern.matcher(url);
+
+        String id = "";
+        if(matcher.find()){
+            id = url.substring(matcher.start()+len, matcher.end());
+        }
+        return id;
     }
 
-
-    public static String getTouid(String url) {
-        //touid="+userUid
-        Pattern pattern = Pattern.compile("touid=[0-9]{3,}");
-        Matcher matcher = pattern.matcher(url);
-        String touid = "";
-        if (matcher.find()) {
-            touid = url.substring(matcher.start() + 6, matcher.end());
-        }
-        return touid;
-    }
 
     public static String getHash(String url) {
         try {
@@ -66,16 +57,16 @@ public class GetId {
 
     }
 
-    public static String getTid(String url) {
-        //forum.php?mod=redirect&goto=findpost&ptid=846689&pid=21330831
-        Pattern pattern = Pattern.compile("tid=[0-9]{3,}");
-        Matcher matcher = pattern.matcher(url);
-        String tid = "";
+    public static int getNumber(String text) {
+        Pattern pattern = Pattern.compile("[0-9]+");
+        Matcher matcher = pattern.matcher(text);
+        String num = "0";
         if (matcher.find()) {
-            tid = url.substring(matcher.start() + 4, matcher.end());
+            num = text.substring(matcher.start(), matcher.end());
         }
-        return tid;
+        return Integer.parseInt(num);
     }
+
 
     public static int getPage(String url) {
         //forum.php?mod=redirect&goto=findpost&ptid=846689&pid=21330831
@@ -88,66 +79,23 @@ public class GetId {
         return page;
     }
 
-    public static String getPid(String url) {
-        //forum.php?mod=redirect&goto=findpost&ptid=846689&pid=21330831
-        Pattern pattern = Pattern.compile("pid=[0-9]{3,}");
-        Matcher matcher = pattern.matcher(url);
-        String pid = "";
-        if (matcher.find()) {
-            pid = url.substring(matcher.start() + 4, matcher.end());
-        }
-        return pid;
-    }
-
-    public static String getUid(String url) {
-        if (null == url) {
-            return "";
-        }
-        String uid = "";
-        if (url.contains("uid=")) {
-            //http://rs.xidian.edu.cn/ucenter/avatar.php?uid=284747&size=small
-            Pattern pattern = Pattern.compile("uid=[0-9]{2,}");
-            Matcher matcher = pattern.matcher(url);
-
-            if (matcher.find()) {
-                uid = url.substring(matcher.start() + 4, matcher.end());
-            }
-        } else {
-            Pattern patternNum = Pattern.compile("[0-9]{2,}");
-            Matcher matcherNum = patternNum.matcher(url);
-            if (matcherNum.find() && url.length() == matcherNum.end() - matcherNum.start()) {
-                uid = url;
-            }
-        }
-        return uid;
-    }
-
     public static String getFroumFid(String url) {
-
-        try {
-            //fid=[0-9]+
-            Pattern pattern = Pattern.compile("fid=[0-9]+");
-            Matcher matcher = pattern.matcher(url);
-            String fid = "";
-            if (matcher.find()) {
-                fid = url.substring(matcher.start() + 4, matcher.end());
-            }
+        String fid =  getid("fid=",url);
+        if(TextUtils.isEmpty(fid)){
+            return "0";
+        }else{
             if (fid.equals("106")) {
                 fid = "110";
             } else if (fid.equals("553")) {
                 fid = "554";
             }
             return fid;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            return "0";
         }
     }
 
+    //htmlcolor 转换成android 的 int color
     public static int getColor(String str) {
-        //<a href="forum.php?mod=viewthread&amp;tid=829659&amp;extra=page%3D1&amp;mobile=2" style="color: #EC1282;">
+        // style="color: #EC1282;">
         int color = 0xff000000;
         if(str.contains("color")){
             int start = str.indexOf("color");

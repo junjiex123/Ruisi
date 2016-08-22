@@ -28,7 +28,6 @@ public class DownloadService extends Service {
     public static final int DOWN_OK = 1;
     public static final int DOWNLOADING = 0;
     public static final int DOWN_ERROR = -1;
-    private static String down_url;
     private String filename = null;
     private int downloadProgress = 0;
 
@@ -70,12 +69,11 @@ public class DownloadService extends Service {
             return super.onStartCommand(intent, flags, startId);
         }
 
-        down_url = intent.getStringExtra("download_url");
+        String down_url = intent.getStringExtra("download_url");
         filename = FileUtil.getFileName(down_url);
         handler = new FileResponseHandler(filename) {
             @Override
             public void onStartDownLoad(String fileName) {
-                Log.i("download", "====on statt start down load " + fileName);
                 if (filename.equals("null") && !fileName.equals("null")) {
                     filename = fileName;
                 }
@@ -85,19 +83,16 @@ public class DownloadService extends Service {
             @Override
             public void onProgress(int progress, long totalBytes) {
                 super.onProgress(progress, totalBytes);
-                Log.i("download progress", progress + "" + totalBytes);
                 updateProgress(DOWNLOADING, progress);
             }
 
             @Override
             public void onSuccess(File file) {
-                Log.i("download", "success");
                 updateProgress(DOWN_OK, 100);
             }
 
             @Override
             public void onFailure(Throwable throwable, File file) {
-                Log.i("download", "fail");
                 updateProgress(DOWN_ERROR, 0);
             }
         };

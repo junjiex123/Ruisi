@@ -291,7 +291,7 @@ public class LoginActivity extends BaseActivity {
         Document doc = Jsoup.parse(res);
         App.USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
         String url = doc.select("a[href^=home.php?mod=space&uid=]").attr("href");
-        App.USER_UID = GetId.getUid(url);
+        App.USER_UID = GetId.getid("uid=",url);
 
         editor.putString("USER_NAME", App.USER_NAME);
         editor.putString("USER_UID", App.USER_UID);

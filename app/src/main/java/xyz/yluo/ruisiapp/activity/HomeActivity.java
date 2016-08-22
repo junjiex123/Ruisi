@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -40,7 +39,6 @@ import xyz.yluo.ruisiapp.View.ChangeNetDialog;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.data.FrageType;
-import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.fragment.FragSetting;
 import xyz.yluo.ruisiapp.fragment.FrageFriends;
 import xyz.yluo.ruisiapp.fragment.FrageHelp;
@@ -50,7 +48,6 @@ import xyz.yluo.ruisiapp.fragment.FrageMessage;
 import xyz.yluo.ruisiapp.fragment.FrageTopicStarHistory;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
-import xyz.yluo.ruisiapp.utils.ImageUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -75,8 +72,6 @@ public class HomeActivity extends BaseActivity
     private View message_bage;
     private View toolBarImagContainer;
     private boolean isNeewRefreshDrawView = true;
-    private boolean isrecieveMessage;
-    private MyDB myDB =  null;
     private Timer timer = null;
     private MyTimerTask task = null;
 
@@ -115,7 +110,6 @@ public class HomeActivity extends BaseActivity
         currentFragment = new FrageHome();
         String tag = App.ISLOGIN? App.USER_NAME:getString(R.string.app_name);
         getFragmentManager().beginTransaction().replace(R.id.fragment_home_container,currentFragment,tag).commit();
-        myDB =  new MyDB(this,MyDB.MODE_WRITE);
     }
 
     @Override
@@ -124,15 +118,8 @@ public class HomeActivity extends BaseActivity
         Log.e(TAG,"onStart");
         if(App.ISLOGIN&& !TextUtils.isEmpty(App.USER_NAME)){
             myToolBar.setTitle(App.USER_NAME);
-            Uri uri = ImageUtils.getImageURI(getFilesDir(), App.USER_UID);
-            if (uri != null) {//图片存在
-                userImage.setImageURI(uri);
-            } else {//图片不存在
-                String url = UrlUtils.getAvaterurlm(App.USER_UID);
-                Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
-            }
-            isrecieveMessage = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this)
-                    .getBoolean("setting_show_notify", false);
+            String url = UrlUtils.getAvaterurlm(App.USER_UID);
+            Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
             if(timer==null){
                 Log.e("message","开始timer");
                 timer = new Timer(true);
@@ -298,13 +285,8 @@ public class HomeActivity extends BaseActivity
             userGrade.setVisibility(View.VISIBLE);
             userGrade.setText(App.USER_GRADE);
             userName.setText(App.USER_NAME);
-            Uri uri = ImageUtils.getImageURI(getFilesDir(), App.USER_UID);
-            if (uri != null) {//图片存在
-                userImage.setImageURI(uri);
-            } else {//图片不存在
-                String url = UrlUtils.getAvaterurlm(App.USER_UID);
-                Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
-            }
+            String url = UrlUtils.getAvaterurlm(App.USER_UID);
+            Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
         }else{
             userImage.setImageResource(R.drawable.image_placeholder);
             userName.setText("点击头像登陆");
@@ -403,25 +385,23 @@ public class HomeActivity extends BaseActivity
                 public void onSuccess(byte[] response) {
                     Document document = Jsoup.parse(new String(response));
                     Elements elemens = document.select(".nts").select("dl.cl");
+                    int last_message_id  = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this)
+                            .getInt(App.NOTICE_MESSAGE_KEY, 0);
                     for (Element e : elemens) {
-                        String s = e.select(".ntc_body").attr("style");
-                        if (s.contains("bold")) {
-                            String url = e.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
-                            String info = e.select(".ntc_body").text();
-                            //只要有未读的就插入 到数据库在判断
-                            myDB.insertMessage(url,info);
-                        }
-                    }
-                    if(myDB.isHaveUnReadMessage()){
-                        Log.e("message","有未读读消息");
-                        if (isrecieveMessage) {
-                            messageHandler.sendEmptyMessage(2);
+                        int  noticeId = Integer.parseInt(e.attr("notice"));
+                        if(last_message_id<noticeId){
+                            boolean isnotify = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this)
+                                    .getBoolean("setting_show_notify", false);
+                            if (isnotify) {
+                                messageHandler.sendEmptyMessage(2);
+                            }else{
+                                messageHandler.sendEmptyMessage(1);
+                            }
+                            break;
                         }else{
-                            messageHandler.sendEmptyMessage(1);
+                            messageHandler.sendEmptyMessage(0);
+                            break;
                         }
-
-                    }else{
-                        messageHandler.sendEmptyMessage(0);
                     }
                 }
             });

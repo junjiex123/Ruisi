@@ -3,7 +3,7 @@ package xyz.yluo.ruisiapp.httpUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public abstract class JsonObjectResponseHandler extends TextResponseHandler {
+public abstract class JObjectResponse extends TextResponseHandler {
 
     @Override
     public void onSuccess(String response) {

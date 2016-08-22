@@ -12,7 +12,7 @@ import android.widget.TextView;
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyHtmlView.HtmlView;
-import xyz.yluo.ruisiapp.utils.RequestSendMail;
+import xyz.yluo.ruisiapp.utils.IntentUtils;
 
 
 /**
@@ -67,7 +67,7 @@ public class AboutActivity extends BaseActivity {
                                 if (user != null) {
                                     user = "by:" + user;
                                 }
-                                RequestSendMail.sendMail(getApplicationContext(), user);
+                                IntentUtils.sendMail(getApplicationContext(), user);
                             }
                         })
                         .show();

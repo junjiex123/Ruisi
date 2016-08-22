@@ -41,7 +41,6 @@ import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.utils.GetId;
-import xyz.yluo.ruisiapp.utils.GetNumber;
 import xyz.yluo.ruisiapp.utils.ImeUtil;
 
 /**
@@ -56,7 +55,7 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
 
     private int totalPage = 1;
     private int currentPage = 1;
-    private int searchid = 0;
+    private String searchid = "";
     private boolean isEnableLoadMore = false;
 
     private RecyclerView recycler_view;
@@ -217,7 +216,7 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
         adapter.notifyDataSetChanged();
         isEnableLoadMore = true;
         adapter.setShowLoadMore(true);
-        searchid = 0;
+        searchid = "";
     }
 
     private void getData(String str) {
@@ -291,7 +290,7 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
         if (isEnableLoadMore) {
             isEnableLoadMore = false;
             int page = currentPage;
-            if (currentPage < totalPage && totalPage > 1 && searchid > 0) {
+            if (currentPage < totalPage && totalPage > 1 && (!TextUtils.isEmpty(searchid))){
                 Log.i("loadmore", currentPage + "");
                 page = page + 1;
                 getSomePageData(page);
@@ -326,18 +325,14 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
             //获取总页数 和当前页数
             if (doc.select(".pg").text().length() > 0) {
                 Elements pageinfos = doc.select(".pg");
-                currentPage = GetNumber.getNumber(pageinfos.select("strong").text());
-                int n = GetNumber.getNumber(pageinfos.select("span").attr("title"));
+                currentPage = GetId.getNumber(pageinfos.select("strong").text());
+                int n = GetId.getNumber(pageinfos.select("span").attr("title"));
                 if (n > 0 && n > totalPage) {
                     totalPage = n;
                 }
                 if (totalPage > 1) {
-                    //searchid = pageinfos.select("a").attr("href")
-                    searchid = GetId.getSearchId(pageinfos.select("a").attr("href"));
-                    Log.i("search id", searchid + "");
+                    searchid = GetId.getid("searchid=",pageinfos.select("a").attr("href"));
                 }
-                Log.i("page info", doc.select(".pg").html());
-                Log.i("page info", currentPage + " " + totalPage);
             }
 
             Elements links = body.select("li");
