@@ -1,12 +1,13 @@
 package xyz.yluo.ruisiapp.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyToolBar;
@@ -78,7 +79,7 @@ public abstract class ArticleListBase extends BaseActivity
         mRecyclerView.addOnScrollListener(new HidingScrollListener() {
             @Override
             public void onHide() {
-                CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) btn_refresh.getLayoutParams();
+                FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) btn_refresh.getLayoutParams();
                 int bottomMargin = lp.bottomMargin;
                 int distanceToScroll = btn_refresh.getHeight() + bottomMargin;
                 btn_refresh.animate().translationY(distanceToScroll).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);

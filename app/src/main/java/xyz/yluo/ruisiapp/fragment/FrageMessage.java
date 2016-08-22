@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xyz.yluo.ruisiapp.App;
-import xyz.yluo.ruisiapp.CheckMessageService;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.MessageAdapter;
 import xyz.yluo.ruisiapp.data.ListType;
@@ -221,19 +220,5 @@ public class FrageMessage extends Fragment {
     private void clearMessage(int type){
         MyDB myDB = new MyDB(getActivity(), MyDB.MODE_WRITE);
         myDB.setAllMessageRead(type);
-
-        MyDB myDB2 = new MyDB(getActivity(), MyDB.MODE_READ);
-        //查看是否有未读消息
-        //如果没有则清楚
-        if(!myDB2.isHaveUnReadMessage()){
-            SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            boolean isrecieveMessage = shp.getBoolean("setting_show_notify", false);
-            //启动后台服务
-            Intent i = new Intent(getActivity(), CheckMessageService.class);
-            i.putExtra("isRunning", true);
-            i.putExtra("isNotisfy", isrecieveMessage);
-            i.putExtra("isClearMessage",true);
-            getActivity().startService(i);
-        }
     }
 }

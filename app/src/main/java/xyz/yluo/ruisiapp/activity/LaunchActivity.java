@@ -22,7 +22,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import xyz.yluo.ruisiapp.App;
-import xyz.yluo.ruisiapp.CheckMessageService;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.checknet.CheckNet;
@@ -185,8 +184,6 @@ public class LaunchActivity extends BaseActivity {
                     editor.apply();
 
                     App.ISLOGIN = true;
-
-                    startCheckMessageService();
                 }
             }
 
@@ -202,14 +199,7 @@ public class LaunchActivity extends BaseActivity {
         Toast.makeText(this, "无法连接到服务器请检查网络设置！", Toast.LENGTH_SHORT).show();
     }
 
-    private void startCheckMessageService() {
-        //启动后台服务
-        Log.e("launch","启动了服务");
-        Intent i = new Intent(this, CheckMessageService.class);
-        i.putExtra("isRunning", true);
-        i.putExtra("isNotisfy", isrecieveMessage);
-        startService(i);
-    }
+
 
 
     private void finishthis() {

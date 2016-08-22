@@ -3,15 +3,18 @@ package xyz.yluo.ruisiapp.activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.BroadcastReceiver;
-import android.content.Context;
+import android.app.NotificationManager;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,13 +26,21 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 import xyz.yluo.ruisiapp.App;
-import xyz.yluo.ruisiapp.CheckMessageService;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.ChangeNetDialog;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.data.FrageType;
+import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.fragment.FragSetting;
 import xyz.yluo.ruisiapp.fragment.FrageFriends;
 import xyz.yluo.ruisiapp.fragment.FrageHelp;
@@ -37,6 +48,8 @@ import xyz.yluo.ruisiapp.fragment.FrageHome;
 import xyz.yluo.ruisiapp.fragment.FrageHotNew;
 import xyz.yluo.ruisiapp.fragment.FrageMessage;
 import xyz.yluo.ruisiapp.fragment.FrageTopicStarHistory;
+import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.ImageUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
@@ -46,9 +59,6 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 1.板块列表{@link HomeActivity}
  * 2.新帖{@link FrageHotNew}
  * 3.新闻{@link xyz.yluo.ruisiapp.fragment.FrageNews}
- * 第一次创建 oncreate->onstart->onresume->running
- * 从别的 activity 退回->restart->onstart->resume->running
- * 别的activity挡住了但是还能看到  onresume->running
  */
 public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, DrawerLayout.DrawerListener {
@@ -56,7 +66,6 @@ public class HomeActivity extends BaseActivity
     private final String TAG = "HomeActivity";
     private DrawerLayout drawer;
     private NavigationView navigationView;
-    private msgReceiver myMsgReceiver;
     private int clickId = 0;
     private long mExitTime;
     private Fragment currentFragment;
@@ -66,6 +75,10 @@ public class HomeActivity extends BaseActivity
     private View message_bage;
     private View toolBarImagContainer;
     private boolean isNeewRefreshDrawView = true;
+    private boolean isrecieveMessage;
+    private MyDB myDB =  null;
+    private Timer timer = null;
+    private MyTimerTask task = null;
 
 
     @Override
@@ -102,13 +115,7 @@ public class HomeActivity extends BaseActivity
         currentFragment = new FrageHome();
         String tag = App.ISLOGIN? App.USER_NAME:getString(R.string.app_name);
         getFragmentManager().beginTransaction().replace(R.id.fragment_home_container,currentFragment,tag).commit();
-
-        //注册检查消息广播
-        Log.e("消息广播","注册广播");
-        myMsgReceiver = new msgReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("com.ruisi.checkmsg");
-        registerReceiver(myMsgReceiver, intentFilter);
+        myDB =  new MyDB(this,MyDB.MODE_WRITE);
     }
 
     @Override
@@ -124,19 +131,29 @@ public class HomeActivity extends BaseActivity
                 String url = UrlUtils.getAvaterurlm(App.USER_UID);
                 Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
             }
+            isrecieveMessage = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this)
+                    .getBoolean("setting_show_notify", false);
+            if(timer==null){
+                Log.e("message","开始timer");
+                timer = new Timer(true);
+            }
+            if (task != null){
+                task.cancel();  //将原任务从队列中移除
+            }
+            task = new MyTimerTask();
+            timer.schedule(task, 300, 60000); //延时1000ms后执行，60000ms执行一
         }
     }
 
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Intent i = new Intent(this, CheckMessageService.class);
-        if (myMsgReceiver != null) {
-            unregisterReceiver(myMsgReceiver);
+    protected void onStop() {
+        super.onStop();
+        if(timer!=null){
+            timer.cancel();
+            timer = null;
+            Log.e("message","停止timer");
         }
-        stopService(i);
-        Log.e("消息广播","onStop取消注册广播 停止线程");
     }
 
     @Override
@@ -156,7 +173,7 @@ public class HomeActivity extends BaseActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         clickId = item.getItemId();
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -357,7 +374,6 @@ public class HomeActivity extends BaseActivity
             case R.id.nav_my_friend:
                 changeFragement(FrageType.FRIEND);
                 break;
-
         }
     }
 
@@ -366,24 +382,74 @@ public class HomeActivity extends BaseActivity
 
     }
 
-    /**
-     * 检查消息接收器
-     */
-    public class msgReceiver extends BroadcastReceiver {
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            //拿到进度，更新UI
-            boolean isHaveMessage = intent.getBooleanExtra("isHaveMessage", false);
-            Log.i("home msg reciver", "收到了新消息广播" + isHaveMessage);
-            if (isHaveMessage) {
-                message_bage.setVisibility(View.VISIBLE);
-            } else {
-                if(message_bage.getVisibility()==View.VISIBLE){
-                    message_bage.setVisibility(View.INVISIBLE);
+    private MyHandler messageHandler = new MyHandler();
+    final NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+            .setSmallIcon(R.mipmap.logo)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setContentTitle("未读消息提醒")
+            .setContentText("你有未读的消息哦,去我的消息页面查看吧！")
+            .setAutoCancel(true);
+
+
+    private class MyTimerTask extends TimerTask{
+        public void run() {
+            String url = App.getBaseUrl() + "home.php?mod=space&do=notice&view=mypost&type=post";
+            if (!App.IS_SCHOOL_NET) {
+                url = url + "&mobile=2";
+            }
+            HttpUtil.SyncGet(HomeActivity.this, url, new ResponseHandler() {
+                @Override
+                public void onSuccess(byte[] response) {
+                    Document document = Jsoup.parse(new String(response));
+                    Elements elemens = document.select(".nts").select("dl.cl");
+                    for (Element e : elemens) {
+                        String s = e.select(".ntc_body").attr("style");
+                        if (s.contains("bold")) {
+                            String url = e.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
+                            String info = e.select(".ntc_body").text();
+                            //只要有未读的就插入 到数据库在判断
+                            myDB.insertMessage(url,info);
+                        }
+                    }
+                    if(myDB.isHaveUnReadMessage()){
+                        Log.e("message","有未读读消息");
+                        if (isrecieveMessage) {
+                            messageHandler.sendEmptyMessage(2);
+                        }else{
+                            messageHandler.sendEmptyMessage(1);
+                        }
+
+                    }else{
+                        messageHandler.sendEmptyMessage(0);
+                    }
                 }
+            });
+        }
+    };
 
+
+    private class MyHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                //0 - 无消息 1-有 2有 且通知
+                case 0:
+                    Log.e("message","无未读消息");
+                    if(message_bage.getVisibility()==View.VISIBLE){
+                        message_bage.setVisibility(View.INVISIBLE);
+                    }
+                    break;
+                case 2:
+                    final NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    mNotifyMgr.notify(10, builder.build());
+                    Log.e("message","发送未读消息弹窗");
+                case 1:
+                    Log.e("message","有未读消息");
+                    message_bage.setVisibility(View.VISIBLE);
+                    break;
             }
         }
     }
+
 }
