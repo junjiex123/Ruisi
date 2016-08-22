@@ -165,11 +165,10 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
         }
 
         @Override
-        protected void onPreExecute() {
-            // todo
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
             adapter.notifyItemChanged(0);
         }
-
 
     }
 

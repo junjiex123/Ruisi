@@ -190,7 +190,7 @@ public class FrageMessage extends Fragment {
         @Override
         protected void onPostExecute(List<MessageData> tempdatas) {
             finishGetData(tempdatas);
-            clearMessage(0);
+            //todo 记录是否未读
         }
     }
 
@@ -221,13 +221,6 @@ public class FrageMessage extends Fragment {
         @Override
         protected void onPostExecute(List<MessageData> tempdatas) {
             finishGetData(tempdatas);
-            clearMessage(1);
         }
-    }
-
-    private void clearMessage(int type){
-//        MyDB myDB = new MyDB(getActivity(), MyDB.MODE_WRITE);
-//        myDB.setAllMessageRead(type);
-        //// TODO: 16-8-22  clear
     }
 }
