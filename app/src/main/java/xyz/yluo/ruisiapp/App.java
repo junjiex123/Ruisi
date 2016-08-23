@@ -3,6 +3,7 @@ package xyz.yluo.ruisiapp;
 import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.text.TextUtils;
 import android.util.Log;
 
 import xyz.yluo.ruisiapp.checknet.NetworkReceiver;
@@ -62,8 +63,12 @@ public class App extends Application {
     public static boolean IS_SCHOOL_NET = false;
     //论坛FORMHASH
     public static String FORMHASH = "";
+
     //是否登陆
-    public static boolean ISLOGIN = false;
+    public static boolean ISLOGIN(){
+        return !TextUtils.isEmpty(USER_UID);
+    }
+
     //用户名
     public static String USER_NAME = "";
     //user uid

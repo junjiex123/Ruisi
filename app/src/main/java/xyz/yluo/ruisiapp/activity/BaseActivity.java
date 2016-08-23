@@ -5,11 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import xyz.yluo.ruisiapp.App;
+import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
-import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.utils.DimmenUtils;
 
 /**
@@ -22,7 +24,7 @@ public class BaseActivity extends AppCompatActivity {
 
     //判断是否需要弹出登录dialog
     public boolean isLogin() {
-        if (App.ISLOGIN) {
+        if (App.ISLOGIN()) {
             return true;
         } else {
             new MyAlertDialog(this, MyAlertDialog.WARNING_TYPE)
@@ -39,6 +41,47 @@ public class BaseActivity extends AppCompatActivity {
         return false;
     }
 
+
+    protected void initToolBar(boolean isshowBack,String text){
+        View toolbar = findViewById(R.id.myToolBar);
+        if(toolbar!=null){
+            ((TextView)toolbar.findViewById(R.id.title)).setText(text);
+            if(isshowBack){
+                findViewById(R.id.logo).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        finish();
+                    }
+                });
+            }else{
+                findViewById(R.id.logo).setVisibility(View.GONE);
+            }
+        }
+    }
+
+    protected ImageView addToolbarMenu(int resid){
+        View toolbar = findViewById(R.id.myToolBar);
+        if(toolbar!=null){
+            ImageView i =  (ImageView)toolbar.findViewById(R.id.menu);
+            i.setImageResource(resid);
+            i.setVisibility(View.VISIBLE);
+            return i;
+        }
+        return null;
+    }
+
+    protected ImageView setToolbarLogo(int resid){
+        View toolbar = findViewById(R.id.myToolBar);
+        if(toolbar!=null){
+            ImageView i =  (ImageView)toolbar.findViewById(R.id.logo);
+            i.setImageResource(resid);
+            i.setVisibility(View.VISIBLE);
+            return i;
+        }
+        return null;
+    }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -50,14 +93,7 @@ public class BaseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void setToolBarMenuClick(MyToolBar myToolBar) {
-        myToolBar.setToolBarClickListener(new MyToolBar.OnToolBarItemClick() {
-            @Override
-            public void OnItemClick(View v, String Tag) {
-                OnToolBarMenuItemClick(v, Tag);
-            }
-        });
-    }
+
 
     protected boolean OnToolBarMenuItemClick(View view, String tag) {
         switch (tag) {

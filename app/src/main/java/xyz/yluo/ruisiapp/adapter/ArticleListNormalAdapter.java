@@ -148,7 +148,8 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
 
         void onBtnAvatarClick() {
             String imageUrl = UrlUtils.getAvaterurlb(DataSet.get(getAdapterPosition()).getAuthorUrl());
-            UserDetailActivity.openWithTransitionAnimation(activity, DataSet.get(getAdapterPosition()).getAuthor(), author_img, imageUrl);
+            UserDetailActivity.openWithAnimation(
+                    activity, DataSet.get(getAdapterPosition()).getAuthor(), author_img, imageUrl);
         }
 
         void onBtnItemClick() {

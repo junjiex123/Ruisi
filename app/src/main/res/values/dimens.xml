@@ -9,5 +9,5 @@
     <dimen name="Card">2dp</dimen>
 
     <dimen name="ToolBarHeight">48dp</dimen>
-
+    <dimen name="BottomBarHeight">48dp</dimen>
 </resources>

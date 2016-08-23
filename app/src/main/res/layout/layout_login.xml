@@ -6,11 +6,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <xyz.yluo.ruisiapp.View.MyToolBar
-        android:id="@+id/myToolBar"
-        android:background="@color/colorPrimary"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/ToolBarHeight"/>
+    <include layout="@layout/my_toolbar"/>
 
     <FrameLayout
         android:layout_width="match_parent"

@@ -131,7 +131,8 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         void user_click() {
             MessageData single_data = DataSet.get(getAdapterPosition() - 1);
             String username = single_data.getTitle().replace("我对 ", "").replace("说:", "").replace(" 对我", "").replace(" 回复了我", "");
-            UserDetailActivity.openWithTransitionAnimation(activity, username, article_user_image, DataSet.get(getAdapterPosition()).getauthorImage());
+            UserDetailActivity.openWithAnimation(
+                    activity, username, article_user_image, DataSet.get(getAdapterPosition()).getauthorImage());
         }
     }
 

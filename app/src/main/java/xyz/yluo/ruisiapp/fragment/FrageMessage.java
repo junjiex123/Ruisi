@@ -50,6 +50,7 @@ public class FrageMessage extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
+        initToolbar(false,"我的消息");
         recycler_view = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
@@ -80,19 +81,14 @@ public class FrageMessage extends BaseFragment {
                 refresh();
             }
         }, 500);
-        setCloseIcon();
         return mRootView;
     }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_message;
+        return R.layout.list_toolbar;
     }
 
-    @Override
-    protected String getTitle() {
-        return "我的消息";
-    }
 
 
     private void refresh() {

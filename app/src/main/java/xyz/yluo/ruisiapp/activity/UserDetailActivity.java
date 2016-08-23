@@ -69,10 +69,10 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
     private String username = "";
     private String imageUrl = "";
 
-    public static void openWithTransitionAnimation(Activity activity, String username, ImageView imgAvatar, String avatarUrl) {
+    public static void openWithAnimation(Activity activity, String username, ImageView imgAvatar, String uid) {
         Intent intent = new Intent(activity, UserDetailActivity.class);
         intent.putExtra("loginName", username);
-        intent.putExtra("avatarUrl", avatarUrl);
+        intent.putExtra("avatarUrl", UrlUtils.getAvaterurlm(uid));
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, imgAvatar, NAME_IMG_AVATAR);
         ActivityCompat.startActivity(activity, intent, options.toBundle());
     }
@@ -158,7 +158,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
                         }
                     }).show();
 
-        } else if (App.ISLOGIN) {
+        } else if (App.ISLOGIN()) {
             String url = "home.php?mod=space&do=pm&subop=view&touid=" + userUid + "&mobile=2";
             ChatActivity.open(this, username, url);
         } else {
@@ -223,7 +223,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
             if (userUid.equals(App.USER_UID)) {
                 Toast.makeText(this, "你不能添加自己为好友", Toast.LENGTH_SHORT).show();
                 return super.onOptionsItemSelected(item);
-            } else if (!App.ISLOGIN) {
+            } else if (!App.ISLOGIN()) {
                 Snackbar.make(layout, "你还没有登陆，无法进行操作", Snackbar.LENGTH_LONG)
                         .setAction("点我登陆", new View.OnClickListener() {
                             @Override

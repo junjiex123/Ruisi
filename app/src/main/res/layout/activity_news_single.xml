@@ -6,11 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <xyz.yluo.ruisiapp.View.MyToolBar
-        android:id="@+id/myToolBar"
-        android:background="@color/colorPrimary"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/ToolBarHeight"/>
+    <include layout="@layout/my_toolbar"/>
 
     <LinearLayout
         android:id="@+id/main_container"

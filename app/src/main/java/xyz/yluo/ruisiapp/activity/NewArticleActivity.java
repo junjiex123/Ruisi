@@ -1,6 +1,5 @@
 package xyz.yluo.ruisiapp.activity;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -34,7 +33,6 @@ import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyColorPicker;
 import xyz.yluo.ruisiapp.View.MySmileyPicker;
 import xyz.yluo.ruisiapp.View.MySpinner;
-import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.PostHandler;
@@ -74,40 +72,16 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_topic);
-        MyToolBar myToolBar = (MyToolBar) findViewById(R.id.myToolBar);
+        initToolBar(true,"发表新帖");
+        addToolbarMenu(R.drawable.ic_send_white_24dp).setOnClickListener(this);
+
+
         myColorPicker = new MyColorPicker(this);
         smileyPicker = new MySmileyPicker(this);
-        myToolBar.setTitle("发表新帖");
-        myToolBar.setBackEnable(this);
         forum_spinner = new MySpinner(this);
         typeid_spinner = new MySpinner(this);
         typeiddatas = new ArrayList<>();
-        myToolBar.addButton("备用",R.drawable.btn_gray_bg,"BTN_SUBMIT_2");
-        myToolBar.addButton("发表",R.drawable.btn_light_blue_bg,"BTN_SUBMIT");
-        myToolBar.setToolBarClickListener(new MyToolBar.OnToolBarItemClick() {
-            @Override
-            public void OnItemClick(View v, String Tag) {
-                if(Tag.equals("BTN_SUBMIT")&&checkPostInput()){
-                    dialog = new MyAlertDialog(NewArticleActivity.this,MyAlertDialog.PROGRESS_TYPE)
-                    .setTitleText("发贴中,请稍后......");
-                    dialog.show();
-                    begainPost(App.FORMHASH);
 
-                }else if(Tag.equals("BTN_SUBMIT_2")){
-                    new MyAlertDialog(NewArticleActivity.this,MyAlertDialog.WARNING_TYPE)
-                            .setTitleText("备用发帖地址")
-                            .setContentText("当本页发帖出现错误时，你可以切换到备用发帖地址")
-                            .setConfirmText("切换")
-                            .setCancelText("取消")
-                            .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
-                                @Override
-                                public void onClick(MyAlertDialog myAlertDialog) {
-                                    startActivity(new Intent(NewArticleActivity.this,NewArticleActivity_2.class));
-                                }
-                            }).show();
-                }
-            }
-        });
         type_id_container = findViewById(R.id.type_id_container);
         type_id_container.setVisibility(View.GONE);
         tv_select_forum = (TextView) findViewById(R.id.tv_select_forum);
@@ -277,6 +251,14 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
     @Override
     public void onClick(final View view) {
         switch (view.getId()){
+            case R.id.menu:
+                if(checkPostInput()) {
+                    dialog = new MyAlertDialog(NewArticleActivity.this, MyAlertDialog.PROGRESS_TYPE)
+                            .setTitleText("发贴中,请稍后......");
+                    dialog.show();
+                    begainPost(App.FORMHASH);
+                }
+                break;
             case R.id.action_bold:
                 handleInsert("[b][/b]");
                 break;

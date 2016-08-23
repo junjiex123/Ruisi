@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,7 +19,6 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.utils.IntentUtils;
 
 /**
@@ -33,7 +34,6 @@ public class SingleNewsActivity extends BaseActivity {
     protected SwipeRefreshLayout refreshLayout;
     private WebView webView;
     private String Url = "";
-    private MyToolBar myToolBar;
 
     public static void open(Context context, String url, String title) {
         Intent intent = new Intent(context, SingleNewsActivity.class);
@@ -47,11 +47,20 @@ public class SingleNewsActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_single);
-        myToolBar = (MyToolBar) findViewById(R.id.myToolBar);
+        TextView t = (TextView) findViewById(R.id.title);
         //http://jwc.xidian.edu.cn/info/1070/4428.htm
         //info/1070/4438.htm
         Url = "http://jwc.xidian.edu.cn/" + getIntent().getExtras().getString("url");
         String title = getIntent().getExtras().getString("title");
+        t.setText(title);
+        ImageView i = (ImageView) findViewById(R.id.menu);
+        i.setImageResource(R.drawable.ic_open_in_browser_24dp);
+        i.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                IntentUtils.openBroswer(SingleNewsActivity.this, Url);
+            }
+        });
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         webView = (WebView) findViewById(R.id.webview);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
@@ -61,27 +70,6 @@ public class SingleNewsActivity extends BaseActivity {
                 refreshLayout.setRefreshing(true);
             }
         });
-
-        myToolBar.setTitle(title);
-        myToolBar.setBackEnable(this);
-        myToolBar.addMenu(R.drawable.ic_open_in_browser_24dp,"NEWS_OPEN_IN_BROWSER");
-        myToolBar.addMenu(R.drawable.ic_refresh_24dp,"NEWS_REFRESH");
-        myToolBar.setToolBarClickListener(new MyToolBar.OnToolBarItemClick() {
-            @Override
-            public void OnItemClick(View v, String Tag) {
-                switch (Tag){
-                    case "NEWS_OPEN_IN_BROWSER":
-                        IntentUtils.openBroswer(SingleNewsActivity.this, Url);
-                        break;
-                    case "NEWS_REFRESH":
-                        refresh();
-                        break;
-
-                }
-            }
-        });
-
-
         //下拉刷新
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

@@ -54,7 +54,7 @@ public class FrageNews extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.frage_news_list, container, false);
+        View view = inflater.inflate(R.layout.list_toolbar, container, false);
         recycler_view = (RecyclerView) view.findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);

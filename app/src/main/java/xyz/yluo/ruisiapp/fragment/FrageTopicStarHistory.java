@@ -1,12 +1,10 @@
 package xyz.yluo.ruisiapp.fragment;
 
-import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +54,7 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater,container,savedInstanceState);
         Bundle bundle = getArguments();//从activity传过来的Bundle
         if (bundle != null) {
             int type = bundle.getInt("type", -1);
@@ -73,17 +72,15 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
                     currentIndex = 2;
             }
         }
-        super.onCreateView(inflater,container,savedInstanceState);
+        initToolbar(true,title);
         RecyclerView recyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
-
 
         String uid = App.USER_UID;
         switch (currentIndex) {
             case 0:
                 //主题
-                //if(actionBar!=null)
                 //    actionBar.setTitle("我的帖子");
                 url = "home.php?mod=space&uid=" + uid + "&do=thread&view=me&mobile=2";
                 break;
@@ -113,19 +110,14 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
         });
 
         refresh();
-        setCloseIcon();
         return mRootView;
     }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.simple_list_view_toolbar;
+        return R.layout.list_toolbar;
     }
 
-    @Override
-    protected String getTitle() {
-        return title;
-    }
 
     @Override
     public void onLoadMore() {

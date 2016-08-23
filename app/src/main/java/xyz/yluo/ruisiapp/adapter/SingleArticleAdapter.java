@@ -155,7 +155,8 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             article_user_image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    UserDetailActivity.openWithTransitionAnimation(activity, datalist.get(0).getUsername(), article_user_image, datalist.get(0).getImg());
+                    UserDetailActivity.openWithAnimation(
+                            activity, datalist.get(0).getUsername(), article_user_image,datalist.get(0).getUid());
                 }
             });
 
@@ -222,7 +223,9 @@ public class SingleArticleAdapter extends RecyclerView.Adapter<SingleArticleAdap
             replay_image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    UserDetailActivity.openWithTransitionAnimation(activity, datalist.get(getAdapterPosition()).getUsername(), replay_image, datalist.get(getAdapterPosition()).getImg());
+                    UserDetailActivity.openWithAnimation(
+                            activity, datalist.get(getAdapterPosition()).getUsername(),
+                            replay_image, datalist.get(getAdapterPosition()).getUid());
                 }
             });
 

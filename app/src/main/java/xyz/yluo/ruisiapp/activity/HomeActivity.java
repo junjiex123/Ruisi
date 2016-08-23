@@ -9,20 +9,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -36,18 +27,18 @@ import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.ChangeNetDialog;
 import xyz.yluo.ruisiapp.View.CircleImageView;
+import xyz.yluo.ruisiapp.View.MyBottomTab;
 import xyz.yluo.ruisiapp.data.FrageType;
 import xyz.yluo.ruisiapp.fragment.FragSetting;
-import xyz.yluo.ruisiapp.fragment.FrageArticleList;
+import xyz.yluo.ruisiapp.fragment.FrageForumList;
 import xyz.yluo.ruisiapp.fragment.FrageFriends;
 import xyz.yluo.ruisiapp.fragment.FrageHelp;
-import xyz.yluo.ruisiapp.fragment.FrageHome;
 import xyz.yluo.ruisiapp.fragment.FrageHotNew;
 import xyz.yluo.ruisiapp.fragment.FrageMessage;
 import xyz.yluo.ruisiapp.fragment.FrageTopicStarHistory;
+import xyz.yluo.ruisiapp.fragment.FragmentMy;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
-import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-17.
@@ -57,43 +48,34 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 3.新闻{@link xyz.yluo.ruisiapp.fragment.FrageNews}
  */
 public class HomeActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, DrawerLayout.DrawerListener {
+        implements  View.OnClickListener,MyBottomTab.OnTabChangeListener{
 
-    private final String TAG = "HomeActivity";
-    private DrawerLayout drawer;
-    private NavigationView navigationView;
-    private int clickId = 0;
     private long mExitTime;
     private Fragment currentFragment;
-    
     private Timer timer = null;
     private MyTimerTask task = null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.addDrawerListener(this);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        currentFragment = new FrageHome();
-        String tag = App.ISLOGIN? App.USER_NAME:getString(R.string.app_name);
-        getFragmentManager().beginTransaction().replace(R.id.fragment_home_container,currentFragment,tag).commit();
-        initDrawView();
-    }
-
-    public void opemDraw(){
-        drawer.openDrawer(GravityCompat.START);
+        currentFragment = new FrageForumList();
+        MyBottomTab bottomTab = (MyBottomTab) findViewById(R.id.bottom_bar);
+        bottomTab.setOnTabChangeListener(this);
+        getFragmentManager().beginTransaction().replace(
+                R.id.fragment_container,currentFragment).commit();
     }
 
     @Override
+    public void tabselectChange(View v, int position) {
+        changeFragement(position);
+    }
+
+    //检查消息程序
+    @Override
     protected void onStart() {
         super.onStart();
-        Log.e(TAG,"onStart");
-        if(App.ISLOGIN&& !TextUtils.isEmpty(App.USER_NAME)){
-            
+        if(App.ISLOGIN()&& !TextUtils.isEmpty(App.USER_NAME)){
             if(timer==null){
                 Log.e("message","开始timer");
                 timer = new Timer(true);
@@ -102,10 +84,9 @@ public class HomeActivity extends BaseActivity
                 task.cancel();  //将原任务从队列中移除
             }
             task = new MyTimerTask();
-            timer.schedule(task, 300, 60000); //延时1000ms后执行，60000ms执行一
+            timer.schedule(task, 200, 60000); //延时200ms后执行，60000ms执行一
         }
     }
-
 
     @Override
     protected void onStop() {
@@ -119,11 +100,8 @@ public class HomeActivity extends BaseActivity
 
     @Override
     public void onBackPressed(){
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        }else if(getFragmentManager().getBackStackEntryCount()>0){
+        if(getFragmentManager().getBackStackEntryCount()>0){
             getFragmentManager().popBackStack();
-            navigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
         }else {
             if ((System.currentTimeMillis() - mExitTime) > 1500) {
                 Toast.makeText(this, "再按一次退出手机睿思", Toast.LENGTH_SHORT).show();
@@ -132,13 +110,6 @@ public class HomeActivity extends BaseActivity
                 finish();
             }
         }
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        clickId = item.getItemId();
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     @Override
@@ -152,51 +123,51 @@ public class HomeActivity extends BaseActivity
          * 所以常用的fragment用show 和 hide 比较好
          * replace 自己和自己是不会执行任何的函数的
          */
+        String TAG = "TAG_"+id;
         FragmentManager fm = getFragmentManager();
-        // 开启Fragment事务
-        String Tag = FrageType.TITLE_LIST[id];
-        Fragment f = fm.findFragmentByTag(Tag);
-        if(f==null){
+        Fragment to = fm.findFragmentByTag(TAG);
+        FragmentTransaction transaction = fm.beginTransaction();
+        if(to==null){
             switch (id){
+                case FrageType.FOURMLIST:
+                    to = new FrageForumList();
+                    break;
+                case FrageType.NEWHOT:
+                    to = new FrageHotNew();
+                    break;
                 case FrageType.MESSAGE:
-                    f = new FrageMessage();
+                    to = new FrageMessage();
+                    break;
+                case FrageType.MY:
+                    to = FragmentMy.newInstance(App.USER_NAME,App.USER_UID);
                     break;
                 case FrageType.FRIEND:
-                    f = new FrageFriends();
+                    to = new FrageFriends();
                     break;
                 case FrageType.TOPIC:
-                    f = FrageTopicStarHistory.newInstance(FrageType.TOPIC);
+                    to = FrageTopicStarHistory.newInstance(FrageType.TOPIC);
                     break;
                 case FrageType.START:
-                    f = FrageTopicStarHistory.newInstance(FrageType.START);
+                    to = FrageTopicStarHistory.newInstance(FrageType.START);
                     break;
                 case FrageType.HISTORY:
-                    f = FrageTopicStarHistory.newInstance(FrageType.HISTORY);
+                    to = FrageTopicStarHistory.newInstance(FrageType.HISTORY);
                     break;
                 case FrageType.HELP:
-                    f = new FrageHelp();
-                    break;
-                case FrageType.HOME:
-                    f = new FrageHome();
+                    to = new FrageHelp();
                     break;
                 case FrageType.SETTING:
-                    f = new FragSetting();
+                    to = new FragSetting();
                     break;
             }
         }
-        switchContent(f,Tag);
-    }
-
-    private void switchContent(Fragment to, String Tag) {
-        FragmentManager fm = getFragmentManager();
         if (currentFragment == to) {
             return;
         }
-        FragmentTransaction transaction = fm.beginTransaction();
-//            .setCustomAnimations(android.R.anim.fade_in, R.anim.slide_out);
+         //.setCustomAnimations(android.R.anim.fade_in, R.anim.slide_out);
         if (!to.isAdded()) {
-            transaction.add(R.id.fragment_home_container, to,Tag);
-            if(!(to instanceof FrageHome)){
+            transaction.add(R.id.fragment_container, to,TAG);
+            if(id>=4){
                 transaction.addToBackStack(null);
             }
         }
@@ -210,24 +181,13 @@ public class HomeActivity extends BaseActivity
         transaction.commit();
     }
 
-    public void openArticleList(int fid,String title){
-        FragmentManager m = getFragmentManager();
-        String tag = FrageType.TITLE_LIST[FrageType.ARTICLELIST];
-        FrageArticleList f = (FrageArticleList) m.findFragmentByTag(tag);
-        if(f!=null){
-            m.beginTransaction().remove(f).commit();
-        }
-        f = FrageArticleList.newInstance(fid,title);
-        switchContent(f,tag);
-    }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.profile_image:
-                if (App.ISLOGIN&&!TextUtils.isEmpty(App.USER_NAME)) {
-                    String url = UrlUtils.getAvaterurlb(App.USER_UID);
-                    UserDetailActivity.openWithTransitionAnimation(HomeActivity.this, App.USER_NAME, (CircleImageView)view, url);
+                if (App.ISLOGIN()) {
+                    UserDetailActivity.openWithAnimation(HomeActivity.this, App.USER_NAME, (CircleImageView)view, App.USER_UID);
                 } else {
                     Intent i = new Intent(HomeActivity.this, LoginActivity.class);
                     startActivityForResult(i,0);
@@ -238,119 +198,11 @@ public class HomeActivity extends BaseActivity
                 dialog.setNetType(App.IS_SCHOOL_NET);
                 dialog.show(getFragmentManager(), "changeNet");
                 break;
-            case R.id.show_message:
-                if(isLogin()){
-                    clickId = R.id.show_message;
-                    drawer.closeDrawer(GravityCompat.START);
-                }
-                break;
         }
 
     }
 
-    /**
-     * 登陆页面返回值
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==RESULT_OK){
-            initDrawView();
-        }
-    }
 
-    private void initDrawView(){
-        Log.i(TAG,"draw open");
-        final View header = navigationView.getHeaderView(0);
-        //header.findViewById(R.id.message_badge_nav).setVisibility(message_bage.getVisibility());
-        CircleImageView userImage = (CircleImageView) header.findViewById(R.id.profile_image);
-        TextView userGrade = (TextView) header.findViewById(R.id.user_grade);
-        TextView userName = (TextView) header.findViewById(R.id.header_user_name);
-        header.findViewById(R.id.change_net).setOnClickListener(this);
-        ImageView btn_show_message = (ImageView) header.findViewById(R.id.show_message);
-        btn_show_message.setOnClickListener(this);
-        userImage.setOnClickListener(this);
-        if(App.ISLOGIN&& !TextUtils.isEmpty(App.USER_NAME)){
-            userGrade.setVisibility(View.VISIBLE);
-            userGrade.setText(App.USER_GRADE);
-            userName.setText(App.USER_NAME);
-            String url = UrlUtils.getAvaterurlm(App.USER_UID);
-            Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
-        }else{
-            userImage.setImageResource(R.drawable.image_placeholder);
-            userName.setText("点击头像登陆");
-            userGrade.setVisibility(View.GONE);
-        }
-    }
-
-    /**
-     * 抽屉监听函数
-     */
-    @Override
-    public void onDrawerSlide(View drawerView, float slideOffset) {
-    }
-
-    @Override
-    public void onDrawerOpened(View drawerView) {
-        clickId = 0;
-        if(App.ISLOGIN){
-            initDrawView();
-        }
-    }
-
-    @Override
-    public void onDrawerClosed(View drawerView) {
-        switch (clickId) {
-            case R.id.nav_about:
-                startActivity(new Intent(this, AboutActivity.class));
-                break;
-            case R.id.nav_setting:
-                changeFragement(FrageType.SETTING);
-                break;
-            case R.id.nav_sign:
-                if (App.IS_SCHOOL_NET) {
-                    if (isLogin()) {
-                        startActivity(new Intent(this, UserDakaActivity.class));
-                    }
-                } else {
-                    Toast.makeText(this, "你现在不是校园网无法签到", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case R.id.show_message:
-                changeFragement(FrageType.MESSAGE);
-                messageHandler.sendEmptyMessage(0);
-                break;
-            case R.id.nav_my_topic:
-                if (isLogin()) {
-                    changeFragement(FrageType.TOPIC);
-                }
-                break;
-            case R.id.nav_my_star:
-                if (isLogin()) {
-                    changeFragement(FrageType.START);
-                }
-                break;
-            case R.id.nav_history:
-                if (isLogin()) {
-                    changeFragement(FrageType.HISTORY);
-                }
-                break;
-            case R.id.nav_help:
-                changeFragement(FrageType.HELP);
-                break;
-            case R.id.nav_home:
-                changeFragement(FrageType.HOME);
-                break;
-            case R.id.nav_my_friend:
-                changeFragement(FrageType.FRIEND);
-                break;
-        }
-    }
-
-    @Override
-    public void onDrawerStateChanged(int newState) {
-
-    }
 
     private MyHandler messageHandler = new MyHandler();
     final NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
@@ -359,6 +211,8 @@ public class HomeActivity extends BaseActivity
             .setContentTitle("未读消息提醒")
             .setContentText("你有未读的消息哦,去我的消息页面查看吧！")
             .setAutoCancel(true);
+
+
 
 
     private class MyTimerTask extends TimerTask{
@@ -393,7 +247,7 @@ public class HomeActivity extends BaseActivity
                 }
             });
         }
-    };
+    }
 
 
     //// TODO: 16-8-23  

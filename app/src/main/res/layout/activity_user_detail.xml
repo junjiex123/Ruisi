@@ -9,7 +9,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
+        android:layout_height="200dp"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
 
@@ -31,8 +31,8 @@
 
             <xyz.yluo.ruisiapp.View.CircleImageView
                 android:id="@+id/user_detail_img_avatar"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
                 android:layout_gravity="center"
                 android:src="@drawable/image_placeholder"
                 app:civ_border_color="@android:color/white"

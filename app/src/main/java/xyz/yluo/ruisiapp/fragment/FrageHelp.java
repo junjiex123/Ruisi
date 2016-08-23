@@ -225,9 +225,9 @@ public class FrageHelp extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
+        initToolbar(true,"睿思帮助");
         HtmlView htmlTextView = (HtmlView) mRootView.findViewById(R.id.html_text);
         htmlTextView.setHtmlText(helpTxt,false);
-        setCloseIcon();
         return mRootView;
     }
 
@@ -236,8 +236,4 @@ public class FrageHelp extends BaseFragment {
         return R.layout.frage_help;
     }
 
-    @Override
-    protected String getTitle() {
-        return "睿思帮助";
-    }
 }

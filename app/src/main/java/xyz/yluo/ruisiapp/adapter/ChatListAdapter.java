@@ -91,7 +91,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 @Override
                 public void onClick(View v) {
                     String imageUrl = DataSets.get(getAdapterPosition()).getUserImage();
-                    UserDetailActivity.openWithTransitionAnimation(context, "username", user_image, imageUrl);
+                    UserDetailActivity.openWithAnimation(context, "username", user_image, imageUrl);
                 }
             });
         }

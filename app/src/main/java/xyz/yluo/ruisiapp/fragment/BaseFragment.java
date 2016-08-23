@@ -8,10 +8,11 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.activity.BaseActivity;
 import xyz.yluo.ruisiapp.activity.HomeActivity;
 
@@ -22,46 +23,69 @@ import xyz.yluo.ruisiapp.activity.HomeActivity;
 
 public abstract class BaseFragment extends Fragment {
     protected View mRootView;
-    protected MyToolBar toolBar;
+    protected View toolBar;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(null == mRootView){
             mRootView = inflater.inflate(getLayoutId(), container, false);
-            toolBar = (MyToolBar) mRootView.findViewById(R.id.myToolBar);
-            if(toolBar!=null){
-                toolBar.setTitle(getTitle());
-
-            }
 
         }
         return mRootView;
     }
 
-    protected void setCloseIcon(){
+    protected void initToolbar(boolean isCloseAble,String title){
+        toolBar = mRootView.findViewById(R.id.myToolBar);
         if(toolBar!=null){
-            toolBar.setIcon(R.drawable.ic_clear_24dp).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(getActivity() instanceof HomeActivity){
-                        getFragmentManager().popBackStack();
+            TextView titles = (TextView) toolBar.findViewById(R.id.title);
+            titles.setText(title);
+            ImageView i = (ImageView) toolBar.findViewById(R.id.logo);
+            if(isCloseAble){
+                i.setImageResource(R.drawable.ic_clear_24dp);
+                i.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(getActivity() instanceof HomeActivity){
+                            getFragmentManager().popBackStack();
+                        }
                     }
-                }
-            });
+                });
+            }else{
+                i.setVisibility(View.GONE);
+            }
         }
     }
 
+    protected ImageView addToolbarMenu(int resid){
+        toolBar = mRootView.findViewById(R.id.myToolBar);
+        if(toolBar!=null){
+            ImageView i =  (ImageView)toolBar.findViewById(R.id.menu);
+            i.setVisibility(View.VISIBLE);
+            i.setImageResource(resid);
+            return i;
+        }
+        return null;
+    }
+
+    protected ImageView setToolbarLogo(int resid){
+        toolBar = mRootView.findViewById(R.id.myToolBar);
+        if(toolBar!=null){
+            ImageView i =  (ImageView)toolBar.findViewById(R.id.logo);
+            i.setVisibility(View.VISIBLE);
+            i.setImageResource(resid);
+            return i;
+        }
+        return null;
+    }
+
+
     protected abstract int getLayoutId();
-    protected abstract String getTitle();
 
     protected boolean isLogin() {
-        return App.ISLOGIN || ((BaseActivity) getActivity()).isLogin();
+        return App.ISLOGIN() || ((BaseActivity) getActivity()).isLogin();
     }
 
-    protected void setToolBarMenuClick(MyToolBar myToolBar) {
-        ((BaseActivity) getActivity()).setToolBarMenuClick(myToolBar);
-    }
 
     protected void switchActivity(Class<?> cls){
         getActivity().startActivity(new Intent(getActivity(),cls));

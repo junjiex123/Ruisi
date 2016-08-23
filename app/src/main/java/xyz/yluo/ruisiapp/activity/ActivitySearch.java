@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
@@ -57,27 +56,25 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
     private int currentPage = 1;
     private String searchid = "";
     private boolean isEnableLoadMore = false;
-
     private RecyclerView recycler_view;
     private EditText search_input;
-    private CoordinatorLayout main_window;
     private SwipeRefreshLayout refreshLayout;
     private SimpleListAdapter adapter;
     private List<SimpleListData> datas = new ArrayList<>();
     private CardView search_card;
     private Animator animator;
     private TextView nav_title;
+    View main_window;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
+        main_window = findViewById(R.id.main_window);
         findViewById(R.id.btn_back).setOnClickListener(this);
         recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
         search_input = (EditText) findViewById(R.id.search_input);
-        main_window = (CoordinatorLayout) findViewById(R.id.main_window);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_view);
         search_card = (CardView) findViewById(R.id.search_card);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);

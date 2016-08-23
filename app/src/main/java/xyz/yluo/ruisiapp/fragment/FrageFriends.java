@@ -46,6 +46,7 @@ public class FrageFriends extends BaseFragment implements LoadMoreListener.OnLoa
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
+        initToolbar(true,"我的好友");
         recycler_view = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
@@ -66,7 +67,6 @@ public class FrageFriends extends BaseFragment implements LoadMoreListener.OnLoa
                 refreshLayout.setRefreshing(true);
             }
         });
-        setCloseIcon();
         new GetDataTask().execute(url);
 
         return mRootView;
@@ -74,13 +74,9 @@ public class FrageFriends extends BaseFragment implements LoadMoreListener.OnLoa
 
     @Override
     protected int getLayoutId() {
-        return R.layout.simple_list_view_toolbar;
+        return R.layout.list_toolbar;
     }
 
-    @Override
-    protected String getTitle() {
-        return "我的好友";
-    }
 
     @Override
     public void onLoadMore() {

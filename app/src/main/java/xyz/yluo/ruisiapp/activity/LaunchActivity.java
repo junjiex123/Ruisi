@@ -51,7 +51,6 @@ public class LaunchActivity extends BaseActivity {
         public void run() {
             if(isForeGround){
                 Intent i = new Intent(getApplicationContext(), HomeActivity.class);
-                i.putExtra("isLogin", App.ISLOGIN);
                 startActivity(i);
                 finish();
             }
@@ -76,7 +75,6 @@ public class LaunchActivity extends BaseActivity {
         btn_inner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                App.ISLOGIN = true;
                 startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                 finish();
             }
@@ -84,7 +82,6 @@ public class LaunchActivity extends BaseActivity {
         btn_outer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                App.ISLOGIN = true;
                 startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                 finish();
             }
@@ -152,10 +149,7 @@ public class LaunchActivity extends BaseActivity {
         HttpUtil.get(this, url, new TextResponseHandler() {
             @Override
             public void onSuccess(String res) {
-                App.ISLOGIN = false;
-                if (res.contains("loginbox")) {
-                    App.ISLOGIN = false;
-                } else {
+                if (!res.contains("loginbox")) {
                     Document doc = Jsoup.parse(res);
                     int index = res.indexOf("欢迎您回来");
                     String s = res.substring(index, index + 30).split("，")[1].split(" ")[0].trim();
@@ -169,8 +163,6 @@ public class LaunchActivity extends BaseActivity {
                     editor.putString("USER_NAME", App.USER_NAME);
                     editor.putString("USER_UID", App.USER_UID);
                     editor.apply();
-
-                    App.ISLOGIN = true;
                 }
             }
 

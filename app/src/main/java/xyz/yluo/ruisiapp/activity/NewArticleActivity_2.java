@@ -21,7 +21,6 @@ import java.util.Map;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.PersistentCookieStore;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -37,7 +36,6 @@ public class NewArticleActivity_2 extends BaseActivity {
     private WebView myWebView;
     private List<String> list = new ArrayList<>();
     private Map<Integer, String> map = new LinkedHashMap<>();
-    private MyToolBar myToolBar;
 
     public static void open(Context context) {
         Intent intent = new Intent(context, NewArticleActivity_2.class);
@@ -51,7 +49,6 @@ public class NewArticleActivity_2 extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_new_topic2);
-        myToolBar = (MyToolBar) findViewById(R.id.myToolBar);
 
         //设置cookie
         myWebView = (WebView) findViewById(R.id.mwebView);
@@ -82,15 +79,10 @@ public class NewArticleActivity_2 extends BaseActivity {
         for (Map.Entry<Integer, String> entry : map.entrySet()) {
             list.add(entry.getValue());
         }
-
-        Spinner spinner = new Spinner(this);
-
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, list);
-        spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
         spinner.setAdapter(spinnerAdapter);
-        myToolBar.setTitle("发表新帖");
-        myToolBar.setBackEnable(this);
-        myToolBar.addView(spinner);
+        initToolBar(true,"发表新帖");
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -114,7 +106,7 @@ public class NewArticleActivity_2 extends BaseActivity {
         WebSettings settings = myWebView.getSettings();
         settings.setJavaScriptEnabled(true);
 
-        if (App.ISLOGIN) {
+        if (App.ISLOGIN()) {
             myWebView.loadUrl(UrlUtils.getPostUrl(CURRENT_FID));
         } else {
             Toast.makeText(this, "你还没有登陆", Toast.LENGTH_SHORT).show();

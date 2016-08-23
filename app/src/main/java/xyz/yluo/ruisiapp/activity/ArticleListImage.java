@@ -43,8 +43,20 @@ public class ArticleListImage extends ArticleListBase {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        myToolBar.setTitle(CurrentTitle);
-        myToolBar.addMenu(R.drawable.ic_column_change_24dp,"CHANGE_COLUMN");
+        initToolBar(true, CurrentTitle);
+        addToolbarMenu(R.drawable.ic_column_change_24dp).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (colNum == 1) {
+                    colNum = 2;
+                    layoutManager.setSpanCount(2);
+                } else {
+                    colNum = 1;
+                    layoutManager.setSpanCount(1);
+                }
+            }
+        });
+
 
         datas = new ArrayList<>();
         layoutManager = new StaggeredGridLayoutManager(colNum, StaggeredGridLayoutManager.VERTICAL);
@@ -53,20 +65,6 @@ public class ArticleListImage extends ArticleListBase {
         mRecyclerView.setAdapter(adapter);
 
         refreshLayout.setEnabled(false);
-    }
-
-    @Override
-    protected boolean OnToolBarMenuItemClick(View view,String tag) {
-        if(tag.equals("CHANGE_COLUMN")){
-            if (colNum == 1) {
-                colNum = 2;
-                layoutManager.setSpanCount(2);
-            } else {
-                colNum = 1;
-                layoutManager.setSpanCount(1);
-            }
-        }
-        return  super.OnToolBarMenuItemClick(view,tag);
     }
 
     @Override

@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xyz.yluo.ruisiapp.App;
-import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.ArticleListNormalAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.database.MyDB;
@@ -59,10 +58,7 @@ public class ArticleList extends ArticleListBase {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mRecyleAdapter);
-        myToolBar.setTitle(CurrentTitle);
-
-        myToolBar.addMenu(R.drawable.ic_search_white_24dp,"SEARCH");
-        myToolBar.addMenu(R.drawable.ic_edit,"POST");
+        initToolBar(true,CurrentTitle);
 
         myDB = new MyDB(ArticleList.this.getApplicationContext(), MyDB.MODE_READ);
         //加载更多

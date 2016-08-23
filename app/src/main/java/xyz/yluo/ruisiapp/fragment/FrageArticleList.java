@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,8 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,8 +25,6 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyToolBar;
-import xyz.yluo.ruisiapp.activity.ArticleList;
 import xyz.yluo.ruisiapp.adapter.ArticleListNormalAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.database.MyDB;
@@ -51,7 +46,7 @@ public class FrageArticleList extends BaseFragment implements LoadMoreListener.O
     int CurrentPage = 1;
     boolean isEnableLoadMore = false;
     RecyclerView.LayoutManager mLayoutManager;
-    protected MyToolBar myToolBar;
+
     boolean isHideZhiding = false;
     //一般板块/图片板块/手机板块数据列表
     private List<ArticleListData> datas;
@@ -82,9 +77,10 @@ public class FrageArticleList extends BaseFragment implements LoadMoreListener.O
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
-        btn_refresh = (FloatingActionButton)mRootView.findViewById(R.id.btn_refresh);
-        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.main_recycler_view);
-        refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.main_refresh_layout);
+        initToolbar(true,TITLE);
+        btn_refresh = (FloatingActionButton)mRootView.findViewById(R.id.btn);
+        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
+        refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         isHideZhiding = PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .getBoolean("setting_hide_zhidin", true);
@@ -189,13 +185,9 @@ public class FrageArticleList extends BaseFragment implements LoadMoreListener.O
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_article_list;
+        return R.layout.list_toolbar_btn;
     }
 
-    @Override
-    protected String getTitle() {
-        return TITLE;
-    }
 
     @Override
     public void onLoadMore() {

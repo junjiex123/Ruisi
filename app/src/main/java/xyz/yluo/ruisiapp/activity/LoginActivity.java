@@ -30,7 +30,6 @@ import java.util.Map;
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
-import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
@@ -57,7 +56,7 @@ public class LoginActivity extends BaseActivity {
     private String loginUrl;
     private int answerSelect = 0;
     private MyAlertDialog dialog;
-    private MyToolBar myToolBar;
+    private View myToolBar;
 
 
 
@@ -72,7 +71,7 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_login);
 
-        myToolBar = (MyToolBar) findViewById(R.id.myToolBar);
+        myToolBar = findViewById(R.id.myToolBar);
         ed_username = (EditText) findViewById(R.id.login_name);
         ed_pass = (EditText) findViewById(R.id.login_pas);
         btn_login = (Button) findViewById(R.id.btn_login);
@@ -89,8 +88,7 @@ public class LoginActivity extends BaseActivity {
                 login_click();
             }
         });
-        myToolBar.setTitle("登陆");
-        myToolBar.setBackEnable(this);
+
 
         perPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         boolean isRemUser = perPreferences.getBoolean("ISREMUSER", false);
@@ -298,7 +296,6 @@ public class LoginActivity extends BaseActivity {
         editor.apply();
         //开始获取formhash
         dialog.dismiss();
-        App.ISLOGIN = true;
         Toast.makeText(getApplicationContext(), "欢迎你" + App.USER_NAME + "登陆成功", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
         intent.putExtra("status", "ok");

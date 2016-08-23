@@ -1,8 +1,5 @@
 package xyz.yluo.ruisiapp.fragment;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -26,12 +23,11 @@ import java.util.List;
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyGridDivider;
+import xyz.yluo.ruisiapp.activity.ActivitySearch;
 import xyz.yluo.ruisiapp.activity.ArticleList;
 import xyz.yluo.ruisiapp.activity.ArticleListImage;
-import xyz.yluo.ruisiapp.activity.HomeActivity;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
 import xyz.yluo.ruisiapp.data.ForumListData;
-import xyz.yluo.ruisiapp.data.FrageType;
 import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -42,7 +38,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * Created by free2 on 16-3-19.
  * 板块列表fragemnt
  */
-public class FrageForumList extends BaseFragment implements RecyclerViewClickListener{
+public class FrageForumList extends BaseFragment implements RecyclerViewClickListener,View.OnClickListener{
     protected SwipeRefreshLayout refreshLayout;
     private List<ForumListData> datas = null;
     private ForumListAdapter adapter = null;
@@ -70,9 +66,11 @@ public class FrageForumList extends BaseFragment implements RecyclerViewClickLis
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.frage_forum_list, container, false);
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        super.onCreateView(inflater,container,savedInstanceState);
+        initToolbar(false,"板块列表");
+        addToolbarMenu(R.drawable.ic_search_white_24dp).setOnClickListener(this);
+        refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
+        RecyclerView recyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         //刷新
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
 
@@ -101,7 +99,6 @@ public class FrageForumList extends BaseFragment implements RecyclerViewClickLis
             }
         });
 
-
         //判断是否真正的需要请求服务器
         //获得新的数据
         long time =  sharedPreferences.getLong(KEY,0);
@@ -116,19 +113,14 @@ public class FrageForumList extends BaseFragment implements RecyclerViewClickLis
             getData();
         }
 
-
-        return view;
+        return mRootView;
     }
 
     @Override
     protected int getLayoutId() {
-        return 0;
+        return R.layout.list_toolbar;
     }
 
-    @Override
-    protected String getTitle() {
-        return "板块列表";
-    }
 
     private void getData() {
         String url = "forum.php?forumlist=1&mobile=2";
@@ -158,8 +150,18 @@ public class FrageForumList extends BaseFragment implements RecyclerViewClickLis
         if (App.IS_SCHOOL_NET && (fid==561|| fid==157 || fid==13)) {
             ArticleListImage.open(getActivity(),fid,title);
         } else {
-            ((HomeActivity)getActivity()).openArticleList(fid,title);
-            //ArticleList.open(getActivity(), fid,title);
+            ArticleList.open(getActivity(), fid,title);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.menu:
+                if(isLogin()){
+                    switchActivity(ActivitySearch.class);
+                }
+                break;
         }
     }
 

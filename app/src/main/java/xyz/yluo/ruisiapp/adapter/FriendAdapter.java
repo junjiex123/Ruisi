@@ -83,8 +83,7 @@ public class FriendAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         void userImage_click() {
             FriendData single = datas.get(getAdapterPosition());
             String username = single.getUserName();
-            String imgUrl = single.getImgUrl();
-            UserDetailActivity.openWithTransitionAnimation(activity, username, user_image, imgUrl);
+            UserDetailActivity.openWithAnimation(activity, username, user_image, single.getUid());
         }
 
         protected void item_click() {

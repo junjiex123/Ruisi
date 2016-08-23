@@ -34,7 +34,6 @@ import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyColorPicker;
 import xyz.yluo.ruisiapp.View.MySmileyPicker;
 import xyz.yluo.ruisiapp.View.MySpinner;
-import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.PostHandler;
@@ -68,25 +67,24 @@ public class EditActivity extends BaseActivity implements View.OnClickListener{
         }else {
             showToast("参数异常无法编辑");
         }
-        MyToolBar myToolBar = (MyToolBar) findViewById(R.id.myToolBar);
+
         myColorPicker = new MyColorPicker(this);
         smileyPicker = new MySmileyPicker(this);
-        myToolBar.setTitle("编辑帖子");
-        myToolBar.setBackEnable(this);
+        initToolBar(true,"编辑帖子");
         typeid_spinner = new MySpinner(this);
         typeiddatas = new ArrayList<>();
-        myToolBar.addButton("提交",R.drawable.btn_light_red_bg,"BTN_SUBMIT");
-        myToolBar.setToolBarClickListener(new MyToolBar.OnToolBarItemClick() {
+        addToolbarMenu(R.drawable.btn_light_red_bg).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void OnItemClick(View v, String Tag) {
-                if(Tag.equals("BTN_SUBMIT")&&checkPostInput()){
+            public void onClick(View view) {
+                if(checkPostInput()){
                     dialog = new MyAlertDialog(EditActivity.this,MyAlertDialog.PROGRESS_TYPE)
-                    .setTitleText("提交中,请稍后......");
+                            .setTitleText("提交中,请稍后......");
                     dialog.show();
                     start_post();
                 }
             }
         });
+
         findViewById(R.id.forum_container).setVisibility(View.GONE);
         type_id_container = findViewById(R.id.type_id_container);
         type_id_container.setVisibility(View.GONE);

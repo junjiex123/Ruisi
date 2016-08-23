@@ -22,7 +22,6 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
 import xyz.yluo.ruisiapp.data.ChatListData;
 import xyz.yluo.ruisiapp.fragment.FrageReplyDialog;
@@ -50,7 +49,6 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
     private String url = "";
     private String touid = "";
     private long replyTime = 0;
-    private MyToolBar myToolBar;
 
     public static void open(Context context, String username, String url) {
         /*isopenfromwebview 是从webview打开的是新建的回话*/
@@ -64,11 +62,11 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
+        setContentView(R.layout.list_toolbar_btn);
 
-        myToolBar = (MyToolBar) findViewById(R.id.myToolBar);
         recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
-        btn_chat = (FloatingActionButton) findViewById(R.id.btn_chat);
+        btn_chat = (FloatingActionButton) findViewById(R.id.btn);
+        btn_chat.setImageResource(R.drawable.ic_reply_white_24dp);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -84,6 +82,7 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
         });
         Bundle bundle = this.getIntent().getExtras();
         username = bundle.getString("username");
+        initToolBar(true,username);
         url = bundle.getString("url");
         btn_chat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,9 +93,6 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
                 dialog.show(getFragmentManager(), "chate");
             }
         });
-
-        myToolBar.setTitle(username);
-        myToolBar.setBackEnable(this);
         new GetDataTask().execute(url);
     }
 

@@ -4,12 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <xyz.yluo.ruisiapp.View.MyToolBar
-        android:id="@+id/myToolBar"
-        android:background="@color/colorPrimary"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/ToolBarHeight"/>
-
+    <include layout="@layout/my_toolbar"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

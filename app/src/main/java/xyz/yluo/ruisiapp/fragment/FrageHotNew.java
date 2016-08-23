@@ -37,8 +37,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * 简单的fragment 首页第二页 展示最新的帖子等
  */
 public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoadMoreListener {
-
-    public static final String TAG = FrageHotNew.class.getSimpleName();
+    
     protected RecyclerView recycler_view;
     protected SwipeRefreshLayout refreshLayout;
     private List<GalleryData> galleryDatas = new ArrayList<>();
@@ -58,16 +57,13 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
+        initToolbar(false,"看贴");
         recycler_view = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
-
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recycler_view.setLayoutManager(mLayoutManager);
-
         adapter = new HotNewListAdapter(getActivity(), mydataset,galleryDatas);
-
-
         recycler_view.setAdapter(adapter);
         recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 10));
 
@@ -98,13 +94,9 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
 
     @Override
     protected int getLayoutId() {
-        return R.layout.frage_hot_new_list;
+        return R.layout.list_toolbar;
     }
 
-    @Override
-    protected String getTitle() {
-        return "看贴";
-    }
 
     private void refresh() {
         CurrentPage = 1;

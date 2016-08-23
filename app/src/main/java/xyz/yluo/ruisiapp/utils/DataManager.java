@@ -50,7 +50,6 @@ public class DataManager {
         }
         //删除cookie
         HttpUtil.exit();
-        App.ISLOGIN = false;
         App.USER_NAME = "";
         App.USER_UID = "";
         SharedPreferences perUserInfo = context.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
@@ -59,7 +58,7 @@ public class DataManager {
         editor.apply();
     }
 
-    public static long getFolderSize(File file) throws Exception {
+    private static long getFolderSize(File file) throws Exception {
         long size = 0;
         try {
             File[] fileList = file.listFiles();
@@ -87,7 +86,7 @@ public class DataManager {
     /**
      * 格式化单位
      */
-    public static String getFormatSize(double size) {
+    private static String getFormatSize(double size) {
         double kiloByte = size / 1024;
         if (kiloByte < 1) {
 //            return size + "Byte";
@@ -123,35 +122,35 @@ public class DataManager {
     /***
      * 清除本应用内部缓存(/data/data/com.xxx.xxx/cache)
      */
-    public static void cleanInternalCache(Context context) {
+    private static void cleanInternalCache(Context context) {
         deleteFilesByDirectory(context.getCacheDir());
     }
 
     /***
      * 清除本应用SharedPreference(/data/data/com.xxx.xxx/shared_prefs)
      */
-    public static void cleanSharedPreference(Context context) {
+    private static void cleanSharedPreference(Context context) {
         deleteFilesByDirectory(new File("/data/data/" + context.getPackageName() + "/shared_prefs"));
     }
 
     /**
      * 按名字清除本应用数据库
      */
-    public static void cleanDatabaseByName(Context context, String dbName) {
+    private static void cleanDatabaseByName(Context context, String dbName) {
         context.deleteDatabase(dbName);
     }
 
     /**
      * 清除/data/data/com.xxx.xxx/files
      */
-    public static void cleanFiles(Context context) {
+    private static void cleanFiles(Context context) {
         deleteFilesByDirectory(context.getFilesDir());
     }
 
     /**
      * 清除外部cache下的内容(/mnt/sdcard/android/data/com.xxx.xxx/cache)
      */
-    public static void cleanExternalCache(Context context) {
+    private static void cleanExternalCache(Context context) {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             deleteFilesByDirectory(context.getExternalCacheDir());
         }
@@ -160,7 +159,7 @@ public class DataManager {
     /**
      * 清除自定义路径下的文件，使用需小心，请不要误删。而且只支持目录下的文件删除
      */
-    public static void cleanCustomCache(String filePath) {
+    private static void cleanCustomCache(String filePath) {
         deleteFilesByDirectory(new File(filePath));
     }
 
