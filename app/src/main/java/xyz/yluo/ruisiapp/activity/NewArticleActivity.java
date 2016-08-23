@@ -83,7 +83,7 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
         typeid_spinner = new MySpinner(this);
         typeiddatas = new ArrayList<>();
         myToolBar.addButton("备用",R.drawable.btn_gray_bg,"BTN_SUBMIT_2");
-        myToolBar.addButton("发表",R.drawable.btn_light_red_bg,"BTN_SUBMIT");
+        myToolBar.addButton("发表",R.drawable.btn_light_blue_bg,"BTN_SUBMIT");
         myToolBar.setToolBarClickListener(new MyToolBar.OnToolBarItemClick() {
             @Override
             public void OnItemClick(View v, String Tag) {

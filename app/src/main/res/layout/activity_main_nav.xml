@@ -6,15 +6,13 @@
     android:layout_height="wrap_content"
     android:background="@drawable/side_nav_bar"
     android:orientation="vertical"
-    android:paddingBottom="16dp"
+    android:padding="@dimen/dimen_16"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <LinearLayout
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginTop="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -71,7 +69,6 @@
 
 
     <TextView
-        android:layout_marginStart="16dp"
         android:textSize="14sp"
         android:textColor="@color/white"
         android:id="@+id/header_user_name"
@@ -79,10 +76,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:lines="1"
-        tools:text="点击头像登陆" />
+        android:text="点击头像登陆" />
 
     <TextView
-        android:layout_marginStart="16dp"
+        android:visibility="gone"
         android:id="@+id/user_grade"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -10,7 +10,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
 
@@ -18,22 +18,19 @@
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/user_detail_header_bg"
+            android:background="@color/colorPrimary"
             android:elevation="4dp"
-            android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleGravity="center_horizontal|bottom"
             app:expandedTitleMarginTop="@dimen/dimen_8"
             app:expandedTitleTextAppearance="@style/text_20_white"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="@dimen/dimen_16">
-
                 <xyz.yluo.ruisiapp.View.CircleImageView
                     android:id="@+id/user_image"
                     android:layout_width="80dp"
@@ -42,16 +39,14 @@
                     android:src="@drawable/image_placeholder"
                     app:civ_border_color="@android:color/white"
                     app:civ_border_width="2dp" />
-
                 <TextView
                     android:id="@+id/user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_8"
                     android:text="哈哈哈哈"
-                    android:textColor="@color/colorAuthor"
+                    android:textColor="@color/white"
                     android:textSize="16sp" />
-
                 <LinearLayout
                     android:id="@+id/have_sign_view"
                     android:layout_width="match_parent"
@@ -92,7 +87,6 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
-
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -143,8 +137,6 @@
                     android:hint="输入你最想说的话,不想填写就留空" />
 
             </LinearLayout>
-
-
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

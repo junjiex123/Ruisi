@@ -83,7 +83,6 @@ public class HomeActivity extends BaseActivity
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.addDrawerListener(this);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-
         myToolBar.setIcon(R.drawable.ic_menu_24dp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,6 +107,7 @@ public class HomeActivity extends BaseActivity
         currentFragment = new FrageHome();
         String tag = App.ISLOGIN? App.USER_NAME:getString(R.string.app_name);
         getFragmentManager().beginTransaction().replace(R.id.fragment_home_container,currentFragment,tag).commit();
+        initDrawView();
     }
 
     @Override
@@ -147,6 +147,7 @@ public class HomeActivity extends BaseActivity
             drawer.closeDrawer(GravityCompat.START);
         }else if(!(currentFragment instanceof FrageHome)){
             changeFragement(FrageType.HOME);
+            navigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
         }else {
             if ((System.currentTimeMillis() - mExitTime) > 1500) {
                 Toast.makeText(this, "再按一次退出手机睿思", Toast.LENGTH_SHORT).show();
@@ -272,7 +273,7 @@ public class HomeActivity extends BaseActivity
     private void initDrawView(){
         Log.i(TAG,"draw open");
         final View header = navigationView.getHeaderView(0);
-        findViewById(R.id.message_badge_nav).setVisibility(message_bage.getVisibility());
+        header.findViewById(R.id.message_badge_nav).setVisibility(message_bage.getVisibility());
         CircleImageView userImage = (CircleImageView) header.findViewById(R.id.profile_image);
         TextView userGrade = (TextView) header.findViewById(R.id.user_grade);
         TextView userName = (TextView) header.findViewById(R.id.header_user_name);
@@ -303,7 +304,9 @@ public class HomeActivity extends BaseActivity
     @Override
     public void onDrawerOpened(View drawerView) {
         clickId = 0;
-        initDrawView();
+        if(App.ISLOGIN){
+            initDrawView();
+        }
     }
 
     @Override
@@ -326,6 +329,7 @@ public class HomeActivity extends BaseActivity
                 break;
             case R.id.show_message:
                 changeFragement(FrageType.MESSAGE);
+                messageHandler.sendEmptyMessage(0);
                 break;
             case R.id.nav_my_topic:
                 if (isLogin()) {
@@ -358,7 +362,6 @@ public class HomeActivity extends BaseActivity
     public void onDrawerStateChanged(int newState) {
 
     }
-
 
     private MyHandler messageHandler = new MyHandler();
     final NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
