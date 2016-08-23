@@ -2,7 +2,6 @@ package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,8 +20,7 @@ import xyz.yluo.ruisiapp.data.GalleryData;
  * Created by free2 on 16-3-31.
  * 支持 gallery
  */
-public class HotNewListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
-    private static final int TYPE_LOAD_MORE = 1;
+public class HotNewListAdapter extends BaseAdapter {
     private static final int TYPE_ARTICLE_LIST = 3;
     private static final int TYPE_ARTICLE_HEADER = 2;
 
@@ -36,59 +34,33 @@ public class HotNewListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         this.galleryDatas = galleryDatas;
     }
 
+
     @Override
-    public int getItemCount() {
+    protected int getDataCount() {
+        int count = DataSet.size();
         if (galleryDatas!=null&&galleryDatas.size() > 0) {
-            if (DataSet.size() == 0) {
-                return 1;
-            }
-            return DataSet.size() + 2;
+            count++;
         }
-        if (DataSet.size() == 0) {
-            return 0;
-        }
-        return DataSet.size() + 1;
+
+        return count;
     }
 
     @Override
-    public int getItemViewType(int position) {
+    protected int getItemType(int position) {
         if (galleryDatas != null && position == 0 && galleryDatas.size() > 0) {
             return TYPE_ARTICLE_HEADER;
-        } else if (position > 0 && position == getItemCount() - 1) {
-            return TYPE_LOAD_MORE;
-        }else {
+        }else{
             return TYPE_ARTICLE_LIST;
         }
     }
 
     @Override
-    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    protected BaseViewHolder getItemViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case TYPE_ARTICLE_LIST:
                 return new NormalViewHolderMe(LayoutInflater.from(parent.getContext()).inflate(R.layout.main_list_item_me, parent, false));
-            case TYPE_LOAD_MORE:
-                return new LoadMoreViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.load_more_item, parent, false));
             default:
                 return new HeadViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.gallery_list_item, parent, false));
-        }
-    }
-
-    @Override
-    public void onBindViewHolder(BaseViewHolder holder, int position) {
-        holder.setData(position);
-    }
-
-    //加载更多ViewHolder
-    private class LoadMoreViewHolder extends BaseViewHolder {
-
-        LoadMoreViewHolder(View itemView) {
-            super(itemView);
-        }
-
-        @Override
-        void setData(int position) {
-            //TODO
-            //load more 现在没有数据填充
         }
     }
 

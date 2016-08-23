@@ -1,9 +1,7 @@
 package xyz.yluo.ruisiapp.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.activity.ArticleList;
-import xyz.yluo.ruisiapp.activity.ArticleListImage;
 import xyz.yluo.ruisiapp.data.ForumListData;
 import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 import xyz.yluo.ruisiapp.utils.ImageUtils;
@@ -24,7 +19,7 @@ import xyz.yluo.ruisiapp.utils.ImageUtils;
  * Created by free2 on 16-3-19.
  * 板块列表
  */
-public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+public class ForumListAdapter extends BaseAdapter {
 
     protected Context context;
     private List<ForumListData> datas = null;
@@ -34,11 +29,27 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         this.context = context;
         this.datas = dataSet;
         this.listener = listener;
+
+        //// TODO: 16-8-24  有bug
+        enableEmptyHolder(48);
     }
 
+    @Override
+    protected int getDataCount() {
+        return datas.size();
+    }
 
     @Override
-    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    protected int getItemType(int pos) {
+        if (datas.get(pos).isheader()) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    @Override
+    protected BaseViewHolder getItemViewHolder(ViewGroup parent, int viewType) {
         if (viewType == 0) {
             return new HeadView(LayoutInflater.from(parent.getContext()).inflate(R.layout.forums_list_item_header, parent, false));
         } else {
@@ -46,26 +57,8 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         }
     }
 
-    @Override
-    public void onBindViewHolder(BaseViewHolder holder, int position) {
-        holder.setData(position);
-    }
 
-    @Override
-    public int getItemCount() {
-        return datas.size();
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if (datas.get(position).isheader()) {
-            return 0;
-        } else {
-            return 1;
-        }
-    }
-
-    protected class HeadView extends BaseViewHolder {
+    private class HeadView extends BaseViewHolder {
 
         TextView head;
 
@@ -79,9 +72,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             head.setText(datas.get(position).getTitle());
         }
     }
-
-
-    protected class ChildViewHolder extends BaseViewHolder {
+    private class ChildViewHolder extends BaseViewHolder {
 
         ImageView img;
         TextView title;
@@ -118,7 +109,4 @@ public class ForumListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             });
         }
     }
-
-
-
 }

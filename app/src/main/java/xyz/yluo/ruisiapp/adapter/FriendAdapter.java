@@ -1,7 +1,6 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,7 @@ import xyz.yluo.ruisiapp.data.FriendData;
  * Created by free2 on 16-4-12.
  * 好友列表
  */
-public class FriendAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+public class FriendAdapter extends BaseAdapter {
 
     private List<FriendData> datas;
     private Activity activity;
@@ -32,18 +31,19 @@ public class FriendAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     @Override
-    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new FriendViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_friend_item, parent, false));
-    }
-
-    @Override
-    public void onBindViewHolder(BaseViewHolder holder, int position) {
-        holder.setData(position);
-    }
-
-    @Override
-    public int getItemCount() {
+    protected int getDataCount() {
         return datas.size();
+    }
+
+    @Override
+    protected int getItemType(int pos) {
+        return 0;
+    }
+
+    @Override
+    protected BaseViewHolder getItemViewHolder(ViewGroup parent, int viewType) {
+        return new FriendViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.activity_friend_item, parent, false));
     }
 
     private class FriendViewHolder extends BaseViewHolder {

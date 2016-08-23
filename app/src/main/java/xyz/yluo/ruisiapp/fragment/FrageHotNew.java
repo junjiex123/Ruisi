@@ -65,6 +65,7 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
         recycler_view.setLayoutManager(mLayoutManager);
         adapter = new HotNewListAdapter(getActivity(), mydataset,galleryDatas);
         recycler_view.setAdapter(adapter);
+        adapter.setLoadMoreEnable(true,"加载中...");
         recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 10));
 
         refreshLayout.post(new Runnable() {
@@ -101,8 +102,8 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
     private void refresh() {
         CurrentPage = 1;
         isEnableLoadMore = false;
+        adapter.setPlaceHolderString("加载中!!");
         getData();
-
     }
 
     @Override
@@ -132,14 +133,15 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
                     public void run() {
                         refreshLayout.setRefreshing(false);
                     }
-                }, 500);
+                }, 300);
 
+                adapter.setPlaceHolderString("加载失败!!");
             }
         });
     }
 
-    private class getGalleryTask extends AsyncTask<Void, Void, Void> {
 
+    private class getGalleryTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
             galleryDatas.clear();
@@ -166,7 +168,6 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
             super.onPostExecute(aVoid);
             adapter.notifyItemChanged(0);
         }
-
     }
 
     //非校园网状态下获得一个板块文章列表数据

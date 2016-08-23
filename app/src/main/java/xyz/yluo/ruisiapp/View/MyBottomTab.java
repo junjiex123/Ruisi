@@ -3,7 +3,6 @@ package xyz.yluo.ruisiapp.View;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;

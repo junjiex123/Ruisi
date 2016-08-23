@@ -1,7 +1,6 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +15,15 @@ import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.View.MyHtmlView.HtmlView;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ChatListData;
-import xyz.yluo.ruisiapp.utils.DimmenUtils;
 
 /**
  * Created by free2 on 16-3-30.
  * 私人消息 adapter
  */
-public class ChatListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+public class ChatListAdapter extends BaseAdapter {
 
     private final int LEFT_ITEM = 0;
     private final int RIGHT_ITEM = 1;
-    private final int EMPTY_ITEM = 2;
 
     private List<ChatListData> DataSets;
     private Activity context;
@@ -34,14 +31,18 @@ public class ChatListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public ChatListAdapter(Activity context, List<ChatListData> datas) {
         DataSets = datas;
         this.context = context;
+        //设置允许留出空白
+        enableEmptyHolder(48);
     }
 
     @Override
-    public int getItemViewType(int position) {
-        if (position == getItemCount() - 1) {
-            return EMPTY_ITEM;
-        }
-        if (DataSets.get(position).getType() == 0) {
+    protected int getDataCount() {
+        return DataSets.size();
+    }
+
+    @Override
+    protected int getItemType(int pos) {
+        if (DataSets.get(pos).getType() == 0) {
             return LEFT_ITEM;
         } else {
             return RIGHT_ITEM;
@@ -49,30 +50,14 @@ public class ChatListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     @Override
-    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
+    protected BaseViewHolder getItemViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case LEFT_ITEM:
                 return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_left_list_item, parent, false));
             case RIGHT_ITEM:
                 return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_right_list_item, parent, false));
-            case EMPTY_ITEM:
-                View view =new View(parent.getContext());
-                view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DimmenUtils.dip2px(parent.getContext(),48)));
-                return new EmptyViewHolder(view);
         }
         return null;
-    }
-
-    @Override
-    public void onBindViewHolder(BaseViewHolder holder, int position) {
-        holder.setData(position);
-    }
-
-
-    @Override
-    public int getItemCount() {
-        return DataSets.size() + 1;
     }
 
     private class MyViewHolder extends BaseViewHolder {
@@ -104,17 +89,6 @@ public class ChatListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         }
     }
 
-    private class EmptyViewHolder extends BaseViewHolder {
-
-        EmptyViewHolder(View itemView) {
-            super(itemView);
-        }
-
-        @Override
-        void setData(int position) {
-
-        }
-    }
 
 
 }
