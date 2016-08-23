@@ -57,9 +57,9 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.frage_hot_new_list, container, false);
-        recycler_view = (RecyclerView) view.findViewById(R.id.recycler_view);
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
+        super.onCreateView(inflater,container,savedInstanceState);
+        recycler_view = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
+        refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
 
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -93,12 +93,17 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
             }
         }, 300);
 
-        return view;
+        return mRootView;
     }
 
     @Override
     protected int getLayoutId() {
-        return 0;
+        return R.layout.frage_hot_new_list;
+    }
+
+    @Override
+    protected String getTitle() {
+        return "看贴";
     }
 
     private void refresh() {

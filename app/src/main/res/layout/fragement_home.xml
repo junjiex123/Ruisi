@@ -5,6 +5,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/background"
     android:orientation="vertical">
+    <xyz.yluo.ruisiapp.View.MyToolBar
+        android:id="@+id/myToolBar"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ToolBarHeight"/>
     <android.support.design.widget.TabLayout
         app:tabTextColor="#ff888888"
         app:tabSelectedTextColor="@color/colorAccent"

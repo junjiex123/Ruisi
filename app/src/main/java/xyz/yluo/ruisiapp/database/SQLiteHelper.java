@@ -45,7 +45,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
          */
         String sql2 = "CREATE TABLE " + MyDB.TABLE_FORUM_LIST + "("
                 + "name VARCHAR(20) primary key,"
-                + "fid VARCHAR(10),"
+                + "fid INT,"
                 + "todayNew VARCHAR(5),"
                 + "isHeader INT NOT NULL"
                 + ")";

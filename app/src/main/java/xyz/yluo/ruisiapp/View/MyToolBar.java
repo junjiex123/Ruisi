@@ -18,9 +18,6 @@ import android.widget.TextView;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.utils.DimmenUtils;
 
-/**
- * Created by free2 on 16-7-27.
- */
 
 
 public class MyToolBar extends LinearLayout implements View.OnClickListener {
@@ -79,6 +76,12 @@ public class MyToolBar extends LinearLayout implements View.OnClickListener {
                 addView(v, 0);
             }
         }
+    }
+
+    public void addView(View v,String tag){
+        addView(v);
+        v.setTag(tag);
+        v.setOnClickListener(this);
     }
 
     public void setTitle(String title) {

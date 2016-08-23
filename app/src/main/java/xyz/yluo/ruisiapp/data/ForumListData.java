@@ -7,14 +7,14 @@ package xyz.yluo.ruisiapp.data;
 public class ForumListData {
     //title,img,url,actualnew
     private String title;
-    private String fid;
+    private int fid;
     private String todayNew;
     //是不是头
     private boolean isheader;
 
 
 
-    public ForumListData(boolean isheader, String title, String todayNew, String fid) {
+    public ForumListData(boolean isheader, String title, String todayNew, int fid) {
         this.title = title;
         this.todayNew = todayNew;
         this.fid = fid;
@@ -34,7 +34,7 @@ public class ForumListData {
         this.title = title;
     }
 
-    public String getFid() {
+    public int getFid() {
         return fid;
     }
 

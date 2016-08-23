@@ -18,7 +18,7 @@ public class ImageUtils {
     /**
      * 获得板块图标
      */
-    public static Drawable getForunlogo(Context contex, String fid) {
+    public static Drawable getForunlogo(Context contex, int fid) {
         try {
             InputStream ims = contex.getAssets().open("forumlogo/common_" + fid + "_icon.gif");
             return Drawable.createFromStream(ims, null);

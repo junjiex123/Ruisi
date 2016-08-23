@@ -79,17 +79,17 @@ public class GetId {
         return page;
     }
 
-    public static String getFroumFid(String url) {
+    public static int getFroumFid(String url) {
         String fid =  getid("fid=",url);
         if(TextUtils.isEmpty(fid)){
-            return "0";
+            return -1;
         }else{
             if (fid.equals("106")) {
                 fid = "110";
             } else if (fid.equals("553")) {
                 fid = "554";
             }
-            return fid;
+            return Integer.parseInt(fid);
         }
     }
 

@@ -16,7 +16,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -37,9 +36,9 @@ import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.ChangeNetDialog;
 import xyz.yluo.ruisiapp.View.CircleImageView;
-import xyz.yluo.ruisiapp.View.MyToolBar;
 import xyz.yluo.ruisiapp.data.FrageType;
 import xyz.yluo.ruisiapp.fragment.FragSetting;
+import xyz.yluo.ruisiapp.fragment.FrageArticleList;
 import xyz.yluo.ruisiapp.fragment.FrageFriends;
 import xyz.yluo.ruisiapp.fragment.FrageHelp;
 import xyz.yluo.ruisiapp.fragment.FrageHome;
@@ -66,11 +65,7 @@ public class HomeActivity extends BaseActivity
     private int clickId = 0;
     private long mExitTime;
     private Fragment currentFragment;
-    private MyToolBar myToolBar;
-    private CircleImageView userImage;
-    //新消息小红点
-    private View message_bage;
-    private View toolBarImagContainer;
+    
     private Timer timer = null;
     private MyTimerTask task = null;
 
@@ -79,30 +74,9 @@ public class HomeActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        myToolBar = (MyToolBar) findViewById(R.id.myToolBar);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.addDrawerListener(this);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        myToolBar.setIcon(R.drawable.ic_menu_24dp).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                drawer.openDrawer(GravityCompat.START);
-            }
-        });
-        toolBarImagContainer = LayoutInflater.from(this).inflate(R.layout.user_img_with_meessage,null,false);
-        userImage = (CircleImageView) toolBarImagContainer.findViewById(R.id.toolbar_user_image);
-        message_bage = toolBarImagContainer.findViewById(R.id.toolbar_message_bage);
-        message_bage.setVisibility(View.INVISIBLE);
-        myToolBar.addView(toolBarImagContainer);
-        toolBarImagContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                drawer.openDrawer(GravityCompat.START);
-            }
-        });
-        myToolBar.addMenu(R.drawable.ic_search_white_24dp,"SEARCH");
-        myToolBar.addMenu(R.drawable.ic_edit,"POST");
-        setToolBarMenuClick(myToolBar);
         navigationView.setNavigationItemSelectedListener(this);
         currentFragment = new FrageHome();
         String tag = App.ISLOGIN? App.USER_NAME:getString(R.string.app_name);
@@ -110,14 +84,16 @@ public class HomeActivity extends BaseActivity
         initDrawView();
     }
 
+    public void opemDraw(){
+        drawer.openDrawer(GravityCompat.START);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
         Log.e(TAG,"onStart");
         if(App.ISLOGIN&& !TextUtils.isEmpty(App.USER_NAME)){
-            myToolBar.setTitle(App.USER_NAME);
-            String url = UrlUtils.getAvaterurlm(App.USER_UID);
-            Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(userImage);
+            
             if(timer==null){
                 Log.e("message","开始timer");
                 timer = new Timer(true);
@@ -142,11 +118,11 @@ public class HomeActivity extends BaseActivity
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed(){
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }else if(!(currentFragment instanceof FrageHome)){
-            changeFragement(FrageType.HOME);
+        }else if(getFragmentManager().getBackStackEntryCount()>0){
+            getFragmentManager().popBackStack();
             navigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
         }else {
             if ((System.currentTimeMillis() - mExitTime) > 1500) {
@@ -178,13 +154,7 @@ public class HomeActivity extends BaseActivity
          */
         FragmentManager fm = getFragmentManager();
         // 开启Fragment事务
-        toolBarImagContainer.setVisibility(View.GONE);
         String Tag = FrageType.TITLE_LIST[id];
-        if(id==FrageType.HOME){
-            Log.e("test","id  is home");
-            Tag = App.ISLOGIN&&(!TextUtils.isEmpty(App.USER_NAME))? App.USER_NAME:getString(R.string.app_name);
-            toolBarImagContainer.setVisibility(View.VISIBLE);
-        }
         Fragment f = fm.findFragmentByTag(Tag);
         if(f==null){
             switch (id){
@@ -219,17 +189,36 @@ public class HomeActivity extends BaseActivity
 
     private void switchContent(Fragment to, String Tag) {
         FragmentManager fm = getFragmentManager();
-        if (currentFragment != to) {
-            FragmentTransaction transaction = fm.beginTransaction();
-//            .setCustomAnimations(android.R.anim.fade_in, R.anim.slide_out);
-            if (!to.isAdded()) {    // 先判断是否被add过
-                transaction.hide(currentFragment).add(R.id.fragment_home_container, to,Tag).commit(); // 隐藏当前的fragment，add下一个到Activity中
-            } else {
-                transaction.hide(currentFragment).show(to).commit(); // 隐藏当前的fragment，显示下一个
-            }
-            currentFragment = to;
-            myToolBar.setTitle(Tag);
+        if (currentFragment == to) {
+            return;
         }
+        FragmentTransaction transaction = fm.beginTransaction();
+//            .setCustomAnimations(android.R.anim.fade_in, R.anim.slide_out);
+        if (!to.isAdded()) {
+            transaction.add(R.id.fragment_home_container, to,Tag);
+            if(!(to instanceof FrageHome)){
+                transaction.addToBackStack(null);
+            }
+        }
+        if(to.isHidden()){
+            transaction.show(to);
+        }
+        if(currentFragment.isVisible()){
+            transaction.hide(currentFragment);
+        }
+        currentFragment = to;
+        transaction.commit();
+    }
+
+    public void openArticleList(int fid,String title){
+        FragmentManager m = getFragmentManager();
+        String tag = FrageType.TITLE_LIST[FrageType.ARTICLELIST];
+        FrageArticleList f = (FrageArticleList) m.findFragmentByTag(tag);
+        if(f!=null){
+            m.beginTransaction().remove(f).commit();
+        }
+        f = FrageArticleList.newInstance(fid,title);
+        switchContent(f,tag);
     }
 
     @Override
@@ -273,7 +262,7 @@ public class HomeActivity extends BaseActivity
     private void initDrawView(){
         Log.i(TAG,"draw open");
         final View header = navigationView.getHeaderView(0);
-        header.findViewById(R.id.message_badge_nav).setVisibility(message_bage.getVisibility());
+        //header.findViewById(R.id.message_badge_nav).setVisibility(message_bage.getVisibility());
         CircleImageView userImage = (CircleImageView) header.findViewById(R.id.profile_image);
         TextView userGrade = (TextView) header.findViewById(R.id.user_grade);
         TextView userName = (TextView) header.findViewById(R.id.header_user_name);
@@ -407,6 +396,7 @@ public class HomeActivity extends BaseActivity
     };
 
 
+    //// TODO: 16-8-23  
     private class MyHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -414,9 +404,9 @@ public class HomeActivity extends BaseActivity
                 //0 - 无消息 1-有 2有 且通知
                 case 0:
                     Log.e("message","无未读消息");
-                    if(message_bage.getVisibility()==View.VISIBLE){
-                        message_bage.setVisibility(View.INVISIBLE);
-                    }
+                    //if(message_bage.getVisibility()==View.VISIBLE){
+                    //    message_bage.setVisibility(View.INVISIBLE);
+                    //}
                     break;
                 case 2:
                     final NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -424,7 +414,7 @@ public class HomeActivity extends BaseActivity
                     Log.e("message","发送未读消息弹窗");
                 case 1:
                     Log.e("message","有未读消息");
-                    message_bage.setVisibility(View.VISIBLE);
+                    //message_bage.setVisibility(View.VISIBLE);
                     break;
             }
         }

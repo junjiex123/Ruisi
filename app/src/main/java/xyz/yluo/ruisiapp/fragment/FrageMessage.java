@@ -33,7 +33,7 @@ import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 //回复我的
 //// TODO: 16-8-22  add 提到我的home.php?mod=space&do=notice&view=mypost&type=at&mobile=2
 
-public class FrageMessage extends Fragment {
+public class FrageMessage extends BaseFragment {
     private static final String Tag = "==FrageMessage==";
     protected RecyclerView recycler_view;
     protected SwipeRefreshLayout refreshLayout;
@@ -49,10 +49,9 @@ public class FrageMessage extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(Tag, "onCreateView");
-        View view = inflater.inflate(R.layout.fragment_message, container, false);
-        recycler_view = (RecyclerView) view.findViewById(R.id.recycler_view);
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
+        super.onCreateView(inflater,container,savedInstanceState);
+        recycler_view = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
+        refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recycler_view.setLayoutManager(layoutManager);
@@ -81,7 +80,18 @@ public class FrageMessage extends Fragment {
                 refresh();
             }
         }, 500);
-        return view;
+        setCloseIcon();
+        return mRootView;
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_message;
+    }
+
+    @Override
+    protected String getTitle() {
+        return "我的消息";
     }
 
 

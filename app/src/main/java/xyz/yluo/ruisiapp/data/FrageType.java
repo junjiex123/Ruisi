@@ -13,7 +13,8 @@ public class FrageType {
             "帮助",//4
             "我的帖子",//5
             "首页",//6
-            "设置"
+            "设置",//7
+            "帖子列表"//8
     };
 
     public static final int START = 0;
@@ -24,4 +25,5 @@ public class FrageType {
     public static final int TOPIC = 5;
     public static final int HOME = 6;
     public static final int SETTING = 7;
+    public static final int ARTICLELIST = 8;
 }

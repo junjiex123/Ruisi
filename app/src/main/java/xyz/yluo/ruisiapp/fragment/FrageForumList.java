@@ -1,5 +1,8 @@
 package xyz.yluo.ruisiapp.fragment;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -23,18 +26,23 @@ import java.util.List;
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyGridDivider;
+import xyz.yluo.ruisiapp.activity.ArticleList;
+import xyz.yluo.ruisiapp.activity.ArticleListImage;
+import xyz.yluo.ruisiapp.activity.HomeActivity;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
 import xyz.yluo.ruisiapp.data.ForumListData;
+import xyz.yluo.ruisiapp.data.FrageType;
 import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-3-19.
  * 板块列表fragemnt
  */
-public class FrageForumList extends BaseFragment {
+public class FrageForumList extends BaseFragment implements RecyclerViewClickListener{
     protected SwipeRefreshLayout refreshLayout;
     private List<ForumListData> datas = null;
     private ForumListAdapter adapter = null;
@@ -69,7 +77,7 @@ public class FrageForumList extends BaseFragment {
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
 
         //先从数据库读出数据
-        adapter = new ForumListAdapter(datas, getActivity());
+        adapter = new ForumListAdapter(datas, getActivity(),this);
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -107,12 +115,19 @@ public class FrageForumList extends BaseFragment {
             });
             getData();
         }
+
+
         return view;
     }
 
     @Override
     protected int getLayoutId() {
         return 0;
+    }
+
+    @Override
+    protected String getTitle() {
+        return "板块列表";
     }
 
     private void getData() {
@@ -135,6 +150,19 @@ public class FrageForumList extends BaseFragment {
         });
     }
 
+    @Override
+    public void recyclerViewListClicked(View v, int position) {
+        int fid = datas.get(position).getFid();
+        //几个特殊的板块
+        String title = datas.get(position).getTitle();
+        if (App.IS_SCHOOL_NET && (fid==561|| fid==157 || fid==13)) {
+            ArticleListImage.open(getActivity(),fid,title);
+        } else {
+            ((HomeActivity)getActivity()).openArticleList(fid,title);
+            //ArticleList.open(getActivity(), fid,title);
+        }
+    }
+
 
     //获取首页板块数据 板块列表
     private class GetForumList extends AsyncTask<String, Void, List<ForumListData>> {
@@ -153,13 +181,13 @@ public class FrageForumList extends BaseFragment {
 
             for (Element ele : elements) {
                 String header = ele.select("h2").text();
-                simpledatas.add(new ForumListData(true, header,"0",null));
+                simpledatas.add(new ForumListData(true, header,"0",-1));
                 for (Element tmp : ele.select("li")) {
                     String todayNew = tmp.select("span.num").text();
                     tmp.select("span.num").remove();
                     String title = tmp.text().replace("西电睿思", "");
                     String titleUrl = tmp.select("a").attr("href");
-                    String fid = GetId.getFroumFid(titleUrl);
+                    int fid = GetId.getFroumFid(titleUrl);
                     simpledatas.add(new ForumListData(false, title, todayNew, fid));
                 }
             }

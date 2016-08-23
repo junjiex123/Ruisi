@@ -236,7 +236,7 @@ public class MyDB {
             if (isheader == 1) {
                 isHeader = true;
             }
-            String fid = result.getString(1);
+            int fid = result.getInt(1);
             String name = result.getString(0);
             String todayNew = result.getString(2);
             //String todayNew, String titleUrl

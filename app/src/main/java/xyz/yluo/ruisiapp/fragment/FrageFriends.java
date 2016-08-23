@@ -1,6 +1,5 @@
 package xyz.yluo.ruisiapp.fragment;
 
-import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -34,7 +33,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * 数据{@link FriendData}
  * adapter{@link FriendAdapter}
  */
-public class FrageFriends extends Fragment implements LoadMoreListener.OnLoadMoreListener{
+public class FrageFriends extends BaseFragment implements LoadMoreListener.OnLoadMoreListener{
     protected RecyclerView recycler_view;
     protected SwipeRefreshLayout refreshLayout;
     private FriendAdapter adapter;
@@ -46,9 +45,9 @@ public class FrageFriends extends Fragment implements LoadMoreListener.OnLoadMor
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.simple_list_view, container, false);
-        recycler_view = (RecyclerView) view.findViewById(R.id.recycler_view);
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
+        super.onCreateView(inflater,container,savedInstanceState);
+        recycler_view = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
+        refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         datas = new ArrayList<>();
         adapter = new FriendAdapter(datas, getActivity());
@@ -67,10 +66,20 @@ public class FrageFriends extends Fragment implements LoadMoreListener.OnLoadMor
                 refreshLayout.setRefreshing(true);
             }
         });
-
+        setCloseIcon();
         new GetDataTask().execute(url);
 
-        return view;
+        return mRootView;
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.simple_list_view_toolbar;
+    }
+
+    @Override
+    protected String getTitle() {
+        return "我的好友";
     }
 
     @Override

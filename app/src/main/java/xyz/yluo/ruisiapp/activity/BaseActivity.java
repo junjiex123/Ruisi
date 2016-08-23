@@ -21,7 +21,7 @@ public class BaseActivity extends AppCompatActivity {
     private static Toast mToast;
 
     //判断是否需要弹出登录dialog
-    boolean isLogin() {
+    public boolean isLogin() {
         if (App.ISLOGIN) {
             return true;
         } else {
@@ -50,7 +50,7 @@ public class BaseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    protected void setToolBarMenuClick(MyToolBar myToolBar) {
+    public void setToolBarMenuClick(MyToolBar myToolBar) {
         myToolBar.setToolBarClickListener(new MyToolBar.OnToolBarItemClick() {
             @Override
             public void OnItemClick(View v, String Tag) {

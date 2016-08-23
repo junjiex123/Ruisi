@@ -34,7 +34,7 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
  * Created by free2 on 16-7-14.
  * 收藏/主题/历史纪录
  */
-public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.OnLoadMoreListener {
+public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListener.OnLoadMoreListener {
 
     protected SwipeRefreshLayout refreshLayout;
     private List<SimpleListData> datas;
@@ -43,6 +43,7 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
     private boolean isEnableLoadMore = true;
     private boolean isHaveMore = true;
     private int currentIndex = 0;
+    private String title = "";
 
     private String url;
     public static FrageTopicStarHistory newInstance(int type) {
@@ -53,28 +54,31 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
         return fragment;
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.simple_list_view, container, false);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
-        refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
-
         Bundle bundle = getArguments();//从activity传过来的Bundle
         if (bundle != null) {
             int type = bundle.getInt("type", -1);
             switch (type) {
                 case FrageType.TOPIC:
                     currentIndex = 0;
+                    title = "我的帖子";
                     break;
                 case FrageType.START:
                     currentIndex = 1;
+                    title = "我的收藏";
                     break;
                 default:
+                    title = "浏览历史";
                     currentIndex = 2;
             }
         }
+        super.onCreateView(inflater,container,savedInstanceState);
+        RecyclerView recyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
+        refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
+        refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
+
+
         String uid = App.USER_UID;
         switch (currentIndex) {
             case 0:
@@ -109,7 +113,18 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
         });
 
         refresh();
-        return view;
+        setCloseIcon();
+        return mRootView;
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.simple_list_view_toolbar;
+    }
+
+    @Override
+    protected String getTitle() {
+        return title;
     }
 
     @Override

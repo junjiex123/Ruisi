@@ -1,6 +1,5 @@
 package xyz.yluo.ruisiapp.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -14,7 +13,7 @@ import xyz.yluo.ruisiapp.View.MyHtmlView.HtmlView;
  * Created by free2 on 16-7-14.
  * 帮助fragment
  */
-public class FrageHelp extends Fragment {
+public class FrageHelp extends BaseFragment {
 
     private static final String helpTxt =
             "本帮助参考 <a href=\"http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid=824705&mobile=2\">【H∀】睿思帮助2.0　viaAH</a><br> 所有权归<a href=\"home.php?mod=space&uid=285519&do=profile&mobile=2\">@Adolf-Hitler</a>所有<br><hr>\n" +
@@ -221,15 +220,24 @@ public class FrageHelp extends Fragment {
                     "2012-12-07 默默上线 <br>\n" +
                     "2014-07-14 论坛升级为X3.2<br>";
 
-    public FrageHelp() {
-    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.frage_help, container, false);
-        HtmlView htmlTextView = (HtmlView) view.findViewById(R.id.html_text);
+        super.onCreateView(inflater,container,savedInstanceState);
+        HtmlView htmlTextView = (HtmlView) mRootView.findViewById(R.id.html_text);
         htmlTextView.setHtmlText(helpTxt,false);
-        return view;
+        setCloseIcon();
+        return mRootView;
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.frage_help;
+    }
+
+    @Override
+    protected String getTitle() {
+        return "睿思帮助";
     }
 }
