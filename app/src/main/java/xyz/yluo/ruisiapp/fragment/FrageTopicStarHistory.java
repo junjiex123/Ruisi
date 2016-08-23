@@ -53,21 +53,9 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
         return fragment;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.e("FrageTopicStarHistory","onDestroy");
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.e("FrageTopicStarHistory","onCreate");
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.e("FrageTopicStarHistory","onCreateView");
         View view = inflater.inflate(R.layout.simple_list_view, container, false);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
@@ -76,8 +64,6 @@ public class FrageTopicStarHistory extends Fragment implements LoadMoreListener.
         Bundle bundle = getArguments();//从activity传过来的Bundle
         if (bundle != null) {
             int type = bundle.getInt("type", -1);
-
-            Log.i("type is", "==" + type + "==");
             switch (type) {
                 case FrageType.TOPIC:
                     currentIndex = 0;

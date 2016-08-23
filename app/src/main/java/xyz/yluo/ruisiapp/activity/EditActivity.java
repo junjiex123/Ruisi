@@ -274,12 +274,12 @@ public class EditActivity extends BaseActivity implements View.OnClickListener{
                 myColorPicker.showAsDropDown(view, 0, 10);
                 break;
             case R.id.action_emotion:
-                ((ImageView)view).setImageResource(R.drawable.ic_edit_emoticon_primary_24dp);
+                ((ImageView)view).setImageResource(R.drawable.ic_edit_emoticon_accent_24dp);
                 smileyPicker.showAsDropDown(view,0,10);
                 smileyPicker.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        ((ImageView)view).setImageResource(R.drawable.editer_bar_emotion_bg);
+                        ((ImageView)view).setImageResource(R.drawable.ic_edit_emoticon_24dp);
                     }
                 });
                 break;
@@ -311,10 +311,10 @@ public class EditActivity extends BaseActivity implements View.OnClickListener{
             Toast.makeText(this, "请选择主题分类", Toast.LENGTH_SHORT).show();
             return false;
         }else if((ed_title.getVisibility()==View.VISIBLE)&&TextUtils.isEmpty(ed_title.getText().toString().trim())){
-            Toast.makeText(this, "标题不能为空啊", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "标题不能为空", Toast.LENGTH_SHORT).show();
             return false;
         }else if(TextUtils.isEmpty(ed_content.getText().toString().trim())){
-            Toast.makeText(this, "内容不能为空啊", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "内容不能为空", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

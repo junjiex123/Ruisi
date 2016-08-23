@@ -71,7 +71,6 @@ public class HomeActivity extends BaseActivity
     //新消息小红点
     private View message_bage;
     private View toolBarImagContainer;
-    private boolean isNeewRefreshDrawView = true;
     private Timer timer = null;
     private MyTimerTask task = null;
 
@@ -79,7 +78,6 @@ public class HomeActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e(TAG,"onCreate");
         setContentView(R.layout.activity_home);
         myToolBar = (MyToolBar) findViewById(R.id.myToolBar);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -272,6 +270,7 @@ public class HomeActivity extends BaseActivity
     }
 
     private void initDrawView(){
+        Log.i(TAG,"draw open");
         final View header = navigationView.getHeaderView(0);
         findViewById(R.id.message_badge_nav).setVisibility(message_bage.getVisibility());
         CircleImageView userImage = (CircleImageView) header.findViewById(R.id.profile_image);
@@ -304,11 +303,7 @@ public class HomeActivity extends BaseActivity
     @Override
     public void onDrawerOpened(View drawerView) {
         clickId = 0;
-        if(isNeewRefreshDrawView){
-            initDrawView();
-            isNeewRefreshDrawView = false;
-        }
-
+        initDrawView();
     }
 
     @Override

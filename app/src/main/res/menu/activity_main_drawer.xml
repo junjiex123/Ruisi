@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item
+        android:checked="true"
+        android:checkable="true"
         android:id="@+id/nav_home"
         android:icon="@drawable/ic_home_24dp"
         android:title="首页" />
@@ -11,24 +12,29 @@
         android:icon="@drawable/ic_autorenew_black_24dp"
         android:title="签到中心" />
     <item
+        android:checkable="true"
         android:id="@+id/nav_my_topic"
         android:icon="@drawable/ic_chat_24dp"
         android:title="我的帖子" />
     <item
+        android:checkable="true"
         android:id="@+id/nav_my_star"
         android:icon="@drawable/ic_favorite_24dp"
         android:title="我的收藏" />
 
     <item
+        android:checkable="true"
         android:id="@+id/nav_my_friend"
         android:icon="@drawable/ic_perm_contact_calendar_black_24dp"
         android:title="我的好友" />
     <item
+        android:checkable="true"
         android:id="@+id/nav_history"
         android:icon="@drawable/ic_history_black_24dp"
         android:title="浏览历史" />
 
-    <item android:title="相关设置">
+    <item android:title="相关设置"
+        android:checkable="true">
         <menu>
             <item
                 android:id="@+id/nav_about"
@@ -36,11 +42,13 @@
                 android:title="关于" />
 
             <item
+                android:checkable="true"
                 android:id="@+id/nav_help"
                 android:icon="@drawable/ic_help_black_24dp"
                 android:title="帮助" />
 
             <item
+                android:checkable="true"
                 android:id="@+id/nav_setting"
                 android:icon="@drawable/ic_settings_24dp"
                 android:title="设置" />

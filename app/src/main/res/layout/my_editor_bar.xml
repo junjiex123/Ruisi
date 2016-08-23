@@ -12,7 +12,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:padding="8dp"
-        android:src="@drawable/editer_bar_bold_bg"
+        android:tint="@color/icon_press_gray_accent"
+        android:src="@drawable/ic_format_bold_white_24dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:layout_marginStart="4dp"
         android:clickable="true" />
@@ -22,7 +23,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:padding="8dp"
-        android:src="@drawable/editer_bar_italic_bg"
+        android:tint="@color/icon_press_gray_accent"
+        android:src="@drawable/ic_format_italic_white_24dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:layout_marginStart="4dp"
         android:clickable="true" />
@@ -32,7 +34,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:padding="8dp"
-        android:src="@drawable/editer_bar_quote_bg"
+        android:tint="@color/icon_press_gray_accent"
+        android:src="@drawable/ic_format_quote_white_24dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:layout_marginStart="4dp"
         android:clickable="true" />
@@ -42,7 +45,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:padding="8dp"
-        android:src="@drawable/editer_bar_color_text_bg"
+        android:tint="@color/icon_press_gray_accent"
+        android:src="@drawable/ic_format_color_text_white_24dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:layout_marginStart="4dp"
         android:clickable="true" />
@@ -52,7 +56,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:padding="8dp"
-        android:src="@drawable/editer_bar_emotion_bg"
+        android:tint="@color/icon_press_gray_accent"
+        android:src="@drawable/ic_edit_emoticon_24dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:layout_marginStart="4dp"
         android:clickable="true" />
@@ -73,7 +78,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:padding="8dp"
-        android:src="@drawable/editer_bar_back_space_bg"
+        android:tint="@color/icon_press_gray_accent"
+        android:src="@drawable/ic_backspace_white_24dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:layout_marginEnd="8dp"/>

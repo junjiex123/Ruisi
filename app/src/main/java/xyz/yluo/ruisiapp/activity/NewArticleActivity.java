@@ -290,12 +290,12 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
                 myColorPicker.showAsDropDown(view, 0, 10);
                 break;
             case R.id.action_emotion:
-                ((ImageView)view).setImageResource(R.drawable.ic_edit_emoticon_primary_24dp);
+                ((ImageView)view).setImageResource(R.drawable.ic_edit_emoticon_accent_24dp);
                 smileyPicker.showAsDropDown(view,0,10);
                 smileyPicker.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        ((ImageView)view).setImageResource(R.drawable.editer_bar_emotion_bg);
+                        ((ImageView)view).setImageResource(R.drawable.ic_edit_emoticon_24dp);
                     }
                 });
                 break;

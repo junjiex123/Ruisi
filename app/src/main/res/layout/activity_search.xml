@@ -65,10 +65,11 @@
                     android:id="@+id/btn_back"
                     android:layout_width="46dp"
                     android:layout_height="46dp"
-                    android:background="?attr/selectableItemBackground"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:padding="11dp"
-                    android:src="@drawable/ic_arraw_back_gray" />
+                    android:tint="@color/gray"
+                    android:src="@drawable/ic_arraw_back_white" />
 
                 <EditText
                     android:id="@+id/search_input"
@@ -93,10 +94,11 @@
                     android:id="@+id/start_search"
                     android:layout_width="46dp"
                     android:layout_height="46dp"
-                    android:background="?attr/selectableItemBackground"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:padding="11dp"
-                    android:src="@drawable/ic_search_gray_24dp" />
+                    android:tint="@color/gray"
+                    android:src="@drawable/ic_search_white_24dp" />
 
             </LinearLayout>
 
