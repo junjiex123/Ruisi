@@ -43,8 +43,11 @@ public class HttpUtil {
             hash = context.getSharedPreferences(App.MY_SHP_NAME,Context.MODE_PRIVATE).
                     getString(App.HASH_KEY,"");
         }
-        Log.i("hash is","==="+hash+"===");
-        map.put("formhash",hash);
+        if(!TextUtils.isEmpty(hash)){
+            Log.i("hash is","==="+hash+"===");
+            map.put("formhash",hash);
+        }
+
         client.post(getUrl(url), map, handler);
     }
 

@@ -31,6 +31,7 @@
                 android:textColor="@color/text_primary_white"
                 android:textSize="14sp" />
             <RadioButton
+                android:id="@+id/btn_pm"
                 android:background="@drawable/switch_right_bg"
                 android:layout_width="0dp"
                 android:layout_weight="1"

@@ -2,6 +2,8 @@ package xyz.yluo.ruisiapp.View;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -34,11 +36,11 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
 
     private String[] tab_names = {"板块","看贴","消息","个人"};
     private OnTabChangeListener listener;
+    private boolean ishaveMessage = false;
 
     //遵循md 设计规范
-    private int SIZE_PADDING_TOP = 8;
-    private int SIZE_PADDING_BOTTOM = 8;
-    private int SIZE_PADDING_LR = 12;
+    private int PADDING_8 = 8;
+    private int PADDING_12 = 12;
     private int SIZE_ICON = 24;
     private  int COLOR_SELECT;
     private  int COLOR_UNSELECT;
@@ -56,6 +58,12 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         init();
     }
 
+    public void setMessage(boolean b){
+        if(b!=ishaveMessage){
+            ishaveMessage = b;
+            invalidate();
+        }
+    }
 
     /**
      * 初始化视图
@@ -63,9 +71,8 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
     private void init() {
         COLOR_SELECT = ContextCompat.getColor(context, R.color.colorPrimary);
         COLOR_UNSELECT = ContextCompat.getColor(context,R.color.colorDisableHintIcon);
-        SIZE_PADDING_TOP = DimmenUtils.dip2px(context,SIZE_PADDING_TOP);
-        SIZE_PADDING_BOTTOM = DimmenUtils.dip2px(context,SIZE_PADDING_BOTTOM);
-        SIZE_PADDING_LR = DimmenUtils.dip2px(context,SIZE_PADDING_LR);
+        PADDING_8 = DimmenUtils.dip2px(context, PADDING_8);
+        PADDING_12 = DimmenUtils.dip2px(context, PADDING_12);
         SIZE_ICON = DimmenUtils.dip2px(context,SIZE_ICON);
         int[] attrs = new int[]{R.attr.selectableItemBackgroundBorderless};
         TypedArray typedArray = context.obtainStyledAttributes(attrs);
@@ -84,6 +91,11 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
             addView(v);
         }
         setTabSelect(-1,0);
+
+        paint_badge.setColor(COLOR_SELECT);
+        paint_badge.setStyle(Paint.Style.FILL);
+        paint_badge.setStrokeWidth(PADDING_8/2);
+        paint_badge.setAntiAlias(true);
     }
 
     private  void setTabSelect(int from,int to) {
@@ -126,7 +138,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         // 设置宽高和权重
         view.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT,1));
         view.setGravity(Gravity.CENTER);
-        view.setPadding(SIZE_PADDING_LR,SIZE_PADDING_TOP,SIZE_PADDING_LR,SIZE_PADDING_BOTTOM);
+        view.setPadding(PADDING_12, PADDING_8, PADDING_12,PADDING_8);
 
         /**
          * 图标
@@ -148,6 +160,26 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         view.addView(textView);
         // 返回布局视图
         return view;
+    }
+
+    private Paint paint_badge = new Paint();
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        if(ishaveMessage){
+            int len = getWidth();
+            int end = len/4*3;
+            int start = len/2;
+
+            int center = (end-start)/2+start;
+            int centx = center+ PADDING_12;
+            int centy = PADDING_12;
+
+            canvas.drawCircle(centx,centy,PADDING_12/4, paint_badge);
+        }
+
     }
 
     public interface OnTabChangeListener {

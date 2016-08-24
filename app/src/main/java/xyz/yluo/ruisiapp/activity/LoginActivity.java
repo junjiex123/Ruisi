@@ -184,12 +184,11 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                if (res.contains("欢迎您回来")) {
-                    login_ok(res);
-                }
                 Document doc = Jsoup.parse(res);
                 loginUrl = doc.select("form#loginform").attr("action");
                 Map<String, String> params = new HashMap<>();
+                String hash = doc.select("input#formhash").attr("value");
+                App.setHash(LoginActivity.this,hash);
                 params.put("fastloginfield", "username");
                 params.put("cookietime", "2592000");
                 params.put("username", username);
@@ -200,7 +199,6 @@ public class LoginActivity extends BaseActivity {
                 } else {
                     params.put("answer", anwser_text.getText().toString());
                 }
-
                 begain_login(params);
             }
 

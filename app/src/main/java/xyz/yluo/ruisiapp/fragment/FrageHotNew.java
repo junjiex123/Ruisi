@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -38,7 +40,11 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * 简单的fragment 首页第二页 展示最新的帖子等
  */
 public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoadMoreListener {
-    
+
+    private static final int TYPE_HOT = 0;
+    private static final int TYPE_NEW = 1;
+
+    private int currentType = 1;
     protected RecyclerView recycler_view;
     protected SwipeRefreshLayout refreshLayout;
     private List<GalleryData> galleryDatas = new ArrayList<>();
@@ -47,18 +53,14 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
     private boolean isEnableLoadMore = false;
     private int CurrentPage = 1;
 
-    public static FrageHotNew newInstance(int type) {
-        Bundle args = new Bundle();
-        args.putInt("type",type);
-        FrageHotNew fragment = new FrageHotNew();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
-        initToolbar(false,"看贴");
+        RadioButton b1 = (RadioButton) mRootView.findViewById(R.id.btn_reply);
+        RadioButton b2 = (RadioButton) mRootView.findViewById(R.id.btn_pm);
+        b1.setText("新帖");
+        b2.setText("热贴");
         recycler_view = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
@@ -77,6 +79,29 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
             }
         });
 
+        RadioGroup swictchMes = (RadioGroup) mRootView.findViewById(R.id.btn_change);
+        swictchMes.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int id) {
+                int pos = -1;
+                if (id == R.id.btn_reply) {
+                    pos = TYPE_NEW;
+                }else{
+                    pos = TYPE_HOT;
+                }
+                if(pos!=currentType){
+                    currentType = pos;
+                    refreshLayout.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            refreshLayout.setRefreshing(true);
+                        }
+                    });
+                    refresh();
+                }
+            }
+        });
+
         Handler mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -90,7 +115,7 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
 
     @Override
     protected int getLayoutId() {
-        return R.layout.list_toolbar;
+        return R.layout.fragment_msg_hot;
     }
 
     private void refresh() {
@@ -113,7 +138,8 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
         if (App.IS_SCHOOL_NET && galleryDatas.size() == 0) {
             new getGalleryTask().execute();
         }
-        String url = "forum.php?mod=guide&view=new&page=" + CurrentPage + "&mobile=2";
+        String type = (currentType==TYPE_HOT)?"hot":"new";
+        String url = "forum.php?mod=guide&view="+type+"&page=" + CurrentPage + "&mobile=2";
         HttpUtil.get(getActivity(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {

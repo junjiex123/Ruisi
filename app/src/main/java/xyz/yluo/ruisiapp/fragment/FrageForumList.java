@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.squareup.picasso.Picasso;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -22,9 +24,12 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.View.MyGridDivider;
 import xyz.yluo.ruisiapp.activity.ActivitySearch;
+import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.PostsActivity;
+import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
 import xyz.yluo.ruisiapp.data.ForumListData;
 import xyz.yluo.ruisiapp.database.MyDB;
@@ -32,6 +37,7 @@ import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.utils.GetId;
+import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-3-19.
@@ -43,6 +49,8 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
     private ForumListAdapter adapter = null;
     private boolean isSetForumToDataBase = false;
     private SharedPreferences sharedPreferences;
+    private CircleImageView userImg;
+
     //15分钟的缓存时间
     private static final int UPDATE_TIME = 1500*600;
     private static final String KEY = "FORUM_UPDATE_KEY";
@@ -60,8 +68,7 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
-        initToolbar(false,"板块列表");
-        addToolbarMenu(R.drawable.ic_search_white_24dp).setOnClickListener(this);
+        userImg = (CircleImageView) mRootView.findViewById(R.id.img);
         refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
         RecyclerView recyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         //设置可以滑出底栏
@@ -69,7 +76,7 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
         recyclerView.setPadding(0,0,0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
         //刷新
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
-
+        mRootView.findViewById(R.id.search).setOnClickListener(this);
         //先从数据库读出数据
         adapter = new ForumListAdapter(datas, getActivity(),this);
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
@@ -83,7 +90,7 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
                 }
             }
         });
-
+        userImg.setOnClickListener(this);
         recyclerView.addItemDecoration(new MyGridDivider(1));
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -103,7 +110,18 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
             getData();
         }
 
+        refreshView();
         return mRootView;
+    }
+
+    private void refreshView(){
+        if(lastLoginState){
+            Picasso.with(getActivity()).load(UrlUtils.getAvaterurls(App.getUid(getActivity())))
+                    .placeholder(R.drawable.image_placeholder)
+                    .into(userImg);
+        }else{
+            userImg.setImageResource(R.drawable.image_placeholder);
+        }
     }
 
     @Override
@@ -112,13 +130,14 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
         if(!hidden&&(lastLoginState!=App.ISLOGIN(getActivity()))){
             lastLoginState = !lastLoginState;
             getData();
+            refreshView();
         }
 
     }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.list_toolbar;
+        return R.layout.fragment_forums;
     }
 
     private void getData() {
@@ -161,9 +180,17 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.menu:
+            case R.id.search:
                 if(isLogin()){
                     switchActivity(ActivitySearch.class);
+                }
+                break;
+            case R.id.img:
+                if(lastLoginState){
+                    String imgurl = UrlUtils.getAvaterurlb(App.getUid(getActivity()));
+                    UserDetailActivity.open(getActivity(),App.getName(getActivity()),imgurl);
+                }else{
+                    switchActivity(LoginActivity.class);
                 }
                 break;
         }

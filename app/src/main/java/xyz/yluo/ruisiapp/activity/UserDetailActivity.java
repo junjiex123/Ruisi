@@ -42,6 +42,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.AddFriendDialog;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
+import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
 import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.SimpleListData;
@@ -62,7 +63,6 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
     protected RecyclerView recycler_view;
     protected CoordinatorLayout layout;
     protected Toolbar toolbar;
-    private ProgressBar progressBar;
     private CollapsingToolbarLayout toolbarLayout;
     private List<SimpleListData> datas = new ArrayList<>();
     private SimpleListAdapter adapter = null;
@@ -96,8 +96,6 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         layout = (CoordinatorLayout) findViewById(R.id.main_window);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,13 +121,14 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         userUid = GetId.getid("uid=",imageUrl);
         //如果是自己
         if (userUid.equals(App.getUid(this))) {
-            fab.setImageResource(R.drawable.ic_exit_24dp);
+            fab.setImageResource(R.drawable.ic_close_24dp);
         }
         String url0 = UrlUtils.getUserHomeUrl(userUid, false);
         getdata(url0);
     }
 
     private void getdata(String url) {
+        adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
         HttpUtil.get(this, url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -139,7 +138,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
             @Override
             public void onFailure(Throwable e) {
                 Toast.makeText(getApplicationContext(), "网络错误！！", Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE);
+                adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
             }
         });
     }
@@ -211,8 +210,11 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_userdetail, menu);
-        return true;
+        if(!userUid.equals(App.getUid(this))){
+            getMenuInflater().inflate(R.menu.menu_userdetail, menu);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -277,7 +279,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         @Override
         protected void onPostExecute(String s) {
             toolbarLayout.setTitle(username);
-            progressBar.setVisibility(View.GONE);
+            adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
             adapter.notifyDataSetChanged();
         }
 

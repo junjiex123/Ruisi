@@ -46,13 +46,14 @@ public class HomeActivity extends BaseActivity
     private Fragment currentFragment;
     private Timer timer = null;
     private MyTimerTask task = null;
+    private MyBottomTab bottomTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         currentFragment = new FrageForumList();
-        MyBottomTab bottomTab = (MyBottomTab) findViewById(R.id.bottom_bar);
+        bottomTab = (MyBottomTab) findViewById(R.id.bottom_bar);
         bottomTab.setOnTabChangeListener(this);
         getFragmentManager().beginTransaction().replace(
                 R.id.fragment_container,currentFragment).commit();
@@ -136,6 +137,7 @@ public class HomeActivity extends BaseActivity
                     break;
                 case FrageType.MESSAGE:
                     to = new FrageMessage();
+                    bottomTab.setMessage(false);
                     break;
                 case FrageType.MY:
                     to = new FragmentMy();
@@ -208,16 +210,14 @@ public class HomeActivity extends BaseActivity
 
 
     //// TODO: 16-8-23  
-    private class MyHandler extends Handler {
+    private  class MyHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
                 //0 - 无消息 1-有 2有 且通知
                 case 0:
                     Log.e("message","无未读消息");
-                    //if(message_bage.getVisibility()==View.VISIBLE){
-                    //    message_bage.setVisibility(View.INVISIBLE);
-                    //}
+                    bottomTab.setMessage(false);
                     break;
                 case 2:
                     final NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -225,7 +225,7 @@ public class HomeActivity extends BaseActivity
                     Log.e("message","发送未读消息弹窗");
                 case 1:
                     Log.e("message","有未读消息");
-                    //message_bage.setVisibility(View.VISIBLE);
+                    bottomTab.setMessage(true);
                     break;
             }
         }

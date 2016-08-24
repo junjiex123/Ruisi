@@ -50,7 +50,6 @@ public class FrageMessage extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
         recycler_view = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
-        RadioGroup swictchMes = (RadioGroup) mRootView.findViewById(R.id.btn_change);
         //设置可以滑出底栏
         recycler_view.setClipToPadding(false);
         recycler_view.setPadding(0,0,0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
@@ -66,6 +65,7 @@ public class FrageMessage extends BaseFragment {
                 getData(false);
             }
         });
+        RadioGroup swictchMes = (RadioGroup) mRootView.findViewById(R.id.btn_change);
         swictchMes.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int id) {
@@ -86,7 +86,7 @@ public class FrageMessage extends BaseFragment {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_message;
+        return R.layout.fragment_msg_hot;
     }
 
     @Override
