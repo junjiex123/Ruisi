@@ -27,7 +27,7 @@ import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.MessageData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
-import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
+import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 
 //回复我的
 //// TODO: 16-8-22  add 提到我的home.php?mod=space&do=notice&view=mypost&type=at&mobile=2
@@ -51,13 +51,16 @@ public class FrageMessage extends BaseFragment {
         super.onCreateView(inflater,container,savedInstanceState);
         initToolbar(false,"我的消息");
         recycler_view = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
+        //设置可以滑出底栏
+        recycler_view.setClipToPadding(false);
+        recycler_view.setPadding(0,0,0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
         refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recycler_view.setLayoutManager(layoutManager);
-        adapter = new MessageAdapter(getActivity(), datas, new RecyclerViewClickListener() {
+        adapter = new MessageAdapter(getActivity(), datas, new ListItemClickListener() {
             @Override
-            public void recyclerViewListClicked(View v, int position) {
+            public void onListItemClick(View v, int position) {
                 if (position != index) {
                     index = position;
                     refresh();

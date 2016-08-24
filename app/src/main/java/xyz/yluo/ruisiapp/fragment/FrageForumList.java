@@ -31,14 +31,14 @@ import xyz.yluo.ruisiapp.data.ForumListData;
 import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
-import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
+import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-3-19.
  * 板块列表fragemnt
  */
-public class FrageForumList extends BaseFragment implements RecyclerViewClickListener,View.OnClickListener{
+public class FrageForumList extends BaseFragment implements ListItemClickListener,View.OnClickListener{
     protected SwipeRefreshLayout refreshLayout;
     private List<ForumListData> datas = null;
     private ForumListAdapter adapter = null;
@@ -71,6 +71,9 @@ public class FrageForumList extends BaseFragment implements RecyclerViewClickLis
         addToolbarMenu(R.drawable.ic_search_white_24dp).setOnClickListener(this);
         refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
         RecyclerView recyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
+        //设置可以滑出底栏
+        recyclerView.setClipToPadding(false);
+        recyclerView.setPadding(0,0,0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
         //刷新
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
 
@@ -143,7 +146,7 @@ public class FrageForumList extends BaseFragment implements RecyclerViewClickLis
     }
 
     @Override
-    public void recyclerViewListClicked(View v, int position) {
+    public void onListItemClick(View v, int position) {
         int fid = datas.get(position).getFid();
         //几个特殊的板块
         String title = datas.get(position).getTitle();

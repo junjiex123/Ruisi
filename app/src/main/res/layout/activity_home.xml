@@ -12,7 +12,6 @@
         android:layout_height="match_parent"/>
 
     <xyz.yluo.ruisiapp.View.MyBottomTab
-        android:background="#eff8f8f8"
         android:id="@+id/bottom_bar"
         android:layout_gravity="bottom"
         android:layout_width="match_parent"

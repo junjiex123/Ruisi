@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -76,6 +75,8 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         setOrientation(LinearLayout.HORIZONTAL);// 水平布局
         setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT));
+        setBackgroundResource(R.drawable.divider_top_bg);
+
         for(int i=0;i<tab_names.length;i++){
             View v = getSingleTab(i);
             v.setTag(i);
@@ -106,7 +107,6 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
     @Override
     public void onClick(View v) {
         int tag = (Integer) v.getTag();
-        Log.e("Mybottom","click"+tag);
         if(currentSelected==tag){
             return;
         }
@@ -127,7 +127,6 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         view.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT,1));
         view.setGravity(Gravity.CENTER);
         view.setPadding(SIZE_PADDING_LR,SIZE_PADDING_TOP,SIZE_PADDING_LR,SIZE_PADDING_BOTTOM);
-        //view.setBackgroundResource(R.drawable.main_tab_item_bg_normal);
 
         /**
          * 图标

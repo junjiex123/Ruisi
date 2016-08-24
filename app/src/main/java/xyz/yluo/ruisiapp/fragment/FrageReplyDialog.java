@@ -51,7 +51,7 @@ import xyz.yluo.ruisiapp.View.VerticalTabLayout;
 import xyz.yluo.ruisiapp.adapter.SmileyAdapter;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
-import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
+import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.utils.ImeUtil;
 import xyz.yluo.ruisiapp.utils.PostHandler;
 
@@ -178,9 +178,9 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
         v.findViewById(R.id.action_smiley).setOnClickListener(this);
         ds = getSmileys();
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.HORIZONTAL, false);
-        adapter = new SmileyAdapter(new RecyclerViewClickListener() {
+        adapter = new SmileyAdapter(new ListItemClickListener() {
             @Override
-            public void recyclerViewListClicked(View v, int position) {
+            public void onListItemClick(View v, int position) {
                 insertSmiley(position);
             }
         }, ds);

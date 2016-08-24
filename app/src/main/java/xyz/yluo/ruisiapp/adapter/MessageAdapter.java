@@ -20,7 +20,7 @@ import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.MessageData;
-import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
+import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 
 /**
  * Created by free2 on 16-3-21.
@@ -30,9 +30,9 @@ import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     protected Activity activity;
     private List<MessageData> DataSet;
-    private RecyclerViewClickListener clickListener;
+    private ListItemClickListener clickListener;
 
-    public MessageAdapter(Activity activity, List<MessageData> dataSet, RecyclerViewClickListener listener) {
+    public MessageAdapter(Activity activity, List<MessageData> dataSet, ListItemClickListener listener) {
         DataSet = dataSet;
         this.activity = activity;
         this.clickListener = listener;
@@ -149,9 +149,9 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int id) {
                     if (id == R.id.btn_reply) {
-                        clickListener.recyclerViewListClicked(radioGroup, 0);
+                        clickListener.onListItemClick(radioGroup, 0);
                     } else {
-                        clickListener.recyclerViewListClicked(radioGroup, 1);
+                        clickListener.onListItemClick(radioGroup, 1);
                     }
                 }
             });

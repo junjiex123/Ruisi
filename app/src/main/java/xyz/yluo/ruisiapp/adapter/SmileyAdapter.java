@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
+import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 
 /**
  * Created by free2 on 16-5-1.
@@ -20,9 +20,9 @@ import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
 public class SmileyAdapter extends RecyclerView.Adapter<SmileyAdapter.SmileyViewHolder> {
 
     private List<Drawable> images = new ArrayList<>();
-    private RecyclerViewClickListener itemListener;
+    private ListItemClickListener itemListener;
 
-    public SmileyAdapter(RecyclerViewClickListener itemListener, List<Drawable> images) {
+    public SmileyAdapter(ListItemClickListener itemListener, List<Drawable> images) {
         this.images = images;
         this.itemListener = itemListener;
     }
@@ -53,7 +53,7 @@ public class SmileyAdapter extends RecyclerView.Adapter<SmileyAdapter.SmileyView
             image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    itemListener.recyclerViewListClicked(image, getAdapterPosition());
+                    itemListener.onListItemClick(image, getAdapterPosition());
                 }
             });
         }

@@ -34,6 +34,7 @@ import java.util.Map;
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
+import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
 import xyz.yluo.ruisiapp.data.LoadMoreType;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
@@ -43,7 +44,7 @@ import xyz.yluo.ruisiapp.fragment.FrageReplyDialog;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
-import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
+import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.IntentUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -55,7 +56,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 其余是评论
  */
 public class SingleArticleActivity extends BaseActivity
-        implements RecyclerViewClickListener, LoadMoreListener.OnLoadMoreListener,
+        implements ListItemClickListener, LoadMoreListener.OnLoadMoreListener,
         FrageReplyDialog.replyCompeteCallBack, View.OnClickListener {
 
     protected SwipeRefreshLayout refreshLayout;
@@ -73,14 +74,14 @@ public class SingleArticleActivity extends BaseActivity
     private boolean isEnableLoadMore = false;
     //回复楼主的链接
     private String replyUrl = "";
-    private SingleArticleAdapter mRecyleAdapter;
+    private SingleArticleAdapter adapter;
     //存储数据 需要填充的列表
     private List<SingleArticleData> mydatalist = new ArrayList<>();
     //是否调到指定页数and楼层???
     private boolean isSaveToDataBase = false;
     private ArrayAdapter<String> spinnerAdapter;
     private List<String> pageSpinnerDatas = new ArrayList<>();
-    private String Title, AuthorName, AuthorUid, Tid, RedirectPid = "";
+    private String Title, AuthorName, Tid, RedirectPid = "";
     private Spinner spinner;
 
     private boolean showPlainText = false;
@@ -137,7 +138,7 @@ public class SingleArticleActivity extends BaseActivity
         });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyleAdapter = new SingleArticleAdapter(this, this, mydatalist);
+        adapter = new SingleArticleAdapter(this, this, mydatalist);
         /**
          * 缓存数量
          */
@@ -156,7 +157,7 @@ public class SingleArticleActivity extends BaseActivity
             }
         });
 
-        mRecyclerView.setAdapter(mRecyleAdapter);
+        mRecyclerView.setAdapter(adapter);
         Bundle b = getIntent().getExtras();
         String url = b.getString("url");
         AuthorName = b.getString("author");
@@ -250,7 +251,7 @@ public class SingleArticleActivity extends BaseActivity
         });
         //数据填充
         mydatalist.clear();
-        mRecyleAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
         getArticleData(page);
     }
 
@@ -263,7 +264,7 @@ public class SingleArticleActivity extends BaseActivity
         });
         //数据填充
         mydatalist.clear();
-        mRecyleAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
         getArticleData(1);
     }
 
@@ -284,14 +285,14 @@ public class SingleArticleActivity extends BaseActivity
             public void onFailure(Throwable e) {
                 isEnableLoadMore = true;
                 e.printStackTrace();
-                mRecyleAdapter.setPlaceHolderString("加载失败......");
+                adapter.setLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
                 Toast.makeText(getApplicationContext(), "加载失败(Error -1)", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     @Override
-    public void recyclerViewListClicked(View v, final int position) {
+    public void onListItemClick(View v, final int position) {
         switch (v.getId()) {
             case R.id.btn_reply_2:
                 if (isLogin()) {
@@ -361,7 +362,7 @@ public class SingleArticleActivity extends BaseActivity
                 mydatalist.get(0).setTitle(title);
             }
             mydatalist.get(edit_pos).setCotent(content);
-            mRecyleAdapter.notifyItemChanged(edit_pos);
+            adapter.notifyItemChanged(edit_pos);
         }
     }
 
@@ -522,7 +523,7 @@ public class SingleArticleActivity extends BaseActivity
                 mRecyclerView.post(new Runnable() {
                     @Override
                     public void run() {
-                        mRecyleAdapter.setPlaceHolderString(finalErrorstr);
+                        adapter.setPlaceHolderString(finalErrorstr);
                     }
                 });
                 return tepdata;
@@ -571,7 +572,6 @@ public class SingleArticleActivity extends BaseActivity
                 data.setType(SingleType.CONTENT);
                 data.setPostTime(data.getPostTime().replace("收藏", ""));
                 AuthorName = data.getUsername();
-                AuthorUid = data.getUid();
             }
             if (!isSaveToDataBase) {
                 //插入数据库
@@ -582,19 +582,19 @@ public class SingleArticleActivity extends BaseActivity
             int add = tepdata.size();
             if (add > 0) {
                 if (add % 10 != 0) {
-                    mRecyleAdapter.setLoadMoreType(LoadMoreType.NOTHING);
+                    adapter.setLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
                 } else {
-                    mRecyleAdapter.setLoadMoreType(LoadMoreType.LOADING);
+                    adapter.setLoadMoreState(BaseAdapter.STATE_LOADING);
                 }
                 int start = mydatalist.size();
                 mydatalist.addAll(tepdata);
                 if (mydatalist.size() > 0 && (mydatalist.get(0).getType() != SingleType.CONTENT) &&
                         (mydatalist.get(0).getType() != SingleType.HEADER)) {
                     mydatalist.add(0, new SingleArticleData(SingleType.HEADER, Title, null, null, null, null, null, null, null));
-                    mRecyleAdapter.notifyItemInserted(0);
+                    adapter.notifyItemInserted(0);
                 }
-                mRecyleAdapter.notifyItemChanged(start);
-                mRecyleAdapter.notifyItemRangeInserted(start + 1, add);
+                adapter.notifyItemChanged(start);
+                adapter.notifyItemRangeInserted(start + 1, add);
 
                 //精确定位到某一层
                 if (!TextUtils.isEmpty(RedirectPid)) {
@@ -609,8 +609,8 @@ public class SingleArticleActivity extends BaseActivity
                 }
             } else {
                 //add = 0 没有添加
-                mRecyleAdapter.setLoadMoreType(LoadMoreType.NOTHING);
-                mRecyleAdapter.notifyItemChanged(mRecyleAdapter.getItemCount() - 1);
+                adapter.setLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
+                adapter.notifyItemChanged(adapter.getItemCount() - 1);
             }
             isEnableLoadMore = true;
             refreshLayout.postDelayed(new Runnable() {
@@ -653,7 +653,7 @@ public class SingleArticleActivity extends BaseActivity
                     } else {
                         showToast("回复删除成功");
                         mydatalist.remove(pos);
-                        mRecyleAdapter.notifyItemRemoved(pos);
+                        adapter.notifyItemRemoved(pos);
                     }
                 } else {
                     int start = res.indexOf("<p>");
@@ -670,5 +670,4 @@ public class SingleArticleActivity extends BaseActivity
             }
         });
     }
-
 }

@@ -13,7 +13,7 @@
         android:id="@+id/mytab"
         android:layout_width="match_parent"
         android:layout_height="38dp"
-        android:background="@drawable/rec_bottom_bg"/>
+        android:background="@drawable/divider_bottom"/>
     <android.support.v7.widget.RecyclerView
         android:scrollbars="vertical"
         android:scrollbarSize="2dp"

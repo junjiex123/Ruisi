@@ -31,8 +31,6 @@ public class ChatListAdapter extends BaseAdapter {
     public ChatListAdapter(Activity context, List<ChatListData> datas) {
         DataSets = datas;
         this.context = context;
-        //设置允许留出空白
-        enableEmptyHolder(48);
     }
 
     @Override

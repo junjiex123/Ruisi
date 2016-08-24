@@ -22,7 +22,7 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SmileyAdapter;
-import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
+import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 
 /**
  * Created by free2 on 16-7-19.
@@ -65,9 +65,9 @@ public class MySmileyPicker extends PopupWindow{
         tab.addTab(tab.newTab().setText("AC娘"));
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(mContext, 7, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new SmileyAdapter(new RecyclerViewClickListener() {
+        adapter = new SmileyAdapter(new ListItemClickListener() {
             @Override
-            public void recyclerViewListClicked(View v, int position) {
+            public void onListItemClick(View v, int position) {
                 smileyClick(position);
                 dismiss();
             }

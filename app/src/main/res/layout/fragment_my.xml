@@ -58,6 +58,8 @@
     </RelativeLayout>
 
     <ScrollView
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/BottomBarHeight"
         android:background="@color/bggrey"
         android:scrollbars="none"
         android:layout_width="match_parent"

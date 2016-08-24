@@ -212,7 +212,7 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
         datas.clear();
         adapter.notifyDataSetChanged();
         isEnableLoadMore = true;
-        adapter.setShowLoadMore(true);
+        adapter.setLoadMoreEnable(true);
         searchid = "";
     }
 
@@ -344,14 +344,14 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
         @Override
         protected void onPostExecute(List<SimpleListData> dataset) {
             if (dataset.size() == 0) {
-                adapter.setShowLoadMore(false);
+                adapter.setLoadMoreEnable(false);
                 isEnableLoadMore = false;
             } else {
-                adapter.setShowLoadMore(true);
+                adapter.setLoadMoreEnable(true);
                 isEnableLoadMore = true;
 
                 if (currentPage >= totalPage) {
-                    adapter.setShowLoadMore(false);
+                    adapter.setLoadMoreEnable(false);
                     isEnableLoadMore = false;
                 }
                 int start = datas.size();

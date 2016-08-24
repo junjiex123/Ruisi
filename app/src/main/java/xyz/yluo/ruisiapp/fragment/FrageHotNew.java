@@ -22,6 +22,7 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.HotNewListAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.data.GalleryData;
@@ -63,9 +64,12 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recycler_view.setLayoutManager(mLayoutManager);
+        //设置可以滑出底栏
+        recycler_view.setClipToPadding(false);
+        recycler_view.setPadding(0,0,0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
         adapter = new HotNewListAdapter(getActivity(), mydataset,galleryDatas);
         recycler_view.setAdapter(adapter);
-        adapter.setLoadMoreEnable(true,"加载中...");
+        adapter.setLoadMoreEnable(true);
         recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 10));
 
         refreshLayout.post(new Runnable() {
@@ -102,7 +106,6 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
     private void refresh() {
         CurrentPage = 1;
         isEnableLoadMore = false;
-        adapter.setPlaceHolderString("加载中!!");
         getData();
     }
 
@@ -116,6 +119,7 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
     }
 
     private void getData() {
+        adapter.setLoadMoreState(BaseAdapter.STATE_LOADING);
         if (App.IS_SCHOOL_NET && galleryDatas.size() == 0) {
             new getGalleryTask().execute();
         }
@@ -135,7 +139,7 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
                     }
                 }, 300);
 
-                adapter.setPlaceHolderString("加载失败!!");
+                adapter.setLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
             }
         });
     }

@@ -12,7 +12,7 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.data.ForumListData;
-import xyz.yluo.ruisiapp.listener.RecyclerViewClickListener;
+import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.utils.ImageUtils;
 
 /**
@@ -23,15 +23,12 @@ public class ForumListAdapter extends BaseAdapter {
 
     protected Context context;
     private List<ForumListData> datas = null;
-    private RecyclerViewClickListener listener;
+    private ListItemClickListener listener;
 
-    public ForumListAdapter(List<ForumListData> dataSet, Context context,RecyclerViewClickListener listener) {
+    public ForumListAdapter(List<ForumListData> dataSet, Context context,ListItemClickListener listener) {
         this.context = context;
         this.datas = dataSet;
         this.listener = listener;
-
-        //// TODO: 16-8-24  有bug
-        enableEmptyHolder(48);
     }
 
     @Override
@@ -104,7 +101,7 @@ public class ForumListAdapter extends BaseAdapter {
             container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.recyclerViewListClicked(view,position);
+                    listener.onListItemClick(view,position);
                 }
             });
         }

@@ -8,7 +8,7 @@
     android:background="?attr/selectableItemBackground">
 
     <TextView
-        android:background="@drawable/rec_bottom_bg"
+        android:background="@drawable/divider_bottom"
         android:padding="16dp"
         android:gravity="center"
         android:textSize="16sp"

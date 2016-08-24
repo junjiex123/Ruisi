@@ -1,6 +1,7 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -22,11 +23,9 @@ import xyz.yluo.ruisiapp.data.SimpleListData;
  * 我的收藏 我的帖子,搜索结果
  * 等都用这个
  */
-public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+public class SimpleListAdapter extends BaseAdapter {
 
     private static final int CONTENT = 0;
-    private static final int LOAD_MORE = 1;
-    private boolean showLoadMore = false;
     private List<SimpleListData> Datas = new ArrayList<>();
     private Activity activity;
     private ListType type;
@@ -37,42 +36,19 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         this.type = type;
     }
 
-    public void setShowLoadMore(boolean showLoadMore) {
-        this.showLoadMore = showLoadMore;
+    @Override
+    protected int getDataCount() {
+        return Datas.size();
     }
 
     @Override
-    public int getItemCount() {
-        if (Datas.size() == 0) {
-            return 0;
-        }
-        return Datas.size() + 1;
-    }
-
-
-    @Override
-    public int getItemViewType(int position) {
-        if (position == getItemCount() - 1) {
-            return LOAD_MORE;
-        } else {
-            return CONTENT;
-        }
+    protected int getItemType(int pos) {
+        return CONTENT;
     }
 
     @Override
-    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        switch (viewType) {
-            case CONTENT:
-                return new SimpleVivwHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.simple_list_item, parent, false));
-            default:
-                return new SimpleLoadMoreViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.simple_load_more_item, parent, false));
-        }
-
-    }
-
-    @Override
-    public void onBindViewHolder(BaseViewHolder holder, int position) {
-        holder.setData(position);
+    protected BaseViewHolder getItemViewHolder(ViewGroup parent, int viewType) {
+        return new SimpleVivwHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.simple_list_item, parent, false));
     }
 
 
@@ -97,7 +73,11 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @Override
         void setData(int position) {
             String keystr = Datas.get(position).getKey();
-            key.setText(Html.fromHtml(keystr));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                key.setText(Html.fromHtml(keystr,0));
+            }else{
+                key.setText(Html.fromHtml(keystr));
+            }
             String values = Datas.get(position).getValue();
             if (values.length() > 0) {
                 value.setVisibility(View.VISIBLE);
@@ -115,18 +95,4 @@ public class SimpleListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             }
         }
     }
-
-    private class SimpleLoadMoreViewHolder extends BaseViewHolder {
-
-        public SimpleLoadMoreViewHolder(View itemView) {
-            super(itemView);
-        }
-
-        @Override
-        void setData(int position) {
-            itemView.setVisibility(showLoadMore ? View.VISIBLE : View.GONE);
-        }
-    }
-
-
 }
