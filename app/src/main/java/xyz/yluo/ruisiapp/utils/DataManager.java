@@ -50,9 +50,9 @@ public class DataManager {
         }
         //删除cookie
         HttpUtil.exit();
-        App.USER_NAME = "";
-        App.USER_UID = "";
-        SharedPreferences perUserInfo = context.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        //删除shp
+        SharedPreferences perUserInfo = context.getSharedPreferences(App.MY_SHP_NAME,
+                Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = perUserInfo.edit();
         editor.clear();
         editor.apply();

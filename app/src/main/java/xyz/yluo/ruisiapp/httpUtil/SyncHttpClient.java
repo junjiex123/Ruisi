@@ -148,6 +148,7 @@ public class SyncHttpClient {
                 os.flush();
                 os.close();
             } else if (method == Method.HEAD) {
+                Log.i("head",connection.getHeaderFields().toString());
                 String location = connection.getHeaderField("Location");
                 handler.sendSuccessMessage(location.getBytes());
                 return;

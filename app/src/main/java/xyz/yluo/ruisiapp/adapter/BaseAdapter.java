@@ -1,17 +1,15 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.data.LoadMoreType;
 import xyz.yluo.ruisiapp.listener.ListItemClickListener;
-import xyz.yluo.ruisiapp.utils.DimmenUtils;
 
 /**
  * Created by yang on 16-8-23.
@@ -23,28 +21,23 @@ import xyz.yluo.ruisiapp.utils.DimmenUtils;
 
 public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseViewHolder>{
 
-    private static final int TYPE_PLACE = 100;
     private static final int TYPE_LOADMORE =101;
 
     public static final int STATE_LOADING = 1;
     public static final int STATE_LOAD_FAIL = 2;
     public static final int STATE_LOAD_NOTHING = 3;
+    public static final int STATE_LOAD_OK = 4;
+    public static final int STATE_NEED_LOGIN = 5;
 
+    private int loadeState = STATE_LOADING;
 
-    boolean enableLoadMore = false;
-    int loadeState = STATE_LOADING;
-
-    private String placeHolderString = "加载中...";
-    private String loadmoreString = "加载中...";
     private ListItemClickListener itemListener;
+    private boolean enableLoadMore = true;
 
     @Override
     public final BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         switch (viewType){
-            case TYPE_PLACE:
-                return new PlaceHolderViewHolder(LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.list_place_holder_item,parent,false));
             case TYPE_LOADMORE:
                 return new LoadMoreViewHolder(LayoutInflater.from(parent.getContext()).
                         inflate(R.layout.load_more_item, parent, false));
@@ -61,17 +54,14 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
     @Override
     public final int getItemViewType(int position) {
         if(position==0&&getDataCount()==0){
-            return TYPE_PLACE;
+            return TYPE_LOADMORE;
         }
-
-        if(position==getItemCount()-1){
-            if(enableLoadMore){
-                return TYPE_LOADMORE;
-            }
+        if(enableLoadMore&&position==getItemCount()-1){
+            return TYPE_LOADMORE;
         }
-
         return getItemType(position);
     }
+
 
     @Override
     public final int getItemCount() {
@@ -79,61 +69,42 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
         if(count==0){
             //1 是placeholder
             return 1;
+        }else{
+            if(enableLoadMore){
+                //++是有一个loadmore item
+                count++;
+            }
+            return count;
         }
+    }
 
-        //center
+
+    public void disableLoadMore(){
         if(enableLoadMore){
-            count++;
+            enableLoadMore = false;
+            //之前是开启状态
+            //false 检查是否有 有则移除
+            int i = getItemCount()-1;
+            if(i>=0&&getItemViewType(i)==TYPE_LOADMORE){
+                notifyItemRemoved(i);
+            }
         }
-
-        return count;
     }
 
     protected abstract int getDataCount();
     protected abstract int getItemType(int pos);
     protected abstract BaseViewHolder getItemViewHolder(ViewGroup parent, int viewType);
 
-    public void setLoadMoreEnable(boolean b){
-        if(b!=enableLoadMore){
-            enableLoadMore = b;
-            if(b){
-                //之前是false
-                int i  = getItemCount()-1;
-                if(i>0&&getItemViewType(i)!=TYPE_LOADMORE){
-                    notifyItemInserted(i);
-                }
-
-            }else{
-                //之前是开启状态
-                //false 检查是否有 有则移除
-                int i = getItemCount()-1;
-                if(i>=0&&getItemViewType(i)==TYPE_LOADMORE){
-                    notifyItemRemoved(i);
-                }
-            }
+    //改变状态
+    public void changeLoadMoreState(int i){
+        this.loadeState = i;
+        int ii = getItemCount()-1;
+        if(ii>=0&&getItemViewType(ii)==TYPE_LOADMORE){
+            notifyItemChanged(ii);
         }
     }
 
-    public void setLoadMoreState(int i){
-        if(enableLoadMore){
-            this.loadeState = i;
-            int ii = getItemCount()-1;
-            if(ii>=0&&getItemViewType(ii)==TYPE_LOADMORE){
-                notifyItemChanged(ii);
-            }
-        }
-    }
-
-
-    public void setPlaceHolderString(String text){
-        placeHolderString = text;
-        if(getDataCount()==0){
-            notifyItemChanged(0);
-        }
-    }
-
-
-    public void setItemListener(ListItemClickListener l){
+    void setItemListener(ListItemClickListener l){
         this.itemListener = l;
     }
 
@@ -152,42 +123,53 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
 
         @Override
         void setData(int position) {
+            //不是第一次加载
+            container.setLayoutParams(new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             switch (loadeState){
                 case STATE_LOAD_FAIL:
                     loadmore_progress.setVisibility(View.GONE);
                     loadmore_text.setText("加载失败");
                     break;
-                case STATE_LOAD_NOTHING:
+                case STATE_NEED_LOGIN:
                     loadmore_progress.setVisibility(View.GONE);
-                    loadmore_text.setText("暂无更多");
+                    loadmore_text.setText("需要登录");
+                    //没有数据填充第一次加载......
+                    if(getDataCount()==0){
+                        container.setLayoutParams(new LinearLayout.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                    }
+                    break;
+                case STATE_LOAD_OK:
+                    loadmore_text.setText("");
+                    loadmore_progress.setVisibility(View.GONE);
+                    break;
+                case STATE_LOADING:
+                    loadmore_progress.setVisibility(View.VISIBLE);
+                    loadmore_text.setText("加载中...");
+                    //没有数据填充第一次加载......
+                    if(getDataCount()==0){
+                        loadmore_progress.setVisibility(View.GONE);
+                        container.setLayoutParams(new LinearLayout.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                    }
                     break;
                 default:
-                    loadmore_progress.setVisibility(View.VISIBLE);
-                    loadmore_text.setText(loadmoreString);
+                    loadmore_progress.setVisibility(View.GONE);
+                    loadmore_text.setText("暂无更多");
                     break;
             }
         }
     }
-    //placeholder ViewHolder
-    private class PlaceHolderViewHolder extends BaseViewHolder {
-        TextView textView;
-        PlaceHolderViewHolder(View itemView) {
-            super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.text);
-        }
 
-        @Override
-        void setData(int position) {
-            textView.setText(placeHolderString);
-        }
-    }
 
-    public abstract class BaseViewHolder extends RecyclerView.ViewHolder
+    abstract class BaseViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener{
 
-        public BaseViewHolder(View itemView) {
+        BaseViewHolder(View itemView) {
             super(itemView);
-            itemView.setOnClickListener(this);
+            if(itemListener!=null)
+                itemView.setOnClickListener(this);
         }
 
         void setData(int position){

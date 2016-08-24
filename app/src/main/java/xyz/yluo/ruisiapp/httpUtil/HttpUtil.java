@@ -1,6 +1,8 @@
 package xyz.yluo.ruisiapp.httpUtil;
 
 import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.Map;
 
@@ -14,6 +16,7 @@ public class HttpUtil {
     private static AsyncHttpClient client = new AsyncHttpClient();
     private static SyncHttpClient syncHttpClient = new SyncHttpClient();
     private static PersistentCookieStore store;
+    private static String hash = "";
 
     private static String getUrl(String url) {
         if (url.startsWith("http")) {
@@ -36,6 +39,12 @@ public class HttpUtil {
 
     public static void post(Context context, String url, Map<String, String> map, ResponseHandler handler) {
         init(context);
+        if(TextUtils.isEmpty(hash)){
+            hash = context.getSharedPreferences(App.MY_SHP_NAME,Context.MODE_PRIVATE).
+                    getString(App.HASH_KEY,"");
+        }
+        Log.i("hash is","==="+hash+"===");
+        map.put("formhash",hash);
         client.post(getUrl(url), map, handler);
     }
 
@@ -45,7 +54,7 @@ public class HttpUtil {
     }
 
     private static void init(Context context) {
-        client.setConnectionTimeout(5000);
+        client.setConnectionTimeout(4000);
         if (context!=null&&store == null) {
             store = new PersistentCookieStore(context);
             client.setStore(store);
@@ -61,6 +70,7 @@ public class HttpUtil {
 
     public static void exit() {
         store.clearCookie();
+        hash = "";
     }
 
     public static PersistentCookieStore getStore(Context context) {

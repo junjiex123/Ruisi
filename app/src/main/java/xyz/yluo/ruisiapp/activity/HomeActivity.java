@@ -45,7 +45,6 @@ import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
  * 这是首页 管理3个fragment
  * 1.板块列表{@link HomeActivity}
  * 2.新帖{@link FrageHotNew}
- * 3.新闻{@link xyz.yluo.ruisiapp.fragment.FrageNews}
  */
 public class HomeActivity extends BaseActivity
         implements  View.OnClickListener,MyBottomTab.OnTabChangeListener{
@@ -64,6 +63,7 @@ public class HomeActivity extends BaseActivity
         bottomTab.setOnTabChangeListener(this);
         getFragmentManager().beginTransaction().replace(
                 R.id.fragment_container,currentFragment).commit();
+
     }
 
     @Override
@@ -75,7 +75,7 @@ public class HomeActivity extends BaseActivity
     @Override
     protected void onStart() {
         super.onStart();
-        if(App.ISLOGIN()&& !TextUtils.isEmpty(App.USER_NAME)){
+        if(!TextUtils.isEmpty(App.getUid(this))){
             if(timer==null){
                 Log.e("message","开始timer");
                 timer = new Timer(true);
@@ -113,12 +113,18 @@ public class HomeActivity extends BaseActivity
     }
 
     @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+        Log.e("HOME","onAttachFragment"+fragment.getTag());
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         // super.onSaveInstanceState(outState);
         //不然保存状态 放置白屏
     }
 
-    private void changeFragement(int id) {
+    public void changeFragement(int id) {
         /**
          * 所以常用的fragment用show 和 hide 比较好
          * replace 自己和自己是不会执行任何的函数的
@@ -139,7 +145,7 @@ public class HomeActivity extends BaseActivity
                     to = new FrageMessage();
                     break;
                 case FrageType.MY:
-                    to = FragmentMy.newInstance(App.USER_NAME,App.USER_UID);
+                    to = new FragmentMy();
                     break;
                 case FrageType.FRIEND:
                     to = new FrageFriends();
@@ -186,8 +192,8 @@ public class HomeActivity extends BaseActivity
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.profile_image:
-                if (App.ISLOGIN()) {
-                    UserDetailActivity.openWithAnimation(HomeActivity.this, App.USER_NAME, (CircleImageView)view, App.USER_UID);
+                if (!TextUtils.isEmpty(App.getUid(this))) {
+                    UserDetailActivity.openWithAnimation(HomeActivity.this,App.getName(this), (CircleImageView)view,App.getUid(this));
                 } else {
                     Intent i = new Intent(HomeActivity.this, LoginActivity.class);
                     startActivityForResult(i,0);
@@ -202,8 +208,6 @@ public class HomeActivity extends BaseActivity
 
     }
 
-
-
     private MyHandler messageHandler = new MyHandler();
     final NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
             .setSmallIcon(R.mipmap.logo)
@@ -211,8 +215,6 @@ public class HomeActivity extends BaseActivity
             .setContentTitle("未读消息提醒")
             .setContentText("你有未读的消息哦,去我的消息页面查看吧！")
             .setAutoCancel(true);
-
-
 
 
     private class MyTimerTask extends TimerTask{

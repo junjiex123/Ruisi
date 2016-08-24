@@ -15,7 +15,7 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 /**
  * Created by free2 on 16-3-31.
  * 一个板块文章列表基类
- * 一般文章列表{@link ArticleList}
+ * 一般文章列表{@link PostsActivity}
  * 图片文章列表{@link ArticleListImage}
  */
 public abstract class ArticleListBase extends BaseActivity

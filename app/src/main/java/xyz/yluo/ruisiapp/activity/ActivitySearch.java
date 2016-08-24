@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,8 +30,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
 import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.SimpleListData;
@@ -48,17 +47,20 @@ import xyz.yluo.ruisiapp.utils.ImeUtil;
  * 搜索换页目的是获得searchid这个参数，然后加上page 参数即可
  * http://bbs.rs.xidian.me/search.php?mod=forum&amp;searchid=1268&amp;
  * orderby=lastpost&amp;ascdesc=desc&amp;searchsubmit=yes&amp;page=20&amp;mobile=2
+ *
+ * http://bbs.rs.xidian.me/search.php?mod=forum&searchid=865&orderby=lastpost&ascdesc=desc&searchsubmit=yes&kw=%E6%B5%8B%E8%AF%95&mobile=2
  */
-public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnLoadMoreListener,View.OnClickListener{
+public class ActivitySearch extends BaseActivity
+        implements LoadMoreListener.OnLoadMoreListener,
+        View.OnClickListener,
+        EditText.OnEditorActionListener{
 
 
     private int totalPage = 1;
     private int currentPage = 1;
     private String searchid = "";
     private boolean isEnableLoadMore = false;
-    private RecyclerView recycler_view;
     private EditText search_input;
-    private SwipeRefreshLayout refreshLayout;
     private SimpleListAdapter adapter;
     private List<SimpleListData> datas = new ArrayList<>();
     private CardView search_card;
@@ -73,34 +75,31 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
         setContentView(R.layout.activity_search);
         main_window = findViewById(R.id.main_window);
         findViewById(R.id.btn_back).setOnClickListener(this);
-        recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
         search_input = (EditText) findViewById(R.id.search_input);
-        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_view);
         search_card = (CardView) findViewById(R.id.search_card);
-        refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         findViewById(R.id.start_search).setOnClickListener(this);
         findViewById(R.id.nav_search).setOnClickListener(this);
-        refreshLayout.setEnabled(false);
         search_input.setHint("请输入搜索内容！");
         adapter = new SimpleListAdapter(ListType.SERRCH, this, datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recycler_view.setLayoutManager(layoutManager);
         recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) layoutManager, this, 20));
         recycler_view.setAdapter(adapter);
+        adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
         nav_title = (TextView) findViewById(R.id.nav_title);
         findViewById(R.id.nav_back).setOnClickListener(this);
+        search_input.setOnEditorActionListener(this);
+    }
 
-        search_input.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                boolean handled = false;
-                if (i == EditorInfo.IME_ACTION_SEARCH) {
-                    start_search_click();
-                    handled = true;
-                }
-                return handled;
-            }
-        });
+    @Override
+    public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+        boolean handled = false;
+        if (i == EditorInfo.IME_ACTION_SEARCH) {
+            start_search_click();
+            handled = true;
+        }
+        return handled;
     }
 
     @Override
@@ -116,6 +115,157 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
             });
         }else {
             ImeUtil.show_ime(ActivitySearch.this, search_input);
+        }
+    }
+
+    private void start_search_click() {
+        String str = search_input.getText().toString();
+        if (TextUtils.isEmpty(str)) {
+            Snackbar.make(main_window, "你还没写内容呢", Snackbar.LENGTH_SHORT).show();
+            return;
+        } else {
+            nav_title.setText("搜索:"+str);
+            hide_search_view();
+            getData(str);
+        }
+
+        ImeUtil.hide_ime(this);
+        datas.clear();
+        adapter.notifyDataSetChanged();
+        isEnableLoadMore = true;
+        searchid = "";
+    }
+
+    private void getData(String str) {
+        adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
+        String url = "search.php?mod=forum&mobile=2";
+        Map<String, String> paras = new HashMap<>();
+        paras.put("searchsubmit", "yes");
+        paras.put("srchtxt", str);
+
+        HttpUtil.post(this, url, paras, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                if (res.contains("秒内只能进行一次搜索")) {
+                    getDataFail("抱歉，您在 15 秒内只能进行一次搜索");
+                } else {
+                    new GetResultListTaskMe().execute(new String(response));
+                }
+            }
+            @Override
+            public void onFailure(Throwable e) {
+                e.printStackTrace();
+                getDataFail(null);
+            }
+        });
+    }
+
+    private void getSomePageData(int page) {
+        String str = search_input.getText().toString();
+        String url = "search.php?mod=forum&searchid="+searchid
+                + "&orderby=lastpost&ascdesc=desc&searchsubmit=yes&kw="+str
+                +"&page="+ page+"&mobile=2";
+        HttpUtil.get(this, url, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                new GetResultListTaskMe().execute(new String(response));
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                e.printStackTrace();
+                getDataFail(null);
+            }
+        });
+    }
+
+    private void getDataFail(String res){
+        String erreortext = res;
+        if(TextUtils.isEmpty(res)){
+            erreortext = "网络错误(Error -2)";
+        }
+        isEnableLoadMore = true;
+        adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
+        Snackbar.make(main_window,erreortext, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLoadMore() {
+        //loadmore 被出发
+        //加载更多
+        if (isEnableLoadMore) {
+            isEnableLoadMore = false;
+            int page = currentPage;
+            if (currentPage < totalPage && totalPage > 1 && (!TextUtils.isEmpty(searchid))){
+                Log.i("loadmore", currentPage + "");
+                page = page + 1;
+                getSomePageData(page);
+            }
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.nav_back:
+            case R.id.btn_back:
+                finish();
+                break;
+            case R.id.nav_search:
+                show_search_view();
+                break;
+            case R.id.start_search:
+                start_search_click();
+                break;
+        }
+    }
+
+
+    private class GetResultListTaskMe extends AsyncTask<String, Void, List<SimpleListData>> {
+        @Override
+        protected List<SimpleListData> doInBackground(String... params) {
+            String res = params[0];
+            List<SimpleListData> dataset = new ArrayList<>();
+            Document doc = Jsoup.parse(res);
+            Elements body = doc.select("div[class=threadlist]"); // 具有 href 属性的链接
+            //获得总页数
+            //获取总页数 和当前页数
+            if (doc.select(".pg").text().length() > 0) {
+                Elements pageinfos = doc.select(".pg");
+                currentPage = GetId.getNumber(pageinfos.select("strong").text());
+                int n = GetId.getNumber(pageinfos.select("span").attr("title"));
+                if (n > 0 && n > totalPage) {
+                    totalPage = n;
+                }
+                if (totalPage > 1) {
+                    searchid = GetId.getid("searchid=",pageinfos.select("a").attr("href"));
+                }
+            }
+
+            Elements links = body.select("li");
+            for (Element src : links) {
+                String url = src.select("a").attr("href");
+                String title = src.select("a").html();
+                dataset.add(new SimpleListData(title, "", url));
+            }
+            return dataset;
+        }
+
+        @Override
+        protected void onPostExecute(List<SimpleListData> dataset) {
+            isEnableLoadMore = true;
+            if (dataset.size() == 0) {
+                adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
+            } else {
+                if (currentPage >= totalPage) {
+                    adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
+                    isEnableLoadMore = false;
+                }
+                int start = datas.size();
+                datas.addAll(dataset);
+                adapter.notifyItemRangeInserted(start, dataset.size());
+            }
         }
     }
 
@@ -194,178 +344,6 @@ public class ActivitySearch extends BaseActivity implements LoadMoreListener.OnL
             });
         }else{
             search_card.setVisibility(View.GONE);
-        }
-    }
-
-    private void start_search_click() {
-        String str = search_input.getText().toString();
-        if (TextUtils.isEmpty(str)) {
-            Snackbar.make(main_window, "你还没写内容呢", Snackbar.LENGTH_SHORT).show();
-            return;
-        } else {
-            nav_title.setText("搜索:"+str);
-            hide_search_view();
-            getData(str);
-        }
-
-        ImeUtil.hide_ime(this);
-        datas.clear();
-        adapter.notifyDataSetChanged();
-        isEnableLoadMore = true;
-        adapter.setLoadMoreEnable(true);
-        searchid = "";
-    }
-
-    private void getData(String str) {
-
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        });
-
-        String url = "search.php?mod=forum&mobile=2";
-        Map<String, String> paras = new HashMap<>();
-        paras.put("formhash", App.FORMHASH);
-        paras.put("searchsubmit", "yes");
-        paras.put("srchtxt", str);
-
-        HttpUtil.post(this, url, paras, new ResponseHandler() {
-            @Override
-            public void onSuccess(byte[] response) {
-                String res = new String(response);
-                if (res.contains("秒内只能进行一次搜索")) {
-                    Snackbar.make(main_window, "抱歉，您在 15 秒内只能进行一次搜索", Snackbar.LENGTH_SHORT).show();
-                } else {
-                    new GetResultListTaskMe().execute(new String(response));
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable e) {
-                e.printStackTrace();
-                Snackbar.make(main_window, "网络错误", Snackbar.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFinish() {
-                super.onFinish();
-                refreshLayout.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout.setRefreshing(false);
-                    }
-                }, 500);
-
-            }
-        });
-    }
-
-    private void getSomePageData(int page) {
-        String url = "search.php?mod=forum&searchid=" + searchid + "&orderby=lastpost&ascdesc=desc&searchsubmit=yes&page=" + page + "&mobile=2";
-
-        HttpUtil.get(this, url, new ResponseHandler() {
-            @Override
-            public void onSuccess(byte[] response) {
-                new GetResultListTaskMe().execute(new String(response));
-            }
-
-            @Override
-            public void onFailure(Throwable e) {
-                isEnableLoadMore = true;
-                e.printStackTrace();
-                Snackbar.make(main_window, "网络错误(Error -2)", Snackbar.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    @Override
-    public void onLoadMore() {
-        //loadmore 被出发
-        //加载更多被电击
-        if (isEnableLoadMore) {
-            isEnableLoadMore = false;
-            int page = currentPage;
-            if (currentPage < totalPage && totalPage > 1 && (!TextUtils.isEmpty(searchid))){
-                Log.i("loadmore", currentPage + "");
-                page = page + 1;
-                getSomePageData(page);
-            }
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.nav_back:
-            case R.id.btn_back:
-                finish();
-                break;
-            case R.id.nav_search:
-                show_search_view();
-                break;
-            case R.id.start_search:
-                start_search_click();
-                break;
-        }
-    }
-
-    private class GetResultListTaskMe extends AsyncTask<String, Void, List<SimpleListData>> {
-        @Override
-        protected List<SimpleListData> doInBackground(String... params) {
-            String res = params[0];
-            List<SimpleListData> dataset = new ArrayList<>();
-            Document doc = Jsoup.parse(res);
-            Elements body = doc.select("div[class=threadlist]"); // 具有 href 属性的链接
-            //获得总页数
-            //获取总页数 和当前页数
-            if (doc.select(".pg").text().length() > 0) {
-                Elements pageinfos = doc.select(".pg");
-                currentPage = GetId.getNumber(pageinfos.select("strong").text());
-                int n = GetId.getNumber(pageinfos.select("span").attr("title"));
-                if (n > 0 && n > totalPage) {
-                    totalPage = n;
-                }
-                if (totalPage > 1) {
-                    searchid = GetId.getid("searchid=",pageinfos.select("a").attr("href"));
-                }
-            }
-
-            Elements links = body.select("li");
-            for (Element src : links) {
-                String url = src.select("a").attr("href");
-                String title = src.select("a").html();
-                dataset.add(new SimpleListData(title, "", url));
-            }
-            return dataset;
-        }
-
-        @Override
-        protected void onPostExecute(List<SimpleListData> dataset) {
-            if (dataset.size() == 0) {
-                adapter.setLoadMoreEnable(false);
-                isEnableLoadMore = false;
-            } else {
-                adapter.setLoadMoreEnable(true);
-                isEnableLoadMore = true;
-
-                if (currentPage >= totalPage) {
-                    adapter.setLoadMoreEnable(false);
-                    isEnableLoadMore = false;
-                }
-                int start = datas.size();
-                datas.addAll(dataset);
-                adapter.notifyItemChanged(start);
-                adapter.notifyItemRangeInserted(start + 1, dataset.size());
-            }
-            findViewById(R.id.view_loading).setVisibility(View.GONE);
-            recycler_view.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    refreshLayout.setRefreshing(false);
-                }
-            }, 300);
         }
     }
 }

@@ -78,8 +78,8 @@ public class UserDakaActivity extends BaseActivity {
                 sign_click();
             }
         });
-        user_name.setText(App.USER_NAME);
-        Picasso.with(this).load(UrlUtils.getAvaterurlb(App.USER_UID)).placeholder(R.drawable.image_placeholder).into(user_image);
+        user_name.setText(App.getName(this));
+        Picasso.with(this).load(UrlUtils.getAvaterurlb(App.getUid(this))).placeholder(R.drawable.image_placeholder).into(user_image);
         init();
         isHaveDaka();
         final String[] mItems = {"开心", "难过", "郁闷", "无聊", "怒", "擦汗", "奋斗", "慵懒", "衰"};

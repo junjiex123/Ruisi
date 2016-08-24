@@ -22,6 +22,7 @@ public class ArticleListData {
     private String replayCount;
     private boolean isRead;
     private boolean ishaveImage;
+    private String imUrl;
 
     private int titleColor = 0xff000000;//文章颜色
 
@@ -47,6 +48,15 @@ public class ArticleListData {
         this.author = author;
         this.replayCount = replayCount;
         this.titleColor = titleColor;
+    }
+
+    //图片分类构造
+    public ArticleListData(String title, String titleUrl, String imageurl, String author, String replyCount){
+        this.title = title;
+        this.titleUrl = titleUrl;
+        this.imUrl = imageurl;
+        this.author = author;
+        this.replayCount = replyCount;
     }
 
     public boolean ishaveImage() {
@@ -103,5 +113,9 @@ public class ArticleListData {
 
     public String getAuthor() {
         return author;
+    }
+
+    public String getImage() {
+        return imUrl;
     }
 }

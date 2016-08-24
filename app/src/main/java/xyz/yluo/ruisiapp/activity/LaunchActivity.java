@@ -1,33 +1,27 @@
 package xyz.yluo.ruisiapp.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
-import xyz.yluo.ruisiapp.checknet.CheckNet;
-import xyz.yluo.ruisiapp.checknet.CheckNetResponse;
-import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
-import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;
+import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
@@ -37,26 +31,18 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 检查是否登陆
  * 读取相关设置写到{@link App}
  */
-public class LaunchActivity extends BaseActivity {
-    private long starttime = 0;
+public class LaunchActivity extends BaseActivity implements View.OnClickListener{
     //等待时间
     private final static int WAIT_TIME = 800;
     private TextView launch_text;
     private CircleImageView user_image;
-    private SharedPreferences perUserInfo = null;
+    private SharedPreferences shp = null;
     private boolean isForeGround = true;
     private Handler mHandler = new Handler();
-    private Runnable mRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if(isForeGround){
-                Intent i = new Intent(getApplicationContext(), HomeActivity.class);
-                startActivity(i);
-                finish();
-            }
 
-        }
-    };
+    //记录2个检查网络的返回值，如果都为空说明没网...
+    private String mobileRes = "";
+    private String pcResponse = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,40 +50,108 @@ public class LaunchActivity extends BaseActivity {
         setContentView(R.layout.activity_launch);
 
         launch_text = (TextView) findViewById(R.id.launch_text);
-        Button btn_inner = (Button) findViewById(R.id.btn_login_inner);
-        Button btn_outer = (Button) findViewById(R.id.btn_login_outer);
+        findViewById(R.id.btn_login_inner).setOnClickListener(this);
+        findViewById(R.id.btn_login_outer).setOnClickListener(this);
         findViewById(R.id.login_fail_view).setVisibility(View.GONE);
         user_image = (CircleImageView) findViewById(R.id.user_image);
         user_image.setVisibility(View.GONE);
-        starttime = System.currentTimeMillis();
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        shp = getSharedPreferences(App.MY_SHP_NAME,MODE_PRIVATE);
+        String uid = App.getUid(this);
+        if (!TextUtils.isEmpty(uid)) {
+            String url = UrlUtils.getAvaterurlm(uid);
+            Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(user_image);
+            user_image.setVisibility(View.VISIBLE);
+        }
+        mHandler.postDelayed(finishRunable, 1500);
+        String urlin = "http://rs.xidian.edu.cn/member.php?mod=logging&action=login&mobile=2";
+        String urlout = "http://bbs.rs.xidian.me/member.php?mod=logging&action=login&mobile=2";
 
-        btn_inner.setOnClickListener(new View.OnClickListener() {
+        HttpUtil.get(this, urlout, new ResponseHandler() {
             @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                finish();
+            public void onSuccess(byte[] response) {
+                mobileRes  = new String(response);
+                if(!TextUtils.isEmpty(pcResponse)){
+                    loginOk();
+                }
             }
         });
-        btn_outer.setOnClickListener(new View.OnClickListener() {
+
+        HttpUtil.get(this, urlin, new ResponseHandler() {
             @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                finish();
+            public void onSuccess(byte[] response) {
+                pcResponse = new String(response);
+                loginOk();
             }
         });
-        getSetting();
+    }
 
 
-        MyDB myDB = new MyDB(this, MyDB.MODE_READ);
-        myDB.showHistoryDatabase();
+    private Runnable finishRunable = new Runnable() {
+        @Override
+        public void run() {
+            loginOk();
+        }
+    };
 
-        new CheckNet(this).startCheck(new CheckNetResponse() {
-            @Override
-            public void onFinish(int type, String response) {
-                canGetRs(type);
+    private void loginOk(){
+        mHandler.removeCallbacks(finishRunable);
+        if(!isForeGround){
+            return;
+        }
+        String res = "";
+        if(!TextUtils.isEmpty(pcResponse)){
+            App.IS_SCHOOL_NET = true;
+            res = pcResponse;
+        }else if(!TextUtils.isEmpty(mobileRes)){
+            App.IS_SCHOOL_NET = false;
+            res = mobileRes;
+        }
+        if(!TextUtils.isEmpty(res)){
+            int i = res.indexOf("欢迎您回来");
+            if(i>0){
+                String info = res.substring(i+6,i+26);
+                int pos1 = info.indexOf(" ");
+                int pos2 = info.indexOf("，");
+                String grade = info.substring(0,pos1);
+                String name = info.substring(pos1+1,pos2);
+                String uid = GetId.getid("uid=",res.substring(i));
+                int indexhash = res.indexOf("formhash");
+                String hash = res.substring(indexhash+9,indexhash+17);
+                SharedPreferences.Editor ed =  shp.edit();
+                ed.putString(App.USER_UID_KEY,uid);
+                ed.putString(App.USER_NAME_KEY,name);
+                ed.putString(App.USER_GRADE_KEY,grade);
+                ed.putString(App.HASH_KEY,hash);
+                ed.apply();
+                Log.e("res","grade "+grade+" uid "+uid+" name "+name+" hash "+hash);
             }
-        });
+            enterHome();
+        }else{
+            Toast.makeText(this, "无法连接到服务器请检查网络设置！", Toast.LENGTH_SHORT).show();
+            findViewById(R.id.login_view).setVisibility(View.GONE);
+            findViewById(R.id.login_fail_view).setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void enterHome(){
+        startActivity(new Intent(this, HomeActivity.class));
+        finish();
+    }
+
+    @Override
+    public void onClick(View view) {
+        //// TODO: 16-8-24
+        switch (view.getId()){
+            case R.id.btn_login_inner:
+                App.IS_SCHOOL_NET = true;
+                enterHome();
+                break;
+            case R.id.btn_login_outer:
+                App.IS_SCHOOL_NET = false;
+                enterHome();
+                break;
+        }
     }
 
     @Override
@@ -117,91 +171,22 @@ public class LaunchActivity extends BaseActivity {
         findViewById(R.id.loading_view).startAnimation(rotateAnimation);
     }
 
-    //从首选项读出设置
-    private void getSetting() {
-        perUserInfo = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String uid = perUserInfo.getString("USER_UID", "0");
-        if (!uid.equals("0")) {
-            String url = UrlUtils.getAvaterurlm(uid);
-            Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(user_image);
-            user_image.setVisibility(View.VISIBLE);
-        }
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
         isForeGround = true;
     }
 
-    private void canGetRs(int type) {
-        if (type == 1 || type == 2) {
-            String url = UrlUtils.getLoginUrl(false);
-            checklogin(url);
-        } else {
-            noNetWork();
-            findViewById(R.id.login_view).setVisibility(View.GONE);
-            findViewById(R.id.login_fail_view).setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void checklogin(String url) {
-        HttpUtil.get(this, url, new TextResponseHandler() {
-            @Override
-            public void onSuccess(String res) {
-                if (!res.contains("loginbox")) {
-                    Document doc = Jsoup.parse(res);
-                    int index = res.indexOf("欢迎您回来");
-                    String s = res.substring(index, index + 30).split("，")[1].split(" ")[0].trim();
-                    if (s.length() > 0) {
-                        App.USER_GRADE = s;
-                    }
-                    App.USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
-                    String url = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").attr("href");
-                    App.USER_UID = GetId.getid("uid=",url);
-                    SharedPreferences.Editor editor = perUserInfo.edit();
-                    editor.putString("USER_NAME", App.USER_NAME);
-                    editor.putString("USER_UID", App.USER_UID);
-                    editor.apply();
-                }
-            }
-
-            @Override
-            public void onFinish() {
-                finishthis();
-            }
-        });
-    }
-
-    //没网是执行
-    private void noNetWork() {
-        Toast.makeText(this, "无法连接到服务器请检查网络设置！", Toast.LENGTH_SHORT).show();
-    }
-
-
-
-
-    private void finishthis() {
-        long currenttime = System.currentTimeMillis();
-        long delay = WAIT_TIME - (currenttime - starttime);
-        if (delay < 0) {
-            mHandler.post(mRunnable);
-        }else{
-            mHandler.postDelayed(mRunnable, delay);
-        }
-
-    }
-
     @Override
     protected void onStop() {
         super.onStop();
-        mHandler.removeCallbacks(mRunnable);
+        mHandler.removeCallbacks(finishRunable);
         isForeGround = false;
     }
 
     @Override
     protected void onDestroy() {
-        mHandler.removeCallbacks(mRunnable);
+        mHandler.removeCallbacks(finishRunable);
         super.onDestroy();
     }
 }

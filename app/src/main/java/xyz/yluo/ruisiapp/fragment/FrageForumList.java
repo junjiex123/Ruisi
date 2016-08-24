@@ -24,8 +24,7 @@ import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyGridDivider;
 import xyz.yluo.ruisiapp.activity.ActivitySearch;
-import xyz.yluo.ruisiapp.activity.ArticleList;
-import xyz.yluo.ruisiapp.activity.ArticleListImage;
+import xyz.yluo.ruisiapp.activity.PostsActivity;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
 import xyz.yluo.ruisiapp.data.ForumListData;
 import xyz.yluo.ruisiapp.database.MyDB;
@@ -44,21 +43,15 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
     private ForumListAdapter adapter = null;
     private boolean isSetForumToDataBase = false;
     private SharedPreferences sharedPreferences;
-    //10分钟的缓存时间
-    private static final int UPDATE_TIME = 1000*600;
+    //15分钟的缓存时间
+    private static final int UPDATE_TIME = 1500*600;
     private static final String KEY = "FORUM_UPDATE_KEY";
-
-    public static FrageForumList newInstance(boolean isLogin) {
-        Bundle args = new Bundle();
-        args.putBoolean("isLogin",isLogin);
-        FrageForumList fragment = new FrageForumList();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private boolean lastLoginState;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        lastLoginState = App.ISLOGIN(getActivity());
         sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         MyDB myDB = new MyDB(getActivity().getApplicationContext(), MyDB.MODE_READ);
         datas = myDB.getForums();
@@ -107,12 +100,6 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
         long time =  sharedPreferences.getLong(KEY,0);
         if(System.currentTimeMillis()-time>UPDATE_TIME||datas==null||datas.size()==0){
             Log.e("板块列表","过了缓存时间需要刷新");
-            refreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    refreshLayout.setRefreshing(true);
-                }
-            });
             getData();
         }
 
@@ -120,12 +107,27 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
     }
 
     @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden&&(lastLoginState!=App.ISLOGIN(getActivity()))){
+            lastLoginState = !lastLoginState;
+            getData();
+        }
+
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.list_toolbar;
     }
 
-
     private void getData() {
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+            }
+        });
         String url = "forum.php?forumlist=1&mobile=2";
         HttpUtil.get(getActivity(), url, new ResponseHandler() {
             @Override
@@ -147,14 +149,13 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
 
     @Override
     public void onListItemClick(View v, int position) {
+        if(datas.get(position).isheader()){
+            return;
+        }
         int fid = datas.get(position).getFid();
         //几个特殊的板块
         String title = datas.get(position).getTitle();
-        if (App.IS_SCHOOL_NET && (fid==561|| fid==157 || fid==13)) {
-            ArticleListImage.open(getActivity(),fid,title);
-        } else {
-            ArticleList.open(getActivity(), fid,title);
-        }
+        PostsActivity.open(getActivity(), fid,title);
     }
 
     @Override
@@ -168,7 +169,6 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
         }
     }
 
-
     //获取首页板块数据 板块列表
     private class GetForumList extends AsyncTask<String, Void, List<ForumListData>> {
         @Override
@@ -177,13 +177,6 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
             List<ForumListData> simpledatas = new ArrayList<>();
             Document document = Jsoup.parse(response);
             Elements elements = document.select("div#wp.wp.wm").select("div.bm.bmw.fl");
-            //获得hash
-            String hash = document.select(".footer").select("a.dialog").attr("href");
-            String ress = GetId.getHash(hash);
-            if (!ress.isEmpty()) {
-                App.FORMHASH = ress;
-            }
-
             for (Element ele : elements) {
                 String header = ele.select("h2").text();
                 simpledatas.add(new ForumListData(true, header,"0",-1));

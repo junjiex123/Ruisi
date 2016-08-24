@@ -30,7 +30,6 @@ public abstract class BaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(null == mRootView){
             mRootView = inflater.inflate(getLayoutId(), container, false);
-
         }
         return mRootView;
     }
@@ -83,11 +82,12 @@ public abstract class BaseFragment extends Fragment {
     protected abstract int getLayoutId();
 
     protected boolean isLogin() {
-        return App.ISLOGIN() || ((BaseActivity) getActivity()).isLogin();
+        return App.ISLOGIN(getActivity()) || ((BaseActivity) getActivity()).isLogin();
     }
 
 
     protected void switchActivity(Class<?> cls){
         getActivity().startActivity(new Intent(getActivity(),cls));
     }
+
 }

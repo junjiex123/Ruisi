@@ -1,11 +1,9 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -20,50 +18,35 @@ import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.MessageData;
-import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 
 /**
  * Created by free2 on 16-3-21.
  * 首页第三页
  * 回复我的 我的消息
  */
-public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+public class MessageAdapter extends BaseAdapter {
     protected Activity activity;
     private List<MessageData> DataSet;
-    private ListItemClickListener clickListener;
 
-    public MessageAdapter(Activity activity, List<MessageData> dataSet, ListItemClickListener listener) {
+    public MessageAdapter(Activity activity, List<MessageData> dataSet) {
         DataSet = dataSet;
         this.activity = activity;
-        this.clickListener = listener;
     }
 
     @Override
-    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == 1) {
-            return new MessageReplyListHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.user_message_list_item, parent, false));
-        } else {
-            return new ChangeMessageHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.change_message_item, parent, false));
-        }
+    protected int getDataCount() {
+        return DataSet.size();
     }
 
     @Override
-    public int getItemViewType(int position) {
-        if (position == 0) {
-            return 0;
-        } else {
-            return 1;
-        }
+    protected int getItemType(int pos) {
+        return 0;
     }
 
     @Override
-    public void onBindViewHolder(BaseViewHolder holder, int position) {
-        holder.setData(position);
-    }
+    protected BaseViewHolder getItemViewHolder(ViewGroup parent, int viewType) {
+        return new MessageReplyListHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.user_message_list_item, parent, false));
 
-    @Override
-    public int getItemCount() {
-        return DataSet.size() + 1;
     }
 
 
@@ -99,7 +82,7 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         }
 
         void setData(int position) {
-            MessageData single_data = DataSet.get(position - 1);
+            MessageData single_data = DataSet.get(position);
             title.setText(single_data.getTitle());
             time.setText(single_data.getTime());
             String imageUrl = single_data.getauthorImage();
@@ -113,7 +96,7 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         }
 
         void item_click() {
-            MessageData single_data = DataSet.get(getAdapterPosition() - 1);
+            MessageData single_data = DataSet.get(getAdapterPosition());
             if (!single_data.isRead()) {
                 single_data.setRead(true);
                 notifyItemChanged(getAdapterPosition());
@@ -129,37 +112,10 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         }
 
         void user_click() {
-            MessageData single_data = DataSet.get(getAdapterPosition() - 1);
+            MessageData single_data = DataSet.get(getAdapterPosition());
             String username = single_data.getTitle().replace("我对 ", "").replace("说:", "").replace(" 对我", "").replace(" 回复了我", "");
             UserDetailActivity.openWithAnimation(
                     activity, username, article_user_image, DataSet.get(getAdapterPosition()).getauthorImage());
-        }
-    }
-
-
-    //切换消息类型
-    private class ChangeMessageHolder extends BaseViewHolder {
-
-        RadioGroup btn_change;
-
-        ChangeMessageHolder(View itemView) {
-            super(itemView);
-            btn_change = (RadioGroup) itemView.findViewById(R.id.btn_change);
-            btn_change.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup radioGroup, int id) {
-                    if (id == R.id.btn_reply) {
-                        clickListener.onListItemClick(radioGroup, 0);
-                    } else {
-                        clickListener.onListItemClick(radioGroup, 1);
-                    }
-                }
-            });
-        }
-
-        @Override
-        void setData(int position) {
-
         }
     }
 

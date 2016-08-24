@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyColorPicker;
@@ -157,10 +156,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener{
                 Document document = Jsoup.parse(new String(response));
                 Elements content = document.select("#e_textarea");
                 Elements title = document.select("input#needsubject");
-                String hash = document.select("#formhash").attr("value");
-                if(!TextUtils.isEmpty(hash)){
-                    App.FORMHASH = hash;
-                }
                 fid = document.select("#fid").attr("value");
                 if(TextUtils.isEmpty(title.attr("value"))){
                     ed_title.setVisibility(View.GONE);
@@ -198,7 +193,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener{
     private void start_post(){
         String url = "forum.php?mod=post&action=edit&extra=&editsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
         Map<String, String> params = new HashMap<>();
-        params.put("formhash", App.FORMHASH);
         //params.put("posttime", time);
         params.put("editsubmit", "yes");
         if(!TextUtils.isEmpty(typeId)&&!typeId.equals("0")){

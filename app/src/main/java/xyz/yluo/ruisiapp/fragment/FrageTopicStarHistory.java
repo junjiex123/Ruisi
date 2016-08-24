@@ -77,7 +77,7 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
         refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
 
-        String uid = App.USER_UID;
+        String uid = App.getUid(getActivity());
         switch (currentIndex) {
             case 0:
                 //主题

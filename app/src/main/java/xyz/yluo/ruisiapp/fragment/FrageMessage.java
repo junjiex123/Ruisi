@@ -3,15 +3,14 @@ package xyz.yluo.ruisiapp.fragment;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioGroup;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -22,18 +21,17 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.MessageAdapter;
 import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.MessageData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
-import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 
 //回复我的
 //// TODO: 16-8-22  add 提到我的home.php?mod=space&do=notice&view=mypost&type=at&mobile=2
 
 public class FrageMessage extends BaseFragment {
-    private static final String Tag = "==FrageMessage==";
     protected RecyclerView recycler_view;
     protected SwipeRefreshLayout refreshLayout;
     private MessageAdapter adapter;
@@ -41,16 +39,18 @@ public class FrageMessage extends BaseFragment {
     private int index = 0;
     int last_message_id  = 0;
     int current_noticeid = 1;
+    private boolean lastLoginState = false;
+
     public FrageMessage() {
         datas = new ArrayList<>();
-    }
 
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
-        initToolbar(false,"我的消息");
         recycler_view = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
+        RadioGroup swictchMes = (RadioGroup) mRootView.findViewById(R.id.btn_change);
         //设置可以滑出底栏
         recycler_view.setClipToPadding(false);
         recycler_view.setPadding(0,0,0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
@@ -58,57 +58,67 @@ public class FrageMessage extends BaseFragment {
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recycler_view.setLayoutManager(layoutManager);
-        adapter = new MessageAdapter(getActivity(), datas, new ListItemClickListener() {
-            @Override
-            public void onListItemClick(View v, int position) {
-                if (position != index) {
-                    index = position;
-                    refresh();
-                }
-
-            }
-        });
+        adapter = new MessageAdapter(getActivity(), datas);
         recycler_view.setAdapter(adapter);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refresh();
+                getData(false);
+            }
+        });
+        swictchMes.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int id) {
+                int pos = 1;
+                if (id == R.id.btn_reply) {
+                    pos = 0;
+                }
+                if (pos != index) {
+                    index = pos;
+                    getData(true);
+                }
             }
         });
 
-        Handler mHandler = new Handler();
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                refresh();
-            }
-        }, 500);
+        getData(false);
         return mRootView;
     }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.list_toolbar;
+        return R.layout.fragment_message;
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden&&(lastLoginState!=App.ISLOGIN(getActivity()))){
+            getData(true);
+            lastLoginState = !lastLoginState;
+        }
+    }
 
-
-    private void refresh() {
+    private void getData(boolean needRefresh) {
+        lastLoginState = App.ISLOGIN(getActivity());
         //记录上次已读消息游标
+        if(!App.ISLOGIN(getActivity())){
+            adapter.changeLoadMoreState(BaseAdapter.STATE_NEED_LOGIN);
+            refreshLayout.setRefreshing(false);
+            return;
+        }
+
+        if(needRefresh){
+            refreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(true);
+                }
+            });
+        }
+
         last_message_id = PreferenceManager.getDefaultSharedPreferences(getActivity()).
                 getInt(App.NOTICE_MESSAGE_KEY, 0);
         current_noticeid = last_message_id;
-        Log.d("id id",last_message_id+"");
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        });
-        getData();
-    }
-
-    private void getData() {
         //reply
         String url = "home.php?mod=space&do=notice&mobile=2";
         if (index != 0) {
@@ -136,6 +146,7 @@ public class FrageMessage extends BaseFragment {
                         refreshLayout.setRefreshing(false);
                     }
                 }, 500);
+                adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
             }
         });
     }
@@ -143,6 +154,7 @@ public class FrageMessage extends BaseFragment {
     private void finishGetData(List<MessageData> temdatas) {
         datas.clear();
         datas.addAll(temdatas);
+        adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
         adapter.notifyDataSetChanged();
 
         refreshLayout.postDelayed(new Runnable() {

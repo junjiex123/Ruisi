@@ -114,7 +114,7 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
         Log.i("reply dialog callbak", "status:" + status + " info:" + txt);
         if (status == RESULT_OK) {
             replyTime = System.currentTimeMillis();
-            String userImage = UrlUtils.getAvaterurlm(App.USER_UID);
+            String userImage = UrlUtils.getAvaterurlm(App.getUid(this));
             datas.add(new ChatListData(1, userImage, txt, "刚刚"));
             adapter.notifyItemInserted(datas.size() - 1);
             recycler_view.scrollToPosition(datas.size());

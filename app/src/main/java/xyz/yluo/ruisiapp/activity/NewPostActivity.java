@@ -1,5 +1,7 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,7 +29,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyColorPicker;
@@ -42,7 +43,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * Created by free2 on 16-3-6.
  * 发帖activity
  */
-public class NewArticleActivity extends BaseActivity implements View.OnClickListener{
+public class NewPostActivity extends BaseActivity implements View.OnClickListener{
 
     private EditText ed_title,ed_content;
     private MyAlertDialog dialog;
@@ -54,40 +55,52 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
     private View type_id_container;
     private String typeId = "";
 
-    private  final int[] fids = new int[]{
+    private static final int[] fids = new int[]{
             72, 549, 108, 551, 550,
             110, 217, 142, 552, 560,
             554,548, 216, 91, 555,
             145, 144, 152, 147, 215,
             125, 140};
-    private  final String[] forums = new String[]{
+    private static final String[] forums = new String[]{
             "灌水专区", "文章天地", "我是女生", "西电问答", "心灵花园",
             "普通交易", "缘聚睿思", "失物招领", "我要毕业啦", "技术博客",
             "就业信息发布","学习交流", "我爱运动", "考研交流", "就业交流", "软件交流",
             "嵌入式交流", "竞赛交流", "原创精品", "西电后街", "音乐纵贯线",
             "绝对漫域"};
     private int fid = fids[0];
+    private String title = forums[0];
+
+
+    public static void open(Context context, int fid, String title) {
+        Intent intent = new Intent(context, NewPostActivity.class);
+        intent.putExtra("FID",fid);
+        intent.putExtra("TITLE",title);
+        context.startActivity(intent);
+    }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_topic);
         initToolBar(true,"发表新帖");
+
+        if(getIntent().getExtras()!=null){
+            fid = getIntent().getExtras().getInt("FID");
+            title = getIntent().getExtras().getString("TITLE");
+        }
         addToolbarMenu(R.drawable.ic_send_white_24dp).setOnClickListener(this);
-
-
         myColorPicker = new MyColorPicker(this);
         smileyPicker = new MySmileyPicker(this);
         forum_spinner = new MySpinner(this);
         typeid_spinner = new MySpinner(this);
         typeiddatas = new ArrayList<>();
-
         type_id_container = findViewById(R.id.type_id_container);
         type_id_container.setVisibility(View.GONE);
         tv_select_forum = (TextView) findViewById(R.id.tv_select_forum);
         tv_select_type = (TextView) findViewById(R.id.tv_select_type);
         tv_select_forum.setOnClickListener(this);
-        tv_select_forum.setText(forums[0]);
+        tv_select_forum.setText(title);
         tv_select_type.setOnClickListener(this);
         ed_title = (EditText) findViewById(R.id.ed_title);
         ed_content = (EditText) findViewById(R.id.ed_content);
@@ -96,24 +109,16 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
         forum_spinner.setListener(new MySpinner.OnItemSelectListener() {
             @Override
             public void onItemSelectChanged(int pos, View v) {
-                if(pos>=fids.length){
-                    return;
-                }else{
-                    fid = fids[pos];
-                    tv_select_forum.setText(forums[pos]);
-                    switch_fid(fid);
-                }
+                fid = fids[pos];
+                tv_select_forum.setText(forums[pos]);
+                switch_fid(fid);
             }
         });
         typeid_spinner.setListener(new MySpinner.OnItemSelectListener() {
             @Override
             public void onItemSelectChanged(int pos, View v) {
-                if(pos>typeiddatas.size()){
-                    return;
-                }else{
-                    typeId = typeiddatas.get(pos).first;
-                    tv_select_type.setText(typeiddatas.get(pos).second);
-                }
+                typeId = typeiddatas.get(pos).first;
+                tv_select_type.setText(typeiddatas.get(pos).second);
             }
         });
         final LinearLayout edit_bar = (LinearLayout) findViewById(R.id.edit_bar);
@@ -157,7 +162,7 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
             }
         });
 
-        switch_fid(fids[0]);
+        switch_fid(fid);
     }
 
     private boolean checkPostInput() {
@@ -176,10 +181,9 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
     }
 
     //开始发帖
-    private void begainPost(String hash  /*, String time*/) {
+    private void begainPost() {
         String url = UrlUtils.getPostUrl(fid);
         Map<String, String> params = new HashMap<>();
-        params.put("formhash", hash);
         //params.put("posttime", time);
         params.put("topicsubmit", "yes");
         if(!TextUtils.isEmpty(typeId)&&!typeId.equals("0")){
@@ -253,10 +257,10 @@ public class NewArticleActivity extends BaseActivity implements View.OnClickList
         switch (view.getId()){
             case R.id.menu:
                 if(checkPostInput()) {
-                    dialog = new MyAlertDialog(NewArticleActivity.this, MyAlertDialog.PROGRESS_TYPE)
+                    dialog = new MyAlertDialog(NewPostActivity.this, MyAlertDialog.PROGRESS_TYPE)
                             .setTitleText("发贴中,请稍后......");
                     dialog.show();
-                    begainPost(App.FORMHASH);
+                    begainPost();
                 }
                 break;
             case R.id.action_bold:

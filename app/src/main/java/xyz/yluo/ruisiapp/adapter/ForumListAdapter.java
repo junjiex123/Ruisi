@@ -23,12 +23,12 @@ public class ForumListAdapter extends BaseAdapter {
 
     protected Context context;
     private List<ForumListData> datas = null;
-    private ListItemClickListener listener;
 
     public ForumListAdapter(List<ForumListData> dataSet, Context context,ListItemClickListener listener) {
         this.context = context;
         this.datas = dataSet;
-        this.listener = listener;
+        setItemListener(listener);
+        disableLoadMore();
     }
 
     @Override
@@ -54,12 +54,10 @@ public class ForumListAdapter extends BaseAdapter {
         }
     }
 
-
     private class HeadView extends BaseViewHolder {
 
         TextView head;
-
-        public HeadView(View itemView) {
+        HeadView(View itemView) {
             super(itemView);
             head = (TextView) itemView.findViewById(R.id.header_title);
         }
@@ -76,7 +74,7 @@ public class ForumListAdapter extends BaseAdapter {
         TextView today_count;
         View container;
 
-        public ChildViewHolder(View itemView) {
+        ChildViewHolder(View itemView) {
             super(itemView);
             img = (ImageView) itemView.findViewById(R.id.img);
             title = (TextView) itemView.findViewById(R.id.title);
@@ -97,13 +95,6 @@ public class ForumListAdapter extends BaseAdapter {
             int fid = single.getFid();
             Drawable dra = ImageUtils.getForunlogo(context, fid);
             img.setImageDrawable(dra);
-
-            container.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onListItemClick(view,position);
-                }
-            });
         }
     }
 }

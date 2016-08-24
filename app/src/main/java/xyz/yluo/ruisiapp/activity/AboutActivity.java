@@ -63,7 +63,7 @@ public class AboutActivity extends BaseActivity {
                         .setAction("确定", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                String user = App.USER_NAME;
+                                String user = App.getName(AboutActivity.this);
                                 if (user != null) {
                                     user = "by:" + user;
                                 }

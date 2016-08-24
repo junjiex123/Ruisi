@@ -1,8 +1,6 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
-import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +44,6 @@ public class SingleArticleAdapter extends BaseAdapter {
 
         this.datalist = datalist;
         this.activity = activity;
-        setLoadMoreEnable(true);
         setItemListener(itemListener);
     }
 
@@ -122,9 +119,8 @@ public class SingleArticleAdapter extends BaseAdapter {
             article_post_time.setText(post_time);
             //myWebView.setContent(single.getCotent());
             htmlView.setHtmlText(single.getCotent(), true);
-
             //判断是不是自己
-            if(!TextUtils.isEmpty(App.USER_UID)&&single.getUid().equals(App.USER_UID)){
+            if(App.ISLOGIN(activity)&&App.getUid(activity).equals(single.getUid())){
                 tv_edit.setVisibility(View.VISIBLE);
                 if(getItemCount()>2){
                     tv_remove.setVisibility(View.GONE);
@@ -192,7 +188,7 @@ public class SingleArticleAdapter extends BaseAdapter {
             htmlTextView.setHtmlText(single.getCotent(), true);
 
             //判断是不是自己
-            if(!TextUtils.isEmpty(App.USER_UID)&&single.getUid().equals(App.USER_UID)){
+            if(App.ISLOGIN(activity)&&App.getUid(activity).equals(single.getUid())){
                 tv_remove.setVisibility(View.VISIBLE);
                 tv_edit.setVisibility(View.VISIBLE);
             }else{

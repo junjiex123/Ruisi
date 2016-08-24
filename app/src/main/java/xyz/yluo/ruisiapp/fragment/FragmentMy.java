@@ -26,36 +26,21 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class FragmentMy extends BaseFragment implements View.OnClickListener{
 
-    private String username;
-    private String uid;
+    private String username,uid;
     private CircleImageView user_img;
     private TextView user_name,user_grade;
     //记录上次创建时候是否登录
     private boolean isLoginLast = false;
     private LinearLayout containerlist;
 
-    public static FragmentMy newInstance(String username, String uid) {
-        FragmentMy fragment = new FragmentMy();
-        Bundle args = new Bundle();
-        args.putString("USERNAME", username);
-        args.putString("UID", uid);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            username = getArguments().getString("USERNAME");
-            uid = getArguments().getString("UID");
-            isLoginLast = App.ISLOGIN();
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        isLoginLast = App.ISLOGIN(getActivity());
         super.onCreateView(inflater,container,savedInstanceState);
+        username = App.getName(getActivity());
+        uid = App.getUid(getActivity());
+
         user_img = (CircleImageView) mRootView.findViewById(R.id.user_img);
         user_name = (TextView) mRootView.findViewById(R.id.user_name);
         user_grade = (TextView) mRootView.findViewById(R.id.user_grade);
@@ -73,9 +58,21 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener{
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        if((isLoginLast!=App.ISLOGIN(getActivity()))){
+            isLoginLast = !isLoginLast;
+            freshView();
+        }
+    }
+
+
+
+    @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(!hidden&&(isLoginLast!=App.ISLOGIN())){
+        if(!hidden&&(isLoginLast!=App.ISLOGIN(getActivity()))){
+            isLoginLast = !isLoginLast;
             freshView();
         }
     }
@@ -86,11 +83,10 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener{
     }
 
     private void freshView(){
-        isLoginLast = App.ISLOGIN();
         if(isLoginLast){
             user_name.setText(username);
             user_grade.setVisibility(View.VISIBLE);
-            user_grade.setText(App.USER_GRADE);
+            user_grade.setText(App.getGrade(getActivity()));
             Picasso.with(getActivity()).load(UrlUtils.getAvaterurlm(uid))
                     .placeholder(R.drawable.image_placeholder).into(user_img);
         }else{
@@ -104,7 +100,7 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.user_img:
-                if(App.ISLOGIN()){
+                if(App.ISLOGIN(getActivity())){
                     UserDetailActivity.openWithAnimation(
                             getActivity(),username,user_img,uid);
                 }else{

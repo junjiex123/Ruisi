@@ -87,6 +87,4 @@ public class ChatListAdapter extends BaseAdapter {
         }
     }
 
-
-
 }

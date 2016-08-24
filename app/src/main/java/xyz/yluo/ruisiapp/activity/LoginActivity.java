@@ -8,16 +8,15 @@ import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -49,14 +48,13 @@ public class LoginActivity extends BaseActivity {
     private EditText anwser_text;
     private Button btn_login;
     private ImageView imageViewl, imageViewr;
-    private CheckBox rem_user, rem_pass;
+    private CheckBox rem_ck;
 
-    private SharedPreferences perPreferences;
+    private SharedPreferences shp;
     private List<String> list = new ArrayList<>();
     private String loginUrl;
     private int answerSelect = 0;
     private MyAlertDialog dialog;
-    private View myToolBar;
 
 
 
@@ -71,14 +69,12 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_login);
 
-        myToolBar = findViewById(R.id.myToolBar);
         ed_username = (EditText) findViewById(R.id.login_name);
         ed_pass = (EditText) findViewById(R.id.login_pas);
         btn_login = (Button) findViewById(R.id.btn_login);
         imageViewl = (ImageView) findViewById(R.id.iv_login_l);
         imageViewr = (ImageView) findViewById(R.id.iv_login_r);
-        rem_user = (CheckBox) findViewById(R.id.rem_user);
-        rem_pass = (CheckBox) findViewById(R.id.rem_pass);
+        rem_ck = (CheckBox) findViewById(R.id.rem_user);
         Spinner anwser_select = (Spinner) findViewById(R.id.anwser_select);
         anwser_text = (EditText) findViewById(R.id.anwser_text);
 
@@ -89,20 +85,12 @@ public class LoginActivity extends BaseActivity {
             }
         });
 
-
-        perPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        boolean isRemUser = perPreferences.getBoolean("ISREMUSER", false);
-        boolean isRemberPass = perPreferences.getBoolean("ISREMPASS", false);
-        if (isRemUser) {
-            rem_user.setChecked(true);
-            ed_username.setText(perPreferences.getString("USERNAME", ""));
-        }
-        if (isRemberPass) {
-            rem_pass.setChecked(true);
-            rem_user.setChecked(true);
-            ed_username.setText(perPreferences.getString("USERNAME", ""));
-            ed_pass.setText(perPreferences.getString("PASSWORD", ""));
-            btn_login.setEnabled(true);
+        shp = getSharedPreferences(App.MY_SHP_NAME, Context.MODE_PRIVATE);
+        boolean rember = shp.getBoolean(App.IS_REMBER_PASS_USER, false);
+        if (rember) {
+            rem_ck.setChecked(true);
+            ed_username.setText(shp.getString(App.LOGIN_NAME, ""));
+            ed_pass.setText(shp.getString(App.LOGIN_PASS, ""));
         }
 
         list.add("安全提问(未设置请忽略)");
@@ -183,23 +171,6 @@ public class LoginActivity extends BaseActivity {
                 }
             }
         });
-        rem_pass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    rem_user.setChecked(true);
-                }
-            }
-        });
-
-        rem_user.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (!b) {
-                    rem_pass.setChecked(false);
-                }
-            }
-        });
     }
 
     private void login_click() {
@@ -262,44 +233,40 @@ public class LoginActivity extends BaseActivity {
 
     //登陆成功执行
     private void login_ok(String res) {
-        int index = res.indexOf("欢迎您回来");
-        String s = res.substring(index, index + 30).split("，")[1].split(" ")[0].trim();
-        if (s.length() > 0) {
-            App.USER_GRADE = s;
-        }
         //写入到首选项
-        SharedPreferences.Editor editor = perPreferences.edit();
-        if (rem_pass.isChecked()) {
-            editor.putBoolean("ISREMUSER", true);
-            editor.putBoolean("ISREMPASS", true);
-            String userName = ed_username.getText().toString().trim();
-            editor.putString("USERNAME", userName);
-            editor.putString("PASSWORD", ed_pass.getText().toString().trim());
+        SharedPreferences.Editor editor = shp.edit();
+        if (rem_ck.isChecked()) {
+            editor.putBoolean(App.IS_REMBER_PASS_USER, true);
+            editor.putString(App.LOGIN_NAME, ed_username.getText().toString().trim());
+            editor.putString(App.LOGIN_PASS,ed_pass.getText().toString().trim());
         } else {
-            editor.putBoolean("ISREMUSER", false);
-            editor.putBoolean("ISREMPASS", false);
-        }
-        if (rem_user.isChecked()) {
-            editor.putBoolean("ISREMUSER", true);
-            editor.putString("USERNAME", ed_username.getText().toString().trim());
-        } else {
-            editor.putBoolean("ISREMUSER", false);
+            editor.putBoolean(App.IS_REMBER_PASS_USER, false);
+            editor.putString(App.LOGIN_NAME,"");
+            editor.putString(App.LOGIN_PASS,"");
         }
 
-        Document doc = Jsoup.parse(res);
-        App.USER_NAME = doc.select(".footer").select("a[href^=home.php?mod=space&uid=]").text();
-        String url = doc.select("a[href^=home.php?mod=space&uid=]").attr("href");
-        App.USER_UID = GetId.getid("uid=",url);
-
-        editor.putString("USER_NAME", App.USER_NAME);
-        editor.putString("USER_UID", App.USER_UID);
+        int i = res.indexOf("欢迎您回来");
+        String info = res.substring(i + 6, i + 26);
+        int pos1 = info.indexOf(" ");
+        int pos2 = info.indexOf("，");
+        String grade = info.substring(0, pos1);
+        String name = info.substring(pos1 + 1, pos2);
+        String uid = GetId.getid("uid=", res.substring(i));
+        int indexhash = res.indexOf("formhash");
+        String hash = res.substring(indexhash + 9, indexhash + 17);
+        editor.putString(App.USER_UID_KEY, uid);
+        editor.putString(App.USER_NAME_KEY, name);
+        editor.putString(App.USER_GRADE_KEY, grade);
+        editor.putString(App.HASH_KEY, hash);
         editor.apply();
-        //开始获取formhash
-        dialog.dismiss();
-        Toast.makeText(getApplicationContext(), "欢迎你" + App.USER_NAME + "登陆成功", Toast.LENGTH_SHORT).show();
+
+        showToast("欢迎你" + name + "登陆成功");
+        Log.e("res", "grade " + grade + " uid " + uid + " name " + name + " hash " + hash);
+
         Intent intent = new Intent();
         intent.putExtra("status", "ok");
         //设置返回数据
+        dialog.dismiss();
         LoginActivity.this.setResult(RESULT_OK, intent);
         finish();
     }
@@ -307,7 +274,7 @@ public class LoginActivity extends BaseActivity {
     //登陆失败执行
     private void login_fail(String res) {
         dialog.dismiss();
-        Toast.makeText(getApplicationContext(), res, Toast.LENGTH_SHORT).show();
+        showToast(res);
     }
 }
 

@@ -3,6 +3,7 @@ package xyz.yluo.ruisiapp;
 import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -61,19 +62,7 @@ public class App extends Application {
     private static final String BASE_URL_RS = "http://rs.xidian.edu.cn/";
     //是否为校园网
     public static boolean IS_SCHOOL_NET = false;
-    //论坛FORMHASH
-    public static String FORMHASH = "";
 
-    //是否登陆
-    public static boolean ISLOGIN(){
-        return !TextUtils.isEmpty(USER_UID);
-    }
-
-    //用户名
-    public static String USER_NAME = "";
-    //user uid
-    public static String USER_UID = "";
-    public static String USER_GRADE = "";
 
     public static String getBaseUrl() {
         if (IS_SCHOOL_NET) {
@@ -83,6 +72,27 @@ public class App extends Application {
         }
     }
 
+    public static boolean ISLOGIN(Context context){
+        return !TextUtils.isEmpty(App.getUid(context));
+    }
+
+    public static String getUid(Context context){
+       SharedPreferences shp =  context.getSharedPreferences(MY_SHP_NAME,MODE_PRIVATE);
+        return shp.getString(USER_UID_KEY,"");
+    }
+
+    public static String getName(Context context){
+        SharedPreferences shp =  context.getSharedPreferences(MY_SHP_NAME,MODE_PRIVATE);
+        return shp.getString(USER_NAME_KEY,"");
+    }
+
+    public static String getGrade(Context context){
+        SharedPreferences shp =  context.getSharedPreferences(MY_SHP_NAME,MODE_PRIVATE);
+        return shp.getString(USER_GRADE_KEY,"");
+    }
+
+
+
 
     /**
      * config
@@ -90,6 +100,16 @@ public class App extends Application {
      */
 
     //记录上次未读消息的id
+    public static final String MY_SHP_NAME = "ruisi_shp";
+
     public static final String NOTICE_MESSAGE_KEY = "message_notice";
+    public static final String USER_UID_KEY = "user_uid";
+    public static final String USER_NAME_KEY = "user_name";
+    public static final String HASH_KEY = "forum_hash";
+    public static final String USER_GRADE_KEY = "user_grade";
+    public static final String IS_REMBER_PASS_USER = "login_rember_pass";
+    public static final String LOGIN_NAME = "login_name";
+    public static final String LOGIN_PASS = "login_pass";
+
 
 }

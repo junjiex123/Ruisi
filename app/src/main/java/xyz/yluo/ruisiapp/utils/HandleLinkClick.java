@@ -8,7 +8,7 @@ import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyHtmlView.HtmlView;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
-import xyz.yluo.ruisiapp.activity.NewArticleActivity_2;
+import xyz.yluo.ruisiapp.activity.NewPostActivity;
 import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.downloadfile.DownloadService;
@@ -33,7 +33,7 @@ public class HandleLinkClick {
             String imageUrl = UrlUtils.getAvaterurlb(url);
             UserDetailActivity.open(context, "name", imageUrl);
         } else if (url.contains("forum.php?mod=post&action=newthread")) { //发帖链接
-            context.startActivity(new Intent(context, NewArticleActivity_2.class));
+            context.startActivity(new Intent(context, NewPostActivity.class));
         } else if (url.contains("member.php?mod=logging&action=login")) {//登陆
             LoginActivity.open(context);
         } else if (url.contains("forum.php?mod=attachment")) {

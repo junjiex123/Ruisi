@@ -2,6 +2,7 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +25,7 @@ public class BaseActivity extends AppCompatActivity {
 
     //判断是否需要弹出登录dialog
     public boolean isLogin() {
-        if (App.ISLOGIN()) {
+        if (!TextUtils.isEmpty(App.getUid(this))) {
             return true;
         } else {
             new MyAlertDialog(this, MyAlertDialog.WARNING_TYPE)
@@ -94,25 +95,6 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
-
-    protected boolean OnToolBarMenuItemClick(View view, String tag) {
-        switch (tag) {
-            case "SEARCH":
-                if (isLogin())
-                    startActivity(new Intent(this, ActivitySearch.class));
-                return true;
-            case "POST":
-                if (isLogin())
-                    startActivity(new Intent(this, NewArticleActivity.class));
-                return true;
-            case "POST2":
-                if (isLogin())
-                    startActivity(new Intent(this, NewArticleActivity_2.class));
-                return true;
-        }
-
-        return false;
-    }
 
     protected void showToast(String str) {
         if (mToast == null) {

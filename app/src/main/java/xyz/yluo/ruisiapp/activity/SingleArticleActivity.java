@@ -36,15 +36,14 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
-import xyz.yluo.ruisiapp.data.LoadMoreType;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
 import xyz.yluo.ruisiapp.data.SingleType;
 import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.fragment.FrageReplyDialog;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
-import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.listener.ListItemClickListener;
+import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.IntentUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -285,7 +284,7 @@ public class SingleArticleActivity extends BaseActivity
             public void onFailure(Throwable e) {
                 isEnableLoadMore = true;
                 e.printStackTrace();
-                adapter.setLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
+                adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
                 Toast.makeText(getApplicationContext(), "加载失败(Error -1)", Toast.LENGTH_SHORT).show();
             }
         });
@@ -373,7 +372,6 @@ public class SingleArticleActivity extends BaseActivity
         final String url = UrlUtils.getStarUrl(Tid);
         Map<String, String> params = new HashMap<>();
         params.put("favoritesubmit", "true");
-        params.put("formhash", App.FORMHASH);
         HttpUtil.post(this, url, params, new ResponseHandler() {
 
             @Override
@@ -468,8 +466,11 @@ public class SingleArticleActivity extends BaseActivity
      * 处理数据类 后台进程
      */
     private class DealWithArticleData extends AsyncTask<String, Void, List<SingleArticleData>> {
+
+        private String errorText = "";
         @Override
         protected List<SingleArticleData> doInBackground(String... params) {
+            errorText = "";
             List<SingleArticleData> tepdata = new ArrayList<>();
             String htmlData = params[0];
             //list 所有楼数据
@@ -480,14 +481,6 @@ public class SingleArticleActivity extends BaseActivity
                 int h_end = htmlData.indexOf('\"', h_start + 1);
                 Title = htmlData.substring(h_start + 1, h_end);
                 isGetTitle = true;
-            }
-            //获取回复/hash
-            if (doc.select("input[name=formhash]").first() != null) {
-                replyUrl = doc.select("form#fastpostform").attr("action");
-                String hash = doc.select("input[name=formhash]").attr("value");
-                if (!hash.isEmpty()) {
-                    App.FORMHASH = hash;
-                }
             }
             int index = 0;
             if ((page_now == 1 && mydatalist.size() == 0) || page_now < page_sum) {
@@ -515,17 +508,10 @@ public class SingleArticleActivity extends BaseActivity
             Elements elements = doc.select(".postlist");
             if(elements.size()<=0){
                 //有可能没有列表处理错误
-                String errorstr = doc.select(".jump_c").text();
-                if(TextUtils.isEmpty(errorstr)) {
-                    errorstr = "network error  !!!";
+                errorText = doc.select(".jump_c").text();
+                if(TextUtils.isEmpty(errorText)) {
+                    errorText = "network error  !!!";
                 }
-                final String finalErrorstr = errorstr;
-                mRecyclerView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.setPlaceHolderString(finalErrorstr);
-                    }
-                });
                 return tepdata;
             }
             Elements postlist = elements.select("div[id^=pid]");
@@ -566,6 +552,20 @@ public class SingleArticleActivity extends BaseActivity
 
         @Override
         protected void onPostExecute(List<SingleArticleData> tepdata) {
+            isEnableLoadMore = true;
+            refreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(false);
+                }
+            }, 400);
+
+            if(!TextUtils.isEmpty(errorText)){
+                Toast.makeText(SingleArticleActivity.this,errorText,Toast.LENGTH_SHORT).show();
+                adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
+                return;
+            }
+
             //这是楼主
             if (page_now == 1 && tepdata.size() > 0 && tepdata.get(0).getIndex().contains("收藏")) {
                 SingleArticleData data = tepdata.get(0);
@@ -582,9 +582,9 @@ public class SingleArticleActivity extends BaseActivity
             int add = tepdata.size();
             if (add > 0) {
                 if (add % 10 != 0) {
-                    adapter.setLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
+                    adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
                 } else {
-                    adapter.setLoadMoreState(BaseAdapter.STATE_LOADING);
+                    adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
                 }
                 int start = mydatalist.size();
                 mydatalist.addAll(tepdata);
@@ -609,16 +609,10 @@ public class SingleArticleActivity extends BaseActivity
                 }
             } else {
                 //add = 0 没有添加
-                adapter.setLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
+                adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
                 adapter.notifyItemChanged(adapter.getItemCount() - 1);
             }
-            isEnableLoadMore = true;
-            refreshLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    refreshLayout.setRefreshing(false);
-                }
-            }, 500);
+
 
             pageSpinnerDatas.clear();
             for (int i = 1; i <= page_sum; i++) {
@@ -634,7 +628,6 @@ public class SingleArticleActivity extends BaseActivity
     private void removeItem(final int pos) {
         String url = "forum.php?mod=post&action=edit&extra=&editsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
         Map<String, String> params = new HashMap<>();
-        params.put("formhash", App.FORMHASH);
         //params.put("posttime", time);
         params.put("editsubmit", "yes");
         //params.put("fid",);

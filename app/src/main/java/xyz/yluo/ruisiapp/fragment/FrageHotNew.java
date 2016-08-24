@@ -69,16 +69,7 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
         recycler_view.setPadding(0,0,0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
         adapter = new HotNewListAdapter(getActivity(), mydataset,galleryDatas);
         recycler_view.setAdapter(adapter);
-        adapter.setLoadMoreEnable(true);
         recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 10));
-
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        });
-
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -102,7 +93,6 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
         return R.layout.list_toolbar;
     }
 
-
     private void refresh() {
         CurrentPage = 1;
         isEnableLoadMore = false;
@@ -119,7 +109,7 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
     }
 
     private void getData() {
-        adapter.setLoadMoreState(BaseAdapter.STATE_LOADING);
+        adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
         if (App.IS_SCHOOL_NET && galleryDatas.size() == 0) {
             new getGalleryTask().execute();
         }
@@ -139,17 +129,15 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
                     }
                 }, 300);
 
-                adapter.setLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
+                adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
             }
         });
     }
 
-
-    private class getGalleryTask extends AsyncTask<Void, Void, Void> {
+    private class getGalleryTask extends AsyncTask<Void, Void, List<GalleryData>> {
         @Override
-        protected Void doInBackground(Void... voids) {
-            galleryDatas.clear();
-            Log.i("gallery", "=====gallery=====");
+        protected List<GalleryData> doInBackground(Void... voids) {
+            List<GalleryData> temp = new ArrayList<>();
             String url = "http://rs.xidian.edu.cn/forum.php";
             try {
                 Document doc = Jsoup.connect(url).userAgent(SyncHttpClient.DEFAULT_USER_AGENT).get();
@@ -158,32 +146,44 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
                     String title = e.text();
                     String titleurl = e.select("a").attr("href");
                     String imgurl = e.select("img").attr("src");
-                    Log.i("gallery", title + titleurl + imgurl);
-                    galleryDatas.add(new GalleryData(imgurl, title, titleurl));
+                    temp.add(new GalleryData(imgurl, title, titleurl));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return null;
+            return temp;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(List<GalleryData> data) {
+            super.onPostExecute(data);
+            if(data.size()==0){
+                return;
+            }
+            //进行了一下优化 只有不相同时才刷行
+            if(galleryDatas.size()==data.size()){
+                boolean isSame = true;
+                for(int i=0;i<data.size();i++){
+                    if(!galleryDatas.get(i).getTitle().equals(data.get(i).getTitle())){
+                        isSame = false;
+                        break;
+                    }
+                }
+                if(isSame){
+                    return;
+                }
+            }
+            galleryDatas = data;
             adapter.notifyItemChanged(0);
         }
     }
 
-    //非校园网状态下获得一个板块文章列表数据
-    //根据html获得数据
-    //调用的手机版
     private class GetNewArticleListTaskMe extends AsyncTask<String, Void, List<ArticleListData>> {
         @Override
         protected List<ArticleListData> doInBackground(String... params) {
             List<ArticleListData> dataset = new ArrayList<>();
             Document doc = Jsoup.parse(params[0]);
             Elements body = doc.select("div[class=threadlist]"); // 具有 href 属性的链接
-            ArticleListData temp;
             Elements links = body.select("li");
             for (Element src : links) {
                 String url = src.select("a").attr("href");
@@ -197,8 +197,7 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
                 String title = src.select("a").text();
                 String img = src.select("img").attr("src");
                 boolean hasImage = img.contains("icon_tu.png");
-                temp = new ArticleListData(hasImage, title, url, author, replyCount,titleColor);
-                dataset.add(temp);
+                dataset.add(new ArticleListData(hasImage, title, url, author, replyCount,titleColor));
             }
 
             MyDB myDB = new MyDB(getActivity(), MyDB.MODE_READ);
@@ -206,27 +205,29 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
         }
 
         @Override
-        protected void onPostExecute(List<ArticleListData> dataset) {
-            if (CurrentPage == 1) {
-                //item 增加删除 改变动画
-                mydataset.clear();
-            }
-            int size = mydataset.size();
-            mydataset.addAll(dataset);
-            if (size > 0) {
-                adapter.notifyItemChanged(size);
-                adapter.notifyItemRangeInserted(size + 1, dataset.size());
-            } else {
-                adapter.notifyDataSetChanged();
-            }
-            isEnableLoadMore = true;
-
+        protected void onPostExecute(List<ArticleListData> datas) {
             refreshLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     refreshLayout.setRefreshing(false);
                 }
-            }, 500);
+            }, 300);
+            if (CurrentPage == 1) {
+                mydataset.clear();
+                mydataset.addAll(datas);
+                adapter.notifyDataSetChanged();
+            }else{
+                if(datas.size()==0){
+                    adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
+                    return;
+                }else{
+                    int size = mydataset.size();
+                    mydataset.addAll(datas);
+                    adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_OK);
+                    adapter.notifyItemRangeInserted(size, datas.size());
+                }
+            }
+            isEnableLoadMore = true;
         }
     }
 

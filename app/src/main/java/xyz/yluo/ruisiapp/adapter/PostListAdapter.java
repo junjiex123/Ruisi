@@ -1,15 +1,16 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Objects;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
@@ -23,12 +24,12 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * Created by free2 on 16-3-5.
  * 一般文章列表adapter分校园网和外网
  */
-public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+public class PostListAdapter extends BaseAdapter {
 
-    private static final int TYPE_NORMAL = 0;
-    private static final int TYPE_LOAD_MORE = 1;
-    //校外网 手机版
-    private static final int TYPE_NORMAL_MOBILE = 3;
+    public static final int TYPE_NORMAL = 0;
+    public static final int TYPE_NORMAL_MOBILE = 1;
+    public static final int TYPE_IMAGE = 2;
+
     //数据
     private List<ArticleListData> DataSet;
     private int type = 3;
@@ -36,54 +37,48 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
     //上下文
     private Activity activity;
 
-    public ArticleListNormalAdapter(Activity activity, List<ArticleListData> data, int type) {
+    public PostListAdapter(Activity activity, List<ArticleListData> data, int type) {
         DataSet = data;
         this.activity = activity;
         this.type = type;
     }
 
-    @Override
-    public int getItemViewType(int position) {
 
-        if (position > 0 && position == getItemCount() - 1) {
-            return TYPE_LOAD_MORE;
-        }
+    @Override
+    protected int getDataCount() {
+        return DataSet.size();
+    }
+
+    @Override
+    protected int getItemType(int pos) {
         //手机版
         if (!App.IS_SCHOOL_NET || type == TYPE_NORMAL_MOBILE) {
             return TYPE_NORMAL_MOBILE;
-        } else {
+        } else if(type==TYPE_IMAGE){
             //一般板块
+            return TYPE_IMAGE;
+        }else{
             return TYPE_NORMAL;
         }
     }
 
-    //设置view
     @Override
-    public BaseViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    protected BaseViewHolder getItemViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case TYPE_NORMAL_MOBILE:
-                return new NormalViewHolderMe(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.main_list_item_me, viewGroup, false));
-            case TYPE_LOAD_MORE:
-                return new LoadMoreViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.load_more_item, viewGroup, false));
+                return new NormalViewHolderMe(LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.main_list_item_me, parent, false));
+            case TYPE_IMAGE:
+                return new ImageCardViewHolder(LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.image_list_item, parent, false));
             default: // TYPE_NORMAL
-                return new NormalViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.main_list_item, viewGroup, false));
+                return new NormalViewHolder(LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.main_list_item, parent, false));
         }
     }
 
-    //设置data
-    @Override
-    public void onBindViewHolder(BaseViewHolder holder, int position) {
-        holder.setData(position);
-    }
 
-    @Override
-    public int getItemCount() {
-        if (DataSet.size() == 0) {
-            return 0;
-        }
-        return DataSet.size() + 1;
-    }
-
+    //校园网环境 帖子列表
     private class NormalViewHolder extends BaseViewHolder {
         protected TextView article_title;
         protected TextView post_time;
@@ -163,19 +158,6 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
         }
     }
 
-    //加载更多ViewHolder
-    private class LoadMoreViewHolder extends BaseViewHolder {
-
-        LoadMoreViewHolder(View itemView) {
-            super(itemView);
-        }
-
-        @Override
-        void setData(int position) {
-        }
-    }
-
-
     //手机版文章列表
     private class NormalViewHolderMe extends BaseViewHolder {
         TextView article_title;
@@ -216,6 +198,46 @@ public class ArticleListNormalAdapter extends RecyclerView.Adapter<BaseViewHolde
                 single_data.setRead(true);
                 notifyItemChanged(getAdapterPosition());
             }
+            SingleArticleActivity.open(activity, single_data.getTitleUrl(), single_data.getAuthor());
+        }
+    }
+
+    //校园网环境 图片板块ViewHolder
+    private  class ImageCardViewHolder extends BaseViewHolder {
+
+        ImageView img_card_image;
+        TextView img_card_title;
+        TextView img_card_author;
+        TextView img_card_like;
+
+        ImageCardViewHolder(View itemView) {
+            super(itemView);
+            img_card_image = (ImageView) itemView.findViewById(R.id.img_card_image);
+            img_card_title = (TextView) itemView.findViewById(R.id.img_card_title);
+            img_card_author = (TextView) itemView.findViewById(R.id.img_card_author);
+            img_card_like = (TextView) itemView.findViewById(R.id.img_card_like);
+
+            itemView.findViewById(R.id.card_list_item).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    item_click();
+                }
+            });
+        }
+
+        void setData(int position) {
+            img_card_author.setText(DataSet.get(position).getAuthor());
+            img_card_title.setText(DataSet.get(position).getTitle());
+            img_card_like.setText(DataSet.get(position).getReplayCount());
+            if (!Objects.equals(DataSet.get(position).getImage(), "")) {
+                Picasso.with(activity).load(App.getBaseUrl() + DataSet.get(position).getImage()).placeholder(R.drawable.image_placeholder).into(img_card_image);
+            } else {
+                img_card_image.setImageResource(R.drawable.image_placeholder);
+            }
+
+        }
+        void item_click() {
+            ArticleListData single_data = DataSet.get(getAdapterPosition());
             SingleArticleActivity.open(activity, single_data.getTitleUrl(), single_data.getAuthor());
         }
     }
