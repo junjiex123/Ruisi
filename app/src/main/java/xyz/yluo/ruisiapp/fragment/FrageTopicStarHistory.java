@@ -18,6 +18,7 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.data.FrageType;
@@ -31,13 +32,13 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 /**
  * Created by free2 on 16-7-14.
  * 收藏/主题/历史纪录
+ * //todo 删除浏览历史
  */
 public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListener.OnLoadMoreListener {
 
-    protected SwipeRefreshLayout refreshLayout;
     private List<SimpleListData> datas;
     private SimpleListAdapter adapter;
-    private int CurrentPage = 0;
+    private int CurrentPage = 1;
     private boolean isEnableLoadMore = true;
     private boolean isHaveMore = true;
     private int currentIndex = 0;
@@ -74,9 +75,9 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
         }
         initToolbar(true,title);
         RecyclerView recyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
-        refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
-        refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
-
+        recyclerView.setHasFixedSize(true);
+        SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
+        refreshLayout.setEnabled(false);
         String uid = App.getUid(getActivity());
         switch (currentIndex) {
             case 0:
@@ -89,10 +90,6 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
                 //   actionBar.setTitle("我的收藏");
                 url = "home.php?mod=space&uid=" + uid + "&do=favorite&view=me&type=thread&mobile=2";
                 break;
-            default:
-                isEnableLoadMore = false;
-                // "历史纪录"
-                break;
         }
 
         datas = new ArrayList<>();
@@ -101,14 +98,6 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
         recyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) layoutManager, this, 10));
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refresh();
-            }
-        });
-
         refresh();
         return mRootView;
     }
@@ -122,49 +111,28 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
     @Override
     public void onLoadMore() {
         if (isEnableLoadMore && isHaveMore) {
-            int a = CurrentPage;
-            String newurl = url + "&page=" + (a + 1);
-            getStringFromInternet(newurl);
+            CurrentPage++;
+            getWebDatas();
+            adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
             isEnableLoadMore = false;
         }
     }
 
     private void refresh() {
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        });
-
         datas.clear();
         adapter.notifyDataSetChanged();
-        getStringFromInternet(url);
-    }
-
-    private void getStringFromInternet(String url) {
-
-        if (currentIndex == 2) {
-            //datas.add()
-            MyDB myDB = new MyDB(getActivity(), MyDB.MODE_READ);
-            for (ArticleListData data : myDB.getHistory(30)) {
-                //Log.i("history",data.getFid());
-                datas.add(new SimpleListData(data.getTitle(), data.getAuthor(), "tid=" + data.getTitleUrl()));
-            }
-            datas.add(new SimpleListData("暂无更多", "", ""));
-            adapter.notifyDataSetChanged();
-            refreshLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    refreshLayout.setRefreshing(false);
-                }
-            }, 500);
-            return;
+        if(currentIndex==2){
+            getDbData();
+        }else{
+            getWebDatas();
         }
 
+    }
 
-        HttpUtil.get(getActivity(), url, new ResponseHandler() {
 
+    private void getWebDatas() {
+        String newurl = url + "&page=" + CurrentPage;
+        HttpUtil.get(getActivity(), newurl, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
@@ -178,77 +146,112 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
             @Override
             public void onFailure(Throwable e) {
                 e.printStackTrace();
-                refreshLayout.setRefreshing(false);
+                adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
             }
         });
     }
 
+    private void getDbData(){
+        isEnableLoadMore = false;
+        new GetUserHistoryTask().execute(1);
+    }
+
     //获得主题
-    private class GetUserArticles extends AsyncTask<String, Void, Void> {
+    private class GetUserArticles extends AsyncTask<String, Void, List<SimpleListData>> {
         @Override
-        protected Void doInBackground(String... strings) {
+        protected List<SimpleListData> doInBackground(String... strings) {
             String res = strings[0];
+            List<SimpleListData> temp = new ArrayList<>();
             Elements lists = Jsoup.parse(res).select(".threadlist").select("ul").select("li");
             for (Element tmp : lists) {
                 String title = tmp.select("a").text();
                 if (title.isEmpty()) {
-                    datas.add(new SimpleListData("暂无更多", "", ""));
                     isHaveMore = false;
                     break;
                 }
                 String titleUrl = tmp.select("a").attr("href");
                 String num = tmp.select(".num").text();
-                datas.add(new SimpleListData(title, num, titleUrl));
+                temp.add(new SimpleListData(title, num, titleUrl));
             }
-            return null;
+            return temp;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            isEnableLoadMore = true;
-            CurrentPage++;
-            adapter.notifyDataSetChanged();
-            refreshLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    refreshLayout.setRefreshing(false);
-                }
-            }, 500);
+        protected void onPostExecute(List<SimpleListData> aVoid) {
+            onLoadCompete(aVoid);
         }
 
     }
 
     //获得用户收藏
-    private class GetUserStarTask extends AsyncTask<String, Void, Void> {
+    private class GetUserStarTask extends AsyncTask<String, Void, List<SimpleListData>> {
         @Override
-        protected Void doInBackground(String... params) {
+        protected List<SimpleListData> doInBackground(String... params) {
             String res = params[0];
+            List<SimpleListData> temp = new ArrayList<>();
             Elements lists = Jsoup.parse(res).select(".threadlist").select("ul").select("li");
             for (Element tmp : lists) {
                 String key = tmp.select("a").text();
                 if (key.isEmpty()) {
-                    datas.add(new SimpleListData("暂无更多", "", ""));
                     isHaveMore = false;
                     break;
                 }
                 String link = tmp.select("a").attr("href");
-                datas.add(new SimpleListData(key, "", link));
+                temp.add(new SimpleListData(key, "", link));
             }
-            return null;
+            return temp;
         }
 
         @Override
-        protected void onPostExecute(Void avoid) {
-            isEnableLoadMore = true;
-            CurrentPage++;
-            adapter.notifyDataSetChanged();
-            refreshLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    refreshLayout.setRefreshing(false);
-                }
-            }, 500);
+        protected void onPostExecute(List<SimpleListData> data) {
+            super.onPostExecute(data);
+            onLoadCompete(data);
         }
+    }
+
+
+    //获得历史记录
+    private class GetUserHistoryTask extends AsyncTask<Integer, Void, List<SimpleListData>>{
+
+        @Override
+        protected List<SimpleListData> doInBackground(Integer... ints) {
+            //datas.add()
+            List<SimpleListData> temp = new ArrayList<>();
+            MyDB myDB = new MyDB(getActivity(), MyDB.MODE_READ);
+            for (ArticleListData data : myDB.getHistory(30)) {
+                //Log.i("history",data.getFid());
+                temp.add(new SimpleListData(data.getTitle(), data.getAuthor(), "tid=" + data.getTitleUrl()));
+            }
+
+            return temp;
+        }
+
+        @Override
+        protected void onPostExecute(List<SimpleListData> data) {
+            super.onPostExecute(data);
+            isHaveMore = false;
+            onLoadCompete(data);
+        }
+    }
+
+
+    //加载完成
+    private void onLoadCompete(List<SimpleListData> d){
+        if(isHaveMore){
+            adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
+        }else{
+            adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
+        }
+        if(d.size()>0){
+            int i = datas.size();
+            datas.addAll(d);
+            if(i==0){
+                adapter.notifyDataSetChanged();
+            }else{
+                adapter.notifyItemRangeInserted(i,d.size());
+            }
+
+        }
+        isEnableLoadMore = true;
     }
 }

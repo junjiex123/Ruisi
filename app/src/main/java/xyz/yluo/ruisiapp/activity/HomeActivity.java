@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.NotificationManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,17 +24,11 @@ import java.util.TimerTask;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.ChangeNetDialog;
-import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.View.MyBottomTab;
 import xyz.yluo.ruisiapp.data.FrageType;
-import xyz.yluo.ruisiapp.fragment.FragSetting;
 import xyz.yluo.ruisiapp.fragment.FrageForumList;
-import xyz.yluo.ruisiapp.fragment.FrageFriends;
-import xyz.yluo.ruisiapp.fragment.FrageHelp;
 import xyz.yluo.ruisiapp.fragment.FrageHotNew;
 import xyz.yluo.ruisiapp.fragment.FrageMessage;
-import xyz.yluo.ruisiapp.fragment.FrageTopicStarHistory;
 import xyz.yluo.ruisiapp.fragment.FragmentMy;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -47,7 +40,7 @@ import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
  * 2.新帖{@link FrageHotNew}
  */
 public class HomeActivity extends BaseActivity
-        implements  View.OnClickListener,MyBottomTab.OnTabChangeListener{
+        implements MyBottomTab.OnTabChangeListener{
 
     private long mExitTime;
     private Fragment currentFragment;
@@ -147,24 +140,6 @@ public class HomeActivity extends BaseActivity
                 case FrageType.MY:
                     to = new FragmentMy();
                     break;
-                case FrageType.FRIEND:
-                    to = new FrageFriends();
-                    break;
-                case FrageType.TOPIC:
-                    to = FrageTopicStarHistory.newInstance(FrageType.TOPIC);
-                    break;
-                case FrageType.START:
-                    to = FrageTopicStarHistory.newInstance(FrageType.START);
-                    break;
-                case FrageType.HISTORY:
-                    to = FrageTopicStarHistory.newInstance(FrageType.HISTORY);
-                    break;
-                case FrageType.HELP:
-                    to = new FrageHelp();
-                    break;
-                case FrageType.SETTING:
-                    to = new FragSetting();
-                    break;
             }
         }
         if (currentFragment == to) {
@@ -187,26 +162,6 @@ public class HomeActivity extends BaseActivity
         transaction.commit();
     }
 
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.profile_image:
-                if (!TextUtils.isEmpty(App.getUid(this))) {
-                    UserDetailActivity.openWithAnimation(HomeActivity.this,App.getName(this), (CircleImageView)view,App.getUid(this));
-                } else {
-                    Intent i = new Intent(HomeActivity.this, LoginActivity.class);
-                    startActivityForResult(i,0);
-                }
-                break;
-            case R.id.change_net:
-                ChangeNetDialog dialog = new ChangeNetDialog();
-                dialog.setNetType(App.IS_SCHOOL_NET);
-                dialog.show(getFragmentManager(), "changeNet");
-                break;
-        }
-
-    }
 
     private MyHandler messageHandler = new MyHandler();
     final NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)

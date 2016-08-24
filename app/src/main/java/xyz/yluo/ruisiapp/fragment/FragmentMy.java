@@ -15,9 +15,11 @@ import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.activity.AboutActivity;
+import xyz.yluo.ruisiapp.activity.FragementActivity;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.UserDakaActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
+import xyz.yluo.ruisiapp.data.FrageType;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -117,37 +119,31 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener{
                     Snackbar.make(containerlist,"校园网环境下才可以签到",Snackbar.LENGTH_SHORT).show();
                 }
                 break;
-            /**
             case R.id.setting:
-                //changeFragement(FrageType.SETTING);
-                //// TODO: 16-8-23
-                break;
-            case R.id.message:
-                changeFragement(FrageType.MESSAGE);
-                messageHandler.sendEmptyMessage(0);
+                FragementActivity.open(getActivity(),FrageType.SETTING);
                 break;
             case R.id.post:
                 if (isLogin()) {
-                    changeFragement(FrageType.TOPIC);
+                    FragementActivity.open(getActivity(),FrageType.TOPIC);
                 }
                 break;
             case R.id.star:
                 if (isLogin()) {
-                    changeFragement(FrageType.START);
+                    FragementActivity.open(getActivity(),FrageType.START);
                 }
                 break;
             case R.id.history:
                 if (isLogin()) {
-                    changeFragement(FrageType.HISTORY);
+                    FragementActivity.open(getActivity(),FrageType.HISTORY);
                 }
                 break;
             case R.id.help:
-                changeFragement(FrageType.HELP);
+                FragementActivity.open(getActivity(),FrageType.HELP);
                 break;
             case R.id.friend:
-                changeFragement(FrageType.FRIEND);
+                FragementActivity.open(getActivity(),FrageType.FRIEND);
                 break;
-             */
+
         }
     }
 }

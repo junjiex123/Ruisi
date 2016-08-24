@@ -1,5 +1,5 @@
 <resources>
-<!--v21 5.0以上的使用此-->
+    <!--v21 5.0以上的使用此-->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>

@@ -19,8 +19,8 @@
         <activity
             android:name=".activity.LaunchActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBarTransStatusBar"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBarTransStatusBar"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,69 +30,70 @@
         </activity>
         <activity
             android:name=".activity.HomeActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            android:screenOrientation="portrait" />
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".activity.PostsActivity"
-            android:theme="@style/AppTheme"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activity.AboutActivity"
-            android:theme="@style/AppTheme.NoActionBarTransStatusBar"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+            android:theme="@style/AppTheme.NoActionBarTransStatusBar"
+            android:windowSoftInputMode="stateHidden" />
         <activity
-            android:exported="true"
             android:name=".activity.SingleArticleActivity"
+            android:exported="true"
             android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".activity.UserDetailActivity"
             android:label="用户信息"
-            android:theme="@style/AppTheme.NoActionBarTransStatusBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBarTransStatusBar" />
         <activity
             android:name=".activity.LoginActivity"
             android:label="登陆手机睿思"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.UserDakaActivity"
             android:label="签到中心"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.ChatActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBarTransStatusBar"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait"/>
-
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.NewPostActivity"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.ActivitySearch"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".downloadfile.DownLoadActivity"
             android:label="下载文件"
-            android:theme="@style/AppTheme.Dialog"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".activity.EditActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme.Dialog" />
+        <activity
+            android:name=".activity.EditActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
 
         <service android:name=".downloadfile.DownloadService" />
 
+        <activity
+            android:name=".activity.FragementActivity"
+            android:label="@string/title_activity_fragement"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

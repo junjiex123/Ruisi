@@ -13,7 +13,7 @@
         <RadioGroup
             android:id="@+id/btn_change"
             android:layout_width="110dp"
-            android:layout_height="30dp"
+            android:layout_height="28dp"
             android:gravity="center"
             android:layout_gravity="center"
             android:checkedButton="@+id/btn_reply"

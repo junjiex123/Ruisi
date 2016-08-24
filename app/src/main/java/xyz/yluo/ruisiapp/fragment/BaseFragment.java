@@ -14,7 +14,6 @@ import android.widget.TextView;
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.BaseActivity;
-import xyz.yluo.ruisiapp.activity.HomeActivity;
 
 
 /**
@@ -41,13 +40,11 @@ public abstract class BaseFragment extends Fragment {
             titles.setText(title);
             ImageView i = (ImageView) toolBar.findViewById(R.id.logo);
             if(isCloseAble){
-                i.setImageResource(R.drawable.ic_clear_24dp);
+                i.setImageResource(R.drawable.ic_arraw_back_white);
                 i.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(getActivity() instanceof HomeActivity){
-                            getFragmentManager().popBackStack();
-                        }
+                        getActivity().finish();
                     }
                 });
             }else{

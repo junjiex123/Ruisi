@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.FriendAdapter;
 import xyz.yluo.ruisiapp.data.FriendData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
@@ -32,6 +32,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * 好友列表
  * 数据{@link FriendData}
  * adapter{@link FriendAdapter}
+ * //todo 查找好友
  */
 public class FrageFriends extends BaseFragment implements LoadMoreListener.OnLoadMoreListener{
     protected RecyclerView recycler_view;
@@ -39,8 +40,8 @@ public class FrageFriends extends BaseFragment implements LoadMoreListener.OnLoa
     private FriendAdapter adapter;
     private List<FriendData> datas;
     private int CurrentPage = 1;
-    private int TotalPage = Integer.MAX_VALUE;
     private boolean isEnableLoadMore = true;
+    private boolean isHaveMore = true;
 
     @Nullable
     @Override
@@ -81,31 +82,26 @@ public class FrageFriends extends BaseFragment implements LoadMoreListener.OnLoa
     @Override
     public void onLoadMore() {
         //加载更多被电击
-        if (isEnableLoadMore) {
-            Log.e("loadmore","loadmore");
+        if (isEnableLoadMore&&isHaveMore) {
             isEnableLoadMore = false;
-            CurrentPage = CurrentPage+1;
-            if(CurrentPage>1&&CurrentPage<=TotalPage){
-                String url = "home.php?mod=space&do=friend&mobile=2"+"&page="+CurrentPage;
-                new GetDataTask().execute(url);
-                Log.e("loadmore",""+CurrentPage);
-            }
+            CurrentPage++;
+            String url = "home.php?mod=space&do=friend&mobile=2"+"&page="+CurrentPage;
+            new GetDataTask().execute(url);
         }
     }
 
 
-    private class GetDataTask extends AsyncTask<String, Void, String> {
+    private class GetDataTask extends AsyncTask<String, Void, List<FriendData>> {
         @Override
-        protected String doInBackground(String... params) {
+        protected List<FriendData> doInBackground(String... params) {
+            final List<FriendData> temp = new ArrayList<>();
             HttpUtil.SyncGet(getActivity(), params[0], new TextResponseHandler() {
                 @Override
                 public void onSuccess(String response) {
                     Document document = Jsoup.parse(response);
                     Elements lists = document.select("#friend_ul").select("li");
                     if(lists.size()<=0){
-                        CurrentPage = CurrentPage-1;
-                        TotalPage = CurrentPage;
-                        Log.e("好友","暂无更多，总页数"+TotalPage);
+                        isHaveMore =false;
                     }else{
                         for (Element element : lists) {
                             String imgurl = element.select(".avt").select("img").attr("src");
@@ -114,7 +110,7 @@ public class FrageFriends extends BaseFragment implements LoadMoreListener.OnLoa
                             String uid = GetId.getid("uid=",imgurl);
                             String info = element.select("p.maxh").text();
                             //userName,imgUrl,info,uid,lastOnlineTime
-                            datas.add(new FriendData(userName, imgurl, info, uid, lastOnline));
+                            temp.add(new FriendData(userName, imgurl, info, uid, lastOnline));
                         }
                     }
 
@@ -125,14 +121,27 @@ public class FrageFriends extends BaseFragment implements LoadMoreListener.OnLoa
                     super.onFailure(e);
                 }
             });
-            return null;
+            return temp;
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            adapter.notifyDataSetChanged();
+        protected void onPostExecute(List<FriendData> s) {
             super.onPostExecute(s);
+            if(isHaveMore){
+                adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
+            }else{
+                adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
+            }
+
+            int i = datas.size();
+            datas.addAll(s);
+            if(i==0){
+                adapter.notifyDataSetChanged();
+            }else{
+                adapter.notifyItemRangeInserted(i,s.size());
+            }
             isEnableLoadMore = true;
+
             refreshLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {
