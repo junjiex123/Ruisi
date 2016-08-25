@@ -69,8 +69,6 @@ public class SingleArticleActivity extends BaseActivity
     private int page_sum = 1;
     private int edit_pos = -1;
     private boolean isGetTitle = false;
-    //是否倒序
-    private boolean isRevere = false;
     //是否允许加载更多
     private boolean isEnableLoadMore = false;
     //回复楼主的链接
@@ -85,8 +83,6 @@ public class SingleArticleActivity extends BaseActivity
     private String Title, AuthorName, Tid, RedirectPid = "";
     private Spinner spinner;
     private boolean showPlainText = false;
-    //记录已经加载的楼层
-    private Set<String> pids = new HashSet<>();
 
     public static void open(Context context, String url, @Nullable String author) {
         Intent intent = new Intent(context, SingleArticleActivity.class);
@@ -102,7 +98,6 @@ public class SingleArticleActivity extends BaseActivity
         setContentView(R.layout.activity_single_article);
 
         showPlainText = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("setting_show_plain", false);
-
         spinner = (Spinner) findViewById(R.id.btn_jump_spinner);
         spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, pageSpinnerDatas);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -179,7 +174,6 @@ public class SingleArticleActivity extends BaseActivity
         } else {
             firstGetData(1);
         }
-
     }
 
     private float x, y = 0;
@@ -274,9 +268,6 @@ public class SingleArticleActivity extends BaseActivity
     //文章一页的html 根据页数 Tid
     private void getArticleData(final int page) {
         String url = UrlUtils.getSingleArticleUrl(Tid, page, false);
-        if (isRevere) {
-            url += "&ordertype=1";
-        }
         HttpUtil.get(this, url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -438,16 +429,6 @@ public class SingleArticleActivity extends BaseActivity
             case R.id.btn_refresh:
                 refresh();
                 break;
-            case R.id.btn_reverse:
-                ImageView v = (ImageView) view;
-                isRevere = !isRevere;
-                if (isRevere) {
-                    v.setImageResource(R.drawable.ic_reverse_ordinary);
-                } else {
-                    v.setImageResource(R.drawable.ic_normal_ordinary);
-                }
-                refresh();
-                break;
             case R.id.btn_share:
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
@@ -473,13 +454,12 @@ public class SingleArticleActivity extends BaseActivity
     private class DealWithArticleData extends AsyncTask<String, Void, List<SingleArticleData>> {
 
         private String errorText = "";
+        private int lastPid = 0;
         @Override
         protected List<SingleArticleData> doInBackground(String... params) {
             errorText = "";
             List<SingleArticleData> tepdata = new ArrayList<>();
             String htmlData = params[0];
-            //list 所有楼数据
-            Document doc = Jsoup.parse(htmlData);
             if (!isGetTitle) {
                 int ih = htmlData.indexOf("keywords");
                 int h_start = htmlData.indexOf('\"', ih + 15);
@@ -488,24 +468,28 @@ public class SingleArticleActivity extends BaseActivity
                 isGetTitle = true;
             }
 
-            //获取回复/hash
-            if (doc.select("input[name=formhash]").first() != null) {
-               replyUrl = doc.select("form#fastpostform").attr("action");
-               //String hash = doc.select("input[name=formhash]").attr("value");
+            Document doc = Jsoup.parse(htmlData);
+
+            //判断错误
+            Elements elements = doc.select(".postlist");
+            if(elements.size()<=0){
+                //有可能没有列表处理错误
+                errorText = doc.select(".jump_c").text();
+                if(TextUtils.isEmpty(errorText)) {
+                    errorText = "network error  !!!";
+                }
+                return tepdata;
             }
-            int index = 0;
-            if ((page_now == 1 && mydatalist.size() == 0) || page_now < page_sum) {
-                index = 0;
-            } else if (page_now >= page_sum) {
-                if (mydatalist.size() == 0) {
-                    index = 0;
-                } else {
-                    index = mydatalist.size() % 10;
-                    if (index == 0) {
-                        index = 10;
-                    }
+
+            //获得回复楼主的url
+            if(TextUtils.isEmpty(replyUrl)){
+                //获取回复/hash
+                if (!doc.select("input[name=formhash]").isEmpty()) {
+                    replyUrl = doc.select("form#fastpostform").attr("action");
+                    //String hash = doc.select("input[name=formhash]").attr("value");
                 }
             }
+
             //获取总页数 和当前页数
             if (doc.select(".pg").text().length() > 0) {
                 if (doc.select(".pg").text().length() > 0) {
@@ -516,18 +500,10 @@ public class SingleArticleActivity extends BaseActivity
                     }
                 }
             }
-            Elements elements = doc.select(".postlist");
-            if(elements.size()<=0){
-                //有可能没有列表处理错误
-                errorText = doc.select(".jump_c").text();
-                if(TextUtils.isEmpty(errorText)) {
-                    errorText = "network error  !!!";
-                }
-                return tepdata;
-            }
+
             Elements postlist = elements.select("div[id^=pid]");
             int size = postlist.size();
-            for (int i = index; i < size; i++) {
+            for (int i = 0; i < size; i++) {
                 Element temp = postlist.get(i);
                 SingleArticleData data;
                 String pid = temp.attr("id").substring(3);
@@ -553,6 +529,10 @@ public class SingleArticleActivity extends BaseActivity
                 //删除修改日期
                 contentels.select("i.pstatus").remove();
                 String finalcontent = contentels.html().trim();
+
+                if(page_now==1){
+
+                }
                 data = new SingleArticleData(SingleType.COMMENT, Title, uid,
                         username, posttime, commentindex, replyUrl, finalcontent, pid);
                 tepdata.add(data);
