@@ -47,7 +47,6 @@ public class MyAlertDialog extends Dialog implements View.OnClickListener {
     public static final int ERROR_TYPE = 1;
     public static final int SUCCESS_TYPE = 2;
     public static final int WARNING_TYPE = 3;
-    public static final int PROGRESS_TYPE = 4;
 
     public  interface OnConfirmClickListener {
          void onClick(MyAlertDialog myAlertDialog);
@@ -183,9 +182,6 @@ public class MyAlertDialog extends Dialog implements View.OnClickListener {
                     mConfirmButton.setBackgroundResource(R.drawable.btn_light_red_bg);
                     mWarningFrame.setVisibility(View.VISIBLE);
                     break;
-                case PROGRESS_TYPE:
-                    mProgressFram.setVisibility(View.VISIBLE);
-                    mConfirmButton.setVisibility(View.GONE);
             }
             if (!fromCreate) {
                 playAnimation();

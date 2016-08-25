@@ -1,5 +1,6 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -44,7 +45,7 @@ import xyz.yluo.ruisiapp.utils.PostHandler;
 public class EditActivity extends BaseActivity implements View.OnClickListener{
 
     private EditText ed_title,ed_content;
-    private MyAlertDialog dialog;
+    private ProgressDialog dialog;
     private MySpinner typeid_spinner;
     private MyColorPicker myColorPicker;
     private MySmileyPicker smileyPicker;
@@ -76,8 +77,8 @@ public class EditActivity extends BaseActivity implements View.OnClickListener{
             @Override
             public void onClick(View view) {
                 if(checkPostInput()){
-                    dialog = new MyAlertDialog(EditActivity.this,MyAlertDialog.PROGRESS_TYPE)
-                            .setTitleText("提交中,请稍后......");
+                    dialog = new ProgressDialog(EditActivity.this);
+                    dialog.setMessage("提交中,请稍后......");
                     dialog.show();
                     start_post();
                 }

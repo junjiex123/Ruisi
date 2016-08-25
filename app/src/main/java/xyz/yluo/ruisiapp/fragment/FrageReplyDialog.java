@@ -109,7 +109,6 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i("replyDialog","====init====");
         View v = inflater.inflate(R.layout.reply_view, null);
         VerticalTabLayout tabLayout = (VerticalTabLayout) v.findViewById(R.id.smiley_tab);
         input = (EditText) v.findViewById(R.id.input_aera);
@@ -131,7 +130,6 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
             input.setHint(bundle.getString("userName","回复"));
             lastReplyTime = bundle.getLong("lastreplyTime",0);
             info = bundle.getString("info","0");
-            Log.i("type is", "==" + replyType + "==");
         }
 
         tabLayout.setOnTabSelectedListener(new VerticalTabLayout.OnTabSelectedListener() {

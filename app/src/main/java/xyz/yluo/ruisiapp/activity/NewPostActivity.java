@@ -1,5 +1,6 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -46,7 +47,6 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 public class NewPostActivity extends BaseActivity implements View.OnClickListener{
 
     private EditText ed_title,ed_content;
-    private MyAlertDialog dialog;
     private MySpinner forum_spinner,typeid_spinner;
     private MyColorPicker myColorPicker;
     private MySmileyPicker smileyPicker;
@@ -84,7 +84,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_topic);
         initToolBar(true,"发表新帖");
-
+        dialog = new ProgressDialog(this);
         if(getIntent().getExtras()!=null){
             fid = getIntent().getExtras().getInt("FID");
             title = getIntent().getExtras().getString("TITLE");
@@ -210,6 +210,12 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             public void onFailure(Throwable e) {
                 postFail("由于未知原因发帖失败");
             }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                dialog.dismiss();
+            }
         });
     }
 
@@ -252,13 +258,14 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
+
+    private ProgressDialog dialog ;
     @Override
     public void onClick(final View view) {
         switch (view.getId()){
             case R.id.menu:
                 if(checkPostInput()) {
-                    dialog = new MyAlertDialog(NewPostActivity.this, MyAlertDialog.PROGRESS_TYPE)
-                            .setTitleText("发贴中,请稍后......");
+                    dialog.setMessage("发贴中,请稍后......");
                     dialog.show();
                     begainPost();
                 }

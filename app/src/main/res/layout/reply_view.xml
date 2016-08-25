@@ -36,15 +36,10 @@
             android:layout_height="40dp" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.8dp"
-        android:background="#eedddddd" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#f2ffffff"
+        android:background="@drawable/divider_top_bg"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="@dimen/dimen_4">
@@ -59,9 +54,11 @@
             android:src="@drawable/ic_edit_emoticon_24dp" />
 
         <EditText
+            android:textSize="15sp"
             android:id="@+id/input_aera"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/edittext_bg"
             android:hint="回复"
@@ -77,19 +74,13 @@
             android:textColor="@color/white"
             android:layout_width="48dp"
             android:layout_height="30dp" />
-
     </LinearLayout>
 
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.8dp"
-        android:background="#1f000000" />
     <LinearLayout
         android:id="@+id/smileys_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffffff"
+        android:background="@drawable/divider_top_bg"
         android:orientation="horizontal">
 
         <xyz.yluo.ruisiapp.View.VerticalTabLayout
@@ -99,14 +90,20 @@
             android:layout_height="match_parent">
 
             <ImageView
+                android:clickable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/smiley_tieba"
                 android:layout_width="40dp"
                 android:layout_height="40dp"/>
             <ImageView
+                android:clickable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/smiley_ldb"
                 android:layout_width="40dp"
                 android:layout_height="40dp" />
             <ImageView
+                android:clickable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/smiley_acn"
                 android:layout_width="40dp"
                 android:layout_height="40dp" />
@@ -116,7 +113,7 @@
         <View
             android:layout_width="0.8dp"
             android:layout_height="match_parent"
-            android:background="#1f000000" />
+            android:background="@color/colorDivider" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/smiley_list"

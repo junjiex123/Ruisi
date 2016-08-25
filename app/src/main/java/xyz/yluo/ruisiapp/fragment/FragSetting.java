@@ -9,6 +9,8 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.util.Log;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import xyz.yluo.ruisiapp.App;
@@ -45,17 +47,13 @@ public class FragSetting extends PreferenceFragment
         about_this = findPreference("about_this");
         open_sourse = findPreference("open_sourse");
         clear_cache = findPreference("clean_cache");
-
         sharedPreferences = getPreferenceScreen().getSharedPreferences();
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-
         boolean b = sharedPreferences.getBoolean("setting_show_tail", false);
         setting_user_tail.setEnabled(b);
         setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail", "无小尾巴"));
         setting_forums_url.setSummary(App.IS_SCHOOL_NET?"当前网络校园网，点击切换":"当前网络校外网，点击切换");
-
-
-        Log.i("is show tail", "" + sharedPreferences.getBoolean("setting_show_tail", false));
+        setting_forums_url.setValue(App.IS_SCHOOL_NET?"1":"2");
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
         PackageManager manager;
         PackageInfo info = null;
         manager = getActivity().getPackageManager();
@@ -145,14 +143,16 @@ public class FragSetting extends PreferenceFragment
                 switch (sharedPreferences.getString("setting_forums_url", "2")) {
                     case "1":
                         setting_forums_url.setSummary("当前网络校园网，点击切换");
+                        Toast.makeText(getActivity(),"切换到校园网!",Toast.LENGTH_SHORT).show();
                         App.IS_SCHOOL_NET = true;
                         break;
                     case "2":
                         setting_forums_url.setSummary("当前网络校外网，点击切换");
+                        Toast.makeText(getActivity(),"切换到外网!",Toast.LENGTH_SHORT).show();
                         App.IS_SCHOOL_NET = false;
                         break;
                 }
-                Toast.makeText(getActivity(),"切换网络成功!",Toast.LENGTH_SHORT).show();
+
                 break;
             case "setting_show_tail":
                 boolean b = sharedPreferences.getBoolean("setting_show_tail", false);

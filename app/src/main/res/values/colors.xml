@@ -4,6 +4,11 @@
     <color name="colorPrimaryDark">#ac1c1b</color>
     <color name="colorAccent">#d12121</color>
 
+    <color name="colorPrimaryNight">#3F51B5</color>
+    <color name="colorPrimaryDarkNight">#303F9F</color>
+    <color name="colorAccentNight">#3F51B5</color>
+
+
     <color name="background">#fefefe</color>
     <color name="colorDisableHintIcon">#61000000</color>
     <color name="colorDivider">#1f000000</color>

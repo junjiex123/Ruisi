@@ -71,17 +71,6 @@ public class BaseActivity extends AppCompatActivity {
         return null;
     }
 
-    protected ImageView setToolbarLogo(int resid){
-        View toolbar = findViewById(R.id.myToolBar);
-        if(toolbar!=null){
-            ImageView i =  (ImageView)toolbar.findViewById(R.id.logo);
-            i.setImageResource(resid);
-            i.setVisibility(View.VISIBLE);
-            return i;
-        }
-        return null;
-    }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -99,7 +88,6 @@ public class BaseActivity extends AppCompatActivity {
     protected void showToast(String str) {
         if (mToast == null) {
             mToast = Toast.makeText(this, str, Toast.LENGTH_SHORT);
-            mToast.setGravity(Gravity.TOP, 0, DimmenUtils.dip2px(this, 56));
         } else {
             mToast.setText(str);
             mToast.setDuration(Toast.LENGTH_SHORT);

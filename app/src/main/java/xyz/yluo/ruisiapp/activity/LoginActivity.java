@@ -1,5 +1,6 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -54,7 +55,7 @@ public class LoginActivity extends BaseActivity {
     private List<String> list = new ArrayList<>();
     private String loginUrl;
     private int answerSelect = 0;
-    private MyAlertDialog dialog;
+    private ProgressDialog dialog;
 
 
 
@@ -68,7 +69,6 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_login);
-
         ed_username = (EditText) findViewById(R.id.login_name);
         ed_pass = (EditText) findViewById(R.id.login_pas);
         btn_login = (Button) findViewById(R.id.btn_login);
@@ -174,9 +174,10 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login_click() {
-        dialog = new  MyAlertDialog(this,MyAlertDialog.PROGRESS_TYPE)
-                .setTitleText("登陆中，请稍后......");
+        dialog = new ProgressDialog(this);
+        dialog.setMessage("登陆中，请稍后......");
         dialog.show();
+
         final String username = ed_username.getText().toString().trim();
         final String passNo = ed_pass.getText().toString().trim();
         String url = UrlUtils.getLoginUrl(false);

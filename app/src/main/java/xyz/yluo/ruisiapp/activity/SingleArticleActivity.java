@@ -28,10 +28,8 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
@@ -75,7 +73,7 @@ public class SingleArticleActivity extends BaseActivity
     private String replyUrl = "";
     private SingleArticleAdapter adapter;
     //存储数据 需要填充的列表
-    private List<SingleArticleData> mydatalist = new ArrayList<>();
+    private List<SingleArticleData> datas = new ArrayList<>();
     //是否调到指定页数and楼层???
     private boolean isSaveToDataBase = false;
     private ArrayAdapter<String> spinnerAdapter;
@@ -112,19 +110,14 @@ public class SingleArticleActivity extends BaseActivity
             }
         });
 
-        LinearLayout bottom_bar_top = (LinearLayout) findViewById(R.id.bottom_bar_top);
+        LinearLayout bottom_bar_top = (LinearLayout) findViewById(R.id.bottom_bar);
         for (int i = 0; i < bottom_bar_top.getChildCount(); i++) {
             View v = bottom_bar_top.getChildAt(i);
             if (v.getId() != R.id.btn_jump_spinner) {
                 v.setOnClickListener(this);
             }
         }
-        LinearLayout bottom_bar_bottom = (LinearLayout) findViewById(R.id.bottom_bar_bottom);
-        for (int i = 0; i < bottom_bar_bottom.getChildCount(); i++) {
-            View v = bottom_bar_bottom.getChildAt(i);
-            v.setOnClickListener(this);
-        }
-        bottom_bar_bottom.setVisibility(View.GONE);
+
 
         //下拉刷新
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -135,7 +128,7 @@ public class SingleArticleActivity extends BaseActivity
         });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        adapter = new SingleArticleAdapter(this, this, mydatalist);
+        adapter = new SingleArticleAdapter(this, this, datas);
         /**
          * 缓存数量
          */
@@ -182,16 +175,9 @@ public class SingleArticleActivity extends BaseActivity
     public boolean dispatchTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                View bottomBar_bottom = findViewById(R.id.bottom_bar_c);
                 //当手指按下的时候
                 x = event.getX();
                 y = event.getY();
-                if (y < bottomBar_bottom.getTop()) {
-                    View v = findViewById(R.id.bottom_bar_bottom);
-                    if (v.getVisibility() == View.VISIBLE) {
-                        v.setVisibility(View.GONE);
-                    }
-                }
                 break;
             case MotionEvent.ACTION_UP:
                 //当手指离开的时候
@@ -200,8 +186,6 @@ public class SingleArticleActivity extends BaseActivity
                 if (dx > 100 && dx > dy) {
                     DisplayMetrics dm = getResources().getDisplayMetrics();
                     int w_screen = dm.widthPixels;
-                    int h_screen = dm.heightPixels;
-                    //Log.i("BASEACTIVITY", "屏幕尺寸：宽度 = " + w_screen + "高度 = " + h_screen + "密度 = " + dm.densityDpi);
                     if ((dx > w_screen / 4) && (x < w_screen / 2)) {
                         finish();
                     }
@@ -246,7 +230,7 @@ public class SingleArticleActivity extends BaseActivity
             }
         });
         //数据填充
-        mydatalist.clear();
+        datas.clear();
         adapter.notifyDataSetChanged();
         getArticleData(page);
     }
@@ -260,7 +244,7 @@ public class SingleArticleActivity extends BaseActivity
             }
         });
         //数据填充
-        mydatalist.clear();
+        datas.clear();
         adapter.notifyDataSetChanged();
         getArticleData(1);
     }
@@ -290,7 +274,7 @@ public class SingleArticleActivity extends BaseActivity
         switch (v.getId()) {
             case R.id.btn_reply_2:
                 if (isLogin()) {
-                    SingleArticleData single = mydatalist.get(position);
+                    SingleArticleData single = datas.get(position);
                     String replyUrl = single.getReplyUrlTitle();
                     String replyIndex = single.getIndex();
                     String replyName = single.getUsername();
@@ -309,13 +293,13 @@ public class SingleArticleActivity extends BaseActivity
             case R.id.tv_edit:
                 edit_pos = position;
                 Intent i = new Intent(this, EditActivity.class);
-                i.putExtra("PID", mydatalist.get(position).getPid());
+                i.putExtra("PID", datas.get(position).getPid());
                 i.putExtra("TID", Tid);
                 startActivityForResult(i, 0);
                 break;
             case R.id.tv_remove:
                 edit_pos = position;
-                if (mydatalist.get(edit_pos).getType() == SingleType.CONTENT) {
+                if (datas.get(edit_pos).getType() == SingleType.CONTENT) {
                     new MyAlertDialog(this, MyAlertDialog.WARNING_TYPE)
                             .setTitleText("删除帖子!")
                             .setConfirmText("删除")
@@ -353,9 +337,9 @@ public class SingleArticleActivity extends BaseActivity
             String title = b.getString("TITLE", "");
             String content = b.getString("CONTENT", "");
             if (edit_pos == 0 && !TextUtils.isEmpty(title)) {
-                mydatalist.get(0).setTitle(title);
+                datas.get(0).setTitle(title);
             }
-            mydatalist.get(edit_pos).setCotent(content);
+            datas.get(edit_pos).setCotent(content);
             adapter.notifyItemChanged(edit_pos);
         }
     }
@@ -372,20 +356,19 @@ public class SingleArticleActivity extends BaseActivity
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                boolean isok = false;
-                if (res.contains("成功")) {
-                    Toast.makeText(getApplicationContext(), "收藏成功", Toast.LENGTH_SHORT).show();
-                    isok = true;
-                } else if (res.contains("您已收藏")) {
-                    Toast.makeText(getApplicationContext(), "您已收藏请勿重复收藏", Toast.LENGTH_SHORT).show();
-                    isok = true;
-                }
-
-                if (isok) {
+                if (res.contains("成功")||res.contains("您已收藏")) {
+                    showToast("收藏成功");
                     if (v != null) {
-                        ImageView mv = (ImageView) v;
-                        mv.setImageResource(R.drawable.ic_star_accent_24dp);
+                        final ImageView mv = (ImageView) v;
+                        mv.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mv.setImageResource(R.drawable.ic_star_accent_24dp);
+                            }
+                        },300);
+
                     }
+
                 }
             }
         });
@@ -408,26 +391,21 @@ public class SingleArticleActivity extends BaseActivity
                 if (isLogin()) {
                     Log.e("reply","url"+replyUrl);
                     //String url,int type,long lastreplyTime,boolean isEnableTail,String userName,String info
-                    String hint = "回复：" + AuthorName;
+                    String hint = "回复帖子：" + Title;
                     FrageReplyDialog dialog = FrageReplyDialog.newInstance(replyUrl, FrageReplyDialog.REPLY_LZ, replyTime, true, hint, Title);
                     dialog.setCallBack(SingleArticleActivity.this);
                     dialog.show(getFragmentManager(), "reply");
                 }
-
                 break;
             case R.id.btn_star:
                 if (isLogin()) {
-                    Toast.makeText(getApplicationContext(), "正在收藏......", Toast.LENGTH_SHORT).show();
+                    showToast("正在收藏帖子...");
                     starTask(view);
                 }
                 break;
-
             case R.id.btn_browser:
                 String url = UrlUtils.getSingleArticleUrl(Tid, page_now, false);
                 IntentUtils.openBroswer(this, url);
-                break;
-            case R.id.btn_refresh:
-                refresh();
                 break;
             case R.id.btn_share:
                 Intent shareIntent = new Intent();
@@ -437,14 +415,9 @@ public class SingleArticleActivity extends BaseActivity
                 //设置分享列表的标题，并且每次都显示分享列表
                 startActivity(Intent.createChooser(shareIntent, "分享到文章到:"));
                 break;
-            case R.id.btn_more:
-                View bottomBar_bottom = findViewById(R.id.bottom_bar_bottom);
-                bottomBar_bottom.setVisibility((bottomBar_bottom.getVisibility() == View.VISIBLE) ? View.GONE : View.VISIBLE);
-                break;
             case R.id.btn_back_top:
                 mRecyclerView.scrollToPosition(0);
                 break;
-
         }
     }
 
@@ -454,7 +427,6 @@ public class SingleArticleActivity extends BaseActivity
     private class DealWithArticleData extends AsyncTask<String, Void, List<SingleArticleData>> {
 
         private String errorText = "";
-        private int lastPid = 0;
         @Override
         protected List<SingleArticleData> doInBackground(String... params) {
             errorText = "";
@@ -469,7 +441,6 @@ public class SingleArticleActivity extends BaseActivity
             }
 
             Document doc = Jsoup.parse(htmlData);
-
             //判断错误
             Elements elements = doc.select(".postlist");
             if(elements.size()<=0){
@@ -530,14 +501,23 @@ public class SingleArticleActivity extends BaseActivity
                 contentels.select("i.pstatus").remove();
                 String finalcontent = contentels.html().trim();
 
-                if(page_now==1){
-
+                if(page_now==1&&i==0){
+                    data = new SingleArticleData(SingleType.CONTENT, Title, uid,
+                            username, posttime.replace("收藏", ""),
+                            commentindex, replyUrl, finalcontent, pid);
+                    AuthorName = username;
+                    if (!isSaveToDataBase) {
+                        //插入数据库
+                        MyDB myDB = new MyDB(SingleArticleActivity.this, MyDB.MODE_WRITE);
+                        myDB.handSingleReadHistory(Tid, Title, AuthorName);
+                        isSaveToDataBase = true;
+                    }
+                }else{
+                    data = new SingleArticleData(SingleType.COMMENT, Title, uid,
+                            username, posttime, commentindex, replyUrl, finalcontent, pid);
                 }
-                data = new SingleArticleData(SingleType.COMMENT, Title, uid,
-                        username, posttime, commentindex, replyUrl, finalcontent, pid);
                 tepdata.add(data);
             }
-
             return tepdata;
         }
 
@@ -557,54 +537,54 @@ public class SingleArticleActivity extends BaseActivity
                 return;
             }
 
-            //这是楼主
-            if (page_now == 1 && tepdata.size() > 0 && tepdata.get(0).getIndex().contains("收藏")) {
-                SingleArticleData data = tepdata.get(0);
-                data.setType(SingleType.CONTENT);
-                data.setPostTime(data.getPostTime().replace("收藏", ""));
-                AuthorName = data.getUsername();
-            }
-            if (!isSaveToDataBase) {
-                //插入数据库
-                MyDB myDB = new MyDB(SingleArticleActivity.this, MyDB.MODE_WRITE);
-                myDB.handSingleReadHistory(Tid, Title, AuthorName);
-                isSaveToDataBase = true;
-            }
-            int add = tepdata.size();
-            if (add > 0) {
-                if (add % 10 != 0) {
-                    adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
-                } else {
-                    adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
-                }
-                int start = mydatalist.size();
-                mydatalist.addAll(tepdata);
-                if (mydatalist.size() > 0 && (mydatalist.get(0).getType() != SingleType.CONTENT) &&
-                        (mydatalist.get(0).getType() != SingleType.HEADER)) {
-                    mydatalist.add(0, new SingleArticleData(SingleType.HEADER, Title, null, null, null, null, null, null, null));
-                    adapter.notifyItemInserted(0);
-                }
-                adapter.notifyItemChanged(start);
-                adapter.notifyItemRangeInserted(start + 1, add);
-
-                //精确定位到某一层
-                if (!TextUtils.isEmpty(RedirectPid)) {
-                    for (int i = 0; i < mydatalist.size(); i++) {
-                        if (!TextUtils.isEmpty(mydatalist.get(i).getPid())
-                                && mydatalist.get(i).getPid().equals(RedirectPid)) {
-                            mRecyclerView.scrollToPosition(i);
-                            break;
-                        }
+            int startsize = datas.size();
+            if(page_now<page_sum){
+                datas.addAll(tepdata);
+                adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
+            }else{
+                //最后一夜了
+                String lastPid = datas.isEmpty()?"0":(datas.get(datas.size()-1).getPid());
+                int equalpos = -1;
+                for(int i=0;i<tepdata.size();i++){
+                    SingleArticleData d =tepdata.get(i);
+                    if(!TextUtils.isEmpty(d.getPid())
+                            &&lastPid.equals(d.getPid())){
+                        equalpos = i;
+                        break;
                     }
-                    RedirectPid = "";
                 }
-            } else {
-                //add = 0 没有添加
+                for(int i = equalpos+1;i<tepdata.size();i++){
+                    datas.add(tepdata.get(i));
+                }
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
-                adapter.notifyItemChanged(adapter.getItemCount() - 1);
             }
 
+            if (datas.size() > 0 && (datas.get(0).getType() != SingleType.CONTENT) &&
+                    (datas.get(0).getType() != SingleType.HEADER)) {
+                datas.add(0, new SingleArticleData(SingleType.HEADER, Title,
+                        null, null, null, null, null, null, null));
+            }
 
+            int add = datas.size()-startsize;
+            if(startsize==0){
+                adapter.notifyDataSetChanged();
+            }else{
+                adapter.notifyItemRangeInserted(startsize,add);
+            }
+
+            //打开的时候移动到指定楼层
+            if (!TextUtils.isEmpty(RedirectPid)) {
+                for (int i = 0; i < datas.size(); i++) {
+                    if (!TextUtils.isEmpty(datas.get(i).getPid())
+                            && datas.get(i).getPid().equals(RedirectPid)) {
+                        mRecyclerView.scrollToPosition(i);
+                        break;
+                    }
+                }
+                RedirectPid = "";
+            }
+
+            //重新设置spinner
             pageSpinnerDatas.clear();
             for (int i = 1; i <= page_sum; i++) {
                 pageSpinnerDatas.add(i + "/" + page_sum + "页");
@@ -623,7 +603,7 @@ public class SingleArticleActivity extends BaseActivity
         params.put("editsubmit", "yes");
         //params.put("fid",);
         params.put("tid", Tid);
-        params.put("pid", mydatalist.get(pos).getPid());
+        params.put("pid", datas.get(pos).getPid());
         params.put("delete", "1");
         HttpUtil.post(this, url, params, new ResponseHandler() {
             @Override
@@ -631,12 +611,12 @@ public class SingleArticleActivity extends BaseActivity
                 String res = new String(response);
                 Log.e("resoult", res);
                 if (res.contains("主题删除成功")) {
-                    if (mydatalist.get(pos).getType() == SingleType.CONTENT) {
+                    if (datas.get(pos).getType() == SingleType.CONTENT) {
                         showToast("主题删除成功");
                         finish();
                     } else {
                         showToast("回复删除成功");
-                        mydatalist.remove(pos);
+                        datas.remove(pos);
                         adapter.notifyItemRemoved(pos);
                     }
                 } else {
