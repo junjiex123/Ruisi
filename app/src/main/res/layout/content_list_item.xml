@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bgwhite"
     android:id="@+id/main_window">
 
     <View
@@ -16,8 +15,7 @@
         android:id="@+id/article_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/textColorPrimary"
-        android:textSize="17sp"
+        style="@style/text_18_pri"
         android:textStyle="bold"
         android:padding="12dp"
         tools:text="尴尬，Xbox One 2与PS4.5太快推出压力重重,尴尬，Xbox One 2" />
@@ -123,7 +121,7 @@
     <View
         android:layout_marginTop="4dp"
         android:layout_below="@+id/tv_edit"
-        android:background="@color/bggrey"
+        android:background="@color/bg_secondary"
         android:layout_width="match_parent"
         android:layout_height="12dp"/>
 </RelativeLayout>

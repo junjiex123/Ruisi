@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -20,10 +22,18 @@ public class App extends Application {
     private  Context context;
     private NetworkReceiver receiver= new NetworkReceiver();
 
+
     @Override
     public void onCreate() {
         super.onCreate();
         this.context = getApplicationContext();
+        boolean isDarkMode = PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean("setting_dark_mode", false);
+        if(isDarkMode){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
 
         //注册网络变化广播
         Log.e("application create消息广播","注册广播");

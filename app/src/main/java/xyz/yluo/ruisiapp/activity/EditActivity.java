@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyColorPicker;
 import xyz.yluo.ruisiapp.View.MySmileyPicker;
 import xyz.yluo.ruisiapp.View.MySpinner;
@@ -73,7 +72,10 @@ public class EditActivity extends BaseActivity implements View.OnClickListener{
         initToolBar(true,"编辑帖子");
         typeid_spinner = new MySpinner(this);
         typeiddatas = new ArrayList<>();
-        addToolbarMenu(R.drawable.btn_light_red_bg).setOnClickListener(new View.OnClickListener() {
+
+
+        addToolbarMenu(R.drawable.ic_done_black_24dp)
+                .setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(checkPostInput()){

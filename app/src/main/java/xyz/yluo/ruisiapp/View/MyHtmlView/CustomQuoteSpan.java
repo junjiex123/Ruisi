@@ -1,13 +1,14 @@
 package xyz.yluo.ruisiapp.View.MyHtmlView;
 
+import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.v4.content.ContextCompat;
 import android.text.Layout;
-import android.text.ParcelableSpan;
-import android.text.style.LeadingMarginSpan;
 import android.text.style.LineBackgroundSpan;
 import android.text.style.QuoteSpan;
+
+import xyz.yluo.ruisiapp.R;
 
 /**
  * Created by free2 on 16-7-16.
@@ -16,15 +17,17 @@ import android.text.style.QuoteSpan;
 
 //CharacterStyle
 
-public class CustomQuoteSpan extends QuoteSpan implements LeadingMarginSpan, ParcelableSpan, LineBackgroundSpan{
+public class CustomQuoteSpan extends QuoteSpan implements LineBackgroundSpan{
     private final int backgroundColor;
     private final int stripeColor;
     private final float stripeWidth;
     private final float gap;
 
-    CustomQuoteSpan() {
-        this.backgroundColor = Color.argb(200, 241, 241, 241);
-        this.stripeColor = Color.argb(255, 238, 238, 238);
+    CustomQuoteSpan(Context context) {
+        this.backgroundColor = ContextCompat.
+                getColor(context, R.color.bg_secondary);
+        this.stripeColor = ContextCompat.
+                getColor(context, R.color.colorDivider);
         this.stripeWidth = 10;
         this.gap = 20;
     }

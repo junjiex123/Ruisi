@@ -38,7 +38,7 @@ public class MyAlertDialog extends Dialog implements View.OnClickListener {
     private View mSuccessRightMask;
     private Button mConfirmButton;
     private Button mCancelButton;
-    private FrameLayout mWarningFrame,mErrorFrame,mSuccessFrame,mProgressFram;
+    private FrameLayout mWarningFrame,mErrorFrame,mSuccessFrame;
     private OnCancelClickListener mCancelClickListener;
     private OnConfirmClickListener mConfirmClickListener;
     private boolean mCloseFromCancel;
@@ -112,7 +112,6 @@ public class MyAlertDialog extends Dialog implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alert_dialog);
-
         mDialogView = getWindow().getDecorView().findViewById(android.R.id.content);
         mTitleTextView = (TextView)findViewById(R.id.title_text);
         mContentTextView = (TextView)findViewById(R.id.content_text);
@@ -125,7 +124,6 @@ public class MyAlertDialog extends Dialog implements View.OnClickListener {
         mWarningFrame = (FrameLayout)findViewById(R.id.warning_frame);
         mConfirmButton = (Button)findViewById(R.id.confirm_button);
         mCancelButton = (Button)findViewById(R.id.cancel_button);
-        mProgressFram = (FrameLayout) findViewById(R.id.progress_frame);
         mConfirmButton.setOnClickListener(this);
         mCancelButton.setOnClickListener(this);
 
@@ -142,7 +140,6 @@ public class MyAlertDialog extends Dialog implements View.OnClickListener {
         mSuccessFrame.setVisibility(View.GONE);
         mWarningFrame.setVisibility(View.GONE);
         mConfirmButton.setVisibility(View.VISIBLE);
-        mProgressFram.setVisibility(View.GONE);
         mConfirmButton.setBackgroundResource(R.drawable.btn_light_blue_bg);
         mErrorFrame.clearAnimation();
         mErrorX.clearAnimation();

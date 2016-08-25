@@ -69,7 +69,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
      * 初始化视图
      */
     private void init() {
-        COLOR_SELECT = ContextCompat.getColor(context, R.color.colorPrimary);
+        COLOR_SELECT = ContextCompat.getColor(context, R.color.colorAccent);
         COLOR_UNSELECT = ContextCompat.getColor(context,R.color.colorDisableHintIcon);
         PADDING_8 = DimmenUtils.dip2px(context, PADDING_8);
         PADDING_12 = DimmenUtils.dip2px(context, PADDING_12);
@@ -82,7 +82,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         setOrientation(LinearLayout.HORIZONTAL);// 水平布局
         setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT));
-        setBackgroundResource(R.drawable.divider_top_bg);
+        setBackgroundResource(R.drawable.bottom_tab_bg);
 
         for(int i=0;i<tab_names.length;i++){
             View v = getSingleTab(i);

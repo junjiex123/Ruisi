@@ -1,11 +1,15 @@
 package xyz.yluo.ruisiapp.utils;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import xyz.yluo.ruisiapp.R;
 
 /**
  * Created by free2 on 16-3-19.
@@ -94,9 +98,10 @@ public class GetId {
     }
 
     //htmlcolor 转换成android 的 int color
-    public static int getColor(String str) {
+    public static int getColor(Context c,String str) {
+
         // style="color: #EC1282;">
-        int color = 0xff000000;
+        int color = ContextCompat.getColor(c, R.color.text_color_pri);
         if(str.contains("color")){
             int start = str.indexOf("color");
             int end = str.indexOf(";",start);

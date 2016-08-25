@@ -20,7 +20,9 @@ import xyz.yluo.ruisiapp.R;
 public class ArrowTextView extends TextView {
 
 
-    private int color = ContextCompat.getColor(getContext(), R.color.bluegrey50);
+    private int color = ContextCompat
+            .getColor(getContext(), R.color.bg_secondary);
+
     private Paint paint = new Paint();
     private Path path = new Path();
 

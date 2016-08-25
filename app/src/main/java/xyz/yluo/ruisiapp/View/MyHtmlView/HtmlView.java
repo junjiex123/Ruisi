@@ -33,6 +33,7 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
     private ImageGetter imageGetter;
     private TagHandle tagHandle;
     private SpannableStringBuilder strBuilderContent;
+    private int colorSec = 0;
 
 
     public HtmlView(Context context) {
@@ -68,6 +69,7 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
 
     private void  init(Context context){
         this.context = context;
+        colorSec = ContextCompat.getColor(context,R.color.text_color_sec);
         setMovementMethod(LinkMovementMethod.getInstance());
         setLinkTextColor(0xff529ECC);
         tagHandle = new TagHandle();
@@ -92,7 +94,8 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
 
 
     //获得textView 链接点击
-    private  SpannableStringBuilder getSequence(Context context, String html, ImageGetter getter, TagHandle handler) {
+    private  SpannableStringBuilder getSequence(Context context, String html,
+                                                ImageGetter getter, TagHandle handler) {
         Spanned spannedHtml;
         spannedHtml = Html.fromHtml(html, getter, handler);
         SpannableStringBuilder strBuilder = new SpannableStringBuilder(spannedHtml);
@@ -140,7 +143,6 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
         return strBuilder;
     }
 
-
     private  void replaceImageSpans(final SpannableStringBuilder strBuilder, final ImageSpan imageSpan) {
         final int start = strBuilder.getSpanStart(imageSpan);
         final int end = strBuilder.getSpanEnd(imageSpan);
@@ -173,13 +175,13 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
                 ds.setUnderlineText(false);
-                ds.setColor(0xff888888);
+                ds.setColor(colorSec);
                 float size = ds.getTextSize();
                 ds.setTextSize((float)(0.9*size));
             }
         };
         strBuilder.setSpan(span,start,end,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        strBuilder.setSpan(new CustomQuoteSpan(), start, end, flags);
+        strBuilder.setSpan(new CustomQuoteSpan(context), start, end, flags);
         //strBuilder.setSpan(new RelativeSizeSpan(0.9f), start, end, flags);
     }
 
@@ -205,7 +207,6 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
         };
         strBuilder.setSpan(clickableSpan, start, end, flags);
     }
-
 
     @Override
     public void downloadCallBack(String url, Drawable d) {

@@ -4,6 +4,13 @@
 
     <PreferenceCategory android:title="论坛设置">
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="setting_dark_mode"
+            android:summaryOff="点击启用夜间模式(重启生效)"
+            android:summaryOn="点击启用日间模式(重启生效)"
+            android:title="夜间模式"/>
+
         <ListPreference
             android:entries="@array/setting_switch_url"
             android:entryValues="@array/setting_switch_url_value"

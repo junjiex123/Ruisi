@@ -43,7 +43,7 @@ public class FriendAdapter extends BaseAdapter {
     @Override
     protected BaseViewHolder getItemViewHolder(ViewGroup parent, int viewType) {
         return new FriendViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.activity_friend_item, parent, false));
+                .inflate(R.layout.friend_item, parent, false));
     }
 
     private class FriendViewHolder extends BaseViewHolder {
@@ -86,7 +86,7 @@ public class FriendAdapter extends BaseAdapter {
             UserDetailActivity.openWithAnimation(activity, username, user_image, single.getUid());
         }
 
-        protected void item_click() {
+        void item_click() {
             String uid = datas.get(getAdapterPosition()).getUid();
             String username = datas.get(getAdapterPosition()).getUserName();
             String url = "home.php?mod=space&do=pm&subop=view&touid=" + uid + "&mobile=2";

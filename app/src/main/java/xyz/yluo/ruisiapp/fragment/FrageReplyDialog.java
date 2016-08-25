@@ -174,7 +174,8 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
         });
         v.findViewById(R.id.action_smiley).setOnClickListener(this);
         ds = getSmileys();
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(
+                getActivity(), 4, LinearLayoutManager.HORIZONTAL, false);
         adapter = new SmileyAdapter(new ListItemClickListener() {
             @Override
             public void onListItemClick(View v, int position) {

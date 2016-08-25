@@ -1,6 +1,7 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -134,7 +135,8 @@ public class PostListAdapter extends BaseAdapter {
             Picasso.with(activity).load(imageUrl).placeholder(R.drawable.image_placeholder).into(author_img);
 
             int color = single.getTitleColor();
-            article_title.setTextColor(single.isRead()?0xff888888 :color);
+            int readcolor = ContextCompat.getColor(activity,R.color.text_color_sec);
+            article_title.setTextColor(single.isRead()?readcolor :color);
 
             article_title.setText(single.getTitle());
             author_name.setText(single.getAuthor());

@@ -43,7 +43,7 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
 
         listView = new ListView(mContext);
         listView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        listView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.background));
+        listView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.bg_secondary));
         listView.setOnItemClickListener(this);
         setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);

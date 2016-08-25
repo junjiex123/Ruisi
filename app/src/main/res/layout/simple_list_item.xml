@@ -40,10 +40,10 @@
             tools:text="150" />
 
     </LinearLayout>
-
     <View
-        style="@style/Divider"
-        android:layout_gravity="bottom"
-        android:layout_marginTop="@dimen/dimen_16" />
+        android:layout_marginTop="@dimen/dimen_16"
+        android:background="@color/colorDivider"
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"/>
 
 </LinearLayout>

@@ -36,7 +36,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -47,16 +46,16 @@
             android:autoLink="web"
             android:lineSpacingMultiplier="1.4"
             android:padding="16dp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="16sp" />
+            style="@style/text_16_pri" />
 
         <TextView
+            android:gravity="center"
+            style="@style/text_16_sec"
             android:id="@+id/version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:textSize="18sp"
             tools:text="当前版本1.4 beta" />
 
     </RelativeLayout>

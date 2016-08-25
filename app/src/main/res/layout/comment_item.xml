@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/main_window"
-    android:background="@color/bgwhite">
+    android:id="@+id/main_window">
     <xyz.yluo.ruisiapp.View.CircleImageView
         android:layout_marginTop="8dp"
         android:id="@+id/article_user_image"

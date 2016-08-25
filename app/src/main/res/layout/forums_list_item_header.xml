@@ -4,8 +4,8 @@
     android:id="@+id/forum_list_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bggrey"
     android:gravity="start|center_vertical"
+    android:background="@color/bg_secondary"
     android:orientation="horizontal">
 
     <TextView
@@ -16,7 +16,7 @@
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
         android:paddingTop="8dp"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorAccent"
         android:textSize="12sp"
         tools:text="西电生活" />
 </LinearLayout>

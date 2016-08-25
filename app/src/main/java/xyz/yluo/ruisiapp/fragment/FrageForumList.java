@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -91,7 +92,8 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
             }
         });
         userImg.setOnClickListener(this);
-        recyclerView.addItemDecoration(new MyGridDivider(1));
+        recyclerView.addItemDecoration(new MyGridDivider(1,
+                ContextCompat.getColor(getActivity(),R.color.colorDivider)));
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 

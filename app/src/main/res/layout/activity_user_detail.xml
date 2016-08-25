@@ -20,7 +20,7 @@
             android:background="@drawable/bg02"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleGravity="center_horizontal|bottom"
-            app:expandedTitleTextAppearance="@style/text_20_white"
+            app:expandedTitleTextAppearance="@style/text_20_pri"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView

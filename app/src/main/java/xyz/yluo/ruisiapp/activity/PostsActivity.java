@@ -266,7 +266,7 @@ public class PostsActivity extends BaseActivity implements
                     Elements tempEles = src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]");
                     String title = tempEles.text();
                     String titleUrl = tempEles.attr("href");
-                    int titleColor = GetId.getColor(tempEles.attr("style"));
+                    int titleColor = GetId.getColor(PostsActivity.this,tempEles.attr("style"));
 
                     Log.e("style",src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]").attr("style"));
                     Log.e("titleColor",titleColor+"");
@@ -312,7 +312,7 @@ public class PostsActivity extends BaseActivity implements
             Elements links = body.select("li");
             for (Element src : links) {
                 String url = src.select("a").attr("href");
-                int titleColor = GetId.getColor(src.select("a").attr("style"));
+                int titleColor = GetId.getColor(PostsActivity.this,src.select("a").attr("style"));
                 String author = src.select(".by").text();
                 src.select("span.by").remove();
                 String title = src.select("a").text();

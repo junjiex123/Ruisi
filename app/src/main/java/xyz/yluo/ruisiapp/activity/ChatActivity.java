@@ -27,6 +27,7 @@ import xyz.yluo.ruisiapp.data.ChatListData;
 import xyz.yluo.ruisiapp.fragment.FrageReplyDialog;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;
+import xyz.yluo.ruisiapp.utils.DimmenUtils;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
@@ -71,6 +72,8 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
         adapter = new ChatListAdapter(this, datas);
         recycler_view.setLayoutManager(layoutManager);
         recycler_view.setAdapter(adapter);
+        recycler_view.setClipToPadding(false);
+        recycler_view.setPadding(0,0,0, DimmenUtils.dip2px(this,50));
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

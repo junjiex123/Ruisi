@@ -60,12 +60,10 @@
     <ScrollView
         android:clipToPadding="false"
         android:paddingBottom="@dimen/BottomBarHeight"
-        android:background="@color/bggrey"
         android:scrollbars="none"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
-            android:background="@color/bgwhite"
             android:id="@+id/container"
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -87,10 +85,9 @@
                     android:layout_height="24dp" />
                 <TextView
                     android:text="签到中心"
-                    android:textColor="@color/textColorPrimary"
+                    style="@style/text_16_pri"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="12dp"
-                    android:textSize="16sp"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content" />
@@ -121,10 +118,9 @@
                     android:layout_height="24dp" />
                 <TextView
                     android:text="我的帖子"
-                    android:textColor="@color/textColorPrimary"
+                    style="@style/text_16_pri"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="12dp"
-                    android:textSize="16sp"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content" />
@@ -155,10 +151,9 @@
                     android:layout_height="24dp" />
                 <TextView
                     android:text="我的收藏"
-                    android:textColor="@color/textColorPrimary"
+                    style="@style/text_16_pri"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="12dp"
-                    android:textSize="16sp"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content" />
@@ -189,10 +184,9 @@
                     android:layout_height="24dp" />
                 <TextView
                     android:text="我的好友"
-                    android:textColor="@color/textColorPrimary"
+                    style="@style/text_16_pri"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="12dp"
-                    android:textSize="16sp"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content" />
@@ -223,10 +217,9 @@
                     android:layout_height="24dp" />
                 <TextView
                     android:text="浏览历史"
-                    android:textColor="@color/textColorPrimary"
+                    style="@style/text_16_pri"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="12dp"
-                    android:textSize="16sp"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content" />
@@ -241,7 +234,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"/>
             <View
-                android:background="@color/bggrey"
+                android:background="@color/bg_secondary"
                 android:layout_width="match_parent"
                 android:layout_height="12dp"/>
             <View
@@ -264,10 +257,9 @@
                     android:layout_height="24dp" />
                 <TextView
                     android:text="关于本程序"
-                    android:textColor="@color/textColorPrimary"
+                    style="@style/text_16_pri"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="12dp"
-                    android:textSize="16sp"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content" />
@@ -298,10 +290,9 @@
                     android:layout_height="24dp" />
                 <TextView
                     android:text="睿思帮助"
-                    android:textColor="@color/textColorPrimary"
+                    style="@style/text_16_pri"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="12dp"
-                    android:textSize="16sp"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content" />

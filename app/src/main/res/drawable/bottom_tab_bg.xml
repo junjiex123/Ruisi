@@ -11,7 +11,7 @@
     <!-- 主体背景颜色值 -->
     <item android:top="0.8dp"> <!--设置只有底部有边框-->
         <shape>
-            <solid android:color="#f1f8f8f8" />
+            <solid android:color="@color/bg_blur" />
         </shape>
     </item>
 </layer-list>

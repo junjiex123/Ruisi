@@ -2,6 +2,7 @@ package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,7 +91,9 @@ public class HotNewListAdapter extends BaseAdapter {
         @Override
         void setData(int position) {
             ArticleListData single = DataSet.get(position);
-            article_title.setTextColor(single.isRead() ? 0xff888888 : 0xff000000);
+            int colorRead = ContextCompat.getColor(activity,R.color.text_color_sec);
+            int color = single.getTitleColor();
+            article_title.setTextColor(single.isRead() ? colorRead : color);
             article_title.setText(single.getTitle());
             author_name.setText(single.getAuthor());
             reply_count.setText(single.getReplayCount());
@@ -110,7 +113,7 @@ public class HotNewListAdapter extends BaseAdapter {
     //图片切换view
     private class HeadViewHolder extends BaseViewHolder{
         private MyGuildView guildView;
-        public HeadViewHolder(View itemView) {
+        HeadViewHolder(View itemView) {
             super(itemView);
             guildView  = (MyGuildView) itemView.findViewById(R.id.myGuideView);
 

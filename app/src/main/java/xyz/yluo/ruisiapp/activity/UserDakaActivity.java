@@ -1,9 +1,11 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -57,7 +59,9 @@ public class UserDakaActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_daka);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.transparent));
+        }
         input = (TextView) findViewById(R.id.input);
         main_window = (CoordinatorLayout) findViewById(R.id.main_window);
         spinner_select = (Spinner) findViewById(R.id.spinner_select);

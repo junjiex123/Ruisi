@@ -390,8 +390,12 @@ public class SingleArticleActivity extends BaseActivity
             case R.id.btn_reply:
                 if (isLogin()) {
                     Log.e("reply","url"+replyUrl);
+                    String hinttext = Title;
+                    if(hinttext.length()>10){
+                        hinttext = hinttext.substring(0,10) +"...";
+                    }
                     //String url,int type,long lastreplyTime,boolean isEnableTail,String userName,String info
-                    String hint = "回复帖子：" + Title;
+                    String hint = "回复帖子:" + hinttext;
                     FrageReplyDialog dialog = FrageReplyDialog.newInstance(replyUrl, FrageReplyDialog.REPLY_LZ, replyTime, true, hint, Title);
                     dialog.setCallBack(SingleArticleActivity.this);
                     dialog.show(getFragmentManager(), "reply");

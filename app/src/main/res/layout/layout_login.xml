@@ -99,7 +99,7 @@
             android:visibility="gone" />
         <Button
             android:id="@+id/btn_login"
-            style="@style/myButton"
+            style="@style/btn_pri"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"

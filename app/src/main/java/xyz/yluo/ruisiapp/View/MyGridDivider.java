@@ -1,7 +1,6 @@
 package xyz.yluo.ruisiapp.View;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
@@ -13,14 +12,12 @@ import android.view.View;
  */
 public class MyGridDivider extends RecyclerView.ItemDecoration{
     private int devideWidth = 2;
-    private int color = 0xF1F1F1;
     private final Paint maint= new Paint();
 
-    public MyGridDivider(int devideWidth)
+    public MyGridDivider(int devideWidth,int color)
     {
 
         this.devideWidth =devideWidth;
-        color = Color.argb(200,241,241,241);
         maint.setColor(color);
         maint.setStyle(Paint.Style.STROKE);
         maint.setAntiAlias(true);

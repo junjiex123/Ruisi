@@ -41,8 +41,7 @@
             android:layout_marginTop="40dp" />
 
         <TextView
-            style="@style/text_12_sec"
-            android:textColor="#88333333"
+            style="@style/text_14_sec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
@@ -50,13 +49,11 @@
             android:text="正在准备数据" />
 
         <TextView
-            style="@style/text_16_pri"
+            style="@style/text_14_sec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:text="©2016 xidianrs.cn"
-            android:textColor="#88333333"
-            android:textSize="15sp" />
+            android:layout_marginBottom="6dp"
+            android:text="©2016 xidianrs.cn" />
     </LinearLayout>
 
     <LinearLayout
@@ -69,7 +66,7 @@
 
         <Button
             android:id="@+id/btn_login_inner"
-            style="@style/myButton"
+            style="@style/btn_pri"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="12dp"
             android:layout_width="0dp"
@@ -81,7 +78,7 @@
         <Button
             android:layout_marginEnd="8dp"
             android:id="@+id/btn_login_outer"
-            style="@style/myButton"
+            style="@style/btn_pri"
             android:layout_width="0dp"
             android:layout_height="36dp"
             android:layout_marginStart="12dp"
