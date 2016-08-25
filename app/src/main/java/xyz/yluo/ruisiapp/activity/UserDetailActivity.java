@@ -214,17 +214,14 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
             getMenuInflater().inflate(R.menu.menu_userdetail, menu);
             return true;
         }
-        return false;
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_add) {
-            if (userUid.equals(App.getUid(this))) {
-                Toast.makeText(this, "你不能添加自己为好友", Toast.LENGTH_SHORT).show();
-                return super.onOptionsItemSelected(item);
-            } else if (!App.ISLOGIN(this)) {
+            if (!App.ISLOGIN(this)) {
                 Snackbar.make(layout, "你还没有登陆，无法进行操作", Snackbar.LENGTH_LONG)
                         .setAction("点我登陆", new View.OnClickListener() {
                             @Override

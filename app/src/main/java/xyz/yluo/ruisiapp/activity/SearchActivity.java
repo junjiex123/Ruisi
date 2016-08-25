@@ -50,7 +50,7 @@ import xyz.yluo.ruisiapp.utils.ImeUtil;
  *
  * http://bbs.rs.xidian.me/search.php?mod=forum&searchid=865&orderby=lastpost&ascdesc=desc&searchsubmit=yes&kw=%E6%B5%8B%E8%AF%95&mobile=2
  */
-public class ActivitySearch extends BaseActivity
+public class SearchActivity extends BaseActivity
         implements LoadMoreListener.OnLoadMoreListener,
         View.OnClickListener,
         EditText.OnEditorActionListener{
@@ -114,7 +114,7 @@ public class ActivitySearch extends BaseActivity
                 }
             });
         }else {
-            ImeUtil.show_ime(ActivitySearch.this, search_input);
+            ImeUtil.show_ime(SearchActivity.this, search_input);
         }
     }
 
@@ -149,7 +149,10 @@ public class ActivitySearch extends BaseActivity
                 String res = new String(response);
                 if (res.contains("秒内只能进行一次搜索")) {
                     getDataFail("抱歉，您在 15 秒内只能进行一次搜索");
-                } else {
+                }else if(res.contains("没有找到匹配结果")){
+                    getDataFail("对不起，没有找到匹配结果。");
+                }
+                else {
                     new GetResultListTaskMe().execute(new String(response));
                 }
             }
@@ -221,14 +224,15 @@ public class ActivitySearch extends BaseActivity
         }
     }
 
-
     private class GetResultListTaskMe extends AsyncTask<String, Void, List<SimpleListData>> {
+        private String searchRes = "";
         @Override
         protected List<SimpleListData> doInBackground(String... params) {
             String res = params[0];
             List<SimpleListData> dataset = new ArrayList<>();
             Document doc = Jsoup.parse(res);
             Elements body = doc.select("div[class=threadlist]"); // 具有 href 属性的链接
+            searchRes = body.select("h2.thread_tit").text();
             //获得总页数
             //获取总页数 和当前页数
             if (doc.select(".pg").text().length() > 0) {
@@ -255,6 +259,9 @@ public class ActivitySearch extends BaseActivity
         @Override
         protected void onPostExecute(List<SimpleListData> dataset) {
             isEnableLoadMore = true;
+            if(!TextUtils.isEmpty(searchRes)&&currentPage==1){
+                nav_title.setText(searchRes.substring(3));
+            }
             if (dataset.size() == 0) {
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
             } else {
@@ -264,6 +271,9 @@ public class ActivitySearch extends BaseActivity
                 }
                 int start = datas.size();
                 datas.addAll(dataset);
+                if(start==0){
+                    adapter.notifyDataSetChanged();
+                }
                 adapter.notifyItemRangeInserted(start, dataset.size());
             }
         }
@@ -290,7 +300,7 @@ public class ActivitySearch extends BaseActivity
 
                 @Override
                 public void onAnimationEnd(Animator animator) {
-                    ImeUtil.show_ime(ActivitySearch.this, search_input);
+                    ImeUtil.show_ime(SearchActivity.this, search_input);
                 }
 
                 @Override
@@ -305,7 +315,7 @@ public class ActivitySearch extends BaseActivity
             });
         }else{
             search_card.setVisibility(View.VISIBLE);
-            ImeUtil.show_ime(ActivitySearch.this, search_input);
+            ImeUtil.show_ime(SearchActivity.this, search_input);
         }
     }
 

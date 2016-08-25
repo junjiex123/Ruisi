@@ -28,8 +28,10 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
@@ -82,8 +84,9 @@ public class SingleArticleActivity extends BaseActivity
     private List<String> pageSpinnerDatas = new ArrayList<>();
     private String Title, AuthorName, Tid, RedirectPid = "";
     private Spinner spinner;
-
     private boolean showPlainText = false;
+    //记录已经加载的楼层
+    private Set<String> pids = new HashSet<>();
 
     public static void open(Context context, String url, @Nullable String author) {
         Intent intent = new Intent(context, SingleArticleActivity.class);
@@ -166,7 +169,7 @@ public class SingleArticleActivity extends BaseActivity
             if (!App.IS_SCHOOL_NET) {
                 url = url + "&mobile=2";
             }
-            HttpUtil.head(this, url, new ResponseHandler() {
+            HttpUtil.head(this, url,null,new ResponseHandler() {
                 @Override
                 public void onSuccess(byte[] response) {
                     int page = GetId.getPage(new String(response));
@@ -255,6 +258,7 @@ public class SingleArticleActivity extends BaseActivity
     }
 
     private void refresh() {
+        adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -411,6 +415,7 @@ public class SingleArticleActivity extends BaseActivity
         switch (view.getId()) {
             case R.id.btn_reply:
                 if (isLogin()) {
+                    Log.e("reply","url"+replyUrl);
                     //String url,int type,long lastreplyTime,boolean isEnableTail,String userName,String info
                     String hint = "回复：" + AuthorName;
                     FrageReplyDialog dialog = FrageReplyDialog.newInstance(replyUrl, FrageReplyDialog.REPLY_LZ, replyTime, true, hint, Title);
@@ -481,6 +486,12 @@ public class SingleArticleActivity extends BaseActivity
                 int h_end = htmlData.indexOf('\"', h_start + 1);
                 Title = htmlData.substring(h_start + 1, h_end);
                 isGetTitle = true;
+            }
+
+            //获取回复/hash
+            if (doc.select("input[name=formhash]").first() != null) {
+               replyUrl = doc.select("form#fastpostform").attr("action");
+               //String hash = doc.select("input[name=formhash]").attr("value");
             }
             int index = 0;
             if ((page_now == 1 && mydatalist.size() == 0) || page_now < page_sum) {

@@ -26,7 +26,7 @@ import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.View.MyGridDivider;
-import xyz.yluo.ruisiapp.activity.ActivitySearch;
+import xyz.yluo.ruisiapp.activity.SearchActivity;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.PostsActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
@@ -182,7 +182,7 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
         switch (view.getId()){
             case R.id.search:
                 if(isLogin()){
-                    switchActivity(ActivitySearch.class);
+                    switchActivity(SearchActivity.class);
                 }
                 break;
             case R.id.img:

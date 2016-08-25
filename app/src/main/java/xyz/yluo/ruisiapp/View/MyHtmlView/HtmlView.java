@@ -16,7 +16,6 @@ import android.text.style.QuoteSpan;
 import android.text.style.TextAppearanceSpan;
 import android.text.style.URLSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -35,10 +34,6 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
     private TagHandle tagHandle;
     private SpannableStringBuilder strBuilderContent;
 
-
-    public SpannableStringBuilder getStrBuilderContent() {
-        return strBuilderContent;
-    }
 
     public HtmlView(Context context) {
         super(context);
@@ -67,10 +62,9 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         if(imageGetter !=null){
-            imageGetter.setNeedStop(true);
+            imageGetter.stopDown();
         }
     }
-
 
     private void  init(Context context){
         this.context = context;
@@ -83,20 +77,14 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
         if(isLoadImage&& imageGetter ==null){
             imageGetter = new ImageGetter(context,this);
         }
-        Log.i("my htmltext","=====new strBuilderContent=====");
         strBuilderContent =  getSequence(context,txt, imageGetter, tagHandle);
         setText(strBuilderContent);
     }
 
-    public void setSpannedHtmlText(SpannableStringBuilder t){
-        this.strBuilderContent = t;
-        setText(t);
-    }
 
     private void upDateTextImage(){
         ImageSpan[] spans = strBuilderContent.getSpans(0, strBuilderContent.length(), ImageSpan.class);
         for(ImageSpan span:spans){
-            Log.i("myhtml text","replace ImageSpan");
             replaceImageSpans(strBuilderContent,span);
         }
         setText(strBuilderContent);
@@ -105,7 +93,7 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
 
     //获得textView 链接点击
     private  SpannableStringBuilder getSequence(Context context, String html, ImageGetter getter, TagHandle handler) {
-        Spanned spannedHtml = null;
+        Spanned spannedHtml;
         spannedHtml = Html.fromHtml(html, getter, handler);
         SpannableStringBuilder strBuilder = new SpannableStringBuilder(spannedHtml);
 
@@ -113,10 +101,8 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
 
         for (Object oo : obj) {
             if (oo instanceof URLSpan) {
-                Log.i("myhtml text","replace urlspan");
                 replaceLinkSpans(context, strBuilder, (URLSpan) oo);
             } else if (oo instanceof QuoteSpan) {
-                Log.i("myhtml text","replace QuoteSpan");
                 replaceQuoteSpans(strBuilder, (QuoteSpan) oo);
             }
         }
@@ -221,11 +207,6 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
     }
 
 
-    /**
-     * 图片加载完成回掉
-     * @param url
-     * @param d
-     */
     @Override
     public void downloadCallBack(String url, Drawable d) {
         upDateTextImage();

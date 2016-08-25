@@ -22,6 +22,7 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
 import xyz.yluo.ruisiapp.data.ChatListData;
 import xyz.yluo.ruisiapp.fragment.FrageReplyDialog;
@@ -39,7 +40,6 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
 
     private RecyclerView recycler_view;
     private SwipeRefreshLayout refreshLayout;
-    private FloatingActionButton btn_chat;
 
     private List<ChatListData> datas = new ArrayList<>();
     private ChatListAdapter adapter;
@@ -51,7 +51,6 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
     private long replyTime = 0;
 
     public static void open(Context context, String username, String url) {
-        /*isopenfromwebview 是从webview打开的是新建的回话*/
         Intent intent = new Intent(context, ChatActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("username", username);
@@ -65,7 +64,7 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
         setContentView(R.layout.list_toolbar_btn);
 
         recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
-        btn_chat = (FloatingActionButton) findViewById(R.id.btn);
+        FloatingActionButton btn_chat = (FloatingActionButton) findViewById(R.id.btn);
         btn_chat.setImageResource(R.drawable.ic_reply_white_24dp);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
@@ -73,7 +72,6 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
         adapter = new ChatListAdapter(this, datas);
         recycler_view.setLayoutManager(layoutManager);
         recycler_view.setAdapter(adapter);
-        refresh();
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -93,7 +91,8 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
                 dialog.show(getFragmentManager(), "chate");
             }
         });
-        new GetDataTask().execute(url);
+
+        refresh();
     }
 
     private void refresh() {
@@ -111,7 +110,6 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
 
     @Override
     public void onReplyFinish(int status, String txt) {
-        Log.i("reply dialog callbak", "status:" + status + " info:" + txt);
         if (status == RESULT_OK) {
             replyTime = System.currentTimeMillis();
             String userImage = UrlUtils.getAvaterurlm(App.getUid(this));
@@ -169,13 +167,14 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             adapter.notifyDataSetChanged();
+            adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
             recycler_view.scrollToPosition(datas.size());
             refreshLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     refreshLayout.setRefreshing(false);
                 }
-            }, 500);
+            }, 400);
         }
     }
 

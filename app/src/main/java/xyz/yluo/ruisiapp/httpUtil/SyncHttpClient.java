@@ -123,8 +123,8 @@ public class SyncHttpClient {
         request(url, Method.POST, map, handler);
     }
 
-    public void head(final String url, final ResponseHandler handler) {
-        request(url, Method.HEAD, null, handler);
+    public void head(final String url,final Map<String, String> map, final ResponseHandler handler) {
+        request(url, Method.HEAD, map, handler);
     }
 
     void request(final String url, final Method method, final Map<String, String> map,
@@ -151,6 +151,7 @@ public class SyncHttpClient {
                 Log.i("head",connection.getHeaderFields().toString());
                 String location = connection.getHeaderField("Location");
                 handler.sendSuccessMessage(location.getBytes());
+                connection.connect();
                 return;
             }
 //            处理重定向

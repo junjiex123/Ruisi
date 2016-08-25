@@ -51,9 +51,9 @@ public class HttpUtil {
         client.post(getUrl(url), map, handler);
     }
 
-    public static void head(Context context, String url, ResponseHandler handler) {
+    public static void head(Context context, String url,Map<String, String> params,ResponseHandler handler) {
         init(context);
-        client.head(getUrl(url), handler);
+        client.head(getUrl(url),params, handler);
     }
 
     private static void init(Context context) {
