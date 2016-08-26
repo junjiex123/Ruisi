@@ -68,11 +68,11 @@ public class SingleArticleAdapter extends BaseAdapter {
     protected BaseAdapter.BaseViewHolder getItemViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case CONTENT:
-                return new ArticleContentViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.content_list_item, parent, false));
+                return new ArticleContentViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_content, parent, false));
             case HEADER:
-                return new HeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.need_load_content_item, parent, false));
+                return new HeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_content_h, parent, false));
             default: // TYPE_COMMENT
-                return new CommentViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.comment_item, parent, false));
+                return new CommentViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comment, parent, false));
         }
     }
 

@@ -30,7 +30,7 @@ public class SmileyAdapter extends RecyclerView.Adapter<SmileyAdapter.SmileyView
 
     @Override
     public SmileyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new SmileyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.smiley_item, parent, false));
+        return new SmileyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_smiley, parent, false));
     }
 
     @Override

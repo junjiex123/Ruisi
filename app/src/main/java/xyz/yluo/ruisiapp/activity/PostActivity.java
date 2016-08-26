@@ -54,7 +54,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 一楼是楼主
  * 其余是评论
  */
-public class SingleArticleActivity extends BaseActivity
+public class PostActivity extends BaseActivity
         implements ListItemClickListener, LoadMoreListener.OnLoadMoreListener,
         FrageReplyDialog.replyCompeteCallBack, View.OnClickListener {
 
@@ -83,7 +83,7 @@ public class SingleArticleActivity extends BaseActivity
     private boolean showPlainText = false;
 
     public static void open(Context context, String url, @Nullable String author) {
-        Intent intent = new Intent(context, SingleArticleActivity.class);
+        Intent intent = new Intent(context, PostActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("url", url);
         intent.putExtra("author", TextUtils.isEmpty(author) ? "null" : author);
@@ -283,7 +283,7 @@ public class SingleArticleActivity extends BaseActivity
                     //String url,int type,long lastreplyTime,boolean isEnableTail,String userName,String info
                     FrageReplyDialog dialog = FrageReplyDialog.newInstance(replyUrl, FrageReplyDialog.REPLY_CZ, replyTime,
                             true, replyUserInfo, ref);
-                    dialog.setCallBack(SingleArticleActivity.this);
+                    dialog.setCallBack(PostActivity.this);
                     dialog.show(getFragmentManager(), "reply");
                 }
                 break;
@@ -397,7 +397,7 @@ public class SingleArticleActivity extends BaseActivity
                     //String url,int type,long lastreplyTime,boolean isEnableTail,String userName,String info
                     String hint = "回复帖子:" + hinttext;
                     FrageReplyDialog dialog = FrageReplyDialog.newInstance(replyUrl, FrageReplyDialog.REPLY_LZ, replyTime, true, hint, Title);
-                    dialog.setCallBack(SingleArticleActivity.this);
+                    dialog.setCallBack(PostActivity.this);
                     dialog.show(getFragmentManager(), "reply");
                 }
                 break;
@@ -512,7 +512,7 @@ public class SingleArticleActivity extends BaseActivity
                     AuthorName = username;
                     if (!isSaveToDataBase) {
                         //插入数据库
-                        MyDB myDB = new MyDB(SingleArticleActivity.this, MyDB.MODE_WRITE);
+                        MyDB myDB = new MyDB(PostActivity.this, MyDB.MODE_WRITE);
                         myDB.handSingleReadHistory(Tid, Title, AuthorName);
                         isSaveToDataBase = true;
                     }
@@ -536,7 +536,7 @@ public class SingleArticleActivity extends BaseActivity
             }, 400);
 
             if(!TextUtils.isEmpty(errorText)){
-                Toast.makeText(SingleArticleActivity.this,errorText,Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostActivity.this,errorText,Toast.LENGTH_SHORT).show();
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
                 return;
             }

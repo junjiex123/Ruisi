@@ -233,7 +233,7 @@ public class FrageHelp extends BaseFragment {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.frage_help;
+        return R.layout.fragment_help;
     }
 
 }

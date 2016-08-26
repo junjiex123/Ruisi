@@ -33,6 +33,7 @@ import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 
 public class FrageMessage extends BaseFragment {
     protected RecyclerView recycler_view;
+    private View pm_badge;
     protected SwipeRefreshLayout refreshLayout;
     private MessageAdapter adapter;
     private List<MessageData> datas;
@@ -40,15 +41,36 @@ public class FrageMessage extends BaseFragment {
     int last_message_id  = 0;
     int current_noticeid = 1;
     private boolean lastLoginState = false;
+    private boolean isHaveReply,isHavePm;
 
-    public FrageMessage() {
+    public static FrageMessage newInstance(boolean isHaveReply,boolean isHavePm) {
+        Bundle args = new Bundle();
+        args.putBoolean("isHaveReply",isHaveReply);
+        args.putBoolean("isHavePm",isHavePm);
+        FrageMessage fragment = new FrageMessage();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         datas = new ArrayList<>();
-
+        Bundle bundle = getArguments();//从activity传过来的Bundle
+        if (bundle != null) {
+            isHaveReply = bundle.getBoolean("isHaveReply",false);
+            isHavePm = bundle.getBoolean("isHavePm",false);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
+        pm_badge = mRootView.findViewById(R.id.pm_badge);
+        if(isHavePm){
+            pm_badge.setVisibility(View.VISIBLE);
+        }
         recycler_view = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         //设置可以滑出底栏
         recycler_view.setClipToPadding(false);
@@ -216,7 +238,6 @@ public class FrageMessage extends BaseFragment {
 
     //获得pm消息
     private class GetUserPmTask extends AsyncTask<String, Void, List<MessageData>> {
-
         @Override
         protected List<MessageData> doInBackground(String... params) {
             //pmbox
@@ -241,6 +262,10 @@ public class FrageMessage extends BaseFragment {
         @Override
         protected void onPostExecute(List<MessageData> tempdatas) {
             finishGetData(tempdatas);
+            if(isHavePm){
+                isHavePm = false;
+                pm_badge.setVisibility(View.GONE);
+            }
         }
     }
 }

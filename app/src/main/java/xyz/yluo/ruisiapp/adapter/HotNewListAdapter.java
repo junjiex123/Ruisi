@@ -13,7 +13,7 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyGuildView;
-import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
+import xyz.yluo.ruisiapp.activity.PostActivity;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.data.GalleryData;
 
@@ -28,11 +28,12 @@ public class HotNewListAdapter extends BaseAdapter {
     private List<ArticleListData> DataSet;
     private List<GalleryData> galleryDatas;
     private Activity activity;
-
+    private int readcolor;
     public HotNewListAdapter(Activity activity, List<ArticleListData> DataSet, @Nullable List<GalleryData> galleryDatas) {
         this.DataSet = DataSet;
         this.activity = activity;
         this.galleryDatas = galleryDatas;
+        readcolor= ContextCompat.getColor(activity,R.color.text_color_sec);
     }
 
 
@@ -59,9 +60,9 @@ public class HotNewListAdapter extends BaseAdapter {
     protected BaseViewHolder getItemViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case TYPE_ARTICLE_LIST:
-                return new NormalViewHolderMe(LayoutInflater.from(parent.getContext()).inflate(R.layout.main_list_item_me, parent, false));
+                return new NormalViewHolderMe(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post_me, parent, false));
             default:
-                return new HeadViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.gallery_list_item, parent, false));
+                return new HeadViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_banner, parent, false));
         }
     }
 
@@ -91,9 +92,9 @@ public class HotNewListAdapter extends BaseAdapter {
         @Override
         void setData(int position) {
             ArticleListData single = DataSet.get(position);
-            int colorRead = ContextCompat.getColor(activity,R.color.text_color_sec);
             int color = single.getTitleColor();
-            article_title.setTextColor(single.isRead() ? colorRead : color);
+
+            article_title.setTextColor(single.isRead()?readcolor :color);
             article_title.setText(single.getTitle());
             author_name.setText(single.getAuthor());
             reply_count.setText(single.getReplayCount());
@@ -106,7 +107,7 @@ public class HotNewListAdapter extends BaseAdapter {
                 single_data.setRead(true);
                 notifyItemChanged(getAdapterPosition());
             }
-            SingleArticleActivity.open(activity, single_data.getTitleUrl(), single_data.getAuthor());
+            PostActivity.open(activity, single_data.getTitleUrl(), single_data.getAuthor());
         }
     }
 
@@ -126,7 +127,7 @@ public class HotNewListAdapter extends BaseAdapter {
                 public void onBannerItemClick(View view, int position) {
                     String titleUrl = galleryDatas.get(position).getTitleUrl();
                     if(!TextUtils.isEmpty(titleUrl)){
-                        SingleArticleActivity.open(activity,titleUrl,null);
+                        PostActivity.open(activity,titleUrl,null);
                     }
                 }
             });

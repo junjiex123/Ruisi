@@ -23,11 +23,11 @@
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
+            android:theme="@style/AppTheme"
             android:name=".activity.HomeActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
@@ -40,7 +40,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activity.SingleArticleActivity"
+            android:name=".activity.PostActivity"
             android:exported="true"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
@@ -54,7 +54,7 @@
             android:label="登陆手机睿思"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.UserDakaActivity"
+            android:name=".activity.SignActivity"
             android:label="签到中心"
             android:screenOrientation="portrait"/>
         <activity
@@ -79,8 +79,7 @@
         <service android:name=".downloadfile.DownloadService" />
 
         <activity
-            android:name=".activity.FragementActivity"
-            android:label="@string/title_activity_fragement"/>
+            android:name=".activity.FragementActivity"/>
     </application>
 
 </manifest>

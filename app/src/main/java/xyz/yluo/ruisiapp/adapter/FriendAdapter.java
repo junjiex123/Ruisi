@@ -43,7 +43,7 @@ public class FriendAdapter extends BaseAdapter {
     @Override
     protected BaseViewHolder getItemViewHolder(ViewGroup parent, int viewType) {
         return new FriendViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.friend_item, parent, false));
+                .inflate(R.layout.item_friend, parent, false));
     }
 
     private class FriendViewHolder extends BaseViewHolder {

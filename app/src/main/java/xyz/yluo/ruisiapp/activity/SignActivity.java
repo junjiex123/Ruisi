@@ -38,7 +38,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * Created by free2 on 16-3-15.
  * 签到activity
  */
-public class UserDakaActivity extends BaseActivity {
+public class SignActivity extends BaseActivity {
 
     protected TextView input;
     protected CoordinatorLayout main_window;

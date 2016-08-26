@@ -137,6 +137,9 @@ class ImageGetter implements Html.ImageGetter{
                 //这是表情文件 返回的同时还要存入文件
                 if(source.contains("static/image/smiley")){
                     File dir = new File(context.getFilesDir()+"/smiley");
+                    if(!dir.exists()){
+                        Log.e("image getter","创建目录"+dir.mkdirs());
+                    }
                     String fileName = source.substring(source.lastIndexOf('/'));
                     File f = new File(dir+fileName);
                     if(!f.exists()){

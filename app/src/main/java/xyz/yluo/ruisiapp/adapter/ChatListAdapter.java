@@ -51,9 +51,9 @@ public class ChatListAdapter extends BaseAdapter {
     protected BaseViewHolder getItemViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case LEFT_ITEM:
-                return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_left_list_item, parent, false));
+                return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_l, parent, false));
             case RIGHT_ITEM:
-                return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_right_list_item, parent, false));
+                return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_r, parent, false));
         }
         return null;
     }

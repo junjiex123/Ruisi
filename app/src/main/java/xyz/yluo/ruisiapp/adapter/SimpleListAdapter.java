@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
+import xyz.yluo.ruisiapp.activity.PostActivity;
 import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.SimpleListData;
 
@@ -47,7 +47,7 @@ public class SimpleListAdapter extends BaseAdapter {
 
     @Override
     protected BaseViewHolder getItemViewHolder(ViewGroup parent, int viewType) {
-        return new SimpleVivwHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.simple_list_item, parent, false));
+        return new SimpleVivwHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_sim_list, parent, false));
     }
 
 
@@ -90,7 +90,7 @@ public class SimpleListAdapter extends BaseAdapter {
             SimpleListData single_data = Datas.get(getAdapterPosition());
             String url = single_data.getExtradata();
             if (url != null && url.length() > 0) {
-                SingleArticleActivity.open(activity, url, single_data.getValue());
+                PostActivity.open(activity, url, single_data.getValue());
             }
         }
     }

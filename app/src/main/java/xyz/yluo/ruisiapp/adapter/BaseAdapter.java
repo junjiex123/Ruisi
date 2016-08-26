@@ -40,7 +40,7 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
         switch (viewType){
             case TYPE_LOADMORE:
                 return new LoadMoreViewHolder(LayoutInflater.from(parent.getContext()).
-                        inflate(R.layout.load_more_item, parent, false));
+                        inflate(R.layout.item_load_more, parent, false));
             default:
                 return getItemViewHolder(parent,viewType);
         }

@@ -101,7 +101,8 @@ public class GetId {
     public static int getColor(Context c,String str) {
 
         // style="color: #EC1282;">
-        int color = ContextCompat.getColor(c, R.color.text_color_pri);
+        int color = ContextCompat.getColor(c,
+                R.color.text_color_pri);
         if(str.contains("color")){
             int start = str.indexOf("color");
             int end = str.indexOf(";",start);

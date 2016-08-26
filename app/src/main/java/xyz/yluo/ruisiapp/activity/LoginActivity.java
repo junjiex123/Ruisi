@@ -67,7 +67,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_login);
+        setContentView(R.layout.activity_login);
         ed_username = (EditText) findViewById(R.id.login_name);
         ed_pass = (EditText) findViewById(R.id.login_pas);
         btn_login = (Button) findViewById(R.id.btn_login);
@@ -252,6 +252,7 @@ public class LoginActivity extends BaseActivity {
         String uid = GetId.getid("uid=", res.substring(i));
         int indexhash = res.indexOf("formhash");
         String hash = res.substring(indexhash + 9, indexhash + 17);
+
         editor.putString(App.USER_UID_KEY, uid);
         editor.putString(App.USER_NAME_KEY, name);
         editor.putString(App.USER_GRADE_KEY, grade);

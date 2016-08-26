@@ -17,7 +17,7 @@ import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.activity.AboutActivity;
 import xyz.yluo.ruisiapp.activity.FragementActivity;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
-import xyz.yluo.ruisiapp.activity.UserDakaActivity;
+import xyz.yluo.ruisiapp.activity.SignActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.FrageType;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -69,7 +69,6 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener{
     }
 
 
-
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
@@ -86,6 +85,7 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener{
 
     private void freshView(){
         if(isLoginLast){
+            uid = App.getUid(getActivity());
             user_name.setText(username);
             user_grade.setVisibility(View.VISIBLE);
             user_grade.setText(App.getGrade(getActivity()));
@@ -114,7 +114,7 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener{
                 break;
             case R.id.sign:
                 if (App.IS_SCHOOL_NET&&isLogin()) {
-                    switchActivity(UserDakaActivity.class);
+                    switchActivity(SignActivity.class);
                 } else {
                     Snackbar.make(containerlist,"校园网环境下才可以签到",Snackbar.LENGTH_SHORT).show();
                 }

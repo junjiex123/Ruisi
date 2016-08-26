@@ -7,10 +7,6 @@ package xyz.yluo.ruisiapp.data;
  */
 public class ArticleListData {
 
-    public static final int TYPE_NORMAL = 0;
-    public static final int TYPE_ZHIDINL = 1;
-    public static final int TYPE_GOLD = 2;
-
     //主页面文章列表item
     private String title;
     private String titleUrl;

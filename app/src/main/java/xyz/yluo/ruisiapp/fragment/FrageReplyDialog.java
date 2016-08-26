@@ -86,6 +86,7 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
     private LinearLayout loadingView;
     //chat时代表touid
     private String info = "";
+    private String userName;
 
 
     private List<Drawable> ds = new ArrayList<>();
@@ -104,14 +105,29 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
         return fragment;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle bundle = getArguments();//从activity传过来的Bundle
+        if (bundle != null) {
+            replyUrl = bundle.getString("replyUrl");
+            replyType = bundle.getInt("replyType",REPLY_LZ);
+            isEnableTail = bundle.getBoolean("isEnableTail",false);
+            userName = bundle.getString("userName","回复");
+            lastReplyTime = bundle.getLong("lastreplyTime",0);
+            info = bundle.getString("info","0");
+        }
+    }
 
     ////onCreateDialog>>onCreateView
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.reply_view, null);
+        View v = inflater.inflate(R.layout.my_reply_view, null);
         VerticalTabLayout tabLayout = (VerticalTabLayout) v.findViewById(R.id.smiley_tab);
         input = (EditText) v.findViewById(R.id.input_aera);
+        input.setHint(userName);
         RecyclerView smiley_listv = (RecyclerView) v.findViewById(R.id.smiley_list);
         smiley_container = (LinearLayout) v.findViewById(R.id.smileys_container);
         loadingView = (LinearLayout) v.findViewById(R.id.loading_view);
@@ -121,16 +137,6 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
         btn_send.setOnClickListener(this);
         input.setOnClickListener(this);
         hideSmiley();
-
-        Bundle bundle = getArguments();//从activity传过来的Bundle
-        if (bundle != null) {
-            replyUrl = bundle.getString("replyUrl");
-            replyType = bundle.getInt("replyType",REPLY_LZ);
-            isEnableTail = bundle.getBoolean("isEnableTail",false);
-            input.setHint(bundle.getString("userName","回复"));
-            lastReplyTime = bundle.getLong("lastreplyTime",0);
-            info = bundle.getString("info","0");
-        }
 
         tabLayout.setOnTabSelectedListener(new VerticalTabLayout.OnTabSelectedListener() {
             @Override
@@ -191,7 +197,7 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.i("FrageReplyDialog","onCreateDialog");
         Dialog dialog = new Dialog(getActivity(), R.style.replyBarDialogStyle);
-        dialog.setContentView(R.layout.reply_view);
+        dialog.setContentView(R.layout.my_reply_view);
         dialog.setCanceledOnTouchOutside(true);
 
         // 设置宽度为屏宽、靠近屏幕底部。
@@ -291,6 +297,8 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
         }
     }
 
+
+    //回复楼主
     private void replyLz(final String res){
         Map<String, String> params = new HashMap<>();
         params.put("message", res);
@@ -366,7 +374,7 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
     }
 
     /**
-     * 回复哈好友
+     * 回复好友
      * @param txt
      */
     private void replyHy(final String txt){

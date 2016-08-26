@@ -48,9 +48,9 @@ public class ForumListAdapter extends BaseAdapter {
     @Override
     protected BaseViewHolder getItemViewHolder(ViewGroup parent, int viewType) {
         if (viewType == 0) {
-            return new HeadView(LayoutInflater.from(parent.getContext()).inflate(R.layout.forums_list_item_header, parent, false));
+            return new HeadView(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_forum_h, parent, false));
         } else {
-            return new ChildViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.forums_list_item, parent, false));
+            return new ChildViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_forum_n, parent, false));
         }
     }
 

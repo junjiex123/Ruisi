@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_margin="6dp"
-        android:background="@drawable/type_bg_circle"
+        android:background="@drawable/badge"
         android:gravity="center"
         android:maxLines="1"
         android:padding="3dp"

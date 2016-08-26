@@ -42,6 +42,21 @@
                 android:textColor="@color/text_primary_white"
                 android:textSize="14sp" />
         </RadioGroup>
+        <RelativeLayout
+            android:visibility="gone"
+            android:id="@+id/pm_badge"
+            android:layout_gravity="center"
+            android:layout_width="110dp"
+            android:layout_height="32dp">
+            <View
+                android:layout_margin="6dp"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/badge"
+                android:layout_width="8dp"
+                android:layout_height="8dp"/>
+
+        </RelativeLayout>
+
 
     </FrameLayout>
 

@@ -7,8 +7,8 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="setting_dark_mode"
-            android:summaryOff="点击启用夜间模式(重启生效)"
-            android:summaryOn="点击启用日间模式(重启生效)"
+            android:summaryOff="点击启用夜间模式(重启软件生效)"
+            android:summaryOn="点击关闭夜间模式(重启软件生效)"
             android:title="夜间模式"/>
 
         <ListPreference

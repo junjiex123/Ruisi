@@ -213,7 +213,8 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
             Elements links = body.select("li");
             for (Element src : links) {
                 String url = src.select("a").attr("href");
-                int titleColor = GetId.getColor(getActivity(),src.select("a").attr("style"));
+                int titleColor = GetId.getColor(
+                        getActivity(),src.select("a").attr("style"));
                 Log.e("style",src.select("a").attr("style"));
                 //Log.e("titleColor",titleColor+"");
                 String author = src.select(".by").text();

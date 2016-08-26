@@ -14,7 +14,7 @@ import android.widget.Toast;
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
-import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
+import xyz.yluo.ruisiapp.activity.PostActivity;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.DataManager;
@@ -98,7 +98,7 @@ public class FragSetting extends PreferenceFragment
                                             @Override
                                             public void onClick(MyAlertDialog myAlertDialog) {
                                                 //RequestOpenBrowser.openBroswer(getActivity(), "http://xidianrs.cn/ruisiapp.apk");
-                                                SingleArticleActivity.open(getActivity(),url,null);
+                                                PostActivity.open(getActivity(),url,null);
                                             }
                                         }).show();
                             }else{
@@ -162,11 +162,21 @@ public class FragSetting extends PreferenceFragment
                 break;
             case "setting_hide_zhidin":
                 boolean bbbb = sharedPreferences.getBoolean("setting_hide_zhidin",true);
-                Toast.makeText(getActivity(),bbbb?"帖子列表不显示置顶帖":"帖子列表显示置顶帖",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),bbbb?"帖子列表不显示置顶帖":"帖子列表显示置顶帖",
+                        Toast.LENGTH_SHORT).show();
                 break;
             case "setting_show_plain":
                 bbbb = sharedPreferences.getBoolean("setting_show_plain",false);
-                Toast.makeText(getActivity(),bbbb?"文章显示模式：简洁":"文章显示模式：默认",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),bbbb?"文章显示模式：简洁":"文章显示模式：默认",
+                        Toast.LENGTH_SHORT).show();
+                break;
+            case "setting_dark_mode":
+                bbbb = sharedPreferences.getBoolean("setting_dark_mode",false);
+                if(bbbb){
+                    Toast.makeText(getActivity(),"成功切换到夜间模式，重启软件生效"
+                            ,Toast.LENGTH_SHORT).show();
+                }
+
                 break;
         }
     }

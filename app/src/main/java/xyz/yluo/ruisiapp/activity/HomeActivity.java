@@ -9,16 +9,16 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v7.app.NotificationCompat;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.lang.ref.WeakReference;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -47,6 +47,9 @@ public class HomeActivity extends BaseActivity
     private Timer timer = null;
     private MyTimerTask task = null;
     private MyBottomTab bottomTab;
+    private long lastCheckMsgTime = 0;
+    private int interval = 45000;//60s
+    private MyHandler messageHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,15 @@ public class HomeActivity extends BaseActivity
         getFragmentManager().beginTransaction().replace(
                 R.id.fragment_container,currentFragment).commit();
 
+        Calendar c = Calendar.getInstance();
+        int HOUR_OF_DAY = c.get(Calendar.HOUR_OF_DAY);
+        if(HOUR_OF_DAY<10&&HOUR_OF_DAY>1){
+            //晚上一点到早上10点间隔,不同时间段检查消息间隔不同
+            //减轻服务器压力
+            interval = interval*2;
+        }
+
+        messageHandler = new MyHandler(bottomTab,this);
     }
 
     @Override
@@ -69,16 +81,18 @@ public class HomeActivity extends BaseActivity
     @Override
     protected void onStart() {
         super.onStart();
-        if(!TextUtils.isEmpty(App.getUid(this))){
+        if(App.ISLOGIN(this)){
+            //60s进行一次
+            long need = interval-(System.currentTimeMillis()-lastCheckMsgTime);
+            if(need<100){
+                need = 100;
+            }
             if(timer==null){
-                Log.e("message","开始timer");
+                Log.e("message","开始timer delay"+need);
                 timer = new Timer(true);
             }
-            if (task != null){
-                task.cancel();  //将原任务从队列中移除
-            }
             task = new MyTimerTask();
-            timer.schedule(task, 200, 60000); //延时200ms后执行，60000ms执行一
+            timer.schedule(task, need, interval); //延时150ms后执行，60s间隔
         }
     }
 
@@ -127,25 +141,25 @@ public class HomeActivity extends BaseActivity
         FragmentManager fm = getFragmentManager();
         Fragment to = fm.findFragmentByTag(TAG);
         FragmentTransaction transaction = fm.beginTransaction();
+        if(to!=null&&currentFragment == to){
+            return;
+        }
         if(to==null){
             switch (id){
-                case FrageType.FOURMLIST:
-                    to = new FrageForumList();
-                    break;
                 case FrageType.NEWHOT:
                     to = new FrageHotNew();
                     break;
                 case FrageType.MESSAGE:
-                    to = new FrageMessage();
                     bottomTab.setMessage(false);
+                    to = FrageMessage.newInstance(ishaveReply,ishavePm);
                     break;
                 case FrageType.MY:
                     to = new FragmentMy();
                     break;
+                default:
+                    to = new FrageForumList();
+                    break;
             }
-        }
-        if (currentFragment == to) {
-            return;
         }
          //.setCustomAnimations(android.R.anim.fade_in, R.anim.slide_out);
         if (!to.isAdded()) {
@@ -164,71 +178,105 @@ public class HomeActivity extends BaseActivity
         transaction.commit();
     }
 
-
-    private MyHandler messageHandler = new MyHandler();
-    final NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-            .setSmallIcon(R.mipmap.logo)
-            .setDefaults(NotificationCompat.DEFAULT_ALL)
-            .setContentTitle("未读消息提醒")
-            .setContentText("你有未读的消息哦,去我的消息页面查看吧！")
-            .setAutoCancel(true);
-
+    boolean ishaveReply = false;
+    boolean ishavePm = false;
 
     private class MyTimerTask extends TimerTask{
         public void run() {
-            String url = App.getBaseUrl() + "home.php?mod=space&do=notice&view=mypost&type=post";
-            if (!App.IS_SCHOOL_NET) {
-                url = url + "&mobile=2";
-            }
-            HttpUtil.SyncGet(HomeActivity.this, url, new ResponseHandler() {
+            String url_reply = "home.php?mod=space&do=notice&view=mypost&type=post"+(App.IS_SCHOOL_NET?"":"&mobile=2");
+            String url_pm = "home.php?mod=space&do=pm&mobile=2";
+            HttpUtil.SyncGet(HomeActivity.this, url_reply, new ResponseHandler() {
                 @Override
                 public void onSuccess(byte[] response) {
-                    Document document = Jsoup.parse(new String(response));
-                    Elements elemens = document.select(".nts").select("dl.cl");
-                    int last_message_id  = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this)
-                            .getInt(App.NOTICE_MESSAGE_KEY, 0);
-                    for (Element e : elemens) {
-                        int  noticeId = Integer.parseInt(e.attr("notice"));
-                        if(last_message_id<noticeId){
-                            boolean isnotify = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this)
-                                    .getBoolean("setting_show_notify", false);
-                            if (isnotify) {
-                                messageHandler.sendEmptyMessage(2);
-                            }else{
-                                messageHandler.sendEmptyMessage(1);
-                            }
-                            break;
-                        }else{
-                            messageHandler.sendEmptyMessage(0);
-                            break;
-                        }
-                    }
+                    dealMessage(true,new String(response));
+                }
+            });
+            lastCheckMsgTime = System.currentTimeMillis();
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            HttpUtil.SyncGet(HomeActivity.this, url_pm, new ResponseHandler() {
+                @Override
+                public void onSuccess(byte[] response) {
+                    dealMessage(false,new String(response));
                 }
             });
         }
     }
 
 
+    private void dealMessage(boolean isReply,String res){
+        Document document = Jsoup.parse(res);
+        //回复
+        if(isReply){
+            Elements elemens = document.select(".nts").select("dl.cl");
+            if(elemens.size()>0){
+                int last_message_id  = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this)
+                        .getInt(App.NOTICE_MESSAGE_KEY, 0);
+                int  noticeId = Integer.parseInt(elemens.get(0).attr("notice"));
+                ishaveReply = last_message_id < noticeId;
+            }
+        }else{
+            Elements lists = document.select(".pmbox").select("ul").select("li");
+            if(lists.size()>0){
+                ishavePm = lists.get(0).select(".num").text().length() > 0;
+            }
+        }
+
+        if(ishaveReply||ishavePm){
+            messageHandler.sendEmptyMessage(0);
+        }else{
+            messageHandler.sendEmptyMessage(-1);
+        }
+    }
+
+
     //// TODO: 16-8-23  
-    private  class MyHandler extends Handler {
+    private  static class MyHandler extends Handler {
+        private final WeakReference<MyBottomTab> mytab;
+        private final WeakReference<HomeActivity> act;
+
+        private MyHandler(MyBottomTab tab,HomeActivity aa) {
+            mytab = new WeakReference<>(tab);
+            act = new WeakReference<>(aa);
+        }
         @Override
         public void handleMessage(Message msg) {
+            MyBottomTab t = mytab.get();
+            HomeActivity a = act.get();
             switch (msg.what){
-                //0 - 无消息 1-有 2有 且通知
-                case 0:
+                //-1 - 无消息 0-有
+                case -1:
                     Log.e("message","无未读消息");
-                    bottomTab.setMessage(false);
+                    t.setMessage(false);
                     break;
-                case 2:
-                    final NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                    mNotifyMgr.notify(10, builder.build());
-                    Log.e("message","发送未读消息弹窗");
-                case 1:
+                case 0:
+                    a.mkNotify();
                     Log.e("message","有未读消息");
-                    bottomTab.setMessage(true);
+                    t.setMessage(true);
                     break;
             }
         }
+    }
+
+
+    private void mkNotify(){
+        boolean isnotify = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this)
+                .getBoolean("setting_show_notify", false);
+        if(!isnotify){
+            return;
+        }
+        final NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.logo)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setContentTitle("未读消息提醒")
+                .setContentText("你有未读的消息哦,去我的消息页面查看吧！")
+                .setAutoCancel(true);
+        final NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotifyMgr.notify(10, builder.build());
+        Log.e("message","发送未读消息弹窗");
     }
 
 }

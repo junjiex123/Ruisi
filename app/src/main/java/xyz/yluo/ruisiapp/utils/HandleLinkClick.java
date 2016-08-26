@@ -9,7 +9,7 @@ import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyHtmlView.HtmlView;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.NewPostActivity;
-import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
+import xyz.yluo.ruisiapp.activity.PostActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.downloadfile.DownloadService;
 
@@ -28,7 +28,7 @@ public class HandleLinkClick {
             //do nothing
             System.out.println("to do img click");
         } else if (url.contains("forum.php?mod=viewthread&tid=")) { // 帖子
-            SingleArticleActivity.open(context, url, null);
+            PostActivity.open(context, url, null);
         } else if (url.contains("home.php?mod=space&uid=")) { // 用户
             String imageUrl = UrlUtils.getAvaterurlb(url);
             UserDetailActivity.open(context, "name", imageUrl);

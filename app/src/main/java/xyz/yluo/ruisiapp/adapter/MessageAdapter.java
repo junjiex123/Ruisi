@@ -14,7 +14,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.ArrowTextView;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.activity.ChatActivity;
-import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
+import xyz.yluo.ruisiapp.activity.PostActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ListType;
 import xyz.yluo.ruisiapp.data.MessageData;
@@ -45,7 +45,7 @@ public class MessageAdapter extends BaseAdapter {
 
     @Override
     protected BaseViewHolder getItemViewHolder(ViewGroup parent, int viewType) {
-        return new MessageReplyListHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.user_message_list_item, parent, false));
+        return new MessageReplyListHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_messgae, parent, false));
 
     }
 
@@ -106,7 +106,7 @@ public class MessageAdapter extends BaseAdapter {
                 ChatActivity.open(activity, username, single_data.getTitleUrl());
                 single_data.setRead(true);
             } else if (ListType.REPLAYME == single_data.getType()) {//回复我的
-                SingleArticleActivity.open(activity, single_data.getTitleUrl(), null);
+                PostActivity.open(activity, single_data.getTitleUrl(), null);
             }
 
         }

@@ -16,7 +16,7 @@ import java.util.Objects;
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
-import xyz.yluo.ruisiapp.activity.SingleArticleActivity;
+import xyz.yluo.ruisiapp.activity.PostActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.ArticleListData;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -68,13 +68,13 @@ public class PostListAdapter extends BaseAdapter {
         switch (viewType) {
             case TYPE_NORMAL_MOBILE:
                 return new NormalViewHolderMe(LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.main_list_item_me, parent, false));
+                        .inflate(R.layout.item_post_me, parent, false));
             case TYPE_IMAGE:
                 return new ImageCardViewHolder(LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.image_list_item, parent, false));
+                        .inflate(R.layout.item_post_img, parent, false));
             default: // TYPE_NORMAL
                 return new NormalViewHolder(LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.main_list_item, parent, false));
+                        .inflate(R.layout.item_post_rs, parent, false));
         }
     }
 
@@ -155,7 +155,7 @@ public class PostListAdapter extends BaseAdapter {
                 single_data.setRead(true);
                 notifyItemChanged(getAdapterPosition());
             }
-            SingleArticleActivity.open(activity, single_data.getTitleUrl(), single_data.getAuthor());
+            PostActivity.open(activity, single_data.getTitleUrl(), single_data.getAuthor());
 
         }
     }
@@ -200,7 +200,7 @@ public class PostListAdapter extends BaseAdapter {
                 single_data.setRead(true);
                 notifyItemChanged(getAdapterPosition());
             }
-            SingleArticleActivity.open(activity, single_data.getTitleUrl(), single_data.getAuthor());
+            PostActivity.open(activity, single_data.getTitleUrl(), single_data.getAuthor());
         }
     }
 
@@ -240,7 +240,7 @@ public class PostListAdapter extends BaseAdapter {
         }
         void item_click() {
             ArticleListData single_data = DataSet.get(getAdapterPosition());
-            SingleArticleActivity.open(activity, single_data.getTitleUrl(), single_data.getAuthor());
+            PostActivity.open(activity, single_data.getTitleUrl(), single_data.getAuthor());
         }
     }
 

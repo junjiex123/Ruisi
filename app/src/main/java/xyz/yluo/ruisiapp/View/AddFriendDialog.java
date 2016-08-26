@@ -46,7 +46,7 @@ public class AddFriendDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.add_friend_dialog, null);
+        View view = inflater.inflate(R.layout.dialog_add_friend, null);
         builder.setView(view);
 
         builder.setTitle("添加好友");
