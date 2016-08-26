@@ -40,7 +40,8 @@ public class PostHandler implements TextWatcher {
 
     public void insertbold(String text) {
         Editable message = mEditor.getEditableText();
-        message.replace(mEditor.getSelectionStart(), mEditor.getSelectionEnd(), Html.fromHtml("<b>" + text + "</b>"));
+        message.replace(mEditor.getSelectionStart(), mEditor.getSelectionEnd(),
+                Html.fromHtml("<b>" + text + "</b>"));
     }
 
     @Override

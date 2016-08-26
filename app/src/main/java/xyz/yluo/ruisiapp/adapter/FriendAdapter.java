@@ -1,6 +1,8 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
+import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.activity.ChatActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.data.FriendData;
+import xyz.yluo.ruisiapp.listener.ListItemLongClickListener;
 
 /**
  * Created by free2 on 16-4-12.
@@ -23,11 +26,13 @@ import xyz.yluo.ruisiapp.data.FriendData;
 public class FriendAdapter extends BaseAdapter {
 
     private List<FriendData> datas;
-    private Activity activity;
+    private Context context;
+    private ListItemLongClickListener listener;
 
-    public FriendAdapter(List<FriendData> datas, Activity activity) {
+    public FriendAdapter(Context context, List<FriendData> datas, ListItemLongClickListener l) {
         this.datas = datas;
-        this.activity = activity;
+        this.context = context;
+        this.listener = l;
     }
 
     @Override
@@ -46,16 +51,17 @@ public class FriendAdapter extends BaseAdapter {
                 .inflate(R.layout.item_friend, parent, false));
     }
 
-    private class FriendViewHolder extends BaseViewHolder {
+    private class FriendViewHolder extends BaseViewHolder{
         protected CircleImageView user_image;
-        protected TextView user_name;
-        TextView user_info;
+        TextView user_name,user_info;
+        private View container;
 
         FriendViewHolder(View itemView) {
             super(itemView);
             user_image = (CircleImageView) itemView.findViewById(R.id.user_image);
             user_name = (TextView) itemView.findViewById(R.id.user_name);
             user_info = (TextView) itemView.findViewById(R.id.user_info);
+            container = itemView.findViewById(R.id.main_item_btn_item);
 
             user_image.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -64,7 +70,7 @@ public class FriendAdapter extends BaseAdapter {
                 }
             });
 
-            itemView.findViewById(R.id.main_item_btn_item).setOnClickListener(new View.OnClickListener() {
+            container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     item_click();
@@ -73,24 +79,34 @@ public class FriendAdapter extends BaseAdapter {
         }
 
         @Override
-        void setData(int position) {
+        void setData(final int position) {
             FriendData single = datas.get(position);
             user_name.setText(single.getUserName());
             user_info.setText(single.getInfo());
-            Picasso.with(activity).load(single.getImgUrl()).placeholder(R.drawable.image_placeholder).into(user_image);
+            Picasso.with(context).load(single.getImgUrl()).placeholder(R.drawable.image_placeholder).into(user_image);
+            container.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if(listener!=null){
+                        listener.onItemLongClick(container,position);
+                        return true;
+                    }
+                    return false;
+                }
+            });
         }
 
         void userImage_click() {
             FriendData single = datas.get(getAdapterPosition());
             String username = single.getUserName();
-            UserDetailActivity.openWithAnimation(activity, username, user_image, single.getUid());
+            UserDetailActivity.openWithAnimation((Activity) context, username, user_image, single.getUid());
         }
 
         void item_click() {
             String uid = datas.get(getAdapterPosition()).getUid();
             String username = datas.get(getAdapterPosition()).getUserName();
             String url = "home.php?mod=space&do=pm&subop=view&touid=" + uid + "&mobile=2";
-            ChatActivity.open(activity, username, url);
+            ChatActivity.open(context, username, url);
         }
 
     }

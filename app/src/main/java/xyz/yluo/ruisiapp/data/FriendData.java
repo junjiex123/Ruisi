@@ -2,6 +2,7 @@ package xyz.yluo.ruisiapp.data;
 
 /**
  * Created by free2 on 16-4-12.
+ * 好友列表data
  */
 public class FriendData {
 

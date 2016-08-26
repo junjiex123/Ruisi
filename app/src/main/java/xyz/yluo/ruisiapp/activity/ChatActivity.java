@@ -114,7 +114,10 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
         @Override
         public void run() {
             ChatActivity aa = act.get();
-            aa.getData(false);
+            if(aa!=null){
+                aa.getData(false);
+            }
+
         }
     }
 
@@ -228,5 +231,8 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }
