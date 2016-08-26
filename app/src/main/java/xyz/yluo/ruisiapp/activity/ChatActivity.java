@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import org.jsoup.Jsoup;
@@ -16,10 +17,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
@@ -49,6 +50,8 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
     private String url = "";
     private String touid = "";
     private long replyTime = 0;
+    private AutoGetTask task;
+
 
     public static void open(Context context, String username, String url) {
         Intent intent = new Intent(context, ChatActivity.class);
@@ -77,7 +80,9 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refresh();
+                datas.clear();
+                adapter.notifyDataSetChanged();
+                getData(true);
             }
         });
         Bundle bundle = this.getIntent().getExtras();
@@ -93,20 +98,36 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
                 dialog.show(getFragmentManager(), "chate");
             }
         });
-
-        refresh();
+        task = new AutoGetTask(this);
+        getData(true);
     }
 
-    private void refresh() {
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        });
 
-        datas.clear();
-        adapter.notifyDataSetChanged();
+    private static class AutoGetTask implements Runnable {
+
+        private final WeakReference<ChatActivity> act;
+
+        private AutoGetTask(ChatActivity a) {
+            act = new WeakReference<>(a);
+        }
+
+        @Override
+        public void run() {
+            ChatActivity aa = act.get();
+            aa.getData(false);
+        }
+    }
+
+    private void getData(boolean needRefresh){
+        if(needRefresh){
+            refreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(true);
+                }
+            });
+        }
+        Log.e("chat","get data...");
         new GetDataTask().execute(url);
     }
 
@@ -114,17 +135,15 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
     public void onReplyFinish(int status, String txt) {
         if (status == RESULT_OK) {
             replyTime = System.currentTimeMillis();
-            String userImage = UrlUtils.getAvaterurlm(App.getUid(this));
-            datas.add(new ChatListData(1, userImage, txt, "刚刚"));
-            adapter.notifyItemInserted(datas.size() - 1);
-            recycler_view.scrollToPosition(datas.size());
+            new GetDataTask().execute(url);
         }
     }
 
-    private class GetDataTask extends AsyncTask<String, Void, String> {
+    private class GetDataTask extends AsyncTask<String, Void, List<ChatListData>> {
         @Override
-        protected String doInBackground(String... params) {
+        protected List<ChatListData> doInBackground(String... params) {
             final String url = params[0];
+            final List<ChatListData> tepdata = new ArrayList<>();
             HttpUtil.SyncGet(getApplicationContext(), url, new TextResponseHandler() {
                 @Override
                 public void onSuccess(String response) {
@@ -143,7 +162,7 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
                     //还没有消息
                     if (elements.text().contains("当前没有相应的短消息")) {
                         String userimg = UrlUtils.getAvaterurlm(touid);
-                        datas.add(new ChatListData(0, userimg, "给我发消息吧...", "刚刚"));
+                        tepdata.add(new ChatListData(0, userimg, "给我发消息吧...", "刚刚"));
                     } else {
                         Elements listdata = elements.select(".cl");
                         for (Element temp : listdata) {
@@ -156,20 +175,44 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
                             String userimg = temp.select(".avat").select("img").attr("src");
                             String content = temp.select(".dialog_t").html();
                             String posttime = temp.select(".date").text();
-                            datas.add(new ChatListData(type, userimg, content, posttime));
+                            tepdata.add(new ChatListData(type, userimg, content, posttime));
                         }
                     }
 
                 }
             });
-            return null;
+            return tepdata;
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            adapter.notifyDataSetChanged();
+        protected void onPostExecute(List<ChatListData> tepdata) {
             adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
+            if(datas.size()==0){
+                datas.addAll(tepdata);
+                adapter.notifyDataSetChanged();
+            }else if(tepdata.size()>0){
+                //处理增加部分
+                String content = datas.get(datas.size()-1).getContent();
+                int type = datas.get(datas.size()-1).getType();
+
+                int equalpos = -1;
+                for(int i=0;i<tepdata.size();i++){
+                    String contentadd = tepdata.get(i).getContent();
+                    int typeadd = tepdata.get(i).getType();
+                    if(content.equals(contentadd)&&typeadd==type){
+                        equalpos = i;
+                        break;
+                    }
+                }
+
+                int add = 0;
+                for(int i = equalpos+1;i<tepdata.size();i++){
+                    datas.add(tepdata.get(i));
+                    add++;
+                }
+                adapter.notifyItemRangeInserted(datas.size()-add,add);
+            }
+
             recycler_view.scrollToPosition(datas.size());
             refreshLayout.postDelayed(new Runnable() {
                 @Override
@@ -177,7 +220,13 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
                     refreshLayout.setRefreshing(false);
                 }
             }, 400);
+
+            //25s自动加载一次
+            recycler_view.removeCallbacks(task);
+            recycler_view.postDelayed(task,25000);
+
         }
     }
+
 
 }
