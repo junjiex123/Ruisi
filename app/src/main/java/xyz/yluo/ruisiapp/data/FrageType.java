@@ -12,7 +12,6 @@ public class FrageType {
     public static final int MY = 3;
 
     public static final int START = 4;
-    public static final int FRIEND = 5;
     public static final int HISTORY = 6;
     public static final int HELP =7;
     public static final int TOPIC = 8;

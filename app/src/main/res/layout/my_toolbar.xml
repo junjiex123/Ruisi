@@ -2,17 +2,17 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:background="@color/colorPrimary"
-    android:layout_height="48dp"
+    android:layout_height="@dimen/ToolBarHeight"
     android:id="@+id/myToolBar">
 
     <ImageView
         android:id="@+id/logo"
-        android:padding="12dp"
+        android:padding="13dp"
         android:src="@drawable/ic_arraw_back_white"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
-        android:layout_width="48dp"
-        android:layout_height="48dp" />
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
 
     <TextView
         android:id="@+id/title"
@@ -27,11 +27,11 @@
     <ImageView
         android:visibility="invisible"
         android:id="@+id/menu"
-        android:padding="12dp"
+        android:padding="13dp"
         android:src="@drawable/ic_search_white_24dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
-        android:layout_width="48dp"
+        android:layout_width="50dp"
         android:layout_gravity="end"
-        android:layout_height="48dp" />
+        android:layout_height="50dp" />
 </FrameLayout>

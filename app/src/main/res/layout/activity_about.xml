@@ -5,39 +5,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="false">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
+    <FrameLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:fitsSystemWindows="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout"
+        android:layout_height="200dp">
+        <ImageView
+            android:fitsSystemWindows="false"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg02"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/bg02"
-            android:elevation="4dp"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            android:layout_height="200dp" />
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+        <TextView
+            android:layout_margin="16dp"
+            android:layout_gravity="bottom"
+            android:text="@string/app_name"
+            style="@style/text_toolbar"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-        </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
+        <ImageView
+            android:onClick="finish"
+            android:clickable="true"
+            android:padding="13dp"
+            android:layout_marginTop="24dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arraw_back_white"
+            android:layout_width="@dimen/ToolBarHeight"
+            android:layout_height="@dimen/ToolBarHeight" />
+    </FrameLayout>
 
     <RelativeLayout
+        android:layout_marginTop="200dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:orientation="vertical">
 
         <xyz.yluo.ruisiapp.View.MyHtmlView.HtmlView
             android:id="@+id/html_text"
@@ -55,7 +60,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="16dp"
             tools:text="当前版本1.4 beta" />
 
     </RelativeLayout>
@@ -66,7 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dimen_16"
         android:src="@drawable/ic_mail_24dp"
-        app:layout_anchor="@id/app_bar"
+        app:layout_anchor="@id/header"
         app:layout_anchorGravity="bottom|end" />
 
 </android.support.design.widget.CoordinatorLayout>

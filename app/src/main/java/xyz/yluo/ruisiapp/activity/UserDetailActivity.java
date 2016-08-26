@@ -177,17 +177,17 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
 
     //加好友确认按钮点击
     @Override
-    public void OkClick(final DialogFragment dialog, String mes) {
+    public void OnAddFriendOkClick(String mes,String uid) {
         final ProgressDialog dialog1 = new ProgressDialog(this);
         dialog1.setTitle("正在发送请求");
         dialog1.setMessage("请等待......");
         Map<String, String> paras = new HashMap<>();
         paras.put("addsubmit", "true");
-        paras.put("handlekey", "friend_" + userUid);
+        paras.put("handlekey", "friend_" + uid);
         paras.put("note", mes);
         paras.put("gid", "1");
         paras.put("addsubmit_btn", "true");
-        HttpUtil.post(this, UrlUtils.getAddFrirndUrl(userUid), paras, new ResponseHandler() {
+        HttpUtil.post(this, UrlUtils.getAddFrirndUrl(uid), paras, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
@@ -233,9 +233,8 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
                             }
                         }).show();
             } else {
-                AddFriendDialog dialogFragment = AddFriendDialog.newInstance(this);
-                dialogFragment.setUserName(username);
-                dialogFragment.setUserImage(imageUrl);
+                AddFriendDialog dialogFragment = AddFriendDialog.newInstance(
+                        this,username,imageUrl);
                 dialogFragment.show(getFragmentManager(), "add");
             }
 
@@ -279,7 +278,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         @Override
         protected void onPostExecute(String s) {
             toolbarLayout.setTitle(username);
-            adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
+            adapter.disableLoadMore();
             adapter.notifyDataSetChanged();
         }
 

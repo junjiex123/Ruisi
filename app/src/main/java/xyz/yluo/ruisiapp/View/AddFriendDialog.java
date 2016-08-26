@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-3-14.
@@ -26,8 +27,10 @@ public class AddFriendDialog extends DialogFragment {
     private AddFriendListener dialogListener;
 
 
-    public static AddFriendDialog newInstance(AddFriendListener var) {
+    public static AddFriendDialog newInstance(AddFriendListener var,String name,String imhurl) {
         AddFriendDialog frag = new AddFriendDialog();
+        frag.setUserName(name);
+        frag.setUserImage(imhurl);
         frag.setListner(var);
         return frag;
     }
@@ -62,7 +65,9 @@ public class AddFriendDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 if (checkInput()) {
-                    dialogListener.OkClick(AddFriendDialog.this, content.getText().toString());
+                    dialogListener.OnAddFriendOkClick(
+                            content.getText().toString(),
+                            GetId.getid("uid=",userImage));
                     AddFriendDialog.this.getDialog().cancel();
                 }
             }
@@ -107,6 +112,6 @@ public class AddFriendDialog extends DialogFragment {
     }
 
     public interface AddFriendListener {
-        void OkClick(DialogFragment dialog, String mes);
+        void OnAddFriendOkClick(String mes,String uid);
     }
 }

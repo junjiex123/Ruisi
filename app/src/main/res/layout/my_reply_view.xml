@@ -101,7 +101,7 @@
             <ImageView
                 android:clickable="true"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/smiley_ldb"
+                android:src="@drawable/smiley_ali"
                 android:layout_width="40dp"
                 android:layout_height="40dp" />
             <ImageView

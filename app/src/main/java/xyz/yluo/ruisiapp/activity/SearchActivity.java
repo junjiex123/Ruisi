@@ -55,14 +55,13 @@ public class SearchActivity extends BaseActivity
         View.OnClickListener,
         EditText.OnEditorActionListener{
 
-
     private int totalPage = 1;
     private int currentPage = 1;
     private String searchid = "";
     private boolean isEnableLoadMore = false;
-    private EditText search_input;
     private SimpleListAdapter adapter;
     private List<SimpleListData> datas = new ArrayList<>();
+    private EditText search_input;
     private CardView search_card;
     private Animator animator;
     private TextView nav_title;
@@ -290,7 +289,7 @@ public class SearchActivity extends BaseActivity
                     (float) Math.hypot(search_card.getWidth(), search_card.getHeight()));
 
             animator.setInterpolator(new AccelerateInterpolator());
-            animator.setDuration(300);
+            animator.setDuration(260);
             animator.start();
             animator.addListener(new Animator.AnimatorListener() {
                 @Override
@@ -329,7 +328,7 @@ public class SearchActivity extends BaseActivity
                     0);
 
             animator.setInterpolator(new DecelerateInterpolator());
-            animator.setDuration(300);
+            animator.setDuration(260);
             animator.start();
             animator.addListener(new Animator.AnimatorListener() {
                 @Override
@@ -355,5 +354,14 @@ public class SearchActivity extends BaseActivity
         }else{
             search_card.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(search_card.getVisibility()==View.VISIBLE){
+            hide_search_view();
+            return;
+        }
+        super.onBackPressed();
     }
 }

@@ -8,7 +8,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:background="@color/colorPrimary"
-        android:layout_height="48dp">
+        android:layout_height="@dimen/ToolBarHeight">
 
         <xyz.yluo.ruisiapp.View.CircleImageView
             android:id="@+id/img"
@@ -32,13 +32,13 @@
             android:layout_height="match_parent" />
         <ImageView
             android:id="@+id/search"
-            android:padding="12dp"
+            android:padding="13dp"
             android:src="@drawable/ic_search_white_24dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:layout_width="48dp"
+            android:layout_width="@dimen/ToolBarHeight"
             android:layout_gravity="end"
-            android:layout_height="48dp" />
+            android:layout_height="@dimen/ToolBarHeight" />
     </FrameLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout

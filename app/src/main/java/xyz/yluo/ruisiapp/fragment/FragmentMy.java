@@ -16,6 +16,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.activity.AboutActivity;
 import xyz.yluo.ruisiapp.activity.FragementActivity;
+import xyz.yluo.ruisiapp.activity.FriendActivity;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.SignActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
@@ -141,7 +142,7 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener{
                 FragementActivity.open(getActivity(),FrageType.HELP);
                 break;
             case R.id.friend:
-                FragementActivity.open(getActivity(),FrageType.FRIEND);
+                switchActivity(FriendActivity.class);
                 break;
 
         }

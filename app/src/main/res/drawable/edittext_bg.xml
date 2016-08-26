@@ -19,7 +19,7 @@
             <solid android:color="@color/bg_secondary" />
             <stroke
                 android:width="1dip"
-                android:color="@color/bg_primary" />
+                android:color="@color/bg_secondary" />
             <corners android:radius="2dip" />
             <padding
                 android:bottom="4dip"

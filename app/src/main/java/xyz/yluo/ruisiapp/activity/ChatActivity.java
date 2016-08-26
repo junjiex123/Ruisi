@@ -25,7 +25,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
 import xyz.yluo.ruisiapp.data.ChatListData;
-import xyz.yluo.ruisiapp.fragment.FrageReplyDialog;
+import xyz.yluo.ruisiapp.View.MyReplyView;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;
 import xyz.yluo.ruisiapp.utils.DimmenUtils;
@@ -37,7 +37,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 消息聊天 activity
  * TODO 支持翻页。。。。目前只能看最后一页
  */
-public class ChatActivity extends BaseActivity implements FrageReplyDialog.replyCompeteCallBack {
+public class ChatActivity extends BaseActivity implements MyReplyView.replyCompeteCallBack {
 
     private RecyclerView recycler_view;
     private SwipeRefreshLayout refreshLayout;
@@ -92,7 +92,7 @@ public class ChatActivity extends BaseActivity implements FrageReplyDialog.reply
         btn_chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FrageReplyDialog dialog = FrageReplyDialog.newInstance(replyUrl, FrageReplyDialog.REPLY_HY, replyTime,
+                MyReplyView dialog = MyReplyView.newInstance(replyUrl, MyReplyView.REPLY_HY, replyTime,
                         false, "回复：" + username, touid);
                 dialog.setCallBack(ChatActivity.this);
                 dialog.show(getFragmentManager(), "chate");

@@ -2,14 +2,18 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
@@ -52,7 +56,7 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
         launch_text = (TextView) findViewById(R.id.launch_text);
         findViewById(R.id.btn_login_inner).setOnClickListener(this);
         findViewById(R.id.btn_login_outer).setOnClickListener(this);
-        findViewById(R.id.login_fail_view).setVisibility(View.GONE);
+        findViewById(R.id.login_fail_view).setVisibility(View.INVISIBLE);
         user_image = (CircleImageView) findViewById(R.id.user_image);
         user_image.setVisibility(View.GONE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -63,7 +67,7 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
             Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(user_image);
             user_image.setVisibility(View.VISIBLE);
         }
-        mHandler.postDelayed(finishRunable, 1500);
+        mHandler.postDelayed(finishRunable, 1600);
         String urlin = "http://rs.xidian.edu.cn/member.php?mod=logging&action=login&mobile=2";
         String urlout = "http://bbs.rs.xidian.me/member.php?mod=logging&action=login&mobile=2";
 
@@ -96,48 +100,17 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
 
     private void loginOk(){
         mHandler.removeCallbacks(finishRunable);
-        if(!isForeGround){
-            return;
-        }
-        String res = "";
-        if(!TextUtils.isEmpty(pcResponse)){
-            App.IS_SCHOOL_NET = true;
-            res = pcResponse;
-        }else if(!TextUtils.isEmpty(mobileRes)){
-            App.IS_SCHOOL_NET = false;
-            res = mobileRes;
-        }
-        if(!TextUtils.isEmpty(res)){
-            int i = res.indexOf("欢迎您回来");
-            if(i>0){
-                String info = res.substring(i+6,i+26);
-                int pos1 = info.indexOf(" ");
-                int pos2 = info.indexOf("，");
-                String grade = info.substring(0,pos1);
-                String name = info.substring(pos1+1,pos2);
-                String uid = GetId.getid("uid=",res.substring(i));
-                int indexhash = res.indexOf("formhash");
-                String hash = res.substring(indexhash+9,indexhash+17);
-                SharedPreferences.Editor ed =  shp.edit();
-                ed.putString(App.USER_UID_KEY,uid);
-                ed.putString(App.USER_NAME_KEY,name);
-                ed.putString(App.USER_GRADE_KEY,grade);
-                ed.putString(App.HASH_KEY,hash);
-                ed.apply();
-                Log.e("res","grade "+grade+" uid "+uid+" name "+name+" hash "+hash);
-            }
-            enterHome();
-        }else{
-            Toast.makeText(this, "无法连接到服务器请检查网络设置！", Toast.LENGTH_SHORT).show();
-            findViewById(R.id.login_view).setVisibility(View.GONE);
-            findViewById(R.id.login_fail_view).setVisibility(View.VISIBLE);
+        if(isForeGround){
+            new CheckTask().execute();
         }
     }
 
     private void enterHome(){
         startActivity(new Intent(this, HomeActivity.class));
         finish();
+        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
     }
+
 
     @Override
     public void onClick(View view) {
@@ -159,16 +132,11 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
         super.onStart();
         AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
         alphaAnimation.setDuration((long) (WAIT_TIME*0.85));// 设置动画显示时间
-
-        TranslateAnimation animation = new TranslateAnimation(0, 0, 80, 0);
-        animation.setDuration((long) (WAIT_TIME*0.8));
-
-        // 初始化需要加载的动画资源
         RotateAnimation rotateAnimation = (RotateAnimation) AnimationUtils.loadAnimation(this, R.anim.always_rotate);
-
-        launch_text.startAnimation(animation);
-        user_image.startAnimation(alphaAnimation);
         findViewById(R.id.loading_view).startAnimation(rotateAnimation);
+        launch_text.startAnimation(alphaAnimation);
+        user_image.startAnimation(alphaAnimation);
+
     }
 
     @Override
@@ -188,5 +156,57 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
     protected void onDestroy() {
         mHandler.removeCallbacks(finishRunable);
         super.onDestroy();
+    }
+
+    private class CheckTask extends AsyncTask<Void,Void,Boolean>{
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            String res = "";
+            if(!TextUtils.isEmpty(pcResponse)){
+                App.IS_SCHOOL_NET = true;
+                res = pcResponse;
+            }else if(!TextUtils.isEmpty(mobileRes)){
+                App.IS_SCHOOL_NET = false;
+                res = mobileRes;
+            }
+            if(!TextUtils.isEmpty(res)){
+                int i = res.indexOf("欢迎您回来");
+                if(i>0){
+                    String info = res.substring(i+6,i+26);
+                    int pos1 = info.indexOf(" ");
+                    int pos2 = info.indexOf("，");
+                    String grade = info.substring(0,pos1);
+                    String name = info.substring(pos1+1,pos2);
+                    String uid = GetId.getid("uid=",res.substring(i));
+                    int indexhash = res.indexOf("formhash");
+                    String hash = res.substring(indexhash+9,indexhash+17);
+                    SharedPreferences.Editor ed =  shp.edit();
+                    ed.putString(App.USER_UID_KEY,uid);
+                    ed.putString(App.USER_NAME_KEY,name);
+                    ed.putString(App.USER_GRADE_KEY,grade);
+                    ed.putString(App.HASH_KEY,hash);
+                    ed.apply();
+                    Log.e("res","grade "+grade+" uid "+uid+" name "+name+" hash "+hash);
+                }
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if(aBoolean) {
+                enterHome();
+            }else{
+                Toast.makeText(LaunchActivity.this, "没有网络,或者睿思服务器又崩溃了！",
+                        Toast.LENGTH_SHORT).show();
+                findViewById(R.id.login_view).setVisibility(View.GONE);
+                View fail = findViewById(R.id.login_fail_view);
+                fail.setVisibility(View.VISIBLE);
+            }
+        }
     }
 }

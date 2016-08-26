@@ -127,7 +127,7 @@ public class MySmileyPicker extends PopupWindow{
     private List<Drawable> getSmileys() {
         String smiley_dir = "static/image/smiley/";
         if (smiley_type == SMILEY_TB) {
-            smiley_dir += "tieba";
+            smiley_dir += "smiley_tieba";
         } else if (smiley_type == SMILEY_LDB) {
             smiley_dir += "lindab";
         } else if (smiley_type == SMILEY_ACN) {

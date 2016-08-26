@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_window"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/my_toolbar"/>
+
+    <LinearLayout
+        android:id="@+id/header"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/dimen_16">
+
+        <xyz.yluo.ruisiapp.View.CircleImageView
+            android:src="@drawable/image_placeholder"
+            android:layout_width="82dp"
+            android:layout_height="82dp" />
+        <TextView
+            android:layout_marginTop="16dp"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:text="睿思规定每日签到时间 07:00-23:00"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="250dp"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_margin="@dimen/dimen_8" />
+
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/sign_yes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:src="@drawable/sign_yy"
+                android:layout_width="60dp"
+                android:layout_height="60dp" />
+
+            <TextView
+                style="@style/text_16_pri"
+                android:id="@+id/info_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:text="今日已签到"/>
+
+            <TextView
+                android:layout_marginTop="6dp"
+                android:id="@+id/total_sign_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/text_14_sec"
+                tools:text="您累计已签到:443 天" />
+
+            <TextView
+                android:layout_marginTop="4dp"
+                style="@style/text_12_sec"
+                android:id="@+id/total_sign_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="您本月已累计签到:5天" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/sign_not"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="@dimen/dimen_16">
+
+            <TextView
+                android:layout_marginTop="16dp"
+                style="@style/text_16_pri"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="选择心情："
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/spinner_select"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_8" />
+
+            <EditText
+                android:id="@+id/input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="输入你最想说的话(选填)" />
+            <Button
+                android:id="@+id/btn_submit"
+                android:textColor="@color/white"
+                android:text="开始签到"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/btn_light_red_bg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/sing_error"
+            android:layout_gravity="center"
+            android:text="不在签到时间内无法签到"
+            style="@style/text_20_pri"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
+
+
+</LinearLayout>

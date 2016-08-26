@@ -20,7 +20,7 @@
             android:background="@drawable/bg02"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleGravity="center_horizontal|bottom"
-            app:expandedTitleTextAppearance="@style/text_20_pri"
+            app:expandedTitleTextAppearance="@style/text_toolbar"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
@@ -39,6 +39,7 @@
                 app:civ_border_width="2dp" />
 
             <android.support.v7.widget.Toolbar
+                app:titleTextColor="@color/white"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"

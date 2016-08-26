@@ -10,14 +10,12 @@ public class FriendData {
     private String imgUrl;
     private String info;
     private String uid;
-    private String lastOnlineTime;
 
-    public FriendData(String userName, String imgUrl, String info, String uid, String lastOnlineTime) {
+    public FriendData(String userName, String imgUrl, String info, String uid) {
         this.userName = userName;
         this.imgUrl = imgUrl;
         this.info = info;
         this.uid = uid;
-        this.lastOnlineTime = lastOnlineTime;
     }
 
     public String getUserName() {
@@ -34,9 +32,5 @@ public class FriendData {
 
     public String getUid() {
         return uid;
-    }
-
-    public String getLastOnlineTime() {
-        return lastOnlineTime;
     }
 }

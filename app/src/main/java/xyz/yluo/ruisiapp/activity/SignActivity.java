@@ -41,15 +41,12 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 public class SignActivity extends BaseActivity {
 
     protected TextView input;
-    protected CoordinatorLayout main_window;
     protected CircleImageView user_image;
-    protected TextView user_name;
     protected ProgressBar progressBar;
-    protected Toolbar toolbar;
     private Spinner spinner_select;
-    private Button btn_start_sign;
-    private LinearLayout have_sign_view, not_sign_view, container;
-    private TextView total_sign_day, total_sign_month, info_title;
+    private Button btn_submit;
+    private View sign_yes,sign_no, container;
+    private TextView total_sign_day, total_sign_month, sing_error;
     private int spinner__select = 0;
     private String qdxq = "kx";
     private boolean isSign = true;
@@ -58,47 +55,30 @@ public class SignActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_daka);
+        setContentView(R.layout.activity_sign);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.transparent));
         }
         input = (TextView) findViewById(R.id.input);
-        main_window = (CoordinatorLayout) findViewById(R.id.main_window);
         spinner_select = (Spinner) findViewById(R.id.spinner_select);
-        btn_start_sign = (Button) findViewById(R.id.btn_start_sign);
+        btn_submit = (Button) findViewById(R.id.btn_submit);
         user_image = (CircleImageView) findViewById(R.id.user_image);
-        user_name = (TextView) findViewById(R.id.user_name);
-        not_sign_view = (LinearLayout) findViewById(R.id.not_sign_view);
-        have_sign_view = (LinearLayout) findViewById(R.id.have_sign_view);
-        container = (LinearLayout) findViewById(R.id.container);
+        sign_no = findViewById(R.id.sign_not);
+        sign_yes = findViewById(R.id.sign_yes);
+        container =  findViewById(R.id.container);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         total_sign_day = (TextView) findViewById(R.id.total_sign_day);
         total_sign_month = (TextView) findViewById(R.id.total_sign_month);
-        info_title = (TextView) findViewById(R.id.info_title);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        btn_start_sign.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sign_click();
-            }
-        });
-        user_name.setText(App.getName(this));
-        Picasso.with(this).load(UrlUtils.getAvaterurlb(App.getUid(this))).placeholder(R.drawable.image_placeholder).into(user_image);
-        init();
-        isHaveDaka();
+        sing_error = (TextView) findViewById(R.id.sing_error);
+        Picasso.with(this).load(UrlUtils.getAvaterurlb(App.getUid(this))).
+                placeholder(R.drawable.image_placeholder).into(user_image);
         final String[] mItems = {"开心", "难过", "郁闷", "无聊", "怒", "擦汗", "奋斗", "慵懒", "衰"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mItems);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        initToolBar(true,"签到中心");
         spinner_select.setAdapter(adapter);
-    }
 
-    private void init() {
         spinner_select.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -109,57 +89,50 @@ public class SignActivity extends BaseActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+
+        isHaveDaka();
     }
+
 
     //看看是否已经签到
     private void isHaveDaka() {
-        container.setVisibility(View.GONE);
-        not_sign_view.setVisibility(View.GONE);
-        have_sign_view.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
+
+        Calendar c = Calendar.getInstance();
+        int HOUR_OF_DAY = c.get(Calendar.HOUR_OF_DAY);
+        if (!(7 <= HOUR_OF_DAY && HOUR_OF_DAY < 23)) {
+            sing_error.setVisibility(View.VISIBLE);
+            return;
+        }
+
+
         String urlget = "plugin.php?id=dsu_paulsign:sign";
         HttpUtil.get(this, urlget, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                Document doc = Jsoup.parse(res);
-                String temphash = doc.select("input[name=formhash]").attr("value");
-                if (!temphash.isEmpty()) {
-                    hash = temphash;
-                }
+                //// TODO: 16-8-26
+                //String temphash = doc.select("input[name=formhash]").attr("value");
+                //if (!temphash.isEmpty()) {
+                 //   hash = temphash;
+                //}
                 if (res.contains("您今天已经签到过了或者签到时间还未开始")) {
                     //您今天已经签到过了
                     //获得时间
-                    have_sign_view.setVisibility(View.VISIBLE);
-                    Calendar c = Calendar.getInstance();
-                    int HOUR_OF_DAY = c.get(Calendar.HOUR_OF_DAY);
-                    if (7 <= HOUR_OF_DAY && HOUR_OF_DAY < 23) {
-                        info_title.setText("今日已签到");
-                    } else {
-                        info_title.setText("不在签到时间内");
-                    }
-
-                    for (Element temp : doc.select(".mn").select("p")) {
-                        String temptext = temp.text();
-                        if (temptext.contains("您累计已签到")) {
-                            int pos = temptext.indexOf("您累计已签到");
-                            total_sign_day.setText(temptext.substring(pos));
-                        } else if (temptext.contains("您本月已累计签到")) {
-                            total_sign_month.setText(temptext);
-                        }
-                    }
+//                    sign_yes.setVisibility(View.VISIBLE);
+//                    for (Element temp : doc.select(".mn").select("p")) {
+//                        String temptext = temp.text();
+//                        if (temptext.contains("您累计已签到")) {
+//                            int pos = temptext.indexOf("您累计已签到");
+//                            total_sign_day.setText(temptext.substring(pos));
+//                        } else if (temptext.contains("您本月已累计签到")) {
+//                            total_sign_month.setText(temptext);
+//                        }
+//                    }
 
                     isSign = true;
-                    not_sign_view.setVisibility(View.GONE);
-                    btn_start_sign.setText("返回");
                 } else {
-                    info_title.setText("今日未签到");
-                    isSign = false;
-                    not_sign_view.setVisibility(View.VISIBLE);
-                    have_sign_view.setVisibility(View.GONE);
+                    //今日未签到
                 }
-                container.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.GONE);
             }
 
             @Override
@@ -168,6 +141,8 @@ public class SignActivity extends BaseActivity {
             }
         });
     }
+
+
 
     //点击签到按钮
     private void sign_click() {
@@ -199,10 +174,9 @@ public class SignActivity extends BaseActivity {
                 public void onSuccess(byte[] response) {
                     String res = new String(response);
                     if (res.contains("恭喜你签到成功")) {
-                        showNtice("签到成功,点击按钮返回");
-                        info_title.setText("签到成功");
+                        showNtice("签到成功");
+                        //info_title.setText("签到成功");
                         isSign = true;
-                        btn_start_sign.setText("返回");
                     } else {
                         showNtice("未知错误");
                     }
@@ -254,6 +228,6 @@ public class SignActivity extends BaseActivity {
 
     private void showNtice(String res) {
         progressBar.setVisibility(View.GONE);
-        Snackbar.make(main_window, res, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(container, res, Snackbar.LENGTH_LONG).show();
     }
 }

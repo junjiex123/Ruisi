@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.fragment;
+package xyz.yluo.ruisiapp.View;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -46,7 +46,6 @@ import java.util.List;
 import java.util.Map;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.VerticalTabLayout;
 import xyz.yluo.ruisiapp.adapter.SmileyAdapter;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -59,11 +58,11 @@ import xyz.yluo.ruisiapp.utils.PostHandler;
  * 回复框 dialog
  */
 
-public class FrageReplyDialog extends DialogFragment implements View.OnClickListener{
+public class MyReplyView extends DialogFragment implements View.OnClickListener{
 
 
     private final int SMILEY_TB = 1;
-    private final int SMILEY_LDB = 2;
+    private final int SMILEY_ALI = 2;
     private final int SMILEY_ACN = 3;
 
     public static final int REPLY_LZ =0;
@@ -91,7 +90,7 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
 
     private List<Drawable> ds = new ArrayList<>();
 
-    public static FrageReplyDialog newInstance(
+    public static MyReplyView newInstance(
             String url,int type,long lastreplyTime,boolean isEnableTail,String userName,String info) {
         Bundle args = new Bundle();
         args.putString("replyUrl",url);
@@ -100,7 +99,7 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
         args.putString("userName",userName);
         args.putString("info",info);
         args.putLong("lastreplyTime",lastreplyTime);
-        FrageReplyDialog fragment = new FrageReplyDialog();
+        MyReplyView fragment = new MyReplyView();
         fragment.setArguments(args);
         return fragment;
     }
@@ -152,7 +151,7 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
                         smiley_type = SMILEY_TB;
                         break;
                     case 1:
-                       smiley_type = SMILEY_LDB;
+                       smiley_type = SMILEY_ALI;
                         break;
                     case 2:
                         smiley_type = SMILEY_ACN;
@@ -195,7 +194,7 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.i("FrageReplyDialog","onCreateDialog");
+        Log.i("MyReplyView","onCreateDialog");
         Dialog dialog = new Dialog(getActivity(), R.style.replyBarDialogStyle);
         dialog.setContentView(R.layout.my_reply_view);
         dialog.setCanceledOnTouchOutside(true);
@@ -548,272 +547,9 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
                     insertName = "16_1021";
                     break;
             }
-        } else if (smiley_type == SMILEY_LDB) {
-            switch (name) {
-                case "ldb033":
-                    insertName = "14_860";
-                    break;
-                case "ldb074":
-                    insertName = "14_871";
-                    break;
-                case "ldb028":
-                    insertName = "14_872";
-                    break;
-                case "ldb079":
-                    insertName = "14_873";
-                    break;
-                case "ldb038":
-                    insertName = "14_874";
-                    break;
-                case "ldb061":
-                    insertName = "14_875";
-                    break;
-                case "ldb036":
-                    insertName = "14_876";
-                    break;
-                case "ldb062":
-                    insertName = "14_877";
-                    break;
-                case "ldb023":
-                    insertName = "14_878";
-                    break;
-                case "ldb007":
-                    insertName = "14_870";
-                    break;
-                case "ldb052":
-                    insertName = "14_869";
-                    break;
-                case "ldb050":
-                    insertName = "14_861";
-                    break;
+        } else if (smiley_type == SMILEY_ALI) {
+            //// TODO: 16-8-26
 
-
-                case "ldb032":
-                    insertName = "14_862";
-                    break;
-                case "ldb016":
-                    insertName = "14_863";
-                    break;
-                case "ldb082":
-                    insertName = "14_864";
-                    break;
-                case "ldb039":
-                    insertName = "14_865";
-                    break;
-                case "ldb043":
-                    insertName = "14_866";
-                    break;
-                case "ldb019":
-                    insertName = "14_867";
-                    break;
-                case "ldb060":
-                    insertName = "14_868";
-                    break;
-                case "ldb046":
-                    insertName = "14_879";
-                    break;
-                case "ldb002":
-                    insertName = "14_880";
-                    break;
-                case "ldb055":
-                    insertName = "14_881";
-                    break;
-                case "ldb080":
-                    insertName = "14_882";
-                    break;
-                case "ldb073":
-                    insertName = "14_883";
-                    break;
-
-
-                case "ldb040":
-                    insertName = "14_894";
-                    break;
-                case "ldb020":
-                    insertName = "14_895";
-                    break;
-                case "ldb008":
-                    insertName = "14_896";
-                    break;
-                case "ldb024":
-                    insertName = "14_897";
-                    break;
-                case "ldb042":
-                    insertName = "14_898";
-                    break;
-                case "ldb018":
-                    insertName = "14_899";
-                    break;
-
-                case "ldb034":
-                    insertName = "14_891";
-                    break;
-                case "ldb041":
-                    insertName = "14_890";
-                    break;
-                case "ldb083":
-                    insertName = "14_882";
-                    break;
-                case "ldb067":
-                    insertName = "14_883";
-                    break;
-                case "ldb025":
-                    insertName = "14_884";
-                    break;
-                case "ldb063":
-                    insertName = "14_885";
-                    break;
-
-
-                case "ldb078":
-                    insertName = "14_886";
-                    break;
-                case "ldb065":
-                    insertName = "14_887";
-                    break;
-                case "ldb004":
-                    insertName = "14_888";
-                    break;
-                case "ldb081":
-                    insertName = "14_889";
-                    break;
-                case "ldb006":
-                    insertName = "14_900";
-                    break;
-                case "ldb026":
-                    insertName = "14_859";
-                    break;
-                case "ldb017":
-                    insertName = "14_818";
-                    break;
-                case "ldb011":
-                    insertName = "14_829";
-                    break;
-                case "ldb014":
-                    insertName = "14_830";
-                    break;
-                case "ldb070":
-                    insertName = "14_831";
-                    break;
-                case "ldb056":
-                    insertName = "14_832";
-                    break;
-                case "ldb021":
-                    insertName = "14_833";
-                    break;
-
-
-                case "ldb010":
-                    insertName = "14_834";
-                    break;
-                case "ldb045":
-                    insertName = "14_835";
-                    break;
-                case "ldb076":
-                    insertName = "14_836";
-                    break;
-                case "ldb005":
-                    insertName = "14_828";
-                    break;
-                case "ldb069":
-                    insertName = "14_827";
-                    break;
-                case "ldb030":
-                    insertName = "14_819";
-                    break;
-                case "ldb071":
-                    insertName = "14_820";
-                    break;
-                case "ldb044":
-                    insertName = "14_821";
-                    break;
-                case "ldb027":
-                    insertName = "14_822";
-                    break;
-                case "ldb013":
-                    insertName = "14_823";
-                    break;
-                case "ldb015":
-                    insertName = "14_824";
-                    break;
-                case "ldb072":
-                    insertName = "14_825";
-                    break;
-
-
-                case "ldb054":
-                    insertName = "14_826";
-                    break;
-                case "ldb049":
-                    insertName = "14_837";
-                    break;
-                case "ldb068":
-                    insertName = "14_838";
-                    break;
-                case "ldb059":
-                    insertName = "14_839";
-                    break;
-                case "ldb075":
-                    insertName = "14_850";
-                    break;
-                case "ldb031":
-                    insertName = "14_851";
-                    break;
-                case "ldb064":
-                    insertName = "14_852";
-                    break;
-                case "ldb037":
-                    insertName = "14_853";
-                    break;
-                case "ldb003":
-                    insertName = "14_854";
-                    break;
-                case "ldb012":
-                    insertName = "14_855";
-                    break;
-                case "ldb035":
-                    insertName = "14_856";
-                    break;
-                case "ldb022":
-                    insertName = "14_857";
-                    break;
-
-
-                case "ldb001":
-                    insertName = "14_849";
-                    break;
-                case "ldb057":
-                    insertName = "14_848";
-                    break;
-                case "ldb048":
-                    insertName = "14_840";
-                    break;
-                case "ldb077":
-                    insertName = "14_841";
-                    break;
-                case "ldb009":
-                    insertName = "14_842";
-                    break;
-                case "ldb053":
-                    insertName = "14_843";
-                    break;
-                case "ldb029":
-                    insertName = "14_844";
-                    break;
-                case "ldb047":
-                    insertName = "14_845";
-                    break;
-                case "ldb066":
-                    insertName = "14_846";
-                    break;
-                case "ldb051":
-                    insertName = "14_847";
-                    break;
-                case "ldb058":
-                    insertName = "14_858";
-                    break;
-
-            }
         } else if (smiley_type == SMILEY_ACN) {
             switch (name) {
 
@@ -1145,9 +881,9 @@ public class FrageReplyDialog extends DialogFragment implements View.OnClickList
     private List<Drawable> getSmileys() {
         String smiley_dir = "static/image/smiley/";
         if (smiley_type == SMILEY_TB) {
-            smiley_dir += "tieba";
-        } else if (smiley_type == SMILEY_LDB) {
-            smiley_dir += "lindab";
+            smiley_dir += "smiley_tieba";
+        } else if (smiley_type == SMILEY_ALI) {
+            smiley_dir += "smiley_ali";
         } else if (smiley_type == SMILEY_ACN) {
             smiley_dir += "acn";
         }

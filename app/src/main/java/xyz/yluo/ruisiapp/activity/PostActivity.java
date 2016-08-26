@@ -34,12 +34,12 @@ import java.util.Map;
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
+import xyz.yluo.ruisiapp.View.MyReplyView;
 import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
 import xyz.yluo.ruisiapp.data.SingleType;
 import xyz.yluo.ruisiapp.database.MyDB;
-import xyz.yluo.ruisiapp.fragment.FrageReplyDialog;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.ListItemClickListener;
@@ -56,7 +56,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class PostActivity extends BaseActivity
         implements ListItemClickListener, LoadMoreListener.OnLoadMoreListener,
-        FrageReplyDialog.replyCompeteCallBack, View.OnClickListener {
+        MyReplyView.replyCompeteCallBack, View.OnClickListener {
 
     protected SwipeRefreshLayout refreshLayout;
     private RecyclerView mRecyclerView;
@@ -281,7 +281,7 @@ public class PostActivity extends BaseActivity
                     String ref = single.getCotent();
                     String replyUserInfo = "回复:" + replyIndex + " " + replyName;
                     //String url,int type,long lastreplyTime,boolean isEnableTail,String userName,String info
-                    FrageReplyDialog dialog = FrageReplyDialog.newInstance(replyUrl, FrageReplyDialog.REPLY_CZ, replyTime,
+                    MyReplyView dialog = MyReplyView.newInstance(replyUrl, MyReplyView.REPLY_CZ, replyTime,
                             true, replyUserInfo, ref);
                     dialog.setCallBack(PostActivity.this);
                     dialog.show(getFragmentManager(), "reply");
@@ -396,7 +396,7 @@ public class PostActivity extends BaseActivity
                     }
                     //String url,int type,long lastreplyTime,boolean isEnableTail,String userName,String info
                     String hint = "回复帖子:" + hinttext;
-                    FrageReplyDialog dialog = FrageReplyDialog.newInstance(replyUrl, FrageReplyDialog.REPLY_LZ, replyTime, true, hint, Title);
+                    MyReplyView dialog = MyReplyView.newInstance(replyUrl, MyReplyView.REPLY_LZ, replyTime, true, hint, Title);
                     dialog.setCallBack(PostActivity.this);
                     dialog.show(getFragmentManager(), "reply");
                 }

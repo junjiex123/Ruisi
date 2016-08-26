@@ -10,7 +10,6 @@ import android.widget.FrameLayout;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.data.FrageType;
 import xyz.yluo.ruisiapp.fragment.FragSetting;
-import xyz.yluo.ruisiapp.fragment.FrageFriends;
 import xyz.yluo.ruisiapp.fragment.FrageHelp;
 import xyz.yluo.ruisiapp.fragment.FrageTopicStarHistory;
 
@@ -35,9 +34,6 @@ public class FragementActivity extends BaseActivity {
         Fragment to = null;
         Bundle  b =  getIntent().getExtras();
         switch (b.getInt("TYPE")){
-            case FrageType.FRIEND:
-                to = new FrageFriends();
-                break;
             case FrageType.TOPIC:
                 to = FrageTopicStarHistory.newInstance(FrageType.TOPIC);
                 break;
