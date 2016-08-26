@@ -75,12 +75,25 @@ class ImageGetter implements Html.ImageGetter{
             if(haveDown.containsKey(source)){
                 return haveDown.get(source);
             }
+
+            String fileName = source.substring(source.lastIndexOf('/'));
             if (source.contains("static/image/smiley/")) {
-                File dir = new File(context.getFilesDir()+"/smiley");
-                String fileName = source.substring(source.lastIndexOf('/'));
-                File f = new File(dir+fileName);
-                if(f.exists()){
-                    Drawable d =  Drawable.createFromPath(f.getPath());
+                Drawable d = null;
+                String smiley_dir = "static/image/smiley/";
+                if(source.contains("tieba")){
+                    //// TODO: 16-8-26
+                    InputStream in = context.getAssets().open(smiley_dir+"tieba" + fileName);
+                    Log.e("bendi tieba ",smiley_dir+"tieba" + fileName);
+                    Bitmap bitmap = BitmapFactory.decodeStream(in);
+                    d = new BitmapDrawable(context.getResources(), bitmap);
+                }else{
+                    File f = new File(context.getFilesDir()+"/smiley"+fileName);
+                    if(f.exists()){
+                        d =  Drawable.createFromPath(f.getPath());
+                    }
+                }
+
+                if(d!=null){
                     d.setBounds(0, 0, 80, 80);
                     return d;
                 }
