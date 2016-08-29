@@ -130,6 +130,7 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
             for (int i = 0; i < datas.size(); i++) {
                 dotImageView = new ImageView(getContext());
                 dotImageView.setImageResource(dotImageResourseId);
+                dotImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 dotImageView.setEnabled(false);
                 dotContainer.addView(dotImageView,lpp);
             }
@@ -224,7 +225,6 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
             Picasso.with(context).load(datas.get(position).getImgurl())
                     .placeholder(R.drawable.image_placeholder)
                     .into(v);
-            //v.setImageResource(R.drawable.image_placeholder);
             if (container.equals(v.getParent())) {
                 container.removeView(v);
             }
