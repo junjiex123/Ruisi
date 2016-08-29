@@ -122,22 +122,27 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
     };
 
     private void loginOk(){
-        mHandler.removeCallbacks(finishRunable);
-        if(isForeGround){
-            new CheckTask().execute();
+        if(!isLoginOk){
+            mHandler.removeCallbacks(finishRunable);
+            if(isForeGround){
+                new CheckTask().execute();
+            }
         }
+
     }
 
     private void enterHome(){
-        startActivity(new Intent(this, HomeActivity.class));
-        finish();
-        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+        if(isForeGround){
+            startActivity(new Intent(this, HomeActivity.class));
+            finish();
+            overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+        }
+
     }
 
 
     @Override
     public void onClick(View view) {
-        //// TODO: 16-8-24
         switch (view.getId()){
             case R.id.btn_login_inner:
                 App.IS_SCHOOL_NET = true;

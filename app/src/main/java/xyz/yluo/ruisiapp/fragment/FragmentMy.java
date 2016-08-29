@@ -1,6 +1,7 @@
 package xyz.yluo.ruisiapp.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
@@ -49,6 +50,11 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener{
         user_grade = (TextView) mRootView.findViewById(R.id.user_grade);
         user_img.setOnClickListener(this);
         mRootView.findViewById(R.id.setting).setOnClickListener(this);
+        mRootView.findViewById(R.id.history).setOnClickListener(this);
+        mRootView.findViewById(R.id.star).setOnClickListener(this);
+        mRootView.findViewById(R.id.friend).setOnClickListener(this);
+        mRootView.findViewById(R.id.post).setOnClickListener(this);
+
         containerlist = (LinearLayout) mRootView.findViewById(R.id.container);
         for(int i =0;i<containerlist.getChildCount();i++){
             View ii = containerlist.getChildAt(i);
@@ -145,6 +151,14 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener{
                 break;
             case R.id.friend:
                 switchActivity(FriendActivity.class);
+                break;
+            case R.id.share:
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_TEXT,"这个手机睿思客户端非常不错，分享给你们。\n下载地址: http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=846819\n下载地址2: http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid=846819&mobile=2");
+                shareIntent.setType("text/plain");
+                //设置分享列表的标题，并且每次都显示分享列表
+                startActivity(Intent.createChooser(shareIntent, "分享到文章到:"));
                 break;
 
         }

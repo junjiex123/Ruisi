@@ -16,7 +16,6 @@ public class HttpUtil {
     private static AsyncHttpClient client = new AsyncHttpClient();
     private static SyncHttpClient syncHttpClient = new SyncHttpClient();
     private static PersistentCookieStore store;
-    private static String hash = "";
 
     private static String getUrl(String url) {
         if (url.startsWith("http")) {
@@ -39,15 +38,14 @@ public class HttpUtil {
 
     public static void post(Context context, String url, Map<String, String> map, ResponseHandler handler) {
         init(context);
-        if(TextUtils.isEmpty(hash)){
-            hash = context.getSharedPreferences(App.MY_SHP_NAME,Context.MODE_PRIVATE).
+        if(!map.containsKey("formhash")||TextUtils.isEmpty(map.get("formhash"))){
+            String hash = context.getSharedPreferences(App.MY_SHP_NAME,Context.MODE_PRIVATE).
                     getString(App.HASH_KEY,"");
+            if(!TextUtils.isEmpty(hash)){
+                Log.i("hash is","==="+hash+"===");
+                map.put("formhash",hash);
+            }
         }
-        if(!TextUtils.isEmpty(hash)){
-            Log.i("hash is","==="+hash+"===");
-            map.put("formhash",hash);
-        }
-
         client.post(getUrl(url), map, handler);
     }
 
@@ -73,7 +71,6 @@ public class HttpUtil {
 
     public static void exit() {
         store.clearCookie();
-        hash = "";
     }
 
     public static PersistentCookieStore getStore(Context context) {

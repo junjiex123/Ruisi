@@ -8,13 +8,16 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceGroup;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.activity.PostActivity;
+import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.DataManager;
@@ -34,7 +37,7 @@ public class FragSetting extends PreferenceFragment
     //论坛地址
     private ListPreference setting_forums_url;
     private SharedPreferences sharedPreferences;
-    private Preference about_this, clear_cache, open_sourse;
+    private Preference about_this, clear_cache, open_sourse,exit_login;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -46,6 +49,7 @@ public class FragSetting extends PreferenceFragment
         about_this = findPreference("about_this");
         open_sourse = findPreference("open_sourse");
         clear_cache = findPreference("clean_cache");
+        exit_login = findPreference("exit_login");
         sharedPreferences = getPreferenceScreen().getSharedPreferences();
         boolean b = sharedPreferences.getBoolean("setting_show_tail", false);
         setting_user_tail.setEnabled(b);
@@ -53,6 +57,30 @@ public class FragSetting extends PreferenceFragment
         setting_forums_url.setSummary(App.IS_SCHOOL_NET?"当前网络校园网，点击切换":"当前网络校外网，点击切换");
         setting_forums_url.setValue(App.IS_SCHOOL_NET?"1":"2");
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+
+        if(!App.ISLOGIN(getActivity())){
+            ((PreferenceGroup)findPreference("group_other")).
+                    removePreference(findPreference("exit_login"));//这是删除 二级
+        }
+
+        exit_login.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                new MyAlertDialog(getActivity(),MyAlertDialog.WARNING_TYPE)
+                        .setTitleText("退出登录")
+                        .setContentText("你确定要注销吗？")
+                        .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
+                            @Override
+                            public void onClick(MyAlertDialog myAlertDialog) {
+                                DataManager.cleanApplicationData(getActivity());
+                                getActivity().finish();
+                            }
+                        }).show();
+                return true;
+            }
+        });
+
         PackageManager manager;
         PackageInfo info = null;
         manager = getActivity().getPackageManager();

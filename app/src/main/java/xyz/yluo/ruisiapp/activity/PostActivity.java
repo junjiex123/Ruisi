@@ -381,6 +381,9 @@ public class PostActivity extends BaseActivity
     public void onReplyFinish(int status, String info) {
         if (status == RESULT_OK) {
             replyTime = System.currentTimeMillis();
+            if(page_now==page_sum){
+                onLoadMore();
+            }
         }
     }
 

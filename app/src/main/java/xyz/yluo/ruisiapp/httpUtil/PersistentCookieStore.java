@@ -14,7 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class PersistentCookieStore {
+class PersistentCookieStore {
+
 
     private static final String COOKIE_PREFS = "Rs_Cookies";
     private final SharedPreferences cookiePrefs;
@@ -49,7 +50,7 @@ public class PersistentCookieStore {
         prefsWriter.apply();
     }
 
-    public String getCookie() {
+    String getCookie() {
         String fulcookie = "";
         for (Map.Entry<String, String> entry : listCookie.entrySet()) {
             String temp = entry.getKey() + "=" + entry.getValue() + ";";

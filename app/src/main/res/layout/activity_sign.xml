@@ -20,6 +20,7 @@
         android:padding="@dimen/dimen_16">
 
         <xyz.yluo.ruisiapp.View.CircleImageView
+            android:id="@+id/user_image"
             android:src="@drawable/image_placeholder"
             android:layout_width="82dp"
             android:layout_height="82dp" />
@@ -88,7 +89,6 @@
 
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/sign_not"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -105,7 +105,7 @@
                 android:textSize="16sp" />
 
             <Spinner
-                android:id="@+id/spinner_select"
+                android:id="@+id/spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -128,7 +128,8 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/sing_error"
+            android:visibility="gone"
+            android:id="@+id/sign_error"
             android:layout_gravity="center"
             android:text="不在签到时间内无法签到"
             style="@style/text_20_pri"

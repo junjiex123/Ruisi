@@ -1,5 +1,6 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,10 +9,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -40,70 +44,47 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class SignActivity extends BaseActivity {
 
-    protected TextView input;
     protected CircleImageView user_image;
     protected ProgressBar progressBar;
-    private Spinner spinner_select;
-    private Button btn_submit;
-    private View sign_yes,sign_no, container;
-    private TextView total_sign_day, total_sign_month, sing_error;
+    private View sign_yes,sign_no;
+    private TextView sign_error;
     private int spinner__select = 0;
     private String qdxq = "kx";
-    private boolean isSign = true;
-    private String hash = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.transparent));
-        }
-        input = (TextView) findViewById(R.id.input);
-        spinner_select = (Spinner) findViewById(R.id.spinner_select);
-        btn_submit = (Button) findViewById(R.id.btn_submit);
-        user_image = (CircleImageView) findViewById(R.id.user_image);
-        sign_no = findViewById(R.id.sign_not);
-        sign_yes = findViewById(R.id.sign_yes);
-        container =  findViewById(R.id.container);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        total_sign_day = (TextView) findViewById(R.id.total_sign_day);
-        total_sign_month = (TextView) findViewById(R.id.total_sign_month);
-        sing_error = (TextView) findViewById(R.id.sing_error);
-        Picasso.with(this).load(UrlUtils.getAvaterurlb(App.getUid(this))).
-                placeholder(R.drawable.image_placeholder).into(user_image);
-        final String[] mItems = {"开心", "难过", "郁闷", "无聊", "怒", "擦汗", "奋斗", "慵懒", "衰"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mItems);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         initToolBar(true,"签到中心");
-        spinner_select.setAdapter(adapter);
 
-        spinner_select.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                spinner__select = pos;
-            }
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        sign_yes = findViewById(R.id.sign_yes);
+        sign_no = findViewById(R.id.sign_not);
+        sign_error = (TextView) findViewById(R.id.sign_error);
+        sign_yes.setVisibility(View.GONE);
+        sign_no.setVisibility(View.GONE);
+        sign_error.setVisibility(View.GONE);
+        user_image = (CircleImageView) findViewById(R.id.user_image);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
-
-        isHaveDaka();
+        checkState();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Picasso.with(this).load(UrlUtils.getAvaterurlb(App.getUid(this))).
+                placeholder(R.drawable.image_placeholder).into(user_image);
+    }
 
     //看看是否已经签到
-    private void isHaveDaka() {
-
+    private void checkState() {
+        progressBar.setVisibility(View.VISIBLE);
         Calendar c = Calendar.getInstance();
         int HOUR_OF_DAY = c.get(Calendar.HOUR_OF_DAY);
         if (!(7 <= HOUR_OF_DAY && HOUR_OF_DAY < 23)) {
-            sing_error.setVisibility(View.VISIBLE);
+            sign_error();
             return;
         }
-
 
         String urlget = "plugin.php?id=dsu_paulsign:sign";
         HttpUtil.get(this, urlget, new ResponseHandler() {
@@ -111,27 +92,23 @@ public class SignActivity extends BaseActivity {
             public void onSuccess(byte[] response) {
                 String res = new String(response);
                 //// TODO: 16-8-26
-                //String temphash = doc.select("input[name=formhash]").attr("value");
-                //if (!temphash.isEmpty()) {
-                 //   hash = temphash;
-                //}
+                Document doc = Jsoup.parse(res);
                 if (res.contains("您今天已经签到过了或者签到时间还未开始")) {
-                    //您今天已经签到过了
-                    //获得时间
-//                    sign_yes.setVisibility(View.VISIBLE);
-//                    for (Element temp : doc.select(".mn").select("p")) {
-//                        String temptext = temp.text();
-//                        if (temptext.contains("您累计已签到")) {
-//                            int pos = temptext.indexOf("您累计已签到");
-//                            total_sign_day.setText(temptext.substring(pos));
-//                        } else if (temptext.contains("您本月已累计签到")) {
-//                            total_sign_month.setText(temptext);
-//                        }
-//                    }
+                    String daytxt = "0";
+                    String monthtxt = "0";
+                    for (Element temp : doc.select(".mn").select("p")) {
+                        String temptext = temp.text();
+                        if (temptext.contains("您累计已签到")) {
+                            int pos = temptext.indexOf("您累计已签到");
+                            daytxt = temptext.substring(pos);
+                        }else if(temptext.contains("您本月已累计签到")) {
+                            monthtxt = temptext;
+                        }
+                    }
 
-                    isSign = true;
+                    sign_yes(daytxt,monthtxt);
                 } else {
-                    //今日未签到
+                    sign_no();
                 }
             }
 
@@ -143,53 +120,100 @@ public class SignActivity extends BaseActivity {
     }
 
 
+    private void sign_error(){
+        progressBar.setVisibility(View.GONE);
+        sign_error.setVisibility(View.VISIBLE);
+    }
+
+    private void sign_yes(String day,String month){
+        progressBar.setVisibility(View.GONE);
+        sign_yes.setVisibility(View.VISIBLE);
+        TextView total_day = (TextView) findViewById(R.id.total_sign_day);
+        TextView total_month = (TextView) findViewById(R.id.total_sign_month);
+        total_day.setText(day);
+        total_month.setText(month);
+    }
+
+    private void sign_no(){
+        progressBar.setVisibility(View.GONE);
+        sign_no.setVisibility(View.VISIBLE);
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        final String[] mItems = {"开心", "难过", "郁闷", "无聊", "怒", "擦汗", "奋斗", "慵懒", "衰"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mItems);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                spinner__select = pos;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
+        Button b = (Button) findViewById(R.id.btn_submit);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startDaka();
+            }
+        });
+    }
 
     //点击签到按钮
-    private void sign_click() {
-        if (isSign) {
-            finish();
+    private void startDaka() {
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setMessage("真在签到...");
+        dialog.show();
+        String xinqin = getGroup1_select();
+        //String formhash = hash;
+        String qdmode;
+        String todaysay = "";
+
+        EditText input = (EditText) findViewById(R.id.input);
+        if (!TextUtils.isEmpty(input.getText().toString())) {
+            qdmode = "1";
+            todaysay = input.getText().toString() + "  --来自睿思手机客户端";
         } else {
-            String xinqin = getGroup1_select();
-            String formhash = hash;
-            String qdmode;
-            String todaysay = "";
-            String fastreplay = "0";
-
-            if (!input.getText().toString().isEmpty()) {
-                qdmode = "1";
-                todaysay = input.getText().toString() + "  --来自睿思手机客户端";
-            } else {
-                qdmode = "3";
-            }
-            Map<String, String> params = new HashMap<>();
-            params.put("formhash", formhash);
-            params.put("qdxq", xinqin);
-            params.put("qdmode", qdmode);
-            params.put("todaysay", todaysay);
-            params.put("fastreplay", fastreplay);
-
-            String url = UrlUtils.getSignUrl();
-            HttpUtil.post(this, url, params, new ResponseHandler() {
-                @Override
-                public void onSuccess(byte[] response) {
-                    String res = new String(response);
-                    if (res.contains("恭喜你签到成功")) {
-                        showNtice("签到成功");
-                        //info_title.setText("签到成功");
-                        isSign = true;
-                    } else {
-                        showNtice("未知错误");
-                    }
-
-                    isHaveDaka();
-                }
-
-                @Override
-                public void onFailure(Throwable e) {
-                    showNtice("网络错误!!!!!");
-                }
-            });
+            qdmode = "3";
         }
+
+        Map<String, String> params = new HashMap<>();
+        //params.put("formhash", formhash);
+        params.put("qdxq", xinqin);
+        params.put("qdmode", qdmode);
+        params.put("todaysay", todaysay);
+        params.put("fastreplay", "0");
+
+        String url = UrlUtils.getSignUrl();
+        HttpUtil.post(this, url, params, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                int start = res.indexOf("恭喜你签到成功");
+                if(start>0){
+                    int end = res.indexOf("</div>",start);
+                    showNtice(res.substring(start,end));
+                    sign_no.setVisibility(View.GONE);
+                    checkState();
+                }else {
+                    showNtice("未知错误,签到失败");
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                showNtice("网络错误!!!!!");
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                dialog.dismiss();
+            }
+        });
     }
 
     //获得选择的心情
@@ -228,6 +252,7 @@ public class SignActivity extends BaseActivity {
 
     private void showNtice(String res) {
         progressBar.setVisibility(View.GONE);
+        View container = findViewById(R.id.container);
         Snackbar.make(container, res, Snackbar.LENGTH_LONG).show();
     }
 }
