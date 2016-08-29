@@ -9,13 +9,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
-import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +33,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class LaunchActivity extends BaseActivity implements View.OnClickListener{
     //等待时间
-    private final static int WAIT_TIME = 800;
+    private final static int WAIT_TIME = 200;
     private TextView launch_text;
     private CircleImageView user_image;
     private SharedPreferences shp = null;
@@ -47,6 +43,7 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
     //记录2个检查网络的返回值，如果都为空说明没网...
     private String mobileRes = "";
     private String pcResponse = "";
+    private boolean isLoginOk = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,34 +64,60 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
             Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(user_image);
             user_image.setVisibility(View.VISIBLE);
         }
-        mHandler.postDelayed(finishRunable, 1600);
-        String urlin = "http://rs.xidian.edu.cn/member.php?mod=logging&action=login&mobile=2";
-        String urlout = "http://bbs.rs.xidian.me/member.php?mod=logging&action=login&mobile=2";
+        mHandler.postDelayed(finishRunable, 3000);
+        final String urlin = "http://rs.xidian.edu.cn/member.php?mod=logging&action=login&mobile=2";
+        final String urlout = "http://bbs.rs.xidian.me/member.php?mod=logging&action=login&mobile=2";
 
-        HttpUtil.get(this, urlout, new ResponseHandler() {
+        new Thread(new Runnable() {
             @Override
-            public void onSuccess(byte[] response) {
-                mobileRes  = new String(response);
-                if(!TextUtils.isEmpty(pcResponse)){
-                    loginOk();
+            public void run() {
+                HttpUtil.get(LaunchActivity.this, urlin, new ResponseHandler() {
+                    @Override
+                    public void onSuccess(byte[] response) {
+                        pcResponse = new String(response);
+                        loginOk();
+                        isLoginOk = true;
+                    }
+
+                    @Override
+                    public void onFailure(Throwable e) {
+                        super.onFailure(e);
+                        e.printStackTrace();
+                        Log.e("login fial","====inner=====");
+                    }
+                });
+
+                try {
+                    Thread.sleep(350);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if(!isLoginOk){
+                    HttpUtil.get(LaunchActivity.this, urlout, new ResponseHandler() {
+                        @Override
+                        public void onSuccess(byte[] response) {
+                            mobileRes  = new String(response);
+                            if(!isLoginOk){
+                                isLoginOk = true;
+                                loginOk();
+                            }
+                        }
+                    });
                 }
             }
-        });
+        }).start();
 
-        HttpUtil.get(this, urlin, new ResponseHandler() {
-            @Override
-            public void onSuccess(byte[] response) {
-                pcResponse = new String(response);
-                loginOk();
-            }
-        });
+
+
     }
 
 
     private Runnable finishRunable = new Runnable() {
         @Override
         public void run() {
-            loginOk();
+            if(!isLoginOk)
+                loginOk();
         }
     };
 
@@ -130,7 +153,7 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void onStart() {
         super.onStart();
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0.4f, 1.0f);
         alphaAnimation.setDuration((long) (WAIT_TIME*0.85));// 设置动画显示时间
         RotateAnimation rotateAnimation = (RotateAnimation) AnimationUtils.loadAnimation(this, R.anim.always_rotate);
         findViewById(R.id.loading_view).startAnimation(rotateAnimation);

@@ -21,7 +21,7 @@ public class MyGridDivider extends RecyclerView.ItemDecoration{
         maint.setColor(color);
         maint.setStyle(Paint.Style.STROKE);
         maint.setAntiAlias(true);
-        maint.setStrokeWidth(devideWidth);
+        maint.setStrokeWidth(devideWidth*0.8f);
     }
 
     @Override

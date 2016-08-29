@@ -72,28 +72,29 @@ class ImageGetter implements Html.ImageGetter{
     @Override
     public Drawable getDrawable(String source) {
         try {
+
             if(haveDown.containsKey(source)){
                 return haveDown.get(source);
             }
-
-            String fileName = source.substring(source.lastIndexOf('/'));
             if (source.contains("static/image/smiley/")) {
+                final String fileName = source.substring(source.lastIndexOf('/'));
                 Drawable d = null;
-                String smiley_dir = "static/image/smiley/";
-                if(source.contains("tieba")){
-                    //// TODO: 16-8-26
-                    InputStream in = context.getAssets().open(smiley_dir+"tieba" + fileName);
-                    Log.e("bendi tieba ",smiley_dir+"tieba" + fileName);
-                    Bitmap bitmap = BitmapFactory.decodeStream(in);
-                    d = new BitmapDrawable(context.getResources(), bitmap);
-                }else{
-                    File f = new File(context.getFilesDir()+"/smiley"+fileName);
-                    if(f.exists()){
-                        d =  Drawable.createFromPath(f.getPath());
-                    }
+                if (source.contains("tieba")) {
+                    d = getAssertImage("tieba", fileName);
+                } else if (source.contains("ali")) {
+                    d = getAssertImage("ali", fileName);
+                } else if (source.contains("acn")) {
+                    d = getAssertImage("acn", fileName);
                 }
 
-                if(d!=null){
+                if (d != null) {
+                    return d;
+                }
+
+                String fileTosave = source.substring(source.indexOf("/smiley"));
+                File f = new File(context.getFilesDir()+fileTosave);
+                if(f.exists()){
+                    d =  Drawable.createFromPath(f.getPath());
                     d.setBounds(0, 0, 80, 80);
                     return d;
                 }
@@ -111,6 +112,20 @@ class ImageGetter implements Html.ImageGetter{
         }
     }
 
+    private Drawable getAssertImage(String type,String fileName) throws Exception{
+        String smiley_dir = "static/image/smiley/";
+        File f = new File(smiley_dir+type+fileName);
+        if(f.exists()){
+            InputStream in = context.getAssets().open(smiley_dir+"tieba" + fileName);
+            Log.e("bendi tieba ",smiley_dir+"tieba" + fileName);
+            Bitmap bitmap = BitmapFactory.decodeStream(in);
+            Drawable d = new BitmapDrawable(context.getResources(), bitmap);
+            d.setBounds(0, 0, 80, 80);
+            return d;
+        }
+        return null;
+    }
+
     private void startDown(){
         if(isStop ||listener==null){
             return;
@@ -125,8 +140,6 @@ class ImageGetter implements Html.ImageGetter{
     //下载网络图片
     private class LoadImage extends AsyncTask<String, Void, Drawable> {
         private String s = "";
-
-
         @Override
         protected Drawable doInBackground(String... params) {
             String source = params[0];
@@ -146,15 +159,18 @@ class ImageGetter implements Html.ImageGetter{
                 URLConnection conn= url.openConnection();
                 conn.connect();
                 InputStream is = conn.getInputStream();
-
                 //这是表情文件 返回的同时还要存入文件
                 if(source.contains("static/image/smiley")){
-                    File dir = new File(context.getFilesDir()+"/smiley");
+                    String fileTosavedir = source.substring(source.indexOf("/smiley"),
+                            source.lastIndexOf("/"));
+                    File dir = new File(context.getFilesDir()+fileTosavedir);
+                    Log.e("--dir--",dir.toString());
                     if(!dir.exists()){
                         Log.e("image getter","创建目录"+dir.mkdirs());
                     }
-                    String fileName = source.substring(source.lastIndexOf('/'));
-                    File f = new File(dir+fileName);
+
+                    String fulldir = source.substring(source.indexOf("/smiley"));
+                    File f = new File(context.getFilesDir()+fulldir);
                     if(!f.exists()){
                         Log.e("image getter","创建"+f.getPath()+">>"+f.createNewFile()) ;
                         FileOutputStream fos = new FileOutputStream(f);
@@ -199,7 +215,6 @@ class ImageGetter implements Html.ImageGetter{
             if(drawable!=null){
                 successCount++;
             }
-
             haveDown.put(s,drawable);
             urls.remove(s);
             if(urls.isEmpty()||successCount>=STEP){
@@ -208,7 +223,6 @@ class ImageGetter implements Html.ImageGetter{
             }
             if(successCount>=STEP)
                 successCount = 0;
-
             /**
              * 下载队列还存在的话 继续下载
              */

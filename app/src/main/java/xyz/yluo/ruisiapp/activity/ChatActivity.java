@@ -44,7 +44,6 @@ public class ChatActivity extends BaseActivity implements MyReplyView.replyCompe
 
     private List<ChatListData> datas = new ArrayList<>();
     private ChatListAdapter adapter;
-
     private String replyUrl = "";
     private String username = "消息";
     private String url = "";
@@ -73,6 +72,7 @@ public class ChatActivity extends BaseActivity implements MyReplyView.replyCompe
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         adapter = new ChatListAdapter(this, datas);
+        adapter.disableLoadMore();
         recycler_view.setLayoutManager(layoutManager);
         recycler_view.setAdapter(adapter);
         recycler_view.setClipToPadding(false);
@@ -189,7 +189,6 @@ public class ChatActivity extends BaseActivity implements MyReplyView.replyCompe
 
         @Override
         protected void onPostExecute(List<ChatListData> tepdata) {
-            adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
             if(datas.size()==0){
                 datas.addAll(tepdata);
                 adapter.notifyDataSetChanged();

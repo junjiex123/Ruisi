@@ -34,12 +34,18 @@ public class AboutActivity extends BaseActivity {
         }
         TextView version = (TextView) findViewById(R.id.version);
 
+        findViewById(R.id.btn_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
 
-        String ss = "<b>西电睿思手机客户端</b><br />目前可见bug较多，最近比较忙修复bug速度会很慢的。。。<br />" +
-                "bug反馈,或者有什么好的建议点击按钮给我发邮件吧<br />或者 <a href=\"home.php?mod=space&uid=252553&do=profile&mobile=2\">" +
+        String ss = "<b>西电睿思手机客户端</b><br />功能不断完善中，bug较多还请多多反馈......<br />" +
+                "bug反馈,或者有什么好的建议可以到<a href=\"forum.php?mod=viewthread&tid=846819&mobile=2\">本帖</a>回复，我都会看的。或者点击按钮给我发邮件吧<br />或者 <a href=\"home.php?mod=space&uid=252553&do=profile&mobile=2\">" +
                 "@谁用了FREEDOM</a>或者<a href=\"home.php?mod=space&uid=261098&do=profile&mobile=2\">@wangfuyang</a><br />" +
-                "也可以到我的github上留言<a href=\"https://github.com/freedom10086/Ruisi\">点击这儿</a>";
+                "也可以到我的github上留言,和提交问题<a href=\"https://github.com/freedom10086/Ruisi\">点击这儿</a>";
 
         HtmlView htmlView = (HtmlView) findViewById(R.id.html_text);
         htmlView.setHtmlText(ss, false);

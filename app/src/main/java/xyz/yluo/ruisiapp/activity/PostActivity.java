@@ -501,6 +501,15 @@ public class PostActivity extends BaseActivity
                 for (Element codee : contentels.select(".blockcode")) {
                     codee.html("<code>" + codee.html().trim() + "</code>");
                 }
+
+                //处理引用
+                for (Element codee : contentels.select("blockquote")) {
+                    if(codee.text().contains("发表于")){
+                        codee.html(codee.html().replaceAll("发表于.{16}",""));
+                        break;
+                    }
+                }
+
                 //删除修改日期
                 contentels.select("i.pstatus").remove();
                 String finalcontent = contentels.html().trim();

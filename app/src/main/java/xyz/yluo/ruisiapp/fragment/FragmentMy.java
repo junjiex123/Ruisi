@@ -114,10 +114,12 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener{
                 switchActivity(AboutActivity.class);
                 break;
             case R.id.sign:
-                if (App.IS_SCHOOL_NET&&isLogin()) {
-                    switchActivity(SignActivity.class);
-                } else {
-                    Snackbar.make(containerlist,"校园网环境下才可以签到",Snackbar.LENGTH_SHORT).show();
+                if (isLogin()) {
+                    if(App.IS_SCHOOL_NET){
+                        switchActivity(SignActivity.class);
+                    }else{
+                        Snackbar.make(containerlist,"校园网环境下才可以签到",Snackbar.LENGTH_SHORT).show();
+                    }
                 }
                 break;
             case R.id.setting:

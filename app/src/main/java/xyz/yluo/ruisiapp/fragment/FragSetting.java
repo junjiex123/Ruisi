@@ -18,6 +18,7 @@ import xyz.yluo.ruisiapp.activity.PostActivity;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.DataManager;
+import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.IntentUtils;
 
 /**
@@ -68,50 +69,47 @@ public class FragSetting extends PreferenceFragment
         }
         about_this.setSummary("当前版本" + version_name+"  version code:"+version_code);
 
-        //约定一个标题格式[2016 xxx更新][version:1.9.2]
-        final String finalVersion_name = version_name;
-        about_this.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Toast.makeText(getActivity(), "正在检查更新", Toast.LENGTH_SHORT).show();
-                final String url = "forum.php?mod=viewthread&tid=846819&mobile=2";
-                HttpUtil.get(getActivity(), url, new ResponseHandler() {
-                    @Override
-                    public void onSuccess(byte[] response) {
-                        String res = new String(response);
-                        int ih = res.indexOf("keywords");
-                        int h_start = res.indexOf('\"',ih+15);
-                        int h_end = res.indexOf('\"',h_start+1);
-                        String title  = res.substring(h_start+1,h_end);
+        //[2016年6月9日更新][code:25]睿思手机客户端
+        final int finalversion_code = version_code;
+        about_this.setOnPreferenceClickListener(
+                new Preference.OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            final String url = "forum.php?mod=viewthread&tid=846819&mobile=2";
+                            Toast.makeText(getActivity(), "正在检查更新", Toast.LENGTH_SHORT).show();
+                            HttpUtil.get(getActivity(), url, new ResponseHandler() {
+                                @Override
+                                public void onSuccess(byte[] response) {
+                                    String res = new String(response);
+                                    int ih = res.indexOf("keywords");
+                                    int h_start = res.indexOf('\"', ih + 15);
+                                    int h_end = res.indexOf('\"', h_start + 1);
+                                    String title = res.substring(h_start + 1, h_end);
+                                    if (title.contains("code")) {
+                                        int st = title.indexOf("code");
+                                        int code = GetId.getNumber(title.substring(st));
+                                        Log.e("code", code + " " + finalversion_code);
+                                        if(code>finalversion_code){
+                                            new MyAlertDialog(getActivity(),MyAlertDialog.WARNING_TYPE)
+                                                    .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
+                                                        @Override
+                                                        public void onClick(MyAlertDialog myAlertDialog) {
+                                                            PostActivity.open(getActivity(),url,"谁用了FREEDOM");
+                                                        }
+                                                    })
+                                                    .setTitleText("检测到新版本")
+                                                    .setConfirmText("查看")
+                                                    .setContentText(title)
+                                                    .show();
 
-                        Log.e("title","title is "+title);
-                        int vh = title.indexOf("[version:");
-                        if(vh>0){
-                            int ve = title.indexOf("]",vh+8);
-                            String newVerName = title.substring(vh+9,ve);
-                            if(!newVerName.equals(finalVersion_name)){
-                                new MyAlertDialog(getActivity(),MyAlertDialog.WARNING_TYPE)
-                                        .setTitleText("检测到新版本")
-                                        .setCancelText("取消")
-                                        .setContentText(title)
-                                        .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
-                                            @Override
-                                            public void onClick(MyAlertDialog myAlertDialog) {
-                                                //RequestOpenBrowser.openBroswer(getActivity(), "http://xidianrs.cn/ruisiapp.apk");
-                                                PostActivity.open(getActivity(),url,null);
-                                            }
-                                        }).show();
-                            }else{
-                                Toast.makeText(getActivity(), "暂无更新", Toast.LENGTH_SHORT).show();
-                            }
-                        }else{
-                            Toast.makeText(getActivity(), "暂无更新", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                });
-                return false;
-            }
+                                        }else{
+                                            Toast.makeText(getActivity(),"暂无更新",Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+                            });
+                            return  true;
+                }
         });
 
         open_sourse.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

@@ -28,7 +28,7 @@ public class CustomQuoteSpan extends QuoteSpan implements LineBackgroundSpan{
                 getColor(context, R.color.bg_secondary);
         this.stripeColor = ContextCompat.
                 getColor(context, R.color.colorDivider);
-        this.stripeWidth = 10;
+        this.stripeWidth = 8;
         this.gap = 20;
     }
 

@@ -4,6 +4,10 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.NotificationManager;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,6 +28,7 @@ import java.util.TimerTask;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyBottomTab;
 import xyz.yluo.ruisiapp.data.FrageType;
 import xyz.yluo.ruisiapp.fragment.FrageForumList;
@@ -32,6 +37,7 @@ import xyz.yluo.ruisiapp.fragment.FrageMessage;
 import xyz.yluo.ruisiapp.fragment.FragmentMy;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-3-17.
@@ -50,6 +56,11 @@ public class HomeActivity extends BaseActivity
     private long lastCheckMsgTime = 0;
     private int interval = 45000;//60s
     private MyHandler messageHandler;
+    //间隔3天检查更新一次
+    private static final int UPDATE_TIME = 1000*3600*24*3;
+    private SharedPreferences sharedPreferences;
+    private boolean isNeedCheckUpdate = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +80,13 @@ public class HomeActivity extends BaseActivity
             interval = interval*2;
         }
 
+        //判断是否真正的需要请求服务器
+        //获得新的数据
+        sharedPreferences  = getPreferences(Context.MODE_PRIVATE);
+        long time =  sharedPreferences.getLong(App.CHECK_UPDATE_KEY,0);
+        if(System.currentTimeMillis()-time>UPDATE_TIME){
+            isNeedCheckUpdate = true;
+        }
         messageHandler = new MyHandler(bottomTab,this);
     }
 
@@ -93,6 +111,10 @@ public class HomeActivity extends BaseActivity
             }
             task = new MyTimerTask();
             timer.schedule(task, need, interval); //延时150ms后执行，60s间隔
+        }
+
+        if(isNeedCheckUpdate){
+            checkUpdate();
         }
     }
 
@@ -193,10 +215,11 @@ public class HomeActivity extends BaseActivity
             });
             lastCheckMsgTime = System.currentTimeMillis();
             try {
-                Thread.sleep(50);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
             HttpUtil.SyncGet(HomeActivity.this, url_pm, new ResponseHandler() {
                 @Override
                 public void onSuccess(byte[] response) {
@@ -204,6 +227,56 @@ public class HomeActivity extends BaseActivity
                 }
             });
         }
+    }
+
+
+    private void checkUpdate(){
+        PackageManager manager;
+        PackageInfo info = null;
+        manager = getPackageManager();
+        try {
+            info = manager.getPackageInfo(getPackageName(), 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        int version_code = 1;
+        if (info != null) {
+            version_code = info.versionCode;
+        }
+        final String url = "forum.php?mod=viewthread&tid=846819&mobile=2";
+        final int finalVersion_code = version_code;
+        HttpUtil.get(HomeActivity.this, url, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                int ih = res.indexOf("keywords");
+                int h_start = res.indexOf('\"', ih + 15);
+                int h_end = res.indexOf('\"', h_start + 1);
+                String title = res.substring(h_start + 1, h_end);
+                if (title.contains("code")) {
+                    int st = title.indexOf("code");
+                    int code = GetId.getNumber(title.substring(st));
+                    if(code> finalVersion_code){
+                        SharedPreferences.Editor editor =  sharedPreferences.edit();
+                        editor.putLong(App.CHECK_UPDATE_KEY,System.currentTimeMillis());
+                        editor.apply();
+                        isNeedCheckUpdate = false;
+                        new MyAlertDialog(HomeActivity.this,MyAlertDialog.WARNING_TYPE)
+                                .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
+                                    @Override
+                                    public void onClick(MyAlertDialog myAlertDialog) {
+                                        PostActivity.open(HomeActivity.this,url,"谁用了FREEDOM");
+                                    }
+                                })
+                                .setTitleText("检测到新版本")
+                                .setConfirmText("查看")
+                                .setContentText(title)
+                                .show();
+
+                    }
+                }
+            }
+        });
     }
 
 

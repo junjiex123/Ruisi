@@ -28,7 +28,7 @@
             android:layout_height="wrap_content" />
 
         <ImageView
-            android:onClick="finish"
+            android:id="@+id/btn_back"
             android:clickable="true"
             android:padding="13dp"
             android:layout_marginTop="24dp"

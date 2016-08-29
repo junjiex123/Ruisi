@@ -130,6 +130,6 @@ public class App extends Application {
     public static final String IS_REMBER_PASS_USER = "login_rember_pass";
     public static final String LOGIN_NAME = "login_name";
     public static final String LOGIN_PASS = "login_pass";
-
+    public static final String CHECK_UPDATE_KEY = "check_update_time";
 
 }
