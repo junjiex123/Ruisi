@@ -1,7 +1,6 @@
 package xyz.yluo.ruisiapp.activity;
 
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;

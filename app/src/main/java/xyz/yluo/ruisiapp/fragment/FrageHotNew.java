@@ -135,7 +135,7 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
 
     private void getData() {
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
-        if (App.IS_SCHOOL_NET && galleryDatas.size() == 0) {
+        if (App.IS_SCHOOL_NET) {
             new getGalleryTask().execute();
         }
         String type = (currentType==TYPE_HOT)?"hot":"new";
@@ -172,6 +172,7 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
                     String title = e.text();
                     String titleurl = e.select("a").attr("href");
                     String imgurl = e.select("img").attr("src");
+                    Log.e("imh",imgurl);
                     temp.add(new GalleryData(imgurl, title, titleurl));
                 }
             } catch (IOException e) {
@@ -186,20 +187,14 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
             if(data.size()==0){
                 return;
             }
-            //进行了一下优化 只有不相同时才刷行
-            if(galleryDatas.size()==data.size()){
-                boolean isSame = true;
-                for(int i=0;i<data.size();i++){
-                    if(!galleryDatas.get(i).getTitle().equals(data.get(i).getTitle())){
-                        isSame = false;
-                        break;
-                    }
-                }
-                if(isSame){
-                    return;
-                }
+            if(galleryDatas.size()==0){
+                galleryDatas.addAll(data);
+            }else if(galleryDatas.size()!=data.size()){//进行了一下优化 只有不相同时才刷行
+                galleryDatas.clear();
+                galleryDatas.addAll(data);
+            }else{
+                return;
             }
-            galleryDatas = data;
             adapter.notifyItemChanged(0);
         }
     }

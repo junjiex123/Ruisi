@@ -3,4 +3,4 @@
     android:id="@+id/myGuideView"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="160dp"/>
+    android:layout_height="180dp"/>

@@ -48,7 +48,7 @@
         android:padding="@dimen/dimen_4">
 
         <ImageButton
-            android:id="@+id/action_smiley"
+            android:id="@+id/btn_smiley"
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_gravity="bottom|start"
@@ -57,6 +57,7 @@
             android:src="@drawable/ic_edit_emoticon_24dp" />
 
         <EditText
+            android:layout_marginStart="4dp"
             android:textColorHint="@color/colorDisableHintIcon"
             style="@style/text_16_pri"
             android:id="@+id/input_aera"

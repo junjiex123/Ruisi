@@ -87,21 +87,22 @@ public class PostsActivity extends BaseActivity implements
         isHideZhiding = PreferenceManager.getDefaultSharedPreferences(this)
                 .getBoolean("setting_hide_zhidin", true);
         if(getType()==PostListAdapter.TYPE_IMAGE){
+            isEnableLoadMore = false;
             mLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
             mRecyclerView.setHasFixedSize(false);
             addToolbarMenu(R.drawable.ic_column_change_24dp).setOnClickListener(this);
         }else{
             mLayoutManager = new LinearLayoutManager(this);
             mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.addOnScrollListener(
+                    new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 8));
             addToolbarMenu(R.drawable.ic_edit).setOnClickListener(this);
         }
 
-        adapter = new PostListAdapter(this, datas, 0);
+        adapter = new PostListAdapter(this, datas, getType());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(adapter);
         myDB = new MyDB(this, MyDB.MODE_READ);
-        //加载更多
-        mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 8));
         datas.clear();
         btn_refresh.setOnClickListener(new View.OnClickListener() {
             @Override

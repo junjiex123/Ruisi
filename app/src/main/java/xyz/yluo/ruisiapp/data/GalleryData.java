@@ -1,5 +1,8 @@
 package xyz.yluo.ruisiapp.data;
 
+import xyz.yluo.ruisiapp.App;
+import xyz.yluo.ruisiapp.utils.UrlUtils;
+
 /**
  * Created by free2 on 16-6-22.
  * gallery data
@@ -10,6 +13,9 @@ public class GalleryData {
     private String titleUrl;
 
     public GalleryData(String imgurl, String title, String titleUrl) {
+        if(imgurl.startsWith("./")){
+            imgurl = App.getBaseUrl()+imgurl.substring(2);
+        }
         this.imgurl = imgurl;
         this.title = title;
         this.titleUrl = titleUrl;

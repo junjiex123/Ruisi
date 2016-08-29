@@ -40,7 +40,7 @@ public class HotNewListAdapter extends BaseAdapter {
     @Override
     protected int getDataCount() {
         int count = DataSet.size();
-        if (galleryDatas!=null&&galleryDatas.size() > 0) {
+        if (galleryDatas.size() > 0) {
             count++;
         }
 
@@ -49,7 +49,7 @@ public class HotNewListAdapter extends BaseAdapter {
 
     @Override
     protected int getItemType(int position) {
-        if (galleryDatas != null && position == 0 && galleryDatas.size() > 0) {
+        if (position == 0 && galleryDatas.size() > 0) {
             return TYPE_ARTICLE_HEADER;
         }else{
             return TYPE_ARTICLE_LIST;

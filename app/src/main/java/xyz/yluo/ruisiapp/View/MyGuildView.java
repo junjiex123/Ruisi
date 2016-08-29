@@ -221,7 +221,9 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
             ImageView v = new ImageView(context);
             v.setLayoutParams(new LayoutParams(RMP,RMP));
             v.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            Picasso.with(context).load(datas.get(position).getImgurl()).placeholder(R.drawable.image_placeholder).into(v);
+            Picasso.with(context).load(datas.get(position).getImgurl())
+                    .placeholder(R.drawable.image_placeholder)
+                    .into(v);
             //v.setImageResource(R.drawable.image_placeholder);
             if (container.equals(v.getParent())) {
                 container.removeView(v);

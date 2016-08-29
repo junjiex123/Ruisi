@@ -50,6 +50,7 @@ import xyz.yluo.ruisiapp.adapter.SmileyAdapter;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.ListItemClickListener;
+import xyz.yluo.ruisiapp.utils.ImageUtils;
 import xyz.yluo.ruisiapp.utils.ImeUtil;
 import xyz.yluo.ruisiapp.utils.PostHandler;
 
@@ -61,9 +62,9 @@ import xyz.yluo.ruisiapp.utils.PostHandler;
 public class MyReplyView extends DialogFragment implements View.OnClickListener{
 
 
-    private final int SMILEY_TB = 1;
-    private final int SMILEY_ALI = 2;
-    private final int SMILEY_ACN = 3;
+    public static final int SMILEY_TB = 1;
+    public static final int SMILEY_ALI = 2;
+    public static final int SMILEY_ACN = 3;
 
     public static final int REPLY_LZ =0;
     public static final int REPLY_CZ =1;
@@ -129,6 +130,7 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
         input.setHint(userName);
         RecyclerView smiley_listv = (RecyclerView) v.findViewById(R.id.smiley_list);
         smiley_container = (LinearLayout) v.findViewById(R.id.smileys_container);
+        smiley_container.setVisibility(View.GONE);
         loadingView = (LinearLayout) v.findViewById(R.id.loading_view);
         loadingView.setVisibility(View.GONE);
         notisfy_view = (CoordinatorLayout) v.findViewById(R.id.notisfy_view);
@@ -177,7 +179,7 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
                 }
             }
         });
-        v.findViewById(R.id.action_smiley).setOnClickListener(this);
+        v.findViewById(R.id.btn_smiley).setOnClickListener(this);
         ds = getSmileys();
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(
                 getActivity(), 4, LinearLayoutManager.HORIZONTAL, false);
@@ -224,14 +226,14 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
                 hideSmiley();
                 send_click();
                 break;
-            case R.id.action_smiley:
+            case R.id.btn_smiley:
                 if (smiley_container.getVisibility() == View.VISIBLE) {
                     smiley_container.setVisibility(View.GONE);
                 } else {
-                    smiley_container.setVisibility(View.VISIBLE);
                     final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     if(getView()!=null)
                     imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+                    smiley_container.setVisibility(View.VISIBLE);
                 }
                 break;
             case R.id.input_aera:
@@ -448,417 +450,7 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
             return;
         }
         String name = nameList[position].split("\\.")[0];
-        String insertName = "";
-
-        Log.i("click smiley name", "name " + name);
-        if (smiley_type == SMILEY_TB) {
-            switch (name) {
-                case "tb001":
-                    insertName = "16_1014";
-                    break;
-                case "tb002":
-                    insertName = "16_1006";
-                    break;
-                case "tb003":
-                    insertName = "16_1018";
-                    break;
-                case "tb004":
-                    insertName = "16_1001";
-                    break;
-                case "tb005":
-                    insertName = "16_1019";
-                    break;
-                case "tb006":
-                    insertName = "16_1025";
-                    break;
-                case "tb008":
-                    insertName = "16_1013";
-                    break;
-                case "tb009":
-                    insertName = "16_1024";
-                    break;
-                case "tb010":
-                    insertName = "16_1020";
-                    break;
-                case "tb011":
-                    insertName = "16_1022";
-                    break;
-                case "tb012":
-                    insertName = "16_1000";
-                    break;
-                case "tb013":
-                    insertName = "16_999";
-                    break;
-                case "tb014":
-                    insertName = "16_998";
-                    break;
-                case "tb015":
-                    insertName = "16_1028";
-                    break;
-                case "tb016":
-                    insertName = "16_1017";
-                    break;
-                case "tb017":
-                    insertName = "16_1023";
-                    break;
-                case "tb018":
-                    insertName = "16_1009";
-                    break;
-                case "tb019":
-                    insertName = "16_1030";
-                    break;
-                case "tb020":
-                    insertName = "16_1007";
-                    break;
-                case "tb021":
-                    insertName = "16_1015";
-                    break;
-                case "tb022":
-                    insertName = "16_1011";
-                    break;
-                case "tb023":
-                    insertName = "16_1029";
-                    break;
-                case "tb024":
-                    insertName = "16_1003";
-                    break;
-                case "tb025":
-                    insertName = "16_1016";
-                    break;
-                case "tb026":
-                    insertName = "16_1008";
-                    break;
-                case "tb027":
-                    insertName = "16_1002";
-                    break;
-                case "tb028":
-                    insertName = "16_1005";
-                    break;
-                case "tb029":
-                    insertName = "16_1027";
-                    break;
-                case "tb030":
-                    insertName = "16_1010";
-                    break;
-                case "tb031":
-                    insertName = "16_1012";
-                    break;
-                case "tb032":
-                    insertName = "16_1021";
-                    break;
-            }
-        } else if (smiley_type == SMILEY_ALI) {
-            //// TODO: 16-8-26
-
-        } else if (smiley_type == SMILEY_ACN) {
-            switch (name) {
-
-                case "acn062":
-                    insertName = "15_950";
-                    break;
-
-                case "acn006":
-                    insertName = "15_963";
-                    break;
-                case "acn025":
-                    insertName = "15_964";
-                    break;
-                case "acn035":
-                    insertName = "15_965";
-                    break;
-                case "acn071":
-                    insertName = "15_966";
-                    break;
-                case "acn037":
-                    insertName = "15_967";
-                    break;
-                case "acn017":
-                    insertName = "15_968";
-                    break;
-                case "acn047":
-                    insertName = "15_969";
-                    break;
-                case "acn016":
-                    insertName = "15_970";
-                    break;
-                case "acn009":
-                    insertName = "15_971";
-                    break;
-                case "acn010":
-                    insertName = "15_972";
-                    break;
-                case "acn020":
-                    insertName = "15_962";
-                    break;
-
-
-                case "acn072":
-                    insertName = "15_961";
-                    break;
-                case "acn060":
-                    insertName = "15_951";
-                    break;
-                case "acn065":
-                    insertName = "15_952";
-                    break;
-                case "acn070":
-                    insertName = "15_953";
-                    break;
-                case "acn032":
-                    insertName = "15_954";
-                    break;
-                case "acn078":
-                    insertName = "15_955";
-                    break;
-                case "acn049":
-                    insertName = "15_956";
-                    break;
-                case "acn013":
-                    insertName = "15_957";
-                    break;
-                case "acn061":
-                    insertName = "15_958";
-                    break;
-                case "acn064":
-                    insertName = "15_959";
-                    break;
-                case "acn024":
-                    insertName = "15_960";
-                    break;
-                case "acn093":
-                    insertName = "15_973";
-                    break;
-
-                case "acn036":
-                    insertName = "15_974";
-                    break;
-                case "acn083":
-                    insertName = "15_987";
-                    break;
-                case "acn095":
-                    insertName = "15_988";
-                    break;
-                case "acn054":
-                    insertName = "15_989";
-                    break;
-                case "acn069":
-                    insertName = "15_990";
-                    break;
-                case "acn074":
-                    insertName = "15_991";
-                    break;
-                case "acn043":
-                    insertName = "15_992";
-                    break;
-                case "acn039":
-                    insertName = "15_993";
-                    break;
-                case "acn089":
-                    insertName = "15_994";
-                    break;
-                case "acn045":
-                    insertName = "15_995";
-                    break;
-                case "acn030":
-                    insertName = "15_996";
-                    break;
-                case "acn005":
-                    insertName = "15_986";
-                    break;
-
-                case "acn018":
-                    insertName = "15_985";
-                    break;
-                case "acn076":
-                    insertName = "15_975";
-                    break;
-                case "acn079":
-                    insertName = "15_976";
-                    break;
-                case "acn008":
-                    insertName = "15_977";
-                    break;
-                case "acn033":
-                    insertName = "15_978";
-                    break;
-                case "acn077":
-                    insertName = "15_979";
-                    break;
-                case "acn014":
-                    insertName = "15_980";
-                    break;
-                case "acn001":
-                    insertName = "15_981";
-                    break;
-                case "acn022":
-                    insertName = "15_982";
-                    break;
-                case "acn096":
-                    insertName = "15_983";
-                    break;
-                case "acn026":
-                    insertName = "15_984";
-                    break;
-                case "acn084":
-                    insertName = "15_997";
-                    break;
-
-                case "acn081":
-                    insertName = "15_949";
-                    break;
-                case "acn055":
-                    insertName = "15_901";
-                    break;
-                case "acn050":
-                    insertName = "15_914";
-                    break;
-                case "acn091":
-                    insertName = "15_915";
-                    break;
-                case "acn031":
-                    insertName = "15_916";
-                    break;
-                case "acn002":
-                    insertName = "15_917";
-                    break;
-                case "acn059":
-                    insertName = "15_918";
-                    break;
-                case "acn073":
-                    insertName = "15_919";
-                    break;
-                case "acn075":
-                    insertName = "15_920";
-                    break;
-                case "acn046":
-                    insertName = "15_921";
-                    break;
-                case "acn097":
-                    insertName = "15_922";
-                    break;
-                case "acn038":
-                    insertName = "15_923";
-                    break;
-
-
-                case "acn068":
-                    insertName = "15_913";
-                    break;
-                case "acn044":
-                    insertName = "15_912";
-                    break;
-                case "acn092":
-                    insertName = "15_902";
-                    break;
-                case "acn028":
-                    insertName = "15_903";
-                    break;
-                case "acn011":
-                    insertName = "15_904";
-                    break;
-                case "acn087":
-                    insertName = "15_905";
-                    break;
-                case "acn085":
-                    insertName = "15_906";
-                    break;
-                case "acn057":
-                    insertName = "15_907";
-                    break;
-                case "acn052":
-                    insertName = "15_908";
-                    break;
-                case "acn090":
-                    insertName = "15_909";
-                    break;
-                case "acn088":
-                    insertName = "15_910";
-                    break;
-                case "acn080":
-                    insertName = "15_911";
-                    break;
-
-                case "acn004":
-                    insertName = "15_924";
-                    break;
-                case "acn053":
-                    insertName = "15_925";
-                    break;
-                case "acn007":
-                    insertName = "15_938";
-                    break;
-                case "acn003":
-                    insertName = "15_939";
-                    break;
-                case "acn029":
-                    insertName = "15_940";
-                    break;
-                case "acn040":
-                    insertName = "15_941";
-                    break;
-                case "acn023":
-                    insertName = "15_942";
-                    break;
-                case "acn058":
-                    insertName = "15_943";
-                    break;
-                case "acn042":
-                    insertName = "15_944";
-                    break;
-                case "acn067":
-                    insertName = "15_945";
-                    break;
-                case "acn094":
-                    insertName = "15_946";
-                    break;
-                case "acn048":
-                    insertName = "15_947";
-                    break;
-
-
-                case "acn027":
-                    insertName = "15_937";
-                    break;
-                case "acn066":
-                    insertName = "15_936";
-                    break;
-                case "acn082":
-                    insertName = "15_926";
-                    break;
-                case "acn051":
-                    insertName = "15_927";
-                    break;
-                case "acn034":
-                    insertName = "15_928";
-                    break;
-                case "acn012":
-                    insertName = "15_929";
-                    break;
-                case "acn086":
-                    insertName = "15_930";
-                    break;
-                case "acn056":
-                    insertName = "15_931";
-                    break;
-                case "acn019":
-                    insertName = "15_932";
-                    break;
-                case "acn015":
-                    insertName = "15_933";
-                    break;
-                case "acn021":
-                    insertName = "15_934";
-                    break;
-                case "acn041":
-                    insertName = "15_935";
-                    break;
-                case "acn063":
-                    insertName = "15_948";
-                    break;
-            }
-        }
-
-
+        String insertName = ImageUtils.getSmileyName(smiley_type,name);
         PostHandler handler = new PostHandler(input);
         handler.insertSmiley("{:" + insertName + ":}", ds.get(position));
     }
@@ -881,9 +473,9 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
     private List<Drawable> getSmileys() {
         String smiley_dir = "static/image/smiley/";
         if (smiley_type == SMILEY_TB) {
-            smiley_dir += "smiley_tieba";
+            smiley_dir += "tieba";
         } else if (smiley_type == SMILEY_ALI) {
-            smiley_dir += "smiley_ali";
+            smiley_dir += "ali";
         } else if (smiley_type == SMILEY_ACN) {
             smiley_dir += "acn";
         }

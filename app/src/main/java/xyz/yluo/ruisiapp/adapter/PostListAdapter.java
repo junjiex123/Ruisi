@@ -2,6 +2,7 @@ package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,12 +101,7 @@ public class PostListAdapter extends BaseAdapter {
             reply_count = (TextView) v.findViewById(R.id.reply_count);
             view_count = (TextView) v.findViewById(R.id.view_count);
 
-            author_img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBtnAvatarClick();
-                }
-            });
+
 
             v.findViewById(R.id.main_item_btn_item).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -121,7 +117,7 @@ public class PostListAdapter extends BaseAdapter {
         void setData(int position) {
             ArticleListData single = DataSet.get(position);
             String type = single.getType();
-            if (!type.equals("normal")) {
+            if (TextUtils.isEmpty(type)||!type.equals("normal")) {
                 article_type.setText(type);
                 article_type.setVisibility(View.VISIBLE);
             } else {

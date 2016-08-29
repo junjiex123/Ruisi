@@ -1,7 +1,6 @@
 package xyz.yluo.ruisiapp.activity;
 
 import android.animation.Animator;
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Build;
