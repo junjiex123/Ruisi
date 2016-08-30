@@ -1,7 +1,6 @@
 package xyz.yluo.ruisiapp.data;
 
 import xyz.yluo.ruisiapp.App;
-import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
  * Created by free2 on 16-6-22.
