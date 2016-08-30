@@ -29,27 +29,38 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
+        <ImageView
+            android:tint="@color/colorDisableHintIcon"
+            android:src="@drawable/ic_person_12dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp" />
+
         <TextView
+            android:layout_marginStart="3dp"
             android:id="@+id/author_name"
             style="@style/text_12_sec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="4dp"
-            android:drawableStart="@drawable/ic_person_12dp"
-            android:gravity="center"
             tools:text="some" />
 
+
+        <ImageView
+            android:layout_marginStart="12dp"
+            android:tint="@color/colorDisableHintIcon"
+            android:src="@drawable/ic_reply_12dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp" />
+
         <TextView
+            android:layout_marginStart="3dp"
             android:id="@+id/reply_count"
             style="@style/text_12_sec"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginStart="12dp"
-            android:drawablePadding="4dp"
-            android:drawableStart="@drawable/ic_reply_12dp"
-            android:gravity="center"
             tools:text="222" />
+
         <TextView
+            android:layout_marginStart="12dp"
             android:id="@+id/is_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

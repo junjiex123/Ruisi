@@ -355,13 +355,4 @@ public class SearchActivity extends BaseActivity
             search_card.setVisibility(View.GONE);
         }
     }
-
-    @Override
-    public void onBackPressed() {
-        if(search_card.getVisibility()==View.VISIBLE){
-            hide_search_view();
-            return;
-        }
-        super.onBackPressed();
-    }
 }

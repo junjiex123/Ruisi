@@ -4,49 +4,44 @@
     xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/dimen_16"
+    android:padding="@dimen/dimen_16"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/post_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:gravity="center"
         style="@style/text_12_sec"
         tool:text="2015 1 1" />
 
-    <LinearLayout
-        android:gravity="end"
+    <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <xyz.yluo.ruisiapp.View.MyHtmlView.HtmlView
-            android:layout_marginEnd="12dp"
-            android:gravity="center"
-            android:paddingStart="12dp"
-            android:paddingBottom="12dp"
-            android:paddingTop="12dp"
-            android:paddingEnd="16dp"
-            android:id="@+id/content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:autoLink="web"
-            android:background="@drawable/sl_chat_me"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            tool:text="test test test" />
-
         <xyz.yluo.ruisiapp.View.CircleImageView
+            android:layout_alignParentEnd="true"
             android:id="@+id/user_image"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/image_placeholder"
             app:civ_border_color="@android:color/white"
             app:civ_border_width="1dp" />
-    </LinearLayout>
+
+        <xyz.yluo.ruisiapp.View.MyHtmlView.HtmlView
+            android:id="@+id/content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:background="@drawable/sl_chat_me"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            tool:text="testtesttesttesttesttesttesttesttesttesttes
+            ttesttesttesttest"
+            android:layout_margin="12dp"
+            android:layout_toStartOf="@+id/user_image" />
+    </RelativeLayout>
 
 
 </LinearLayout>

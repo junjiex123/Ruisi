@@ -236,8 +236,22 @@ public class PostsActivity extends BaseActivity implements
                         m.setSpanCount(1);
                     }
                 }else{
-                    NewPostActivity.open(this,FID,TITLE);
+                    Intent i = new Intent(this,NewPostActivity.class);
+                    i.putExtra("FID",FID);
+                    i.putExtra("TITLE",TITLE);
+                    startActivityForResult(i,0);
                 }
+        }
+    }
+
+
+    //接受发帖是否成功
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK){
+            //发帖成功 刷新
+            refresh();
         }
     }
 

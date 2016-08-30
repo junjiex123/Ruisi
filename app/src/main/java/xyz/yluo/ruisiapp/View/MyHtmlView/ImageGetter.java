@@ -23,6 +23,8 @@ import java.util.Set;
 
 import xyz.yluo.ruisiapp.App;
 
+import static java.lang.System.in;
+
 /**
  * Created by free2 on 16-7-16.
  * 图片下载
@@ -76,6 +78,7 @@ class ImageGetter implements Html.ImageGetter{
             if(haveDown.containsKey(source)){
                 return haveDown.get(source);
             }
+            //static/image/smiley/tieba/tb014.png
             if (source.contains("static/image/smiley/")) {
                 final String fileName = source.substring(source.lastIndexOf('/'));
                 Drawable d = null;
@@ -112,18 +115,20 @@ class ImageGetter implements Html.ImageGetter{
         }
     }
 
-    private Drawable getAssertImage(String type,String fileName) throws Exception{
-        String smiley_dir = "static/image/smiley/";
-        File f = new File(smiley_dir+type+fileName);
-        if(f.exists()){
-            InputStream in = context.getAssets().open(smiley_dir+"tieba" + fileName);
-            Log.e("bendi tieba ",smiley_dir+"tieba" + fileName);
-            Bitmap bitmap = BitmapFactory.decodeStream(in);
+    private Drawable getAssertImage(String type,String fileName){
+        try {
+            InputStream i = context.getAssets().open("static/image/smiley/"+type+fileName);
+            Log.e("bendi tieba ","tieba" + fileName);
+            Bitmap bitmap = BitmapFactory.decodeStream(i);
             Drawable d = new BitmapDrawable(context.getResources(), bitmap);
             d.setBounds(0, 0, 80, 80);
+            in.close();
             return d;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     private void startDown(){

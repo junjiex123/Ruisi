@@ -50,7 +50,6 @@ public class ChatActivity extends BaseActivity implements MyReplyView.replyCompe
     private long replyTime = 0;
     private AutoGetTask task;
 
-
     public static void open(Context context, String username, String url) {
         Intent intent = new Intent(context, ChatActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -130,6 +129,7 @@ public class ChatActivity extends BaseActivity implements MyReplyView.replyCompe
             });
         }
         Log.e("chat","get data...");
+
         new GetDataTask().execute(url);
     }
 
@@ -137,6 +137,7 @@ public class ChatActivity extends BaseActivity implements MyReplyView.replyCompe
     public void onReplyFinish(int status, String txt) {
         if (status == RESULT_OK) {
             replyTime = System.currentTimeMillis();
+            recycler_view.removeCallbacks(task);
             new GetDataTask().execute(url);
         }
     }
@@ -214,7 +215,6 @@ public class ChatActivity extends BaseActivity implements MyReplyView.replyCompe
                 adapter.notifyItemRangeInserted(datas.size()-add,add);
             }
 
-            recycler_view.scrollToPosition(datas.size());
             refreshLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -222,9 +222,10 @@ public class ChatActivity extends BaseActivity implements MyReplyView.replyCompe
                 }
             }, 400);
 
-            //25s自动加载一次
+            //15s自动加载一次
+            recycler_view.scrollToPosition(datas.size());
             recycler_view.removeCallbacks(task);
-            recycler_view.postDelayed(task,25000);
+            recycler_view.postDelayed(task,15000);
 
         }
     }

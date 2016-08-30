@@ -195,9 +195,6 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                //// TODO: 16-7-26 delete it later
-                //ed_content.setText(res);
-                //逆向工程 反向判断有没有发帖成功
                 Log.e("post",res);
                 if(res.contains("已经被系统拒绝")){
                     postFail("由于未知原因发帖失败");
@@ -223,17 +220,13 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
     private void postSuccess() {
         dialog.dismiss();
         Toast.makeText(this, "主题发表成功", Toast.LENGTH_SHORT).show();
-        new MyAlertDialog(this,MyAlertDialog.SUCCESS_TYPE)
-                .setTitleText("发帖成功")
-                .setContentText("要离开此页面吗？")
-                .setCancelText("取消")
-                .setConfirmText("离开")
-                .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
-                    @Override
-                    public void onClick(MyAlertDialog myAlertDialog) {
-                        finish();
-                    }
-                });
+
+        Intent intent = new Intent();
+        intent.putExtra("status", "ok");
+        //设置返回数据
+        dialog.dismiss();
+        NewPostActivity.this.setResult(RESULT_OK, intent);
+        finish();
 
     }
 //

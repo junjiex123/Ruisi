@@ -24,7 +24,6 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SmileyAdapter;
 import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.utils.ImageUtils;
-import xyz.yluo.ruisiapp.utils.PostHandler;
 
 /**
  * Created by free2 on 16-7-19.
@@ -35,13 +34,12 @@ public class MySmileyPicker extends PopupWindow{
 
     private Context mContext;
     private OnItemClickListener listener;
-    private RecyclerView recyclerView;
     private SmileyAdapter adapter;
     private List<Drawable> ds = new ArrayList<>();
     private String[] nameList;
 
     private static final int SMILEY_TB = 1;
-    private static final int SMILEY_LDB = 2;
+    private static final int SMILEY_ALI = 2;
     private static final int SMILEY_ACN = 3;
 
     private int smiley_type = SMILEY_TB;
@@ -60,10 +58,10 @@ public class MySmileyPicker extends PopupWindow{
 
         View v = LayoutInflater.from(mContext).inflate(R.layout.my_smiley_view,null);
         TabLayout tab = (TabLayout) v.findViewById(R.id.mytab);
-        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
         ds = getSmileys();
         tab.addTab(tab.newTab().setText("贴吧"));
-        tab.addTab(tab.newTab().setText("林大b"));
+        tab.addTab(tab.newTab().setText("阿狸"));
         tab.addTab(tab.newTab().setText("AC娘"));
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(mContext, 7, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
@@ -83,7 +81,7 @@ public class MySmileyPicker extends PopupWindow{
                         smiley_type = SMILEY_TB;
                         break;
                     case 1:
-                        smiley_type = SMILEY_LDB;
+                        smiley_type = SMILEY_ALI;
                         break;
                     case 2:
                         smiley_type = SMILEY_ACN;
@@ -129,9 +127,9 @@ public class MySmileyPicker extends PopupWindow{
     private List<Drawable> getSmileys() {
         String smiley_dir = "static/image/smiley/";
         if (smiley_type == SMILEY_TB) {
-            smiley_dir += "smiley_tieba";
-        } else if (smiley_type == SMILEY_LDB) {
-            smiley_dir += "lindab";
+            smiley_dir += "tieba";
+        } else if (smiley_type == SMILEY_ALI) {
+            smiley_dir += "ali";
         } else if (smiley_type == SMILEY_ACN) {
             smiley_dir += "acn";
         }

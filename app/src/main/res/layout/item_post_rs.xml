@@ -82,47 +82,49 @@
                 android:gravity="center_vertical"
                 android:layout_marginTop="4dp"
                 android:orientation="horizontal">
-
+                <ImageView
+                    android:tint="@color/colorDisableHintIcon"
+                    android:src="@drawable/ic_time_12dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp" />
                 <TextView
+                    android:layout_marginStart="3dp"
                     android:id="@+id/post_time"
                     style="@style/text_12_sec"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
                     android:layout_weight="1"
-                    android:drawablePadding="4dp"
-                    android:drawableStart="@drawable/ic_time_12dp"
-                    android:gravity="center|start"
                     android:maxLines="1"
                     tools:text="2015-1-1 19:20:15" />
-
+                <ImageView
+                    android:tint="@color/colorDisableHintIcon"
+                    android:src="@drawable/ic_look_12dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp" />
                 <TextView
+                    android:layout_marginStart="3dp"
                     android:id="@+id/view_count"
                     style="@style/text_12_sec"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="@dimen/dimen_4"
-                    android:drawableStart="@drawable/ic_look_12dp"
-                    android:gravity="top"
                     android:maxEms="5"
                     tools:text="222" />
-
+                <ImageView
+                    android:tint="@color/colorDisableHintIcon"
+                    android:src="@drawable/ic_reply_12dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="8dp"/>
                 <TextView
                     android:id="@+id/reply_count"
                     style="@style/text_12_sec"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimen_8"
-                    android:drawablePadding="4dp"
-                    android:drawableStart="@drawable/ic_reply_12dp"
-                    android:gravity="top"
+                    android:layout_marginStart="3dp"
                     android:maxEms="5"
                     tools:text="111" />
             </LinearLayout>
-
-
         </LinearLayout>
-
     </LinearLayout>
 
     <View
