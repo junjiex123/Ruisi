@@ -183,9 +183,6 @@ public class ImageUtils {
                 case "acn071":
                     insertName = "15_966";
                     break;
-                case "acn037":
-                    insertName = "15_967";
-                    break;
                 case "acn017":
                     insertName = "15_968";
                     break;
@@ -219,9 +216,6 @@ public class ImageUtils {
                 case "acn032":
                     insertName = "15_954";
                     break;
-                case "acn078":
-                    insertName = "15_955";
-                    break;
                 case "acn049":
                     insertName = "15_956";
                     break;
@@ -234,20 +228,11 @@ public class ImageUtils {
                 case "acn064":
                     insertName = "15_959";
                     break;
-                case "acn024":
-                    insertName = "15_960";
-                    break;
                 case "acn093":
                     insertName = "15_973";
                     break;
-                case "acn036":
-                    insertName = "15_974";
-                    break;
                 case "acn083":
                     insertName = "15_987";
-                    break;
-                case "acn095":
-                    insertName = "15_988";
                     break;
                 case "acn054":
                     insertName = "15_989";
@@ -267,20 +252,11 @@ public class ImageUtils {
                 case "acn089":
                     insertName = "15_994";
                     break;
-                case "acn045":
-                    insertName = "15_995";
-                    break;
-                case "acn030":
-                    insertName = "15_996";
-                    break;
                 case "acn005":
                     insertName = "15_986";
                     break;
                 case "acn018":
                     insertName = "15_985";
-                    break;
-                case "acn076":
-                    insertName = "15_975";
                     break;
                 case "acn079":
                     insertName = "15_976";
@@ -288,29 +264,11 @@ public class ImageUtils {
                 case "acn008":
                     insertName = "15_977";
                     break;
-                case "acn033":
-                    insertName = "15_978";
-                    break;
-                case "acn077":
-                    insertName = "15_979";
-                    break;
-                case "acn014":
-                    insertName = "15_980";
-                    break;
-                case "acn001":
-                    insertName = "15_981";
-                    break;
                 case "acn022":
                     insertName = "15_982";
                     break;
                 case "acn096":
                     insertName = "15_983";
-                    break;
-                case "acn026":
-                    insertName = "15_984";
-                    break;
-                case "acn084":
-                    insertName = "15_997";
                     break;
                 case "acn081":
                     insertName = "15_949";
@@ -321,14 +279,8 @@ public class ImageUtils {
                 case "acn050":
                     insertName = "15_914";
                     break;
-                case "acn091":
-                    insertName = "15_915";
-                    break;
                 case "acn031":
                     insertName = "15_916";
-                    break;
-                case "acn002":
-                    insertName = "15_917";
                     break;
                 case "acn059":
                     insertName = "15_918";
@@ -336,29 +288,14 @@ public class ImageUtils {
                 case "acn073":
                     insertName = "15_919";
                     break;
-                case "acn075":
-                    insertName = "15_920";
-                    break;
-                case "acn046":
-                    insertName = "15_921";
-                    break;
                 case "acn097":
                     insertName = "15_922";
-                    break;
-                case "acn038":
-                    insertName = "15_923";
                     break;
                 case "acn068":
                     insertName = "15_913";
                     break;
                 case "acn044":
                     insertName = "15_912";
-                    break;
-                case "acn092":
-                    insertName = "15_902";
-                    break;
-                case "acn028":
-                    insertName = "15_903";
                     break;
                 case "acn011":
                     insertName = "15_904";
@@ -372,9 +309,6 @@ public class ImageUtils {
                 case "acn057":
                     insertName = "15_907";
                     break;
-                case "acn052":
-                    insertName = "15_908";
-                    break;
                 case "acn090":
                     insertName = "15_909";
                     break;
@@ -387,9 +321,6 @@ public class ImageUtils {
                 case "acn004":
                     insertName = "15_924";
                     break;
-                case "acn053":
-                    insertName = "15_925";
-                    break;
                 case "acn007":
                     insertName = "15_938";
                     break;
@@ -398,12 +329,6 @@ public class ImageUtils {
                     break;
                 case "acn029":
                     insertName = "15_940";
-                    break;
-                case "acn040":
-                    insertName = "15_941";
-                    break;
-                case "acn023":
-                    insertName = "15_942";
                     break;
                 case "acn058":
                     insertName = "15_943";
@@ -420,17 +345,8 @@ public class ImageUtils {
                 case "acn048":
                     insertName = "15_947";
                     break;
-                case "acn027":
-                    insertName = "15_937";
-                    break;
                 case "acn066":
                     insertName = "15_936";
-                    break;
-                case "acn082":
-                    insertName = "15_926";
-                    break;
-                case "acn051":
-                    insertName = "15_927";
                     break;
                 case "acn034":
                     insertName = "15_928";
@@ -452,9 +368,6 @@ public class ImageUtils {
                     break;
                 case "acn021":
                     insertName = "15_934";
-                    break;
-                case "acn041":
-                    insertName = "15_935";
                     break;
                 case "acn063":
                     insertName = "15_948";
