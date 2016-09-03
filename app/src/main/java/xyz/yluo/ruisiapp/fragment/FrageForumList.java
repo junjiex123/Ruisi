@@ -232,10 +232,11 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
 
         @Override
         protected void onPostExecute(List<ForumListData> simpledatas) {
-            datas.clear();
-            datas.addAll(simpledatas);
-            adapter.notifyDataSetChanged();
-
+            if(simpledatas.size()>0){
+                datas.clear();
+                datas.addAll(simpledatas);
+                adapter.notifyDataSetChanged();
+            }
             refreshLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {

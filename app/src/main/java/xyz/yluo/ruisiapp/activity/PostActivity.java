@@ -441,10 +441,12 @@ public class PostActivity extends BaseActivity
             String htmlData = params[0];
             if (!isGetTitle) {
                 int ih = htmlData.indexOf("keywords");
-                int h_start = htmlData.indexOf('\"', ih + 15);
-                int h_end = htmlData.indexOf('\"', h_start + 1);
-                Title = htmlData.substring(h_start + 1, h_end);
-                isGetTitle = true;
+                if(ih>0){
+                    int h_start = htmlData.indexOf('\"', ih + 15);
+                    int h_end = htmlData.indexOf('\"', h_start + 1);
+                    Title = htmlData.substring(h_start + 1, h_end);
+                    isGetTitle = true;
+                }
             }
 
             Document doc = Jsoup.parse(htmlData);

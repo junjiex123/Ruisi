@@ -30,6 +30,7 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
     public static final int STATE_NEED_LOGIN = 5;
 
     private int loadeState = STATE_LOADING;
+    private boolean isenablePlaceHolder = true;
 
     private ListItemClickListener itemListener;
     private boolean enableLoadMore = true;
@@ -53,7 +54,7 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
 
     @Override
     public final int getItemViewType(int position) {
-        if(position==0&&getDataCount()==0){
+        if(position==0&&getDataCount()==0&&isenablePlaceHolder){
             return TYPE_LOADMORE;
         }
         if(enableLoadMore&&position==getItemCount()-1){
@@ -62,14 +63,20 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
         return getItemType(position);
     }
 
+    public void setIsenablePlaceHolder(boolean isenablePlaceHolder) {
+        this.isenablePlaceHolder = isenablePlaceHolder;
+    }
 
     @Override
     public final int getItemCount() {
         int count = getDataCount();
-        if(count==0){
+        if(count==0&&isenablePlaceHolder){
             //1 是placeholder
             return 1;
-        }else{
+        }else if(count==0){
+            return 0;
+        }
+        else{
             if(enableLoadMore){
                 //++是有一个loadmore item
                 count++;

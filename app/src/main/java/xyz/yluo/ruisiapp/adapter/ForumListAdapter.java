@@ -29,6 +29,7 @@ public class ForumListAdapter extends BaseAdapter {
         this.datas = dataSet;
         setItemListener(listener);
         disableLoadMore();
+        setIsenablePlaceHolder(false);
     }
 
     @Override
