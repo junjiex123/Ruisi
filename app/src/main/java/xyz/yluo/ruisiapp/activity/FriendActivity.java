@@ -53,7 +53,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         View.OnClickListener, TextWatcher ,AddFriendDialog.AddFriendListener {
     protected RecyclerView recycler_view;
     private FriendAdapter adapter;
-    private List<FriendData> datas,backUpdatas;
+    private List<FriendData> datas,backUpdatas,totalDatas;
     private int CurrentPage = 1;
     private boolean isEnableLoadMore = true;
     private boolean isHaveMore = true;
@@ -72,6 +72,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
         datas = new ArrayList<>();
         backUpdatas = new ArrayList<>();
+        totalDatas = new ArrayList<>();
         adapter = new FriendAdapter(this,datas,this);
         recycler_view.setHasFixedSize(true);
         LinearLayoutManager lm = new LinearLayoutManager(this);
@@ -109,7 +110,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         String name = datas.get(position).getUserName();
         String imgurl = datas.get(position).getImgUrl();
         boolean isfrend = false;
-        for (FriendData d : backUpdatas) {
+        for (FriendData d : totalDatas) {
             if (d.getUserName().equals(name)) {
                 isfrend = true;
                 break;
@@ -272,6 +273,9 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
             }
             int i = datas.size();
             datas.addAll(s);
+            if(!isInsearchMode){
+                totalDatas.addAll(s);
+            }
             if(i==0){
                 adapter.notifyDataSetChanged();
             }else{
