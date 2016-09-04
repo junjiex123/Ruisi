@@ -173,6 +173,10 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
                 String num = tmp.select(".num").text();
                 temp.add(new SimpleListData(title, num, titleUrl));
             }
+
+            if(temp.size()%10!=0){
+                isHaveMore = false;
+            }
             return temp;
         }
 
@@ -198,6 +202,9 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
                 }
                 String link = tmp.select("a").attr("href");
                 temp.add(new SimpleListData(key, "", link));
+            }
+            if(temp.size()%10!=0){
+                isHaveMore = false;
             }
             return temp;
         }
@@ -237,7 +244,7 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
 
     //加载完成
     private void onLoadCompete(List<SimpleListData> d){
-        if(isHaveMore){
+        if(isHaveMore&&d.size()>0){
             adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
         }else{
             adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
