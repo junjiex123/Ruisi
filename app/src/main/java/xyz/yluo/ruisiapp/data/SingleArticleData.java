@@ -20,6 +20,7 @@ public class SingleArticleData {
     private String replyUrlTitle;
     private String cotent;
     private String title;
+    private String editTime;
 
     public SingleArticleData(SingleType type, String title, String uid, String username, String postTime, String index, String replyUrl, String cotent,String pid) {
         this.type = type;
@@ -54,12 +55,16 @@ public class SingleArticleData {
         return replyUrlTitle;
     }
 
-    public void setPostTime(String postTime) {
-        this.postTime = postTime;
-    }
-
     public String getUsername() {
         return username;
+    }
+
+    public void setEditTime(String editTime) {
+        this.editTime = editTime;
+    }
+
+    public String getEditTime() {
+        return editTime;
     }
 
     public String getUid() {

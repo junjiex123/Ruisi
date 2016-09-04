@@ -61,6 +61,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
     public void setMessage(boolean b){
         if(b!=ishaveMessage){
             ishaveMessage = b;
+            drawableStateChanged();
             invalidate();
         }
     }

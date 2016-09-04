@@ -509,14 +509,19 @@ public class PostActivity extends BaseActivity
 
                 //处理引用
                 for (Element codee : contentels.select("blockquote")) {
-                    if(codee.text().contains("发表于")){
-                        codee.html(codee.html().replaceAll("发表于.{16}",""));
-                        break;
+                    int start = codee.html().indexOf("发表于");
+                    if(start>0){
+                        int end = codee.html().indexOf("</font>",start);
+                        if(end>start){
+                            int c = end-start;
+                            codee.html(codee.html().replaceAll("发表于.{"+(c-3)+"}",""));
+                            break;
+                        }
                     }
                 }
 
                 //删除修改日期
-                contentels.select("i.pstatus").remove();
+                String edittime = contentels.select("i.pstatus").remove().text();
                 String finalcontent = contentels.html().trim();
 
                 if(page_now==1&&i==0){
@@ -533,6 +538,9 @@ public class PostActivity extends BaseActivity
                 }else{
                     data = new SingleArticleData(SingleType.COMMENT, Title, uid,
                             username, posttime, commentindex, replyUrl, finalcontent, pid);
+                }
+                if(!TextUtils.isEmpty(edittime)){
+                    data.setEditTime(edittime);
                 }
                 tepdata.add(data);
             }
