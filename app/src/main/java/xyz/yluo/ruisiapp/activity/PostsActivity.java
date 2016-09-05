@@ -100,6 +100,9 @@ public class PostsActivity extends BaseActivity implements
         }
 
         adapter = new PostListAdapter(this, datas, getType());
+        if(getType()==PostListAdapter.TYPE_IMAGE){
+            adapter.setIsenablePlaceHolder(false);
+        }
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(adapter);
         myDB = new MyDB(this, MyDB.MODE_READ);

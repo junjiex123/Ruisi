@@ -68,7 +68,6 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
 
     public static final int REPLY_LZ =0;
     public static final int REPLY_CZ =1;
-    public static final int REPLY_HY =2;
 
     private int smiley_type = SMILEY_TB;
     private int replyType = REPLY_LZ;
@@ -290,9 +289,6 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
                 case REPLY_CZ:
                     replyCz(text);
                     break;
-                case REPLY_HY:
-                    replyHy(text);
-                    break;
             }
 
         }
@@ -374,45 +370,7 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
         });
     }
 
-    /**
-     * 回复好友
-     * @param txt
-     */
-    private void replyHy(final String txt){
-        Map<String, String> params = new HashMap<>();
-        params.put("touid", info);
-        params.put("message", txt);
-        HttpUtil.post(getActivity(), replyUrl, params, new ResponseHandler() {
-            @Override
-            public void onSuccess(byte[] response) {
-                String res = new String(response);
-                if (res.contains("操作成功")) {
-                    Toast.makeText(getActivity(), "回复发表成功", Toast.LENGTH_SHORT).show();
-                    sendCallBack(Activity.RESULT_OK,txt);
-                    input.setText("");
-                    dismiss();
-                } else {
-                    if (res.contains("两次发送短消息太快")) {
-                        Toast.makeText(getActivity(), "两次发送短消息太快，请稍候再发送", Toast.LENGTH_SHORT).show();
-                    } else {
-                        System.out.println(res);
-                        Toast.makeText(getActivity(), "由于未知原因发表失败", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
 
-            @Override
-            public void onFailure(Throwable e) {
-                Toast.makeText(getActivity(), "网络错误！！！", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFinish() {
-                super.onFinish();
-                loadingView.setVisibility(View.GONE);
-            }
-        });
-    }
 
     /**
      * 回复楼主

@@ -60,8 +60,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ChatActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.NewPostActivity"
             android:screenOrientation="portrait" />

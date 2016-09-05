@@ -5,30 +5,33 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.lang.ref.WeakReference;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyReplyView;
 import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
 import xyz.yluo.ruisiapp.data.ChatListData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;
-import xyz.yluo.ruisiapp.utils.DimmenUtils;
 import xyz.yluo.ruisiapp.utils.GetId;
+import xyz.yluo.ruisiapp.utils.ImeUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -36,19 +39,17 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 消息聊天 activity
  * TODO 支持翻页。。。。目前只能看最后一页
  */
-public class ChatActivity extends BaseActivity implements MyReplyView.replyCompeteCallBack {
+public class ChatActivity extends BaseActivity{
 
-    private RecyclerView recycler_view;
+    private RecyclerView list;
     private SwipeRefreshLayout refreshLayout;
-
     private List<ChatListData> datas = new ArrayList<>();
     private ChatListAdapter adapter;
     private String replyUrl = "";
-    private String username = "消息";
     private String url = "";
     private String touid = "";
     private long replyTime = 0;
-    private AutoGetTask task;
+    private EditText input;
 
     public static void open(Context context, String username, String url) {
         Intent intent = new Intent(context, ChatActivity.class);
@@ -61,20 +62,17 @@ public class ChatActivity extends BaseActivity implements MyReplyView.replyCompe
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.list_toolbar_btn);
+        setContentView(R.layout.activity_chat);
 
-        recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
-        FloatingActionButton btn_chat = (FloatingActionButton) findViewById(R.id.btn);
-        btn_chat.setImageResource(R.drawable.ic_reply_white_24dp);
-        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
+        list = (RecyclerView) findViewById(R.id.list);
+        input = (EditText) findViewById(R.id.input_aera);
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_view);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         adapter = new ChatListAdapter(this, datas);
         adapter.disableLoadMore();
-        recycler_view.setLayoutManager(layoutManager);
-        recycler_view.setAdapter(adapter);
-        recycler_view.setClipToPadding(false);
-        recycler_view.setPadding(0,0,0, DimmenUtils.dip2px(this,50));
+        list.setLayoutManager(layoutManager);
+        list.setAdapter(adapter);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -84,40 +82,19 @@ public class ChatActivity extends BaseActivity implements MyReplyView.replyCompe
             }
         });
         Bundle bundle = this.getIntent().getExtras();
-        username = bundle.getString("username");
-        initToolBar(true,username);
+        initToolBar(true, bundle.getString("username"));
         url = bundle.getString("url");
-        btn_chat.setOnClickListener(new View.OnClickListener() {
+
+
+        findViewById(R.id.action_send).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                MyReplyView dialog = MyReplyView.newInstance(replyUrl, MyReplyView.REPLY_HY, replyTime,
-                        false, "回复：" + username, touid);
-                dialog.setCallBack(ChatActivity.this);
-                dialog.show(getFragmentManager(), "chate");
+            public void onClick(View v) {
+                send_click();
             }
         });
-        task = new AutoGetTask(this);
         getData(true);
     }
 
-
-    private static class AutoGetTask implements Runnable {
-
-        private final WeakReference<ChatActivity> act;
-
-        private AutoGetTask(ChatActivity a) {
-            act = new WeakReference<>(a);
-        }
-
-        @Override
-        public void run() {
-            ChatActivity aa = act.get();
-            if(aa!=null){
-                aa.getData(false);
-            }
-
-        }
-    }
 
     private void getData(boolean needRefresh){
         if(needRefresh){
@@ -131,15 +108,6 @@ public class ChatActivity extends BaseActivity implements MyReplyView.replyCompe
         Log.e("chat","get data...");
 
         new GetDataTask().execute(url);
-    }
-
-    @Override
-    public void onReplyFinish(int status, String txt) {
-        if (status == RESULT_OK) {
-            replyTime = System.currentTimeMillis();
-            recycler_view.removeCallbacks(task);
-            new GetDataTask().execute(url);
-        }
     }
 
     private class GetDataTask extends AsyncTask<String, Void, List<ChatListData>> {
@@ -196,10 +164,10 @@ public class ChatActivity extends BaseActivity implements MyReplyView.replyCompe
                 //处理增加部分
                 String content = datas.get(datas.size()-1).getContent();
                 int type = datas.get(datas.size()-1).getType();
-
                 int equalpos = -1;
                 for(int i=0;i<tepdata.size();i++){
                     String contentadd = tepdata.get(i).getContent();
+                    Log.e("data",contentadd);
                     int typeadd = tepdata.get(i).getType();
                     if(content.equals(contentadd)&&typeadd==type){
                         equalpos = i;
@@ -219,19 +187,83 @@ public class ChatActivity extends BaseActivity implements MyReplyView.replyCompe
                 @Override
                 public void run() {
                     refreshLayout.setRefreshing(false);
+                    list.scrollToPosition(datas.size()-1);
                 }
             }, 400);
-
-            //15s自动加载一次
-            recycler_view.scrollToPosition(datas.size());
-            recycler_view.removeCallbacks(task);
-            recycler_view.postDelayed(task,15000);
-
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    private void send_click() {
+        String text = input.getText().toString();
+        int len = 0;
+        try {
+            len = text.getBytes("UTF-8").length;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        if (len == 0) {
+            //input.setError("你还没写内容呢!");
+            final Snackbar s = Snackbar.make(list, "你还没写内容呢", Snackbar.LENGTH_SHORT);
+            s.setAction("好的", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            s.dismiss();
+                        }
+                    })
+                    .show();
+        } else {
+            //时间检测
+            if (!(System.currentTimeMillis() - replyTime > 15000)) {
+                Snackbar.make(list, "还没到15s呢，再等等吧！", Snackbar.LENGTH_SHORT).show();
+                return;
+            }
+            //字数补齐补丁
+            if (len < 13) {
+                int need = 14 - len;
+                for (int i = 0; i < need; i++) {
+                    text += " ";
+                }
+            }
+
+            final Snackbar snackbar = Snackbar.make(list,"回复发表中...",Snackbar.LENGTH_LONG);
+            ImeUtil.hide_ime(this);
+            snackbar.show();
+            Map<String, String> params = new HashMap<>();
+            params.put("touid", touid);
+            params.put("message", text);
+            HttpUtil.post(this, replyUrl, params, new ResponseHandler() {
+                @Override
+                public void onSuccess(byte[] response) {
+                    String res = new String(response);
+                    if (res.contains("操作成功")) {
+                        list.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                getData(false);
+                            }
+                        },800);
+                        showToast("回复发表成功");
+                        replyTime = System.currentTimeMillis();
+                        input.setText("");
+                    } else {
+                        if (res.contains("两次发送短消息太快")) {
+                            showToast("两次发送短消息太快，请稍候再发送");
+                        } else {
+                            System.out.println(res);
+                            showToast("由于未知原因发表失败");
+                        }
+                    }
+                }
+                @Override
+                public void onFailure(Throwable e) {
+                    showToast("网络错误！！！");
+                }
+                @Override
+                public void onFinish() {
+                    snackbar.dismiss();
+                    super.onFinish();
+                }
+            });
+        }
     }
 }
