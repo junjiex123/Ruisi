@@ -101,9 +101,8 @@ public class FragSetting extends PreferenceFragment
                 new Preference.OnPreferenceClickListener() {
                         @Override
                         public boolean onPreferenceClick(Preference preference) {
-                            final String url = "forum.php?mod=viewthread&tid=846819&mobile=2";
                             Toast.makeText(getActivity(), "正在检查更新", Toast.LENGTH_SHORT).show();
-                            HttpUtil.get(getActivity(), url, new ResponseHandler() {
+                            HttpUtil.get(getActivity(), App.CHECK_UPDATE_URL, new ResponseHandler() {
                                 @Override
                                 public void onSuccess(byte[] response) {
                                     String res = new String(response);
@@ -120,7 +119,7 @@ public class FragSetting extends PreferenceFragment
                                                     .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
                                                         @Override
                                                         public void onClick(MyAlertDialog myAlertDialog) {
-                                                            PostActivity.open(getActivity(),url,"谁用了FREEDOM");
+                                                            PostActivity.open(getActivity(),App.CHECK_UPDATE_URL,"谁用了FREEDOM");
                                                         }
                                                     })
                                                     .setTitleText("检测到新版本")

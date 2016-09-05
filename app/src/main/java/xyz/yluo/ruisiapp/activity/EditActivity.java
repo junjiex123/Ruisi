@@ -220,6 +220,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener{
                         i.putExtra("TITLE",ed_title.getText().toString());
                     }
                     i.putExtra("CONTENT",ed_content.getText().toString());
+                    i.putExtra("PID",pid);
                     setResult(RESULT_OK,i);
                     EditActivity.this.finish();
                 }else{

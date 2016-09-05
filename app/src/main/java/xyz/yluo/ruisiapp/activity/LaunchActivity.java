@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -48,8 +50,19 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_launch);
 
+        /**
+         * 切换主题
+         */
+        boolean isDarkMode = PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean("setting_dark_mode", false);
+        if(isDarkMode){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
+        setContentView(R.layout.activity_launch);
         launch_text = (TextView) findViewById(R.id.launch_text);
         findViewById(R.id.btn_login_inner).setOnClickListener(this);
         findViewById(R.id.btn_login_outer).setOnClickListener(this);

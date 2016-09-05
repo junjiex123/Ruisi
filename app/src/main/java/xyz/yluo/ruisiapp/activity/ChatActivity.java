@@ -2,6 +2,7 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,8 +11,11 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,13 +29,16 @@ import java.util.List;
 import java.util.Map;
 
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.MySmileyPicker;
 import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
 import xyz.yluo.ruisiapp.data.ChatListData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;
+import xyz.yluo.ruisiapp.utils.DimmenUtils;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.ImeUtil;
+import xyz.yluo.ruisiapp.utils.PostHandler;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -50,6 +57,7 @@ public class ChatActivity extends BaseActivity{
     private String touid = "";
     private long replyTime = 0;
     private EditText input;
+    private MySmileyPicker smileyPicker;
 
     public static void open(Context context, String username, String url) {
         Intent intent = new Intent(context, ChatActivity.class);
@@ -64,6 +72,7 @@ public class ChatActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        smileyPicker = new MySmileyPicker(this);
         list = (RecyclerView) findViewById(R.id.list);
         input = (EditText) findViewById(R.id.input_aera);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_view);
@@ -85,11 +94,32 @@ public class ChatActivity extends BaseActivity{
         initToolBar(true, bundle.getString("username"));
         url = bundle.getString("url");
 
+        smileyPicker.setListener(new MySmileyPicker.OnItemClickListener() {
+            @Override
+            public void itemClick(String str, Drawable a) {
+                PostHandler handler = new PostHandler(input);
+                handler.insertSmiley("{:" + str + ":}", a);
+            }
+        });
 
         findViewById(R.id.action_send).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 send_click();
+            }
+        });
+
+        findViewById(R.id.btn_smiley).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                ((ImageView)view).setImageResource(R.drawable.ic_edit_emoticon_accent_24dp);
+                smileyPicker.showAtLocation(view, Gravity.BOTTOM,32, DimmenUtils.dip2px(ChatActivity.this,52));
+                smileyPicker.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        ((ImageView)view).setImageResource(R.drawable.ic_edit_emoticon_24dp);
+                    }
+                });
             }
         });
         getData(true);
@@ -239,10 +269,10 @@ public class ChatActivity extends BaseActivity{
                         list.postDelayed(new Runnable() {
                             @Override
                             public void run() {
+                                showToast("回复发表成功");
                                 getData(false);
                             }
-                        },800);
-                        showToast("回复发表成功");
+                        },500);
                         replyTime = System.currentTimeMillis();
                         input.setText("");
                     } else {
@@ -260,7 +290,12 @@ public class ChatActivity extends BaseActivity{
                 }
                 @Override
                 public void onFinish() {
-                    snackbar.dismiss();
+                    list.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            snackbar.dismiss();
+                        }
+                    },500);
                     super.onFinish();
                 }
             });

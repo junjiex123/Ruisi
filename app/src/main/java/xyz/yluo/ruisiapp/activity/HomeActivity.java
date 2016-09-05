@@ -100,22 +100,26 @@ public class HomeActivity extends BaseActivity
     protected void onStart() {
         super.onStart();
         if(App.ISLOGIN(this)){
-            //60s进行一次
-            long need = interval-(System.currentTimeMillis()-lastCheckMsgTime);
-            if(need<100){
-                need = 100;
-            }
-            if(timer==null){
-                Log.e("message","开始timer delay"+need);
-                timer = new Timer(true);
-            }
-            task = new MyTimerTask();
-            timer.schedule(task, need, interval); //延时150ms后执行，60s间隔
+            startCheckMessage();
         }
 
         if(isNeedCheckUpdate){
             checkUpdate();
         }
+    }
+
+    public void startCheckMessage(){
+        //60s进行一次
+        long need = interval-(System.currentTimeMillis()-lastCheckMsgTime);
+        if(need<100){
+            need = 100;
+        }
+        if(timer==null){
+            Log.e("message","开始timer delay"+need);
+            timer = new Timer(true);
+        }
+        task = new MyTimerTask();
+        timer.schedule(task, need, interval); //延时150ms后执行，60s间隔
     }
 
     @Override
@@ -173,6 +177,7 @@ public class HomeActivity extends BaseActivity
                     break;
                 case FrageType.MESSAGE:
                     bottomTab.setMessage(false);
+                    bottomTab.invalidate();
                     to = FrageMessage.newInstance(ishaveReply,ishavePm);
                     break;
                 case FrageType.MY:
@@ -243,9 +248,8 @@ public class HomeActivity extends BaseActivity
         if (info != null) {
             version_code = info.versionCode;
         }
-        final String url = "forum.php?mod=viewthread&tid=846819&mobile=2";
         final int finalVersion_code = version_code;
-        HttpUtil.get(HomeActivity.this, url, new ResponseHandler() {
+        HttpUtil.get(HomeActivity.this, App.CHECK_UPDATE_URL, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
@@ -265,7 +269,7 @@ public class HomeActivity extends BaseActivity
                                 .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
                                     @Override
                                     public void onClick(MyAlertDialog myAlertDialog) {
-                                        PostActivity.open(HomeActivity.this,url,"谁用了FREEDOM");
+                                        PostActivity.open(HomeActivity.this,App.CHECK_UPDATE_URL,"谁用了FREEDOM");
                                     }
                                 })
                                 .setTitleText("检测到新版本")
@@ -286,8 +290,7 @@ public class HomeActivity extends BaseActivity
         if(isReply){
             Elements elemens = document.select(".nts").select("dl.cl");
             if(elemens.size()>0){
-                int last_message_id  = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this)
-                        .getInt(App.NOTICE_MESSAGE_KEY, 0);
+                int last_message_id  = getSharedPreferences(App.MY_SHP_NAME,MODE_PRIVATE).getInt(App.NOTICE_MESSAGE_KEY, 0);
                 int  noticeId = Integer.parseInt(elemens.get(0).attr("notice"));
                 ishaveReply = last_message_id < noticeId;
             }

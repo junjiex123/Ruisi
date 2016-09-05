@@ -22,7 +22,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -61,7 +61,17 @@
                 android:gravity="center_vertical"
                 android:layout_marginTop="4dp"
                 android:orientation="horizontal">
-
+                <TextView
+                    android:id="@+id/article_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/type_bg_accent"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:text="金币"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp" />
                 <ImageView
                     android:tint="@color/colorDisableHintIcon"
                     android:src="@drawable/ic_time_12dp"
@@ -76,18 +86,6 @@
                     android:layout_weight="1"
                     android:maxLines="1"
                     tools:text="2015-1-1 19:20:15" />
-
-                <TextView
-                    android:id="@+id/article_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/type_bg_accent"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
-                    android:text="金币"
-                    android:textColor="@android:color/white"
-                    android:textSize="12sp" />
 
                 <ImageView
                     android:tint="@color/colorDisableHintIcon"

@@ -10,6 +10,7 @@ import xyz.yluo.ruisiapp.View.MyHtmlView.HtmlView;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.NewPostActivity;
 import xyz.yluo.ruisiapp.activity.PostActivity;
+import xyz.yluo.ruisiapp.activity.PostsActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.downloadfile.DownloadService;
 
@@ -36,6 +37,9 @@ public class HandleLinkClick {
             context.startActivity(new Intent(context, NewPostActivity.class));
         } else if (url.contains("member.php?mod=logging&action=login")) {//登陆
             LoginActivity.open(context);
+        } else if(url.contains("forum.php?mod=forumdisplay&fid=")){
+            int fid = GetId.getFroumFid(url);
+            PostsActivity.open(context,fid,"分区帖子");
         } else if (url.contains("forum.php?mod=attachment")) {
             //forum.php?mod=attachment&aid=ODk0NjM4fDdmMmIxZjE3fDE0NjgxMjc1Mjl8MjUyNTUzfDg0NjgxOQ%3D%3D&mobile=2
             final String finalUrl = url;

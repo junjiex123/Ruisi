@@ -336,10 +336,12 @@ public class PostActivity extends BaseActivity
             Bundle b = data.getExtras();
             String title = b.getString("TITLE", "");
             String content = b.getString("CONTENT", "");
+            String pid = b.getString("PID","");
             if (edit_pos == 0 && !TextUtils.isEmpty(title)) {
                 datas.get(0).setTitle(title);
             }
             datas.get(edit_pos).setCotent(content);
+            //todo 应该从网络获取
             adapter.notifyItemChanged(edit_pos);
         }
     }
@@ -550,12 +552,6 @@ public class PostActivity extends BaseActivity
         @Override
         protected void onPostExecute(List<SingleArticleData> tepdata) {
             isEnableLoadMore = true;
-            refreshLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    refreshLayout.setRefreshing(false);
-                }
-            }, 400);
 
             if(!TextUtils.isEmpty(errorText)){
                 Toast.makeText(PostActivity.this,errorText,Toast.LENGTH_SHORT).show();
@@ -617,6 +613,13 @@ public class PostActivity extends BaseActivity
             }
             spinner.setSelection(page_now - 1);
             spinnerAdapter.notifyDataSetChanged();
+
+            refreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(false);
+                }
+            }, 400);
         }
     }
 

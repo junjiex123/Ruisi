@@ -110,6 +110,13 @@ public class PostListAdapter extends BaseAdapter {
                 }
             });
 
+            author_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBtnAvatarClick();
+                }
+            });
+
         }
 
         //设置listItem的数据
@@ -123,8 +130,7 @@ public class PostListAdapter extends BaseAdapter {
             } else {
                 article_type.setVisibility(View.GONE);
             }
-            String postTime = "发表于:" + single.getPostTime();
-            post_time.setText(postTime);
+            post_time.setText(single.getPostTime());
             view_count.setText(single.getViewCount());
 
             String imageUrl = UrlUtils.getAvaterurlm(single.getAuthorUrl());

@@ -1,5 +1,6 @@
 package xyz.yluo.ruisiapp.fragment;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -138,8 +139,8 @@ public class FrageMessage extends BaseFragment {
             });
         }
 
-        last_message_id = PreferenceManager.getDefaultSharedPreferences(getActivity()).
-                getInt(App.NOTICE_MESSAGE_KEY, 0);
+        last_message_id =  getActivity().getSharedPreferences(App.MY_SHP_NAME, Activity.MODE_PRIVATE)
+                .getInt(App.NOTICE_MESSAGE_KEY, 0);
         current_noticeid = last_message_id;
         //reply
         String url = "home.php?mod=space&do=notice&mobile=2";
@@ -221,7 +222,7 @@ public class FrageMessage extends BaseFragment {
             }
 
             if(last_message_id<current_noticeid){
-                SharedPreferences prf =  PreferenceManager.getDefaultSharedPreferences(getActivity());
+                SharedPreferences prf =  getActivity().getSharedPreferences(App.MY_SHP_NAME, Activity.MODE_PRIVATE);
                 SharedPreferences.Editor editor =  prf.edit();
                 editor.putInt(App.NOTICE_MESSAGE_KEY,current_noticeid);
                 editor.apply();
