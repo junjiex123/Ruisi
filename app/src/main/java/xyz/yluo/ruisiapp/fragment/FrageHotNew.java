@@ -246,6 +246,9 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
                     int size = mydataset.size();
                     mydataset.addAll(datas);
                     adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_OK);
+                    if(galleryDatas.size()>0){
+                        size++;
+                    }
                     adapter.notifyItemRangeInserted(size, datas.size());
                 }
             }

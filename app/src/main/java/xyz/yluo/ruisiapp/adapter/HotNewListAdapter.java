@@ -43,7 +43,6 @@ public class HotNewListAdapter extends BaseAdapter {
         if (galleryDatas.size() > 0) {
             count++;
         }
-
         return count;
     }
 
@@ -88,12 +87,14 @@ public class HotNewListAdapter extends BaseAdapter {
             });
         }
 
-        //设置listItem的数据
+               //设置listItem的数据
         @Override
         void setData(int position) {
+            if(galleryDatas.size()>0&&position>0){
+                position--;
+            }
             ArticleListData single = DataSet.get(position);
             int color = single.getTitleColor();
-
             article_title.setTextColor(single.isRead()?readcolor :color);
             article_title.setText(single.getTitle());
             author_name.setText(single.getAuthor());
@@ -102,7 +103,11 @@ public class HotNewListAdapter extends BaseAdapter {
         }
 
         void onBtnItemClick() {
-            ArticleListData single_data = DataSet.get(getAdapterPosition());
+            int pos = getAdapterPosition();
+            if(pos>0&&galleryDatas.size()>0){
+                pos--;
+            }
+            ArticleListData single_data = DataSet.get(pos);
             if (!single_data.isRead()) {
                 single_data.setRead(true);
                 notifyItemChanged(getAdapterPosition());

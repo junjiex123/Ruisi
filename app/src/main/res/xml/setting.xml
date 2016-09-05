@@ -56,7 +56,7 @@
 
         <EditTextPreference
             android:capitalize="words"
-            android:defaultValue="[size=1][color=#ff0000]-----来自[url=http://rs.xidian.edu.cn/forum.php?mod=viewthread&amp;tid=846819]手机睿思[/url][/color][/size]"
+            android:defaultValue="[size=1][color=#ff0000]-----来自[url=http://rs.xidian.edu.cn/forum.php?mod=viewthread&amp;tid=805203]手机睿思[/url][/color][/size]"
             android:inputType="textCapWords"
             android:key="setting_user_tail"
             android:maxLines="3"
