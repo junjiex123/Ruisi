@@ -1,61 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_item_btn_item"
+    android:id="@+id/list_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
-    android:orientation="vertical"
     android:paddingEnd="@dimen/dimen_16"
     android:paddingStart="16dp"
     android:paddingTop="@dimen/dimen_16">
 
-    <LinearLayout
+
+    <xyz.yluo.ruisiapp.View.CircleImageView
+        android:id="@+id/user_image"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/image_placeholder"
+        app:civ_border_color="@android:color/white"
+        app:civ_border_width="1dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/user_name"
+        style="@style/text_16_pri"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        tools:text="hualong95"
+        android:layout_marginTop="4dp"
+        android:layout_alignTop="@+id/user_image"
+        android:layout_toEndOf="@+id/user_image"
+        android:layout_marginStart="8dp" />
+
+    <TextView
+        android:id="@+id/is_online"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/type_bg_blue"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:text="在线"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:layout_marginStart="6dp"
+        android:layout_alignBaseline="@+id/user_name"
+        android:layout_toEndOf="@+id/user_name" />
+
+    <TextView
+        android:id="@+id/user_info"
+        style="@style/text_12_sec"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:maxLines="1"
+        tools:text="木有人买电脑了"
+        android:layout_marginTop="6dp"
+        android:layout_below="@+id/user_name"
+        android:layout_alignStart="@+id/user_name" />
 
-        <xyz.yluo.ruisiapp.View.CircleImageView
-            android:id="@+id/user_image"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="@dimen/dimen_8"
-            android:src="@drawable/image_placeholder"
-            app:civ_border_color="@android:color/white"
-            app:civ_border_width="1dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/user_name"
-                style="@style/text_16_pri"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:maxLines="1"
-                tools:text="hualong95" />
-
-            <TextView
-                android:id="@+id/user_info"
-                style="@style/text_12_sec"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:layout_marginTop="@dimen/dimen_4"
-                android:maxLines="1"
-                tools:text="木有人买电脑了" />
-        </LinearLayout>
-    </LinearLayout>
     <View
         android:background="@color/colorDivider"
-        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
-        android:layout_height="0.6dp"/>
-</LinearLayout>
+        android:layout_height="0.6dp"
+        android:id="@+id/view"
+        android:layout_marginTop="12dp"
+        android:layout_below="@+id/user_image" />
+</RelativeLayout>
+

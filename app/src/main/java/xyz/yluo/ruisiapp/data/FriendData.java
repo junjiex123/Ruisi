@@ -10,12 +10,14 @@ public class FriendData {
     private String imgUrl;
     private String info;
     private String uid;
+    private boolean isOnline;
 
-    public FriendData(String userName, String imgUrl, String info, String uid) {
+    public FriendData(String userName, String imgUrl, String info, String uid,boolean isOnline) {
         this.userName = userName;
         this.imgUrl = imgUrl;
         this.info = info;
         this.uid = uid;
+        this.isOnline = isOnline;
     }
 
     public String getUserName() {
@@ -32,5 +34,9 @@ public class FriendData {
 
     public String getUid() {
         return uid;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
     }
 }

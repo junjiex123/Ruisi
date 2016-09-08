@@ -248,8 +248,9 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
                             String userName = element.select("h4").select("a[href^=home.php?mod=space&uid=]").text();
                             String uid = GetId.getid("uid=",imgurl);
                             String info = element.select("p.maxh").text();
+                            boolean online = element.select("em.gol").text().contains("在线");
                             //userName,imgUrl,info,uid
-                            temp.add(new FriendData(userName, imgurl, info, uid));
+                            temp.add(new FriendData(userName, imgurl, info, uid,online));
                         }
                     }
 

@@ -49,10 +49,9 @@ public class FriendAdapter extends BaseAdapter {
         return new FriendViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_friend, parent, false));
     }
-
     private class FriendViewHolder extends BaseViewHolder{
         protected CircleImageView user_image;
-        TextView user_name,user_info;
+        TextView user_name,user_info,is_online;
         private View container;
 
         FriendViewHolder(View itemView) {
@@ -60,7 +59,8 @@ public class FriendAdapter extends BaseAdapter {
             user_image = (CircleImageView) itemView.findViewById(R.id.user_image);
             user_name = (TextView) itemView.findViewById(R.id.user_name);
             user_info = (TextView) itemView.findViewById(R.id.user_info);
-            container = itemView.findViewById(R.id.main_item_btn_item);
+            is_online = (TextView) itemView.findViewById(R.id.is_online);
+            container = itemView.findViewById(R.id.list_item);
 
             user_image.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -82,6 +82,7 @@ public class FriendAdapter extends BaseAdapter {
             FriendData single = datas.get(position);
             user_name.setText(single.getUserName());
             user_info.setText(single.getInfo());
+            is_online.setVisibility(single.isOnline()?View.VISIBLE:View.GONE);
             Picasso.with(context).load(single.getImgUrl()).placeholder(R.drawable.image_placeholder).into(user_image);
             container.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
