@@ -2,7 +2,10 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -42,7 +45,6 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
 
     public static void open(Context context, String url) {
         Intent intent = new Intent(context, ViewImgActivity.class);
-        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("url", url);
         context.startActivity(intent);
     }
@@ -52,7 +54,9 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_img);
         datas = new ArrayList<>();
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(Color.rgb(138,145,151));
+        }
 
         pager = (ViewPager) findViewById(R.id.pager);
         index = (TextView) findViewById(R.id.index);
@@ -70,14 +74,23 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
         Bundle b = getIntent().getExtras();
         String url = b.getString("url");
 
-        String tid = GetId.getid("tid=",url);
+        final String tid = GetId.getid("tid=",url);
         aid = GetId.getid("aid=",url);
         String urll = "forum.php?mod=viewthread&tid="
                 +tid+"&aid="+aid+"&from=album&mobile=2";
         HttpUtil.get(ViewImgActivity.this, urll, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
-                Document doc = Jsoup.parse(new String(response));
+                String res = new String(response);
+                Document doc = Jsoup.parse(res);
+                int ih = doc.head().html().indexOf("keywords");
+                if(ih>0){
+                    int h_start = doc.head().html().indexOf('\"', ih + 15);
+                    int h_end = doc.head().html().indexOf('\"', h_start + 1);
+                    String  title  = doc.head().html().substring(h_start + 1, h_end);
+                    TextView v = (TextView) findViewById(R.id.title);
+                    v.setText(title);
+                }
                 Elements elements = doc.select("ul.postalbum_c").select("li");
                 int i = 0;
                 for(Element e:elements){
@@ -86,7 +99,6 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
                         position = i;
                         Log.e("position",position+"====1");
                     }
-
                     String src = e.select("img").attr("orig");
                     if(TextUtils.isEmpty("src")){
                         continue;

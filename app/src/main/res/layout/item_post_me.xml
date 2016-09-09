@@ -26,10 +26,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:gravity="center_vertical"
+        android:gravity="center_vertical|end"
         android:orientation="horizontal">
 
+        <TextView
+            android:layout_marginStart="12dp"
+            android:id="@+id/is_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/type_bg_blue"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:text="有图"
+            android:textColor="@android:color/white"
+            android:textSize="10sp" />
+
         <ImageView
+            android:layout_marginStart="12dp"
             android:tint="@color/colorDisableHintIcon"
             android:src="@drawable/ic_person_12dp"
             android:layout_width="16dp"
@@ -47,7 +60,7 @@
         <ImageView
             android:layout_marginStart="12dp"
             android:tint="@color/colorDisableHintIcon"
-            android:src="@drawable/ic_reply_12dp"
+            android:src="@drawable/ic_message_12dp"
             android:layout_width="16dp"
             android:layout_height="16dp" />
 
@@ -58,18 +71,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             tools:text="222" />
-
-        <TextView
-            android:layout_marginStart="12dp"
-            android:id="@+id/is_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/type_bg_blue"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:text="有图"
-            android:textColor="@android:color/white"
-            android:textSize="10sp" />
 
     </LinearLayout>
 

@@ -47,12 +47,23 @@
 
                 <TextView
                     android:id="@+id/author_name"
-                    style="@style/text_12_sec"
+                    style="@style/text_14_sec"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:layout_weight="1"
                     tools:text="hahah" />
+
+                <TextView
+                    android:id="@+id/article_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/type_bg_accent"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:text="金币"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -61,17 +72,7 @@
                 android:gravity="center_vertical"
                 android:layout_marginTop="4dp"
                 android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/article_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/type_bg_accent"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
-                    android:text="金币"
-                    android:textColor="@android:color/white"
-                    android:textSize="12sp" />
+
                 <ImageView
                     android:tint="@color/colorDisableHintIcon"
                     android:src="@drawable/ic_time_12dp"
@@ -102,7 +103,7 @@
                     tools:text="222" />
                 <ImageView
                     android:tint="@color/colorDisableHintIcon"
-                    android:src="@drawable/ic_reply_12dp"
+                    android:src="@drawable/ic_message_12dp"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_marginStart="8dp"/>

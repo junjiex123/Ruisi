@@ -44,13 +44,8 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
     private PageAdapter adapter;
     //自动播放
     private AutoPlayTask mAutoPlayTask;
-    private int AutoPlayDelay = 5000;
+    private static final int AutoPlayDelay = 5000;
     private List<GalleryData> datas;
-
-    /**
-     * 记录当前位置
-     */
-    private int current_position = 0;
 
     private static final int RMP = LayoutParams.MATCH_PARENT;
     private static final int RWC = LayoutParams.WRAP_CONTENT;
@@ -176,14 +171,13 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        current_position = position;
+        //current_position = position;
     }
 
 
     @Override
     public void onPageSelected(int position) {
         position = position % datas.size();
-        current_position = position;
         changeView(position);
     }
 
@@ -219,24 +213,25 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
 
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
-            ImageView v = new ImageView(context);
-            v.setLayoutParams(new LayoutParams(RMP,RMP));
-            v.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            Picasso.with(context).load(datas.get(position).getImgurl())
-                    .placeholder(R.drawable.image_placeholder)
-                    .into(v);
-            if (container.equals(v.getParent())) {
-                container.removeView(v);
+            ImageView v  = (ImageView) container.findViewWithTag(position);
+            if(v==null){
+                v = new ImageView(context);
+                v.setLayoutParams(new LayoutParams(RMP,RMP));
+                v.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                Picasso.with(context).load(datas.get(position).getImgurl())
+                        .placeholder(R.drawable.image_placeholder)
+                        .into(v);
+                if (listener != null) {
+                    v.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            listener.onBannerItemClick(view, position);
+                        }
+                    });
+                }
+                v.setTag(position);
+                container.addView(v);
             }
-            if (listener != null) {
-                v.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        listener.onBannerItemClick(view, position);
-                    }
-                });
-            }
-            container.addView(v);
             return v;
         }
 
