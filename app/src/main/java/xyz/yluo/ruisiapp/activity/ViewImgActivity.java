@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -25,6 +24,7 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.View.ScaleImageView;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
@@ -141,18 +141,20 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
 
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
-            ImageView v = new ImageView(ViewImgActivity.this);
-            v.setLayoutParams(new RelativeLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT));
-            v.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            Picasso.with(ViewImgActivity.this).load(datas.get(position))
-                    .placeholder(R.drawable.image_placeholder)
-                    .into(v);
-            if (container.equals(v.getParent())) {
-                container.removeView(v);
+            ScaleImageView v = (ScaleImageView) container.findViewWithTag(position);
+            if(v==null){
+                v = new ScaleImageView(ViewImgActivity.this);
+                v.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT);
+                v.setLayoutParams(params);
+                Picasso.with(ViewImgActivity.this).load(datas.get(position))
+                        .placeholder(R.drawable.image_placeholder)
+                        .into(v);
+                v.setTag(position);
+                container.addView(v);
             }
-            container.addView(v);
             return v;
         }
 
@@ -170,7 +172,6 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            //do nothing
         }
     }
 }
