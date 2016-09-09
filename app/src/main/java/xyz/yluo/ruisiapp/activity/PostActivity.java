@@ -36,7 +36,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyReplyView;
 import xyz.yluo.ruisiapp.adapter.BaseAdapter;
-import xyz.yluo.ruisiapp.adapter.SingleArticleAdapter;
+import xyz.yluo.ruisiapp.adapter.PostAdapter;
 import xyz.yluo.ruisiapp.data.SingleArticleData;
 import xyz.yluo.ruisiapp.data.SingleType;
 import xyz.yluo.ruisiapp.database.MyDB;
@@ -71,7 +71,7 @@ public class PostActivity extends BaseActivity
     private boolean isEnableLoadMore = false;
     //回复楼主的链接
     private String replyUrl = "";
-    private SingleArticleAdapter adapter;
+    private PostAdapter adapter;
     //存储数据 需要填充的列表
     private List<SingleArticleData> datas = new ArrayList<>();
     //是否调到指定页数and楼层???
@@ -128,7 +128,7 @@ public class PostActivity extends BaseActivity
         });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        adapter = new SingleArticleAdapter(this, this, datas);
+        adapter = new PostAdapter(this, this, datas);
         /**
          * 缓存数量
          */

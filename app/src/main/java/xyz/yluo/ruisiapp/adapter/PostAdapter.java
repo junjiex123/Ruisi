@@ -27,7 +27,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 评论 文章 loadmore
  */
 
-public class SingleArticleAdapter extends BaseAdapter {
+public class PostAdapter extends BaseAdapter {
 
     private static final int CONTENT = 0;
     private static final int COMENT = 1;
@@ -38,7 +38,7 @@ public class SingleArticleAdapter extends BaseAdapter {
     private List<SingleArticleData> datalist;
     private Activity activity;
 
-    public SingleArticleAdapter(
+    public PostAdapter(
             Activity activity, ListItemClickListener itemListener,
             List<SingleArticleData> datalist) {
 

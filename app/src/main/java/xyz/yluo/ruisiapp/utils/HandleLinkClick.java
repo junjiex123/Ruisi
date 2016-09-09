@@ -12,6 +12,7 @@ import xyz.yluo.ruisiapp.activity.NewPostActivity;
 import xyz.yluo.ruisiapp.activity.PostActivity;
 import xyz.yluo.ruisiapp.activity.PostsActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
+import xyz.yluo.ruisiapp.activity.ViewImgActivity;
 import xyz.yluo.ruisiapp.downloadfile.DownloadService;
 
 /**
@@ -26,8 +27,7 @@ public class HandleLinkClick {
         Log.i("handle the link", url);
         //点击了图片
         if (url.contains("from=album")) {
-            //do nothing
-            System.out.println("to do img click");
+            ViewImgActivity.open(context,url);
         } else if (url.contains("forum.php?mod=viewthread&tid=")) { // 帖子
             PostActivity.open(context, url, null);
         } else if (url.contains("home.php?mod=space&uid=")) { // 用户

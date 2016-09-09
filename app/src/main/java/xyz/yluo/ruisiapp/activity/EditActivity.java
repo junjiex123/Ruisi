@@ -150,8 +150,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener{
     }
 
     private void start_edit(){
-        //没有分类 http://bbs.rs.xidian.me/forum.php?mod=post&action=edit&fid=72&tid=879072&pid=22185602&mobile=2
-        //有分类 http://bbs.rs.xidian.me/forum.php?mod=post&action=edit&fid=72&tid=879783&pid=22201972&mobile=2
         String url =  "forum.php?mod=post&action=edit&tid="+tid+"&pid="+pid+"&mobile=2";
         HttpUtil.get(this, url, new ResponseHandler() {
             @Override
