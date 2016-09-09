@@ -79,13 +79,11 @@ public class DownloadService extends Service {
                 }
                 createNotification(filename);
             }
-
             @Override
             public void onProgress(int progress, long totalBytes) {
                 super.onProgress(progress, totalBytes);
                 updateProgress(DOWNLOADING, progress);
             }
-
             @Override
             public void onSuccess(File file) {
                 updateProgress(DOWN_OK, 100);
@@ -93,10 +91,11 @@ public class DownloadService extends Service {
 
             @Override
             public void onFailure(Throwable throwable, File file) {
+                Log.e("error","===========");
                 updateProgress(DOWN_ERROR, 0);
             }
         };
-        HttpUtil.get(getApplicationContext(), down_url, handler);
+        HttpUtil.get(this, down_url, handler);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -150,8 +149,6 @@ public class DownloadService extends Service {
                 mNotifyManager.notify(0, mBuilder.build());
                 break;
             case DOWN_OK:
-                Toast.makeText(getApplicationContext(),"文件下载完成",Toast.LENGTH_SHORT).show();
-
                 mBuilder.setContentText("文件下载完成！")
                         // Removes the progress bar
                         .setProgress(0, 0, false);

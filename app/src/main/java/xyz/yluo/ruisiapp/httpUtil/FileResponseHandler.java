@@ -98,6 +98,7 @@ public abstract class FileResponseHandler extends ResponseHandler {
             instream.close();
             onSuccess(getTargetFile());
         }catch (Exception e){
+            e.printStackTrace();
             onFailure(new Exception("received bytes length is not contentLength"), getTargetFile());
         }
     }
