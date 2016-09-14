@@ -285,10 +285,6 @@ public class PostsActivity extends BaseActivity implements
                     String title = tempEles.text();
                     String titleUrl = tempEles.attr("href");
                     int titleColor = GetId.getColor(PostsActivity.this,tempEles.attr("style"));
-
-                    Log.e("style",src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]").attr("style"));
-                    Log.e("titleColor",titleColor+"");
-
                     String author = src.getElementsByAttributeValue("class", "by").first().select("a").text();
                     String authorUrl = src.getElementsByAttributeValue("class", "by").first().select("a").attr("href");
                     String time = src.getElementsByAttributeValue("class", "by").first().select("em").text().trim();

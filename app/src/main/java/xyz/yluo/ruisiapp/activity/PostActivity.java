@@ -140,10 +140,8 @@ public class PostActivity extends BaseActivity
                     jump_page(pos + 1);
                 }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
 
@@ -552,35 +550,38 @@ public class PostActivity extends BaseActivity
         @Override
         protected void onPostExecute(List<SingleArticleData> tepdata) {
             isEnableLoadMore = true;
-
             if(!TextUtils.isEmpty(errorText)){
                 Toast.makeText(PostActivity.this,errorText,Toast.LENGTH_SHORT).show();
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
                 return;
             }
+            if(tepdata.size()==0){
+                adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
+                return;
+            }
 
+            Log.e("page",page_now+"||"+page_sum);
             int startsize = datas.size();
-            if(page_now<page_sum){
+            if(page_now<page_sum||(page_now==1&&page_sum!=1)){
                 datas.addAll(tepdata);
-                adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
-            }else{
-                //最后一夜了
-                String lastPid = datas.isEmpty()?"0":(datas.get(datas.size()-1).getPid());
-                int equalpos = -1;
-                for(int i=0;i<tepdata.size();i++){
-                    SingleArticleData d =tepdata.get(i);
-                    if(!TextUtils.isEmpty(d.getPid())
-                            &&lastPid.equals(d.getPid())){
-                        equalpos = i;
-                        break;
-                    }
+                if(tepdata.size()==10){
+                    adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
+                }else{
+                    adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
                 }
-                for(int i = equalpos+1;i<tepdata.size();i++){
-                    datas.add(tepdata.get(i));
+
+            }else {
+                //最后一页了
+                String pid = datas.size()>0?datas.get(datas.size()-1).getPid():"0";
+                int pidint = Integer.parseInt(pid);
+                for(int i=0;i<tepdata.size();i++){
+                    int pidt = Integer.parseInt(tepdata.get(i).getPid());
+                    if(pidt>pidint){
+                        datas.add(tepdata.get(i));
+                    }
                 }
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
             }
-
             if (datas.size() > 0 && (datas.get(0).getType() != SingleType.CONTENT) &&
                     (datas.get(0).getType() != SingleType.HEADER)) {
                 datas.add(0, new SingleArticleData(SingleType.HEADER, Title,
@@ -622,7 +623,6 @@ public class PostActivity extends BaseActivity
             }, 400);
         }
     }
-
 
     //删除帖子或者回复
     private void removeItem(final int pos) {

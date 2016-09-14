@@ -28,7 +28,7 @@ public class HandleLinkClick {
         //点击了图片
         if (url.contains("from=album")) {
             ViewImgActivity.open(context,url);
-        } else if (url.contains("forum.php?mod=viewthread&tid=")) { // 帖子
+        } else if (url.contains("forum.php?mod=viewthread&tid=")||url.contains("forum.php?mod=redirect&goto=findpost")) { // 帖子
             PostActivity.open(context, url, null);
         } else if (url.contains("home.php?mod=space&uid=")) { // 用户
             String imageUrl = UrlUtils.getAvaterurlb(url);

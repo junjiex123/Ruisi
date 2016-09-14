@@ -161,6 +161,25 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             }
         });
 
+        findViewById(R.id.action_backspace).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                int start = ed_content.getSelectionStart();
+                int end = ed_content.getSelectionEnd();
+                if(start==0){
+                    return false;
+                }
+                if((start==end)&&start>0){
+                    start = start-5;
+                }
+                if(start<0){
+                    start = 0;
+                }
+                ed_content.getText().delete(start,end);
+                return  true;
+            }
+        });
+
         switch_fid(fid);
     }
 
