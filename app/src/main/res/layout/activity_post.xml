@@ -53,7 +53,8 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_marginStart="4dp"
             android:padding="8dp"
-            android:src="@drawable/ic_browser"
+            android:tint="@color/colorDisableHintIcon"
+            android:src="@drawable/ic_public_24dp"
             android:id="@+id/btn_browser"
             android:layout_width="40dp"
             android:layout_height="match_parent" />

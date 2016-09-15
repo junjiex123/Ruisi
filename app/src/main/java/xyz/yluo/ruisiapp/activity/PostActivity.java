@@ -93,7 +93,7 @@ public class PostActivity extends BaseActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_single_article);
+        setContentView(R.layout.activity_post);
 
         showPlainText = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("setting_show_plain", false);
         spinner = (Spinner) findViewById(R.id.btn_jump_spinner);
@@ -560,26 +560,31 @@ public class PostActivity extends BaseActivity
                 return;
             }
 
-            Log.e("page",page_now+"||"+page_sum);
             int startsize = datas.size();
-            if(page_now<page_sum||(page_now==1&&page_sum!=1)){
+            if(datas.size()==0){
                 datas.addAll(tepdata);
-                if(tepdata.size()==10){
-                    adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
-                }else{
-                    adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
+            }else{
+                String strindex = datas.get(datas.size()-1).getIndex();
+                if(TextUtils.isEmpty(strindex)){
+                    strindex = "-1";
+                }else if(strindex.equals("沙发")){
+                    strindex = "1";
+                }else if(strindex.equals("板凳")){
+                    strindex = "2";
+                }else if(strindex.equals("地板")){
+                    strindex = "3";
                 }
-
-            }else {
-                //最后一页了
-                String pid = datas.size()>0?datas.get(datas.size()-1).getPid():"0";
-                int pidint = Integer.parseInt(pid);
-                for(int i=0;i<tepdata.size();i++){
-                    int pidt = Integer.parseInt(tepdata.get(i).getPid());
-                    if(pidt>pidint){
+                int index = GetId.getNumber(strindex);
+                for(int i = 0;i<tepdata.size();i++){
+                    int indexp = GetId.getNumber(tepdata.get(i).getIndex());
+                    if(indexp>index){
                         datas.add(tepdata.get(i));
                     }
                 }
+            }
+            if(page_now<page_sum){
+                adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
+            }else{
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
             }
             if (datas.size() > 0 && (datas.get(0).getType() != SingleType.CONTENT) &&
