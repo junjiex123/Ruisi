@@ -576,7 +576,15 @@ public class PostActivity extends BaseActivity
                 }
                 int index = GetId.getNumber(strindex);
                 for(int i = 0;i<tepdata.size();i++){
-                    int indexp = GetId.getNumber(tepdata.get(i).getIndex());
+                    String strindexp = tepdata.get(i).getIndex();
+                    if(strindex.equals("沙发")){
+                        strindex = "1";
+                    }else if(strindex.equals("板凳")){
+                        strindex = "2";
+                    }else if(strindex.equals("地板")){
+                        strindex = "3";
+                    }
+                    int indexp = GetId.getNumber(strindex);
                     if(indexp>index){
                         datas.add(tepdata.get(i));
                     }
