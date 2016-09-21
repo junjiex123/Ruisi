@@ -37,8 +37,8 @@ import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyReplyView;
 import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.PostAdapter;
-import xyz.yluo.ruisiapp.data.SingleArticleData;
-import xyz.yluo.ruisiapp.data.SingleType;
+import xyz.yluo.ruisiapp.model.SingleArticleData;
+import xyz.yluo.ruisiapp.model.SingleType;
 import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -513,6 +513,7 @@ public class PostActivity extends BaseActivity
                     if(start>0){
                         int end = codee.html().indexOf("</font>",start);
                         if(end>start){
+                            codee.select("a").removeAttr("href");
                             int c = end-start;
                             codee.html(codee.html().replaceAll("发表于.{"+(c-3)+"}",""));
                             break;
@@ -577,14 +578,14 @@ public class PostActivity extends BaseActivity
                 int index = GetId.getNumber(strindex);
                 for(int i = 0;i<tepdata.size();i++){
                     String strindexp = tepdata.get(i).getIndex();
-                    if(strindex.equals("沙发")){
-                        strindex = "1";
+                    if(strindexp.equals("沙发")){
+                        strindexp = "1";
                     }else if(strindex.equals("板凳")){
-                        strindex = "2";
+                        strindexp = "2";
                     }else if(strindex.equals("地板")){
-                        strindex = "3";
+                        strindexp = "3";
                     }
-                    int indexp = GetId.getNumber(strindex);
+                    int indexp = GetId.getNumber(strindexp);
                     if(indexp>index){
                         datas.add(tepdata.get(i));
                     }
@@ -600,7 +601,6 @@ public class PostActivity extends BaseActivity
                 datas.add(0, new SingleArticleData(SingleType.HEADER, Title,
                         null, null, null, null, null, null, null));
             }
-
             int add = datas.size()-startsize;
             if(startsize==0){
                 adapter.notifyDataSetChanged();

@@ -15,7 +15,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.activity.ChatActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
-import xyz.yluo.ruisiapp.data.FriendData;
+import xyz.yluo.ruisiapp.model.FriendData;
 import xyz.yluo.ruisiapp.listener.ListItemLongClickListener;
 
 /**

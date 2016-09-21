@@ -27,7 +27,7 @@ import xyz.yluo.ruisiapp.utils.ImageUtils;
 
 /**
  * Created by free2 on 16-7-19.
- *
+ * smiley picker
  */
 
 public class MySmileyPicker extends PopupWindow{

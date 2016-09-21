@@ -21,7 +21,7 @@ import xyz.yluo.ruisiapp.activity.FriendActivity;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.SignActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
-import xyz.yluo.ruisiapp.data.FrageType;
+import xyz.yluo.ruisiapp.model.FrageType;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**

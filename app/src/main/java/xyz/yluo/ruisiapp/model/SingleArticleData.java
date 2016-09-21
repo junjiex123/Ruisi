@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.data;
+package xyz.yluo.ruisiapp.model;
 
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 

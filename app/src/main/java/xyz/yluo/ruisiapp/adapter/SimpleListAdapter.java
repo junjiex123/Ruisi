@@ -13,8 +13,8 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.PostActivity;
-import xyz.yluo.ruisiapp.data.ListType;
-import xyz.yluo.ruisiapp.data.SimpleListData;
+import xyz.yluo.ruisiapp.model.ListType;
+import xyz.yluo.ruisiapp.model.SimpleListData;
 
 /**
  * Created by free2 on 16-4-7.

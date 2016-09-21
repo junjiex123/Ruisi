@@ -77,6 +77,7 @@ public class LoginActivity extends BaseActivity {
         Spinner anwser_select = (Spinner) findViewById(R.id.anwser_select);
         anwser_text = (EditText) findViewById(R.id.anwser_text);
 
+        initToolBar(true,getResources().getString(R.string.app_name));
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

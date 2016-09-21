@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.data.ForumListData;
+import xyz.yluo.ruisiapp.model.ForumListData;
 import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.utils.ImageUtils;
 

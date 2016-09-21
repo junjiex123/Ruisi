@@ -14,7 +14,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "xidianrs.db";
 
     //更改版本后数据库将重新创建
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
 
     public SQLiteHelper(Context context) {

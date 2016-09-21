@@ -30,7 +30,7 @@ import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyBottomTab;
-import xyz.yluo.ruisiapp.data.FrageType;
+import xyz.yluo.ruisiapp.model.FrageType;
 import xyz.yluo.ruisiapp.fragment.FrageForumList;
 import xyz.yluo.ruisiapp.fragment.FrageHotNew;
 import xyz.yluo.ruisiapp.fragment.FrageMessage;
@@ -147,12 +147,6 @@ public class HomeActivity extends BaseActivity
     }
 
     @Override
-    public void onAttachFragment(Fragment fragment) {
-        super.onAttachFragment(fragment);
-        Log.e("HOME","onAttachFragment"+fragment.getTag());
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         // super.onSaveInstanceState(outState);
         //不然保存状态 放置白屏
@@ -235,6 +229,9 @@ public class HomeActivity extends BaseActivity
     }
 
 
+    /**
+     * check update
+     */
     private void checkUpdate(){
         PackageManager manager;
         PackageInfo info = null;
@@ -284,6 +281,9 @@ public class HomeActivity extends BaseActivity
     }
 
 
+    /**
+     * check unread message
+     */
     private void dealMessage(boolean isReply,String res){
         Document document = Jsoup.parse(res);
         //回复
@@ -309,7 +309,7 @@ public class HomeActivity extends BaseActivity
     }
 
 
-    //// TODO: 16-8-23  
+    //deal unread message show red point
     private  static class MyHandler extends Handler {
         private final WeakReference<MyBottomTab> mytab;
         private final WeakReference<HomeActivity> act;
@@ -338,6 +338,7 @@ public class HomeActivity extends BaseActivity
     }
 
 
+    //tixing wei du xiao xi
     private void mkNotify(){
         boolean isnotify = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this)
                 .getBoolean("setting_show_notify", false);

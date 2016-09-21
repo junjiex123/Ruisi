@@ -12,9 +12,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import xyz.yluo.ruisiapp.data.ArticleListData;
-import xyz.yluo.ruisiapp.data.ForumListData;
-import xyz.yluo.ruisiapp.data.SchoolNewsData;
+import xyz.yluo.ruisiapp.model.ArticleListData;
+import xyz.yluo.ruisiapp.model.ForumListData;
+import xyz.yluo.ruisiapp.model.SchoolNewsData;
 import xyz.yluo.ruisiapp.utils.GetId;
 
 

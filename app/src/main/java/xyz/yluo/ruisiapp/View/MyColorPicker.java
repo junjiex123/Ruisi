@@ -16,7 +16,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
  * Created by free2 on 16-7-19.
- *
+ * color picker on edit bar
  */
 
 public class MyColorPicker extends PopupWindow implements AdapterView.OnItemClickListener {

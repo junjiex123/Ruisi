@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.data;
+package xyz.yluo.ruisiapp.model;
 
 /**
  * Created by free2 on 16-4-13.

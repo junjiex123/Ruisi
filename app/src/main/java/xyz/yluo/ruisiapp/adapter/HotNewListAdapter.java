@@ -14,8 +14,8 @@ import java.util.List;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.MyGuildView;
 import xyz.yluo.ruisiapp.activity.PostActivity;
-import xyz.yluo.ruisiapp.data.ArticleListData;
-import xyz.yluo.ruisiapp.data.GalleryData;
+import xyz.yluo.ruisiapp.model.ArticleListData;
+import xyz.yluo.ruisiapp.model.GalleryData;
 
 /**
  * Created by free2 on 16-3-31.

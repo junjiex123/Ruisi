@@ -22,7 +22,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.data.GalleryData;
+import xyz.yluo.ruisiapp.model.GalleryData;
 import xyz.yluo.ruisiapp.utils.DimmenUtils;
 
 

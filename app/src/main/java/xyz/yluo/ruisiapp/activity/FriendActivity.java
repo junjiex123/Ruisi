@@ -38,7 +38,7 @@ import xyz.yluo.ruisiapp.View.AddFriendDialog;
 import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.FriendAdapter;
-import xyz.yluo.ruisiapp.data.FriendData;
+import xyz.yluo.ruisiapp.model.FriendData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;

@@ -16,8 +16,8 @@ import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.activity.ChatActivity;
 import xyz.yluo.ruisiapp.activity.PostActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
-import xyz.yluo.ruisiapp.data.ListType;
-import xyz.yluo.ruisiapp.data.MessageData;
+import xyz.yluo.ruisiapp.model.ListType;
+import xyz.yluo.ruisiapp.model.MessageData;
 
 /**
  * Created by free2 on 16-3-21.
