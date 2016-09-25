@@ -1,5 +1,6 @@
 package xyz.yluo.ruisiapp.fragment;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -9,12 +10,12 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.activity.PostActivity;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -65,16 +66,20 @@ public class FragSetting extends PreferenceFragment
         exit_login.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                new MyAlertDialog(getActivity(),MyAlertDialog.WARNING_TYPE)
-                        .setTitleText("退出登录")
-                        .setContentText("你确定要注销吗？")
-                        .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
+                new AlertDialog.Builder(getActivity()).
+                        setTitle("退出登录").
+                        setMessage("你确定要注销吗？").
+                        setPositiveButton("注销", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(MyAlertDialog myAlertDialog) {
+                            public void onClick(DialogInterface dialog, int which) {
                                 DataManager.cleanApplicationData(getActivity());
                                 getActivity().finish();
                             }
-                        }).show();
+                        })
+                        .setNegativeButton("取消",null)
+                        .setCancelable(true)
+                        .create()
+                        .show();
                 return true;
             }
         });
@@ -115,16 +120,18 @@ public class FragSetting extends PreferenceFragment
                                         int code = GetId.getNumber(title.substring(st));
                                         Log.e("code", code + " " + finalversion_code);
                                         if(code>finalversion_code){
-                                            new MyAlertDialog(getActivity(),MyAlertDialog.WARNING_TYPE)
-                                                    .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
+                                            new AlertDialog.Builder(getActivity()).
+                                                    setTitle("检测到新版本！！").
+                                                    setMessage("你确定要注销吗？").
+                                                    setPositiveButton("查看", new DialogInterface.OnClickListener() {
                                                         @Override
-                                                        public void onClick(MyAlertDialog myAlertDialog) {
+                                                        public void onClick(DialogInterface dialog, int which) {
                                                             PostActivity.open(getActivity(),App.CHECK_UPDATE_URL,"谁用了FREEDOM");
                                                         }
                                                     })
-                                                    .setTitleText("检测到新版本")
-                                                    .setConfirmText("查看")
-                                                    .setContentText(title)
+                                                    .setNegativeButton("取消",null)
+                                                    .setCancelable(true)
+                                                    .create()
                                                     .show();
 
                                         }else{

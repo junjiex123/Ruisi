@@ -1,6 +1,9 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -11,7 +14,6 @@ import android.widget.Toast;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 
 /**
  * Created by free2 on 16-4-11.
@@ -26,16 +28,20 @@ public class BaseActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(App.getUid(this))) {
             return true;
         } else {
-            new MyAlertDialog(this, MyAlertDialog.WARNING_TYPE)
-                    .setTitleText("需要登陆")
-                    .setCancelText("取消")
-                    .setContentText("你还没有登陆，要去登陆吗？？")
-                    .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
+            Dialog alertDialog = new AlertDialog.Builder(this).
+                    setTitle("需要登陆").
+                    setMessage("你还没有登陆，要去登陆吗？？").
+                    setPositiveButton("登陆", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(MyAlertDialog myAlertDialog) {
+                        public void onClick(DialogInterface dialog, int which) {
                             startActivity(new Intent(BaseActivity.this, LoginActivity.class));
                         }
-                    }).show();
+                    })
+                    .setNegativeButton("取消",null)
+                    .setCancelable(true)
+                    .create();
+
+            alertDialog.show();
         }
         return false;
     }

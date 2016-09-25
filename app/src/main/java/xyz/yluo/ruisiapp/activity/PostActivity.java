@@ -1,12 +1,14 @@
 package xyz.yluo.ruisiapp.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -33,17 +35,16 @@ import java.util.Map;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyReplyView;
 import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.PostAdapter;
-import xyz.yluo.ruisiapp.model.SingleArticleData;
-import xyz.yluo.ruisiapp.model.SingleType;
 import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
+import xyz.yluo.ruisiapp.model.SingleArticleData;
+import xyz.yluo.ruisiapp.model.SingleType;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.IntentUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -297,31 +298,19 @@ public class PostActivity extends BaseActivity
                 break;
             case R.id.tv_remove:
                 edit_pos = position;
-                if (datas.get(edit_pos).getType() == SingleType.CONTENT) {
-                    new MyAlertDialog(this, MyAlertDialog.WARNING_TYPE)
-                            .setTitleText("删除帖子!")
-                            .setConfirmText("删除")
-                            .setCancelText("取消")
-                            .setContentText("只能够删除没有回复的帖子，你要删除本贴吗？")
-                            .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
-                                @Override
-                                public void onClick(MyAlertDialog myAlertDialog) {
-                                    removeItem(position);
-                                }
-                            }).show();
-                    break;
-                }
-                new MyAlertDialog(this, MyAlertDialog.WARNING_TYPE)
-                        .setTitleText("删除回复!")
-                        .setContentText("你要删除此条回复吗？")
-                        .setConfirmText("删除")
-                        .setCancelText("取消")
-                        .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
+                new AlertDialog.Builder(this).
+                        setTitle("删除帖子!").
+                        setMessage("你要删除本贴/回复吗？").
+                        setPositiveButton("删除", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(MyAlertDialog myAlertDialog) {
+                            public void onClick(DialogInterface dialog, int which) {
                                 removeItem(position);
                             }
-                        }).show();
+                        })
+                        .setNegativeButton("取消",null)
+                        .setCancelable(true)
+                        .create()
+                        .show();
                 break;
         }
     }
@@ -554,6 +543,7 @@ public class PostActivity extends BaseActivity
             if(!TextUtils.isEmpty(errorText)){
                 Toast.makeText(PostActivity.this,errorText,Toast.LENGTH_SHORT).show();
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
+                refreshLayout.setRefreshing(false);
                 return;
             }
             if(tepdata.size()==0){

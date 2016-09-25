@@ -2,14 +2,14 @@
 西安电子科技大学校园睿思论坛客户端。本客户端在校园网和校外网环境下均可使用。
 
 ### 更新地址:
-#### fir.im
-![image](fir.png)
-
-[直接下载](http://fir.im/c5xt)
 
 #### 论坛下载
 [校外网访问](http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid=846819&mobile=2)
 [校园网访问](http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=846819)
+
+#### 第三方市场
+[豌豆荚](http://www.wandoujia.com/apps/com.yluo.ruisiapp)
+[魅族应用商店](http://app.meizu.com/apps/public/detail?package_name=com.yluo.ruisiapp)
 
 ### 软件截图
 ![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/1.jpg)
@@ -37,7 +37,6 @@
 
 [material-design-icons](https://github.com/google/material-design-icons)
 
-[sweet-alert-dialog](https://github.com/pedant/sweet-alert-dialog)
 
 ### License
 

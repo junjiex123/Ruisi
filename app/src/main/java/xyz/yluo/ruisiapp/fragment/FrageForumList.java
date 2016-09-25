@@ -32,11 +32,11 @@ import xyz.yluo.ruisiapp.activity.PostsActivity;
 import xyz.yluo.ruisiapp.activity.SearchActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
-import xyz.yluo.ruisiapp.model.ForumListData;
 import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.ListItemClickListener;
+import xyz.yluo.ruisiapp.model.ForumListData;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 

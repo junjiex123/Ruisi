@@ -1,11 +1,12 @@
 package xyz.yluo.ruisiapp.utils;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import xyz.yluo.ruisiapp.App;
-import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyHtmlView.HtmlView;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.NewPostActivity;
@@ -46,19 +47,21 @@ public class HandleLinkClick {
             /**
              * 启动下载服务
              */
-            new MyAlertDialog(context, MyAlertDialog.NORMAL_TYPE)
-                    .setTitleText("下载附件")
-                    .setContentText("你要开始下载此附件吗？")
-                    .setCancelText("取消")
-                    .setConfirmText("下载")
-                    .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
+
+            new AlertDialog.Builder(context).
+                    setTitle("下载附件").
+                    setMessage("你要开始下载此附件吗？").
+                    setPositiveButton("下载", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(MyAlertDialog myAlertDialog) {
+                        public void onClick(DialogInterface dialog, int which) {
                             Intent intent = new Intent(context, DownloadService.class);
                             intent.putExtra("download_url", finalUrl);
                             context.startService(intent);
                         }
                     })
+                    .setNegativeButton("取消",null)
+                    .setCancelable(true)
+                    .create()
                     .show();
 
         } else {

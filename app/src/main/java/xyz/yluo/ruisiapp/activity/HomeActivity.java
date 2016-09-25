@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
@@ -28,15 +30,14 @@ import java.util.TimerTask;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.View.MyBottomTab;
-import xyz.yluo.ruisiapp.model.FrageType;
 import xyz.yluo.ruisiapp.fragment.FrageForumList;
 import xyz.yluo.ruisiapp.fragment.FrageHotNew;
 import xyz.yluo.ruisiapp.fragment.FrageMessage;
 import xyz.yluo.ruisiapp.fragment.FragmentMy;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.model.FrageType;
 import xyz.yluo.ruisiapp.utils.GetId;
 
 /**
@@ -262,17 +263,19 @@ public class HomeActivity extends BaseActivity
                         editor.putLong(App.CHECK_UPDATE_KEY,System.currentTimeMillis());
                         editor.apply();
                         isNeedCheckUpdate = false;
-                        new MyAlertDialog(HomeActivity.this,MyAlertDialog.WARNING_TYPE)
-                                .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
+                        new AlertDialog.Builder(HomeActivity.this).
+                                setTitle("检测到新版本").
+                                setMessage(title).
+                                setPositiveButton("查看", new DialogInterface.OnClickListener() {
                                     @Override
-                                    public void onClick(MyAlertDialog myAlertDialog) {
+                                    public void onClick(DialogInterface dialog, int which) {
                                         PostActivity.open(HomeActivity.this,App.CHECK_UPDATE_URL,"谁用了FREEDOM");
                                     }
                                 })
-                                .setTitleText("检测到新版本")
-                                .setConfirmText("查看")
-                                .setContentText(title)
-                                .show();
+                                .setNegativeButton("取消",null)
+                                .setCancelable(true)
+                                .create()
+                        .show();
 
                     }
                 }

@@ -2,10 +2,12 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.animation.Animator;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,15 +37,14 @@ import java.util.Map;
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.AddFriendDialog;
-import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.FriendAdapter;
-import xyz.yluo.ruisiapp.model.FriendData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
 import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;
 import xyz.yluo.ruisiapp.listener.ListItemLongClickListener;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
+import xyz.yluo.ruisiapp.model.FriendData;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.ImeUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
@@ -92,8 +93,6 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         search_input.addTextChangedListener(this);
     }
 
-
-
     @Override
     public void onLoadMore() {
         //加载更多被电击
@@ -121,15 +120,19 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
                     this, name, imgurl);
             dialogFragment.show(getFragmentManager(), "add");
         }else{
-            new MyAlertDialog(this,MyAlertDialog.WARNING_TYPE)
-                    .setTitleText("删除好友")
-                    .setContentText("你要删除"+datas.get(position).getUserName()+"吗？")
-                    .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
+            new AlertDialog.Builder(this).
+                    setTitle("删除好友").
+                    setMessage("你要删除"+datas.get(position).getUserName()+"吗？").
+                    setPositiveButton("删除", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(MyAlertDialog myAlertDialog) {
+                        public void onClick(DialogInterface dialog, int which) {
                             removeFriend(datas.get(position).getUid(),position);
                         }
-                    }).show();
+                    })
+                    .setNegativeButton("取消",null)
+                    .setCancelable(true)
+                    .create()
+                    .show();
         }
     }
 

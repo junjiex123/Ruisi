@@ -16,9 +16,9 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.CircleImageView;
 import xyz.yluo.ruisiapp.View.MyHtmlView.HtmlView;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
+import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.model.SingleArticleData;
 import xyz.yluo.ruisiapp.model.SingleType;
-import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**

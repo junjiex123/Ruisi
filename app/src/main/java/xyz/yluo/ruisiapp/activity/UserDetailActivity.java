@@ -3,6 +3,7 @@ package xyz.yluo.ruisiapp.activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -16,6 +17,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -41,13 +43,12 @@ import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.View.AddFriendDialog;
 import xyz.yluo.ruisiapp.View.CircleImageView;
-import xyz.yluo.ruisiapp.View.MyAlertDialog.MyAlertDialog;
 import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
-import xyz.yluo.ruisiapp.model.ListType;
-import xyz.yluo.ruisiapp.model.SimpleListData;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.model.ListType;
+import xyz.yluo.ruisiapp.model.SimpleListData;
 import xyz.yluo.ruisiapp.utils.DataManager;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.GetLevel;
@@ -148,16 +149,20 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
     private void fab_click() {
         //如果是自己 退出登录
         if (userUid.equals(App.getUid(this))) {
-            new MyAlertDialog(this,MyAlertDialog.WARNING_TYPE)
-                    .setTitleText("退出登录")
-                    .setContentText("你确定要注销吗？")
-                    .setConfirmClickListener(new MyAlertDialog.OnConfirmClickListener() {
+            new AlertDialog.Builder(this).
+                    setTitle("退出登录").
+                    setMessage("你确定要注销吗？").
+                    setPositiveButton("注销", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(MyAlertDialog myAlertDialog) {
+                        public void onClick(DialogInterface dialog, int which) {
                             DataManager.cleanApplicationData(UserDetailActivity.this);
                             finish();
                         }
-                    }).show();
+                    })
+                    .setNegativeButton("取消",null)
+                    .setCancelable(true)
+                    .create()
+                    .show();
 
         } else if (App.ISLOGIN(this)) {
             String url = "home.php?mod=space&do=pm&subop=view&touid=" + userUid + "&mobile=2";
