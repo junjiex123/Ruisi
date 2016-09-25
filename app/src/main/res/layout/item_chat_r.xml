@@ -37,8 +37,7 @@
             android:background="@drawable/sl_chat_me"
             android:textColor="@android:color/white"
             android:textSize="16sp"
-            tool:text="testtesttesttesttesttesttesttesttesttesttes
-            ttesttesttesttest"
+            tool:text="testtesttesttesttesttesttesttesttesttesttes"
             android:layout_margin="12dp"
             android:layout_toStartOf="@+id/user_image" />
     </RelativeLayout>

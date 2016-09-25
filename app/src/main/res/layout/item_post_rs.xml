@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_item_btn_item"
@@ -19,112 +19,104 @@
         android:layout_height="wrap_content"
         tools:text="帖子的标题" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <xyz.yluo.ruisiapp.View.CircleImageView
+        android:id="@+id/author_img"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginTop="8dp"
+        android:layout_below="@+id/article_title"
+        android:src="@drawable/image_placeholder"
+        app:civ_border_color="@android:color/white"
+        app:civ_border_width="1dp" />
+
+    <TextView
+        android:id="@+id/author_name"
+        style="@style/text_14_sec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="3dp"
+        android:layout_toEndOf="@+id/author_img"
+        android:layout_alignTop="@+id/author_img"
+        tools:text="hahah" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/post_time"
         android:orientation="horizontal">
 
-        <xyz.yluo.ruisiapp.View.CircleImageView
-            android:id="@+id/author_img"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/image_placeholder"
-            app:civ_border_color="@android:color/white"
-            app:civ_border_width="1dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:tint="@color/colorDisableHintIcon"
+            android:src="@drawable/ic_look_12dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp" />
+        <TextView
+            android:layout_marginStart="3dp"
+            android:id="@+id/view_count"
+            style="@style/text_12_sec"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/author_name"
-                    style="@style/text_14_sec"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:layout_weight="1"
-                    tools:text="hahah" />
-
-                <TextView
-                    android:id="@+id/article_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/type_bg_accent"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
-                    android:text="金币"
-                    android:textColor="@android:color/white"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:tint="@color/colorDisableHintIcon"
-                    android:src="@drawable/ic_time_12dp"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp" />
-                <TextView
-                    android:layout_marginStart="3dp"
-                    android:id="@+id/post_time"
-                    style="@style/text_12_sec"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:maxLines="1"
-                    tools:text="2015-1-1 19:20:15" />
-
-                <ImageView
-                    android:tint="@color/colorDisableHintIcon"
-                    android:src="@drawable/ic_look_12dp"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp" />
-                <TextView
-                    android:layout_marginStart="3dp"
-                    android:id="@+id/view_count"
-                    style="@style/text_12_sec"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxEms="5"
-                    tools:text="222" />
-                <ImageView
-                    android:tint="@color/colorDisableHintIcon"
-                    android:src="@drawable/ic_message_12dp"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_marginStart="8dp"/>
-                <TextView
-                    android:id="@+id/reply_count"
-                    style="@style/text_12_sec"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="3dp"
-                    android:maxEms="5"
-                    tools:text="111" />
-            </LinearLayout>
-        </LinearLayout>
+            android:maxEms="5"
+            tools:text="222" />
+        <ImageView
+            android:tint="@color/colorDisableHintIcon"
+            android:src="@drawable/ic_message_12dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="8dp"/>
+        <TextView
+            android:id="@+id/reply_count"
+            style="@style/text_12_sec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:maxEms="5"
+            tools:text="111" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/article_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/type_bg_accent"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:text="金币"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/author_name"
+        android:textColor="@android:color/white"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:tint="@color/colorDisableHintIcon"
+        android:src="@drawable/ic_time_12dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:id="@+id/imageView"
+        android:layout_marginTop="3dp"
+        android:layout_below="@+id/author_name"
+        android:layout_alignStart="@+id/author_name" />
+
+    <TextView
+        android:id="@+id/post_time"
+        style="@style/text_12_sec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        tools:text="2015-1-1 19:20:15"
+        android:layout_alignBottom="@+id/imageView"
+        android:layout_toEndOf="@+id/imageView" />
 
     <View
         android:layout_marginTop="12dp"
+        android:layout_below="@+id/author_img"
         android:background="@color/colorDivider"
         android:layout_width="match_parent"
         android:layout_height="0.6dp"/>
-
-</LinearLayout>
+</RelativeLayout>
 
 

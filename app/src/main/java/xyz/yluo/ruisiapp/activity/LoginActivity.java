@@ -47,7 +47,6 @@ public class LoginActivity extends BaseActivity {
     private EditText ed_username, ed_pass ;
     private EditText anwser_text;
     private Button btn_login;
-    private ImageView imageViewl, imageViewr;
     private CheckBox rem_ck;
 
     private SharedPreferences shp;
@@ -71,8 +70,6 @@ public class LoginActivity extends BaseActivity {
         ed_username = (EditText) findViewById(R.id.login_name);
         ed_pass = (EditText) findViewById(R.id.login_pas);
         btn_login = (Button) findViewById(R.id.btn_login);
-        imageViewl = (ImageView) findViewById(R.id.iv_login_l);
-        imageViewr = (ImageView) findViewById(R.id.iv_login_r);
         rem_ck = (CheckBox) findViewById(R.id.rem_user);
         Spinner anwser_select = (Spinner) findViewById(R.id.anwser_select);
         anwser_text = (EditText) findViewById(R.id.anwser_text);
@@ -159,15 +156,6 @@ public class LoginActivity extends BaseActivity {
                     btn_login.setEnabled(true);
                 } else {
                     btn_login.setEnabled(false);
-                }
-
-                //替换密码框图片
-                if (!TextUtils.isEmpty(ed_pass.getText())) {
-                    imageViewl.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_22_hide));
-                    imageViewr.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_33_hide));
-                } else {
-                    imageViewl.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_22));
-                    imageViewr.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_33));
                 }
             }
         });

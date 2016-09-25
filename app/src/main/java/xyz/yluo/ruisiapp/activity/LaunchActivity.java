@@ -77,7 +77,7 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
             Picasso.with(this).load(url).placeholder(R.drawable.image_placeholder).into(user_image);
             user_image.setVisibility(View.VISIBLE);
         }
-        mHandler.postDelayed(finishRunable, 3000);
+        mHandler.postDelayed(finishRunable, 2500);
         final String urlin = "http://rs.xidian.edu.cn/member.php?mod=logging&action=login&mobile=2";
         final String urlout = "http://bbs.rs.xidian.me/member.php?mod=logging&action=login&mobile=2";
 
@@ -90,15 +90,7 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
                         pcResponse = new String(response);
                         loginOk();
                     }
-
-                    @Override
-                    public void onFailure(Throwable e) {
-                        super.onFailure(e);
-                        e.printStackTrace();
-                        Log.e("login fial","====inner=====");
-                    }
                 });
-
                 try {
                     Thread.sleep(350);
                 } catch (InterruptedException e) {
