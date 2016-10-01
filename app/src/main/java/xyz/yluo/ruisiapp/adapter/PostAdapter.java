@@ -94,7 +94,6 @@ public class PostAdapter extends BaseAdapter {
             article_user_image = (CircleImageView) itemView.findViewById(R.id.article_user_image);
             article_username = (TextView) itemView.findViewById(R.id.article_username);
             article_post_time = (TextView) itemView.findViewById(R.id.article_post_time);
-            //myWebView = (MyWebView) itemView.findViewById(R.id.mywebview);
             htmlView = (HtmlView) itemView.findViewById(R.id.html_text);
             article_user_image.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -117,7 +116,6 @@ public class PostAdapter extends BaseAdapter {
             Picasso.with(activity).load(img_url).placeholder(R.drawable.image_placeholder).into(article_user_image);
             String post_time = "发表于:" + single.getPostTime();
             article_post_time.setText(post_time);
-            //myWebView.setContent(single.getCotent());
             htmlView.setHtmlText(single.getCotent(), true);
             //判断是不是自己
             if(App.ISLOGIN(activity)&&App.getUid(activity).equals(single.getUid())){
@@ -182,8 +180,7 @@ public class PostAdapter extends BaseAdapter {
             btn_reply_2.setVisibility(isreply ? View.VISIBLE : View.GONE);
             String img_url = UrlUtils.getAvaterurlm(single.getImg());
             Picasso.with(activity).load(img_url).placeholder(R.drawable.image_placeholder).into(replay_image);
-            String timeText = "发表于:" + single.getPostTime();
-            replay_time.setText(timeText);
+            replay_time.setText(single.getPostTime());
             replay_index.setText(single.getIndex());
             htmlTextView.setHtmlText(single.getCotent(), true);
 

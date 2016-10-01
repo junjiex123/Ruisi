@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -96,7 +95,6 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
                     String zsrc = e.select("img").attr("zsrc");
                     if(zsrc.contains(aid)){
                         position = i;
-                        Log.e("position",position+"====1");
                     }
                     String src = e.select("img").attr("orig");
                     if(TextUtils.isEmpty("src")){

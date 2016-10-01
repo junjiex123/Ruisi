@@ -58,6 +58,8 @@ public class App extends Application {
         return context;
     }
 
+    //发布地址tid
+    public static final String POST_TID = "805203";
     //启动时设定
     //论坛基地址
     private static final String BASE_URL_ME = "http://bbs.rs.xidian.me/";
@@ -125,6 +127,6 @@ public class App extends Application {
     public static final String CHECK_UPDATE_KEY = "check_update_time";
 
 
-    public static final String CHECK_UPDATE_URL = "forum.php?mod=viewthread&tid=805203&mobile=2";
+    public static final String CHECK_UPDATE_URL = "forum.php?mod=viewthread&tid="+App.POST_TID+"&mobile=2";
 
 }

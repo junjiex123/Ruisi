@@ -155,10 +155,12 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener{
             case R.id.share:
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_TEXT,"这个手机睿思客户端非常不错，分享给你们。\n下载地址: http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=846819\n下载地址2: http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid=846819&mobile=2");
+                shareIntent.putExtra(Intent.EXTRA_TEXT,"这个手机睿思客户端非常不错，分享给你们。" +
+                        "\n下载地址: http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid="+App.POST_TID +
+                        "\n下载地址2: http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid="+App.POST_TID+"&mobile=2");
                 shareIntent.setType("text/plain");
                 //设置分享列表的标题，并且每次都显示分享列表
-                startActivity(Intent.createChooser(shareIntent, "分享到文章到:"));
+                startActivity(Intent.createChooser(shareIntent, "分享到手机睿思到:"));
                 break;
 
         }

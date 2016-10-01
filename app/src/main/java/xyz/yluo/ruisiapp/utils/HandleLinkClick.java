@@ -47,7 +47,6 @@ public class HandleLinkClick {
             /**
              * 启动下载服务
              */
-
             new AlertDialog.Builder(context).
                     setTitle("下载附件").
                     setMessage("你要开始下载此附件吗？").

@@ -70,7 +70,7 @@
         <Preference
             android:key="about_this"
             android:summary="当前版本1.0 beta 1"
-            android:title="关于本程序"/>
+            android:title="检查更新"/>
         <Preference
             android:key="open_sourse"
             android:summary="在github上查看本项目"

@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
 import android.text.Layout;
-import android.text.style.LineBackgroundSpan;
 import android.text.style.QuoteSpan;
 
 import xyz.yluo.ruisiapp.R;
@@ -17,19 +16,16 @@ import xyz.yluo.ruisiapp.R;
 
 //CharacterStyle
 
-public class CustomQuoteSpan extends QuoteSpan implements LineBackgroundSpan{
-    private final int backgroundColor;
-    private final int stripeColor;
+public class CustomQuoteSpan extends QuoteSpan{
+    private final int borderColor;
     private final float stripeWidth;
     private final float gap;
 
     CustomQuoteSpan(Context context) {
-        this.backgroundColor = ContextCompat.
-                getColor(context, R.color.bg_secondary);
-        this.stripeColor = ContextCompat.
+        this.borderColor = ContextCompat.
                 getColor(context, R.color.colorDivider);
-        this.stripeWidth = 8;
-        this.gap = 20;
+        this.stripeWidth = 6;
+        this.gap = 16;
     }
 
 
@@ -43,17 +39,9 @@ public class CustomQuoteSpan extends QuoteSpan implements LineBackgroundSpan{
         Paint.Style style = p.getStyle();
         int paintColor = p.getColor();
         p.setStyle(Paint.Style.FILL);
-        p.setColor(stripeColor);
+        p.setColor(borderColor);
         c.drawRect(x, top, x + dir * stripeWidth, bottom, p);
         p.setStyle(style);
-        p.setColor(paintColor);
-    }
-
-    @Override
-    public void drawBackground(Canvas c, Paint p, int left, int right, int top, int baseline, int bottom, CharSequence text, int start, int end, int lnum) {
-        int paintColor = p.getColor();
-        p.setColor(backgroundColor);
-        c.drawRect(left, top, right, bottom, p);
         p.setColor(paintColor);
     }
 }

@@ -41,7 +41,7 @@ public class FrageMessage extends BaseFragment {
     int last_message_id  = 0;
     int current_noticeid = 1;
     private boolean lastLoginState = false;
-    private boolean isHaveReply,isHavePm;
+    private boolean isHavePm;
 
     public static FrageMessage newInstance(boolean isHaveReply,boolean isHavePm) {
         Bundle args = new Bundle();
@@ -59,7 +59,7 @@ public class FrageMessage extends BaseFragment {
         datas = new ArrayList<>();
         Bundle bundle = getArguments();//从activity传过来的Bundle
         if (bundle != null) {
-            isHaveReply = bundle.getBoolean("isHaveReply",false);
+            boolean isHaveReply = bundle.getBoolean("isHaveReply", false);
             isHavePm = bundle.getBoolean("isHavePm",false);
         }
     }

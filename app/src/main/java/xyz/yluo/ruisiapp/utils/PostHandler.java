@@ -2,7 +2,6 @@ package xyz.yluo.ruisiapp.utils;
 
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
-import android.text.Html;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.ImageSpan;
@@ -36,12 +35,6 @@ public class PostHandler implements TextWatcher {
         // Insert the emoticon.
         message.replace(start, end, emoticon);
         message.setSpan(span, start, start + emoticon.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-    }
-
-    public void insertbold(String text) {
-        Editable message = mEditor.getEditableText();
-        message.replace(mEditor.getSelectionStart(), mEditor.getSelectionEnd(),
-                Html.fromHtml("<b>" + text + "</b>"));
     }
 
     @Override

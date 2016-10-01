@@ -42,7 +42,7 @@ public class AboutActivity extends BaseActivity {
 
         String ss = "<b>西电睿思手机客户端</b><br />功能不断完善中，bug较多还请多多反馈......<br />" +
                 "bug反馈:<br />" +
-                "1.到 <a href=\"forum.php?mod=viewthread&tid=805203&mobile=2\">本帖</a> 回复<br />" +
+                "1.到 <a href=\"forum.php?mod=viewthread&tid="+App.POST_TID+"&mobile=2\">本帖</a> 回复<br />" +
                 "2.本站 <a href=\"home.php?mod=space&uid=252553&do=profile&mobile=2\">@谁用了FREEDOM</a><br />" +
                 "3.本站 <a href=\"home.php?mod=space&uid=261098&do=profile&mobile=2\">@wangfuyang</a><br />" +
                 "4.github提交 <a href=\"https://github.com/freedom10086/Ruisi\">点击这儿<br /></a><br />"+

@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.activity.HomeActivity;
 import xyz.yluo.ruisiapp.activity.PostActivity;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -118,11 +119,13 @@ public class FragSetting extends PreferenceFragment
                                     if (title.contains("code")) {
                                         int st = title.indexOf("code");
                                         int code = GetId.getNumber(title.substring(st));
-                                        Log.e("code", code + " " + finalversion_code);
-                                        if(code>finalversion_code){
+                                        if(code> finalversion_code){
+                                            SharedPreferences.Editor editor =  sharedPreferences.edit();
+                                            editor.putLong(App.CHECK_UPDATE_KEY,System.currentTimeMillis());
+                                            editor.apply();
                                             new AlertDialog.Builder(getActivity()).
-                                                    setTitle("检测到新版本！！").
-                                                    setMessage("你确定要注销吗？").
+                                                    setTitle("检测到新版本").
+                                                    setMessage(title).
                                                     setPositiveButton("查看", new DialogInterface.OnClickListener() {
                                                         @Override
                                                         public void onClick(DialogInterface dialog, int which) {
@@ -135,7 +138,7 @@ public class FragSetting extends PreferenceFragment
                                                     .show();
 
                                         }else{
-                                            Toast.makeText(getActivity(),"暂无更新",Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getActivity(), "暂无更新", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
