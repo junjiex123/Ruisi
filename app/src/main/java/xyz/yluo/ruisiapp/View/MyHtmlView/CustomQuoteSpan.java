@@ -16,7 +16,7 @@ import xyz.yluo.ruisiapp.R;
 
 //CharacterStyle
 
-public class CustomQuoteSpan extends QuoteSpan{
+public class CustomQuoteSpan extends QuoteSpan {
     private final int borderColor;
     private final float stripeWidth;
     private final float gap;

@@ -62,7 +62,7 @@ public class ArrowTextView extends TextView {
     }
 
     /**
-     * @param canvas 画布
+     * @param canvas        画布
      * @param arrowInHeight 箭头高度
      */
     private void drawRound(Canvas canvas, float arrowInHeight) {

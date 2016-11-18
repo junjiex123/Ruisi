@@ -56,10 +56,10 @@ public class PostListAdapter extends BaseAdapter {
         //手机版
         if (!App.IS_SCHOOL_NET || type == TYPE_NORMAL_MOBILE) {
             return TYPE_NORMAL_MOBILE;
-        } else if(type==TYPE_IMAGE){
+        } else if (type == TYPE_IMAGE) {
             //一般板块
             return TYPE_IMAGE;
-        }else{
+        } else {
             return TYPE_NORMAL;
         }
     }
@@ -102,7 +102,6 @@ public class PostListAdapter extends BaseAdapter {
             view_count = (TextView) v.findViewById(R.id.view_count);
 
 
-
             v.findViewById(R.id.main_item_btn_item).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -124,7 +123,7 @@ public class PostListAdapter extends BaseAdapter {
         void setData(int position) {
             ArticleListData single = DataSet.get(position);
             String type = single.getType();
-            if (TextUtils.isEmpty(type)||!type.equals("normal")) {
+            if (TextUtils.isEmpty(type) || !type.equals("normal")) {
                 article_type.setText(type);
                 article_type.setVisibility(View.VISIBLE);
             } else {
@@ -137,8 +136,8 @@ public class PostListAdapter extends BaseAdapter {
             Picasso.with(activity).load(imageUrl).placeholder(R.drawable.image_placeholder).into(author_img);
 
             int color = single.getTitleColor();
-            int readcolor = ContextCompat.getColor(activity,R.color.text_color_sec);
-            article_title.setTextColor(single.isRead()?readcolor :color);
+            int readcolor = ContextCompat.getColor(activity, R.color.text_color_sec);
+            article_title.setTextColor(single.isRead() ? readcolor : color);
 
             article_title.setText(single.getTitle());
             author_name.setText(single.getAuthor());
@@ -189,7 +188,7 @@ public class PostListAdapter extends BaseAdapter {
         void setData(int position) {
             ArticleListData single = DataSet.get(position);
             int color = single.getTitleColor();
-            article_title.setTextColor(single.isRead()?0xff888888 :color);
+            article_title.setTextColor(single.isRead() ? 0xff888888 : color);
             article_title.setText(single.getTitle());
             author_name.setText(single.getAuthor());
             reply_count.setText(single.getReplayCount());
@@ -207,7 +206,7 @@ public class PostListAdapter extends BaseAdapter {
     }
 
     //校园网环境 图片板块ViewHolder
-    private  class ImageCardViewHolder extends BaseViewHolder {
+    private class ImageCardViewHolder extends BaseViewHolder {
 
         ImageView img_card_image;
         TextView img_card_title;
@@ -240,6 +239,7 @@ public class PostListAdapter extends BaseAdapter {
             }
 
         }
+
         void item_click() {
             ArticleListData single_data = DataSet.get(getAdapterPosition());
             PostActivity.open(activity, single_data.getTitleUrl(), single_data.getAuthor());

@@ -73,8 +73,8 @@ public class SimpleListAdapter extends BaseAdapter {
         void setData(int position) {
             String keystr = Datas.get(position).getKey();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                key.setText(Html.fromHtml(keystr,0));
-            }else{
+                key.setText(Html.fromHtml(keystr, 0));
+            } else {
                 key.setText(Html.fromHtml(keystr));
             }
             String values = Datas.get(position).getValue();

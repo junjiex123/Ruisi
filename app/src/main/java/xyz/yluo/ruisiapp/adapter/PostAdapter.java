@@ -57,9 +57,9 @@ public class PostAdapter extends BaseAdapter {
     protected int getItemType(int pos) {
         if (datalist.get(pos).getType() == SingleType.CONTENT) {
             return CONTENT;
-        } else if(datalist.get(pos).getType()==SingleType.HEADER){
+        } else if (datalist.get(pos).getType() == SingleType.HEADER) {
             return HEADER;
-        }else{
+        } else {
             return COMENT;
         }
     }
@@ -82,8 +82,8 @@ public class PostAdapter extends BaseAdapter {
         TextView article_title;
         CircleImageView article_user_image;
         TextView article_username;
-        TextView article_post_time,tv_remove,tv_edit;
-       // MyWebView myWebView;
+        TextView article_post_time, tv_remove, tv_edit;
+        // MyWebView myWebView;
         HtmlView htmlView;
 
         ArticleContentViewHolder(View itemView) {
@@ -99,7 +99,7 @@ public class PostAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     UserDetailActivity.openWithAnimation(
-                            activity, datalist.get(0).getUsername(), article_user_image,datalist.get(0).getUid());
+                            activity, datalist.get(0).getUsername(), article_user_image, datalist.get(0).getUid());
                 }
             });
 
@@ -118,28 +118,28 @@ public class PostAdapter extends BaseAdapter {
             article_post_time.setText(post_time);
             htmlView.setHtmlText(single.getCotent(), true);
             //判断是不是自己
-            if(App.ISLOGIN(activity)&&App.getUid(activity).equals(single.getUid())){
+            if (App.ISLOGIN(activity) && App.getUid(activity).equals(single.getUid())) {
                 tv_edit.setVisibility(View.VISIBLE);
-                if(getItemCount()>2){
+                if (getItemCount() > 2) {
                     tv_remove.setVisibility(View.GONE);
-                }else{
+                } else {
                     tv_remove.setVisibility(View.VISIBLE);
                 }
-            }else{
+            } else {
                 tv_remove.setVisibility(View.GONE);
                 tv_edit.setVisibility(View.GONE);
             }
         }
     }
 
-    private class CommentViewHolder extends BaseViewHolder{
+    private class CommentViewHolder extends BaseViewHolder {
         ImageView replay_image;
         ImageView btn_reply_2;
         TextView replay_author;
         TextView replay_index;
         TextView replay_time;
         HtmlView htmlTextView;
-        TextView bt_lable_lz,tv_remove,tv_edit;
+        TextView bt_lable_lz, tv_remove, tv_edit;
 
         CommentViewHolder(View itemView) {
             super(itemView);
@@ -185,18 +185,19 @@ public class PostAdapter extends BaseAdapter {
             htmlTextView.setHtmlText(single.getCotent(), true);
 
             //判断是不是自己
-            if(App.ISLOGIN(activity)&&App.getUid(activity).equals(single.getUid())){
+            if (App.ISLOGIN(activity) && App.getUid(activity).equals(single.getUid())) {
                 tv_remove.setVisibility(View.VISIBLE);
                 tv_edit.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 tv_remove.setVisibility(View.GONE);
                 tv_edit.setVisibility(View.GONE);
             }
         }
 
     }
+
     //header
-    private class HeaderViewHolder extends BaseViewHolder{
+    private class HeaderViewHolder extends BaseViewHolder {
 
         HeaderViewHolder(View itemView) {
             super(itemView);

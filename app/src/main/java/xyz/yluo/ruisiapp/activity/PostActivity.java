@@ -141,6 +141,7 @@ public class PostActivity extends BaseActivity
                     jump_page(pos + 1);
                 }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
@@ -150,13 +151,13 @@ public class PostActivity extends BaseActivity
         Bundle b = getIntent().getExtras();
         String url = b.getString("url");
         AuthorName = b.getString("author");
-        Tid = GetId.getid("tid=",url);
+        Tid = GetId.getid("tid=", url);
         if (url != null && url.contains("redirect")) {
-            RedirectPid = GetId.getid("pid=",url);
+            RedirectPid = GetId.getid("pid=", url);
             if (!App.IS_SCHOOL_NET) {
                 url = url + "&mobile=2";
             }
-            HttpUtil.head(this, url,null,new ResponseHandler() {
+            HttpUtil.head(this, url, null, new ResponseHandler() {
                 @Override
                 public void onSuccess(byte[] response) {
                     int page = GetId.getPage(new String(response));
@@ -307,7 +308,7 @@ public class PostActivity extends BaseActivity
                                 removeItem(position);
                             }
                         })
-                        .setNegativeButton("取消",null)
+                        .setNegativeButton("取消", null)
                         .setCancelable(true)
                         .create()
                         .show();
@@ -323,7 +324,7 @@ public class PostActivity extends BaseActivity
             Bundle b = data.getExtras();
             String title = b.getString("TITLE", "");
             String content = b.getString("CONTENT", "");
-            String pid = b.getString("PID","");
+            String pid = b.getString("PID", "");
             if (edit_pos == 0 && !TextUtils.isEmpty(title)) {
                 datas.get(0).setTitle(title);
             }
@@ -345,7 +346,7 @@ public class PostActivity extends BaseActivity
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                if (res.contains("成功")||res.contains("您已收藏")) {
+                if (res.contains("成功") || res.contains("您已收藏")) {
                     showToast("收藏成功");
                     if (v != null) {
                         final ImageView mv = (ImageView) v;
@@ -354,7 +355,7 @@ public class PostActivity extends BaseActivity
                             public void run() {
                                 mv.setImageResource(R.drawable.ic_star_accent_24dp);
                             }
-                        },300);
+                        }, 300);
 
                     }
 
@@ -370,7 +371,7 @@ public class PostActivity extends BaseActivity
     public void onReplyFinish(int status, String info) {
         if (status == RESULT_OK) {
             replyTime = System.currentTimeMillis();
-            if(page_now==page_sum){
+            if (page_now == page_sum) {
                 onLoadMore();
             }
         }
@@ -381,10 +382,10 @@ public class PostActivity extends BaseActivity
         switch (view.getId()) {
             case R.id.btn_reply:
                 if (isLogin()) {
-                    Log.e("reply","url"+replyUrl);
+                    Log.e("reply", "url" + replyUrl);
                     String hinttext = Title;
-                    if(hinttext.length()>10){
-                        hinttext = hinttext.substring(0,10) +"...";
+                    if (hinttext.length() > 10) {
+                        hinttext = hinttext.substring(0, 10) + "...";
                     }
                     //String url,int type,long lastreplyTime,boolean isEnableTail,String userName,String info
                     String hint = "回复帖子:" + hinttext;
@@ -423,6 +424,7 @@ public class PostActivity extends BaseActivity
     private class DealWithArticleData extends AsyncTask<String, Void, List<SingleArticleData>> {
 
         private String errorText = "";
+
         @Override
         protected List<SingleArticleData> doInBackground(String... params) {
             errorText = "";
@@ -430,7 +432,7 @@ public class PostActivity extends BaseActivity
             String htmlData = params[0];
             if (!isGetTitle) {
                 int ih = htmlData.indexOf("keywords");
-                if(ih>0){
+                if (ih > 0) {
                     int h_start = htmlData.indexOf('\"', ih + 15);
                     int h_end = htmlData.indexOf('\"', h_start + 1);
                     Title = htmlData.substring(h_start + 1, h_end);
@@ -441,17 +443,17 @@ public class PostActivity extends BaseActivity
             Document doc = Jsoup.parse(htmlData);
             //判断错误
             Elements elements = doc.select(".postlist");
-            if(elements.size()<=0){
+            if (elements.size() <= 0) {
                 //有可能没有列表处理错误
                 errorText = doc.select(".jump_c").text();
-                if(TextUtils.isEmpty(errorText)) {
+                if (TextUtils.isEmpty(errorText)) {
                     errorText = "network error  !!!";
                 }
                 return tepdata;
             }
 
             //获得回复楼主的url
-            if(TextUtils.isEmpty(replyUrl)){
+            if (TextUtils.isEmpty(replyUrl)) {
                 //获取回复/hash
                 if (!doc.select("input[name=formhash]").isEmpty()) {
                     replyUrl = doc.select("form#fastpostform").attr("action");
@@ -476,7 +478,7 @@ public class PostActivity extends BaseActivity
                 Element temp = postlist.get(i);
                 SingleArticleData data;
                 String pid = temp.attr("id").substring(3);
-                String uid = GetId.getid("uid=",temp.select("span[class=avatar]").select("img").attr("src"));
+                String uid = GetId.getid("uid=", temp.select("span[class=avatar]").select("img").attr("src"));
                 Elements userInfo = temp.select("ul.authi");
                 String commentindex = userInfo.select("li.grey").select("em").text();
                 String username = userInfo.select("a[href^=home.php?mod=space&uid=]").text();
@@ -499,12 +501,12 @@ public class PostActivity extends BaseActivity
                 //处理引用
                 for (Element codee : contentels.select("blockquote")) {
                     int start = codee.html().indexOf("发表于");
-                    if(start>0){
-                        int end = codee.html().indexOf("</font>",start);
-                        if(end>start){
+                    if (start > 0) {
+                        int end = codee.html().indexOf("</font>", start);
+                        if (end > start) {
                             codee.select("a").removeAttr("href");
-                            int c = end-start;
-                            codee.html(codee.html().replaceAll("发表于.{"+(c-3)+"}",""));
+                            int c = end - start;
+                            codee.html(codee.html().replaceAll("发表于.{" + (c - 3) + "}", ""));
                             break;
                         }
                     }
@@ -514,7 +516,7 @@ public class PostActivity extends BaseActivity
                 String edittime = contentels.select("i.pstatus").remove().text();
                 String finalcontent = contentels.html().trim();
 
-                if(page_now==1&&i==0){
+                if (page_now == 1 && i == 0) {
                     data = new SingleArticleData(SingleType.CONTENT, Title, uid,
                             username, posttime.replace("收藏", ""),
                             commentindex, replyUrl, finalcontent, pid);
@@ -525,11 +527,11 @@ public class PostActivity extends BaseActivity
                         myDB.handSingleReadHistory(Tid, Title, AuthorName);
                         isSaveToDataBase = true;
                     }
-                }else{
+                } else {
                     data = new SingleArticleData(SingleType.COMMENT, Title, uid,
                             username, posttime, commentindex, replyUrl, finalcontent, pid);
                 }
-                if(!TextUtils.isEmpty(edittime)){
+                if (!TextUtils.isEmpty(edittime)) {
                     data.setEditTime(edittime);
                 }
                 tepdata.add(data);
@@ -540,50 +542,50 @@ public class PostActivity extends BaseActivity
         @Override
         protected void onPostExecute(List<SingleArticleData> tepdata) {
             isEnableLoadMore = true;
-            if(!TextUtils.isEmpty(errorText)){
-                Toast.makeText(PostActivity.this,errorText,Toast.LENGTH_SHORT).show();
+            if (!TextUtils.isEmpty(errorText)) {
+                Toast.makeText(PostActivity.this, errorText, Toast.LENGTH_SHORT).show();
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
                 refreshLayout.setRefreshing(false);
                 return;
             }
-            if(tepdata.size()==0){
+            if (tepdata.size() == 0) {
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
                 return;
             }
 
             int startsize = datas.size();
-            if(datas.size()==0){
+            if (datas.size() == 0) {
                 datas.addAll(tepdata);
-            }else{
-                String strindex = datas.get(datas.size()-1).getIndex();
-                if(TextUtils.isEmpty(strindex)){
+            } else {
+                String strindex = datas.get(datas.size() - 1).getIndex();
+                if (TextUtils.isEmpty(strindex)) {
                     strindex = "-1";
-                }else if(strindex.equals("沙发")){
+                } else if (strindex.equals("沙发")) {
                     strindex = "1";
-                }else if(strindex.equals("板凳")){
+                } else if (strindex.equals("板凳")) {
                     strindex = "2";
-                }else if(strindex.equals("地板")){
+                } else if (strindex.equals("地板")) {
                     strindex = "3";
                 }
                 int index = GetId.getNumber(strindex);
-                for(int i = 0;i<tepdata.size();i++){
+                for (int i = 0; i < tepdata.size(); i++) {
                     String strindexp = tepdata.get(i).getIndex();
-                    if(strindexp.equals("沙发")){
+                    if (strindexp.equals("沙发")) {
                         strindexp = "1";
-                    }else if(strindex.equals("板凳")){
+                    } else if (strindex.equals("板凳")) {
                         strindexp = "2";
-                    }else if(strindex.equals("地板")){
+                    } else if (strindex.equals("地板")) {
                         strindexp = "3";
                     }
                     int indexp = GetId.getNumber(strindexp);
-                    if(indexp>index){
+                    if (indexp > index) {
                         datas.add(tepdata.get(i));
                     }
                 }
             }
-            if(page_now<page_sum){
+            if (page_now < page_sum) {
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
-            }else{
+            } else {
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
             }
             if (datas.size() > 0 && (datas.get(0).getType() != SingleType.CONTENT) &&
@@ -591,11 +593,11 @@ public class PostActivity extends BaseActivity
                 datas.add(0, new SingleArticleData(SingleType.HEADER, Title,
                         null, null, null, null, null, null, null));
             }
-            int add = datas.size()-startsize;
-            if(startsize==0){
+            int add = datas.size() - startsize;
+            if (startsize == 0) {
                 adapter.notifyDataSetChanged();
-            }else{
-                adapter.notifyItemRangeInserted(startsize,add);
+            } else {
+                adapter.notifyItemRangeInserted(startsize, add);
             }
 
             //打开的时候移动到指定楼层

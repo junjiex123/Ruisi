@@ -123,7 +123,7 @@ public class SyncHttpClient {
         request(url, Method.POST, map, handler);
     }
 
-    public void head(final String url,final Map<String, String> map, final ResponseHandler handler) {
+    public void head(final String url, final Map<String, String> map, final ResponseHandler handler) {
         request(url, Method.HEAD, map, handler);
     }
 
@@ -148,7 +148,7 @@ public class SyncHttpClient {
                 os.flush();
                 os.close();
             } else if (method == Method.HEAD) {
-                Log.i("head",connection.getHeaderFields().toString());
+                Log.i("head", connection.getHeaderFields().toString());
                 String location = connection.getHeaderField("Location");
                 handler.sendSuccessMessage(location.getBytes());
                 connection.connect();
@@ -156,14 +156,14 @@ public class SyncHttpClient {
             }
 //            处理重定向
             int code = connection.getResponseCode();
-            if (code == 302||code==301) {
+            if (code == 302 || code == 301) {
                 //如果会重定向，保存302 301重定向地址,然后重新发送请求(模拟请求)
                 String location = connection.getHeaderField("Location");
                 Log.i("httputil", "302 new location is " + location);
-                if(TextUtils.isEmpty(Location)||(!Location.equals(location))){
+                if (TextUtils.isEmpty(Location) || (!Location.equals(location))) {
                     Location = location;
                     request(App.getBaseUrl() + location, Method.GET, map, handler);
-                }else{
+                } else {
                     handler.sendFailureMessage(new Throwable("重定向错误"));
                 }
                 connection.disconnect();

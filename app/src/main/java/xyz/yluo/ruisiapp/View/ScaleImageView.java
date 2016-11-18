@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
-public class ScaleImageView extends ImageView{
+public class ScaleImageView extends ImageView {
     private PointF startPoint = new PointF();
     private Matrix matrix = new Matrix();
     private Matrix currentMaritx = new Matrix();
@@ -19,14 +19,15 @@ public class ScaleImageView extends ImageView{
     private PointF midPoint;//中心点
 
 
-    public ScaleImageView(Context context){
+    public ScaleImageView(Context context) {
         super(context);
     }
+
     /**
      * 该构造方法在静态引入XML文件中是必须的
      */
-    public ScaleImageView(Context context,AttributeSet paramAttributeSet){
-        super(context,paramAttributeSet);
+    public ScaleImageView(Context context, AttributeSet paramAttributeSet) {
+        super(context, paramAttributeSet);
     }
 
     public boolean onTouchEvent(MotionEvent event) {
@@ -34,7 +35,7 @@ public class ScaleImageView extends ImageView{
             case MotionEvent.ACTION_DOWN:
                 mode = DRAG;
                 currentMaritx.set(this.getImageMatrix());//记录ImageView当期的移动位置
-                startPoint.set(event.getX(),event.getY());//开始点
+                startPoint.set(event.getX(), event.getY());//开始点
                 break;
             case MotionEvent.ACTION_MOVE://移动事件
                 this.setScaleType(ImageView.ScaleType.MATRIX);
@@ -44,9 +45,9 @@ public class ScaleImageView extends ImageView{
                     matrix.set(currentMaritx);//在当前的位置基础上移动
                     matrix.postTranslate(dx, dy);
 
-                } else if(mode == ZOOM){//图片放大事件
+                } else if (mode == ZOOM) {//图片放大事件
                     float endDis = distance(event);//结束距离
-                    if(endDis > 10f){
+                    if (endDis > 10f) {
                         float scale = endDis / startDis;//放大倍数
                         //Log.v("scale=", String.valueOf(scale));
                         matrix.set(currentMaritx);
@@ -67,7 +68,7 @@ public class ScaleImageView extends ImageView{
                 mode = ZOOM;
                 startDis = distance(event);
 
-                if(startDis > 10f){//避免手指上有两个茧
+                if (startDis > 10f) {//避免手指上有两个茧
                     midPoint = mid(event);
                     currentMaritx.set(this.getImageMatrix());//记录当前的缩放倍数
                 }
@@ -80,24 +81,27 @@ public class ScaleImageView extends ImageView{
 
     /**
      * 两点之间的距离
+     *
      * @param event
      * @return
      */
-    private static float distance(MotionEvent event){
+    private static float distance(MotionEvent event) {
         //两根线的距离
         float dx = event.getX(1) - event.getX(0);
         float dy = event.getY(1) - event.getY(0);
-        return (float) Math.sqrt(dx*dx + dy*dy);
+        return (float) Math.sqrt(dx * dx + dy * dy);
     }
+
     /**
      * 计算两点之间中心点的距离
+     *
      * @param event
      * @return
      */
-    private static PointF mid(MotionEvent event){
+    private static PointF mid(MotionEvent event) {
         float midx = event.getX(1) + event.getX(0);
         float midy = event.getY(1) + event.getY(0);
 
-        return new PointF(midx/2, midy/2);
+        return new PointF(midx / 2, midy / 2);
     }
 }

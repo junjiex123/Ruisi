@@ -32,18 +32,19 @@
             android:layout_marginEnd="@dimen/dimen_8"
             android:layout_marginStart="@dimen/dimen_8"
             android:background="@drawable/type_bg_accent"
+            android:maxLines="1"
             android:paddingEnd="4dp"
             android:paddingStart="4dp"
-            android:maxLines="1"
             android:textColor="#FFFFFFFF"
             android:textSize="12sp"
             tools:text="150" />
 
     </LinearLayout>
+
     <View
-        android:layout_marginTop="@dimen/dimen_16"
-        android:background="@color/colorDivider"
         android:layout_width="match_parent"
-        android:layout_height="0.6dp"/>
+        android:layout_height="0.6dp"
+        android:layout_marginTop="@dimen/dimen_16"
+        android:background="@color/colorDivider" />
 
 </LinearLayout>

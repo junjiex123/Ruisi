@@ -16,10 +16,6 @@ import android.widget.TextView;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.utils.DimmenUtils;
 
-/**
- * Created by free2 on 16-7-19.
- *
- */
 
 public class MySpinner extends PopupWindow implements AdapterView.OnItemClickListener {
 
@@ -30,16 +26,14 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
 
     private int currnetSelect = 0;
 
-    public MySpinner(Context context)
-    {
+    public MySpinner(Context context) {
         super(context);
         mContext = context;
         init();
     }
 
 
-    private void init()
-    {
+    private void init() {
 
         listView = new ListView(mContext);
         listView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -48,14 +42,14 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
         setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        setBackgroundDrawable(ContextCompat.getDrawable(mContext,R.drawable.my_spinner_bg));
+        setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.my_spinner_bg));
 
         setFocusable(true);
         setContentView(listView);
     }
 
-    public void setData(String[] datas){
-        adapter = new MySpinnerListAdapter(datas,mContext);
+    public void setData(String[] datas) {
+        adapter = new MySpinnerListAdapter(datas, mContext);
         listView.setAdapter(adapter);
     }
 
@@ -67,14 +61,14 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> arg0, View view, int pos, long arg3) {
         dismiss();
-        if(listener!=null&&currnetSelect!=pos){
+        if (listener != null && currnetSelect != pos) {
             currnetSelect = pos;
-            listener.onItemSelectChanged(pos,view);
+            listener.onItemSelectChanged(pos, view);
         }
 
     }
 
-    public interface OnItemSelectListener{
+    public interface OnItemSelectListener {
         void onItemSelectChanged(int pos, View v);
     }
 
@@ -88,7 +82,6 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
             this.datas = datas;
             this.context = context;
         }
-
 
 
         @Override
@@ -114,8 +107,8 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
             v.setText(datas[i]);
             v.setLayoutParams(new AbsListView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
             //textView.setTextColor(COLOR_UNSELECT);
-            int padding1 = DimmenUtils.dip2px(mContext,8);
-            int padding2 = DimmenUtils.dip2px(mContext,6);
+            int padding1 = DimmenUtils.dip2px(mContext, 8);
+            int padding2 = DimmenUtils.dip2px(mContext, 6);
 
             v.setPadding(padding1, padding2, padding1, padding2);
             return v;

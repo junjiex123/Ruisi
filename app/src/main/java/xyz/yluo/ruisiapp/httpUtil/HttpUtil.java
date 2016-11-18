@@ -8,10 +8,6 @@ import java.util.Map;
 
 import xyz.yluo.ruisiapp.App;
 
-/**
- * Created by free2 on 16-4-4.
- *
- */
 public class HttpUtil {
     private static AsyncHttpClient client = new AsyncHttpClient();
     private static SyncHttpClient syncHttpClient = new SyncHttpClient();
@@ -38,25 +34,25 @@ public class HttpUtil {
 
     public static void post(Context context, String url, Map<String, String> map, ResponseHandler handler) {
         init(context);
-        if(!map.containsKey("formhash")||TextUtils.isEmpty(map.get("formhash"))){
-            String hash = context.getSharedPreferences(App.MY_SHP_NAME,Context.MODE_PRIVATE).
-                    getString(App.HASH_KEY,"");
-            if(!TextUtils.isEmpty(hash)){
-                Log.i("hash is","==="+hash+"===");
-                map.put("formhash",hash);
+        if (!map.containsKey("formhash") || TextUtils.isEmpty(map.get("formhash"))) {
+            String hash = context.getSharedPreferences(App.MY_SHP_NAME, Context.MODE_PRIVATE).
+                    getString(App.HASH_KEY, "");
+            if (!TextUtils.isEmpty(hash)) {
+                Log.i("hash is", "===" + hash + "===");
+                map.put("formhash", hash);
             }
         }
         client.post(getUrl(url), map, handler);
     }
 
-    public static void head(Context context, String url,Map<String, String> params,ResponseHandler handler) {
+    public static void head(Context context, String url, Map<String, String> params, ResponseHandler handler) {
         init(context);
-        client.head(getUrl(url),params, handler);
+        client.head(getUrl(url), params, handler);
     }
 
     private static void init(Context context) {
         client.setConnectionTimeout(4000);
-        if (context!=null&&store == null) {
+        if (context != null && store == null) {
             store = new PersistentCookieStore(context);
             client.setStore(store);
         }

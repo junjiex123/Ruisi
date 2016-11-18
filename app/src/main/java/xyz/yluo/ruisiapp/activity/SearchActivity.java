@@ -47,13 +47,13 @@ import xyz.yluo.ruisiapp.utils.ImeUtil;
  * 搜索换页目的是获得searchid这个参数，然后加上page 参数即可
  * http://bbs.rs.xidian.me/search.php?mod=forum&amp;searchid=1268&amp;
  * orderby=lastpost&amp;ascdesc=desc&amp;searchsubmit=yes&amp;page=20&amp;mobile=2
- *
+ * <p>
  * http://bbs.rs.xidian.me/search.php?mod=forum&searchid=865&orderby=lastpost&ascdesc=desc&searchsubmit=yes&kw=%E6%B5%8B%E8%AF%95&mobile=2
  */
 public class SearchActivity extends BaseActivity
         implements LoadMoreListener.OnLoadMoreListener,
         View.OnClickListener,
-        EditText.OnEditorActionListener{
+        EditText.OnEditorActionListener {
 
     private int totalPage = 1;
     private int currentPage = 1;
@@ -112,7 +112,7 @@ public class SearchActivity extends BaseActivity
                     show_search_view();
                 }
             });
-        }else {
+        } else {
             ImeUtil.show_ime(SearchActivity.this, search_input);
         }
     }
@@ -123,7 +123,7 @@ public class SearchActivity extends BaseActivity
             Snackbar.make(main_window, "你还没写内容呢", Snackbar.LENGTH_SHORT).show();
             return;
         } else {
-            nav_title.setText("搜索:"+str);
+            nav_title.setText("搜索:" + str);
             hide_search_view();
             getData(str);
         }
@@ -148,13 +148,13 @@ public class SearchActivity extends BaseActivity
                 String res = new String(response);
                 if (res.contains("秒内只能进行一次搜索")) {
                     getDataFail("抱歉，您在 15 秒内只能进行一次搜索");
-                }else if(res.contains("没有找到匹配结果")){
+                } else if (res.contains("没有找到匹配结果")) {
                     getDataFail("对不起，没有找到匹配结果。");
-                }
-                else {
+                } else {
                     new GetResultListTaskMe().execute(new String(response));
                 }
             }
+
             @Override
             public void onFailure(Throwable e) {
                 e.printStackTrace();
@@ -165,9 +165,9 @@ public class SearchActivity extends BaseActivity
 
     private void getSomePageData(int page) {
         String str = search_input.getText().toString();
-        String url = "search.php?mod=forum&searchid="+searchid
-                + "&orderby=lastpost&ascdesc=desc&searchsubmit=yes&kw="+str
-                +"&page="+ page+"&mobile=2";
+        String url = "search.php?mod=forum&searchid=" + searchid
+                + "&orderby=lastpost&ascdesc=desc&searchsubmit=yes&kw=" + str
+                + "&page=" + page + "&mobile=2";
         HttpUtil.get(this, url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -182,14 +182,14 @@ public class SearchActivity extends BaseActivity
         });
     }
 
-    private void getDataFail(String res){
+    private void getDataFail(String res) {
         String erreortext = res;
-        if(TextUtils.isEmpty(res)){
+        if (TextUtils.isEmpty(res)) {
             erreortext = "网络错误(Error -2)";
         }
         isEnableLoadMore = true;
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
-        Snackbar.make(main_window,erreortext, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(main_window, erreortext, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -199,7 +199,7 @@ public class SearchActivity extends BaseActivity
         if (isEnableLoadMore) {
             isEnableLoadMore = false;
             int page = currentPage;
-            if (currentPage < totalPage && totalPage > 1 && (!TextUtils.isEmpty(searchid))){
+            if (currentPage < totalPage && totalPage > 1 && (!TextUtils.isEmpty(searchid))) {
                 Log.i("loadmore", currentPage + "");
                 page = page + 1;
                 getSomePageData(page);
@@ -209,7 +209,7 @@ public class SearchActivity extends BaseActivity
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.nav_back:
             case R.id.btn_back:
                 finish();
@@ -225,6 +225,7 @@ public class SearchActivity extends BaseActivity
 
     private class GetResultListTaskMe extends AsyncTask<String, Void, List<SimpleListData>> {
         private String searchRes = "";
+
         @Override
         protected List<SimpleListData> doInBackground(String... params) {
             String res = params[0];
@@ -242,7 +243,7 @@ public class SearchActivity extends BaseActivity
                     totalPage = n;
                 }
                 if (totalPage > 1) {
-                    searchid = GetId.getid("searchid=",pageinfos.select("a").attr("href"));
+                    searchid = GetId.getid("searchid=", pageinfos.select("a").attr("href"));
                 }
             }
 
@@ -258,7 +259,7 @@ public class SearchActivity extends BaseActivity
         @Override
         protected void onPostExecute(List<SimpleListData> dataset) {
             isEnableLoadMore = true;
-            if(!TextUtils.isEmpty(searchRes)&&currentPage==1){
+            if (!TextUtils.isEmpty(searchRes) && currentPage == 1) {
                 nav_title.setText(searchRes.substring(3));
             }
             if (dataset.size() == 0) {
@@ -270,7 +271,7 @@ public class SearchActivity extends BaseActivity
                 }
                 int start = datas.size();
                 datas.addAll(dataset);
-                if(start==0){
+                if (start == 0) {
                     adapter.notifyDataSetChanged();
                 }
                 adapter.notifyItemRangeInserted(start, dataset.size());
@@ -278,7 +279,7 @@ public class SearchActivity extends BaseActivity
         }
     }
 
-    private void show_search_view(){
+    private void show_search_view() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             search_card.setVisibility(View.VISIBLE);
             animator = ViewAnimationUtils.createCircularReveal(
@@ -312,13 +313,13 @@ public class SearchActivity extends BaseActivity
 
                 }
             });
-        }else{
+        } else {
             search_card.setVisibility(View.VISIBLE);
             ImeUtil.show_ime(SearchActivity.this, search_input);
         }
     }
 
-    private void hide_search_view(){
+    private void hide_search_view() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             animator = ViewAnimationUtils.createCircularReveal(
                     search_card,
@@ -351,7 +352,7 @@ public class SearchActivity extends BaseActivity
 
                 }
             });
-        }else{
+        } else {
             search_card.setVisibility(View.GONE);
         }
     }

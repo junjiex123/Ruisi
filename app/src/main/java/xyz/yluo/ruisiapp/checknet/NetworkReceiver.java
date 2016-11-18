@@ -17,7 +17,7 @@ import xyz.yluo.ruisiapp.App;
 public class NetworkReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
-        Log.e("check net","网络变化");
+        Log.e("check net", "网络变化");
         checkNetWork(context);
     }
 

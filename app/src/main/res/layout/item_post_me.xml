@@ -4,36 +4,36 @@
     android:id="@+id/main_item_btn_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
     android:clickable="true"
     android:orientation="vertical"
-    android:paddingStart="12dp"
     android:paddingEnd="12dp"
-    android:paddingTop="12dp"
-    android:background="?attr/selectableItemBackground">
+    android:paddingStart="12dp"
+    android:paddingTop="12dp">
 
     <TextView
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
         android:id="@+id/article_title"
         style="@style/text_16_pri"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingEnd="4dp"
+        android:paddingStart="4dp"
         tools:text="话题的标题" />
 
     <LinearLayout
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:gravity="center_vertical|end"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingEnd="4dp"
+        android:paddingStart="4dp">
 
         <TextView
-            android:layout_marginStart="12dp"
             android:id="@+id/is_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
             android:background="@drawable/type_bg_blue"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
@@ -42,42 +42,42 @@
             android:textSize="10sp" />
 
         <ImageView
-            android:layout_marginStart="12dp"
-            android:tint="@color/colorDisableHintIcon"
-            android:src="@drawable/ic_person_12dp"
             android:layout_width="16dp"
-            android:layout_height="16dp" />
+            android:layout_height="16dp"
+            android:layout_marginStart="12dp"
+            android:src="@drawable/ic_person_12dp"
+            android:tint="@color/colorDisableHintIcon" />
 
         <TextView
-            android:layout_marginStart="3dp"
             android:id="@+id/author_name"
             style="@style/text_12_sec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
             tools:text="some" />
 
 
         <ImageView
-            android:layout_marginStart="12dp"
-            android:tint="@color/colorDisableHintIcon"
-            android:src="@drawable/ic_message_12dp"
             android:layout_width="16dp"
-            android:layout_height="16dp" />
+            android:layout_height="16dp"
+            android:layout_marginStart="12dp"
+            android:src="@drawable/ic_message_12dp"
+            android:tint="@color/colorDisableHintIcon" />
 
         <TextView
-            android:layout_marginStart="3dp"
             android:id="@+id/reply_count"
             style="@style/text_12_sec"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginStart="3dp"
             tools:text="222" />
 
     </LinearLayout>
 
     <View
-        android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="0.6dp"
+        android:layout_marginTop="8dp"
         android:background="@color/colorDivider" />
 
 </LinearLayout>

@@ -59,15 +59,13 @@ import xyz.yluo.ruisiapp.utils.PostHandler;
  * 回复框 dialog
  */
 
-public class MyReplyView extends DialogFragment implements View.OnClickListener{
-
-
+public class MyReplyView extends DialogFragment implements View.OnClickListener {
     public static final int SMILEY_TB = 1;
     public static final int SMILEY_ALI = 2;
     public static final int SMILEY_ACN = 3;
 
-    public static final int REPLY_LZ =0;
-    public static final int REPLY_CZ =1;
+    public static final int REPLY_LZ = 0;
+    public static final int REPLY_CZ = 1;
 
     private int smiley_type = SMILEY_TB;
     private int replyType = REPLY_LZ;
@@ -91,14 +89,14 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
     private List<Drawable> ds = new ArrayList<>();
 
     public static MyReplyView newInstance(
-            String url,int type,long lastreplyTime,boolean isEnableTail,String userName,String info) {
+            String url, int type, long lastreplyTime, boolean isEnableTail, String userName, String info) {
         Bundle args = new Bundle();
-        args.putString("replyUrl",url);
-        args.putInt("replyType",type);
-        args.putBoolean("isEnableTail",isEnableTail);
-        args.putString("userName",userName);
-        args.putString("info",info);
-        args.putLong("lastreplyTime",lastreplyTime);
+        args.putString("replyUrl", url);
+        args.putInt("replyType", type);
+        args.putBoolean("isEnableTail", isEnableTail);
+        args.putString("userName", userName);
+        args.putString("info", info);
+        args.putLong("lastreplyTime", lastreplyTime);
         MyReplyView fragment = new MyReplyView();
         fragment.setArguments(args);
         return fragment;
@@ -111,11 +109,11 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
         Bundle bundle = getArguments();//从activity传过来的Bundle
         if (bundle != null) {
             replyUrl = bundle.getString("replyUrl");
-            replyType = bundle.getInt("replyType",REPLY_LZ);
-            isEnableTail = bundle.getBoolean("isEnableTail",false);
-            userName = bundle.getString("userName","回复");
-            lastReplyTime = bundle.getLong("lastreplyTime",0);
-            info = bundle.getString("info","0");
+            replyType = bundle.getInt("replyType", REPLY_LZ);
+            isEnableTail = bundle.getBoolean("isEnableTail", false);
+            userName = bundle.getString("userName", "回复");
+            lastReplyTime = bundle.getLong("lastreplyTime", 0);
+            info = bundle.getString("info", "0");
         }
     }
 
@@ -152,7 +150,7 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
                         smiley_type = SMILEY_TB;
                         break;
                     case 1:
-                       smiley_type = SMILEY_ALI;
+                        smiley_type = SMILEY_ALI;
                         break;
                     case 2:
                         smiley_type = SMILEY_ACN;
@@ -165,6 +163,7 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
+
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
@@ -195,7 +194,7 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.i("MyReplyView","onCreateDialog");
+        Log.i("MyReplyView", "onCreateDialog");
         Dialog dialog = new Dialog(getActivity(), R.style.replyBarDialogStyle);
         dialog.setContentView(R.layout.my_reply_view);
         dialog.setCanceledOnTouchOutside(true);
@@ -213,7 +212,7 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         input.requestFocus();
-        if(getDialog().getWindow()!=null){
+        if (getDialog().getWindow() != null) {
             getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }
     }
@@ -230,8 +229,8 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
                     smiley_container.setVisibility(View.GONE);
                 } else {
                     final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    if(getView()!=null)
-                    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+                    if (getView() != null)
+                        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
                     smiley_container.setVisibility(View.VISIBLE);
                 }
                 break;
@@ -256,13 +255,13 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
             Snackbar.make(notisfy_view, "你还没写内容呢", Snackbar.LENGTH_LONG).show();
         } else {
             //时间检测
-            if(!checkTime()){
+            if (!checkTime()) {
                 return;
             }
             //添加小尾巴
-            if(isEnableTail){
+            if (isEnableTail) {
                 SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                if(shp.getBoolean("setting_show_tail", false)){
+                if (shp.getBoolean("setting_show_tail", false)) {
                     String texttail = shp.getString("setting_user_tail", "无尾巴").trim();
                     if (!texttail.equals("无尾巴")) {
                         texttail = "     " + texttail;
@@ -282,7 +281,7 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
 
             loadingView.setVisibility(View.VISIBLE);
             ImeUtil.hide_ime(getDialog().getWindow());
-            switch (replyType){
+            switch (replyType) {
                 case REPLY_LZ:
                     replyLz(text);
                     break;
@@ -296,7 +295,7 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
 
 
     //回复楼主
-    private void replyLz(final String res){
+    private void replyLz(final String res) {
         Map<String, String> params = new HashMap<>();
         params.put("message", res);
         HttpUtil.post(getActivity(), replyUrl + "&handlekey=fastpost&loc=1&inajax=1", params, new ResponseHandler() {
@@ -321,9 +320,8 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
 
     /**
      * 回复层主
-     * @param txt
      */
-    private void replyCz(final String txt){
+    private void replyCz(final String txt) {
         HttpUtil.get(getActivity(), replyUrl, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -354,6 +352,7 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
                         String res = new String(response);
                         handleReply(true, res + "层主");
                     }
+
                     @Override
                     public void onFailure(Throwable e) {
                         e.printStackTrace();
@@ -371,17 +370,14 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
     }
 
 
-
     /**
      * 回复楼主
-     * @param isok
-     * @param res
      */
     private void handleReply(boolean isok, String res) {
         if (isok) {
             if (res.contains("成功") || res.contains("层主")) {
                 Toast.makeText(getActivity(), "回复发表成功", Toast.LENGTH_SHORT).show();
-                sendCallBack(Activity.RESULT_OK,input.getText().toString());
+                sendCallBack(Activity.RESULT_OK, input.getText().toString());
                 input.setText("");
                 dismiss();
             } else if (res.contains("您两次发表间隔")) {
@@ -408,7 +404,7 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
             return;
         }
         String name = nameList[position].split("\\.")[0];
-        String insertName = ImageUtils.getSmileyName(smiley_type,name);
+        String insertName = ImageUtils.getSmileyName(smiley_type, name);
         PostHandler handler = new PostHandler(input);
         handler.insertSmiley("{:" + insertName + ":}", ds.get(position));
     }
@@ -454,17 +450,17 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener{
         return ds;
     }
 
-    public interface replyCompeteCallBack{
-        void onReplyFinish(int status,String info);
+    public interface replyCompeteCallBack {
+        void onReplyFinish(int status, String info);
     }
 
-    public void setCallBack(replyCompeteCallBack callBack){
+    public void setCallBack(replyCompeteCallBack callBack) {
         this.callBack = callBack;
     }
 
-    private void sendCallBack(int status,String info){
-        if(callBack!=null){
-            callBack.onReplyFinish(status,info);
+    private void sendCallBack(int status, String info) {
+        if (callBack != null) {
+            callBack.onReplyFinish(status, info);
         }
     }
 

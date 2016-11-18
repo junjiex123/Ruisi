@@ -66,7 +66,7 @@ public class DownLoadActivity extends AppCompatActivity {
     private void cancelDown() {
         //to do
         Intent intent = new Intent(this, DownloadService.class);
-        intent.putExtra("cancel",true);
+        intent.putExtra("cancel", true);
         startService(intent);
         finish();
     }

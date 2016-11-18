@@ -1,69 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_window"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <include
         android:id="@+id/myToolBar"
-        layout="@layout/my_toolbar"/>
+        layout="@layout/my_toolbar" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh_view"
-        android:layout_below="@+id/myToolBar"
-        android:layout_above="@+id/reply_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/reply_view"
+        android:layout_below="@+id/myToolBar">
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/reply_view"
-        android:padding="4dp"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
         android:background="@drawable/bottom_tab_bg"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:padding="4dp">
 
         <ImageView
-            android:padding="6dp"
             android:id="@+id/btn_smiley"
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_gravity="bottom|start"
             android:background="?android:attr/selectableItemBackground"
-            android:contentDescription="@null"
             android:clickable="true"
+            android:contentDescription="@null"
+            android:padding="6dp"
             android:src="@drawable/ic_edit_emoticon_24dp" />
 
         <EditText
-            android:layout_marginStart="4dp"
-            android:textColorHint="@color/colorDisableHintIcon"
-            style="@style/text_16_pri"
             android:id="@+id/input_aera"
+            style="@style/text_16_pri"
             android:layout_width="0dp"
-            android:gravity="center_vertical"
             android:layout_height="match_parent"
+            android:layout_marginStart="4dp"
             android:layout_weight="1"
             android:background="@drawable/edittext_bg"
+            android:gravity="center_vertical"
             android:hint="回复"
-            android:maxLines="3" />
+            android:maxLines="3"
+            android:textColorHint="@color/colorDisableHintIcon" />
 
         <Button
-            android:layout_marginStart="4dp"
             android:id="@+id/action_send"
+            android:layout_width="50dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="4dp"
             android:background="@drawable/btn_light_blue_bg"
             android:text="发表"
-            android:textSize="12sp"
             android:textColor="@color/white"
-            android:layout_width="50dp"
-            android:layout_height="32dp" />
+            android:textSize="12sp" />
     </LinearLayout>
 
 </RelativeLayout>

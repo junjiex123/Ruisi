@@ -17,8 +17,8 @@ import xyz.yluo.ruisiapp.database.SQLiteHelper;
  */
 public class App extends Application {
 
-    private  Context context;
-    private NetworkReceiver receiver= new NetworkReceiver();
+    private Context context;
+    private NetworkReceiver receiver = new NetworkReceiver();
 
 
     @Override
@@ -26,15 +26,14 @@ public class App extends Application {
         super.onCreate();
         this.context = getApplicationContext();
 
-
         //注册网络变化广播
-        Log.e("application create消息广播","注册广播");
+        Log.e("application create消息广播", "注册广播");
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(receiver, intentFilter);
 
         //清空消息数据库
-        MyDB myDB = new MyDB(context,MyDB.MODE_WRITE);
+        MyDB myDB = new MyDB(context, MyDB.MODE_WRITE);
         //最多缓存2000条历史纪录
         myDB.deleteOldHistory(2000);
     }
@@ -44,8 +43,8 @@ public class App extends Application {
         super.onTerminate();
 
         //注册网络变化广播
-        if(receiver!=null){
-            Log.e("application onTerminate","取消注册广播");
+        if (receiver != null) {
+            Log.e("application onTerminate", "取消注册广播");
             unregisterReceiver(receiver);
         }
 
@@ -54,7 +53,7 @@ public class App extends Application {
 
     }
 
-    public  Context getContext() {
+    public Context getContext() {
         return context;
     }
 
@@ -76,36 +75,34 @@ public class App extends Application {
         }
     }
 
-    public static boolean ISLOGIN(Context context){
+    public static boolean ISLOGIN(Context context) {
         return !TextUtils.isEmpty(App.getUid(context));
     }
 
-    public static String getUid(Context context){
-       SharedPreferences shp =  context.getSharedPreferences(MY_SHP_NAME,MODE_PRIVATE);
-        return shp.getString(USER_UID_KEY,"");
+    public static String getUid(Context context) {
+        SharedPreferences shp = context.getSharedPreferences(MY_SHP_NAME, MODE_PRIVATE);
+        return shp.getString(USER_UID_KEY, "");
     }
 
-    public static void setHash(Context context,String hash){
-        if(TextUtils.isEmpty(hash)){
-            return ;
+    public static void setHash(Context context, String hash) {
+        if (TextUtils.isEmpty(hash)) {
+            return;
         }
-        SharedPreferences shp =  context.getSharedPreferences(MY_SHP_NAME,MODE_PRIVATE);
-        SharedPreferences.Editor editor =shp.edit();
-        editor.putString(HASH_KEY,hash);
+        SharedPreferences shp = context.getSharedPreferences(MY_SHP_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = shp.edit();
+        editor.putString(HASH_KEY, hash);
         editor.apply();
     }
 
-    public static String getName(Context context){
-        SharedPreferences shp =  context.getSharedPreferences(MY_SHP_NAME,MODE_PRIVATE);
-        return shp.getString(USER_NAME_KEY,"");
+    public static String getName(Context context) {
+        SharedPreferences shp = context.getSharedPreferences(MY_SHP_NAME, MODE_PRIVATE);
+        return shp.getString(USER_NAME_KEY, "");
     }
 
-    public static String getGrade(Context context){
-        SharedPreferences shp =  context.getSharedPreferences(MY_SHP_NAME,MODE_PRIVATE);
-        return shp.getString(USER_GRADE_KEY,"");
+    public static String getGrade(Context context) {
+        SharedPreferences shp = context.getSharedPreferences(MY_SHP_NAME, MODE_PRIVATE);
+        return shp.getString(USER_GRADE_KEY, "");
     }
-
-
 
 
     /**
@@ -127,6 +124,6 @@ public class App extends Application {
     public static final String CHECK_UPDATE_KEY = "check_update_time";
 
 
-    public static final String CHECK_UPDATE_URL = "forum.php?mod=viewthread&tid="+App.POST_TID+"&mobile=2";
+    public static final String CHECK_UPDATE_URL = "forum.php?mod=viewthread&tid=" + App.POST_TID + "&mobile=2";
 
 }

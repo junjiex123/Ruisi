@@ -4,8 +4,8 @@
     android:id="@+id/forum_list_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="start|center_vertical"
     android:background="@color/bg_secondary"
+    android:gravity="start|center_vertical"
     android:orientation="horizontal">
 
     <TextView

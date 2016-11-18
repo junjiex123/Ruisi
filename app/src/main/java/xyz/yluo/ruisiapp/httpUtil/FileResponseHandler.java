@@ -42,7 +42,7 @@ public abstract class FileResponseHandler extends ResponseHandler {
     }
 
     protected File getTargetFile() {
-        assert(mFile != null);
+        assert (mFile != null);
         return mFile;
     }
 
@@ -84,7 +84,7 @@ public abstract class FileResponseHandler extends ResponseHandler {
             byte[] tmp = new byte[1024];
             int len;
             // do not send messages if request has been cancelled
-            while ((len = instream.read(tmp)) != -1 && !Thread.currentThread().isInterrupted()&&(!isCancel)) {
+            while ((len = instream.read(tmp)) != -1 && !Thread.currentThread().isInterrupted() && (!isCancel)) {
                 downloadCount += len;// 时时获取下载到的大小
                 fos.write(tmp, 0, len);
                 if (updateCount == 0 || (downloadCount * 100 / totalSize - down_step) >= updateCount) {
@@ -97,7 +97,7 @@ public abstract class FileResponseHandler extends ResponseHandler {
             fos.close();
             instream.close();
             onSuccess(getTargetFile());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             onFailure(new Exception("received bytes length is not contentLength"), getTargetFile());
         }

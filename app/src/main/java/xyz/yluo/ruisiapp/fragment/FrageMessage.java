@@ -38,15 +38,15 @@ public class FrageMessage extends BaseFragment {
     private MessageAdapter adapter;
     private List<MessageData> datas;
     private int index = 0;
-    int last_message_id  = 0;
+    int last_message_id = 0;
     int current_noticeid = 1;
     private boolean lastLoginState = false;
     private boolean isHavePm;
 
-    public static FrageMessage newInstance(boolean isHaveReply,boolean isHavePm) {
+    public static FrageMessage newInstance(boolean isHaveReply, boolean isHavePm) {
         Bundle args = new Bundle();
-        args.putBoolean("isHaveReply",isHaveReply);
-        args.putBoolean("isHavePm",isHavePm);
+        args.putBoolean("isHaveReply", isHaveReply);
+        args.putBoolean("isHavePm", isHavePm);
         FrageMessage fragment = new FrageMessage();
         fragment.setArguments(args);
         return fragment;
@@ -60,21 +60,21 @@ public class FrageMessage extends BaseFragment {
         Bundle bundle = getArguments();//从activity传过来的Bundle
         if (bundle != null) {
             boolean isHaveReply = bundle.getBoolean("isHaveReply", false);
-            isHavePm = bundle.getBoolean("isHavePm",false);
+            isHavePm = bundle.getBoolean("isHavePm", false);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater,container,savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
         pm_badge = mRootView.findViewById(R.id.pm_badge);
-        if(isHavePm){
+        if (isHavePm) {
             pm_badge.setVisibility(View.VISIBLE);
         }
         recycler_view = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         //设置可以滑出底栏
         recycler_view.setClipToPadding(false);
-        recycler_view.setPadding(0,0,0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
+        recycler_view.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
         refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -114,7 +114,7 @@ public class FrageMessage extends BaseFragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(!hidden&&(lastLoginState!=App.ISLOGIN(getActivity()))){
+        if (!hidden && (lastLoginState != App.ISLOGIN(getActivity()))) {
             getData(true);
             lastLoginState = !lastLoginState;
         }
@@ -123,13 +123,13 @@ public class FrageMessage extends BaseFragment {
     private void getData(boolean needRefresh) {
         lastLoginState = App.ISLOGIN(getActivity());
         //记录上次已读消息游标
-        if(!App.ISLOGIN(getActivity())){
+        if (!App.ISLOGIN(getActivity())) {
             adapter.changeLoadMoreState(BaseAdapter.STATE_NEED_LOGIN);
             refreshLayout.setRefreshing(false);
             return;
         }
 
-        if(needRefresh){
+        if (needRefresh) {
             refreshLayout.post(new Runnable() {
                 @Override
                 public void run() {
@@ -138,7 +138,7 @@ public class FrageMessage extends BaseFragment {
             });
         }
 
-        last_message_id =  getActivity().getSharedPreferences(App.MY_SHP_NAME, Activity.MODE_PRIVATE)
+        last_message_id = getActivity().getSharedPreferences(App.MY_SHP_NAME, Activity.MODE_PRIVATE)
                 .getInt(App.NOTICE_MESSAGE_KEY, 0);
         current_noticeid = last_message_id;
         //reply
@@ -194,36 +194,36 @@ public class FrageMessage extends BaseFragment {
             //pmbox
             List<MessageData> tempdatas = new ArrayList<>();
             Elements lists = Jsoup.parse(params[0]).select(".nts").select("dl.cl");
-            for (Element tmp:lists) {
-                int  noticeId = Integer.parseInt(tmp.attr("notice"));
+            for (Element tmp : lists) {
+                int noticeId = Integer.parseInt(tmp.attr("notice"));
                 String authorImage = tmp.select(".avt").select("img").attr("src");
                 String time = tmp.select(".xg1.xw0").text();
-                String authorTitle  ="";
+                String authorTitle = "";
                 String titleUrl = "";
                 String content = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").text().replace("查看", "");
                 if (content.isEmpty()) {
                     //这是系统消息
                     authorTitle = "系统消息";
                     titleUrl = tmp.select(".ntc_body").select("a").attr("href");
-                    authorImage = App.getBaseUrl()+authorImage;
+                    authorImage = App.getBaseUrl() + authorImage;
                     content = tmp.select(".ntc_body").text();
-                }else{
+                } else {
                     //这是回复消息
                     authorTitle = tmp.select(".ntc_body").select("a[href^=home.php]").text() + " 回复了我";
                     titleUrl = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
                 }
 
-                boolean isRead = (noticeId<=last_message_id);
-                if(noticeId>current_noticeid){
+                boolean isRead = (noticeId <= last_message_id);
+                if (noticeId > current_noticeid) {
                     current_noticeid = noticeId;
                 }
                 tempdatas.add(new MessageData(ListType.REPLAYME, authorTitle, titleUrl, authorImage, time, isRead, content));
             }
 
-            if(last_message_id<current_noticeid){
-                SharedPreferences prf =  getActivity().getSharedPreferences(App.MY_SHP_NAME, Activity.MODE_PRIVATE);
-                SharedPreferences.Editor editor =  prf.edit();
-                editor.putInt(App.NOTICE_MESSAGE_KEY,current_noticeid);
+            if (last_message_id < current_noticeid) {
+                SharedPreferences prf = getActivity().getSharedPreferences(App.MY_SHP_NAME, Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prf.edit();
+                editor.putInt(App.NOTICE_MESSAGE_KEY, current_noticeid);
                 editor.apply();
             }
             return tempdatas;
@@ -262,7 +262,7 @@ public class FrageMessage extends BaseFragment {
         @Override
         protected void onPostExecute(List<MessageData> tempdatas) {
             finishGetData(tempdatas);
-            if(isHavePm){
+            if (isHavePm) {
                 isHavePm = false;
                 pm_badge.setVisibility(View.GONE);
             }

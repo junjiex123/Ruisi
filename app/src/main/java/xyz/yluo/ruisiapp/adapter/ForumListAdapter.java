@@ -24,7 +24,7 @@ public class ForumListAdapter extends BaseAdapter {
     protected Context context;
     private List<ForumListData> datas = null;
 
-    public ForumListAdapter(List<ForumListData> dataSet, Context context,ListItemClickListener listener) {
+    public ForumListAdapter(List<ForumListData> dataSet, Context context, ListItemClickListener listener) {
         this.context = context;
         this.datas = dataSet;
         setItemListener(listener);
@@ -58,6 +58,7 @@ public class ForumListAdapter extends BaseAdapter {
     private class HeadView extends BaseViewHolder {
 
         TextView head;
+
         HeadView(View itemView) {
             super(itemView);
             head = (TextView) itemView.findViewById(R.id.header_title);
@@ -68,6 +69,7 @@ public class ForumListAdapter extends BaseAdapter {
             head.setText(datas.get(position).getTitle());
         }
     }
+
     private class ChildViewHolder extends BaseViewHolder {
 
         ImageView img;

@@ -45,9 +45,10 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
     private String title = "";
 
     private String url;
+
     public static FrageTopicStarHistory newInstance(int type) {
         Bundle args = new Bundle();
-        args.putInt("type",type);
+        args.putInt("type", type);
         FrageTopicStarHistory fragment = new FrageTopicStarHistory();
         fragment.setArguments(args);
         return fragment;
@@ -55,7 +56,7 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater,container,savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
         Bundle bundle = getArguments();//从activity传过来的Bundle
         if (bundle != null) {
             int type = bundle.getInt("type", -1);
@@ -73,7 +74,7 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
                     currentIndex = 2;
             }
         }
-        initToolbar(true,title);
+        initToolbar(true, title);
         RecyclerView recyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
@@ -121,9 +122,9 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
     private void refresh() {
         datas.clear();
         adapter.notifyDataSetChanged();
-        if(currentIndex==2){
+        if (currentIndex == 2) {
             getDbData();
-        }else{
+        } else {
             getWebDatas();
         }
 
@@ -151,7 +152,7 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
         });
     }
 
-    private void getDbData(){
+    private void getDbData() {
         isEnableLoadMore = false;
         new GetUserHistoryTask().execute(1);
     }
@@ -174,7 +175,7 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
                 temp.add(new SimpleListData(title, num, titleUrl));
             }
 
-            if(temp.size()%10!=0){
+            if (temp.size() % 10 != 0) {
                 isHaveMore = false;
             }
             return temp;
@@ -203,7 +204,7 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
                 String link = tmp.select("a").attr("href");
                 temp.add(new SimpleListData(key, "", link));
             }
-            if(temp.size()%10!=0){
+            if (temp.size() % 10 != 0) {
                 isHaveMore = false;
             }
             return temp;
@@ -218,7 +219,7 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
 
 
     //获得历史记录
-    private class GetUserHistoryTask extends AsyncTask<Integer, Void, List<SimpleListData>>{
+    private class GetUserHistoryTask extends AsyncTask<Integer, Void, List<SimpleListData>> {
 
         @Override
         protected List<SimpleListData> doInBackground(Integer... ints) {
@@ -243,19 +244,19 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
 
 
     //加载完成
-    private void onLoadCompete(List<SimpleListData> d){
-        if(isHaveMore&&d.size()>0){
+    private void onLoadCompete(List<SimpleListData> d) {
+        if (isHaveMore && d.size() > 0) {
             adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
-        }else{
+        } else {
             adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
         }
-        if(d.size()>0){
+        if (d.size() > 0) {
             int i = datas.size();
             datas.addAll(d);
-            if(i==0){
+            if (i == 0) {
                 adapter.notifyDataSetChanged();
-            }else{
-                adapter.notifyItemRangeInserted(i,d.size());
+            } else {
+                adapter.notifyItemRangeInserted(i, d.size());
             }
 
         }

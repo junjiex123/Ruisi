@@ -34,7 +34,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
             R.drawable.ic_person_white_24dp
     };
 
-    private String[] tab_names = {"板块","看贴","消息","个人"};
+    private String[] tab_names = {"板块", "看贴", "消息", "个人"};
     private OnTabChangeListener listener;
     private boolean ishaveMessage = false;
 
@@ -42,8 +42,8 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
     private int PADDING_8 = 8;
     private int PADDING_12 = 12;
     private int SIZE_ICON = 24;
-    private  int COLOR_SELECT;
-    private  int COLOR_UNSELECT;
+    private int COLOR_SELECT;
+    private int COLOR_UNSELECT;
     private int CLICK_BG_RES;
 
     public MyBottomTab(Context context) {
@@ -58,8 +58,8 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         init();
     }
 
-    public void setMessage(boolean b){
-        if(b!=ishaveMessage){
+    public void setMessage(boolean b) {
+        if (b != ishaveMessage) {
             ishaveMessage = b;
             drawableStateChanged();
             invalidate();
@@ -71,10 +71,10 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
      */
     private void init() {
         COLOR_SELECT = ContextCompat.getColor(context, R.color.colorAccent);
-        COLOR_UNSELECT = ContextCompat.getColor(context,R.color.colorDisableHintIcon);
+        COLOR_UNSELECT = ContextCompat.getColor(context, R.color.colorDisableHintIcon);
         PADDING_8 = DimmenUtils.dip2px(context, PADDING_8);
         PADDING_12 = DimmenUtils.dip2px(context, PADDING_12);
-        SIZE_ICON = DimmenUtils.dip2px(context,SIZE_ICON);
+        SIZE_ICON = DimmenUtils.dip2px(context, SIZE_ICON);
         int[] attrs = new int[]{R.attr.selectableItemBackgroundBorderless};
         TypedArray typedArray = context.obtainStyledAttributes(attrs);
         CLICK_BG_RES = typedArray.getResourceId(0, 0);
@@ -85,32 +85,32 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
                 LinearLayout.LayoutParams.WRAP_CONTENT));
         setBackgroundResource(R.drawable.bottom_tab_bg);
 
-        for(int i=0;i<tab_names.length;i++){
+        for (int i = 0; i < tab_names.length; i++) {
             View v = getSingleTab(i);
             v.setTag(i);
             v.setOnClickListener(this);
             addView(v);
         }
-        setTabSelect(-1,0);
+        setTabSelect(-1, 0);
 
         paint_badge.setColor(COLOR_SELECT);
         paint_badge.setStyle(Paint.Style.FILL);
-        paint_badge.setStrokeWidth(PADDING_8/2);
+        paint_badge.setStrokeWidth(PADDING_8 / 2);
         paint_badge.setAntiAlias(true);
     }
 
-    private  void setTabSelect(int from,int to) {
-        if(from!=-1){
-            ViewGroup tab_item_from = (ViewGroup)this.findViewWithTag(from);
-            ImageView pre_img = (ImageView)tab_item_from.getChildAt(0);
-            TextView  pre_text = (TextView)tab_item_from.getChildAt(1);
+    private void setTabSelect(int from, int to) {
+        if (from != -1) {
+            ViewGroup tab_item_from = (ViewGroup) this.findViewWithTag(from);
+            ImageView pre_img = (ImageView) tab_item_from.getChildAt(0);
+            TextView pre_text = (TextView) tab_item_from.getChildAt(1);
             pre_img.setColorFilter(COLOR_UNSELECT);
             pre_text.setTextColor(COLOR_UNSELECT);
         }
 
-        ViewGroup tab_item_to = (ViewGroup)this.findViewWithTag(to);
-        ImageView to_img = (ImageView)tab_item_to.getChildAt(0);
-        TextView  to_text = (TextView)tab_item_to.getChildAt(1);
+        ViewGroup tab_item_to = (ViewGroup) this.findViewWithTag(to);
+        ImageView to_img = (ImageView) tab_item_to.getChildAt(0);
+        TextView to_text = (TextView) tab_item_to.getChildAt(1);
         to_img.setImageResource(icons_unselect[to]);
         to_img.setColorFilter(COLOR_SELECT);
         to_text.setTextColor(COLOR_SELECT);
@@ -120,13 +120,13 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
     @Override
     public void onClick(View v) {
         int tag = (Integer) v.getTag();
-        if(currentSelected==tag){
+        if (currentSelected == tag) {
             return;
         }
-        if(listener!=null){
-            listener.tabselectChange(v,tag);
+        if (listener != null) {
+            listener.tabselectChange(v, tag);
         }
-        setTabSelect(currentSelected,tag);
+        setTabSelect(currentSelected, tag);
         currentSelected = tag;
     }
 
@@ -137,9 +137,9 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
 
         view.setOrientation(LinearLayout.VERTICAL);
         // 设置宽高和权重
-        view.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT,1));
+        view.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT, 1));
         view.setGravity(Gravity.CENTER);
-        view.setPadding(PADDING_12, PADDING_8, PADDING_12,PADDING_8);
+        view.setPadding(PADDING_12, PADDING_8, PADDING_12, PADDING_8);
 
         /**
          * 图标
@@ -154,7 +154,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
          */
         TextView textView = new TextView(getContext());
         textView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,12);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         textView.setTextColor(COLOR_UNSELECT);
         textView.setText(tab_names[position]);
         view.addView(iconView);
@@ -169,16 +169,16 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if(ishaveMessage){
+        if (ishaveMessage) {
             int len = getWidth();
-            int end = len/4*3;
-            int start = len/2;
+            int end = len / 4 * 3;
+            int start = len / 2;
 
-            int center = (end-start)/2+start;
-            int centx = center+ PADDING_12;
+            int center = (end - start) / 2 + start;
+            int centx = center + PADDING_12;
             int centy = PADDING_12;
 
-            canvas.drawCircle(centx,centy,PADDING_12/4, paint_badge);
+            canvas.drawCircle(centx, centy, PADDING_12 / 4, paint_badge);
         }
 
     }

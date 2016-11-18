@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/smileys_container"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/smileys_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical">
 
     <android.support.design.widget.TabLayout
-        app:tabTextColor="@color/text_color_sec"
-        app:tabSelectedTextColor="@color/colorAccent"
         android:id="@+id/mytab"
         android:layout_width="match_parent"
         android:layout_height="38dp"
-        android:background="@drawable/divider_bottom"/>
+        android:background="@drawable/divider_bottom"
+        app:tabSelectedTextColor="@color/colorAccent"
+        app:tabTextColor="@color/text_color_sec" />
+
     <android.support.v7.widget.RecyclerView
-        android:scrollbars="vertical"
-        android:scrollbarSize="2dp"
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="200dp"/>
+        android:layout_height="200dp"
+        android:scrollbarSize="2dp"
+        android:scrollbars="vertical" />
 </LinearLayout>

@@ -4,4 +4,4 @@ public enum Method{
         GET,
         POST,
         HEAD
-        }
+}

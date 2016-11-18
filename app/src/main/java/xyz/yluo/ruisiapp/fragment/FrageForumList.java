@@ -44,7 +44,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * Created by free2 on 16-3-19.
  * 板块列表fragemnt
  */
-public class FrageForumList extends BaseFragment implements ListItemClickListener,View.OnClickListener{
+public class FrageForumList extends BaseFragment implements ListItemClickListener, View.OnClickListener {
     protected SwipeRefreshLayout refreshLayout;
     private List<ForumListData> datas = null;
     private ForumListAdapter adapter = null;
@@ -53,7 +53,7 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
     private CircleImageView userImg;
 
     //15分钟的缓存时间
-    private static final int UPDATE_TIME = 1500*600;
+    private static final int UPDATE_TIME = 1500 * 600;
     private static final String KEY = "FORUM_UPDATE_KEY";
     private boolean lastLoginState;
 
@@ -68,18 +68,18 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater,container,savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
         userImg = (CircleImageView) mRootView.findViewById(R.id.img);
         refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
         RecyclerView recyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         //设置可以滑出底栏
         recyclerView.setClipToPadding(false);
-        recyclerView.setPadding(0,0,0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
+        recyclerView.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
         //刷新
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         mRootView.findViewById(R.id.search).setOnClickListener(this);
         //先从数据库读出数据
-        adapter = new ForumListAdapter(datas, getActivity(),this);
+        adapter = new ForumListAdapter(datas, getActivity(), this);
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -93,7 +93,7 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
         });
         userImg.setOnClickListener(this);
         recyclerView.addItemDecoration(new MyGridDivider(1,
-                ContextCompat.getColor(getActivity(),R.color.colorDivider)));
+                ContextCompat.getColor(getActivity(), R.color.colorDivider)));
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
@@ -106,9 +106,9 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
 
         //判断是否真正的需要请求服务器
         //获得新的数据
-        long time =  sharedPreferences.getLong(KEY,0);
-        if(System.currentTimeMillis()-time>UPDATE_TIME||datas==null||datas.size()==0){
-            Log.e("板块列表","过了缓存时间需要刷新");
+        long time = sharedPreferences.getLong(KEY, 0);
+        if (System.currentTimeMillis() - time > UPDATE_TIME || datas == null || datas.size() == 0) {
+            Log.e("板块列表", "过了缓存时间需要刷新");
             getData();
         }
 
@@ -116,12 +116,12 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
         return mRootView;
     }
 
-    private void refreshView(){
-        if(lastLoginState){
+    private void refreshView() {
+        if (lastLoginState) {
             Picasso.with(getActivity()).load(UrlUtils.getAvaterurls(App.getUid(getActivity())))
                     .placeholder(R.drawable.image_placeholder)
                     .into(userImg);
-        }else{
+        } else {
             userImg.setImageResource(R.drawable.image_placeholder);
         }
     }
@@ -129,7 +129,7 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(!hidden&&(lastLoginState!=App.ISLOGIN(getActivity()))){
+        if (!hidden && (lastLoginState != App.ISLOGIN(getActivity()))) {
             lastLoginState = !lastLoginState;
             getData();
             refreshView();
@@ -170,28 +170,28 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
 
     @Override
     public void onListItemClick(View v, int position) {
-        if(datas.get(position).isheader()){
+        if (datas.get(position).isheader()) {
             return;
         }
         int fid = datas.get(position).getFid();
         //几个特殊的板块
         String title = datas.get(position).getTitle();
-        PostsActivity.open(getActivity(), fid,title);
+        PostsActivity.open(getActivity(), fid, title);
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.search:
-                if(isLogin()){
+                if (isLogin()) {
                     switchActivity(SearchActivity.class);
                 }
                 break;
             case R.id.img:
-                if(lastLoginState){
+                if (lastLoginState) {
                     String imgurl = UrlUtils.getAvaterurlb(App.getUid(getActivity()));
-                    UserDetailActivity.open(getActivity(),App.getName(getActivity()),imgurl);
-                }else{
+                    UserDetailActivity.open(getActivity(), App.getName(getActivity()), imgurl);
+                } else {
                     switchActivity(LoginActivity.class);
                 }
                 break;
@@ -208,7 +208,7 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
             Elements elements = document.select("div#wp.wp.wm").select("div.bm.bmw.fl");
             for (Element ele : elements) {
                 String header = ele.select("h2").text();
-                simpledatas.add(new ForumListData(true, header,"0",-1));
+                simpledatas.add(new ForumListData(true, header, "0", -1));
                 for (Element tmp : ele.select("li")) {
                     String todayNew = tmp.select("span.num").text();
                     tmp.select("span.num").remove();
@@ -219,12 +219,12 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
                 }
             }
 
-            if(!isSetForumToDataBase){
+            if (!isSetForumToDataBase) {
                 MyDB myDB = new MyDB(getActivity().getApplicationContext(), MyDB.MODE_WRITE);
                 myDB.setForums(simpledatas);
                 isSetForumToDataBase = true;
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putLong(KEY,System.currentTimeMillis());
+                editor.putLong(KEY, System.currentTimeMillis());
                 editor.apply();
             }
             return simpledatas;
@@ -232,7 +232,7 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
 
         @Override
         protected void onPostExecute(List<ForumListData> simpledatas) {
-            if(simpledatas.size()>0){
+            if (simpledatas.size() > 0) {
                 datas.clear();
                 datas.addAll(simpledatas);
                 adapter.notifyDataSetChanged();

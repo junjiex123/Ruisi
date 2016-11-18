@@ -1,8 +1,5 @@
 package xyz.yluo.ruisiapp.model;
 
-/**
- * Created by free2 on 16-4-7.
- */
 public class SimpleListData {
     private String key;
     private String value;

@@ -11,12 +11,10 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.widget.Toast;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.activity.HomeActivity;
 import xyz.yluo.ruisiapp.activity.PostActivity;
 import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
 import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
@@ -37,7 +35,7 @@ public class FragSetting extends PreferenceFragment
     //论坛地址
     private ListPreference setting_forums_url;
     private SharedPreferences sharedPreferences;
-    private Preference about_this, clear_cache, open_sourse,exit_login;
+    private Preference about_this, clear_cache, open_sourse, exit_login;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -54,13 +52,13 @@ public class FragSetting extends PreferenceFragment
         boolean b = sharedPreferences.getBoolean("setting_show_tail", false);
         setting_user_tail.setEnabled(b);
         setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail", "无小尾巴"));
-        setting_forums_url.setSummary(App.IS_SCHOOL_NET?"当前网络校园网，点击切换":"当前网络校外网，点击切换");
-        setting_forums_url.setValue(App.IS_SCHOOL_NET?"1":"2");
+        setting_forums_url.setSummary(App.IS_SCHOOL_NET ? "当前网络校园网，点击切换" : "当前网络校外网，点击切换");
+        setting_forums_url.setValue(App.IS_SCHOOL_NET ? "1" : "2");
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
 
-        if(!App.ISLOGIN(getActivity())){
-            ((PreferenceGroup)findPreference("group_other")).
+        if (!App.ISLOGIN(getActivity())) {
+            ((PreferenceGroup) findPreference("group_other")).
                     removePreference(findPreference("exit_login"));//这是删除 二级
         }
 
@@ -77,7 +75,7 @@ public class FragSetting extends PreferenceFragment
                                 getActivity().finish();
                             }
                         })
-                        .setNegativeButton("取消",null)
+                        .setNegativeButton("取消", null)
                         .setCancelable(true)
                         .create()
                         .show();
@@ -99,53 +97,53 @@ public class FragSetting extends PreferenceFragment
             version_code = info.versionCode;
             version_name = info.versionName;
         }
-        about_this.setSummary("当前版本" + version_name+"  version code:"+version_code);
+        about_this.setSummary("当前版本" + version_name + "  version code:" + version_code);
 
         //[2016年6月9日更新][code:25]睿思手机客户端
         final int finalversion_code = version_code;
         about_this.setOnPreferenceClickListener(
                 new Preference.OnPreferenceClickListener() {
-                        @Override
-                        public boolean onPreferenceClick(Preference preference) {
-                            Toast.makeText(getActivity(), "正在检查更新", Toast.LENGTH_SHORT).show();
-                            HttpUtil.get(getActivity(), App.CHECK_UPDATE_URL, new ResponseHandler() {
-                                @Override
-                                public void onSuccess(byte[] response) {
-                                    String res = new String(response);
-                                    int ih = res.indexOf("keywords");
-                                    int h_start = res.indexOf('\"', ih + 15);
-                                    int h_end = res.indexOf('\"', h_start + 1);
-                                    String title = res.substring(h_start + 1, h_end);
-                                    if (title.contains("code")) {
-                                        int st = title.indexOf("code");
-                                        int code = GetId.getNumber(title.substring(st));
-                                        if(code> finalversion_code){
-                                            SharedPreferences.Editor editor =  sharedPreferences.edit();
-                                            editor.putLong(App.CHECK_UPDATE_KEY,System.currentTimeMillis());
-                                            editor.apply();
-                                            new AlertDialog.Builder(getActivity()).
-                                                    setTitle("检测到新版本").
-                                                    setMessage(title).
-                                                    setPositiveButton("查看", new DialogInterface.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(DialogInterface dialog, int which) {
-                                                            PostActivity.open(getActivity(),App.CHECK_UPDATE_URL,"谁用了FREEDOM");
-                                                        }
-                                                    })
-                                                    .setNegativeButton("取消",null)
-                                                    .setCancelable(true)
-                                                    .create()
-                                                    .show();
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        Toast.makeText(getActivity(), "正在检查更新", Toast.LENGTH_SHORT).show();
+                        HttpUtil.get(getActivity(), App.CHECK_UPDATE_URL, new ResponseHandler() {
+                            @Override
+                            public void onSuccess(byte[] response) {
+                                String res = new String(response);
+                                int ih = res.indexOf("keywords");
+                                int h_start = res.indexOf('\"', ih + 15);
+                                int h_end = res.indexOf('\"', h_start + 1);
+                                String title = res.substring(h_start + 1, h_end);
+                                if (title.contains("code")) {
+                                    int st = title.indexOf("code");
+                                    int code = GetId.getNumber(title.substring(st));
+                                    if (code > finalversion_code) {
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putLong(App.CHECK_UPDATE_KEY, System.currentTimeMillis());
+                                        editor.apply();
+                                        new AlertDialog.Builder(getActivity()).
+                                                setTitle("检测到新版本").
+                                                setMessage(title).
+                                                setPositiveButton("查看", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        PostActivity.open(getActivity(), App.CHECK_UPDATE_URL, "谁用了FREEDOM");
+                                                    }
+                                                })
+                                                .setNegativeButton("取消", null)
+                                                .setCancelable(true)
+                                                .create()
+                                                .show();
 
-                                        }else{
-                                            Toast.makeText(getActivity(), "暂无更新", Toast.LENGTH_SHORT).show();
-                                        }
+                                    } else {
+                                        Toast.makeText(getActivity(), "暂无更新", Toast.LENGTH_SHORT).show();
                                     }
                                 }
-                            });
-                            return  true;
-                }
-        });
+                            }
+                        });
+                        return true;
+                    }
+                });
 
         open_sourse.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -174,12 +172,12 @@ public class FragSetting extends PreferenceFragment
                 switch (sharedPreferences.getString("setting_forums_url", "2")) {
                     case "1":
                         setting_forums_url.setSummary("当前网络校园网，点击切换");
-                        Toast.makeText(getActivity(),"切换到校园网!",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "切换到校园网!", Toast.LENGTH_SHORT).show();
                         App.IS_SCHOOL_NET = true;
                         break;
                     case "2":
                         setting_forums_url.setSummary("当前网络校外网，点击切换");
-                        Toast.makeText(getActivity(),"切换到外网!",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "切换到外网!", Toast.LENGTH_SHORT).show();
                         App.IS_SCHOOL_NET = false;
                         break;
                 }
@@ -194,20 +192,20 @@ public class FragSetting extends PreferenceFragment
                 setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail", "无小尾巴"));
                 break;
             case "setting_hide_zhidin":
-                boolean bbbb = sharedPreferences.getBoolean("setting_hide_zhidin",true);
-                Toast.makeText(getActivity(),bbbb?"帖子列表不显示置顶帖":"帖子列表显示置顶帖",
+                boolean bbbb = sharedPreferences.getBoolean("setting_hide_zhidin", true);
+                Toast.makeText(getActivity(), bbbb ? "帖子列表不显示置顶帖" : "帖子列表显示置顶帖",
                         Toast.LENGTH_SHORT).show();
                 break;
             case "setting_show_plain":
-                bbbb = sharedPreferences.getBoolean("setting_show_plain",false);
-                Toast.makeText(getActivity(),bbbb?"文章显示模式：简洁":"文章显示模式：默认",
+                bbbb = sharedPreferences.getBoolean("setting_show_plain", false);
+                Toast.makeText(getActivity(), bbbb ? "文章显示模式：简洁" : "文章显示模式：默认",
                         Toast.LENGTH_SHORT).show();
                 break;
             case "setting_dark_mode":
-                bbbb = sharedPreferences.getBoolean("setting_dark_mode",false);
-                if(bbbb){
-                    Toast.makeText(getActivity(),"成功切换到夜间模式，重启软件生效"
-                            ,Toast.LENGTH_SHORT).show();
+                bbbb = sharedPreferences.getBoolean("setting_dark_mode", false);
+                if (bbbb) {
+                    Toast.makeText(getActivity(), "成功切换到夜间模式，重启软件生效"
+                            , Toast.LENGTH_SHORT).show();
                 }
 
                 break;

@@ -56,7 +56,7 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater,container,savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
         RadioButton b1 = (RadioButton) mRootView.findViewById(R.id.btn_reply);
         RadioButton b2 = (RadioButton) mRootView.findViewById(R.id.btn_pm);
         b1.setText("新帖");
@@ -68,8 +68,8 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
         recycler_view.setLayoutManager(mLayoutManager);
         //设置可以滑出底栏
         recycler_view.setClipToPadding(false);
-        recycler_view.setPadding(0,0,0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
-        adapter = new HotNewListAdapter(getActivity(), mydataset,galleryDatas);
+        recycler_view.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
+        adapter = new HotNewListAdapter(getActivity(), mydataset, galleryDatas);
         recycler_view.setAdapter(adapter);
         recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 10));
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -86,10 +86,10 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
                 int pos = -1;
                 if (id == R.id.btn_reply) {
                     pos = TYPE_NEW;
-                }else{
+                } else {
                     pos = TYPE_HOT;
                 }
-                if(pos!=currentType){
+                if (pos != currentType) {
                     currentType = pos;
                     refreshLayout.post(new Runnable() {
                         @Override
@@ -138,8 +138,8 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
         if (App.IS_SCHOOL_NET) {
             new getGalleryTask().execute();
         }
-        String type = (currentType==TYPE_HOT)?"hot":"new";
-        String url = "forum.php?mod=guide&view="+type+"&page=" + CurrentPage + "&mobile=2";
+        String type = (currentType == TYPE_HOT) ? "hot" : "new";
+        String url = "forum.php?mod=guide&view=" + type + "&page=" + CurrentPage + "&mobile=2";
         HttpUtil.get(getActivity(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -172,7 +172,7 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
                     String title = e.text();
                     String titleurl = e.select("a").attr("href");
                     String imgurl = e.select("img").attr("src");
-                    Log.e("imh",imgurl);
+                    Log.e("imh", imgurl);
                     temp.add(new GalleryData(imgurl, title, titleurl));
                 }
             } catch (IOException e) {
@@ -184,15 +184,15 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
         @Override
         protected void onPostExecute(List<GalleryData> data) {
             super.onPostExecute(data);
-            if(data.size()==0){
+            if (data.size() == 0) {
                 return;
             }
-            if(galleryDatas.size()==0){
+            if (galleryDatas.size() == 0) {
                 galleryDatas.addAll(data);
-            }else if(galleryDatas.size()!=data.size()){//进行了一下优化 只有不相同时才刷行
+            } else if (galleryDatas.size() != data.size()) {//进行了一下优化 只有不相同时才刷行
                 galleryDatas.clear();
                 galleryDatas.addAll(data);
-            }else{
+            } else {
                 return;
             }
             adapter.notifyItemChanged(0);
@@ -209,8 +209,8 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
             for (Element src : links) {
                 String url = src.select("a").attr("href");
                 int titleColor = GetId.getColor(
-                        getActivity(),src.select("a").attr("style"));
-                Log.e("style",src.select("a").attr("style"));
+                        getActivity(), src.select("a").attr("style"));
+                Log.e("style", src.select("a").attr("style"));
                 //Log.e("titleColor",titleColor+"");
                 String author = src.select(".by").text();
                 src.select("span.by").remove();
@@ -219,7 +219,7 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
                 String title = src.select("a").text();
                 String img = src.select("img").attr("src");
                 boolean hasImage = img.contains("icon_tu.png");
-                dataset.add(new ArticleListData(hasImage, title, url, author, replyCount,titleColor));
+                dataset.add(new ArticleListData(hasImage, title, url, author, replyCount, titleColor));
             }
 
             MyDB myDB = new MyDB(getActivity(), MyDB.MODE_READ);
@@ -238,15 +238,15 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
                 mydataset.clear();
                 mydataset.addAll(datas);
                 adapter.notifyDataSetChanged();
-            }else{
-                if(datas.size()==0){
+            } else {
+                if (datas.size() == 0) {
                     adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
                     return;
-                }else{
+                } else {
                     int size = mydataset.size();
                     mydataset.addAll(datas);
                     adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_OK);
-                    if(galleryDatas.size()>0){
+                    if (galleryDatas.size() > 0) {
                         size++;
                     }
                     adapter.notifyItemRangeInserted(size, datas.size());

@@ -22,7 +22,7 @@ public class SingleArticleData {
     private String title;
     private String editTime;
 
-    public SingleArticleData(SingleType type, String title, String uid, String username, String postTime, String index, String replyUrl, String cotent,String pid) {
+    public SingleArticleData(SingleType type, String title, String uid, String username, String postTime, String index, String replyUrl, String cotent, String pid) {
         this.type = type;
         this.username = username;
         this.postTime = postTime;
@@ -39,7 +39,7 @@ public class SingleArticleData {
         this.title = title;
     }
 
-    public String getImg(){
+    public String getImg() {
         return UrlUtils.getAvaterurlm(uid);
     }
 

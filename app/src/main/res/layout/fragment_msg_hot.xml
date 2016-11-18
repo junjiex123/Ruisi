@@ -1,59 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:background="@color/colorPrimary"
-        android:layout_height="@dimen/ToolBarHeight">
+        android:layout_height="@dimen/ToolBarHeight"
+        android:background="@color/colorPrimary">
 
         <RadioGroup
             android:id="@+id/btn_change"
             android:layout_width="110dp"
             android:layout_height="28dp"
-            android:gravity="center"
             android:layout_gravity="center"
             android:checkedButton="@+id/btn_reply"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/btn_reply"
-                android:background="@drawable/switch_left_bg"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/switch_left_bg"
                 android:button="@null"
                 android:gravity="center"
                 android:text="回复"
                 android:textColor="@color/text_primary_white"
                 android:textSize="14sp" />
+
             <RadioButton
                 android:id="@+id/btn_pm"
-                android:background="@drawable/switch_right_bg"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/switch_right_bg"
                 android:button="@null"
                 android:gravity="center"
                 android:text="消息"
                 android:textColor="@color/text_primary_white"
                 android:textSize="14sp" />
         </RadioGroup>
+
         <RelativeLayout
-            android:visibility="gone"
             android:id="@+id/pm_badge"
-            android:layout_gravity="center"
             android:layout_width="110dp"
-            android:layout_height="32dp">
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:visibility="gone">
+
             <View
-                android:layout_margin="6dp"
-                android:layout_alignParentEnd="true"
-                android:background="@drawable/badge"
                 android:layout_width="8dp"
-                android:layout_height="8dp"/>
+                android:layout_height="8dp"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="6dp"
+                android:background="@drawable/badge" />
 
         </RelativeLayout>
 

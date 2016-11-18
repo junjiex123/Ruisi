@@ -29,7 +29,7 @@ import static java.lang.System.in;
  * Created by free2 on 16-7-16.
  * 图片下载
  */
-class ImageGetter implements Html.ImageGetter{
+class ImageGetter implements Html.ImageGetter {
     private Context context;
     /**
      * 标记是否开始下载
@@ -50,13 +50,13 @@ class ImageGetter implements Html.ImageGetter{
 
     private int successCount = 0;
 
-    private Map<String,Drawable> haveDown;
+    private Map<String, Drawable> haveDown;
     private ImageDownLoadListener listener;
 
     ImageGetter(Context context, ImageDownLoadListener listener) {
         this.context = context;
         this.listener = listener;
-        if(haveDown==null){
+        if (haveDown == null) {
             haveDown = new HashMap<>();
         }
         urls = new HashSet<>();
@@ -66,7 +66,7 @@ class ImageGetter implements Html.ImageGetter{
         this.isStop = false;
     }
 
-    void reStart(){
+    void reStart() {
         isStop = false;
         startDown();
     }
@@ -75,7 +75,7 @@ class ImageGetter implements Html.ImageGetter{
     public Drawable getDrawable(String source) {
         try {
 
-            if(haveDown.containsKey(source)){
+            if (haveDown.containsKey(source)) {
                 return haveDown.get(source);
             }
             //static/image/smiley/tieba/tb014.png
@@ -95,17 +95,17 @@ class ImageGetter implements Html.ImageGetter{
                 }
 
                 String fileTosave = source.substring(source.indexOf("/smiley"));
-                File f = new File(context.getFilesDir()+fileTosave);
-                if(f.exists()){
-                    d =  Drawable.createFromPath(f.getPath());
+                File f = new File(context.getFilesDir() + fileTosave);
+                if (f.exists()) {
+                    d = Drawable.createFromPath(f.getPath());
                     d.setBounds(0, 0, 80, 80);
                     return d;
                 }
             }
 
             urls.add(source);
-            Log.e("imggetter","add queue "+source);
-            if(!isStart){
+            Log.e("imggetter", "add queue " + source);
+            if (!isStart) {
                 startDown();
             }
             return null;
@@ -115,10 +115,10 @@ class ImageGetter implements Html.ImageGetter{
         }
     }
 
-    private Drawable getAssertImage(String type,String fileName){
+    private Drawable getAssertImage(String type, String fileName) {
         try {
-            InputStream i = context.getAssets().open("static/image/smiley/"+type+fileName);
-            Log.e("bendi tieba ","tieba" + fileName);
+            InputStream i = context.getAssets().open("static/image/smiley/" + type + fileName);
+            Log.e("bendi tieba ", "tieba" + fileName);
             Bitmap bitmap = BitmapFactory.decodeStream(i);
             Drawable d = new BitmapDrawable(context.getResources(), bitmap);
             d.setBounds(0, 0, 80, 80);
@@ -131,12 +131,12 @@ class ImageGetter implements Html.ImageGetter{
         }
     }
 
-    private void startDown(){
-        if(isStop ||listener==null){
+    private void startDown() {
+        if (isStop || listener == null) {
             return;
         }
         isStart = true;
-        if(!urls.isEmpty()){
+        if (!urls.isEmpty()) {
             String uurl = urls.iterator().next();
             new LoadImage().execute(uurl);
         }
@@ -145,6 +145,7 @@ class ImageGetter implements Html.ImageGetter{
     //下载网络图片
     private class LoadImage extends AsyncTask<String, Void, Drawable> {
         private String s = "";
+
         @Override
         protected Drawable doInBackground(String... params) {
             String source = params[0];
@@ -161,23 +162,23 @@ class ImageGetter implements Html.ImageGetter{
             }
             try {
                 URL url = new URL(mySource);
-                URLConnection conn= url.openConnection();
+                URLConnection conn = url.openConnection();
                 conn.connect();
                 InputStream is = conn.getInputStream();
                 //这是表情文件 返回的同时还要存入文件
-                if(source.contains("static/image/smiley")){
+                if (source.contains("static/image/smiley")) {
                     String fileTosavedir = source.substring(source.indexOf("/smiley"),
                             source.lastIndexOf("/"));
-                    File dir = new File(context.getFilesDir()+fileTosavedir);
-                    Log.e("--dir--",dir.toString());
-                    if(!dir.exists()){
-                        Log.e("image getter","创建目录"+dir.mkdirs());
+                    File dir = new File(context.getFilesDir() + fileTosavedir);
+                    Log.e("--dir--", dir.toString());
+                    if (!dir.exists()) {
+                        Log.e("image getter", "创建目录" + dir.mkdirs());
                     }
 
                     String fulldir = source.substring(source.indexOf("/smiley"));
-                    File f = new File(context.getFilesDir()+fulldir);
-                    if(!f.exists()){
-                        Log.e("image getter","创建"+f.getPath()+">>"+f.createNewFile()) ;
+                    File f = new File(context.getFilesDir() + fulldir);
+                    if (!f.exists()) {
+                        Log.e("image getter", "创建" + f.getPath() + ">>" + f.createNewFile());
                         FileOutputStream fos = new FileOutputStream(f);
                         byte[] buffer = new byte[1024];
                         int len;
@@ -190,7 +191,7 @@ class ImageGetter implements Html.ImageGetter{
                     }
 
                     Drawable d = Drawable.createFromPath(f.getPath());
-                    d.setBounds(0,0,80,80);
+                    d.setBounds(0, 0, 80, 80);
                     return d;
                 }
 
@@ -203,7 +204,7 @@ class ImageGetter implements Html.ImageGetter{
                     return null;
                 }
                 Drawable drawable = new BitmapDrawable(context.getResources(), bm);
-                drawable.setBounds(0, 0, drawable.getIntrinsicWidth()*2, drawable.getIntrinsicHeight()*2);
+                drawable.setBounds(0, 0, drawable.getIntrinsicWidth() * 2, drawable.getIntrinsicHeight() * 2);
                 is.close();
                 bis.close();
                 return drawable;
@@ -217,28 +218,28 @@ class ImageGetter implements Html.ImageGetter{
 
         @Override
         protected void onPostExecute(Drawable drawable) {
-            if(drawable!=null){
+            if (drawable != null) {
                 successCount++;
             }
-            haveDown.put(s,drawable);
+            haveDown.put(s, drawable);
             urls.remove(s);
-            if(urls.isEmpty()||successCount>=STEP){
-                Log.e("imggetter","全部下载已经完成");
-                listener.downloadCallBack(s,drawable);
+            if (urls.isEmpty() || successCount >= STEP) {
+                Log.e("imggetter", "全部下载已经完成");
+                listener.downloadCallBack(s, drawable);
             }
-            if(successCount>=STEP)
+            if (successCount >= STEP)
                 successCount = 0;
             /**
              * 下载队列还存在的话 继续下载
              */
-            if(!urls.isEmpty()){
+            if (!urls.isEmpty()) {
                 startDown();
             }
         }
     }
 
-    interface ImageDownLoadListener{
-        void downloadCallBack(String url,Drawable d);
+    interface ImageDownLoadListener {
+        void downloadCallBack(String url, Drawable d);
     }
 
 }

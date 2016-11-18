@@ -224,10 +224,10 @@ public class FrageHelp extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater,container,savedInstanceState);
-        initToolbar(true,"睿思帮助");
+        super.onCreateView(inflater, container, savedInstanceState);
+        initToolbar(true, "睿思帮助");
         HtmlView htmlTextView = (HtmlView) mRootView.findViewById(R.id.html_text);
-        htmlTextView.setHtmlText(helpTxt,false);
+        htmlTextView.setHtmlText(helpTxt, false);
         return mRootView;
     }
 

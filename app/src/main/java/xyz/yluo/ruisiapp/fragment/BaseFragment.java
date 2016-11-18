@@ -27,19 +27,19 @@ public abstract class BaseFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if(null == mRootView){
+        if (null == mRootView) {
             mRootView = inflater.inflate(getLayoutId(), container, false);
         }
         return mRootView;
     }
 
-    protected void initToolbar(boolean isCloseAble,String title){
+    protected void initToolbar(boolean isCloseAble, String title) {
         toolBar = mRootView.findViewById(R.id.myToolBar);
-        if(toolBar!=null){
+        if (toolBar != null) {
             TextView titles = (TextView) toolBar.findViewById(R.id.title);
             titles.setText(title);
             ImageView i = (ImageView) toolBar.findViewById(R.id.logo);
-            if(isCloseAble){
+            if (isCloseAble) {
                 i.setImageResource(R.drawable.ic_arraw_back_white);
                 i.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -47,16 +47,16 @@ public abstract class BaseFragment extends Fragment {
                         getActivity().finish();
                     }
                 });
-            }else{
+            } else {
                 i.setVisibility(View.GONE);
             }
         }
     }
 
-    protected ImageView addToolbarMenu(int resid){
+    protected ImageView addToolbarMenu(int resid) {
         toolBar = mRootView.findViewById(R.id.myToolBar);
-        if(toolBar!=null){
-            ImageView i =  (ImageView)toolBar.findViewById(R.id.menu);
+        if (toolBar != null) {
+            ImageView i = (ImageView) toolBar.findViewById(R.id.menu);
             i.setVisibility(View.VISIBLE);
             i.setImageResource(resid);
             return i;
@@ -64,10 +64,10 @@ public abstract class BaseFragment extends Fragment {
         return null;
     }
 
-    protected ImageView setToolbarLogo(int resid){
+    protected ImageView setToolbarLogo(int resid) {
         toolBar = mRootView.findViewById(R.id.myToolBar);
-        if(toolBar!=null){
-            ImageView i =  (ImageView)toolBar.findViewById(R.id.logo);
+        if (toolBar != null) {
+            ImageView i = (ImageView) toolBar.findViewById(R.id.logo);
             i.setVisibility(View.VISIBLE);
             i.setImageResource(resid);
             return i;
@@ -83,8 +83,8 @@ public abstract class BaseFragment extends Fragment {
     }
 
 
-    protected void switchActivity(Class<?> cls){
-        getActivity().startActivity(new Intent(getActivity(),cls));
+    protected void switchActivity(Class<?> cls) {
+        getActivity().startActivity(new Intent(getActivity(), cls));
     }
 
 }

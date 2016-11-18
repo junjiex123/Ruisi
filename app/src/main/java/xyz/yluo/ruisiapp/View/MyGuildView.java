@@ -61,22 +61,22 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
         init(context);
     }
 
-    private void init(Context context){
+    private void init(Context context) {
         this.context = context;
-        dotMargine = DimmenUtils.dip2px(context,2);
-        containerPaddingTB = DimmenUtils.dip2px(context,8);
-        containerPaddingLR = DimmenUtils.dip2px(context,12);
+        dotMargine = DimmenUtils.dip2px(context, 2);
+        containerPaddingTB = DimmenUtils.dip2px(context, 8);
+        containerPaddingLR = DimmenUtils.dip2px(context, 12);
 
         dotImageResourseId = R.drawable.dot_bg;
         viewPager = new ViewPager(context);
-        viewPager.setLayoutParams(new LayoutParams(RMP,RMP));
+        viewPager.setLayoutParams(new LayoutParams(RMP, RMP));
         viewPager.addOnPageChangeListener(this);
         adapter = new PageAdapter();
         viewPager.setAdapter(adapter);
         addView(viewPager);
 
         dotContainer = new LinearLayout(context);
-        LayoutParams lp = new LayoutParams(RMP,RWC);
+        LayoutParams lp = new LayoutParams(RMP, RWC);
         lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         /**
          * 在这儿设置圆点位置
@@ -87,13 +87,13 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
         //dotContainer.setGravity(CENTER_HORIZONTAL);
         dotContainer.setGravity(CENTER_VERTICAL);
         dotContainer.setBackgroundColor(0x7f333333);
-        dotContainer.setPadding(containerPaddingLR,containerPaddingTB,containerPaddingLR,containerPaddingTB);
+        dotContainer.setPadding(containerPaddingLR, containerPaddingTB, containerPaddingLR, containerPaddingTB);
         addView(dotContainer);
 
         mAutoPlayTask = new AutoPlayTask(this);
     }
 
-    public void setData(List<GalleryData> datas){
+    public void setData(List<GalleryData> datas) {
         isAutoPlay = !(isAutoPlay && datas.size() < 3);
         this.datas = datas;
         adapter.notifyDataSetChanged();
@@ -107,15 +107,15 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
         if (dotContainer != null && datas.size() > 1) {
             dotContainer.removeAllViews();
 
-            LinearLayout.LayoutParams lpt = new LinearLayout.LayoutParams(LWC, LWC,1);
-            lpt.setMargins(0,0,containerPaddingLR,0);
+            LinearLayout.LayoutParams lpt = new LinearLayout.LayoutParams(LWC, LWC, 1);
+            lpt.setMargins(0, 0, containerPaddingLR, 0);
             TextView title = new TextView(context);
             title.setGravity(Gravity.CENTER_VERTICAL);
             title.setSingleLine(true);
             title.setEllipsize(TextUtils.TruncateAt.END);
             title.setTextColor(Color.WHITE);
             title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
-            dotContainer.addView(title,lpt);
+            dotContainer.addView(title, lpt);
 
             LinearLayout.LayoutParams lpp = new LinearLayout.LayoutParams(LWC, LWC);
             lpp.setMargins(dotMargine, 0, dotMargine, 0);
@@ -127,32 +127,31 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
                 dotImageView.setImageResource(dotImageResourseId);
                 dotImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 dotImageView.setEnabled(false);
-                dotContainer.addView(dotImageView,lpp);
+                dotContainer.addView(dotImageView, lpp);
             }
         }
     }
 
-    private void switchToNextPage(){
-        int page = (viewPager.getCurrentItem() + 1)%datas.size();
+    private void switchToNextPage() {
+        int page = (viewPager.getCurrentItem() + 1) % datas.size();
 
         viewPager.setCurrentItem(page);
         startAutoPlay();
     }
 
-    private void changeView(int pos){
+    private void changeView(int pos) {
         if (dotContainer != null && datas != null) {
-            ((TextView)dotContainer.getChildAt(0)).setText(datas.get(pos).getTitle());
+            ((TextView) dotContainer.getChildAt(0)).setText(datas.get(pos).getTitle());
             for (int i = 1; i < dotContainer.getChildCount(); i++) {
                 dotContainer.getChildAt(i).setEnabled(false);
                 dotContainer.getChildAt(i).setScaleX(1.0f);
                 dotContainer.getChildAt(i).setScaleY(1.0f);
             }
-            dotContainer.getChildAt(pos+1).setEnabled(true);
-            dotContainer.getChildAt(pos+1).setScaleX(1.3f);
-            dotContainer.getChildAt(pos+1).setScaleY(1.3f);
+            dotContainer.getChildAt(pos + 1).setEnabled(true);
+            dotContainer.getChildAt(pos + 1).setScaleX(1.3f);
+            dotContainer.getChildAt(pos + 1).setScaleY(1.3f);
         }
     }
-
 
 
     //启用和关闭自动播放
@@ -203,7 +202,6 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
     }
 
 
-
     private class PageAdapter extends PagerAdapter {
 
         @Override
@@ -213,10 +211,10 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
 
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
-            ImageView v  = (ImageView) container.findViewWithTag(position);
-            if(v==null){
+            ImageView v = (ImageView) container.findViewWithTag(position);
+            if (v == null) {
                 v = new ImageView(context);
-                v.setLayoutParams(new LayoutParams(RMP,RMP));
+                v.setLayoutParams(new LayoutParams(RMP, RMP));
                 v.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 Picasso.with(context).load(datas.get(position).getImgurl())
                         .placeholder(R.drawable.image_placeholder)

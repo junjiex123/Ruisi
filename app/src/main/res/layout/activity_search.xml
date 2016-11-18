@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_window"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,42 +12,45 @@
         android:gravity="center_vertical|center_horizontal">
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
             <ImageView
                 android:id="@+id/nav_back"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="13dp"
-                android:clickable="true"
-                android:src="@drawable/ic_arraw_back_white"
                 android:layout_width="50dp"
-                android:layout_height="50dp" />
+                android:layout_height="50dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:padding="13dp"
+                android:src="@drawable/ic_arraw_back_white" />
+
             <TextView
-                android:maxLines="1"
                 android:id="@+id/nav_title"
-                android:gravity="center_vertical"
-                android:textColor="@color/white"
-                android:text="搜索"
-                android:textSize="18sp"
                 android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:layout_height="match_parent" />
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:text="搜索"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
             <ImageView
                 android:id="@+id/nav_search"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="13dp"
-                android:clickable="true"
-                android:src="@drawable/ic_search_white_24dp"
                 android:layout_width="50dp"
-                android:layout_height="50dp" />
+                android:layout_height="50dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:padding="13dp"
+                android:src="@drawable/ic_search_white_24dp" />
         </LinearLayout>
 
-        <include layout="@layout/my_scearch_card"/>
+        <include layout="@layout/my_scearch_card" />
     </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 </LinearLayout>

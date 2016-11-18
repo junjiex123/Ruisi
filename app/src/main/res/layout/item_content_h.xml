@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:clickable="true"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/need_loading_item"
-    android:background="?attr/selectableItemBackground"
-    android:padding="16dp"
-    android:gravity="center"
     style="@style/text_16_sec"
-    android:text="点此查看全文"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" />
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:gravity="center"
+    android:padding="16dp"
+    android:text="点此查看全文" />

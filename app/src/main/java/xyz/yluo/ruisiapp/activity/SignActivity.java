@@ -39,7 +39,7 @@ public class SignActivity extends BaseActivity {
 
     protected CircleImageView user_image;
     protected ProgressBar progressBar;
-    private View sign_yes,sign_no;
+    private View sign_yes, sign_no;
     private TextView sign_error;
     private int spinner__select = 0;
     private String qdxq = "kx";
@@ -48,7 +48,7 @@ public class SignActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign);
-        initToolBar(true,"签到中心");
+        initToolBar(true, "签到中心");
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         sign_yes = findViewById(R.id.sign_yes);
@@ -94,12 +94,12 @@ public class SignActivity extends BaseActivity {
                         if (temptext.contains("您累计已签到")) {
                             int pos = temptext.indexOf("您累计已签到");
                             daytxt = temptext.substring(pos);
-                        }else if(temptext.contains("您本月已累计签到")) {
+                        } else if (temptext.contains("您本月已累计签到")) {
                             monthtxt = temptext;
                         }
                     }
 
-                    sign_yes(daytxt,monthtxt);
+                    sign_yes(daytxt, monthtxt);
                 } else {
                     sign_no();
                 }
@@ -113,12 +113,12 @@ public class SignActivity extends BaseActivity {
     }
 
 
-    private void sign_error(){
+    private void sign_error() {
         progressBar.setVisibility(View.GONE);
         sign_error.setVisibility(View.VISIBLE);
     }
 
-    private void sign_yes(String day,String month){
+    private void sign_yes(String day, String month) {
         progressBar.setVisibility(View.GONE);
         sign_yes.setVisibility(View.VISIBLE);
         TextView total_day = (TextView) findViewById(R.id.total_sign_day);
@@ -127,7 +127,7 @@ public class SignActivity extends BaseActivity {
         total_month.setText(month);
     }
 
-    private void sign_no(){
+    private void sign_no() {
         progressBar.setVisibility(View.GONE);
         sign_no.setVisibility(View.VISIBLE);
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
@@ -186,12 +186,12 @@ public class SignActivity extends BaseActivity {
             public void onSuccess(byte[] response) {
                 String res = new String(response);
                 int start = res.indexOf("恭喜你签到成功");
-                if(start>0){
-                    int end = res.indexOf("</div>",start);
-                    showNtice(res.substring(start,end));
+                if (start > 0) {
+                    int end = res.indexOf("</div>", start);
+                    showNtice(res.substring(start, end));
                     sign_no.setVisibility(View.GONE);
                     checkState();
-                }else {
+                } else {
                     showNtice("未知错误,签到失败");
                 }
             }

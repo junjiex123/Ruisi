@@ -47,7 +47,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * 2.新帖{@link FrageHotNew}
  */
 public class HomeActivity extends BaseActivity
-        implements MyBottomTab.OnTabChangeListener{
+        implements MyBottomTab.OnTabChangeListener {
 
     private long mExitTime;
     private Fragment currentFragment;
@@ -58,7 +58,7 @@ public class HomeActivity extends BaseActivity
     private int interval = 45000;//60s
     private MyHandler messageHandler;
     //间隔3天检查更新一次
-    private static final int UPDATE_TIME = 1000*3600*24*3;
+    private static final int UPDATE_TIME = 1000 * 3600 * 24 * 3;
     private SharedPreferences sharedPreferences;
     private boolean isNeedCheckUpdate = false;
 
@@ -71,24 +71,24 @@ public class HomeActivity extends BaseActivity
         bottomTab = (MyBottomTab) findViewById(R.id.bottom_bar);
         bottomTab.setOnTabChangeListener(this);
         getFragmentManager().beginTransaction().replace(
-                R.id.fragment_container,currentFragment).commit();
+                R.id.fragment_container, currentFragment).commit();
 
         Calendar c = Calendar.getInstance();
         int HOUR_OF_DAY = c.get(Calendar.HOUR_OF_DAY);
-        if(HOUR_OF_DAY<10&&HOUR_OF_DAY>1){
+        if (HOUR_OF_DAY < 10 && HOUR_OF_DAY > 1) {
             //晚上一点到早上10点间隔,不同时间段检查消息间隔不同
             //减轻服务器压力
-            interval = interval*2;
+            interval = interval * 2;
         }
 
         //判断是否真正的需要请求服务器
         //获得新的数据
-        sharedPreferences  = getPreferences(Context.MODE_PRIVATE);
-        long time =  sharedPreferences.getLong(App.CHECK_UPDATE_KEY,0);
-        if(System.currentTimeMillis()-time>UPDATE_TIME){
+        sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        long time = sharedPreferences.getLong(App.CHECK_UPDATE_KEY, 0);
+        if (System.currentTimeMillis() - time > UPDATE_TIME) {
             isNeedCheckUpdate = true;
         }
-        messageHandler = new MyHandler(bottomTab,this);
+        messageHandler = new MyHandler(bottomTab, this);
     }
 
     @Override
@@ -100,23 +100,23 @@ public class HomeActivity extends BaseActivity
     @Override
     protected void onStart() {
         super.onStart();
-        if(App.ISLOGIN(this)){
+        if (App.ISLOGIN(this)) {
             startCheckMessage();
         }
 
-        if(isNeedCheckUpdate){
+        if (isNeedCheckUpdate) {
             checkUpdate();
         }
     }
 
-    public void startCheckMessage(){
+    public void startCheckMessage() {
         //60s进行一次
-        long need = interval-(System.currentTimeMillis()-lastCheckMsgTime);
-        if(need<100){
+        long need = interval - (System.currentTimeMillis() - lastCheckMsgTime);
+        if (need < 100) {
             need = 100;
         }
-        if(timer==null){
-            Log.e("message","开始timer delay"+need);
+        if (timer == null) {
+            Log.e("message", "开始timer delay" + need);
             timer = new Timer(true);
         }
         task = new MyTimerTask();
@@ -126,18 +126,18 @@ public class HomeActivity extends BaseActivity
     @Override
     protected void onStop() {
         super.onStop();
-        if(timer!=null){
+        if (timer != null) {
             timer.cancel();
             timer = null;
-            Log.e("message","停止timer");
+            Log.e("message", "停止timer");
         }
     }
 
     @Override
-    public void onBackPressed(){
-        if(getFragmentManager().getBackStackEntryCount()>0){
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
-        }else {
+        } else {
             if ((System.currentTimeMillis() - mExitTime) > 1500) {
                 Toast.makeText(this, "再按一次退出手机睿思", Toast.LENGTH_SHORT).show();
                 mExitTime = System.currentTimeMillis();
@@ -158,22 +158,22 @@ public class HomeActivity extends BaseActivity
          * 所以常用的fragment用show 和 hide 比较好
          * replace 自己和自己是不会执行任何的函数的
          */
-        String TAG = "TAG_"+id;
+        String TAG = "TAG_" + id;
         FragmentManager fm = getFragmentManager();
         Fragment to = fm.findFragmentByTag(TAG);
         FragmentTransaction transaction = fm.beginTransaction();
-        if(to!=null&&currentFragment == to){
+        if (to != null && currentFragment == to) {
             return;
         }
-        if(to==null){
-            switch (id){
+        if (to == null) {
+            switch (id) {
                 case FrageType.NEWHOT:
                     to = new FrageHotNew();
                     break;
                 case FrageType.MESSAGE:
                     bottomTab.setMessage(false);
                     bottomTab.invalidate();
-                    to = FrageMessage.newInstance(ishaveReply,ishavePm);
+                    to = FrageMessage.newInstance(ishaveReply, ishavePm);
                     break;
                 case FrageType.MY:
                     to = new FragmentMy();
@@ -183,17 +183,17 @@ public class HomeActivity extends BaseActivity
                     break;
             }
         }
-         //.setCustomAnimations(android.R.anim.fade_in, R.anim.slide_out);
+        //.setCustomAnimations(android.R.anim.fade_in, R.anim.slide_out);
         if (!to.isAdded()) {
-            transaction.add(R.id.fragment_container, to,TAG);
-            if(id>=4){
+            transaction.add(R.id.fragment_container, to, TAG);
+            if (id >= 4) {
                 transaction.addToBackStack(null);
             }
         }
-        if(to.isHidden()){
+        if (to.isHidden()) {
             transaction.show(to);
         }
-        if(currentFragment.isVisible()){
+        if (currentFragment.isVisible()) {
             transaction.hide(currentFragment);
         }
         currentFragment = to;
@@ -203,14 +203,14 @@ public class HomeActivity extends BaseActivity
     boolean ishaveReply = false;
     boolean ishavePm = false;
 
-    private class MyTimerTask extends TimerTask{
+    private class MyTimerTask extends TimerTask {
         public void run() {
-            String url_reply = "home.php?mod=space&do=notice&view=mypost&type=post"+(App.IS_SCHOOL_NET?"":"&mobile=2");
+            String url_reply = "home.php?mod=space&do=notice&view=mypost&type=post" + (App.IS_SCHOOL_NET ? "" : "&mobile=2");
             String url_pm = "home.php?mod=space&do=pm&mobile=2";
             HttpUtil.SyncGet(HomeActivity.this, url_reply, new ResponseHandler() {
                 @Override
                 public void onSuccess(byte[] response) {
-                    dealMessage(true,new String(response));
+                    dealMessage(true, new String(response));
                 }
             });
             lastCheckMsgTime = System.currentTimeMillis();
@@ -223,7 +223,7 @@ public class HomeActivity extends BaseActivity
             HttpUtil.SyncGet(HomeActivity.this, url_pm, new ResponseHandler() {
                 @Override
                 public void onSuccess(byte[] response) {
-                    dealMessage(false,new String(response));
+                    dealMessage(false, new String(response));
                 }
             });
         }
@@ -233,7 +233,7 @@ public class HomeActivity extends BaseActivity
     /**
      * check update
      */
-    private void checkUpdate(){
+    private void checkUpdate() {
         PackageManager manager;
         PackageInfo info = null;
         manager = getPackageManager();
@@ -258,9 +258,9 @@ public class HomeActivity extends BaseActivity
                 if (title.contains("code")) {
                     int st = title.indexOf("code");
                     int code = GetId.getNumber(title.substring(st));
-                    if(code> finalVersion_code){
-                        SharedPreferences.Editor editor =  sharedPreferences.edit();
-                        editor.putLong(App.CHECK_UPDATE_KEY,System.currentTimeMillis());
+                    if (code > finalVersion_code) {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putLong(App.CHECK_UPDATE_KEY, System.currentTimeMillis());
                         editor.apply();
                         isNeedCheckUpdate = false;
                         new AlertDialog.Builder(HomeActivity.this).
@@ -269,13 +269,13 @@ public class HomeActivity extends BaseActivity
                                 setPositiveButton("查看", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        PostActivity.open(HomeActivity.this,App.CHECK_UPDATE_URL,"谁用了FREEDOM");
+                                        PostActivity.open(HomeActivity.this, App.CHECK_UPDATE_URL, "谁用了FREEDOM");
                                     }
                                 })
-                                .setNegativeButton("取消",null)
+                                .setNegativeButton("取消", null)
                                 .setCancelable(true)
                                 .create()
-                        .show();
+                                .show();
 
                     }
                 }
@@ -287,53 +287,54 @@ public class HomeActivity extends BaseActivity
     /**
      * check unread message
      */
-    private void dealMessage(boolean isReply,String res){
+    private void dealMessage(boolean isReply, String res) {
         Document document = Jsoup.parse(res);
         //回复
-        if(isReply){
+        if (isReply) {
             Elements elemens = document.select(".nts").select("dl.cl");
-            if(elemens.size()>0){
-                int last_message_id  = getSharedPreferences(App.MY_SHP_NAME,MODE_PRIVATE).getInt(App.NOTICE_MESSAGE_KEY, 0);
-                int  noticeId = Integer.parseInt(elemens.get(0).attr("notice"));
+            if (elemens.size() > 0) {
+                int last_message_id = getSharedPreferences(App.MY_SHP_NAME, MODE_PRIVATE).getInt(App.NOTICE_MESSAGE_KEY, 0);
+                int noticeId = Integer.parseInt(elemens.get(0).attr("notice"));
                 ishaveReply = last_message_id < noticeId;
             }
-        }else{
+        } else {
             Elements lists = document.select(".pmbox").select("ul").select("li");
-            if(lists.size()>0){
+            if (lists.size() > 0) {
                 ishavePm = lists.get(0).select(".num").text().length() > 0;
             }
         }
 
-        if(ishaveReply||ishavePm){
+        if (ishaveReply || ishavePm) {
             messageHandler.sendEmptyMessage(0);
-        }else{
+        } else {
             messageHandler.sendEmptyMessage(-1);
         }
     }
 
 
     //deal unread message show red point
-    private  static class MyHandler extends Handler {
+    private static class MyHandler extends Handler {
         private final WeakReference<MyBottomTab> mytab;
         private final WeakReference<HomeActivity> act;
 
-        private MyHandler(MyBottomTab tab,HomeActivity aa) {
+        private MyHandler(MyBottomTab tab, HomeActivity aa) {
             mytab = new WeakReference<>(tab);
             act = new WeakReference<>(aa);
         }
+
         @Override
         public void handleMessage(Message msg) {
             MyBottomTab t = mytab.get();
             HomeActivity a = act.get();
-            switch (msg.what){
+            switch (msg.what) {
                 //-1 - 无消息 0-有
                 case -1:
-                    Log.e("message","无未读消息");
+                    Log.e("message", "无未读消息");
                     t.setMessage(false);
                     break;
                 case 0:
                     a.mkNotify();
-                    Log.e("message","有未读消息");
+                    Log.e("message", "有未读消息");
                     t.setMessage(true);
                     break;
             }
@@ -342,10 +343,10 @@ public class HomeActivity extends BaseActivity
 
 
     //tixing wei du xiao xi
-    private void mkNotify(){
+    private void mkNotify() {
         boolean isnotify = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this)
                 .getBoolean("setting_show_notify", false);
-        if(!isnotify){
+        if (!isnotify) {
             return;
         }
         final NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
@@ -356,7 +357,7 @@ public class HomeActivity extends BaseActivity
                 .setAutoCancel(true);
         final NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotifyMgr.notify(10, builder.build());
-        Log.e("message","发送未读消息弹窗");
+        Log.e("message", "发送未读消息弹窗");
     }
 
 }

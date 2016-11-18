@@ -27,7 +27,7 @@ public class AddFriendDialog extends DialogFragment {
     private AddFriendListener dialogListener;
 
 
-    public static AddFriendDialog newInstance(AddFriendListener var,String name,String imhurl) {
+    public static AddFriendDialog newInstance(AddFriendListener var, String name, String imhurl) {
         AddFriendDialog frag = new AddFriendDialog();
         frag.setUserName(name);
         frag.setUserImage(imhurl);
@@ -67,7 +67,7 @@ public class AddFriendDialog extends DialogFragment {
                 if (checkInput()) {
                     dialogListener.OnAddFriendOkClick(
                             content.getText().toString(),
-                            GetId.getid("uid=",userImage));
+                            GetId.getid("uid=", userImage));
                     AddFriendDialog.this.getDialog().cancel();
                 }
             }
@@ -112,6 +112,6 @@ public class AddFriendDialog extends DialogFragment {
     }
 
     public interface AddFriendListener {
-        void OnAddFriendOkClick(String mes,String uid);
+        void OnAddFriendOkClick(String mes, String uid);
     }
 }

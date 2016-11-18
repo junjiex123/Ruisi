@@ -37,7 +37,7 @@ public class BaseActivity extends AppCompatActivity {
                             startActivity(new Intent(BaseActivity.this, LoginActivity.class));
                         }
                     })
-                    .setNegativeButton("取消",null)
+                    .setNegativeButton("取消", null)
                     .setCancelable(true)
                     .create();
 
@@ -47,27 +47,27 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
-    protected void initToolBar(boolean isshowBack,String text){
+    protected void initToolBar(boolean isshowBack, String text) {
         View toolbar = findViewById(R.id.myToolBar);
-        if(toolbar!=null){
-            ((TextView)toolbar.findViewById(R.id.title)).setText(text);
-            if(isshowBack){
+        if (toolbar != null) {
+            ((TextView) toolbar.findViewById(R.id.title)).setText(text);
+            if (isshowBack) {
                 findViewById(R.id.logo).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         finish();
                     }
                 });
-            }else{
+            } else {
                 findViewById(R.id.logo).setVisibility(View.GONE);
             }
         }
     }
 
-    protected ImageView addToolbarMenu(int resid){
+    protected ImageView addToolbarMenu(int resid) {
         View toolbar = findViewById(R.id.myToolBar);
-        if(toolbar!=null){
-            ImageView i =  (ImageView)toolbar.findViewById(R.id.menu);
+        if (toolbar != null) {
+            ImageView i = (ImageView) toolbar.findViewById(R.id.menu);
             i.setImageResource(resid);
             i.setVisibility(View.VISIBLE);
             return i;
@@ -86,7 +86,6 @@ public class BaseActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 
     protected void showToast(String str) {

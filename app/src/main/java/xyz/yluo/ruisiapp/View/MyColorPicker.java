@@ -25,18 +25,16 @@ public class MyColorPicker extends PopupWindow implements AdapterView.OnItemClic
     private GridView gridView;
     private OnItemSelectListener listener;
     private MyAdapter adapter;
-    private String[][] colorDatas =null;
+    private String[][] colorDatas = null;
 
-    public MyColorPicker(Context context)
-    {
+    public MyColorPicker(Context context) {
         super(context);
         mContext = context;
         init();
     }
 
 
-    private void init()
-    {
+    private void init() {
         String[] colors = mContext.getResources().getStringArray(R.array.color_list);
         for (int i = 0; i < colors.length; i++) {
             if (colorDatas == null) {
@@ -50,15 +48,15 @@ public class MyColorPicker extends PopupWindow implements AdapterView.OnItemClic
         gridView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         gridView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
         gridView.setNumColumns(8);
-        gridView.setPadding(DimmenUtils.dip2px(mContext,8),DimmenUtils.dip2px(mContext,12),DimmenUtils.dip2px(mContext,8),DimmenUtils.dip2px(mContext,12));
+        gridView.setPadding(DimmenUtils.dip2px(mContext, 8), DimmenUtils.dip2px(mContext, 12), DimmenUtils.dip2px(mContext, 8), DimmenUtils.dip2px(mContext, 12));
         gridView.setGravity(Gravity.CENTER);
-        gridView.setHorizontalSpacing(DimmenUtils.dip2px(mContext,4));
-        gridView.setVerticalSpacing(DimmenUtils.dip2px(mContext,12));
+        gridView.setHorizontalSpacing(DimmenUtils.dip2px(mContext, 4));
+        gridView.setVerticalSpacing(DimmenUtils.dip2px(mContext, 12));
         gridView.setOnItemClickListener(this);
 
         setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
         setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-        setBackgroundDrawable(ContextCompat.getDrawable(mContext,R.drawable.rec_solid_primary_bg));
+        setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.rec_solid_primary_bg));
         setFocusable(true);
         setContentView(gridView);
 
@@ -71,20 +69,17 @@ public class MyColorPicker extends PopupWindow implements AdapterView.OnItemClic
     }
 
 
-
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        if(listener!=null){
-            listener.itemClick(i,view,colorDatas[i][0]);
+        if (listener != null) {
+            listener.itemClick(i, view, colorDatas[i][0]);
         }
         dismiss();
     }
 
-    public interface OnItemSelectListener{
-        void itemClick(int pos, View v,String color);
+    public interface OnItemSelectListener {
+        void itemClick(int pos, View v, String color);
     }
-
-
 
 
     private class MyAdapter extends BaseAdapter {
@@ -108,9 +103,9 @@ public class MyColorPicker extends PopupWindow implements AdapterView.OnItemClic
         public View getView(int i, View convertView, ViewGroup viewGroup) {
             View colorView;
             colorView = new View(mContext);
-            colorView.setLayoutParams(new GridView.LayoutParams(DimmenUtils.dip2px(mContext,20), DimmenUtils.dip2px(mContext,20)));//设置ImageView对象布局
+            colorView.setLayoutParams(new GridView.LayoutParams(DimmenUtils.dip2px(mContext, 20), DimmenUtils.dip2px(mContext, 20)));//设置ImageView对象布局
             colorView.setPadding(4, 4, 4, 4);//设置间距
-            int color = GetId.getColor(mContext,colorDatas[i][1]);
+            int color = GetId.getColor(mContext, colorDatas[i][1]);
             colorView.setBackgroundColor(color);
             return colorView;
         }

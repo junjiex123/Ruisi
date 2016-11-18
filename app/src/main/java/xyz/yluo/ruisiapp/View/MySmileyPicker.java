@@ -30,7 +30,7 @@ import xyz.yluo.ruisiapp.utils.ImageUtils;
  * smiley picker
  */
 
-public class MySmileyPicker extends PopupWindow{
+public class MySmileyPicker extends PopupWindow {
 
     private Context mContext;
     private OnItemClickListener listener;
@@ -45,18 +45,16 @@ public class MySmileyPicker extends PopupWindow{
     private int smiley_type = SMILEY_TB;
 
 
-    public MySmileyPicker(Context context)
-    {
+    public MySmileyPicker(Context context) {
         super(context);
         mContext = context;
         init();
     }
 
 
-    private void init()
-    {
+    private void init() {
 
-        View v = LayoutInflater.from(mContext).inflate(R.layout.my_smiley_view,null);
+        View v = LayoutInflater.from(mContext).inflate(R.layout.my_smiley_view, null);
         TabLayout tab = (TabLayout) v.findViewById(R.id.mytab);
         RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
         ds = getSmileys();
@@ -103,7 +101,7 @@ public class MySmileyPicker extends PopupWindow{
         recyclerView.setAdapter(adapter);
         setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
         setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-        setBackgroundDrawable(ContextCompat.getDrawable(mContext,R.drawable.rec_solid_primary_bg));
+        setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.rec_solid_primary_bg));
         setFocusable(true);
         setContentView(v);
     }
@@ -120,8 +118,8 @@ public class MySmileyPicker extends PopupWindow{
         this.listener = listener;
     }
 
-    public interface OnItemClickListener{
-        void itemClick(String str,Drawable a);
+    public interface OnItemClickListener {
+        void itemClick(String str, Drawable a);
     }
 
     private List<Drawable> getSmileys() {
@@ -156,9 +154,9 @@ public class MySmileyPicker extends PopupWindow{
         }
 
         String name = nameList[position].split("\\.")[0];
-        String insertName = ImageUtils.getSmileyName(smiley_type,name);
-        if(listener!=null){
-            listener.itemClick(insertName,ds.get(position));
+        String insertName = ImageUtils.getSmileyName(smiley_type, name);
+        if (listener != null) {
+            listener.itemClick(insertName, ds.get(position));
         }
 
     }

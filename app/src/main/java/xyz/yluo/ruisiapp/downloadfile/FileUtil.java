@@ -20,6 +20,7 @@ public class FileUtil {
      * 保存升级APK的目录
      ***********/
     public static final String path = "Download/手机睿思下载";
+
     /**
      * 方法描述：createFile方法
      */

@@ -13,7 +13,6 @@ public class ForumListData {
     private boolean isheader;
 
 
-
     public ForumListData(boolean isheader, String title, String todayNew, int fid) {
         this.title = title;
         this.todayNew = todayNew;

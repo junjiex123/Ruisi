@@ -9,10 +9,10 @@ import android.text.style.ImageSpan;
  * Created by free2 on 16-7-16.
  * 自定义imageSpan
  */
-public class CustomImageSpan extends ImageSpan{
+public class CustomImageSpan extends ImageSpan {
 
-    public CustomImageSpan(Drawable drawable,String src) {
-        super(drawable,src,ALIGN_BASELINE);
+    public CustomImageSpan(Drawable drawable, String src) {
+        super(drawable, src, ALIGN_BASELINE);
 
     }
 
@@ -28,10 +28,10 @@ public class CustomImageSpan extends ImageSpan{
 
         //获得图片宽度
         int width = drawable.getIntrinsicWidth();
-        if(width<60){//一般的表情为17
-            canvas.translate(x+8, transY);
-        }else{
-            canvas.translate(x+32, transY);
+        if (width < 60) {//一般的表情为17
+            canvas.translate(x + 8, transY);
+        } else {
+            canvas.translate(x + 32, transY);
         }
         drawable.draw(canvas);
         canvas.restore();

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_window"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,14 +11,13 @@
         android:background="@color/colorPrimary"
         android:gravity="center_vertical|center_horizontal">
 
-        <include layout="@layout/my_toolbar"/>
+        <include layout="@layout/my_toolbar" />
 
-        <include
-            layout="@layout/my_scearch_card"/>
+        <include layout="@layout/my_scearch_card" />
     </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 </LinearLayout>

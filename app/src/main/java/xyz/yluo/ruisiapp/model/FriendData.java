@@ -12,7 +12,7 @@ public class FriendData {
     private String uid;
     private boolean isOnline;
 
-    public FriendData(String userName, String imgUrl, String info, String uid,boolean isOnline) {
+    public FriendData(String userName, String imgUrl, String info, String uid, boolean isOnline) {
         this.userName = userName;
         this.imgUrl = imgUrl;
         this.info = info;

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_window"
     android:layout_width="match_parent"
@@ -8,29 +7,30 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <include layout="@layout/my_toolbar"/>
+    <include layout="@layout/my_toolbar" />
 
     <LinearLayout
         android:id="@+id/header"
-        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="@dimen/dimen_16">
 
         <xyz.yluo.ruisiapp.View.CircleImageView
             android:id="@+id/user_image"
-            android:src="@drawable/image_placeholder"
             android:layout_width="82dp"
-            android:layout_height="82dp" />
+            android:layout_height="82dp"
+            android:src="@drawable/image_placeholder" />
+
         <TextView
-            android:layout_marginTop="16dp"
-            android:textSize="12sp"
-            android:textColor="@color/white"
-            android:text="睿思规定每日签到时间 07:00-23:00"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="睿思规定每日签到时间 07:00-23:00"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <FrameLayout
@@ -49,18 +49,18 @@
 
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/sign_yes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <ImageView
-                android:src="@drawable/sign_yy"
                 android:layout_width="60dp"
-                android:layout_height="60dp" />
+                android:layout_height="60dp"
+                android:src="@drawable/sign_yy" />
 
             <TextView
                 style="@style/text_16_pri"
@@ -68,22 +68,22 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
-                android:text="今日已签到"/>
+                android:text="今日已签到" />
 
             <TextView
-                android:layout_marginTop="6dp"
                 android:id="@+id/total_sign_day"
+                style="@style/text_14_sec"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/text_14_sec"
+                android:layout_marginTop="6dp"
                 tools:text="您累计已签到:443 天" />
 
             <TextView
-                android:layout_marginTop="4dp"
-                style="@style/text_12_sec"
                 android:id="@+id/total_sign_month"
+                style="@style/text_12_sec"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 tools:text="您本月已累计签到:5天" />
         </LinearLayout>
 
@@ -92,15 +92,15 @@
             android:id="@+id/sign_not"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:gravity="center"
+            android:orientation="vertical"
             android:padding="@dimen/dimen_16">
 
             <TextView
-                android:layout_marginTop="16dp"
                 style="@style/text_16_pri"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:text="选择心情："
                 android:textSize="16sp" />
 
@@ -117,24 +117,25 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="输入你最想说的话(选填)" />
+
             <Button
                 android:id="@+id/btn_submit"
-                android:textColor="@color/white"
-                android:text="开始签到"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/btn_light_red_bg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:text="开始签到"
+                android:textColor="@color/white" />
         </LinearLayout>
 
         <TextView
-            android:visibility="gone"
             android:id="@+id/sign_error"
-            android:layout_gravity="center"
-            android:text="不在签到时间内无法签到"
             style="@style/text_20_pri"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="不在签到时间内无法签到"
+            android:visibility="gone" />
 
     </FrameLayout>
 

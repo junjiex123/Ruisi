@@ -15,13 +15,13 @@ import xyz.yluo.ruisiapp.listener.ListItemClickListener;
  * Created by yang on 16-8-23.
  * adapter 简单封装
  * //0 ---- placeholder
- //允许空 则最后一个就是
- //允许加载更多 不允许空则是最后一个否则倒数第二
+ * //允许空 则最后一个就是
+ * //允许加载更多 不允许空则是最后一个否则倒数第二
  */
 
-public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseViewHolder>{
+public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseViewHolder> {
 
-    private static final int TYPE_LOADMORE =101;
+    private static final int TYPE_LOADMORE = 101;
 
     public static final int STATE_LOADING = 1;
     public static final int STATE_LOAD_FAIL = 2;
@@ -38,12 +38,12 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
     @Override
     public final BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        switch (viewType){
+        switch (viewType) {
             case TYPE_LOADMORE:
                 return new LoadMoreViewHolder(LayoutInflater.from(parent.getContext()).
                         inflate(R.layout.item_load_more, parent, false));
             default:
-                return getItemViewHolder(parent,viewType);
+                return getItemViewHolder(parent, viewType);
         }
     }
 
@@ -54,10 +54,10 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
 
     @Override
     public final int getItemViewType(int position) {
-        if(position==0&&getDataCount()==0&&isenablePlaceHolder){
+        if (position == 0 && getDataCount() == 0 && isenablePlaceHolder) {
             return TYPE_LOADMORE;
         }
-        if(enableLoadMore&&position==getItemCount()-1){
+        if (enableLoadMore && position == getItemCount() - 1) {
             return TYPE_LOADMORE;
         }
         return getItemType(position);
@@ -70,14 +70,13 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
     @Override
     public final int getItemCount() {
         int count = getDataCount();
-        if(count==0&&isenablePlaceHolder){
+        if (count == 0 && isenablePlaceHolder) {
             //1 是placeholder
             return 1;
-        }else if(count==0){
+        } else if (count == 0) {
             return 0;
-        }
-        else{
-            if(enableLoadMore){
+        } else {
+            if (enableLoadMore) {
                 //++是有一个loadmore item
                 count++;
             }
@@ -86,32 +85,34 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
     }
 
 
-    public void disableLoadMore(){
-        if(enableLoadMore){
+    public void disableLoadMore() {
+        if (enableLoadMore) {
             enableLoadMore = false;
             //之前是开启状态
             //false 检查是否有 有则移除
-            int i = getItemCount()-1;
-            if(i>=0&&getItemViewType(i)==TYPE_LOADMORE){
+            int i = getItemCount() - 1;
+            if (i >= 0 && getItemViewType(i) == TYPE_LOADMORE) {
                 notifyItemRemoved(i);
             }
         }
     }
 
     protected abstract int getDataCount();
+
     protected abstract int getItemType(int pos);
+
     protected abstract BaseViewHolder getItemViewHolder(ViewGroup parent, int viewType);
 
     //改变状态
-    public void changeLoadMoreState(int i){
+    public void changeLoadMoreState(int i) {
         this.loadeState = i;
-        int ii = getItemCount()-1;
-        if(ii>=0&&getItemViewType(ii)==TYPE_LOADMORE){
+        int ii = getItemCount() - 1;
+        if (ii >= 0 && getItemViewType(ii) == TYPE_LOADMORE) {
             notifyItemChanged(ii);
         }
     }
 
-    void setItemListener(ListItemClickListener l){
+    void setItemListener(ListItemClickListener l) {
         this.itemListener = l;
     }
 
@@ -121,6 +122,7 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
         TextView loadmore_text;
         ProgressBar loadmore_progress;
         View container;
+
         LoadMoreViewHolder(View itemView) {
             super(itemView);
             loadmore_progress = (ProgressBar) itemView.findViewById(R.id.load_more_progress);
@@ -133,7 +135,7 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
             //不是第一次加载
             container.setLayoutParams(new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            switch (loadeState){
+            switch (loadeState) {
                 case STATE_LOAD_FAIL:
                     loadmore_progress.setVisibility(View.GONE);
                     loadmore_text.setText("加载失败");
@@ -142,7 +144,7 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
                     loadmore_progress.setVisibility(View.GONE);
                     loadmore_text.setText("需要登录");
                     //没有数据填充第一次加载......
-                    if(getDataCount()==0){
+                    if (getDataCount() == 0) {
                         container.setLayoutParams(new LinearLayout.LayoutParams(
                                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                     }
@@ -155,7 +157,7 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
                     loadmore_progress.setVisibility(View.VISIBLE);
                     loadmore_text.setText("加载中...");
                     //没有数据填充第一次加载......
-                    if(getDataCount()==0){
+                    if (getDataCount() == 0) {
                         loadmore_progress.setVisibility(View.GONE);
                         container.setLayoutParams(new LinearLayout.LayoutParams(
                                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -171,21 +173,21 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
 
 
     abstract class BaseViewHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener{
+            implements View.OnClickListener {
 
         BaseViewHolder(View itemView) {
             super(itemView);
-            if(itemListener!=null)
+            if (itemListener != null)
                 itemView.setOnClickListener(this);
         }
 
-        void setData(int position){
+        void setData(int position) {
 
         }
 
         @Override
         public void onClick(View view) {
-            if(itemListener!=null){
+            if (itemListener != null) {
                 itemListener.onListItemClick(view, this.getAdapterPosition());
             }
         }

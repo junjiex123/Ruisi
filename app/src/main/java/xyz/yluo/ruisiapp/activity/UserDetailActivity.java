@@ -91,7 +91,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_detail);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.transparent));
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.transparent));
         }
         toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
@@ -121,7 +121,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recycler_view.setLayoutManager(layoutManager);
         recycler_view.setAdapter(adapter);
-        userUid = GetId.getid("uid=",imageUrl);
+        userUid = GetId.getid("uid=", imageUrl);
         //如果是自己
         if (userUid.equals(App.getUid(this))) {
             fab.setImageResource(R.drawable.ic_close_24dp);
@@ -159,7 +159,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
                             finish();
                         }
                     })
-                    .setNegativeButton("取消",null)
+                    .setNegativeButton("取消", null)
                     .setCancelable(true)
                     .create()
                     .show();
@@ -181,7 +181,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
 
     //加好友确认按钮点击
     @Override
-    public void OnAddFriendOkClick(String mes,String uid) {
+    public void OnAddFriendOkClick(String mes, String uid) {
         final ProgressDialog dialog1 = new ProgressDialog(this);
         dialog1.setTitle("正在发送请求");
         dialog1.setMessage("请等待......");
@@ -217,7 +217,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if(!userUid.equals(App.getUid(this))){
+        if (!userUid.equals(App.getUid(this))) {
             getMenuInflater().inflate(R.menu.menu_userdetail, menu);
             return true;
         }
@@ -238,7 +238,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
                         }).show();
             } else {
                 AddFriendDialog dialogFragment = AddFriendDialog.newInstance(
-                        this,username,imageUrl);
+                        this, username, imageUrl);
                 dialogFragment.show(getFragmentManager(), "add");
             }
 

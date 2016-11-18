@@ -1,7 +1,4 @@
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="论坛设置">
 
         <SwitchPreference
@@ -9,7 +6,7 @@
             android:key="setting_dark_mode"
             android:summaryOff="点击启用夜间模式(重启软件生效)"
             android:summaryOn="点击关闭夜间模式(重启软件生效)"
-            android:title="夜间模式"/>
+            android:title="夜间模式" />
 
         <ListPreference
             android:entries="@array/setting_switch_url"
@@ -18,41 +15,36 @@
             android:summary="手动切换网络类型(校园网/外网)"
             android:title="手动切换网络" />
 
-
         <SwitchPreference
             android:defaultValue="true"
             android:key="setting_hide_zhidin"
             android:summaryOff="帖子列表显示置顶帖"
             android:summaryOn="帖子列表不显示置顶帖"
-            android:title="隐藏置顶帖(仅校园网环境生效)"/>
+            android:title="隐藏置顶帖(仅校园网环境生效)" />
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="setting_show_plain"
             android:summaryOff="帖子内容样式得到保留，保留文字大小颜色等信息"
             android:summaryOn="帖子内容为普通文本样式，去除了文字大小颜色等信息"
-            android:title="简单帖子样式模式">
-
-        </SwitchPreference>
+            android:title="简单帖子样式模式" />
 
         <SwitchPreference
-
             android:defaultValue="false"
             android:key="setting_show_notify"
             android:summaryOff="不进行新消息提醒"
             android:summaryOn="有新消息通知栏提醒"
-            android:title="新消息通知栏提醒"/>
-
-
+            android:title="新消息通知栏提醒" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="小尾巴设置"
-        android:key="group_tail">
+    <PreferenceCategory
+        android:key="group_tail"
+        android:title="小尾巴设置">
         <SwitchPreference
             android:defaultValue="false"
             android:key="setting_show_tail"
             android:summary="不建议添加过长过大的小尾巴"
-            android:title="启用小尾巴"/>
+            android:title="启用小尾巴" />
 
         <EditTextPreference
             android:capitalize="words"
@@ -65,27 +57,26 @@
             android:title="自定义小尾巴" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="其他信息"
-        android:key="group_other">
+    <PreferenceCategory
+        android:key="group_other"
+        android:title="其他信息">
         <Preference
             android:key="about_this"
             android:summary="当前版本1.0 beta 1"
-            android:title="检查更新"/>
+            android:title="检查更新" />
         <Preference
             android:key="open_sourse"
             android:summary="在github上查看本项目"
-            android:title="项目地址">
-
-        </Preference>
+            android:title="项目地址" />
 
         <Preference
             android:key="clean_cache"
             android:summary="当前缓存大小1MB"
-            android:title="清除缓存"/>
+            android:title="清除缓存" />
 
         <Preference
-            android:layout="@layout/my_exit_btn"
-            android:key="exit_login"/>
+            android:key="exit_login"
+            android:layout="@layout/my_exit_btn" />
     </PreferenceCategory>
 
 </PreferenceScreen>

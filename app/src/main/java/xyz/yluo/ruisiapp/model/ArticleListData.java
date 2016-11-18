@@ -24,7 +24,7 @@ public class ArticleListData {
 
 
     //一般文章构造器
-    public ArticleListData(String type, String title, String titleUrl, String author, String authorUrl, String postTime, String viewCount, String replayCount,int titleColor) {
+    public ArticleListData(String type, String title, String titleUrl, String author, String authorUrl, String postTime, String viewCount, String replayCount, int titleColor) {
         this.type = type;//置顶 精华 金币。。。
         this.title = title;
         this.titleUrl = titleUrl;
@@ -37,7 +37,7 @@ public class ArticleListData {
     }
 
     //手机版构造器
-    public ArticleListData(boolean haveImage, String title, String titleUrl, String author, String replayCount,int titleColor) {
+    public ArticleListData(boolean haveImage, String title, String titleUrl, String author, String replayCount, int titleColor) {
         this.ishaveImage = haveImage;//0--have image
         this.title = title;
         this.titleUrl = titleUrl;
@@ -47,7 +47,7 @@ public class ArticleListData {
     }
 
     //图片分类构造
-    public ArticleListData(String title, String titleUrl, String imageurl, String author, String replyCount){
+    public ArticleListData(String title, String titleUrl, String imageurl, String author, String replyCount) {
         this.title = title;
         this.titleUrl = titleUrl;
         this.imUrl = imageurl;

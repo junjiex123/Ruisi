@@ -25,14 +25,14 @@ import xyz.yluo.ruisiapp.model.FrageType;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
- *  TODO: 16-8-23  打开的时候检查是否签到显示在后面
- *  基础列表后面可以显示一些详情，如收藏的数目等...
+ * TODO: 16-8-23  打开的时候检查是否签到显示在后面
+ * 基础列表后面可以显示一些详情，如收藏的数目等...
  */
-public class FragmentMy extends BaseFragment implements View.OnClickListener{
+public class FragmentMy extends BaseFragment implements View.OnClickListener {
 
-    private String username,uid;
+    private String username, uid;
     private CircleImageView user_img;
-    private TextView user_name,user_grade;
+    private TextView user_name, user_grade;
     //记录上次创建时候是否登录
     private boolean isLoginLast = false;
     private LinearLayout containerlist;
@@ -41,7 +41,7 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         isLoginLast = App.ISLOGIN(getActivity());
-        super.onCreateView(inflater,container,savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
         username = App.getName(getActivity());
         uid = App.getUid(getActivity());
 
@@ -56,9 +56,9 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener{
         mRootView.findViewById(R.id.post).setOnClickListener(this);
 
         containerlist = (LinearLayout) mRootView.findViewById(R.id.container);
-        for(int i =0;i<containerlist.getChildCount();i++){
+        for (int i = 0; i < containerlist.getChildCount(); i++) {
             View ii = containerlist.getChildAt(i);
-            if(ii instanceof LinearLayout){
+            if (ii instanceof LinearLayout) {
                 ii.setOnClickListener(this);
             }
         }
@@ -69,7 +69,7 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener{
     @Override
     public void onStart() {
         super.onStart();
-        if((isLoginLast!=App.ISLOGIN(getActivity()))){
+        if ((isLoginLast != App.ISLOGIN(getActivity()))) {
             isLoginLast = !isLoginLast;
             freshView();
         }
@@ -79,7 +79,7 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener{
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(!hidden&&(isLoginLast!=App.ISLOGIN(getActivity()))){
+        if (!hidden && (isLoginLast != App.ISLOGIN(getActivity()))) {
             isLoginLast = !isLoginLast;
             freshView();
         }
@@ -90,15 +90,15 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener{
         return R.layout.fragment_my;
     }
 
-    private void freshView(){
-        if(isLoginLast){
+    private void freshView() {
+        if (isLoginLast) {
             uid = App.getUid(getActivity());
             user_name.setText(username);
             user_grade.setVisibility(View.VISIBLE);
             user_grade.setText(App.getGrade(getActivity()));
             Picasso.with(getActivity()).load(UrlUtils.getAvaterurlm(uid))
                     .placeholder(R.drawable.image_placeholder).into(user_img);
-        }else{
+        } else {
             user_name.setText("点击头像登陆");
             user_grade.setVisibility(View.GONE);
             user_img.setImageResource(R.drawable.image_placeholder);
@@ -107,12 +107,12 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.user_img:
-                if(App.ISLOGIN(getActivity())){
+                if (App.ISLOGIN(getActivity())) {
                     UserDetailActivity.openWithAnimation(
-                            getActivity(),username,user_img,uid);
-                }else{
+                            getActivity(), username, user_img, uid);
+                } else {
                     switchActivity(LoginActivity.class);
                 }
                 break;
@@ -121,33 +121,33 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener{
                 break;
             case R.id.sign:
                 if (isLogin()) {
-                    if(App.IS_SCHOOL_NET){
+                    if (App.IS_SCHOOL_NET) {
                         switchActivity(SignActivity.class);
-                    }else{
-                        Snackbar.make(containerlist,"校园网环境下才可以签到",Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        Snackbar.make(containerlist, "校园网环境下才可以签到", Snackbar.LENGTH_SHORT).show();
                     }
                 }
                 break;
             case R.id.setting:
-                FragementActivity.open(getActivity(),FrageType.SETTING);
+                FragementActivity.open(getActivity(), FrageType.SETTING);
                 break;
             case R.id.post:
                 if (isLogin()) {
-                    FragementActivity.open(getActivity(),FrageType.TOPIC);
+                    FragementActivity.open(getActivity(), FrageType.TOPIC);
                 }
                 break;
             case R.id.star:
                 if (isLogin()) {
-                    FragementActivity.open(getActivity(),FrageType.START);
+                    FragementActivity.open(getActivity(), FrageType.START);
                 }
                 break;
             case R.id.history:
                 if (isLogin()) {
-                    FragementActivity.open(getActivity(),FrageType.HISTORY);
+                    FragementActivity.open(getActivity(), FrageType.HISTORY);
                 }
                 break;
             case R.id.help:
-                FragementActivity.open(getActivity(),FrageType.HELP);
+                FragementActivity.open(getActivity(), FrageType.HELP);
                 break;
             case R.id.friend:
                 switchActivity(FriendActivity.class);
@@ -155,9 +155,9 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener{
             case R.id.share:
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_TEXT,"这个手机睿思客户端非常不错，分享给你们。" +
-                        "\n下载地址: http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid="+App.POST_TID +
-                        "\n下载地址2: http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid="+App.POST_TID+"&mobile=2");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "这个手机睿思客户端非常不错，分享给你们。" +
+                        "\n下载地址: http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=" + App.POST_TID +
+                        "\n下载地址2: http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid=" + App.POST_TID + "&mobile=2");
                 shareIntent.setType("text/plain");
                 //设置分享列表的标题，并且每次都显示分享列表
                 startActivity(Intent.createChooser(shareIntent, "分享到手机睿思到:"));

@@ -53,7 +53,7 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
         setContentView(R.layout.activity_view_img);
         datas = new ArrayList<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(Color.rgb(138,145,151));
+            getWindow().setStatusBarColor(Color.rgb(138, 145, 151));
         }
 
         pager = (ViewPager) findViewById(R.id.pager);
@@ -72,39 +72,39 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
         Bundle b = getIntent().getExtras();
         String url = b.getString("url");
 
-        final String tid = GetId.getid("tid=",url);
-        aid = GetId.getid("aid=",url);
+        final String tid = GetId.getid("tid=", url);
+        aid = GetId.getid("aid=", url);
         String urll = "forum.php?mod=viewthread&tid="
-                +tid+"&aid="+aid+"&from=album&mobile=2";
+                + tid + "&aid=" + aid + "&from=album&mobile=2";
         HttpUtil.get(ViewImgActivity.this, urll, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
                 Document doc = Jsoup.parse(res);
                 int ih = doc.head().html().indexOf("keywords");
-                if(ih>0){
+                if (ih > 0) {
                     int h_start = doc.head().html().indexOf('\"', ih + 15);
                     int h_end = doc.head().html().indexOf('\"', h_start + 1);
-                    String  title  = doc.head().html().substring(h_start + 1, h_end);
+                    String title = doc.head().html().substring(h_start + 1, h_end);
                     TextView v = (TextView) findViewById(R.id.title);
                     v.setText(title);
                 }
                 Elements elements = doc.select("ul.postalbum_c").select("li");
                 int i = 0;
-                for(Element e:elements){
+                for (Element e : elements) {
                     String zsrc = e.select("img").attr("zsrc");
-                    if(zsrc.contains(aid)){
+                    if (zsrc.contains(aid)) {
                         position = i;
                     }
                     String src = e.select("img").attr("orig");
-                    if(TextUtils.isEmpty("src")){
+                    if (TextUtils.isEmpty("src")) {
                         continue;
                     }
-                    if(src.startsWith("./")){
-                        src =  src.substring(2);
+                    if (src.startsWith("./")) {
+                        src = src.substring(2);
                     }
-                    if(!src.startsWith("http")){
-                        src = App.getBaseUrl()+src;
+                    if (!src.startsWith("http")) {
+                        src = App.getBaseUrl() + src;
                     }
 
                     i++;
@@ -117,8 +117,8 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
         });
     }
 
-    private void changeIndex(int pos){
-        index.setText((pos+1)+"/"+datas.size());
+    private void changeIndex(int pos) {
+        index.setText((pos + 1) + "/" + datas.size());
     }
 
 
@@ -140,8 +140,7 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
     }
 
 
-
-    private class MyAdapter extends PagerAdapter{
+    private class MyAdapter extends PagerAdapter {
 
         @Override
         public int getCount() {
@@ -151,7 +150,7 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
             ScaleImageView v = (ScaleImageView) container.findViewWithTag(position);
-            if(v==null){
+            if (v == null) {
                 v = new ScaleImageView(ViewImgActivity.this);
                 v.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                 ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(

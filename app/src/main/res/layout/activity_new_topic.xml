@@ -1,94 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_window"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include layout="@layout/my_toolbar"/>
+
+    <include layout="@layout/my_toolbar" />
+
     <LinearLayout
-        android:layout_marginTop="@dimen/ToolBarHeight"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/ToolBarHeight"
         android:orientation="vertical">
+
         <LinearLayout
-            android:padding="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:padding="4dp">
+
             <RelativeLayout
                 android:id="@+id/forum_container"
+                android:layout_width="120dp"
+                android:layout_height="30dp"
                 android:layout_marginStart="4dp"
                 android:background="@drawable/my_spinner_bg"
-                android:orientation="horizontal"
-                android:layout_width="120dp"
-                android:layout_height="30dp">
+                android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/tv_select_forum"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="12dp"
-                    android:text="请选择分区"
-                    android:maxLines="1"
-                    android:gravity="center_vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_centerVertical="true"/>
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:paddingEnd="12dp"
+                    android:paddingStart="4dp"
+                    android:text="请选择分区" />
+
                 <ImageView
-                    android:layout_gravity="end"
-                    android:src="@drawable/ic_arrow_drop_down_black_24dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_alignParentEnd="true"/>
+                    android:layout_gravity="end"
+                    android:src="@drawable/ic_arrow_drop_down_black_24dp" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/type_id_container"
+                android:layout_width="120dp"
+                android:layout_height="30dp"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/my_spinner_bg"
-                android:orientation="horizontal"
-                android:layout_width="120dp"
-                android:layout_height="30dp">
+                android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/tv_select_type"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="12dp"
-                    android:text="选择主题分类"
-                    android:gravity="center_vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_centerVertical="true"/>
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
+                    android:paddingEnd="12dp"
+                    android:paddingStart="4dp"
+                    android:text="选择主题分类" />
+
                 <ImageView
-                    android:layout_gravity="end"
-                    android:src="@drawable/ic_arrow_drop_down_black_24dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_alignParentEnd="true"/>
+                    android:layout_gravity="end"
+                    android:src="@drawable/ic_arrow_drop_down_black_24dp" />
             </RelativeLayout>
         </LinearLayout>
+
         <EditText
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
             android:id="@+id/ed_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="2"
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
             android:background="@drawable/edittext_bg"
             android:gravity="top|start"
-            android:hint="标题" />
+            android:hint="标题"
+            android:maxLines="2" />
 
 
         <include layout="@layout/my_editor_bar" />
 
-        <EditText android:id="@+id/ed_content"
+        <EditText
+            android:id="@+id/ed_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/edittext_bg"
             android:layout_marginBottom="@dimen/dimen_8"
             android:layout_marginLeft="@dimen/dimen_8"
             android:layout_marginRight="@dimen/dimen_8"
+            android:background="@drawable/edittext_bg"
             android:gravity="top|start"
             android:hint="内容" />
     </LinearLayout>

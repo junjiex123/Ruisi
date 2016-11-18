@@ -71,13 +71,13 @@
             </LinearLayout>
 
             <xyz.yluo.ruisiapp.View.ArrowTextView
-                android:textColor="@color/text_color_sec"
                 android:id="@+id/reply_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="4"
                 android:ellipsize="end"
+                android:maxLines="4"
                 android:padding="6dp"
+                android:textColor="@color/text_color_sec"
                 tools:text="1111\n测试呵呵哈哈哈。。。" />
 
         </LinearLayout>
@@ -85,10 +85,10 @@
     </LinearLayout>
 
     <View
-        android:layout_gravity="bottom"
-        android:background="@color/colorDivider"
         android:layout_width="match_parent"
-        android:layout_height="0.8dp"/>
+        android:layout_height="0.8dp"
+        android:layout_gravity="bottom"
+        android:background="@color/colorDivider" />
 
 </LinearLayout>
 

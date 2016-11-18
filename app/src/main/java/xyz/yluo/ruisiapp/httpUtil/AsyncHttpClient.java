@@ -33,7 +33,7 @@ public class AsyncHttpClient extends SyncHttpClient {
     }
 
     @Override
-    public void head(final String url,final Map<String, String> map,final ResponseHandler handler) {
+    public void head(final String url, final Map<String, String> map, final ResponseHandler handler) {
         threadPool.execute(new Runnable() {
             @Override
             public void run() {

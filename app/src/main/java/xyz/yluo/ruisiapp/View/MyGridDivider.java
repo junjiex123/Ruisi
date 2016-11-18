@@ -10,34 +10,31 @@ import android.view.View;
  * Created by free2 on 16-7-17.
  * grid layout 分割线
  */
-public class MyGridDivider extends RecyclerView.ItemDecoration{
+public class MyGridDivider extends RecyclerView.ItemDecoration {
     private int devideWidth = 2;
-    private final Paint maint= new Paint();
+    private final Paint maint = new Paint();
 
-    public MyGridDivider(int devideWidth,int color)
-    {
+    public MyGridDivider(int devideWidth, int color) {
 
-        this.devideWidth =devideWidth;
+        this.devideWidth = devideWidth;
         maint.setColor(color);
         maint.setStyle(Paint.Style.STROKE);
         maint.setAntiAlias(true);
-        maint.setStrokeWidth(devideWidth*0.8f);
+        maint.setStrokeWidth(devideWidth * 0.8f);
     }
 
     @Override
-    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state)
-    {
+    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
 
         int childCount = parent.getChildCount();
-        for (int i = 0; i < childCount; i++)
-        {
+        for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
             final int left = child.getLeft();
             final int right = child.getRight();
             final int top = child.getTop();
             final int bottom = child.getBottom();
 
-            c.drawRect(left+devideWidth/2,top+devideWidth/2,right-devideWidth/2,bottom-devideWidth/2,maint);
+            c.drawRect(left + devideWidth / 2, top + devideWidth / 2, right - devideWidth / 2, bottom - devideWidth / 2, maint);
         }
 
     }
@@ -47,6 +44,6 @@ public class MyGridDivider extends RecyclerView.ItemDecoration{
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
 
-        outRect.set(-devideWidth/2, -devideWidth/2, devideWidth/2, devideWidth/2);
+        outRect.set(-devideWidth / 2, -devideWidth / 2, devideWidth / 2, devideWidth / 2);
     }
 }

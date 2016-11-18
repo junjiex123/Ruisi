@@ -29,11 +29,12 @@ public class HotNewListAdapter extends BaseAdapter {
     private List<GalleryData> galleryDatas;
     private Activity activity;
     private int readcolor;
+
     public HotNewListAdapter(Activity activity, List<ArticleListData> DataSet, @Nullable List<GalleryData> galleryDatas) {
         this.DataSet = DataSet;
         this.activity = activity;
         this.galleryDatas = galleryDatas;
-        readcolor= ContextCompat.getColor(activity,R.color.text_color_sec);
+        readcolor = ContextCompat.getColor(activity, R.color.text_color_sec);
     }
 
 
@@ -50,7 +51,7 @@ public class HotNewListAdapter extends BaseAdapter {
     protected int getItemType(int position) {
         if (position == 0 && galleryDatas.size() > 0) {
             return TYPE_ARTICLE_HEADER;
-        }else{
+        } else {
             return TYPE_ARTICLE_LIST;
         }
     }
@@ -87,15 +88,15 @@ public class HotNewListAdapter extends BaseAdapter {
             });
         }
 
-               //设置listItem的数据
+        //设置listItem的数据
         @Override
         void setData(int position) {
-            if(galleryDatas.size()>0&&position>0){
+            if (galleryDatas.size() > 0 && position > 0) {
                 position--;
             }
             ArticleListData single = DataSet.get(position);
             int color = single.getTitleColor();
-            article_title.setTextColor(single.isRead()?readcolor :color);
+            article_title.setTextColor(single.isRead() ? readcolor : color);
             article_title.setText(single.getTitle());
             author_name.setText(single.getAuthor());
             reply_count.setText(single.getReplayCount());
@@ -104,7 +105,7 @@ public class HotNewListAdapter extends BaseAdapter {
 
         void onBtnItemClick() {
             int pos = getAdapterPosition();
-            if(pos>0&&galleryDatas.size()>0){
+            if (pos > 0 && galleryDatas.size() > 0) {
                 pos--;
             }
             ArticleListData single_data = DataSet.get(pos);
@@ -117,13 +118,15 @@ public class HotNewListAdapter extends BaseAdapter {
     }
 
     //图片切换view
-    private class HeadViewHolder extends BaseViewHolder{
+    private class HeadViewHolder extends BaseViewHolder {
         private MyGuildView guildView;
+
         HeadViewHolder(View itemView) {
             super(itemView);
-            guildView  = (MyGuildView) itemView.findViewById(R.id.myGuideView);
+            guildView = (MyGuildView) itemView.findViewById(R.id.myGuideView);
 
         }
+
         @Override
         void setData(int position) {
             guildView.setData(galleryDatas);
@@ -131,8 +134,8 @@ public class HotNewListAdapter extends BaseAdapter {
                 @Override
                 public void onBannerItemClick(View view, int position) {
                     String titleUrl = galleryDatas.get(position).getTitleUrl();
-                    if(!TextUtils.isEmpty(titleUrl)){
-                        PostActivity.open(activity,titleUrl,null);
+                    if (!TextUtils.isEmpty(titleUrl)) {
+                        PostActivity.open(activity, titleUrl, null);
                     }
                 }
             });

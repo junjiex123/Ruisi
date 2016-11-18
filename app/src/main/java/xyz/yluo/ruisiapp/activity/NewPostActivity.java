@@ -43,27 +43,27 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * Created by free2 on 16-3-6.
  * 发帖activity
  */
-public class NewPostActivity extends BaseActivity implements View.OnClickListener{
+public class NewPostActivity extends BaseActivity implements View.OnClickListener {
 
-    private EditText ed_title,ed_content;
-    private MySpinner forum_spinner,typeid_spinner;
+    private EditText ed_title, ed_content;
+    private MySpinner forum_spinner, typeid_spinner;
     private MyColorPicker myColorPicker;
     private MySmileyPicker smileyPicker;
-    private TextView tv_select_forum,tv_select_type;
-    private List<Pair<String,String>> typeiddatas;
+    private TextView tv_select_forum, tv_select_type;
+    private List<Pair<String, String>> typeiddatas;
     private View type_id_container;
     private String typeId = "";
 
     private static final int[] fids = new int[]{
             72, 549, 108, 551, 550,
             110, 217, 142, 552, 560,
-            554,548, 216, 91, 555,
+            554, 548, 216, 91, 555,
             145, 144, 152, 147, 215,
             125, 140};
     private static final String[] forums = new String[]{
             "灌水专区", "文章天地", "我是女生", "西电问答", "心灵花园",
             "普通交易", "缘聚睿思", "失物招领", "我要毕业啦", "技术博客",
-            "就业信息发布","学习交流", "我爱运动", "考研交流", "就业交流", "软件交流",
+            "就业信息发布", "学习交流", "我爱运动", "考研交流", "就业交流", "软件交流",
             "嵌入式交流", "竞赛交流", "原创精品", "西电后街", "音乐纵贯线",
             "绝对漫域"};
     private int fid = fids[0];
@@ -72,8 +72,8 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
 
     public static void open(Context context, int fid, String title) {
         Intent intent = new Intent(context, NewPostActivity.class);
-        intent.putExtra("FID",fid);
-        intent.putExtra("TITLE",title);
+        intent.putExtra("FID", fid);
+        intent.putExtra("TITLE", title);
         context.startActivity(intent);
     }
 
@@ -82,9 +82,9 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_topic);
-        initToolBar(true,"发表新帖");
+        initToolBar(true, "发表新帖");
         dialog = new ProgressDialog(this);
-        if(getIntent().getExtras()!=null){
+        if (getIntent().getExtras() != null) {
             fid = getIntent().getExtras().getInt("FID");
             title = getIntent().getExtras().getString("TITLE");
         }
@@ -121,9 +121,9 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             }
         });
         final LinearLayout edit_bar = (LinearLayout) findViewById(R.id.edit_bar);
-        for(int i = 0;i<edit_bar.getChildCount();i++){
+        for (int i = 0; i < edit_bar.getChildCount(); i++) {
             View c = edit_bar.getChildAt(i);
-            if(c instanceof ImageView){
+            if (c instanceof ImageView) {
                 c.setOnClickListener(this);
             }
         }
@@ -133,10 +133,10 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 //[size=7][/size]
-                if(ed_content==null||(ed_content.getText().length()<=0&&i==0)){
+                if (ed_content == null || (ed_content.getText().length() <= 0 && i == 0)) {
                     return;
                 }
-                handleInsert("[size="+(i+1)+"][/size]");
+                handleInsert("[size=" + (i + 1) + "][/size]");
             }
 
             @Override
@@ -149,7 +149,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         myColorPicker.setListener(new MyColorPicker.OnItemSelectListener() {
             @Override
             public void itemClick(int pos, View v, String color) {
-                handleInsert("[color="+color+"][/color]");
+                handleInsert("[color=" + color + "][/color]");
             }
         });
 
@@ -166,17 +166,17 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             public boolean onLongClick(View v) {
                 int start = ed_content.getSelectionStart();
                 int end = ed_content.getSelectionEnd();
-                if(start==0){
+                if (start == 0) {
                     return false;
                 }
-                if((start==end)&&start>0){
-                    start = start-5;
+                if ((start == end) && start > 0) {
+                    start = start - 5;
                 }
-                if(start<0){
+                if (start < 0) {
                     start = 0;
                 }
-                ed_content.getText().delete(start,end);
-                return  true;
+                ed_content.getText().delete(start, end);
+                return true;
             }
         });
 
@@ -185,13 +185,13 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
 
     private boolean checkPostInput() {
 
-        if(!TextUtils.isEmpty(typeId)&&typeId.equals("0")){
+        if (!TextUtils.isEmpty(typeId) && typeId.equals("0")) {
             Toast.makeText(this, "请选择主题分类", Toast.LENGTH_SHORT).show();
             return false;
-        }else if(TextUtils.isEmpty(ed_title.getText().toString().trim())){
+        } else if (TextUtils.isEmpty(ed_title.getText().toString().trim())) {
             Toast.makeText(this, "标题不能为空啊", Toast.LENGTH_SHORT).show();
             return false;
-        }else if(TextUtils.isEmpty(ed_content.getText().toString().trim())){
+        } else if (TextUtils.isEmpty(ed_content.getText().toString().trim())) {
             Toast.makeText(this, "内容不能为空啊", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -204,8 +204,8 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         Map<String, String> params = new HashMap<>();
         //params.put("posttime", time);
         params.put("topicsubmit", "yes");
-        if(!TextUtils.isEmpty(typeId)&&!typeId.equals("0")){
-            params.put("typeid",typeId);
+        if (!TextUtils.isEmpty(typeId) && !typeId.equals("0")) {
+            params.put("typeid", typeId);
         }
         params.put("subject", ed_title.getText().toString());
         params.put("message", ed_content.getText().toString());
@@ -213,10 +213,10 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                Log.e("post",res);
-                if(res.contains("已经被系统拒绝")){
+                Log.e("post", res);
+                if (res.contains("已经被系统拒绝")) {
                     postFail("由于未知原因发帖失败");
-                }else{
+                } else {
                     postSuccess();
                 }
             }
@@ -247,35 +247,37 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         finish();
 
     }
-//
+
+    //
     //发帖失败执行
     private void postFail(String str) {
         dialog.dismiss();
         Toast.makeText(this, "发帖失败", Toast.LENGTH_SHORT).show();
     }
 
-    private void handleInsert(String s){
+    private void handleInsert(String s) {
         int start = ed_content.getSelectionStart();
         Editable edit = ed_content.getEditableText();//获取EditText的文字
-        if (start < 0 || start >= edit.length() ){
+        if (start < 0 || start >= edit.length()) {
             edit.append(s);
-        }else{
-            edit.insert(start,s);//光标所在位置插入文字
+        } else {
+            edit.insert(start, s);//光标所在位置插入文字
         }
         //[size=7][/size]
         int a = s.indexOf("[/");
-        if(a>0){
-            ed_content.setSelection(start+a);
+        if (a > 0) {
+            ed_content.setSelection(start + a);
         }
     }
 
 
-    private ProgressDialog dialog ;
+    private ProgressDialog dialog;
+
     @Override
     public void onClick(final View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.menu:
-                if(checkPostInput()) {
+                if (checkPostInput()) {
                     dialog.setMessage("发贴中,请稍后......");
                     dialog.show();
                     begainPost();
@@ -294,25 +296,25 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
                 myColorPicker.showAsDropDown(view, 0, 10);
                 break;
             case R.id.action_emotion:
-                ((ImageView)view).setImageResource(R.drawable.ic_edit_emoticon_accent_24dp);
-                smileyPicker.showAsDropDown(view,0,10);
+                ((ImageView) view).setImageResource(R.drawable.ic_edit_emoticon_accent_24dp);
+                smileyPicker.showAsDropDown(view, 0, 10);
                 smileyPicker.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        ((ImageView)view).setImageResource(R.drawable.ic_edit_emoticon_24dp);
+                        ((ImageView) view).setImageResource(R.drawable.ic_edit_emoticon_24dp);
                     }
                 });
                 break;
             case R.id.action_backspace:
                 int start = ed_content.getSelectionStart();
                 int end = ed_content.getSelectionEnd();
-                if(start==0){
+                if (start == 0) {
                     return;
                 }
-                if((start==end)&&start>0){
-                    start = start-1;
+                if ((start == end) && start > 0) {
+                    start = start - 1;
                 }
-                ed_content.getText().delete(start,end);
+                ed_content.getText().delete(start, end);
                 break;
             case R.id.tv_select_forum:
                 forum_spinner.setWidth(view.getWidth());
@@ -321,7 +323,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.tv_select_type:
                 String[] names = new String[typeiddatas.size()];
-                for(int i=0;i<typeiddatas.size();i++){
+                for (int i = 0; i < typeiddatas.size(); i++) {
                     names[i] = typeiddatas.get(i).second;
                 }
                 typeid_spinner.setData(names);
@@ -331,23 +333,23 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
 
     }
 
-    private void switch_fid(int fid){
+    private void switch_fid(int fid) {
         typeiddatas.clear();
         typeId = "";
-        String url = "forum.php?mod=post&action=newthread&fid="+fid+"&mobile=2";
+        String url = "forum.php?mod=post&action=newthread&fid=" + fid + "&mobile=2";
         HttpUtil.get(this, url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 Document document = Jsoup.parse(new String(response));
                 Elements types = document.select("#typeid").select("option");
-                for(Element e:types){
-                    typeiddatas.add(new Pair<>(e.attr("value"),e.text()));
+                for (Element e : types) {
+                    typeiddatas.add(new Pair<>(e.attr("value"), e.text()));
                 }
-                if(typeiddatas.size()>0){
+                if (typeiddatas.size() > 0) {
                     type_id_container.setVisibility(View.VISIBLE);
                     tv_select_type.setText(typeiddatas.get(0).second);
                     typeId = typeiddatas.get(0).first;
-                }else{
+                } else {
                     type_id_container.setVisibility(View.GONE);
                 }
             }

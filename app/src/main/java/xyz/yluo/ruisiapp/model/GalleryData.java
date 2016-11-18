@@ -12,8 +12,8 @@ public class GalleryData {
     private String titleUrl;
 
     public GalleryData(String imgurl, String title, String titleUrl) {
-        if(imgurl.startsWith("./")){
-            imgurl = App.getBaseUrl()+imgurl.substring(2);
+        if (imgurl.startsWith("./")) {
+            imgurl = App.getBaseUrl() + imgurl.substring(2);
         }
         this.imgurl = imgurl;
         this.title = title;

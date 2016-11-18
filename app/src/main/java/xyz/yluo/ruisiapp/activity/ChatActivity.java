@@ -46,7 +46,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 消息聊天 activity
  * TODO 支持翻页。。。。目前只能看最后一页
  */
-public class ChatActivity extends BaseActivity{
+public class ChatActivity extends BaseActivity {
 
     private RecyclerView list;
     private SwipeRefreshLayout refreshLayout;
@@ -112,12 +112,12 @@ public class ChatActivity extends BaseActivity{
         findViewById(R.id.btn_smiley).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                ((ImageView)view).setImageResource(R.drawable.ic_edit_emoticon_accent_24dp);
-                smileyPicker.showAtLocation(view, Gravity.BOTTOM,32, DimmenUtils.dip2px(ChatActivity.this,52));
+                ((ImageView) view).setImageResource(R.drawable.ic_edit_emoticon_accent_24dp);
+                smileyPicker.showAtLocation(view, Gravity.BOTTOM, 32, DimmenUtils.dip2px(ChatActivity.this, 52));
                 smileyPicker.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        ((ImageView)view).setImageResource(R.drawable.ic_edit_emoticon_24dp);
+                        ((ImageView) view).setImageResource(R.drawable.ic_edit_emoticon_24dp);
                     }
                 });
             }
@@ -126,8 +126,8 @@ public class ChatActivity extends BaseActivity{
     }
 
 
-    private void getData(boolean needRefresh){
-        if(needRefresh){
+    private void getData(boolean needRefresh) {
+        if (needRefresh) {
             refreshLayout.post(new Runnable() {
                 @Override
                 public void run() {
@@ -135,7 +135,7 @@ public class ChatActivity extends BaseActivity{
                 }
             });
         }
-        Log.e("chat","get data...");
+        Log.e("chat", "get data...");
 
         new GetDataTask().execute(url);
     }
@@ -156,7 +156,7 @@ public class ChatActivity extends BaseActivity{
                         replyUrl = temps;
                         touid = doc.select("input[name=touid]").attr("value");
                     } else {
-                        touid = GetId.getid("touid=",url);
+                        touid = GetId.getid("touid=", url);
                         replyUrl = "home.php?mod=spacecp&ac=pm&op=send&pmid=" + touid + "&daterange=0&pmsubmit=yes&mobile=2";
                     }
                     Elements elements = doc.select(".msgbox.b_m");
@@ -187,37 +187,37 @@ public class ChatActivity extends BaseActivity{
 
         @Override
         protected void onPostExecute(List<ChatListData> tepdata) {
-            if(datas.size()==0){
+            if (datas.size() == 0) {
                 datas.addAll(tepdata);
                 adapter.notifyDataSetChanged();
-            }else if(tepdata.size()>0){
+            } else if (tepdata.size() > 0) {
                 //处理增加部分
-                String content = datas.get(datas.size()-1).getContent();
-                int type = datas.get(datas.size()-1).getType();
+                String content = datas.get(datas.size() - 1).getContent();
+                int type = datas.get(datas.size() - 1).getType();
                 int equalpos = -1;
-                for(int i=0;i<tepdata.size();i++){
+                for (int i = 0; i < tepdata.size(); i++) {
                     String contentadd = tepdata.get(i).getContent();
-                    Log.e("data",contentadd);
+                    Log.e("data", contentadd);
                     int typeadd = tepdata.get(i).getType();
-                    if(content.equals(contentadd)&&typeadd==type){
+                    if (content.equals(contentadd) && typeadd == type) {
                         equalpos = i;
                         break;
                     }
                 }
 
                 int add = 0;
-                for(int i = equalpos+1;i<tepdata.size();i++){
+                for (int i = equalpos + 1; i < tepdata.size(); i++) {
                     datas.add(tepdata.get(i));
                     add++;
                 }
-                adapter.notifyItemRangeInserted(datas.size()-add,add);
+                adapter.notifyItemRangeInserted(datas.size() - add, add);
             }
 
             refreshLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     refreshLayout.setRefreshing(false);
-                    list.scrollToPosition(datas.size()-1);
+                    list.scrollToPosition(datas.size() - 1);
                 }
             }, 400);
         }
@@ -235,11 +235,11 @@ public class ChatActivity extends BaseActivity{
             //input.setError("你还没写内容呢!");
             final Snackbar s = Snackbar.make(list, "你还没写内容呢", Snackbar.LENGTH_SHORT);
             s.setAction("好的", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            s.dismiss();
-                        }
-                    })
+                @Override
+                public void onClick(View v) {
+                    s.dismiss();
+                }
+            })
                     .show();
         } else {
             //时间检测
@@ -255,7 +255,7 @@ public class ChatActivity extends BaseActivity{
                 }
             }
 
-            final Snackbar snackbar = Snackbar.make(list,"回复发表中...",Snackbar.LENGTH_LONG);
+            final Snackbar snackbar = Snackbar.make(list, "回复发表中...", Snackbar.LENGTH_LONG);
             ImeUtil.hide_ime(this);
             snackbar.show();
             Map<String, String> params = new HashMap<>();
@@ -272,7 +272,7 @@ public class ChatActivity extends BaseActivity{
                                 showToast("回复发表成功");
                                 getData(false);
                             }
-                        },500);
+                        }, 500);
                         replyTime = System.currentTimeMillis();
                         input.setText("");
                     } else {
@@ -284,10 +284,12 @@ public class ChatActivity extends BaseActivity{
                         }
                     }
                 }
+
                 @Override
                 public void onFailure(Throwable e) {
                     showToast("网络错误！！！");
                 }
+
                 @Override
                 public void onFinish() {
                     list.postDelayed(new Runnable() {
@@ -295,7 +297,7 @@ public class ChatActivity extends BaseActivity{
                         public void run() {
                             snackbar.dismiss();
                         }
-                    },500);
+                    }, 500);
                     super.onFinish();
                 }
             });

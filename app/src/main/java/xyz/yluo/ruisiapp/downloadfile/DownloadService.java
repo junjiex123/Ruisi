@@ -49,11 +49,11 @@ public class DownloadService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         //取消下载按钮被电击
-        if(intent.getExtras().containsKey("cancel")){
-            Log.e("取消下载","=====ok=====");
-            if(handler!=null){
+        if (intent.getExtras().containsKey("cancel")) {
+            Log.e("取消下载", "=====ok=====");
+            if (handler != null) {
                 handler.cancelDownoad();
-                if(mNotifyManager!=null){
+                if (mNotifyManager != null) {
                     mNotifyManager.cancel(0);
                     FileUtil.deleteFile(filename);
                 }
@@ -64,8 +64,8 @@ public class DownloadService extends Service {
         //开始下载
         downloadProgress = 0;
         //判断sd卡
-        if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-            Toast.makeText(getApplicationContext(),"SD卡不存在无法下载...",Toast.LENGTH_SHORT).show();
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            Toast.makeText(getApplicationContext(), "SD卡不存在无法下载...", Toast.LENGTH_SHORT).show();
             return super.onStartCommand(intent, flags, startId);
         }
 
@@ -79,11 +79,13 @@ public class DownloadService extends Service {
                 }
                 createNotification(filename);
             }
+
             @Override
             public void onProgress(int progress, long totalBytes) {
                 super.onProgress(progress, totalBytes);
                 updateProgress(DOWNLOADING, progress);
             }
+
             @Override
             public void onSuccess(File file) {
                 updateProgress(DOWN_OK, 100);
@@ -91,7 +93,7 @@ public class DownloadService extends Service {
 
             @Override
             public void onFailure(Throwable throwable, File file) {
-                Log.e("error","===========");
+                Log.e("error", "===========");
                 updateProgress(DOWN_ERROR, 0);
             }
         };

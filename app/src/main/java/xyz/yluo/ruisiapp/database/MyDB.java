@@ -102,7 +102,7 @@ public class MyDB {
     public List<ArticleListData> handReadHistoryList(List<ArticleListData> datas) {
         String sql = "SELECT tid from " + TABLE_READ_HISTORY + " where tid = ?";
         for (ArticleListData data : datas) {
-            String tid = GetId.getid("tid=",data.getTitleUrl());
+            String tid = GetId.getid("tid=", data.getTitleUrl());
             String args[] = new String[]{String.valueOf(tid)};
             Cursor result = db.rawQuery(sql, args);
             int count = result.getCount();
@@ -165,7 +165,7 @@ public class MyDB {
         int a = count - num;
         if (a > 0) {
             //大于就一次性删除1/5
-            a = num/5;
+            a = num / 5;
             //DELETE FROM XXX WHERE tid IN (SELECT TOP 100 PurchaseOrderDetailID FROM Purchasing.PurchaseOrderDetail
             //ORDER BY DueDate DESC);
             String sql = "DELETE FROM " + TABLE_READ_HISTORY + " WHERE tid IN (SELECT tid FROM " + TABLE_READ_HISTORY

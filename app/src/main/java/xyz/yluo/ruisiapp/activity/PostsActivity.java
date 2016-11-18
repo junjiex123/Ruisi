@@ -44,7 +44,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  * 2个是不同的
  */
 public class PostsActivity extends BaseActivity implements
-        LoadMoreListener.OnLoadMoreListener,View.OnClickListener{
+        LoadMoreListener.OnLoadMoreListener, View.OnClickListener {
 
     private int FID = 72;
     private String TITLE;
@@ -65,8 +65,8 @@ public class PostsActivity extends BaseActivity implements
 
     public static void open(Context context, int fid, String title) {
         Intent intent = new Intent(context, PostsActivity.class);
-        intent.putExtra("FID",fid);
-        intent.putExtra("TITLE",title);
+        intent.putExtra("FID", fid);
+        intent.putExtra("TITLE", title);
         context.startActivity(intent);
     }
 
@@ -79,19 +79,19 @@ public class PostsActivity extends BaseActivity implements
             FID = getIntent().getExtras().getInt("FID");
             TITLE = getIntent().getExtras().getString("TITLE");
         }
-        initToolBar(true,TITLE);
-        btn_refresh = (FloatingActionButton)findViewById(R.id.btn);
+        initToolBar(true, TITLE);
+        btn_refresh = (FloatingActionButton) findViewById(R.id.btn);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        refreshLayout = (SwipeRefreshLayout)findViewById(R.id.refresh_layout);
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         isHideZhiding = PreferenceManager.getDefaultSharedPreferences(this)
                 .getBoolean("setting_hide_zhidin", true);
-        if(getType()==PostListAdapter.TYPE_IMAGE){
+        if (getType() == PostListAdapter.TYPE_IMAGE) {
             isEnableLoadMore = false;
-            mLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+            mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
             mRecyclerView.setHasFixedSize(false);
             addToolbarMenu(R.drawable.ic_column_change_24dp).setOnClickListener(this);
-        }else{
+        } else {
             mLayoutManager = new LinearLayoutManager(this);
             mRecyclerView.setHasFixedSize(true);
             mRecyclerView.addOnScrollListener(
@@ -100,7 +100,7 @@ public class PostsActivity extends BaseActivity implements
         }
 
         adapter = new PostListAdapter(this, datas, getType());
-        if(getType()==PostListAdapter.TYPE_IMAGE){
+        if (getType() == PostListAdapter.TYPE_IMAGE) {
             adapter.setIsenablePlaceHolder(false);
         }
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -118,12 +118,12 @@ public class PostsActivity extends BaseActivity implements
         getData();
     }
 
-    private int getType(){
-        if(App.IS_SCHOOL_NET && (FID==561|| FID==157 || FID==13)){
+    private int getType() {
+        if (App.IS_SCHOOL_NET && (FID == 561 || FID == 157 || FID == 13)) {
             return PostListAdapter.TYPE_IMAGE;
-        }else if(App.IS_SCHOOL_NET){
+        } else if (App.IS_SCHOOL_NET) {
             return PostListAdapter.TYPE_NORMAL;
-        }else{
+        } else {
             return PostListAdapter.TYPE_NORMAL_MOBILE;
         }
     }
@@ -194,7 +194,7 @@ public class PostsActivity extends BaseActivity implements
             @Override
             public void onSuccess(byte[] response) {
                 String s = new String(response);
-                switch (getType()){
+                switch (getType()) {
                     case PostListAdapter.TYPE_IMAGE:
                         new getImagePosts().execute(s);
                         break;
@@ -228,21 +228,21 @@ public class PostsActivity extends BaseActivity implements
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.menu:
-                if(getType()==PostListAdapter.TYPE_IMAGE){
-                    StaggeredGridLayoutManager m = (StaggeredGridLayoutManager)mLayoutManager;
+                if (getType() == PostListAdapter.TYPE_IMAGE) {
+                    StaggeredGridLayoutManager m = (StaggeredGridLayoutManager) mLayoutManager;
                     int span = m.getSpanCount();
-                    if(span==1){
+                    if (span == 1) {
                         m.setSpanCount(2);
-                    }else{
+                    } else {
                         m.setSpanCount(1);
                     }
-                }else{
-                    Intent i = new Intent(this,NewPostActivity.class);
-                    i.putExtra("FID",FID);
-                    i.putExtra("TITLE",TITLE);
-                    startActivityForResult(i,0);
+                } else {
+                    Intent i = new Intent(this, NewPostActivity.class);
+                    i.putExtra("FID", FID);
+                    i.putExtra("TITLE", TITLE);
+                    startActivityForResult(i, 0);
                 }
         }
     }
@@ -252,7 +252,7 @@ public class PostsActivity extends BaseActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==RESULT_OK){
+        if (resultCode == RESULT_OK) {
             //发帖成功 刷新
             refresh();
         }
@@ -284,18 +284,18 @@ public class PostsActivity extends BaseActivity implements
                     Elements tempEles = src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]");
                     String title = tempEles.text();
                     String titleUrl = tempEles.attr("href");
-                    int titleColor = GetId.getColor(PostsActivity.this,tempEles.attr("style"));
+                    int titleColor = GetId.getColor(PostsActivity.this, tempEles.attr("style"));
                     String author = src.getElementsByAttributeValue("class", "by").first().select("a").text();
                     String authorUrl = src.getElementsByAttributeValue("class", "by").first().select("a").attr("href");
                     String time = src.getElementsByAttributeValue("class", "by").first().select("em").text().trim();
                     String viewcount = src.getElementsByAttributeValue("class", "num").select("em").text();
                     String replaycount = src.getElementsByAttributeValue("class", "num").select("a").text();
 
-                    if(isHideZhiding&&type.equals("置顶")){
-                        Log.i("article list","ignore zhidin");
-                    }else {
+                    if (isHideZhiding && type.equals("置顶")) {
+                        Log.i("article list", "ignore zhidin");
+                    } else {
                         if (title.length() > 0 && author.length() > 0) {
-                            temp = new ArticleListData(type,title, titleUrl, author, authorUrl, time, viewcount, replaycount,titleColor);
+                            temp = new ArticleListData(type, title, titleUrl, author, authorUrl, time, viewcount, replaycount, titleColor);
                             dataset.add(temp);
                         }
                     }
@@ -326,14 +326,14 @@ public class PostsActivity extends BaseActivity implements
             Elements links = body.select("li");
             for (Element src : links) {
                 String url = src.select("a").attr("href");
-                int titleColor = GetId.getColor(PostsActivity.this,src.select("a").attr("style"));
+                int titleColor = GetId.getColor(PostsActivity.this, src.select("a").attr("style"));
                 String author = src.select(".by").text();
                 src.select("span.by").remove();
                 String title = src.select("a").text();
                 String replyCount = src.select("span.num").text();
                 String img = src.select("img").attr("src");
                 boolean hasImage = img.contains("icon_tu.png");
-                temp = new ArticleListData(hasImage, title, url, author, replyCount,titleColor);
+                temp = new ArticleListData(hasImage, title, url, author, replyCount, titleColor);
                 dataset.add(temp);
             }
             return myDB.handReadHistoryList(dataset);
