@@ -46,12 +46,7 @@ public class BaseActivity extends AppCompatActivity {
         if (toolbar != null) {
             ((TextView) toolbar.findViewById(R.id.title)).setText(text);
             if (isshowBack) {
-                findViewById(R.id.logo).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        finish();
-                    }
-                });
+                findViewById(R.id.logo).setOnClickListener(view -> finish());
             } else {
                 findViewById(R.id.logo).setVisibility(View.GONE);
             }

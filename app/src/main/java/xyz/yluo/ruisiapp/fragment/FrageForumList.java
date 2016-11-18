@@ -61,7 +61,7 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
         super.onCreate(savedInstanceState);
         lastLoginState = App.ISLOGIN(getActivity());
         sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-        MyDB myDB = new MyDB(getActivity().getApplicationContext(), MyDB.MODE_READ);
+        MyDB myDB = new MyDB(getActivity().getApplicationContext());
         datas = myDB.getForums();
     }
 
@@ -137,7 +137,7 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
     }
 
     private void getData() {
-        refreshLayout.post(() -> refreshLayout.setRefreshing(true));
+        refreshLayout.setRefreshing(true);
         String url = "forum.php?forumlist=1&mobile=2";
         HttpUtil.get(getActivity(), url, new ResponseHandler() {
             @Override
@@ -203,7 +203,7 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
             }
 
             if (!isSetForumToDataBase) {
-                MyDB myDB = new MyDB(getActivity().getApplicationContext(), MyDB.MODE_WRITE);
+                MyDB myDB = new MyDB(getActivity().getApplicationContext());
                 myDB.setForums(simpledatas);
                 isSetForumToDataBase = true;
                 SharedPreferences.Editor editor = sharedPreferences.edit();

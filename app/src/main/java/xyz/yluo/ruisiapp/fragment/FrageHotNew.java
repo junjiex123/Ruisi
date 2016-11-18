@@ -84,7 +84,7 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
             }
             if (pos != currentType) {
                 currentType = pos;
-                refreshLayout.post(() -> refreshLayout.setRefreshing(true));
+                refreshLayout.setRefreshing(true);
                 refresh();
             }
         });
@@ -199,7 +199,7 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
                 dataset.add(new ArticleListData(hasImage, title, url, author, replyCount, titleColor));
             }
 
-            MyDB myDB = new MyDB(getActivity(), MyDB.MODE_READ);
+            MyDB myDB = new MyDB(getActivity());
             return myDB.handReadHistoryList(dataset);
         }
 

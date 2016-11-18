@@ -103,7 +103,6 @@ public class PostActivity extends BaseActivity
         mRecyclerView = (RecyclerView) findViewById(R.id.topic_recycler_view);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.topic_refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
-        refreshLayout.post(() -> refreshLayout.setRefreshing(true));
 
         LinearLayout bottom_bar_top = (LinearLayout) findViewById(R.id.bottom_bar);
         for (int i = 0; i < bottom_bar_top.getChildCount(); i++) {
@@ -114,7 +113,9 @@ public class PostActivity extends BaseActivity
         }
 
         //下拉刷新
-        refreshLayout.setOnRefreshListener(() -> {refresh();});
+        refreshLayout.setOnRefreshListener(() -> {
+            refresh();
+        });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         adapter = new PostAdapter(this, this, datas);
@@ -186,8 +187,6 @@ public class PostActivity extends BaseActivity
     }
 
     private void firstGetData(int page) {
-        refreshLayout.post(() -> refreshLayout.setRefreshing(true));
-        //数据填充
         getArticleData(page);
     }
 
@@ -206,8 +205,6 @@ public class PostActivity extends BaseActivity
 
     //跳页
     private void jump_page(int page) {
-        refreshLayout.post(() -> refreshLayout.setRefreshing(true));
-        //数据填充
         datas.clear();
         adapter.notifyDataSetChanged();
         getArticleData(page);
@@ -215,7 +212,7 @@ public class PostActivity extends BaseActivity
 
     private void refresh() {
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
-        refreshLayout.post(() -> refreshLayout.setRefreshing(true));
+
         //数据填充
         datas.clear();
         adapter.notifyDataSetChanged();
@@ -224,6 +221,7 @@ public class PostActivity extends BaseActivity
 
     //文章一页的html 根据页数 Tid
     private void getArticleData(final int page) {
+        refreshLayout.setRefreshing(true);
         String url = UrlUtils.getSingleArticleUrl(Tid, page, false);
         HttpUtil.get(this, url, new ResponseHandler() {
             @Override
@@ -484,7 +482,7 @@ public class PostActivity extends BaseActivity
                     AuthorName = username;
                     if (!isSaveToDataBase) {
                         //插入数据库
-                        MyDB myDB = new MyDB(PostActivity.this, MyDB.MODE_WRITE);
+                        MyDB myDB = new MyDB(PostActivity.this);
                         myDB.handSingleReadHistory(Tid, Title, AuthorName);
                         isSaveToDataBase = true;
                     }
@@ -581,12 +579,7 @@ public class PostActivity extends BaseActivity
             spinner.setSelection(page_now - 1);
             spinnerAdapter.notifyDataSetChanged();
 
-            refreshLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    refreshLayout.setRefreshing(false);
-                }
-            }, 400);
+            refreshLayout.postDelayed(() -> refreshLayout.setRefreshing(false), 400);
         }
     }
 

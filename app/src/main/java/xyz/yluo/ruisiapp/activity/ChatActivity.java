@@ -105,9 +105,7 @@ public class ChatActivity extends BaseActivity {
 
 
     private void getData(boolean needRefresh) {
-        if (needRefresh) {
-            refreshLayout.post(() -> refreshLayout.setRefreshing(true));
-        }
+        if (needRefresh) refreshLayout.setRefreshing(true);
         Log.e("chat", "get data...");
 
         new GetDataTask().execute(url);

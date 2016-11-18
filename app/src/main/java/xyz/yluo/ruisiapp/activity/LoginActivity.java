@@ -53,8 +53,6 @@ public class LoginActivity extends BaseActivity {
     private int answerSelect = 0;
     private ProgressDialog dialog;
 
-
-
     public static void open(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -39,16 +39,20 @@ public class MyDB {
 
 
     //构造函数
-    public MyDB(Context context, int mode) {
+    public MyDB(Context context) {
         this.context = context;
-        if (mode == MODE_WRITE) {
+        this.db = new SQLiteHelper(context).getWritableDatabase();
+    }
+
+    private SQLiteDatabase getDb() {
+        if (this.db == null || !this.db.isOpen()) {
             this.db = new SQLiteHelper(context).getWritableDatabase();
-        } else {
-            this.db = new SQLiteHelper(context).getReadableDatabase();
         }
+        return this.db;
     }
 
     public void clearAllDataBase() {
+        getDb();
         String sql = "DELETE FROM " + TABLE_READ_HISTORY;
         this.db.execSQL(sql);
         Log.e("mydb", "clear TABLE_READ_HISTORY");
@@ -58,6 +62,7 @@ public class MyDB {
 
         String sql4 = "DELETE FROM " + TABLE_MESSAGE;
         this.db.execSQL(sql4);
+        this.db.close();
         Log.e("mydb", "clear all TABLE_MESSAGE");
     }
 
@@ -91,6 +96,7 @@ public class MyDB {
 
     //判断list<> 是否为已读并修改返回
     public List<ArticleListData> handReadHistoryList(List<ArticleListData> datas) {
+        getDb();
         String sql = "SELECT tid from " + TABLE_READ_HISTORY + " where tid = ?";
         for (ArticleListData data : datas) {
             String tid = GetId.getid("tid=", data.titleUrl);
@@ -104,50 +110,55 @@ public class MyDB {
                 Log.e("mydb", tid + "is read");
             }
         }
+        this.db.close();
         return datas;
     }
 
     //判断插入数据的ID是否已经存在数据库中。
     private boolean isArticleRead(String tid) {
+        getDb();
         String sql = "SELECT tid from " + TABLE_READ_HISTORY + " where tid = ?";
         String args[] = new String[]{String.valueOf(tid)};
         Cursor result = db.rawQuery(sql, args);
         int count = result.getCount();
         result.close();
+        this.db.close();
         return count != 0;
     }
 
     //	//插入操作
     private void insertReadHistory(String tid, String title, String author) {
+        getDb();
         String sql = "INSERT INTO " + TABLE_READ_HISTORY + " (tid,title,author,read_time)"
                 + " VALUES(?,?,?,?)";
         String read_time_str = getTime();
         Object args[] = new Object[]{tid, title, author, read_time_str};
         this.db.execSQL(sql, args);
+        this.db.close();
         Log.e("mydb", tid + "insertReadHistory");
     }
 
     //更新操作
     private void updateReadHistory(String tid, String title, String author) {
+        getDb();
         String read_time_str = getTime();
         String sql = "UPDATE " + TABLE_READ_HISTORY + " SET title=?,read_time=? WHERE tid=?";
         Object args[] = new Object[]{title, read_time_str, tid};
         this.db.execSQL(sql, args);
+        this.db.close();
         Log.e("mydb", tid + "updateReadHistory" + author);
     }
 
-    public void showHistoryDatabase() {
-        String sql = "SELECT * FROM " + TABLE_READ_HISTORY;
-        Cursor result = this.db.rawQuery(sql, null);    //执行查询语句
-        for (result.moveToFirst(); !result.isAfterLast(); result.moveToNext())    //采用循环的方式查询数据
-        {
-            Log.i("show database", result.getString(0) + "," + result.getString(1) + "," + result.getString(2) + "," + result.getString(3));
-        }
-        result.close();
+    public void clearHistory(){
+        getDb();
+        String sql = "DELETE FROM " + TABLE_READ_HISTORY;
+        this.db.execSQL(sql);
+        this.db.close();
     }
 
     public void deleteOldHistory(int num) {
         //最长缓存2000条数据 num 2000
+        getDb();
         Cursor cursor = this.db.rawQuery("SELECT COUNT(*) FROM " + TABLE_READ_HISTORY, null);
         cursor.moveToFirst();
         int count = cursor.getInt(0);
@@ -170,6 +181,7 @@ public class MyDB {
     }
 
     public List<ArticleListData> getHistory(int num) {
+        getDb();
         List<ArticleListData> datas = new ArrayList<>();
         String sql = "SELECT * FROM " + TABLE_READ_HISTORY + " order by read_time desc limit " + num;
         Cursor result = this.db.rawQuery(sql, null);    //执行查询语句
@@ -186,6 +198,7 @@ public class MyDB {
             datas.add(new ArticleListData(false, result.getString(1), result.getString(0), result.getString(2), "null", 0xff888888));
         }
         result.close();
+        this.db.close();
         return datas;
     }
 
@@ -196,7 +209,7 @@ public class MyDB {
     public void setForums(List<ForumListData> datas) {
         if (datas != null && datas.size() > 0) {
             clearForums();
-            this.db = new SQLiteHelper(context).getWritableDatabase();
+            getDb();
             for (ForumListData d : datas) {
                 String sql = "INSERT INTO " + TABLE_FORUM_LIST + " (name,fid,todayNew,isHeader)"
                         + " VALUES(?,?,?,?)";
@@ -209,6 +222,8 @@ public class MyDB {
                 }
 
             }
+
+            this.db.close();
         }
     }
 
@@ -216,6 +231,7 @@ public class MyDB {
      * 获得板块列表
      */
     public List<ForumListData> getForums() {
+        getDb();
         List<ForumListData> datas = new ArrayList<>();
         String sql = "SELECT * FROM " + TABLE_FORUM_LIST;
         Cursor result = this.db.rawQuery(sql, null);    //执行查询语句
@@ -234,6 +250,7 @@ public class MyDB {
             datas.add(new ForumListData(isHeader, name, todayNew, fid));
         }
         result.close();
+        this.db.close();
         return datas;
     }
 
@@ -241,8 +258,10 @@ public class MyDB {
      * 清空板块数据库
      */
     public void clearForums() {
+        getDb();
         String sql = "DELETE FROM " + TABLE_FORUM_LIST;
         this.db.execSQL(sql);
+        this.db.close();
     }
 
 }

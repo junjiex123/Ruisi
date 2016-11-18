@@ -106,7 +106,7 @@ public class PostsActivity extends BaseActivity implements
         }
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(adapter);
-        myDB = new MyDB(this, MyDB.MODE_READ);
+        myDB = new MyDB(this);
         datas.clear();
         btn_refresh.setOnClickListener(v -> refresh());
         init();
@@ -136,7 +136,7 @@ public class PostsActivity extends BaseActivity implements
 
     private void init() {
         btn_refresh.hide();
-        refreshLayout.post(() -> refreshLayout.setRefreshing(true));
+        refreshLayout.setRefreshing(true);
 
         refreshLayout.setOnRefreshListener(this::refresh);
 
@@ -159,7 +159,7 @@ public class PostsActivity extends BaseActivity implements
 
     private void refresh() {
         btn_refresh.hide();
-        refreshLayout.post(() -> refreshLayout.setRefreshing(true));
+        refreshLayout.setRefreshing(true);
         CurrentPage = 1;
         getData();
     }

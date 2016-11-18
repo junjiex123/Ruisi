@@ -1,13 +1,16 @@
 package xyz.yluo.ruisiapp.fragment;
 
+import android.app.Dialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -75,6 +78,23 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
             }
         }
         initToolbar(true, title);
+        if (currentIndex == 2)
+            addToolbarMenu(R.drawable.ic_delete_24dp).setOnClickListener(view -> {
+                Dialog alertDialog = new AlertDialog.Builder(getActivity()).
+                        setTitle("清空历史记录")
+                        .setMessage("你确定要清空浏览历史吗？？")
+                        .setPositiveButton("是的(=・ω・=)", (dialogInterface, i) -> {
+                            MyDB db = new MyDB(getActivity());
+                            db.clearHistory();
+                            datas.clear();
+                            adapter.notifyDataSetChanged();
+                            Toast.makeText(getActivity(), "浏览历史已清空~~", Toast.LENGTH_SHORT).show();
+                        })
+                        .setNegativeButton("取消", null)
+                        .setCancelable(true)
+                        .create();
+                alertDialog.show();
+            });
         RecyclerView recyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
@@ -224,7 +244,7 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
         @Override
         protected List<SimpleListData> doInBackground(Integer... ints) {
             List<SimpleListData> temp = new ArrayList<>();
-            MyDB myDB = new MyDB(getActivity(), MyDB.MODE_READ);
+            MyDB myDB = new MyDB(getActivity());
             for (ArticleListData data : myDB.getHistory(30)) {
                 temp.add(new SimpleListData(data.title, data.author, "tid=" + data.titleUrl));
             }
@@ -238,7 +258,6 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
             onLoadCompete(data);
         }
     }
-
 
     //加载完成
     private void onLoadCompete(List<SimpleListData> d) {

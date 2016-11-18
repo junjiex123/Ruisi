@@ -138,7 +138,7 @@ public class HomeActivity extends BaseActivity
             getFragmentManager().popBackStack();
         } else {
             if ((System.currentTimeMillis() - mExitTime) > 1500) {
-                Toast.makeText(this, "再按一次退出手机睿思", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "再按一次退出手机睿思(｡･ω･｡)~~", Toast.LENGTH_SHORT).show();
                 mExitTime = System.currentTimeMillis();
             } else {
                 finish();

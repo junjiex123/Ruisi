@@ -33,7 +33,7 @@ public class App extends Application {
         registerReceiver(receiver, intentFilter);
 
         //清空消息数据库
-        MyDB myDB = new MyDB(context, MyDB.MODE_WRITE);
+        MyDB myDB = new MyDB(context);
         //最多缓存2000条历史纪录
         myDB.deleteOldHistory(2000);
     }

@@ -122,7 +122,7 @@ public class FrageMessage extends BaseFragment {
         }
 
         if (needRefresh) {
-            refreshLayout.post(() -> refreshLayout.setRefreshing(true));
+            refreshLayout.setRefreshing(true);
         }
 
         last_message_id = getActivity().getSharedPreferences(App.MY_SHP_NAME, Activity.MODE_PRIVATE)
