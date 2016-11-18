@@ -63,19 +63,9 @@ public class FriendAdapter extends BaseAdapter {
             is_online = (TextView) itemView.findViewById(R.id.is_online);
             container = itemView.findViewById(R.id.list_item);
 
-            user_image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    userImage_click();
-                }
-            });
+            user_image.setOnClickListener(v -> userImage_click());
 
-            container.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    item_click();
-                }
-            });
+            container.setOnClickListener(v -> item_click());
         }
 
         @Override
@@ -85,15 +75,12 @@ public class FriendAdapter extends BaseAdapter {
             user_info.setText(single.getInfo());
             is_online.setVisibility(single.isOnline() ? View.VISIBLE : View.GONE);
             Picasso.with(context).load(single.getImgUrl()).placeholder(R.drawable.image_placeholder).into(user_image);
-            container.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    if (listener != null) {
-                        listener.onItemLongClick(container, position);
-                        return true;
-                    }
-                    return false;
+            container.setOnLongClickListener(view -> {
+                if (listener != null) {
+                    listener.onItemLongClick(container, position);
+                    return true;
                 }
+                return false;
             });
         }
 

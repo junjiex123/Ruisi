@@ -18,7 +18,6 @@ import android.widget.TextView;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.utils.DimmenUtils;
 
-
 /**
  * Created by free2 on 16-7-18.
  * my tab
@@ -178,7 +177,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
             int centx = center + PADDING_12;
             int centy = PADDING_12;
 
-            canvas.drawCircle(centx, centy, PADDING_12 / 4, paint_badge);
+            canvas.drawCircle(centx, centy, 2, paint_badge);
         }
 
     }

@@ -147,12 +147,7 @@ public class SignActivity extends BaseActivity {
         });
 
         Button b = (Button) findViewById(R.id.btn_submit);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startDaka();
-            }
-        });
+        b.setOnClickListener(view -> startDaka());
     }
 
     //点击签到按钮

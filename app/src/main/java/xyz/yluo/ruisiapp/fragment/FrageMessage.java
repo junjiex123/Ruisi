@@ -81,24 +81,16 @@ public class FrageMessage extends BaseFragment {
         recycler_view.setLayoutManager(layoutManager);
         adapter = new MessageAdapter(getActivity(), datas);
         recycler_view.setAdapter(adapter);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getData(false);
-            }
-        });
+        refreshLayout.setOnRefreshListener(() -> getData(false));
         RadioGroup swictchMes = (RadioGroup) mRootView.findViewById(R.id.btn_change);
-        swictchMes.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int id) {
-                int pos = 1;
-                if (id == R.id.btn_reply) {
-                    pos = 0;
-                }
-                if (pos != index) {
-                    index = pos;
-                    getData(true);
-                }
+        swictchMes.setOnCheckedChangeListener((radioGroup, id) -> {
+            int pos = 1;
+            if (id == R.id.btn_reply) {
+                pos = 0;
+            }
+            if (pos != index) {
+                index = pos;
+                getData(true);
             }
         });
 
@@ -130,12 +122,7 @@ public class FrageMessage extends BaseFragment {
         }
 
         if (needRefresh) {
-            refreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    refreshLayout.setRefreshing(true);
-                }
-            });
+            refreshLayout.post(() -> refreshLayout.setRefreshing(true));
         }
 
         last_message_id = getActivity().getSharedPreferences(App.MY_SHP_NAME, Activity.MODE_PRIVATE)
@@ -162,12 +149,7 @@ public class FrageMessage extends BaseFragment {
             @Override
             public void onFailure(Throwable e) {
                 e.printStackTrace();
-                refreshLayout.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout.setRefreshing(false);
-                    }
-                }, 500);
+                refreshLayout.postDelayed(() -> refreshLayout.setRefreshing(false), 500);
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
             }
         });
@@ -179,12 +161,7 @@ public class FrageMessage extends BaseFragment {
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
         adapter.notifyDataSetChanged();
 
-        refreshLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(false);
-            }
-        }, 500);
+        refreshLayout.postDelayed(() -> refreshLayout.setRefreshing(false), 500);
     }
 
     //获得回复我的

@@ -2,7 +2,6 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.animation.Animator;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -123,12 +122,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
             new AlertDialog.Builder(this).
                     setTitle("删除好友").
                     setMessage("你要删除"+datas.get(position).getUserName()+"吗？").
-                    setPositiveButton("删除", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            removeFriend(datas.get(position).getUid(),position);
-                        }
-                    })
+                    setPositiveButton("删除", (dialog, which) -> removeFriend(datas.get(position).getUid(),position))
                     .setNegativeButton("取消",null)
                     .setCancelable(true)
                     .create()

@@ -3,7 +3,6 @@ package xyz.yluo.ruisiapp.activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -23,7 +22,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -99,12 +97,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         layout = (CoordinatorLayout) findViewById(R.id.main_window);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fab_click();
-            }
-        });
+        fab.setOnClickListener(v -> fab_click());
 
         ViewCompat.setTransitionName(imageView, NAME_IMG_AVATAR);
         username = getIntent().getStringExtra("loginName");
@@ -152,12 +145,9 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
             new AlertDialog.Builder(this).
                     setTitle("退出登录").
                     setMessage("你确定要注销吗？").
-                    setPositiveButton("注销", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            DataManager.cleanApplicationData(UserDetailActivity.this);
-                            finish();
-                        }
+                    setPositiveButton("注销", (dialog, which) -> {
+                        DataManager.cleanApplicationData(UserDetailActivity.this);
+                        finish();
                     })
                     .setNegativeButton("取消", null)
                     .setCancelable(true)
@@ -169,12 +159,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
             ChatActivity.open(this, username, url);
         } else {
             Snackbar.make(layout, "你还没有登陆，无法发送消息", Snackbar.LENGTH_LONG)
-                    .setAction("点我登陆", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                        }
-                    }).show();
+                    .setAction("点我登陆", view -> startActivity(new Intent(getApplicationContext(), LoginActivity.class))).show();
         }
 
     }
@@ -230,12 +215,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         if (id == R.id.menu_add) {
             if (!App.ISLOGIN(this)) {
                 Snackbar.make(layout, "你还没有登陆，无法进行操作", Snackbar.LENGTH_LONG)
-                        .setAction("点我登陆", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                            }
-                        }).show();
+                        .setAction("点我登陆", view -> startActivity(new Intent(getApplicationContext(), LoginActivity.class))).show();
             } else {
                 AddFriendDialog dialogFragment = AddFriendDialog.newInstance(
                         this, username, imageUrl);

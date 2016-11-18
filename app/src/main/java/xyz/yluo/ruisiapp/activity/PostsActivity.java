@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -107,12 +108,7 @@ public class PostsActivity extends BaseActivity implements
         mRecyclerView.setAdapter(adapter);
         myDB = new MyDB(this, MyDB.MODE_READ);
         datas.clear();
-        btn_refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                refresh();
-            }
-        });
+        btn_refresh.setOnClickListener(v -> refresh());
         init();
         //子类实现获取数据
         getData();
@@ -140,19 +136,9 @@ public class PostsActivity extends BaseActivity implements
 
     private void init() {
         btn_refresh.hide();
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        });
+        refreshLayout.post(() -> refreshLayout.setRefreshing(true));
 
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refresh();
-            }
-        });
+        refreshLayout.setOnRefreshListener(this::refresh);
 
         //隐藏按钮
         mRecyclerView.addOnScrollListener(new HidingScrollListener() {
@@ -173,12 +159,7 @@ public class PostsActivity extends BaseActivity implements
 
     private void refresh() {
         btn_refresh.hide();
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        });
+        refreshLayout.post(() -> refreshLayout.setRefreshing(true));
         CurrentPage = 1;
         getData();
     }
@@ -212,12 +193,7 @@ public class PostsActivity extends BaseActivity implements
             @Override
             public void onFailure(Throwable e) {
                 //Toast.makeText(getActivity(), "网络错误！！", Toast.LENGTH_SHORT).show();
-                refreshLayout.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout.setRefreshing(false);
-                    }
-                }, 500);
+                refreshLayout.postDelayed(() -> refreshLayout.setRefreshing(false), 500);
 
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
             }
@@ -263,11 +239,10 @@ public class PostsActivity extends BaseActivity implements
         @Override
         protected List<ArticleListData> doInBackground(String... params) {
             String res = params[0];
-            List<ArticleListData> dataset = new ArrayList<>();
-            Elements list = Jsoup.parse(res).select("div[id=threadlist]");
-            Elements links = list.select("tbody");
+            List<ArticleListData> tempDatas = new ArrayList<>();
+            Elements list = Jsoup.parse(res).select("#threadlist tbody");
             ArticleListData temp;
-            for (Element src : links) {
+            for (Element src : list) {
                 if (src.getElementsByAttributeValue("class", "by").first() != null) {
                     String type;
                     if (src.attr("id").contains("stickthread")) {
@@ -290,19 +265,21 @@ public class PostsActivity extends BaseActivity implements
                     String time = src.getElementsByAttributeValue("class", "by").first().select("em").text().trim();
                     String viewcount = src.getElementsByAttributeValue("class", "num").select("em").text();
                     String replaycount = src.getElementsByAttributeValue("class", "num").select("a").text();
+                    String tag = src.select("em a[href^=forum.php?mod=forumdisplay]").text();
 
                     if (isHideZhiding && type.equals("置顶")) {
                         Log.i("article list", "ignore zhidin");
                     } else {
                         if (title.length() > 0 && author.length() > 0) {
                             temp = new ArticleListData(type, title, titleUrl, author, authorUrl, time, viewcount, replaycount, titleColor);
-                            dataset.add(temp);
+                            if (!TextUtils.isEmpty(tag)) temp.tag = tag;
+                            tempDatas.add(temp);
                         }
                     }
 
                 }
             }
-            return myDB.handReadHistoryList(dataset);
+            return myDB.handReadHistoryList(tempDatas);
         }
 
         @Override
@@ -387,11 +364,6 @@ public class PostsActivity extends BaseActivity implements
         adapter.notifyItemRangeInserted(start, dataset.size());
         isEnableLoadMore = true;
 
-        refreshLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(false);
-            }
-        }, 500);
+        refreshLayout.postDelayed(() -> refreshLayout.setRefreshing(false), 500);
     }
 }

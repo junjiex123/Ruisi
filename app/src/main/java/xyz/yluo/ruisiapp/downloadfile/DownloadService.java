@@ -109,12 +109,7 @@ public class DownloadService extends Service {
     public void createNotification(final String filename) {
         Handler handler = new Handler(Looper.getMainLooper());
 
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), "开始下载" + filename, Toast.LENGTH_SHORT).show();
-            }
-        });
+        handler.post(() -> Toast.makeText(getApplicationContext(), "开始下载" + filename, Toast.LENGTH_SHORT).show());
         Intent resultIntent = new Intent(this, DownLoadActivity.class);
         resultIntent.putExtra("fileName", filename);
         resultIntent.putExtra("progress", downloadProgress);

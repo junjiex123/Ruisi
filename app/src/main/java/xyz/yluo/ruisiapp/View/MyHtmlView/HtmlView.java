@@ -51,6 +51,7 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
         init(context);
     }
 
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -60,10 +61,12 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
     }
 
     @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        if (imageGetter != null) {
-            imageGetter.stopDown();
+    protected void onWindowVisibilityChanged(int visibility) {
+        super.onWindowVisibilityChanged(visibility);
+        if(visibility!=VISIBLE){
+            if (imageGetter != null) {
+                imageGetter.stopDown();
+            }
         }
     }
 

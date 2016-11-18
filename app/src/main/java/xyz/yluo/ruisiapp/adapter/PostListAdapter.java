@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-import java.util.Objects;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
@@ -100,63 +99,48 @@ public class PostListAdapter extends BaseAdapter {
             post_time = (TextView) v.findViewById(R.id.post_time);
             reply_count = (TextView) v.findViewById(R.id.reply_count);
             view_count = (TextView) v.findViewById(R.id.view_count);
-
-
-            v.findViewById(R.id.main_item_btn_item).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBtnItemClick();
-                }
-            });
-
-            author_img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBtnAvatarClick();
-                }
-            });
-
+            v.findViewById(R.id.main_item_btn_item).setOnClickListener(v1 -> onBtnItemClick());
+            author_img.setOnClickListener(v2 -> onBtnAvatarClick());
         }
 
         //设置listItem的数据
         @Override
         void setData(int position) {
             ArticleListData single = DataSet.get(position);
-            String type = single.getType();
+            String type = single.type;
             if (TextUtils.isEmpty(type) || !type.equals("normal")) {
                 article_type.setText(type);
                 article_type.setVisibility(View.VISIBLE);
             } else {
                 article_type.setVisibility(View.GONE);
             }
-            post_time.setText(single.getPostTime());
-            view_count.setText(single.getViewCount());
+            post_time.setText(single.postTime);
+            view_count.setText(single.viewCount);
 
-            String imageUrl = UrlUtils.getAvaterurlm(single.getAuthorUrl());
+            String imageUrl = UrlUtils.getAvaterurlm(single.authorUrl);
             Picasso.with(activity).load(imageUrl).placeholder(R.drawable.image_placeholder).into(author_img);
 
-            int color = single.getTitleColor();
+            int color = single.titleColor;
             int readcolor = ContextCompat.getColor(activity, R.color.text_color_sec);
-            article_title.setTextColor(single.isRead() ? readcolor : color);
-
-            article_title.setText(single.getTitle());
-            author_name.setText(single.getAuthor());
-            reply_count.setText(single.getReplayCount());
+            article_title.setTextColor(single.isRead ? readcolor : color);
+            article_title.setText(TextUtils.isEmpty(single.tag) ? single.title : "[" + single.tag + "] " + single.title);
+            author_name.setText(single.author);
+            reply_count.setText(single.replayCount);
         }
 
         void onBtnAvatarClick() {
-            String imageUrl = UrlUtils.getAvaterurlb(DataSet.get(getAdapterPosition()).getAuthorUrl());
+            String imageUrl = UrlUtils.getAvaterurlb(DataSet.get(getAdapterPosition()).authorUrl);
             UserDetailActivity.openWithAnimation(
-                    activity, DataSet.get(getAdapterPosition()).getAuthor(), author_img, imageUrl);
+                    activity, DataSet.get(getAdapterPosition()).author, author_img, imageUrl);
         }
 
         void onBtnItemClick() {
             ArticleListData single_data = DataSet.get(getAdapterPosition());
-            if (!single_data.isRead()) {
-                single_data.setRead(true);
+            if (!single_data.isRead) {
+                single_data.isRead = true;
                 notifyItemChanged(getAdapterPosition());
             }
-            PostActivity.open(activity, single_data.getTitleUrl(), single_data.getAuthor());
+            PostActivity.open(activity, single_data.titleUrl, single_data.author);
 
         }
     }
@@ -175,33 +159,28 @@ public class PostListAdapter extends BaseAdapter {
             author_name = (TextView) v.findViewById(R.id.author_name);
             is_image = (TextView) v.findViewById(R.id.is_image);
             reply_count = (TextView) v.findViewById(R.id.reply_count);
-            v.findViewById(R.id.main_item_btn_item).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBtnItemClick();
-                }
-            });
+            v.findViewById(R.id.main_item_btn_item).setOnClickListener(v1 -> onBtnItemClick());
         }
 
         //设置listItem的数据
         @Override
         void setData(int position) {
             ArticleListData single = DataSet.get(position);
-            int color = single.getTitleColor();
-            article_title.setTextColor(single.isRead() ? 0xff888888 : color);
-            article_title.setText(single.getTitle());
-            author_name.setText(single.getAuthor());
-            reply_count.setText(single.getReplayCount());
-            is_image.setVisibility(single.ishaveImage() ? View.VISIBLE : View.GONE);
+            int color = single.titleColor;
+            article_title.setTextColor(single.isRead ? 0xff888888 : color);
+            article_title.setText(single.title);
+            author_name.setText(single.author);
+            reply_count.setText(single.replayCount);
+            is_image.setVisibility(single.ishaveImage ? View.VISIBLE : View.GONE);
         }
 
         void onBtnItemClick() {
             ArticleListData single_data = DataSet.get(getAdapterPosition());
-            if (!single_data.isRead()) {
-                single_data.setRead(true);
+            if (!single_data.isRead) {
+                single_data.isRead = true;
                 notifyItemChanged(getAdapterPosition());
             }
-            PostActivity.open(activity, single_data.getTitleUrl(), single_data.getAuthor());
+            PostActivity.open(activity, single_data.titleUrl, single_data.author);
         }
     }
 
@@ -220,20 +199,15 @@ public class PostListAdapter extends BaseAdapter {
             img_card_author = (TextView) itemView.findViewById(R.id.img_card_author);
             img_card_like = (TextView) itemView.findViewById(R.id.img_card_like);
 
-            itemView.findViewById(R.id.card_list_item).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    item_click();
-                }
-            });
+            itemView.findViewById(R.id.card_list_item).setOnClickListener(v -> item_click());
         }
 
         void setData(int position) {
-            img_card_author.setText(DataSet.get(position).getAuthor());
-            img_card_title.setText(DataSet.get(position).getTitle());
-            img_card_like.setText(DataSet.get(position).getReplayCount());
-            if (!Objects.equals(DataSet.get(position).getImage(), "")) {
-                Picasso.with(activity).load(App.getBaseUrl() + DataSet.get(position).getImage()).placeholder(R.drawable.image_placeholder).into(img_card_image);
+            img_card_author.setText(DataSet.get(position).author);
+            img_card_title.setText(DataSet.get(position).title);
+            img_card_like.setText(DataSet.get(position).replayCount);
+            if (!TextUtils.isEmpty(DataSet.get(position).imUrl)) {
+                Picasso.with(activity).load(App.getBaseUrl() + DataSet.get(position).imUrl).placeholder(R.drawable.image_placeholder).into(img_card_image);
             } else {
                 img_card_image.setImageResource(R.drawable.image_placeholder);
             }
@@ -242,7 +216,7 @@ public class PostListAdapter extends BaseAdapter {
 
         void item_click() {
             ArticleListData single_data = DataSet.get(getAdapterPosition());
-            PostActivity.open(activity, single_data.getTitleUrl(), single_data.getAuthor());
+            PostActivity.open(activity, single_data.titleUrl, single_data.author);
         }
     }
 

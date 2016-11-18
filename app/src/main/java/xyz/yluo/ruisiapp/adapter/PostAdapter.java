@@ -95,13 +95,8 @@ public class PostAdapter extends BaseAdapter {
             article_username = (TextView) itemView.findViewById(R.id.article_username);
             article_post_time = (TextView) itemView.findViewById(R.id.article_post_time);
             htmlView = (HtmlView) itemView.findViewById(R.id.html_text);
-            article_user_image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    UserDetailActivity.openWithAnimation(
-                            activity, datalist.get(0).getUsername(), article_user_image, datalist.get(0).getUid());
-                }
-            });
+            article_user_image.setOnClickListener(v -> UserDetailActivity.openWithAnimation(
+                    activity, datalist.get(0).getUsername(), article_user_image, datalist.get(0).getUid()));
 
             tv_remove.setOnClickListener(this);
             tv_edit.setOnClickListener(this);
@@ -153,14 +148,9 @@ public class PostAdapter extends BaseAdapter {
             htmlTextView = (HtmlView) itemView.findViewById(R.id.html_text);
             bt_lable_lz = (TextView) itemView.findViewById(R.id.bt_lable_lz);
 
-            replay_image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    UserDetailActivity.openWithAnimation(
-                            activity, datalist.get(getAdapterPosition()).getUsername(),
-                            replay_image, datalist.get(getAdapterPosition()).getUid());
-                }
-            });
+            replay_image.setOnClickListener(v -> UserDetailActivity.openWithAnimation(
+                    activity, datalist.get(getAdapterPosition()).getUsername(),
+                    replay_image, datalist.get(getAdapterPosition()).getUid()));
 
             tv_remove.setOnClickListener(this);
             tv_edit.setOnClickListener(this);

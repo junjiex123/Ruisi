@@ -95,12 +95,12 @@ public class HotNewListAdapter extends BaseAdapter {
                 position--;
             }
             ArticleListData single = DataSet.get(position);
-            int color = single.getTitleColor();
-            article_title.setTextColor(single.isRead() ? readcolor : color);
-            article_title.setText(single.getTitle());
-            author_name.setText(single.getAuthor());
-            reply_count.setText(single.getReplayCount());
-            is_image.setVisibility(single.ishaveImage() ? View.VISIBLE : View.GONE);
+            int color = single.titleColor;
+            article_title.setTextColor(single.isRead ? readcolor : color);
+            article_title.setText(single.title);
+            author_name.setText(single.author);
+            reply_count.setText(single.replayCount);
+            is_image.setVisibility(single.ishaveImage ? View.VISIBLE : View.GONE);
         }
 
         void onBtnItemClick() {
@@ -109,11 +109,11 @@ public class HotNewListAdapter extends BaseAdapter {
                 pos--;
             }
             ArticleListData single_data = DataSet.get(pos);
-            if (!single_data.isRead()) {
-                single_data.setRead(true);
+            if (!single_data.isRead) {
+                single_data.isRead = true;
                 notifyItemChanged(getAdapterPosition());
             }
-            PostActivity.open(activity, single_data.getTitleUrl(), single_data.getAuthor());
+            PostActivity.open(activity, single_data.titleUrl, single_data.author);
         }
     }
 
@@ -130,13 +130,10 @@ public class HotNewListAdapter extends BaseAdapter {
         @Override
         void setData(int position) {
             guildView.setData(galleryDatas);
-            guildView.setListener(new MyGuildView.OnItemClickListener() {
-                @Override
-                public void onBannerItemClick(View view, int position) {
-                    String titleUrl = galleryDatas.get(position).getTitleUrl();
-                    if (!TextUtils.isEmpty(titleUrl)) {
-                        PostActivity.open(activity, titleUrl, null);
-                    }
+            guildView.setListener((view, position1) -> {
+                String titleUrl = galleryDatas.get(position1).getTitleUrl();
+                if (!TextUtils.isEmpty(titleUrl)) {
+                    PostActivity.open(activity, titleUrl, null);
                 }
             });
         }

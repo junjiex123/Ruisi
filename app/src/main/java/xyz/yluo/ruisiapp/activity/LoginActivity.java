@@ -73,12 +73,7 @@ public class LoginActivity extends BaseActivity {
         anwser_text = (EditText) findViewById(R.id.anwser_text);
 
         initToolBar(true,getResources().getString(R.string.app_name));
-        btn_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                login_click();
-            }
-        });
+        btn_login.setOnClickListener(v -> login_click());
 
         shp = getSharedPreferences(App.MY_SHP_NAME, Context.MODE_PRIVATE);
         boolean rember = shp.getBoolean(App.IS_REMBER_PASS_USER, false);

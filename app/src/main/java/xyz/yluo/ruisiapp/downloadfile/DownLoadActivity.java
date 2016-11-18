@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -37,13 +36,7 @@ public class DownLoadActivity extends AppCompatActivity {
         btnClose = (TextView) findViewById(R.id.btn_close);
         btn_cancel = (TextView) findViewById(R.id.btn_cancel);
         mProgressBar.setProgress(progress);
-        btn_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelDown();
-            }
-        });
-
+        btn_cancel.setOnClickListener(v -> cancelDown());
         if (progress == 100) {
             download_compete();
             return;
@@ -55,12 +48,7 @@ public class DownLoadActivity extends AppCompatActivity {
         intentFilter.addAction("com.example.communication.RECEIVER");
         registerReceiver(downloadMsgReceiver, intentFilter);
         download_info.setText("下载" + fileName + " " + progress + "%");
-        btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        btnClose.setOnClickListener(v -> finish());
     }
 
     private void cancelDown() {
@@ -87,20 +75,10 @@ public class DownLoadActivity extends AppCompatActivity {
         mProgressBar.setProgress(100);
         btnClose.setText("打开");
 
-        btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FileUtil.requestHandleFile(getApplicationContext(), fileName);
-            }
-        });
+        btnClose.setOnClickListener(v -> FileUtil.requestHandleFile(getApplicationContext(), fileName));
 
         btn_cancel.setText("关闭");
-        btn_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        btn_cancel.setOnClickListener(view -> finish());
     }
 
     /**

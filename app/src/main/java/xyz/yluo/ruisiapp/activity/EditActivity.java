@@ -2,7 +2,6 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
@@ -14,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,15 +73,12 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
 
 
         addToolbarMenu(R.drawable.ic_done_black_24dp)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (checkPostInput()) {
-                            dialog = new ProgressDialog(EditActivity.this);
-                            dialog.setMessage("提交中,请稍后......");
-                            dialog.show();
-                            start_post();
-                        }
+                .setOnClickListener(view -> {
+                    if (checkPostInput()) {
+                        dialog = new ProgressDialog(EditActivity.this);
+                        dialog.setMessage("提交中,请稍后......");
+                        dialog.show();
+                        start_post();
                     }
                 });
 
@@ -94,15 +89,12 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
         tv_select_type.setOnClickListener(this);
         ed_title = (EditText) findViewById(R.id.ed_title);
         ed_content = (EditText) findViewById(R.id.ed_content);
-        typeid_spinner.setListener(new MySpinner.OnItemSelectListener() {
-            @Override
-            public void onItemSelectChanged(int pos, View v) {
-                if (pos > typeiddatas.size()) {
-                    return;
-                } else {
-                    typeId = typeiddatas.get(pos).first;
-                    tv_select_type.setText(typeiddatas.get(pos).second);
-                }
+        typeid_spinner.setListener((pos, v) -> {
+            if (pos > typeiddatas.size()) {
+                return;
+            } else {
+                typeId = typeiddatas.get(pos).first;
+                tv_select_type.setText(typeiddatas.get(pos).second);
             }
         });
         final LinearLayout edit_bar = (LinearLayout) findViewById(R.id.edit_bar);
@@ -131,19 +123,11 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
         });
 
 
-        myColorPicker.setListener(new MyColorPicker.OnItemSelectListener() {
-            @Override
-            public void itemClick(int pos, View v, String color) {
-                handleInsert("[color=" + color + "][/color]");
-            }
-        });
+        myColorPicker.setListener((pos, v, color) -> handleInsert("[color=" + color + "][/color]"));
 
-        smileyPicker.setListener(new MySmileyPicker.OnItemClickListener() {
-            @Override
-            public void itemClick(String str, Drawable a) {
-                PostHandler handler = new PostHandler(ed_content);
-                handler.insertSmiley("{:" + str + ":}", a);
-            }
+        smileyPicker.setListener((str, a) -> {
+            PostHandler handler = new PostHandler(ed_content);
+            handler.insertSmiley("{:" + str + ":}", a);
         });
 
         start_edit();
@@ -270,12 +254,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
             case R.id.action_emotion:
                 ((ImageView) view).setImageResource(R.drawable.ic_edit_emoticon_accent_24dp);
                 smileyPicker.showAsDropDown(view, 0, 10);
-                smileyPicker.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        ((ImageView) view).setImageResource(R.drawable.ic_edit_emoticon_24dp);
-                    }
-                });
+                smileyPicker.setOnDismissListener(() -> ((ImageView) view).setImageResource(R.drawable.ic_edit_emoticon_24dp));
                 break;
             case R.id.action_backspace:
                 int start = ed_content.getSelectionStart();

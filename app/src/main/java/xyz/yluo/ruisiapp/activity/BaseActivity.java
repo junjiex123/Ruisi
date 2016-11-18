@@ -1,7 +1,6 @@
 package xyz.yluo.ruisiapp.activity;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -31,12 +30,7 @@ public class BaseActivity extends AppCompatActivity {
             Dialog alertDialog = new AlertDialog.Builder(this).
                     setTitle("需要登陆").
                     setMessage("你还没有登陆，要去登陆吗？？").
-                    setPositiveButton("登陆", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            startActivity(new Intent(BaseActivity.this, LoginActivity.class));
-                        }
-                    })
+                    setPositiveButton("登陆", (dialog, which) -> startActivity(new Intent(BaseActivity.this, LoginActivity.class)))
                     .setNegativeButton("取消", null)
                     .setCancelable(true)
                     .create();

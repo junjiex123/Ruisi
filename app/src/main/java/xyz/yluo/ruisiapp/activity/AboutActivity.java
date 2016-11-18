@@ -32,12 +32,7 @@ public class AboutActivity extends BaseActivity {
         }
         TextView version = (TextView) findViewById(R.id.version);
 
-        findViewById(R.id.btn_back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        findViewById(R.id.btn_back).setOnClickListener(view -> finish());
 
 
         String ss = "<b>西电睿思手机客户端</b><br />功能不断完善中，bug较多还请多多反馈......<br />" +
@@ -66,23 +61,15 @@ public class AboutActivity extends BaseActivity {
             version.setText(a);
         }
 
-        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar.make(v, "你要提交bug或者建议吗?", Snackbar.LENGTH_LONG)
-                        .setAction("确定", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                String user = App.getName(AboutActivity.this);
-                                if (user != null) {
-                                    user = "by:" + user;
-                                }
-                                IntentUtils.sendMail(getApplicationContext(), user);
-                            }
-                        })
-                        .show();
-            }
-        });
+        findViewById(R.id.fab).setOnClickListener(v -> Snackbar.make(v, "你要提交bug或者建议吗?", Snackbar.LENGTH_LONG)
+                .setAction("确定", view -> {
+                    String user = App.getName(AboutActivity.this);
+                    if (user != null) {
+                        user = "by:" + user;
+                    }
+                    IntentUtils.sendMail(getApplicationContext(), user);
+                })
+                .show());
     }
 
 }

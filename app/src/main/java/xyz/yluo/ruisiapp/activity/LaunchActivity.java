@@ -81,44 +81,36 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
         final String urlin = "http://rs.xidian.edu.cn/member.php?mod=logging&action=login&mobile=2";
         final String urlout = "http://bbs.rs.xidian.me/member.php?mod=logging&action=login&mobile=2";
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                HttpUtil.get(LaunchActivity.this, urlin, new ResponseHandler() {
+        new Thread(() -> {
+            HttpUtil.get(LaunchActivity.this, urlin, new ResponseHandler() {
+                @Override
+                public void onSuccess(byte[] response) {
+                    pcResponse = new String(response);
+                    loginOk();
+                }
+            });
+            try {
+                Thread.sleep(350);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if(!isLoginOk){
+                HttpUtil.get(LaunchActivity.this, urlout, new ResponseHandler() {
                     @Override
                     public void onSuccess(byte[] response) {
-                        pcResponse = new String(response);
-                        loginOk();
+                        mobileRes  = new String(response);
+                        if(!isLoginOk){
+                            loginOk();
+                        }
                     }
                 });
-                try {
-                    Thread.sleep(350);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if(!isLoginOk){
-                    HttpUtil.get(LaunchActivity.this, urlout, new ResponseHandler() {
-                        @Override
-                        public void onSuccess(byte[] response) {
-                            mobileRes  = new String(response);
-                            if(!isLoginOk){
-                                loginOk();
-                            }
-                        }
-                    });
-                }
             }
         }).start();
     }
 
 
-    private Runnable finishRunable = new Runnable() {
-        @Override
-        public void run() {
-            loginOk();
-        }
-    };
+    private Runnable finishRunable = this::loginOk;
 
     private void loginOk(){
         if(!isLoginOk&&isForeGround){

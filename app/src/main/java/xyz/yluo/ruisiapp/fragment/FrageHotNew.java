@@ -72,43 +72,25 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
         adapter = new HotNewListAdapter(getActivity(), mydataset, galleryDatas);
         recycler_view.setAdapter(adapter);
         recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 10));
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
+        refreshLayout.setOnRefreshListener(this::refresh);
+
+        RadioGroup swictchMes = (RadioGroup) mRootView.findViewById(R.id.btn_change);
+        swictchMes.setOnCheckedChangeListener((radioGroup, id) -> {
+            int pos = -1;
+            if (id == R.id.btn_reply) {
+                pos = TYPE_NEW;
+            } else {
+                pos = TYPE_HOT;
+            }
+            if (pos != currentType) {
+                currentType = pos;
+                refreshLayout.post(() -> refreshLayout.setRefreshing(true));
                 refresh();
             }
         });
 
-        RadioGroup swictchMes = (RadioGroup) mRootView.findViewById(R.id.btn_change);
-        swictchMes.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int id) {
-                int pos = -1;
-                if (id == R.id.btn_reply) {
-                    pos = TYPE_NEW;
-                } else {
-                    pos = TYPE_HOT;
-                }
-                if (pos != currentType) {
-                    currentType = pos;
-                    refreshLayout.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            refreshLayout.setRefreshing(true);
-                        }
-                    });
-                    refresh();
-                }
-            }
-        });
-
         Handler mHandler = new Handler();
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getData();
-            }
-        }, 300);
+        mHandler.postDelayed(this::getData, 300);
 
         return mRootView;
     }
@@ -148,12 +130,7 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
 
             @Override
             public void onFailure(Throwable e) {
-                refreshLayout.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout.setRefreshing(false);
-                    }
-                }, 300);
+                refreshLayout.postDelayed(() -> refreshLayout.setRefreshing(false), 300);
 
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
             }
@@ -228,12 +205,7 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
 
         @Override
         protected void onPostExecute(List<ArticleListData> datas) {
-            refreshLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    refreshLayout.setRefreshing(false);
-                }
-            }, 300);
+            refreshLayout.postDelayed(() -> refreshLayout.setRefreshing(false), 300);
             if (CurrentPage == 1) {
                 mydataset.clear();
                 mydataset.addAll(datas);

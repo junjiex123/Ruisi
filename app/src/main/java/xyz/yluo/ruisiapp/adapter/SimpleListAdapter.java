@@ -59,12 +59,7 @@ public class SimpleListAdapter extends BaseAdapter {
             super(itemView);
             key = (TextView) itemView.findViewById(R.id.key);
             value = (TextView) itemView.findViewById(R.id.value);
-            itemView.findViewById(R.id.main_item_btn_item).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    item_click();
-                }
-            });
+            itemView.findViewById(R.id.main_item_btn_item).setOnClickListener(v -> item_click());
 
             System.out.println(type);
         }

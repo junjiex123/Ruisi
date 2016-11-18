@@ -70,12 +70,9 @@ public class ChatListAdapter extends BaseAdapter {
             user_image = (CircleImageView) itemView.findViewById(R.id.user_image);
             post_time = (TextView) itemView.findViewById(R.id.post_time);
 
-            user_image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String imageUrl = DataSets.get(getAdapterPosition()).getUserImage();
-                    UserDetailActivity.openWithAnimation(context, "username", user_image, imageUrl);
-                }
+            user_image.setOnClickListener(v -> {
+                String imageUrl = DataSets.get(getAdapterPosition()).getUserImage();
+                UserDetailActivity.openWithAnimation(context, "username", user_image, imageUrl);
             });
         }
 

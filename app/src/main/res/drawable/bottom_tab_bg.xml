@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- 连框颜色值 -->
     <item>
         <shape>
             <stroke
-                android:width="0.8dp"
+                android:width="0.6dp"
                 android:color="@color/colorDivider" />
         </shape>
     </item>
     <!-- 主体背景颜色值 -->
-    <item android:top="0.8dp"> <!--设置只有底部有边框-->
+    <item android:top="0.6dp">
         <shape>
             <solid android:color="@color/bg_blur" />
         </shape>

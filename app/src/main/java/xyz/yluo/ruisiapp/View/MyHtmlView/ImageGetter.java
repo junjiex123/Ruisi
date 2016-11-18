@@ -64,17 +64,20 @@ class ImageGetter implements Html.ImageGetter {
 
     void stopDown() {
         this.isStop = false;
+        Log.e("image getter", "stop down");
     }
 
     void reStart() {
-        isStop = false;
-        startDown();
+        if (isStop) {
+            isStop = false;
+            Log.e("image getter", "reStart down");
+            startDown();
+        }
     }
 
     @Override
     public Drawable getDrawable(String source) {
         try {
-
             if (haveDown.containsKey(source)) {
                 return haveDown.get(source);
             }
@@ -104,7 +107,7 @@ class ImageGetter implements Html.ImageGetter {
             }
 
             urls.add(source);
-            Log.e("imggetter", "add queue " + source);
+            Log.e("imggetter", "get " + source);
             if (!isStart) {
                 startDown();
             }
@@ -132,6 +135,7 @@ class ImageGetter implements Html.ImageGetter {
     }
 
     private void startDown() {
+
         if (isStop || listener == null) {
             return;
         }

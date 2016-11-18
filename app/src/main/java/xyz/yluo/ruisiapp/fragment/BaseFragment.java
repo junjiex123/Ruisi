@@ -41,12 +41,7 @@ public abstract class BaseFragment extends Fragment {
             ImageView i = (ImageView) toolBar.findViewById(R.id.logo);
             if (isCloseAble) {
                 i.setImageResource(R.drawable.ic_arraw_back_white);
-                i.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        getActivity().finish();
-                    }
-                });
+                i.setOnClickListener(view -> getActivity().finish());
             } else {
                 i.setVisibility(View.GONE);
             }

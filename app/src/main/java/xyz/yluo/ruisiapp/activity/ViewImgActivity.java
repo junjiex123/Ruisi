@@ -32,14 +32,12 @@ import xyz.yluo.ruisiapp.utils.GetId;
 
 public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
 
-
     private ViewPager pager;
     private List<String> datas;
     private String aid = "0";
     private TextView index;
     private MyAdapter adapter;
     private int position = 0;
-
 
     public static void open(Context context, String url) {
         Intent intent = new Intent(context, ViewImgActivity.class);
@@ -58,12 +56,7 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
 
         pager = (ViewPager) findViewById(R.id.pager);
         index = (TextView) findViewById(R.id.index);
-        findViewById(R.id.nav_back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        findViewById(R.id.nav_back).setOnClickListener(v -> finish());
 
         pager.addOnPageChangeListener(this);
         adapter = new MyAdapter();

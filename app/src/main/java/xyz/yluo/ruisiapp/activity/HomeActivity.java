@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -266,12 +265,7 @@ public class HomeActivity extends BaseActivity
                         new AlertDialog.Builder(HomeActivity.this).
                                 setTitle("检测到新版本").
                                 setMessage(title).
-                                setPositiveButton("查看", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        PostActivity.open(HomeActivity.this, App.CHECK_UPDATE_URL, "谁用了FREEDOM");
-                                    }
-                                })
+                                setPositiveButton("查看", (dialog, which) -> PostActivity.open(HomeActivity.this, App.CHECK_UPDATE_URL, "谁用了FREEDOM"))
                                 .setNegativeButton("取消", null)
                                 .setCancelable(true)
                                 .create()

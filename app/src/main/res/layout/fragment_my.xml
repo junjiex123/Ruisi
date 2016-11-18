@@ -286,7 +286,7 @@
             android:background="@color/colorDivider" />
 
         <LinearLayout
-            android:id="@+id/help"
+            android:id="@+id/market"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
@@ -298,7 +298,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_help_black_24dp"
+                android:src="@drawable/ic_favorite_white_12dp"
                 android:tint="@color/colorDisableHintIcon" />
 
             <TextView
@@ -308,7 +308,7 @@
                 android:layout_marginEnd="12dp"
                 android:layout_marginStart="12dp"
                 android:layout_weight="1"
-                android:text="睿思帮助" />
+                android:text="到商店评分" />
 
             <ImageView
                 android:layout_width="24dp"

@@ -1,7 +1,6 @@
 package xyz.yluo.ruisiapp.activity;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -104,12 +103,7 @@ public class PostActivity extends BaseActivity
         mRecyclerView = (RecyclerView) findViewById(R.id.topic_recycler_view);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.topic_refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        });
+        refreshLayout.post(() -> refreshLayout.setRefreshing(true));
 
         LinearLayout bottom_bar_top = (LinearLayout) findViewById(R.id.bottom_bar);
         for (int i = 0; i < bottom_bar_top.getChildCount(); i++) {
@@ -119,14 +113,8 @@ public class PostActivity extends BaseActivity
             }
         }
 
-
         //下拉刷新
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refresh();
-            }
-        });
+        refreshLayout.setOnRefreshListener(() -> {refresh();});
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         adapter = new PostAdapter(this, this, datas);
@@ -198,12 +186,7 @@ public class PostActivity extends BaseActivity
     }
 
     private void firstGetData(int page) {
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        });
+        refreshLayout.post(() -> refreshLayout.setRefreshing(true));
         //数据填充
         getArticleData(page);
     }
@@ -223,12 +206,7 @@ public class PostActivity extends BaseActivity
 
     //跳页
     private void jump_page(int page) {
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        });
+        refreshLayout.post(() -> refreshLayout.setRefreshing(true));
         //数据填充
         datas.clear();
         adapter.notifyDataSetChanged();
@@ -237,12 +215,7 @@ public class PostActivity extends BaseActivity
 
     private void refresh() {
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        });
+        refreshLayout.post(() -> refreshLayout.setRefreshing(true));
         //数据填充
         datas.clear();
         adapter.notifyDataSetChanged();
@@ -302,12 +275,7 @@ public class PostActivity extends BaseActivity
                 new AlertDialog.Builder(this).
                         setTitle("删除帖子!").
                         setMessage("你要删除本贴/回复吗？").
-                        setPositiveButton("删除", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                removeItem(position);
-                            }
-                        })
+                        setPositiveButton("删除", (dialog, which) -> removeItem(position))
                         .setNegativeButton("取消", null)
                         .setCancelable(true)
                         .create()
@@ -350,12 +318,7 @@ public class PostActivity extends BaseActivity
                     showToast("收藏成功");
                     if (v != null) {
                         final ImageView mv = (ImageView) v;
-                        mv.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mv.setImageResource(R.drawable.ic_star_accent_24dp);
-                            }
-                        }, 300);
+                        mv.postDelayed(() -> mv.setImageResource(R.drawable.ic_star_accent_24dp), 300);
 
                     }
 
@@ -497,14 +460,12 @@ public class PostActivity extends BaseActivity
                 for (Element codee : contentels.select(".blockcode")) {
                     codee.html("<code>" + codee.html().trim() + "</code>");
                 }
-
                 //处理引用
                 for (Element codee : contentels.select("blockquote")) {
                     int start = codee.html().indexOf("发表于");
                     if (start > 0) {
                         int end = codee.html().indexOf("</font>", start);
                         if (end > start) {
-                            codee.select("a").removeAttr("href");
                             int c = end - start;
                             codee.html(codee.html().replaceAll("发表于.{" + (c - 3) + "}", ""));
                             break;

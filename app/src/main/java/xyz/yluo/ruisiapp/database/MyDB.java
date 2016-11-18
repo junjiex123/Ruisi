@@ -14,7 +14,6 @@ import java.util.Locale;
 
 import xyz.yluo.ruisiapp.model.ArticleListData;
 import xyz.yluo.ruisiapp.model.ForumListData;
-import xyz.yluo.ruisiapp.model.SchoolNewsData;
 import xyz.yluo.ruisiapp.utils.GetId;
 
 
@@ -30,11 +29,6 @@ public class MyDB {
      * 板块列表 表
      */
     static final String TABLE_FORUM_LIST = "rs_forum_list";
-
-    /**
-     * 校内新闻数据表
-     */
-    static final String TABLE_SCHOOL_NEWS = "rs_news";
 
     /**
      * 消息列表
@@ -61,9 +55,6 @@ public class MyDB {
 
         String sql2 = "DELETE FROM " + TABLE_READ_HISTORY;
         this.db.execSQL(sql2);
-
-        String sql3 = "DELETE FROM " + TABLE_SCHOOL_NEWS;
-        this.db.execSQL(sql3);
 
         String sql4 = "DELETE FROM " + TABLE_MESSAGE;
         this.db.execSQL(sql4);
@@ -102,14 +93,14 @@ public class MyDB {
     public List<ArticleListData> handReadHistoryList(List<ArticleListData> datas) {
         String sql = "SELECT tid from " + TABLE_READ_HISTORY + " where tid = ?";
         for (ArticleListData data : datas) {
-            String tid = GetId.getid("tid=", data.getTitleUrl());
+            String tid = GetId.getid("tid=", data.titleUrl);
             String args[] = new String[]{String.valueOf(tid)};
             Cursor result = db.rawQuery(sql, args);
             int count = result.getCount();
             result.close();
             if (count != 0)//判断得到的返回数据是否为空
             {
-                data.setRead(true);
+                data.isRead = true;
                 Log.e("mydb", tid + "is read");
             }
         }
@@ -252,97 +243,6 @@ public class MyDB {
     public void clearForums() {
         String sql = "DELETE FROM " + TABLE_FORUM_LIST;
         this.db.execSQL(sql);
-    }
-
-
-    /**
-     * 新闻缓存
-     */
-    public void setSingleNewsRead(String url) {
-        String sql = "UPDATE " + TABLE_SCHOOL_NEWS + " SET is_read =? WHERE url=?";
-        Object args[] = new Object[]{1, url};
-        this.db.execSQL(sql, args);
-    }
-
-    private boolean isNewsInDataBase(String url) {
-        String sql = "SELECT * from " + TABLE_SCHOOL_NEWS + " where url = ?";
-        String args[] = new String[]{String.valueOf(url)};
-        Cursor result = db.rawQuery(sql, args);
-        int count = result.getCount();
-        if (count == 0) {
-            result.close();
-            return false;
-        } else {
-            result.close();
-            return true;
-        }
-    }
-
-    private boolean isNewsRead(String url) {
-        String sql = "SELECT * from " + TABLE_SCHOOL_NEWS + " where url = ?";
-        String args[] = new String[]{String.valueOf(url)};
-        Cursor result = db.rawQuery(sql, args);
-        int count = result.getCount();
-        result.moveToFirst();
-        if (count <= 0) {//db.close();
-            result.close();
-            return false;
-        } else {
-            int i = result.getInt(5);
-            result.close();
-            return i == 1;
-        }
-    }
-
-    /**
-     * 传入为空 则返回所有的内容
-     * 传入不为空 和传入的参数做比较，标记已读
-     */
-    public List<SchoolNewsData> getNewsList(List<SchoolNewsData> datasIn) {
-        List<SchoolNewsData> datas = new ArrayList<>();
-        String sql = "SELECT * FROM " + TABLE_SCHOOL_NEWS;
-        Cursor result = this.db.rawQuery(sql, null);    //执行查询语句
-        for (result.moveToFirst(); !result.isAfterLast(); result.moveToNext())    //采用循环的方式查询数据
-        {
-            String url = result.getString(0);
-            String title = result.getString(1);
-            boolean isImage = (result.getInt(2) == 1);
-            boolean is_patch = (result.getInt(3) == 1);
-            String post_time = result.getString(4);
-            boolean is_read = (result.getInt(5) == 1);
-            //String url, String title, boolean is_image, boolean is_patch, String post_time
-            datas.add(new SchoolNewsData(url, title, isImage, is_patch, post_time, is_read));
-        }
-
-        result.close();
-        if (datasIn == null || datasIn.size() == 0) {
-            return datas;
-        } else {
-            //传入参数不为空
-            //插入新的数据
-            for (SchoolNewsData d : datasIn) {
-                //不在数据库
-                if (!isNewsInDataBase(d.getUrl())) {
-                    insertNews(d);
-                } else {
-                    //在数据库 设置是否已读
-                    if (isNewsRead(d.getUrl())) {
-                        d.setRead(true);
-                    }
-                }
-            }
-            return datasIn;
-        }
-    }
-
-    private void insertNews(SchoolNewsData d) {
-        String sql = "INSERT INTO " + TABLE_SCHOOL_NEWS + " (title,url,is_image,is_patch,post_time,is_read)"
-                + " VALUES(?,?,?,?,?,?)";
-        int is_read = d.isRead() ? 1 : 0;
-        int is_image = d.is_image() ? 1 : 0;
-        int is_patch = d.is_patch() ? 1 : 0;
-        Object args[] = new Object[]{d.getTitle(), d.getUrl(), is_image, is_patch, d.getPost_time(), is_read};
-        this.db.execSQL(sql, args);
     }
 
 }

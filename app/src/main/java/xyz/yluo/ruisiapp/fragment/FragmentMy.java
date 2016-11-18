@@ -2,6 +2,7 @@ package xyz.yluo.ruisiapp.fragment;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
@@ -146,8 +147,16 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener {
                     FragementActivity.open(getActivity(), FrageType.HISTORY);
                 }
                 break;
-            case R.id.help:
-                FragementActivity.open(getActivity(), FrageType.HELP);
+            case R.id.market:
+                try {
+                    Uri uri = Uri.parse("market://details?id=" + getActivity().getPackageName());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 break;
             case R.id.friend:
                 switchActivity(FriendActivity.class);

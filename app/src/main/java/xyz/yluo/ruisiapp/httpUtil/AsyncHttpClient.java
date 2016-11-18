@@ -14,31 +14,16 @@ public class AsyncHttpClient extends SyncHttpClient {
 
     @Override
     public void get(final String url, final ResponseHandler handler) {
-        threadPool.execute(new Runnable() {
-            @Override
-            public void run() {
-                request(url, Method.GET, null, handler);
-            }
-        });
+        threadPool.execute(() -> request(url, Method.GET, null, handler));
     }
 
     @Override
     public void post(final String url, final Map<String, String> map, final ResponseHandler handler) {
-        threadPool.execute(new Runnable() {
-            @Override
-            public void run() {
-                request(url, Method.POST, map, handler);
-            }
-        });
+        threadPool.execute(() -> request(url, Method.POST, map, handler));
     }
 
     @Override
     public void head(final String url, final Map<String, String> map, final ResponseHandler handler) {
-        threadPool.execute(new Runnable() {
-            @Override
-            public void run() {
-                request(url, Method.HEAD, map, handler);
-            }
-        });
+        threadPool.execute(() -> request(url, Method.HEAD, map, handler));
     }
 }

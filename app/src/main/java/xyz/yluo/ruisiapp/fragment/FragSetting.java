@@ -1,6 +1,5 @@
 package xyz.yluo.ruisiapp.fragment;
 
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -62,25 +61,19 @@ public class FragSetting extends PreferenceFragment
                     removePreference(findPreference("exit_login"));//这是删除 二级
         }
 
-        exit_login.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                new AlertDialog.Builder(getActivity()).
-                        setTitle("退出登录").
-                        setMessage("你确定要注销吗？").
-                        setPositiveButton("注销", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                DataManager.cleanApplicationData(getActivity());
-                                getActivity().finish();
-                            }
-                        })
-                        .setNegativeButton("取消", null)
-                        .setCancelable(true)
-                        .create()
-                        .show();
-                return true;
-            }
+        exit_login.setOnPreferenceClickListener(preference -> {
+            new AlertDialog.Builder(getActivity()).
+                    setTitle("退出登录").
+                    setMessage("你确定要注销吗？").
+                    setPositiveButton("注销", (dialog, which) -> {
+                        DataManager.cleanApplicationData(getActivity());
+                        getActivity().finish();
+                    })
+                    .setNegativeButton("取消", null)
+                    .setCancelable(true)
+                    .create()
+                    .show();
+            return true;
         });
 
         PackageManager manager;
@@ -102,66 +95,52 @@ public class FragSetting extends PreferenceFragment
         //[2016年6月9日更新][code:25]睿思手机客户端
         final int finalversion_code = version_code;
         about_this.setOnPreferenceClickListener(
-                new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        Toast.makeText(getActivity(), "正在检查更新", Toast.LENGTH_SHORT).show();
-                        HttpUtil.get(getActivity(), App.CHECK_UPDATE_URL, new ResponseHandler() {
-                            @Override
-                            public void onSuccess(byte[] response) {
-                                String res = new String(response);
-                                int ih = res.indexOf("keywords");
-                                int h_start = res.indexOf('\"', ih + 15);
-                                int h_end = res.indexOf('\"', h_start + 1);
-                                String title = res.substring(h_start + 1, h_end);
-                                if (title.contains("code")) {
-                                    int st = title.indexOf("code");
-                                    int code = GetId.getNumber(title.substring(st));
-                                    if (code > finalversion_code) {
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        editor.putLong(App.CHECK_UPDATE_KEY, System.currentTimeMillis());
-                                        editor.apply();
-                                        new AlertDialog.Builder(getActivity()).
-                                                setTitle("检测到新版本").
-                                                setMessage(title).
-                                                setPositiveButton("查看", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        PostActivity.open(getActivity(), App.CHECK_UPDATE_URL, "谁用了FREEDOM");
-                                                    }
-                                                })
-                                                .setNegativeButton("取消", null)
-                                                .setCancelable(true)
-                                                .create()
-                                                .show();
+                preference -> {
+                    Toast.makeText(getActivity(), "正在检查更新", Toast.LENGTH_SHORT).show();
+                    HttpUtil.get(getActivity(), App.CHECK_UPDATE_URL, new ResponseHandler() {
+                        @Override
+                        public void onSuccess(byte[] response) {
+                            String res = new String(response);
+                            int ih = res.indexOf("keywords");
+                            int h_start = res.indexOf('\"', ih + 15);
+                            int h_end = res.indexOf('\"', h_start + 1);
+                            String title = res.substring(h_start + 1, h_end);
+                            if (title.contains("code")) {
+                                int st = title.indexOf("code");
+                                int code = GetId.getNumber(title.substring(st));
+                                if (code > finalversion_code) {
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putLong(App.CHECK_UPDATE_KEY, System.currentTimeMillis());
+                                    editor.apply();
+                                    new AlertDialog.Builder(getActivity()).
+                                            setTitle("检测到新版本").
+                                            setMessage(title).
+                                            setPositiveButton("查看", (dialog, which) -> PostActivity.open(getActivity(), App.CHECK_UPDATE_URL, "谁用了FREEDOM"))
+                                            .setNegativeButton("取消", null)
+                                            .setCancelable(true)
+                                            .create()
+                                            .show();
 
-                                    } else {
-                                        Toast.makeText(getActivity(), "暂无更新", Toast.LENGTH_SHORT).show();
-                                    }
+                                } else {
+                                    Toast.makeText(getActivity(), "暂无更新", Toast.LENGTH_SHORT).show();
                                 }
                             }
-                        });
-                        return true;
-                    }
+                        }
+                    });
+                    return true;
                 });
 
-        open_sourse.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                IntentUtils.openBroswer(getActivity(), "https://github.com/freedom10086/Ruisi");
-                return false;
-            }
+        open_sourse.setOnPreferenceClickListener(preference -> {
+            IntentUtils.openBroswer(getActivity(), "https://github.com/freedom10086/Ruisi");
+            return false;
         });
         clear_cache.setSummary("缓存大小：" + DataManager.getTotalCacheSize(getActivity()));
-        clear_cache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                DataManager.cleanApplicationData(getActivity());
+        clear_cache.setOnPreferenceClickListener(preference -> {
+            DataManager.cleanApplicationData(getActivity());
 
-                Toast.makeText(getActivity(), "缓存清理成功!请重新登陆", Toast.LENGTH_SHORT).show();
-                clear_cache.setSummary("缓存大小：" + DataManager.getTotalCacheSize(getActivity()));
-                return false;
-            }
+            Toast.makeText(getActivity(), "缓存清理成功!请重新登陆", Toast.LENGTH_SHORT).show();
+            clear_cache.setSummary("缓存大小：" + DataManager.getTotalCacheSize(getActivity()));
+            return false;
         });
     }
 

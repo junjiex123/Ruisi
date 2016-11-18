@@ -51,25 +51,6 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 + ")";
         db.execSQL(sql2);
         Log.e("DATABASE", "TABLE_FORUM_LIST数据表创建成功");
-
-
-        /**
-         * 新闻缓存
-         *
-         private String post_time;
-         private boolean isRead;
-         */
-        String sql3 = "CREATE TABLE " + MyDB.TABLE_SCHOOL_NEWS + "("
-                + "url VARCHAR(50) primary key,"
-                + "title VARCHAR(50) NOT NULL,"
-                + "is_image INT,"
-                + "is_patch INT,"
-                + "post_time VARCHAR(20),"
-                + "is_read INT"
-                + ")";
-        db.execSQL(sql3);
-        Log.e("DATABASE", "创建数据库 TABLE_SCHOOL_NEWS");
-
     }
 
 
@@ -82,9 +63,6 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
         String sql2 = "DROP TABLE IF EXISTS " + MyDB.TABLE_FORUM_LIST;
         db.execSQL(sql2);
-
-        String sql3 = "DROP TABLE IF EXISTS " + MyDB.TABLE_SCHOOL_NEWS;
-        db.execSQL(sql3);
 
         this.onCreate(db);
         Log.e("DATABASE", "数据库已更新");

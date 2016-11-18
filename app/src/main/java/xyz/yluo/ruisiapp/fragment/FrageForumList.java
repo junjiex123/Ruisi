@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -97,12 +96,7 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getData();
-            }
-        });
+        refreshLayout.setOnRefreshListener(this::getData);
 
         //判断是否真正的需要请求服务器
         //获得新的数据
@@ -143,12 +137,7 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
     }
 
     private void getData() {
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        });
+        refreshLayout.post(() -> refreshLayout.setRefreshing(true));
         String url = "forum.php?forumlist=1&mobile=2";
         HttpUtil.get(getActivity(), url, new ResponseHandler() {
             @Override
@@ -158,12 +147,7 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
 
             @Override
             public void onFailure(Throwable e) {
-                refreshLayout.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout.setRefreshing(false);
-                    }
-                }, 500);
+                refreshLayout.postDelayed(() -> refreshLayout.setRefreshing(false), 500);
             }
         });
     }
@@ -204,8 +188,7 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
         protected List<ForumListData> doInBackground(String... params) {
             String response = params[0];
             List<ForumListData> simpledatas = new ArrayList<>();
-            Document document = Jsoup.parse(response);
-            Elements elements = document.select("div#wp.wp.wm").select("div.bm.bmw.fl");
+            Elements elements = Jsoup.parse(response).select("#wp.wp.wm").select(".bm.bmw.fl");
             for (Element ele : elements) {
                 String header = ele.select("h2").text();
                 simpledatas.add(new ForumListData(true, header, "0", -1));
@@ -237,12 +220,7 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
                 datas.addAll(simpledatas);
                 adapter.notifyDataSetChanged();
             }
-            refreshLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    refreshLayout.setRefreshing(false);
-                }
-            }, 500);
+            refreshLayout.postDelayed(() -> refreshLayout.setRefreshing(false), 500);
         }
     }
 }

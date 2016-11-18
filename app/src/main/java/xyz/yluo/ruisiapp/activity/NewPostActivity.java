@@ -3,7 +3,6 @@ package xyz.yluo.ruisiapp.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
@@ -15,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -105,20 +103,14 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         ed_content = (EditText) findViewById(R.id.ed_content);
 
         forum_spinner.setData(forums);
-        forum_spinner.setListener(new MySpinner.OnItemSelectListener() {
-            @Override
-            public void onItemSelectChanged(int pos, View v) {
-                fid = fids[pos];
-                tv_select_forum.setText(forums[pos]);
-                switch_fid(fid);
-            }
+        forum_spinner.setListener((pos, v) -> {
+            fid = fids[pos];
+            tv_select_forum.setText(forums[pos]);
+            switch_fid(fid);
         });
-        typeid_spinner.setListener(new MySpinner.OnItemSelectListener() {
-            @Override
-            public void onItemSelectChanged(int pos, View v) {
-                typeId = typeiddatas.get(pos).first;
-                tv_select_type.setText(typeiddatas.get(pos).second);
-            }
+        typeid_spinner.setListener((pos, v) -> {
+            typeId = typeiddatas.get(pos).first;
+            tv_select_type.setText(typeiddatas.get(pos).second);
         });
         final LinearLayout edit_bar = (LinearLayout) findViewById(R.id.edit_bar);
         for (int i = 0; i < edit_bar.getChildCount(); i++) {
@@ -146,38 +138,27 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         });
 
 
-        myColorPicker.setListener(new MyColorPicker.OnItemSelectListener() {
-            @Override
-            public void itemClick(int pos, View v, String color) {
-                handleInsert("[color=" + color + "][/color]");
-            }
+        myColorPicker.setListener((pos, v, color) -> handleInsert("[color=" + color + "][/color]"));
+
+        smileyPicker.setListener((str, a) -> {
+            PostHandler handler = new PostHandler(ed_content);
+            handler.insertSmiley("{:" + str + ":}", a);
         });
 
-        smileyPicker.setListener(new MySmileyPicker.OnItemClickListener() {
-            @Override
-            public void itemClick(String str, Drawable a) {
-                PostHandler handler = new PostHandler(ed_content);
-                handler.insertSmiley("{:" + str + ":}", a);
+        findViewById(R.id.action_backspace).setOnLongClickListener(v -> {
+            int start = ed_content.getSelectionStart();
+            int end = ed_content.getSelectionEnd();
+            if (start == 0) {
+                return false;
             }
-        });
-
-        findViewById(R.id.action_backspace).setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                int start = ed_content.getSelectionStart();
-                int end = ed_content.getSelectionEnd();
-                if (start == 0) {
-                    return false;
-                }
-                if ((start == end) && start > 0) {
-                    start = start - 5;
-                }
-                if (start < 0) {
-                    start = 0;
-                }
-                ed_content.getText().delete(start, end);
-                return true;
+            if ((start == end) && start > 0) {
+                start = start - 5;
             }
+            if (start < 0) {
+                start = 0;
+            }
+            ed_content.getText().delete(start, end);
+            return true;
         });
 
         switch_fid(fid);
@@ -298,12 +279,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             case R.id.action_emotion:
                 ((ImageView) view).setImageResource(R.drawable.ic_edit_emoticon_accent_24dp);
                 smileyPicker.showAsDropDown(view, 0, 10);
-                smileyPicker.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        ((ImageView) view).setImageResource(R.drawable.ic_edit_emoticon_24dp);
-                    }
-                });
+                smileyPicker.setOnDismissListener(() -> ((ImageView) view).setImageResource(R.drawable.ic_edit_emoticon_24dp));
                 break;
             case R.id.action_backspace:
                 int start = ed_content.getSelectionStart();

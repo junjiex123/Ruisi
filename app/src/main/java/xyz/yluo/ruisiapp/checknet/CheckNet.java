@@ -28,12 +28,7 @@ public class CheckNet {
     }
 
     public void startCheck(final CheckNetResponse handler) {
-        threadPool.execute(new Runnable() {
-            @Override
-            public void run() {
-                request(handler);
-            }
-        });
+        threadPool.execute(() -> request(handler));
     }
 
     private void request(final CheckNetResponse checkNetResponse) {

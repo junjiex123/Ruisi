@@ -67,18 +67,8 @@ public class MessageAdapter extends BaseAdapter {
             reply_content = (ArrowTextView) itemView.findViewById(R.id.reply_content);
             isRead = (TextView) itemView.findViewById(R.id.is_read);
 
-            article_user_image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    user_click();
-                }
-            });
-            itemView.findViewById(R.id.main_item_btn_item).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    item_click();
-                }
-            });
+            article_user_image.setOnClickListener(v -> user_click());
+            itemView.findViewById(R.id.main_item_btn_item).setOnClickListener(v -> item_click());
         }
 
         void setData(int position) {

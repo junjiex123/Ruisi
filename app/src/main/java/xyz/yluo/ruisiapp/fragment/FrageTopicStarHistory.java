@@ -223,14 +223,11 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
 
         @Override
         protected List<SimpleListData> doInBackground(Integer... ints) {
-            //datas.add()
             List<SimpleListData> temp = new ArrayList<>();
             MyDB myDB = new MyDB(getActivity(), MyDB.MODE_READ);
             for (ArticleListData data : myDB.getHistory(30)) {
-                //Log.i("history",data.getFid());
-                temp.add(new SimpleListData(data.getTitle(), data.getAuthor(), "tid=" + data.getTitleUrl()));
+                temp.add(new SimpleListData(data.title, data.author, "tid=" + data.titleUrl));
             }
-
             return temp;
         }
 
