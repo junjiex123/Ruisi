@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.View.MyHtmlView;
+package xyz.yluo.ruisiapp.view.myhtmlview;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

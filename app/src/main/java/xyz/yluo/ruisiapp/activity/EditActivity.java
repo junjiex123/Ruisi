@@ -28,11 +28,11 @@ import java.util.List;
 import java.util.Map;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyColorPicker;
-import xyz.yluo.ruisiapp.View.MySmileyPicker;
-import xyz.yluo.ruisiapp.View.MySpinner;
-import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
-import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.view.MyColorPicker;
+import xyz.yluo.ruisiapp.view.MySmileyPicker;
+import xyz.yluo.ruisiapp.view.MySpinner;
+import xyz.yluo.ruisiapp.myhttp.HttpUtil;
+import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.PostHandler;
 
 /**

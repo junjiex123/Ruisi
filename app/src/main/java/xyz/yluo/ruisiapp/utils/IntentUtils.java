@@ -30,4 +30,25 @@ public class IntentUtils {
 
         activity.startActivity(intent);
     }
+
+    public static boolean openOnStore(Context context) {
+        try {
+            Uri uri = Uri.parse("market://details?id=" + context.getPackageName());
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static void shareApp(Context context, String data) {
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, data);
+        shareIntent.setType("text/plain");
+        context.startActivity(Intent.createChooser(shareIntent, "分享到手机睿思到:"));
+    }
 }

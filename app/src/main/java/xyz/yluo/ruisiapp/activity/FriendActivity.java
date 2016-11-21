@@ -35,12 +35,12 @@ import java.util.Map;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.AddFriendDialog;
+import xyz.yluo.ruisiapp.view.AddFriendDialog;
 import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.FriendAdapter;
-import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
-import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
-import xyz.yluo.ruisiapp.httpUtil.TextResponseHandler;
+import xyz.yluo.ruisiapp.myhttp.HttpUtil;
+import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
+import xyz.yluo.ruisiapp.myhttp.TextResponseHandler;
 import xyz.yluo.ruisiapp.listener.ListItemLongClickListener;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.model.FriendData;
@@ -50,10 +50,10 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 public class FriendActivity extends BaseActivity implements LoadMoreListener.OnLoadMoreListener,
         ListItemLongClickListener, TextView.OnEditorActionListener,
-        View.OnClickListener, TextWatcher ,AddFriendDialog.AddFriendListener {
+        View.OnClickListener, TextWatcher, AddFriendDialog.AddFriendListener {
     protected RecyclerView recycler_view;
     private FriendAdapter adapter;
-    private List<FriendData> datas,backUpdatas,totalDatas;
+    private List<FriendData> datas, backUpdatas, totalDatas;
     private int CurrentPage = 1;
     private boolean isEnableLoadMore = true;
     private boolean isHaveMore = true;
@@ -68,20 +68,20 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend);
 
-        initToolBar(true,"我的好友");
+        initToolBar(true, "我的好友");
         recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
         datas = new ArrayList<>();
         backUpdatas = new ArrayList<>();
         totalDatas = new ArrayList<>();
-        adapter = new FriendAdapter(this,datas,this);
+        adapter = new FriendAdapter(this, datas, this);
         recycler_view.setHasFixedSize(true);
         LinearLayoutManager lm = new LinearLayoutManager(this);
         recycler_view.setLayoutManager(lm);
         recycler_view.addOnScrollListener(new LoadMoreListener(lm, this, 12));
         recycler_view.setAdapter(adapter);
-        search_input = (EditText)findViewById(R.id.search_input);
+        search_input = (EditText) findViewById(R.id.search_input);
         search_input.setHint("查找好友");
-        search_card = (CardView)findViewById(R.id.search_card);
+        search_card = (CardView) findViewById(R.id.search_card);
         final String url = "home.php?mod=space&do=friend&mobile=2";
         new GetDataTask().execute(url);
         search_input.setOnEditorActionListener(this);
@@ -95,21 +95,21 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
     @Override
     public void onLoadMore() {
         //加载更多被电击
-        if (isEnableLoadMore&&isHaveMore&&!isInsearchMode) {
+        if (isEnableLoadMore && isHaveMore && !isInsearchMode) {
             isEnableLoadMore = false;
             CurrentPage++;
-            String url = "home.php?mod=space&do=friend&mobile=2"+"&page="+CurrentPage;
+            String url = "home.php?mod=space&do=friend&mobile=2" + "&page=" + CurrentPage;
             new GetDataTask().execute(url);
         }
     }
 
     @Override
     public void onItemLongClick(View v, final int position) {
-        String name = datas.get(position).getUserName();
-        String imgurl = datas.get(position).getImgUrl();
+        String name = datas.get(position).userName;
+        String imgurl = datas.get(position).imgUrl;
         boolean isfrend = false;
         for (FriendData d : totalDatas) {
-            if (d.getUserName().equals(name)) {
+            if (d.userName.equals(name)) {
                 isfrend = true;
                 break;
             }
@@ -118,12 +118,12 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
             AddFriendDialog dialogFragment = AddFriendDialog.newInstance(
                     this, name, imgurl);
             dialogFragment.show(getFragmentManager(), "add");
-        }else{
+        } else {
             new AlertDialog.Builder(this).
                     setTitle("删除好友").
-                    setMessage("你要删除"+datas.get(position).getUserName()+"吗？").
-                    setPositiveButton("删除", (dialog, which) -> removeFriend(datas.get(position).getUid(),position))
-                    .setNegativeButton("取消",null)
+                    setMessage("你要删除" + datas.get(position).userName + "吗？").
+                    setPositiveButton("删除", (dialog, which) -> removeFriend(datas.get(position).uid, position))
+                    .setNegativeButton("取消", null)
                     .setCancelable(true)
                     .create()
                     .show();
@@ -131,7 +131,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
     }
 
     @Override
-    public void OnAddFriendOkClick(String mes,String uid) {
+    public void OnAddFriendOkClick(String mes, String uid) {
         final ProgressDialog dialog1 = new ProgressDialog(this);
         dialog1.setTitle("正在发送请求");
         dialog1.setMessage("请等待......");
@@ -166,7 +166,6 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
     }
 
 
-
     @Override
     public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
         boolean handled = false;
@@ -177,15 +176,15 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         return handled;
     }
 
-    private void startSearch(){
+    private void startSearch() {
         String str = search_input.getText().toString().trim();
         if (TextUtils.isEmpty(str)) {
             Snackbar.make(recycler_view,
                     "请输入要搜索好友的名称！", Snackbar.LENGTH_SHORT).show();
         } else {
             ImeUtil.hide_ime(this);
-            String url = "home.php?username="+str
-                    +"&searchsubmit=true&op=&mod=spacecp&ac=search&type=all&mobile=2";
+            String url = "home.php?username=" + str
+                    + "&searchsubmit=true&op=&mod=spacecp&ac=search&type=all&mobile=2";
             adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
             new GetDataTask().execute(url);
         }
@@ -193,7 +192,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.menu:
                 enterSearchMode();
                 break;
@@ -206,7 +205,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         }
     }
 
-    private void enterSearchMode(){
+    private void enterSearchMode() {
         ////进入搜索模式
         isInsearchMode = true;
         backUpdatas.clear();
@@ -215,7 +214,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         show_search_view();
     }
 
-    private void exitSearchMode(){
+    private void exitSearchMode() {
         //退出搜索模式
         isInsearchMode = false;
         datas.clear();
@@ -224,8 +223,6 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         adapter.notifyDataSetChanged();
         hide_search_view();
     }
-
-
 
 
     private class GetDataTask extends AsyncTask<String, Void, List<FriendData>> {
@@ -237,17 +234,17 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
                 public void onSuccess(String response) {
                     Document document = Jsoup.parse(response);
                     Elements lists = document.select("ul.buddy").select("li");
-                    if(lists.size()<=0){
-                        isHaveMore =false;
-                    }else{
+                    if (lists.size() <= 0) {
+                        isHaveMore = false;
+                    } else {
                         for (Element element : lists) {
                             String imgurl = element.select("img").attr("src");
                             String userName = element.select("h4").select("a[href^=home.php?mod=space&uid=]").text();
-                            String uid = GetId.getid("uid=",imgurl);
+                            String uid = GetId.getid("uid=", imgurl);
                             String info = element.select("p.maxh").text();
                             boolean online = element.select("em.gol").text().contains("在线");
                             //userName,imgUrl,info,uid
-                            temp.add(new FriendData(userName, imgurl, info, uid,online));
+                            temp.add(new FriendData(userName, imgurl, info, uid, online));
                         }
                     }
 
@@ -264,65 +261,66 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         @Override
         protected void onPostExecute(List<FriendData> s) {
             super.onPostExecute(s);
-            if(!isHaveMore||isInsearchMode){
+            if (!isHaveMore || isInsearchMode) {
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
-            }else{
+            } else {
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
             }
             int i = datas.size();
             datas.addAll(s);
-            if(!isInsearchMode){
+            if (!isInsearchMode) {
                 totalDatas.addAll(s);
             }
-            if(i==0){
+            if (i == 0) {
                 adapter.notifyDataSetChanged();
-            }else{
-                adapter.notifyItemRangeInserted(i,s.size());
+            } else {
+                adapter.notifyItemRangeInserted(i, s.size());
             }
             isEnableLoadMore = true;
         }
     }
 
 
-    private void removeFriend(String uid, final int pos){
+    private void removeFriend(String uid, final int pos) {
         //操作成功
-        String url = "home.php?mod=spacecp&ac=friend&op=ignore&uid="+uid+"&confirm=1";
-        if(App.ISLOGIN(this)){
-            url = url+"&mobile=2";
+        String url = "home.php?mod=spacecp&ac=friend&op=ignore&uid=" + uid + "&confirm=1";
+        if (App.ISLOGIN(this)) {
+            url = url + "&mobile=2";
         }
-        HashMap<String,String> pa = new HashMap<>();
-        pa.put("friendsubmit","true");
+        HashMap<String, String> pa = new HashMap<>();
+        pa.put("friendsubmit", "true");
         HttpUtil.post(this, url, pa, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String s = new String(response);
-                if(s.contains("操作成功")){
-                    removeRes(true,pos);
-                }else{
-                    removeRes(false,pos);
+                if (s.contains("操作成功")) {
+                    removeRes(true, pos);
+                } else {
+                    removeRes(false, pos);
                 }
             }
+
             @Override
             public void onFailure(Throwable e) {
                 super.onFailure(e);
-                removeRes(false,pos);
+                removeRes(false, pos);
             }
         });
     }
 
 
-    private void removeRes(boolean b,int pos){
-        if(b){
+    private void removeRes(boolean b, int pos) {
+        if (b) {
             datas.remove(pos);
             adapter.notifyItemRemoved(pos);
-            Snackbar.make(recycler_view,"删除好友成功！",Snackbar.LENGTH_SHORT).show();
-        }else{
-            Snackbar.make(recycler_view,"删除好友失败！",Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(recycler_view, "删除好友成功！", Snackbar.LENGTH_SHORT).show();
+        } else {
+            Snackbar.make(recycler_view, "删除好友失败！", Snackbar.LENGTH_SHORT).show();
         }
     }
 
 
-    private void show_search_view(){
+    private void show_search_view() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             search_card.setVisibility(View.VISIBLE);
             animator = ViewAnimationUtils.createCircularReveal(
@@ -357,13 +355,13 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
             });
 
             animator.start();
-        }else{
+        } else {
             search_card.setVisibility(View.VISIBLE);
             ImeUtil.show_ime(FriendActivity.this, search_input);
         }
     }
 
-    private void hide_search_view(){
+    private void hide_search_view() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             animator = ViewAnimationUtils.createCircularReveal(
                     search_card,
@@ -396,14 +394,14 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
                 }
             });
             animator.start();
-        }else{
+        } else {
             search_card.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void onBackPressed() {
-        if(isInsearchMode){
+        if (isInsearchMode) {
             exitSearchMode();
             return;
         }
@@ -415,17 +413,17 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
         String s = search_input.getText().toString().trim();
         datas.clear();
-        if(TextUtils.isEmpty(s)){
+        if (TextUtils.isEmpty(s)) {
             datas.addAll(backUpdatas);
             adapter.notifyDataSetChanged();
-        }else{
-            for(FriendData d:backUpdatas){
-                if(d.getUserName().contains(s)){
+        } else {
+            for (FriendData d : backUpdatas) {
+                if (d.userName.contains(s)) {
                     datas.add(d);
                 }
             }
 
-            if(datas.size()!=backUpdatas.size()){
+            if (datas.size() != backUpdatas.size()) {
                 adapter.notifyDataSetChanged();
             }
         }
@@ -435,6 +433,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
     public void afterTextChanged(Editable editable) {
 
     }
+
     @Override
     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 

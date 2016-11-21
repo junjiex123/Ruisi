@@ -29,13 +29,13 @@ import java.util.TimerTask;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyBottomTab;
+import xyz.yluo.ruisiapp.view.MyBottomTab;
 import xyz.yluo.ruisiapp.fragment.FrageForumList;
 import xyz.yluo.ruisiapp.fragment.FrageHotNew;
 import xyz.yluo.ruisiapp.fragment.FrageMessage;
 import xyz.yluo.ruisiapp.fragment.FragmentMy;
-import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
-import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.myhttp.HttpUtil;
+import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.model.FrageType;
 import xyz.yluo.ruisiapp.utils.GetId;
 

@@ -1,8 +1,6 @@
 package xyz.yluo.ruisiapp.fragment;
 
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
@@ -10,12 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.CircleImageView;
+import xyz.yluo.ruisiapp.view.CircleImageView;
 import xyz.yluo.ruisiapp.activity.AboutActivity;
 import xyz.yluo.ruisiapp.activity.FragementActivity;
 import xyz.yluo.ruisiapp.activity.FriendActivity;
@@ -23,6 +22,7 @@ import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.SignActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.model.FrageType;
+import xyz.yluo.ruisiapp.utils.IntentUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -148,28 +148,18 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener {
                 }
                 break;
             case R.id.market:
-                try {
-                    Uri uri = Uri.parse("market://details?id=" + getActivity().getPackageName());
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (!IntentUtils.openOnStore(getActivity())) {
+                    Toast.makeText(getActivity(), "确保你的手机安装了相关应用商城", Toast.LENGTH_SHORT).show();
                 }
-
                 break;
             case R.id.friend:
                 switchActivity(FriendActivity.class);
                 break;
             case R.id.share:
-                Intent shareIntent = new Intent();
-                shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_TEXT, "这个手机睿思客户端非常不错，分享给你们。" +
+                String data = "这个手机睿思客户端非常不错，分享给你们。" +
                         "\n下载地址: http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=" + App.POST_TID +
-                        "\n下载地址2: http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid=" + App.POST_TID + "&mobile=2");
-                shareIntent.setType("text/plain");
-                //设置分享列表的标题，并且每次都显示分享列表
-                startActivity(Intent.createChooser(shareIntent, "分享到手机睿思到:"));
+                        "\n下载地址2: http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid=" + App.POST_TID + "&mobile=2";
+                IntentUtils.shareApp(getActivity(), data);
                 break;
 
         }

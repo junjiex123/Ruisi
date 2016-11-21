@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.View;
+package xyz.yluo.ruisiapp.view;
 
 import android.content.Context;
 import android.graphics.Matrix;

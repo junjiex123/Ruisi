@@ -25,9 +25,9 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.ScaleImageView;
-import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
-import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.view.ScaleImageView;
+import xyz.yluo.ruisiapp.myhttp.HttpUtil;
+import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
 
 public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageChangeListener {

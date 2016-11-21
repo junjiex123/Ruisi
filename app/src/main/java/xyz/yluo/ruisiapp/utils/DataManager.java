@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.database.SQLiteHelper;
-import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 
 /**
  * Created by free2 on 16-6-20.

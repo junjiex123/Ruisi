@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.httpUtil;
+package xyz.yluo.ruisiapp.myhttp;
 
 import android.content.Context;
 import android.text.TextUtils;

@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.httpUtil;
+package xyz.yluo.ruisiapp.myhttp;
 
 /**
  * Created by free2 on 16-4-4.

@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyReplyView;
+import xyz.yluo.ruisiapp.view.MyReplyView;
 
 /**
  * Created by free2 on 16-7-13.

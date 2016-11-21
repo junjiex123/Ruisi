@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyGuildView;
+import xyz.yluo.ruisiapp.view.MyGuildView;
 import xyz.yluo.ruisiapp.activity.PostActivity;
 import xyz.yluo.ruisiapp.model.ArticleListData;
 import xyz.yluo.ruisiapp.model.GalleryData;

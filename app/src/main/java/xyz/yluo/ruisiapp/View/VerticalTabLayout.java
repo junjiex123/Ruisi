@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.View;
+package xyz.yluo.ruisiapp.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -21,9 +21,8 @@ public class VerticalTabLayout extends ViewGroup {
     /**
      * onmeasure>>onlayout>>ondraw
      */
-
+    private static final int indicateWidth = 6;
     private int indicateColor = ContextCompat.getColor(getContext(), R.color.colorAccent);
-    private int indicateWidth = 8;
     private int currentSelect = 0;
 
 
@@ -85,15 +84,12 @@ public class VerticalTabLayout extends ViewGroup {
         for (int i = 0; i < getChildCount(); i++) {
             View cv = getChildAt(i);
             final int id = i;
-            cv.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onTabSelected(id);
-                    if (currentSelect != id) {
-                        currentSelect = id;
-                        listener.onTabSelectedChanged(id);
-                        invalidate();
-                    }
+            cv.setOnClickListener(view -> {
+                listener.onTabSelected(id);
+                if (currentSelect != id) {
+                    currentSelect = id;
+                    listener.onTabSelectedChanged(id);
+                    invalidate();
                 }
             });
         }

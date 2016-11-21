@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.View;
+package xyz.yluo.ruisiapp.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -61,10 +61,7 @@ public class ArrowTextView extends TextView {
 
     }
 
-    /**
-     * @param canvas        画布
-     * @param arrowInHeight 箭头高度
-     */
+
     private void drawRound(Canvas canvas, float arrowInHeight) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             canvas.drawRoundRect(0, arrowInHeight, getWidth(), getHeight(), 4, 4, paint);

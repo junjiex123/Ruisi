@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.View;
+package xyz.yluo.ruisiapp.view;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -220,12 +220,7 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
                         .placeholder(R.drawable.image_placeholder)
                         .into(v);
                 if (listener != null) {
-                    v.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            listener.onBannerItemClick(view, position);
-                        }
-                    });
+                    v.setOnClickListener(view -> listener.onBannerItemClick(view, position));
                 }
                 v.setTag(position);
                 container.addView(v);

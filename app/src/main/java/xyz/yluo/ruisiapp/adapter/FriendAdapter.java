@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.CircleImageView;
+import xyz.yluo.ruisiapp.view.CircleImageView;
 import xyz.yluo.ruisiapp.activity.ChatActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.listener.ListItemLongClickListener;
@@ -71,10 +71,10 @@ public class FriendAdapter extends BaseAdapter {
         @Override
         void setData(final int position) {
             FriendData single = datas.get(position);
-            user_name.setText(single.getUserName());
-            user_info.setText(single.getInfo());
+            user_name.setText(single.userName);
+            user_info.setText(single.info);
             is_online.setVisibility(single.isOnline() ? View.VISIBLE : View.GONE);
-            Picasso.with(context).load(single.getImgUrl()).placeholder(R.drawable.image_placeholder).into(user_image);
+            Picasso.with(context).load(single.imgUrl).placeholder(R.drawable.image_placeholder).into(user_image);
             container.setOnLongClickListener(view -> {
                 if (listener != null) {
                     listener.onItemLongClick(container, position);
@@ -86,13 +86,13 @@ public class FriendAdapter extends BaseAdapter {
 
         void userImage_click() {
             FriendData single = datas.get(getAdapterPosition());
-            String username = single.getUserName();
-            UserDetailActivity.openWithAnimation((Activity) context, username, user_image, single.getUid());
+            String username = single.userName;
+            UserDetailActivity.openWithAnimation((Activity) context, username, user_image, single.uid);
         }
 
         void item_click() {
-            String uid = datas.get(getAdapterPosition()).getUid();
-            String username = datas.get(getAdapterPosition()).getUserName();
+            String uid = datas.get(getAdapterPosition()).uid;
+            String username = datas.get(getAdapterPosition()).userName;
             String url = "home.php?mod=space&do=pm&subop=view&touid=" + uid + "&mobile=2";
             ChatActivity.open(context, username, url);
         }

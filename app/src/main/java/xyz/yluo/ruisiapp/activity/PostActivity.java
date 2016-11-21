@@ -34,12 +34,12 @@ import java.util.Map;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyReplyView;
+import xyz.yluo.ruisiapp.view.MyReplyView;
 import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.PostAdapter;
 import xyz.yluo.ruisiapp.database.MyDB;
-import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
-import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.myhttp.HttpUtil;
+import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.model.SingleArticleData;
@@ -68,7 +68,7 @@ public class PostActivity extends BaseActivity
     private int edit_pos = -1;
     private boolean isGetTitle = false;
     //是否允许加载更多
-    private boolean isEnableLoadMore = false;
+    private boolean enableLoadMore = false;
     //回复楼主的链接
     private String replyUrl = "";
     private PostAdapter adapter;
@@ -113,9 +113,7 @@ public class PostActivity extends BaseActivity
         }
 
         //下拉刷新
-        refreshLayout.setOnRefreshListener(() -> {
-            refresh();
-        });
+        refreshLayout.setOnRefreshListener(this::refresh);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         adapter = new PostAdapter(this, this, datas);
@@ -187,19 +185,19 @@ public class PostActivity extends BaseActivity
     }
 
     private void firstGetData(int page) {
-        getArticleData(page);
+        getArticleData(page, true);
     }
 
     @Override
     public void onLoadMore() {
         //加载更多被电击
-        if (isEnableLoadMore) {
-            isEnableLoadMore = false;
+        if (enableLoadMore) {
+            enableLoadMore = false;
             int page = page_now;
             if (page_now < page_sum) {
                 page = page_now + 1;
             }
-            getArticleData(page);
+            getArticleData(page, false);
         }
     }
 
@@ -207,21 +205,20 @@ public class PostActivity extends BaseActivity
     private void jump_page(int page) {
         datas.clear();
         adapter.notifyDataSetChanged();
-        getArticleData(page);
+        getArticleData(page, true);
     }
 
     private void refresh() {
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
-
         //数据填充
         datas.clear();
         adapter.notifyDataSetChanged();
-        getArticleData(1);
+        getArticleData(1, true);
     }
 
     //文章一页的html 根据页数 Tid
-    private void getArticleData(final int page) {
-        refreshLayout.setRefreshing(true);
+    private void getArticleData(final int page, boolean needRefresh) {
+        if (needRefresh) refreshLayout.setRefreshing(true);
         String url = UrlUtils.getSingleArticleUrl(Tid, page, false);
         HttpUtil.get(this, url, new ResponseHandler() {
             @Override
@@ -232,7 +229,7 @@ public class PostActivity extends BaseActivity
 
             @Override
             public void onFailure(Throwable e) {
-                isEnableLoadMore = true;
+                enableLoadMore = true;
                 e.printStackTrace();
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
                 Toast.makeText(getApplicationContext(), "加载失败(Error -1)", Toast.LENGTH_SHORT).show();
@@ -348,7 +345,6 @@ public class PostActivity extends BaseActivity
                     if (hinttext.length() > 10) {
                         hinttext = hinttext.substring(0, 10) + "...";
                     }
-                    //String url,int type,long lastreplyTime,boolean isEnableTail,String userName,String info
                     String hint = "回复帖子:" + hinttext;
                     MyReplyView dialog = MyReplyView.newInstance(replyUrl, MyReplyView.REPLY_LZ, replyTime, true, hint, Title);
                     dialog.setCallBack(PostActivity.this);
@@ -500,7 +496,7 @@ public class PostActivity extends BaseActivity
 
         @Override
         protected void onPostExecute(List<SingleArticleData> tepdata) {
-            isEnableLoadMore = true;
+            enableLoadMore = true;
             if (!TextUtils.isEmpty(errorText)) {
                 Toast.makeText(PostActivity.this, errorText, Toast.LENGTH_SHORT).show();
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
@@ -585,7 +581,6 @@ public class PostActivity extends BaseActivity
 
     //删除帖子或者回复
     private void removeItem(final int pos) {
-        String url = "forum.php?mod=post&action=edit&extra=&editsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
         Map<String, String> params = new HashMap<>();
         //params.put("posttime", time);
         params.put("editsubmit", "yes");
@@ -593,7 +588,7 @@ public class PostActivity extends BaseActivity
         params.put("tid", Tid);
         params.put("pid", datas.get(pos).getPid());
         params.put("delete", "1");
-        HttpUtil.post(this, url, params, new ResponseHandler() {
+        HttpUtil.post(this, UrlUtils.getDeleteReplyUrl(), params, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);

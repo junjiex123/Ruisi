@@ -16,8 +16,8 @@ import android.widget.Toast;
 import java.io.File;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.httpUtil.FileResponseHandler;
-import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
+import xyz.yluo.ruisiapp.myhttp.FileResponseHandler;
+import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 
 /***
  * 下载服务 2016 07 11

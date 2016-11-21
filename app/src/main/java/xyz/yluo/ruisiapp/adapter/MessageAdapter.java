@@ -11,8 +11,8 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.ArrowTextView;
-import xyz.yluo.ruisiapp.View.CircleImageView;
+import xyz.yluo.ruisiapp.view.ArrowTextView;
+import xyz.yluo.ruisiapp.view.CircleImageView;
 import xyz.yluo.ruisiapp.activity.ChatActivity;
 import xyz.yluo.ruisiapp.activity.PostActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;

@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.View;
+package xyz.yluo.ruisiapp.view;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -47,8 +47,8 @@ import java.util.Map;
 
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SmileyAdapter;
-import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
-import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.myhttp.HttpUtil;
+import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.utils.ImageUtils;
 import xyz.yluo.ruisiapp.utils.ImeUtil;
@@ -181,12 +181,7 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener 
         ds = getSmileys();
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(
                 getActivity(), 4, LinearLayoutManager.HORIZONTAL, false);
-        adapter = new SmileyAdapter(new ListItemClickListener() {
-            @Override
-            public void onListItemClick(View v, int position) {
-                insertSmiley(position);
-            }
-        }, ds);
+        adapter = new SmileyAdapter((v1, position) -> insertSmiley(position), ds);
         smiley_listv.setLayoutManager(layoutManager);
         smiley_listv.setAdapter(adapter);
         return v;

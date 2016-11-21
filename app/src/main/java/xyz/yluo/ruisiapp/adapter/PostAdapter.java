@@ -13,8 +13,8 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.CircleImageView;
-import xyz.yluo.ruisiapp.View.MyHtmlView.HtmlView;
+import xyz.yluo.ruisiapp.view.CircleImageView;
+import xyz.yluo.ruisiapp.view.myhtmlview.HtmlView;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.model.SingleArticleData;

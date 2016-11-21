@@ -52,7 +52,7 @@ public class UrlUtils {
     public static String getAvaterurls(String urlUid) {
         String uid = urlUid;
         if (urlUid.contains("uid")) {
-            uid = GetId.getid("uid=",urlUid);
+            uid = GetId.getid("uid=", urlUid);
         }
         return App.getBaseUrl() + "ucenter/avatar.php?uid=" + uid + "&size=small";
     }
@@ -60,7 +60,7 @@ public class UrlUtils {
     public static String getAvaterurlm(String urlUid) {
         String uid = urlUid;
         if (urlUid.contains("uid")) {
-            uid = GetId.getid("uid=",urlUid);
+            uid = GetId.getid("uid=", urlUid);
         }
         return App.getBaseUrl() + "ucenter/avatar.php?uid=" + uid + "&size=middle";
     }
@@ -68,7 +68,7 @@ public class UrlUtils {
     public static String getAvaterurlb(String urlUid) {
         String uid = urlUid;
         if (urlUid.contains("uid")) {
-            uid = GetId.getid("uid=",urlUid);
+            uid = GetId.getid("uid=", urlUid);
         }
         return App.getBaseUrl() + "ucenter/avatar.php?uid=" + uid + "&size=big";
     }
@@ -90,5 +90,9 @@ public class UrlUtils {
 
     public static String getPostUrl(int fid) {
         return App.getBaseUrl() + "forum.php?mod=post&action=newthread&fid=" + fid + "&mobile=2";
+    }
+
+    public static String getDeleteReplyUrl() {
+        return "forum.php?mod=post&action=edit&extra=&editsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
     }
 }

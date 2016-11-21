@@ -6,11 +6,11 @@ package xyz.yluo.ruisiapp.model;
  */
 public class FriendData {
 
-    private String userName;
-    private String imgUrl;
-    private String info;
-    private String uid;
-    private boolean isOnline;
+    public String userName;
+    public String imgUrl;
+    public String info;
+    public String uid;
+    public boolean isOnline;
 
     public FriendData(String userName, String imgUrl, String info, String uid, boolean isOnline) {
         this.userName = userName;
@@ -18,22 +18,6 @@ public class FriendData {
         this.info = info;
         this.uid = uid;
         this.isOnline = isOnline;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public String getInfo() {
-        return info;
-    }
-
-    public String getUid() {
-        return uid;
     }
 
     public boolean isOnline() {

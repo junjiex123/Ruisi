@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.View;
+package xyz.yluo.ruisiapp.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -177,7 +177,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
             int centx = center + PADDING_12;
             int centy = PADDING_12;
 
-            canvas.drawCircle(centx, centy, 2, paint_badge);
+            canvas.drawCircle(centx, centy, 3, paint_badge);
         }
 
     }

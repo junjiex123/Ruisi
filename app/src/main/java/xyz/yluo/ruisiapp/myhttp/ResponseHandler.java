@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.httpUtil;
+package xyz.yluo.ruisiapp.myhttp;
 
 import android.os.Handler;
 import android.os.Looper;

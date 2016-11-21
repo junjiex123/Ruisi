@@ -20,7 +20,7 @@
         android:textStyle="bold"
         tools:text="尴尬，Xbox One 2与PS4.5太快推出压力重重,尴尬，Xbox One 2" />
 
-    <xyz.yluo.ruisiapp.View.CircleImageView
+    <xyz.yluo.ruisiapp.view.CircleImageView
         android:id="@+id/article_user_image"
         android:layout_width="44dp"
         android:layout_height="44dp"
@@ -76,7 +76,7 @@
         android:background="@color/colorDivider" />
 
 
-    <xyz.yluo.ruisiapp.View.MyHtmlView.HtmlView
+    <xyz.yluo.ruisiapp.view.myhtmlview.HtmlView
         android:id="@+id/html_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

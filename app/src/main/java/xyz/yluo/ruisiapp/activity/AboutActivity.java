@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.MyHtmlView.HtmlView;
+import xyz.yluo.ruisiapp.view.myhtmlview.HtmlView;
 import xyz.yluo.ruisiapp.utils.IntentUtils;
 
 

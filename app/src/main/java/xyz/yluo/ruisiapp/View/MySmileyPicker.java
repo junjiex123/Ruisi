@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.View;
+package xyz.yluo.ruisiapp.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -63,12 +63,9 @@ public class MySmileyPicker extends PopupWindow {
         tab.addTab(tab.newTab().setText("AC娘"));
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(mContext, 7, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new SmileyAdapter(new ListItemClickListener() {
-            @Override
-            public void onListItemClick(View v, int position) {
-                smileyClick(position);
-                dismiss();
-            }
+        adapter = new SmileyAdapter((v1, position) -> {
+            smileyClick(position);
+            dismiss();
         }, ds);
 
         tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

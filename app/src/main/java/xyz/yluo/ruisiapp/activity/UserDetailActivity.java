@@ -39,17 +39,17 @@ import java.util.Map;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.View.AddFriendDialog;
-import xyz.yluo.ruisiapp.View.CircleImageView;
+import xyz.yluo.ruisiapp.view.AddFriendDialog;
+import xyz.yluo.ruisiapp.view.CircleImageView;
 import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
-import xyz.yluo.ruisiapp.httpUtil.HttpUtil;
-import xyz.yluo.ruisiapp.httpUtil.ResponseHandler;
+import xyz.yluo.ruisiapp.myhttp.HttpUtil;
+import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.model.ListType;
 import xyz.yluo.ruisiapp.model.SimpleListData;
 import xyz.yluo.ruisiapp.utils.DataManager;
 import xyz.yluo.ruisiapp.utils.GetId;
-import xyz.yluo.ruisiapp.utils.GetLevel;
+import xyz.yluo.ruisiapp.utils.RuisUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -233,28 +233,28 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
             String res = params[0];
             username = Jsoup.parse(res).select(".user_avatar").select(".name").text();
             Elements lists = Jsoup.parse(res).select(".user_box").select("ul").select("li");
-            if (lists != null) {
-                for (Element tmp : lists) {
-                    String value = tmp.select("span").text();
-                    tmp.select("span").remove();
-                    String key = tmp.text();
-                    if (key.contains("积分")) {
-                        String grade = GetLevel.getUserLevel(Integer.parseInt(value));
-                        datas.add(new SimpleListData("等级", grade, ""));
-                    } else if (key.contains("上传量") || key.contains("下载量")) {
-                        long a = Long.parseLong(value.trim());
-                        DecimalFormat decimalFormat = new DecimalFormat(".00");
-                        float GBsize = (float) (a / 1024 / 1024 / 1024.0);
-                        if (GBsize > 500) {
-                            float TBsize = GBsize / 1024.0f;
-                            value = decimalFormat.format(TBsize) + " TB";
-                        } else {
-                            value = decimalFormat.format(GBsize) + " GB";
-                        }
+            if (lists == null) return null;
 
+            for (Element tmp : lists) {
+                String value = tmp.select("span").text();
+                tmp.select("span").remove();
+                String key = tmp.text();
+                if (key.contains("积分")) {
+                    String grade = RuisUtils.getLevel(Integer.parseInt(value));
+                    datas.add(new SimpleListData("等级", grade, ""));
+                } else if (key.contains("上传量") || key.contains("下载量")) {
+                    long a = Long.parseLong(value.trim());
+                    DecimalFormat decimalFormat = new DecimalFormat(".00");
+                    float GBsize = (float) (a / 1024 / 1024 / 1024.0);
+                    if (GBsize > 500) {
+                        float TBsize = GBsize / 1024.0f;
+                        value = decimalFormat.format(TBsize) + " TB";
+                    } else {
+                        value = decimalFormat.format(GBsize) + " GB";
                     }
-                    datas.add(new SimpleListData(key, value, ""));
+
                 }
+                datas.add(new SimpleListData(key, value, ""));
             }
             return null;
         }
