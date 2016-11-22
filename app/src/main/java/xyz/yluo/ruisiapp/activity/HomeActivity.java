@@ -335,8 +335,6 @@ public class HomeActivity extends BaseActivity
         }
     }
 
-
-    //tixing wei du xiao xi
     private void mkNotify() {
         boolean isnotify = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this)
                 .getBoolean("setting_show_notify", false);

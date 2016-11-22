@@ -16,6 +16,7 @@ import android.text.style.QuoteSpan;
 import android.text.style.TextAppearanceSpan;
 import android.text.style.URLSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -35,7 +36,6 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
     private SpannableStringBuilder strBuilderContent;
     private int colorSec = 0;
 
-
     public HtmlView(Context context) {
         super(context);
         init(context);
@@ -49,25 +49,6 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
     public HtmlView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
-    }
-
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        if (imageGetter != null) {
-            imageGetter.reStart();
-        }
-    }
-
-    @Override
-    protected void onWindowVisibilityChanged(int visibility) {
-        super.onWindowVisibilityChanged(visibility);
-        if(visibility!=VISIBLE){
-            if (imageGetter != null) {
-                imageGetter.stopDown();
-            }
-        }
     }
 
     private void init(Context context) {
@@ -94,7 +75,6 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
         }
         setText(strBuilderContent);
     }
-
 
     //获得textView 链接点击
     private SpannableStringBuilder getSequence(Context context, String html,
@@ -211,8 +191,15 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
         strBuilder.setSpan(clickableSpan, start, end, flags);
     }
 
+    public void cancel(){
+        if (imageGetter != null) {
+            Log.e("------", "imageGetter.cancel");
+            imageGetter.cancel();
+        }
+    }
+
     @Override
-    public void downloadCallBack(String url, Drawable d) {
+    public void downloadCallBack(Drawable d) {
         upDateTextImage();
     }
 }

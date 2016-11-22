@@ -172,12 +172,10 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
             int len = getWidth();
             int end = len / 4 * 3;
             int start = len / 2;
-
             int center = (end - start) / 2 + start;
             int centx = center + PADDING_12;
             int centy = PADDING_12;
-
-            canvas.drawCircle(centx, centy, 3, paint_badge);
+            canvas.drawCircle(centx, centy, 5, paint_badge);
         }
 
     }

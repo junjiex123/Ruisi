@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.View.MyHtmlView;
+package xyz.yluo.ruisiapp.view.myhtmlview;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -13,8 +13,6 @@ import xyz.yluo.ruisiapp.R;
  * Created by free2 on 16-7-16.
  * <blockquate> span
  */
-
-//CharacterStyle
 
 public class CustomQuoteSpan extends QuoteSpan {
     private final int borderColor;
