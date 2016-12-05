@@ -39,18 +39,18 @@ import java.util.Map;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.view.AddFriendDialog;
-import xyz.yluo.ruisiapp.view.CircleImageView;
 import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
-import xyz.yluo.ruisiapp.myhttp.HttpUtil;
-import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.model.ListType;
 import xyz.yluo.ruisiapp.model.SimpleListData;
+import xyz.yluo.ruisiapp.myhttp.HttpUtil;
+import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.DataManager;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.RuisUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
+import xyz.yluo.ruisiapp.view.AddFriendDialog;
+import xyz.yluo.ruisiapp.view.CircleImageView;
 
 /**
  * 用户信息activity

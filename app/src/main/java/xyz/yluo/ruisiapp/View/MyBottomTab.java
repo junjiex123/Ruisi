@@ -39,6 +39,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
 
     //遵循md 设计规范
     private int PADDING_8 = 8;
+    private int BADGE_SIZE = 6;
     private int PADDING_12 = 12;
     private int SIZE_ICON = 24;
     private int COLOR_SELECT;
@@ -65,6 +66,17 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         }
     }
 
+    public void setSelect(int pos) {
+        if (pos >= tab_names.length) {
+            return;
+        }
+
+        if (pos != currentSelected) {
+            setTabSelect(currentSelected, pos);
+            currentSelected = pos;
+        }
+    }
+
     /**
      * 初始化视图
      */
@@ -74,6 +86,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         PADDING_8 = DimmenUtils.dip2px(context, PADDING_8);
         PADDING_12 = DimmenUtils.dip2px(context, PADDING_12);
         SIZE_ICON = DimmenUtils.dip2px(context, SIZE_ICON);
+        BADGE_SIZE = DimmenUtils.dip2px(context, 3);
         int[] attrs = new int[]{R.attr.selectableItemBackgroundBorderless};
         TypedArray typedArray = context.obtainStyledAttributes(attrs);
         CLICK_BG_RES = typedArray.getResourceId(0, 0);
@@ -103,6 +116,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
             ViewGroup tab_item_from = (ViewGroup) this.findViewWithTag(from);
             ImageView pre_img = (ImageView) tab_item_from.getChildAt(0);
             TextView pre_text = (TextView) tab_item_from.getChildAt(1);
+            pre_text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
             pre_img.setColorFilter(COLOR_UNSELECT);
             pre_text.setTextColor(COLOR_UNSELECT);
         }
@@ -110,6 +124,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         ViewGroup tab_item_to = (ViewGroup) this.findViewWithTag(to);
         ImageView to_img = (ImageView) tab_item_to.getChildAt(0);
         TextView to_text = (TextView) tab_item_to.getChildAt(1);
+        to_text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         to_img.setImageResource(icons_unselect[to]);
         to_img.setColorFilter(COLOR_SELECT);
         to_text.setTextColor(COLOR_SELECT);
@@ -154,6 +169,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         TextView textView = new TextView(getContext());
         textView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        textView.setTextAlignment(TEXT_ALIGNMENT_CENTER);
         textView.setTextColor(COLOR_UNSELECT);
         textView.setText(tab_names[position]);
         view.addView(iconView);
@@ -175,7 +191,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
             int center = (end - start) / 2 + start;
             int centx = center + PADDING_12;
             int centy = PADDING_12;
-            canvas.drawCircle(centx, centy, 5, paint_badge);
+            canvas.drawCircle(centx, centy, BADGE_SIZE, paint_badge);
         }
 
     }

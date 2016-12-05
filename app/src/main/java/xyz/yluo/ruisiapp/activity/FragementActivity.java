@@ -1,14 +1,13 @@
 package xyz.yluo.ruisiapp.activity;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.fragment.FragSetting;
 import xyz.yluo.ruisiapp.fragment.FrageTopicStarHistory;
 import xyz.yluo.ruisiapp.model.FrageType;
 
@@ -43,12 +42,11 @@ public class FragementActivity extends BaseActivity {
                 to = FrageTopicStarHistory.newInstance(FrageType.HISTORY);
                 break;
             case FrageType.SETTING:
-                to = new FragSetting();
+                //to = new FragSetting();
+                // TODO: 2016/12/5
                 break;
         }
-
-        getFragmentManager().beginTransaction().replace(
-                R.id.container, to).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, to).commit();
     }
 
 }

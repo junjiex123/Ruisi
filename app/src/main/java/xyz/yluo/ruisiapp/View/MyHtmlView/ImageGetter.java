@@ -31,20 +31,25 @@ import static java.lang.System.in;
 /**
  * Created by free2 on 16-7-16.
  * 图片下载
+ * //todo make ImageGetter static
+ * 出入list<url,callback>
+ * 下载完毕 根据url调用callback
  */
 class ImageGetter implements Html.ImageGetter {
 
     private static final int DOWMLOAD_OK = 1;
-    private Context context;
-    private ExecutorService mPool;
+    private final WeakReference<Context> context;
+    private static ExecutorService mPool;
     private ImageHandler handler;
     private Map<String, Drawable> haveGet = new HashMap<>();
     private Set<String> doing = new HashSet<>();
 
     ImageGetter(Context context, ImageDownLoadListener listener) {
-        this.context = context;
-        int thread = Runtime.getRuntime().availableProcessors();
-        mPool = Executors.newFixedThreadPool(thread);
+        this.context = new WeakReference<>(context);
+        if (mPool == null) {
+            int thread = Runtime.getRuntime().availableProcessors();
+            mPool = Executors.newFixedThreadPool(thread);
+        }
         handler = new ImageHandler(listener);
     }
 
@@ -72,7 +77,7 @@ class ImageGetter implements Html.ImageGetter {
                     return d;
                 }
                 String fileTosave = source.substring(source.indexOf("/smiley"));
-                File f = new File(context.getFilesDir() + fileTosave);
+                File f = new File(context.get().getFilesDir() + fileTosave);
                 if (f.exists()) {
                     d = Drawable.createFromPath(f.getPath());
                     d.setBounds(0, 0, 80, 80);
@@ -123,24 +128,24 @@ class ImageGetter implements Html.ImageGetter {
                 //这是表情文件 返回的同时还要存入文件
                 if (this.url.contains("static/image/smiley")) {
                     String fileTosavedir = this.url.substring(this.url.indexOf("/smiley"), this.url.lastIndexOf("/"));
-                    File dir = new File(context.getFilesDir() + fileTosavedir);
+                    File dir = new File(context.get().getFilesDir() + fileTosavedir);
                     if (!dir.exists()) {
                         Log.e("image getter", "创建目录" + dir.mkdirs());
                     }
                     String fulldir = this.url.substring(this.url.indexOf("/smiley"));
-                    File f = new File(context.getFilesDir() + fulldir);
+                    File f = new File(context.get().getFilesDir() + fulldir);
                     Bitmap b;
                     if (f.exists()) {
-                        b = Picasso.with(context).load(f).get();
+                        b = Picasso.with(context.get()).load(f).get();
                     } else {
-                        b = Picasso.with(context).load(this.url).get();
+                        b = Picasso.with(context.get()).load(this.url).get();
                         FileOutputStream out = new FileOutputStream(f);
                         b.compress(Bitmap.CompressFormat.PNG, 90, out);
                         out.flush();
                         out.close();
                     }
                     if (b != null) {
-                        Drawable d = new BitmapDrawable(context.getResources(), b);
+                        Drawable d = new BitmapDrawable(context.get().getResources(), b);
                         d.setBounds(0, 0, 80, 80);
                         haveGet.put(url, d);
                         sendMessage(d);
@@ -149,9 +154,9 @@ class ImageGetter implements Html.ImageGetter {
                     /**
                      * 这是一般的图片
                      */
-                    Bitmap bm = Picasso.with(context).load(this.url).get();
+                    Bitmap bm = Picasso.with(context.get()).load(this.url).get();
                     if (bm != null) {
-                        Drawable d = new BitmapDrawable(context.getResources(), bm);
+                        Drawable d = new BitmapDrawable(context.get().getResources(), bm);
                         d.setBounds(0, 0, d.getIntrinsicWidth() * 2, d.getIntrinsicHeight() * 2);
                         haveGet.put(this.url, d);
                         sendMessage(d);
@@ -189,10 +194,10 @@ class ImageGetter implements Html.ImageGetter {
 
     private Drawable getAssertImage(String type, String fileName) {
         try {
-            InputStream i = context.getAssets().open("static/image/smiley/" + type + fileName);
+            InputStream i = context.get().getAssets().open("static/image/smiley/" + type + fileName);
             Log.e("bendi tieba ", "tieba" + fileName);
             Bitmap bitmap = BitmapFactory.decodeStream(i);
-            Drawable d = new BitmapDrawable(context.getResources(), bitmap);
+            Drawable d = new BitmapDrawable(context.get().getResources(), bitmap);
             d.setBounds(0, 0, 80, 80);
             in.close();
             return d;

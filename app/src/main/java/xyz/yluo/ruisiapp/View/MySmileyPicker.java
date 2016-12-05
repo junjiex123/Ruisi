@@ -1,9 +1,6 @@
 package xyz.yluo.ruisiapp.view;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -16,13 +13,11 @@ import android.view.ViewGroup;
 import android.widget.PopupWindow;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SmileyAdapter;
-import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.utils.ImageUtils;
 
 /**
@@ -132,10 +127,7 @@ public class MySmileyPicker extends PopupWindow {
         try {
             nameList = mContext.getAssets().list(smiley_dir);
             for (String temp : nameList) {
-                InputStream in = mContext.getAssets().open(smiley_dir + "/" + temp);
-                Bitmap bitmap = BitmapFactory.decodeStream(in);
-                Drawable d = new BitmapDrawable(mContext.getResources(), bitmap);
-                d.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
+                Drawable d = Drawable.createFromPath("file:////android_asset/" + smiley_dir + temp);
                 ds.add(d);
             }
 
@@ -155,6 +147,5 @@ public class MySmileyPicker extends PopupWindow {
         if (listener != null) {
             listener.itemClick(insertName, ds.get(position));
         }
-
     }
 }

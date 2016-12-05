@@ -1,8 +1,5 @@
 package xyz.yluo.ruisiapp.activity;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
@@ -29,15 +27,12 @@ import java.util.TimerTask;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.view.MyBottomTab;
-import xyz.yluo.ruisiapp.fragment.FrageForumList;
+import xyz.yluo.ruisiapp.adapter.MainPageAdapter;
 import xyz.yluo.ruisiapp.fragment.FrageHotNew;
-import xyz.yluo.ruisiapp.fragment.FrageMessage;
-import xyz.yluo.ruisiapp.fragment.FragmentMy;
 import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
-import xyz.yluo.ruisiapp.model.FrageType;
 import xyz.yluo.ruisiapp.utils.GetId;
+import xyz.yluo.ruisiapp.view.MyBottomTab;
 
 /**
  * Created by free2 on 16-3-17.
@@ -46,42 +41,40 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * 2.新帖{@link FrageHotNew}
  */
 public class HomeActivity extends BaseActivity
-        implements MyBottomTab.OnTabChangeListener {
+        implements MyBottomTab.OnTabChangeListener, ViewPager.OnPageChangeListener {
 
     private long mExitTime;
-    private Fragment currentFragment;
     private Timer timer = null;
     private MyTimerTask task = null;
     private MyBottomTab bottomTab;
     private long lastCheckMsgTime = 0;
-    private int interval = 45000;//60s
+    private static int interval = 45000;//60s
     private MyHandler messageHandler;
     //间隔3天检查更新一次
     private static final int UPDATE_TIME = 1000 * 3600 * 24 * 3;
     private SharedPreferences sharedPreferences;
     private boolean isNeedCheckUpdate = false;
+    private ViewPager viewPager;
+    private MainPageAdapter adapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        currentFragment = new FrageForumList();
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        adapter = new MainPageAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(this);
         bottomTab = (MyBottomTab) findViewById(R.id.bottom_bar);
         bottomTab.setOnTabChangeListener(this);
-        getFragmentManager().beginTransaction().replace(
-                R.id.fragment_container, currentFragment).commit();
 
         Calendar c = Calendar.getInstance();
         int HOUR_OF_DAY = c.get(Calendar.HOUR_OF_DAY);
         if (HOUR_OF_DAY < 10 && HOUR_OF_DAY > 1) {
-            //晚上一点到早上10点间隔,不同时间段检查消息间隔不同
-            //减轻服务器压力
+            //晚上一点到早上10点间隔,不同时间段检查消息间隔不同 减轻服务器压力
             interval = interval * 2;
         }
-
-        //判断是否真正的需要请求服务器
-        //获得新的数据
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
         long time = sharedPreferences.getLong(App.CHECK_UPDATE_KEY, 0);
         if (System.currentTimeMillis() - time > UPDATE_TIME) {
@@ -92,7 +85,7 @@ public class HomeActivity extends BaseActivity
 
     @Override
     public void tabselectChange(View v, int position) {
-        changeFragement(position);
+        switchTab(position);
     }
 
     //检查消息程序
@@ -152,55 +145,32 @@ public class HomeActivity extends BaseActivity
         //不然保存状态 放置白屏
     }
 
-    public void changeFragement(int id) {
-        /**
-         * 所以常用的fragment用show 和 hide 比较好
-         * replace 自己和自己是不会执行任何的函数的
-         */
-        String TAG = "TAG_" + id;
-        FragmentManager fm = getFragmentManager();
-        Fragment to = fm.findFragmentByTag(TAG);
-        FragmentTransaction transaction = fm.beginTransaction();
-        if (to != null && currentFragment == to) {
-            return;
+    private void switchTab(int pos) {
+        if (pos == 2) {
+            bottomTab.setMessage(false);
+            bottomTab.invalidate();
         }
-        if (to == null) {
-            switch (id) {
-                case FrageType.NEWHOT:
-                    to = new FrageHotNew();
-                    break;
-                case FrageType.MESSAGE:
-                    bottomTab.setMessage(false);
-                    bottomTab.invalidate();
-                    to = FrageMessage.newInstance(ishaveReply, ishavePm);
-                    break;
-                case FrageType.MY:
-                    to = new FragmentMy();
-                    break;
-                default:
-                    to = new FrageForumList();
-                    break;
-            }
-        }
-        //.setCustomAnimations(android.R.anim.fade_in, R.anim.slide_out);
-        if (!to.isAdded()) {
-            transaction.add(R.id.fragment_container, to, TAG);
-            if (id >= 4) {
-                transaction.addToBackStack(null);
-            }
-        }
-        if (to.isHidden()) {
-            transaction.show(to);
-        }
-        if (currentFragment.isVisible()) {
-            transaction.hide(currentFragment);
-        }
-        currentFragment = to;
-        transaction.commit();
+        viewPager.setCurrentItem(pos, false);
+
     }
 
     boolean ishaveReply = false;
     boolean ishavePm = false;
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        bottomTab.setSelect(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
 
     private class MyTimerTask extends TimerTask {
         public void run() {

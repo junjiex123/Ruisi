@@ -5,9 +5,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -38,7 +35,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,7 +45,6 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.SmileyAdapter;
 import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
-import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.utils.ImageUtils;
 import xyz.yluo.ruisiapp.utils.ImeUtil;
 import xyz.yluo.ruisiapp.utils.PostHandler;
@@ -432,10 +427,7 @@ public class MyReplyView extends DialogFragment implements View.OnClickListener 
         try {
             nameList = getActivity().getAssets().list(smiley_dir);
             for (String temp : nameList) {
-                InputStream in = getActivity().getAssets().open(smiley_dir + "/" + temp);
-                Bitmap bitmap = BitmapFactory.decodeStream(in);
-                Drawable d = new BitmapDrawable(getActivity().getResources(), bitmap);
-                d.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
+                Drawable d = Drawable.createFromPath("file:///android_asset/" + smiley_dir + temp);
                 ds.add(d);
             }
 

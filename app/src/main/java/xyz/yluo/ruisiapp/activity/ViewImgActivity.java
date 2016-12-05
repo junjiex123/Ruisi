@@ -25,10 +25,10 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.view.ScaleImageView;
 import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
+import xyz.yluo.ruisiapp.view.ScaleImageView;
 
 public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
 

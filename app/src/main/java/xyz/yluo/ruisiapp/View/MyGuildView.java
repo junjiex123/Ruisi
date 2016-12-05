@@ -63,7 +63,7 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
 
     private void init(Context context) {
         this.context = context;
-        dotMargine = DimmenUtils.dip2px(context, 2);
+        dotMargine = DimmenUtils.dip2px(context, 3);
         containerPaddingTB = DimmenUtils.dip2px(context, 8);
         containerPaddingLR = DimmenUtils.dip2px(context, 12);
 
@@ -103,10 +103,8 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
     }
 
     private void initdotsAndImages() {
-
         if (dotContainer != null && datas.size() > 1) {
             dotContainer.removeAllViews();
-
             LinearLayout.LayoutParams lpt = new LinearLayout.LayoutParams(LWC, LWC, 1);
             lpt.setMargins(0, 0, containerPaddingLR, 0);
             TextView title = new TextView(context);
@@ -134,7 +132,6 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
 
     private void switchToNextPage() {
         int page = (viewPager.getCurrentItem() + 1) % datas.size();
-
         viewPager.setCurrentItem(page);
         startAutoPlay();
     }
@@ -143,13 +140,16 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
         if (dotContainer != null && datas != null) {
             ((TextView) dotContainer.getChildAt(0)).setText(datas.get(pos).getTitle());
             for (int i = 1; i < dotContainer.getChildCount(); i++) {
-                dotContainer.getChildAt(i).setEnabled(false);
-                dotContainer.getChildAt(i).setScaleX(1.0f);
-                dotContainer.getChildAt(i).setScaleY(1.0f);
+                if (i == pos + 1) {
+                    dotContainer.getChildAt(i).setEnabled(true);
+                    dotContainer.getChildAt(i).setScaleX(1.4f);
+                    dotContainer.getChildAt(i).setScaleY(1.4f);
+                } else {
+                    dotContainer.getChildAt(i).setEnabled(false);
+                    dotContainer.getChildAt(i).setScaleX(1.0f);
+                    dotContainer.getChildAt(i).setScaleY(1.0f);
+                }
             }
-            dotContainer.getChildAt(pos + 1).setEnabled(true);
-            dotContainer.getChildAt(pos + 1).setScaleX(1.3f);
-            dotContainer.getChildAt(pos + 1).setScaleY(1.3f);
         }
     }
 

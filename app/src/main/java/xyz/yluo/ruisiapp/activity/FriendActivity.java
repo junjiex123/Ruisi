@@ -35,18 +35,18 @@ import java.util.Map;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.view.AddFriendDialog;
 import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.FriendAdapter;
-import xyz.yluo.ruisiapp.myhttp.HttpUtil;
-import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
-import xyz.yluo.ruisiapp.myhttp.TextResponseHandler;
 import xyz.yluo.ruisiapp.listener.ListItemLongClickListener;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.model.FriendData;
+import xyz.yluo.ruisiapp.myhttp.HttpUtil;
+import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
+import xyz.yluo.ruisiapp.myhttp.TextResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.ImeUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
+import xyz.yluo.ruisiapp.view.AddFriendDialog;
 
 public class FriendActivity extends BaseActivity implements LoadMoreListener.OnLoadMoreListener,
         ListItemLongClickListener, TextView.OnEditorActionListener,

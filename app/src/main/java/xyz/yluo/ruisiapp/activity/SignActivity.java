@@ -26,10 +26,10 @@ import java.util.Map;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.view.CircleImageView;
 import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
+import xyz.yluo.ruisiapp.view.CircleImageView;
 
 /**
  * Created by free2 on 16-3-15.

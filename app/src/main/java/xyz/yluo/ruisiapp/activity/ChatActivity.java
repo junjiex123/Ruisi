@@ -26,17 +26,17 @@ import java.util.List;
 import java.util.Map;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.view.MySmileyPicker;
 import xyz.yluo.ruisiapp.adapter.ChatListAdapter;
+import xyz.yluo.ruisiapp.model.ChatListData;
 import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.myhttp.TextResponseHandler;
-import xyz.yluo.ruisiapp.model.ChatListData;
 import xyz.yluo.ruisiapp.utils.DimmenUtils;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.ImeUtil;
 import xyz.yluo.ruisiapp.utils.PostHandler;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
+import xyz.yluo.ruisiapp.view.MySmileyPicker;
 
 /**
  * Created by free2 on 16-3-30.
