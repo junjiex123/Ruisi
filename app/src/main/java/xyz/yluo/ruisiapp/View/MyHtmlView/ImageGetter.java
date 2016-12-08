@@ -195,7 +195,7 @@ class ImageGetter implements Html.ImageGetter {
     private Drawable getAssertImage(String type, String fileName) {
         try {
             InputStream i = context.get().getAssets().open("static/image/smiley/" + type + fileName);
-            Log.e("bendi tieba ", "tieba" + fileName);
+            Log.e("bendi smiley ", type + fileName);
             Bitmap bitmap = BitmapFactory.decodeStream(i);
             Drawable d = new BitmapDrawable(context.get().getResources(), bitmap);
             d.setBounds(0, 0, 80, 80);
