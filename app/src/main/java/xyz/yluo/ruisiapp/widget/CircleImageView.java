@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package xyz.yluo.ruisiapp.view;
+package xyz.yluo.ruisiapp.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;

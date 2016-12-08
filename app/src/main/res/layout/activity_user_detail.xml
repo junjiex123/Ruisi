@@ -29,7 +29,7 @@
                 android:layout_alignBottom="@+id/user_detail_layout_info"
                 android:adjustViewBounds="true" />
 
-            <xyz.yluo.ruisiapp.view.CircleImageView
+            <xyz.yluo.ruisiapp.widget.CircleImageView
                 android:id="@+id/user_detail_img_avatar"
                 android:layout_width="80dp"
                 android:layout_height="80dp"

@@ -32,7 +32,7 @@ import xyz.yluo.ruisiapp.fragment.FrageHotNew;
 import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
-import xyz.yluo.ruisiapp.view.MyBottomTab;
+import xyz.yluo.ruisiapp.widget.MyBottomTab;
 
 /**
  * Created by free2 on 16-3-17.

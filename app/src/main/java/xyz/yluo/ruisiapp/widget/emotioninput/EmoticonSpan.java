@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.view.emotioninput;
+package xyz.yluo.ruisiapp.widget.emotioninput;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;

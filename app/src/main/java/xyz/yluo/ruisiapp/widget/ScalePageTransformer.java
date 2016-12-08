@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.view;
+package xyz.yluo.ruisiapp.widget;
 
 
 import android.support.v4.view.ViewPager;

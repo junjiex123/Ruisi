@@ -18,8 +18,8 @@ import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.model.SingleArticleData;
 import xyz.yluo.ruisiapp.model.SingleType;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
-import xyz.yluo.ruisiapp.view.CircleImageView;
-import xyz.yluo.ruisiapp.view.myhtmlview.HtmlView;
+import xyz.yluo.ruisiapp.widget.CircleImageView;
+import xyz.yluo.ruisiapp.widget.myhtmlview.HtmlView;
 
 /**
  * Created by free2 on 16-3-7.

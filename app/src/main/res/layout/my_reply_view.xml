@@ -89,7 +89,7 @@
         android:background="@drawable/bottom_tab_bg"
         android:orientation="horizontal">
 
-        <xyz.yluo.ruisiapp.view.VerticalTabLayout
+        <xyz.yluo.ruisiapp.widget.VerticalTabLayout
             android:id="@+id/smiley_tab"
             android:layout_width="40dp"
             android:layout_height="match_parent"
@@ -116,7 +116,7 @@
                 android:clickable="true"
                 android:src="@drawable/smiley_acn" />
 
-        </xyz.yluo.ruisiapp.view.VerticalTabLayout>
+        </xyz.yluo.ruisiapp.widget.VerticalTabLayout>
 
         <View
             android:layout_width="0.8dp"

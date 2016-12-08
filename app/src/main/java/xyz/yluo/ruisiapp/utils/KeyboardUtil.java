@@ -15,7 +15,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
-import xyz.yluo.ruisiapp.view.emotioninput.PanelViewRoot;
+import xyz.yluo.ruisiapp.widget.emotioninput.PanelViewRoot;
 
 public class KeyboardUtil {
 

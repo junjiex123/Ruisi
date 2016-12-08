@@ -34,8 +34,8 @@ import xyz.yluo.ruisiapp.utils.DimmenUtils;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.KeyboardUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
-import xyz.yluo.ruisiapp.view.MySmileyPicker;
-import xyz.yluo.ruisiapp.view.emotioninput.EmotionInputHandler;
+import xyz.yluo.ruisiapp.widget.MySmileyPicker;
+import xyz.yluo.ruisiapp.widget.emotioninput.EmotionInputHandler;
 
 /**
  * Created by free2 on 16-3-30.

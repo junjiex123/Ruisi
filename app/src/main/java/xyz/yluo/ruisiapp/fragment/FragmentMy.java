@@ -25,7 +25,7 @@ import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.model.FrageType;
 import xyz.yluo.ruisiapp.utils.IntentUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
-import xyz.yluo.ruisiapp.view.CircleImageView;
+import xyz.yluo.ruisiapp.widget.CircleImageView;
 
 /**
  * TODO: 16-8-23  打开的时候检查是否签到显示在后面

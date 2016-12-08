@@ -20,7 +20,7 @@
         android:orientation="horizontal"
         android:paddingBottom="8dp">
 
-        <xyz.yluo.ruisiapp.view.CircleImageView
+        <xyz.yluo.ruisiapp.widget.CircleImageView
             android:id="@+id/article_user_image"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -70,7 +70,7 @@
                     android:textSize="12sp" />
             </LinearLayout>
 
-            <xyz.yluo.ruisiapp.view.ArrowTextView
+            <xyz.yluo.ruisiapp.widget.ArrowTextView
                 android:id="@+id/reply_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

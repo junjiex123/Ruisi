@@ -46,8 +46,8 @@ import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.IntentUtils;
 import xyz.yluo.ruisiapp.utils.KeyboardUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
-import xyz.yluo.ruisiapp.view.emotioninput.PanelViewRoot;
-import xyz.yluo.ruisiapp.view.emotioninput.SmileyInputRoot;
+import xyz.yluo.ruisiapp.widget.emotioninput.PanelViewRoot;
+import xyz.yluo.ruisiapp.widget.emotioninput.SmileyInputRoot;
 
 /**
  * Created by free2 on 16-3-6.

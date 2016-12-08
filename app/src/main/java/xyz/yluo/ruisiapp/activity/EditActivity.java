@@ -30,10 +30,10 @@ import java.util.Map;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
-import xyz.yluo.ruisiapp.view.MyColorPicker;
-import xyz.yluo.ruisiapp.view.MySmileyPicker;
-import xyz.yluo.ruisiapp.view.MySpinner;
-import xyz.yluo.ruisiapp.view.emotioninput.EmotionInputHandler;
+import xyz.yluo.ruisiapp.widget.MyColorPicker;
+import xyz.yluo.ruisiapp.widget.MySmileyPicker;
+import xyz.yluo.ruisiapp.widget.MySpinner;
+import xyz.yluo.ruisiapp.widget.emotioninput.EmotionInputHandler;
 
 /**
  * Created by free2 on 16-8-4.

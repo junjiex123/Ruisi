@@ -49,8 +49,8 @@ import xyz.yluo.ruisiapp.utils.DataManager;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.RuisUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
-import xyz.yluo.ruisiapp.view.AddFriendDialog;
-import xyz.yluo.ruisiapp.view.CircleImageView;
+import xyz.yluo.ruisiapp.widget.AddFriendDialog;
+import xyz.yluo.ruisiapp.widget.CircleImageView;
 
 /**
  * 用户信息activity

@@ -26,9 +26,9 @@ import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.KeyboardUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
-import xyz.yluo.ruisiapp.view.emotioninput.PanelViewRoot;
-import xyz.yluo.ruisiapp.view.emotioninput.SmileyInputRoot;
-import xyz.yluo.ruisiapp.view.myhtmlview.HtmlView;
+import xyz.yluo.ruisiapp.widget.emotioninput.PanelViewRoot;
+import xyz.yluo.ruisiapp.widget.emotioninput.SmileyInputRoot;
+import xyz.yluo.ruisiapp.widget.myhtmlview.HtmlView;
 
 public class ReplyCzActivity extends BaseActivity {
 

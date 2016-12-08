@@ -36,8 +36,8 @@ import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
-import xyz.yluo.ruisiapp.view.CircleImageView;
-import xyz.yluo.ruisiapp.view.MyGridDivider;
+import xyz.yluo.ruisiapp.widget.CircleImageView;
+import xyz.yluo.ruisiapp.widget.MyGridDivider;
 
 /**
  * Created by free2 on 16-3-19.

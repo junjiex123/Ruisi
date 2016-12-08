@@ -46,7 +46,7 @@ import xyz.yluo.ruisiapp.myhttp.TextResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.KeyboardUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
-import xyz.yluo.ruisiapp.view.AddFriendDialog;
+import xyz.yluo.ruisiapp.widget.AddFriendDialog;
 
 public class FriendActivity extends BaseActivity implements LoadMoreListener.OnLoadMoreListener,
         ListItemLongClickListener, TextView.OnEditorActionListener,

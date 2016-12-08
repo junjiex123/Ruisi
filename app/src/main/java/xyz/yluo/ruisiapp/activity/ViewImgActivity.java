@@ -28,7 +28,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
-import xyz.yluo.ruisiapp.view.ScaleImageView;
+import xyz.yluo.ruisiapp.widget.ScaleImageView;
 
 public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
 

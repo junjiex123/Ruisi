@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.view.myhtmlview;
+package xyz.yluo.ruisiapp.widget.myhtmlview;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
