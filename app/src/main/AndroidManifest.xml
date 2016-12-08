@@ -44,8 +44,8 @@
             android:name=".activity.PostActivity"
             android:exported="true"
             android:hardwareAccelerated="true"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activity.UserDetailActivity"
             android:label="用户信息"
@@ -60,8 +60,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ChatActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activity.NewPostActivity"
             android:screenOrientation="portrait" />
@@ -83,6 +83,7 @@
         <activity android:name=".activity.FriendActivity" />
         <activity android:name=".activity.ViewImgActivity" />
         <activity android:name=".activity.SettingActivity" />
+        <activity android:name=".activity.ReplyCzActivity"></activity>
     </application>
 
 </manifest>

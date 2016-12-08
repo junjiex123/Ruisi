@@ -62,12 +62,14 @@ public class PanelViewRoot extends FrameLayout {
             @Override
             public void onTextChange(boolean enable, String s) {
                 sendBtn.setEnabled(enable);
-                if (!enable) {
-                    sendBtn.setVisibility(GONE);
-                    moreViewBtn.setVisibility(VISIBLE);
-                } else {
-                    moreViewBtn.setVisibility(GONE);
-                    sendBtn.setVisibility(VISIBLE);
+                if (moreView != null && moreViewBtn != null) {
+                    if (!enable) {
+                        sendBtn.setVisibility(GONE);
+                        moreViewBtn.setVisibility(VISIBLE);
+                    } else {
+                        moreViewBtn.setVisibility(GONE);
+                        sendBtn.setVisibility(VISIBLE);
+                    }
                 }
                 Log.e("enable", "" + enable);
             }
@@ -78,21 +80,19 @@ public class PanelViewRoot extends FrameLayout {
     }
 
     private void setSmileyView(View smileyBtn) {
-        smileyBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (PanelViewRoot.this.getVisibility() == View.VISIBLE) {
-                    if (smileyView.getVisibility() != VISIBLE) {
-                        smileyView.setVisibility(VISIBLE);
-                        moreView.setVisibility(GONE);
-                    } else {
-                        KeyboardUtil.showKeyboard(editText);
-                    }
-                } else {
+        smileyBtn.setOnClickListener(view -> {
+            if (PanelViewRoot.this.getVisibility() == View.VISIBLE) {
+                if (smileyView.getVisibility() != VISIBLE) {
                     smileyView.setVisibility(VISIBLE);
-                    moreView.setVisibility(GONE);
-                    showPanel(PanelViewRoot.this);
+                    if (moreView != null) moreView.setVisibility(GONE);
+
+                } else {
+                    KeyboardUtil.showKeyboard(editText);
                 }
+            } else {
+                smileyView.setVisibility(VISIBLE);
+                if (moreView != null) moreView.setVisibility(GONE);
+                showPanel(PanelViewRoot.this);
             }
         });
     }
@@ -102,21 +102,20 @@ public class PanelViewRoot extends FrameLayout {
         this.sendBtn.setVisibility(GONE);
         addView(moreView);
         this.moreViewBtn = moreBtn;
-        moreViewBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (PanelViewRoot.this.getVisibility() == View.VISIBLE) {
-                    if (moreView.getVisibility() != VISIBLE) {
-                        moreView.setVisibility(VISIBLE);
-                        smileyView.setVisibility(GONE);
-                    } else {
-                        KeyboardUtil.showKeyboard(editText);
-                    }
-                } else {
+        this.moreViewBtn.setVisibility(VISIBLE);
+        this.sendBtn.setVisibility(GONE);
+        moreViewBtn.setOnClickListener(view -> {
+            if (PanelViewRoot.this.getVisibility() == View.VISIBLE) {
+                if (moreView.getVisibility() != VISIBLE) {
                     moreView.setVisibility(VISIBLE);
                     smileyView.setVisibility(GONE);
-                    showPanel(PanelViewRoot.this);
+                } else {
+                    KeyboardUtil.showKeyboard(editText);
                 }
+            } else {
+                moreView.setVisibility(VISIBLE);
+                smileyView.setVisibility(GONE);
+                showPanel(PanelViewRoot.this);
             }
         });
     }

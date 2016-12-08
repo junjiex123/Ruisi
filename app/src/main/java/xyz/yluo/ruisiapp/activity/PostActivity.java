@@ -158,10 +158,10 @@ public class PostActivity extends BaseActivity
                 //当手指离开的时候
                 float dx = event.getX() - x;
                 float dy = event.getY() - y;
-                if (dx > 100 && dx > dy) {
+                if (x < 180 && dx > 100 && dx > dy) {
                     DisplayMetrics dm = getResources().getDisplayMetrics();
                     int w_screen = dm.widthPixels;
-                    if ((dx > w_screen / 4) && (x < w_screen / 2)) {
+                    if ((dx > 2 * w_screen / 5) && (x < 5 * w_screen / 6)) {
                         finish();
                     }
                 }
@@ -173,7 +173,7 @@ public class PostActivity extends BaseActivity
     }
 
     private void firstGetData(int page) {
-        getArticleData(page, true);
+        getArticleData(page);
     }
 
     @Override
@@ -185,7 +185,7 @@ public class PostActivity extends BaseActivity
             if (page_now < page_sum) {
                 page = page_now + 1;
             }
-            getArticleData(page, false);
+            getArticleData(page);
         }
     }
 
@@ -194,12 +194,11 @@ public class PostActivity extends BaseActivity
         //数据填充
         datas.clear();
         adapter.notifyDataSetChanged();
-        getArticleData(1, true);
+        getArticleData(1);
     }
 
     //文章一页的html 根据页数 Tid
-    private void getArticleData(final int page, boolean needRefresh) {
-        if (needRefresh) setRefresh(true);
+    private void getArticleData(final int page) {
         String url = UrlUtils.getSingleArticleUrl(Tid, page, false);
         HttpUtil.get(this, url, new ResponseHandler() {
             @Override
@@ -222,9 +221,13 @@ public class PostActivity extends BaseActivity
     public void onListItemClick(View v, final int position) {
         switch (v.getId()) {
             case R.id.btn_reply_cz:
-                SingleArticleData single = datas.get(position);
-                String replyUrl = single.getReplyUrlTitle();
-                replyCz(replyUrl);
+                if (isLogin()) {
+                    SingleArticleData single = datas.get(position);
+                    Intent i = new Intent(PostActivity.this, ReplyCzActivity.class);
+                    i.putExtra("islz", single.getUid().equals(datas.get(0).getUid()));
+                    i.putExtra("data", single);
+                    startActivityForResult(i, 20);
+                }
                 break;
             case R.id.need_loading_item:
                 refresh();
@@ -234,7 +237,7 @@ public class PostActivity extends BaseActivity
                 Intent i = new Intent(this, EditActivity.class);
                 i.putExtra("PID", datas.get(position).getPid());
                 i.putExtra("TID", Tid);
-                startActivityForResult(i, 0);
+                startActivityForResult(i, 10);
                 break;
             case R.id.tv_remove:
                 edit_pos = position;
@@ -250,22 +253,28 @@ public class PostActivity extends BaseActivity
         }
     }
 
-
-    //编辑Activity返回
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            Bundle b = data.getExtras();
-            String title = b.getString("TITLE", "");
-            String content = b.getString("CONTENT", "");
-            String pid = b.getString("PID", "");
-            if (edit_pos == 0 && !TextUtils.isEmpty(title)) {
-                datas.get(0).setTitle(title);
+            if (requestCode == 10) {
+                //编辑Activity返回
+                Bundle b = data.getExtras();
+                String title = b.getString("TITLE", "");
+                String content = b.getString("CONTENT", "");
+                if (edit_pos == 0 && !TextUtils.isEmpty(title)) {
+                    datas.get(0).setTitle(title);
+                }
+                datas.get(edit_pos).setCotent(content);
+                adapter.notifyItemChanged(edit_pos);
+            } else if (requestCode == 20) {
+                //回复层主返回
+                replyTime = System.currentTimeMillis();
+                if (page_now == page_sum) {
+                    onLoadMore();
+                }
             }
-            datas.get(edit_pos).setCotent(content);
-            //todo 应该从网络获取
-            adapter.notifyItemChanged(edit_pos);
+
         }
     }
 
@@ -488,7 +497,6 @@ public class PostActivity extends BaseActivity
                 }
                 RedirectPid = "";
             }
-            setRefresh(false);
         }
     }
 
@@ -557,7 +565,7 @@ public class PostActivity extends BaseActivity
         if (!(isLogin() && checkTime() && checkInput())) {
             return;
         }
-        String s = getPreparedReply(input.getText().toString());
+        String s = getPreparedReply(this, input.getText().toString());
         Map<String, String> params = new HashMap<>();
         params.put("message", s);
         HttpUtil.post(this, url + "&handlekey=fastpost&loc=1&inajax=1", params, new ResponseHandler() {
@@ -580,61 +588,8 @@ public class PostActivity extends BaseActivity
         });
     }
 
-    //回复层主
-    private void replyCz(String url) {
-        if (!(isLogin() && checkTime() && checkInput())) {
-            return;
-        }
-        String inputStr = getPreparedReply(input.getText().toString());
-        HttpUtil.get(this, url, new ResponseHandler() {
-            @Override
-            public void onSuccess(byte[] response) {
-                Document document = Jsoup.parse(new String(response));
-                Elements els = document.select("#postform");
-                String formhash = els.select("input[name=formhash]").attr("value");
-                String posttime = els.select("input[name=posttime]").attr("value");
-                String noticeauthor = els.select("input[name=noticeauthor]").attr("value");
-                String noticetrimstr = els.select("input[name=noticetrimstr]").attr("value");
-                String reppid = els.select("input[name=reppid]").attr("value");
-                String reppost = els.select("input[name=reppost]").attr("value");
-                String noticeauthormsg = els.select("input[name=noticeauthormsg]").attr("value");
-                String postUrl = els.attr("action");
 
-                Map<String, String> params = new HashMap<>();
-                params.put("formhash", formhash);
-                params.put("posttime", posttime);
-                params.put("noticeauthor", noticeauthor);
-                params.put("noticetrimstr", noticetrimstr);
-                params.put("reppid", reppid);
-                params.put("reppost", reppost);
-                params.put("noticeauthormsg", noticeauthormsg);
-                params.put("replysubmit", "yes");
-                params.put("message", inputStr);
-
-                HttpUtil.post(PostActivity.this, postUrl, params, new ResponseHandler() {
-                    @Override
-                    public void onSuccess(byte[] response) {
-                        String res = new String(response);
-                        handleReply(true, res + "层主");
-                    }
-
-                    @Override
-                    public void onFailure(Throwable e) {
-                        e.printStackTrace();
-                        handleReply(false, "");
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        setRefresh(false);
-                    }
-                });
-            }
-        });
-    }
-
-    private String getPreparedReply(String text) {
+    public static String getPreparedReply(Context context, String text) {
         int len = 0;
         try {
             len = text.getBytes("UTF-8").length;
@@ -642,7 +597,7 @@ public class PostActivity extends BaseActivity
             e.printStackTrace();
         }
 
-        SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(context);
         if (shp.getBoolean("setting_show_tail", false)) {
             String texttail = shp.getString("setting_user_tail", "无尾巴").trim();
             if (!texttail.equals("无尾巴")) {
@@ -686,7 +641,7 @@ public class PostActivity extends BaseActivity
     private void jump_page(int page) {
         datas.clear();
         adapter.notifyDataSetChanged();
-        getArticleData(page, true);
+        getArticleData(page);
     }
 
     private boolean checkInput() {
@@ -711,10 +666,19 @@ public class PostActivity extends BaseActivity
     private void setRefresh(boolean refresh) {
         if (refresh && !isRefreshing) {
             isRefreshing = true;
-            //// TODO: 2016/12/8
+            showLoading("处理中", "请稍后...");
         } else if (!refresh && isRefreshing) {
             isRefreshing = false;
-            //// TODO: 2016/12/8
+            dismissLoading();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mPanelRoot.getVisibility() == View.VISIBLE) {
+            mPanelRoot.hidePanelAndKeyboard();
+        } else {
+            super.onBackPressed();
         }
     }
 }

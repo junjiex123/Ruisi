@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xyz.yluo.ruisiapp.view.emotioninput.SmileyInputRoot xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:orientation="vertical"
+    tools:context="xyz.yluo.ruisiapp.activity.ReplyCzActivity">
 
     <include layout="@layout/my_toolbar" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/topic_list"
+    <ScrollView
+        android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+
+        <include layout="@layout/item_comment" />
+    </ScrollView>
 
     <include layout="@layout/my_input_bar" />
-
 </xyz.yluo.ruisiapp.view.emotioninput.SmileyInputRoot>

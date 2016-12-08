@@ -67,8 +67,8 @@ class ImageGetter implements Html.ImageGetter {
                 Drawable d = null;
                 if (source.contains("tieba")) {
                     d = getAssertImage("tieba", fileName);
-                } else if (source.contains("ali")) {
-                    d = getAssertImage("ali", fileName);
+                } else if (source.contains("jgz")) {
+                    d = getAssertImage("jgz", fileName);
                 } else if (source.contains("acn")) {
                     d = getAssertImage("acn", fileName);
                 }

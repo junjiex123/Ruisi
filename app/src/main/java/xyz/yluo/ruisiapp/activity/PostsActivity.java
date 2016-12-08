@@ -186,7 +186,6 @@ public class PostsActivity extends BaseActivity implements
                         //外网
                         new getPostsMe().execute(s);
                         break;
-
                 }
             }
 
@@ -198,7 +197,6 @@ public class PostsActivity extends BaseActivity implements
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
             }
         });
-
     }
 
 

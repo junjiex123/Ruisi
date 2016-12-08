@@ -1,6 +1,7 @@
 package xyz.yluo.ruisiapp.activity;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import xyz.yluo.ruisiapp.R;
 public class BaseActivity extends AppCompatActivity {
 
     private static Toast mToast;
+    private static ProgressDialog dialog;
 
     //判断是否需要弹出登录dialog
     public boolean isLogin() {
@@ -92,5 +94,18 @@ public class BaseActivity extends AppCompatActivity {
             mToast.setDuration(Toast.LENGTH_SHORT);
         }
         mToast.show();
+    }
+
+    protected void showLoading(String title, String content) {
+        dialog = new ProgressDialog(this);
+        dialog.setTitle(title);
+        dialog.setMessage(content);
+        dialog.show();
+    }
+
+    protected void dismissLoading() {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
     }
 }

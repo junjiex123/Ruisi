@@ -90,8 +90,7 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
         });
 
         Handler mHandler = new Handler();
-        mHandler.postDelayed(this::getData, 300);
-
+        mHandler.postDelayed(() -> getData(),300);
         return mRootView;
     }
 
