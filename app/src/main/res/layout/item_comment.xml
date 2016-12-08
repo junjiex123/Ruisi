@@ -40,7 +40,7 @@
         android:textSize="12sp" />
 
     <ImageView
-        android:id="@+id/btn_reply_2"
+        android:id="@+id/btn_reply_cz"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_alignParentEnd="true"

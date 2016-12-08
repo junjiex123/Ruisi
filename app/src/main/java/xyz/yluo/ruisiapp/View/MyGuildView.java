@@ -72,6 +72,7 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
         viewPager.setLayoutParams(new LayoutParams(RMP, RMP));
         viewPager.addOnPageChangeListener(this);
         adapter = new PageAdapter();
+        viewPager.setPageTransformer(true, new ScalePageTransformer());
         viewPager.setAdapter(adapter);
         addView(viewPager);
 
@@ -96,6 +97,7 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
     public void setData(List<GalleryData> datas) {
         isAutoPlay = !(isAutoPlay && datas.size() < 3);
         this.datas = datas;
+        viewPager.setOffscreenPageLimit(datas.size());
         adapter.notifyDataSetChanged();
         initdotsAndImages();
         changeView(0);

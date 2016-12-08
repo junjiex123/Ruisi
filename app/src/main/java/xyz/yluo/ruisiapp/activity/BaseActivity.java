@@ -53,6 +53,13 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    protected void setTitle(String s) {
+        View toolbar = findViewById(R.id.myToolBar);
+        if (toolbar != null) {
+            ((TextView) toolbar.findViewById(R.id.title)).setText(s);
+        }
+    }
+
     protected ImageView addToolbarMenu(int resid) {
         View toolbar = findViewById(R.id.myToolBar);
         if (toolbar != null) {

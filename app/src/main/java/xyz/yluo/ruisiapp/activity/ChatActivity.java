@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,10 +32,10 @@ import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.myhttp.TextResponseHandler;
 import xyz.yluo.ruisiapp.utils.DimmenUtils;
 import xyz.yluo.ruisiapp.utils.GetId;
-import xyz.yluo.ruisiapp.utils.ImeUtil;
-import xyz.yluo.ruisiapp.utils.PostHandler;
+import xyz.yluo.ruisiapp.utils.KeyboardUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 import xyz.yluo.ruisiapp.view.MySmileyPicker;
+import xyz.yluo.ruisiapp.view.emotioninput.EmotionInputHandler;
 
 /**
  * Created by free2 on 16-3-30.
@@ -46,7 +45,6 @@ import xyz.yluo.ruisiapp.view.MySmileyPicker;
 public class ChatActivity extends BaseActivity {
 
     private RecyclerView list;
-    private SwipeRefreshLayout refreshLayout;
     private List<ChatListData> datas = new ArrayList<>();
     private ChatListAdapter adapter;
     private String replyUrl = "";
@@ -55,6 +53,8 @@ public class ChatActivity extends BaseActivity {
     private long replyTime = 0;
     private EditText input;
     private MySmileyPicker smileyPicker;
+    private boolean isRefreshing = false;
+    private EmotionInputHandler handler;
 
     public static void open(Context context, String username, String url) {
         Intent intent = new Intent(context, ChatActivity.class);
@@ -71,27 +71,21 @@ public class ChatActivity extends BaseActivity {
 
         smileyPicker = new MySmileyPicker(this);
         list = (RecyclerView) findViewById(R.id.list);
-        input = (EditText) findViewById(R.id.input_aera);
-        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_view);
-        refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
+        input = (EditText) findViewById(R.id.ed_comment);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         adapter = new ChatListAdapter(this, datas);
         adapter.disableLoadMore();
         list.setLayoutManager(layoutManager);
         list.setAdapter(adapter);
-        refreshLayout.setOnRefreshListener(() -> {
-            datas.clear();
-            adapter.notifyDataSetChanged();
-            getData(true);
-        });
         Bundle bundle = this.getIntent().getExtras();
         initToolBar(true, bundle.getString("username"));
         url = bundle.getString("url");
 
-        smileyPicker.setListener((str, a) -> {
-            PostHandler handler = new PostHandler(input);
-            handler.insertSmiley("{:" + str + ":}", a);
+        handler = new EmotionInputHandler(input, (enable, s) -> {
+
         });
+
+        smileyPicker.setListener((str, a) -> handler.insertSmiley(str, a));
 
         findViewById(R.id.action_send).setOnClickListener(v -> send_click());
 
@@ -104,8 +98,14 @@ public class ChatActivity extends BaseActivity {
     }
 
 
+    private void refresh() {
+        datas.clear();
+        adapter.notifyDataSetChanged();
+        getData(true);
+    }
+
     private void getData(boolean needRefresh) {
-        if (needRefresh) refreshLayout.setRefreshing(true);
+        if (needRefresh) setRefresh(true);
         Log.e("chat", "get data...");
 
         new GetDataTask().execute(url);
@@ -184,10 +184,8 @@ public class ChatActivity extends BaseActivity {
                 adapter.notifyItemRangeInserted(datas.size() - add, add);
             }
 
-            refreshLayout.postDelayed(() -> {
-                refreshLayout.setRefreshing(false);
-                list.scrollToPosition(datas.size() - 1);
-            }, 400);
+            list.scrollToPosition(datas.size() - 1);
+            setRefresh(true);
         }
     }
 
@@ -219,7 +217,7 @@ public class ChatActivity extends BaseActivity {
             }
 
             final Snackbar snackbar = Snackbar.make(list, "回复发表中...", Snackbar.LENGTH_LONG);
-            ImeUtil.hide_ime(this);
+            KeyboardUtil.hideKeyboard(this);
             snackbar.show();
             Map<String, String> params = new HashMap<>();
             params.put("touid", touid);
@@ -256,6 +254,16 @@ public class ChatActivity extends BaseActivity {
                     super.onFinish();
                 }
             });
+        }
+    }
+
+    private void setRefresh(boolean refresh) {
+        if (refresh && !isRefreshing) {
+            isRefreshing = true;
+            //// TODO: 2016/12/8
+        } else if (!refresh && isRefreshing) {
+            isRefreshing = false;
+            //// TODO: 2016/12/8
         }
     }
 }

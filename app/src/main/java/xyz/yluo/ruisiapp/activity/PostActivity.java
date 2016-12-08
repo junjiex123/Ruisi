@@ -2,24 +2,22 @@ package xyz.yluo.ruisiapp.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -27,6 +25,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,8 +44,10 @@ import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.IntentUtils;
+import xyz.yluo.ruisiapp.utils.KeyboardUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
-import xyz.yluo.ruisiapp.view.MyReplyView;
+import xyz.yluo.ruisiapp.view.emotioninput.PanelViewRoot;
+import xyz.yluo.ruisiapp.view.emotioninput.SmileyInputRoot;
 
 /**
  * Created by free2 on 16-3-6.
@@ -55,11 +56,9 @@ import xyz.yluo.ruisiapp.view.MyReplyView;
  * 其余是评论
  */
 public class PostActivity extends BaseActivity
-        implements ListItemClickListener, LoadMoreListener.OnLoadMoreListener,
-        MyReplyView.replyCompeteCallBack, View.OnClickListener {
+        implements ListItemClickListener, LoadMoreListener.OnLoadMoreListener, View.OnClickListener {
 
-    protected SwipeRefreshLayout refreshLayout;
-    private RecyclerView mRecyclerView;
+    private RecyclerView topicList;
     //上一次回复时间
     private long replyTime = 0;
     //当前第几页
@@ -76,11 +75,11 @@ public class PostActivity extends BaseActivity
     private List<SingleArticleData> datas = new ArrayList<>();
     //是否调到指定页数and楼层???
     private boolean isSaveToDataBase = false;
-    private ArrayAdapter<String> spinnerAdapter;
-    private List<String> pageSpinnerDatas = new ArrayList<>();
     private String Title, AuthorName, Tid, RedirectPid = "";
-    private Spinner spinner;
     private boolean showPlainText = false;
+    private boolean isRefreshing = false;
+    private EditText input;
+    private PanelViewRoot mPanelRoot;
 
     public static void open(Context context, String url, @Nullable String author) {
         Intent intent = new Intent(context, PostActivity.class);
@@ -94,47 +93,36 @@ public class PostActivity extends BaseActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
-
+        initToolBar(true, "正文");
+        input = (EditText) findViewById(R.id.ed_comment);
+        SmileyInputRoot rootViewGroup = (SmileyInputRoot) findViewById(R.id.root);
+        mPanelRoot = rootViewGroup.getmPanelLayout();
         showPlainText = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("setting_show_plain", false);
-        spinner = (Spinner) findViewById(R.id.btn_jump_spinner);
-        spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, pageSpinnerDatas);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(spinnerAdapter);
-        mRecyclerView = (RecyclerView) findViewById(R.id.topic_recycler_view);
-        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.topic_refresh_layout);
-        refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
+        topicList = (RecyclerView) findViewById(R.id.topic_list);
+        View btnSend = findViewById(R.id.btn_send);
+        btnSend.setOnClickListener(this);
+        View smuleyBtn = findViewById(R.id.btn_emotion);
+        View btnMore = findViewById(R.id.btn_more);
 
-        LinearLayout bottom_bar_top = (LinearLayout) findViewById(R.id.bottom_bar);
-        for (int i = 0; i < bottom_bar_top.getChildCount(); i++) {
-            View v = bottom_bar_top.getChildAt(i);
-            if (v.getId() != R.id.btn_jump_spinner) {
-                v.setOnClickListener(this);
-            }
-        }
-
-        //下拉刷新
-        refreshLayout.setOnRefreshListener(this::refresh);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        topicList.setLayoutManager(mLayoutManager);
         adapter = new PostAdapter(this, this, datas);
         /**
          * 缓存数量
          */
-        mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 8));
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
-                if (!(pos + 1 == page_now)) {
-                    jump_page(pos + 1);
-                }
-            }
+        topicList.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 8));
+        topicList.setAdapter(adapter);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+        KeyboardUtil.attach(this, mPanelRoot, isShowing -> Log.e("key board", String.valueOf(isShowing)));
+        mPanelRoot.init(input, smuleyBtn, btnSend);
+        mPanelRoot.setMoreView(LayoutInflater.from(this).inflate(R.layout.my_smiley_menu, null), btnMore);
+        topicList.setOnTouchListener((view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                mPanelRoot.hidePanelAndKeyboard();
             }
+            return false;
         });
 
-        mRecyclerView.setAdapter(adapter);
         Bundle b = getIntent().getExtras();
         String url = b.getString("url");
         AuthorName = b.getString("author");
@@ -201,13 +189,6 @@ public class PostActivity extends BaseActivity
         }
     }
 
-    //跳页
-    private void jump_page(int page) {
-        datas.clear();
-        adapter.notifyDataSetChanged();
-        getArticleData(page, true);
-    }
-
     private void refresh() {
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
         //数据填充
@@ -218,7 +199,7 @@ public class PostActivity extends BaseActivity
 
     //文章一页的html 根据页数 Tid
     private void getArticleData(final int page, boolean needRefresh) {
-        if (needRefresh) refreshLayout.setRefreshing(true);
+        if (needRefresh) setRefresh(true);
         String url = UrlUtils.getSingleArticleUrl(Tid, page, false);
         HttpUtil.get(this, url, new ResponseHandler() {
             @Override
@@ -240,20 +221,10 @@ public class PostActivity extends BaseActivity
     @Override
     public void onListItemClick(View v, final int position) {
         switch (v.getId()) {
-            case R.id.btn_reply_2:
-                if (isLogin()) {
-                    SingleArticleData single = datas.get(position);
-                    String replyUrl = single.getReplyUrlTitle();
-                    String replyIndex = single.getIndex();
-                    String replyName = single.getUsername();
-                    String ref = single.getCotent();
-                    String replyUserInfo = "回复:" + replyIndex + " " + replyName;
-                    //String url,int type,long lastreplyTime,boolean isEnableTail,String userName,String info
-                    MyReplyView dialog = MyReplyView.newInstance(replyUrl, MyReplyView.REPLY_CZ, replyTime,
-                            true, replyUserInfo, ref);
-                    dialog.setCallBack(PostActivity.this);
-                    dialog.show(getFragmentManager(), "reply");
-                }
+            case R.id.btn_reply_cz:
+                SingleArticleData single = datas.get(position);
+                String replyUrl = single.getReplyUrlTitle();
+                replyCz(replyUrl);
                 break;
             case R.id.need_loading_item:
                 refresh();
@@ -279,6 +250,7 @@ public class PostActivity extends BaseActivity
         }
     }
 
+
     //编辑Activity返回
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -297,59 +269,12 @@ public class PostActivity extends BaseActivity
         }
     }
 
-    /**
-     * 收藏帖子
-     */
-    private void starTask(final View v) {
-        final String url = UrlUtils.getStarUrl(Tid);
-        Map<String, String> params = new HashMap<>();
-        params.put("favoritesubmit", "true");
-        HttpUtil.post(this, url, params, new ResponseHandler() {
-
-            @Override
-            public void onSuccess(byte[] response) {
-                String res = new String(response);
-                if (res.contains("成功") || res.contains("您已收藏")) {
-                    showToast("收藏成功");
-                    if (v != null) {
-                        final ImageView mv = (ImageView) v;
-                        mv.postDelayed(() -> mv.setImageResource(R.drawable.ic_star_accent_24dp), 300);
-
-                    }
-
-                }
-            }
-        });
-    }
-
-    /**
-     * 回复dialog完成回掉函数
-     */
-    @Override
-    public void onReplyFinish(int status, String info) {
-        if (status == RESULT_OK) {
-            replyTime = System.currentTimeMillis();
-            if (page_now == page_sum) {
-                onLoadMore();
-            }
-        }
-    }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_reply:
-                if (isLogin()) {
-                    Log.e("reply", "url" + replyUrl);
-                    String hinttext = Title;
-                    if (hinttext.length() > 10) {
-                        hinttext = hinttext.substring(0, 10) + "...";
-                    }
-                    String hint = "回复帖子:" + hinttext;
-                    MyReplyView dialog = MyReplyView.newInstance(replyUrl, MyReplyView.REPLY_LZ, replyTime, true, hint, Title);
-                    dialog.setCallBack(PostActivity.this);
-                    dialog.show(getFragmentManager(), "reply");
-                }
+            case R.id.btn_send:
+                replyLz(replyUrl);
                 break;
             case R.id.btn_star:
                 if (isLogin()) {
@@ -368,9 +293,6 @@ public class PostActivity extends BaseActivity
                 shareIntent.setType("text/plain");
                 //设置分享列表的标题，并且每次都显示分享列表
                 startActivity(Intent.createChooser(shareIntent, "分享到文章到:"));
-                break;
-            case R.id.btn_back_top:
-                mRecyclerView.scrollToPosition(0);
                 break;
         }
     }
@@ -500,7 +422,7 @@ public class PostActivity extends BaseActivity
             if (!TextUtils.isEmpty(errorText)) {
                 Toast.makeText(PostActivity.this, errorText, Toast.LENGTH_SHORT).show();
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
-                refreshLayout.setRefreshing(false);
+                setRefresh(false);
                 return;
             }
             if (tepdata.size() == 0) {
@@ -560,29 +482,41 @@ public class PostActivity extends BaseActivity
                 for (int i = 0; i < datas.size(); i++) {
                     if (!TextUtils.isEmpty(datas.get(i).getPid())
                             && datas.get(i).getPid().equals(RedirectPid)) {
-                        mRecyclerView.scrollToPosition(i);
+                        topicList.scrollToPosition(i);
                         break;
                     }
                 }
                 RedirectPid = "";
             }
-
-            //重新设置spinner
-            pageSpinnerDatas.clear();
-            for (int i = 1; i <= page_sum; i++) {
-                pageSpinnerDatas.add(i + "/" + page_sum + "页");
-            }
-            spinner.setSelection(page_now - 1);
-            spinnerAdapter.notifyDataSetChanged();
-
-            refreshLayout.postDelayed(() -> refreshLayout.setRefreshing(false), 400);
+            setRefresh(false);
         }
+    }
+
+    /**
+     * 收藏帖子
+     */
+    private void starTask(final View v) {
+        final String url = UrlUtils.getStarUrl(Tid);
+        Map<String, String> params = new HashMap<>();
+        params.put("favoritesubmit", "true");
+        HttpUtil.post(this, url, params, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                if (res.contains("成功") || res.contains("您已收藏")) {
+                    showToast("收藏成功");
+                    if (v != null) {
+                        final ImageView mv = (ImageView) v;
+                        mv.postDelayed(() -> mv.setImageResource(R.drawable.ic_star_accent_24dp), 300);
+                    }
+                }
+            }
+        });
     }
 
     //删除帖子或者回复
     private void removeItem(final int pos) {
         Map<String, String> params = new HashMap<>();
-        //params.put("posttime", time);
         params.put("editsubmit", "yes");
         //params.put("fid",);
         params.put("tid", Tid);
@@ -616,5 +550,171 @@ public class PostActivity extends BaseActivity
                 showToast("网络错误,删除失败！");
             }
         });
+    }
+
+    //回复楼主
+    private void replyLz(String url) {
+        if (!(isLogin() && checkTime() && checkInput())) {
+            return;
+        }
+        String s = getPreparedReply(input.getText().toString());
+        Map<String, String> params = new HashMap<>();
+        params.put("message", s);
+        HttpUtil.post(this, url + "&handlekey=fastpost&loc=1&inajax=1", params, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                handleReply(true, res);
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                handleReply(false, "");
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                setRefresh(false);
+            }
+        });
+    }
+
+    //回复层主
+    private void replyCz(String url) {
+        if (!(isLogin() && checkTime() && checkInput())) {
+            return;
+        }
+        String inputStr = getPreparedReply(input.getText().toString());
+        HttpUtil.get(this, url, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                Document document = Jsoup.parse(new String(response));
+                Elements els = document.select("#postform");
+                String formhash = els.select("input[name=formhash]").attr("value");
+                String posttime = els.select("input[name=posttime]").attr("value");
+                String noticeauthor = els.select("input[name=noticeauthor]").attr("value");
+                String noticetrimstr = els.select("input[name=noticetrimstr]").attr("value");
+                String reppid = els.select("input[name=reppid]").attr("value");
+                String reppost = els.select("input[name=reppost]").attr("value");
+                String noticeauthormsg = els.select("input[name=noticeauthormsg]").attr("value");
+                String postUrl = els.attr("action");
+
+                Map<String, String> params = new HashMap<>();
+                params.put("formhash", formhash);
+                params.put("posttime", posttime);
+                params.put("noticeauthor", noticeauthor);
+                params.put("noticetrimstr", noticetrimstr);
+                params.put("reppid", reppid);
+                params.put("reppost", reppost);
+                params.put("noticeauthormsg", noticeauthormsg);
+                params.put("replysubmit", "yes");
+                params.put("message", inputStr);
+
+                HttpUtil.post(PostActivity.this, postUrl, params, new ResponseHandler() {
+                    @Override
+                    public void onSuccess(byte[] response) {
+                        String res = new String(response);
+                        handleReply(true, res + "层主");
+                    }
+
+                    @Override
+                    public void onFailure(Throwable e) {
+                        e.printStackTrace();
+                        handleReply(false, "");
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        setRefresh(false);
+                    }
+                });
+            }
+        });
+    }
+
+    private String getPreparedReply(String text) {
+        int len = 0;
+        try {
+            len = text.getBytes("UTF-8").length;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(this);
+        if (shp.getBoolean("setting_show_tail", false)) {
+            String texttail = shp.getString("setting_user_tail", "无尾巴").trim();
+            if (!texttail.equals("无尾巴")) {
+                texttail = "     " + texttail;
+                text += texttail;
+            }
+        }
+
+        //字数补齐补丁
+        if (len < 13) {
+            int need = 14 - len;
+            for (int i = 0; i < need; i++) {
+                text += " ";
+            }
+        }
+
+        return text;
+    }
+
+    private void handleReply(boolean isok, String res) {
+        if (isok) {
+            if (res.contains("成功") || res.contains("层主")) {
+                Toast.makeText(this, "回复发表成功", Toast.LENGTH_SHORT).show();
+                input.setText(null);
+                replyTime = System.currentTimeMillis();
+                if (page_now == page_sum) {
+                    onLoadMore();
+                }
+                mPanelRoot.hidePanelAndKeyboard();
+            } else if (res.contains("您两次发表间隔")) {
+                Toast.makeText(this, "您两次发表间隔太短了......", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "由于未知原因发表失败", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "网络错误", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //跳页
+    private void jump_page(int page) {
+        datas.clear();
+        adapter.notifyDataSetChanged();
+        getArticleData(page, true);
+    }
+
+    private boolean checkInput() {
+        String s = input.getText().toString();
+        if (TextUtils.isEmpty(s)) {
+            showToast("你还没写内容呢!");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean checkTime() {
+        if (System.currentTimeMillis() - replyTime > 15000) {
+            return true;
+        } else {
+            showToast("还没到15s呢，再等等吧!");
+            return false;
+        }
+    }
+
+    private void setRefresh(boolean refresh) {
+        if (refresh && !isRefreshing) {
+            isRefreshing = true;
+            //// TODO: 2016/12/8
+        } else if (!refresh && isRefreshing) {
+            isRefreshing = false;
+            //// TODO: 2016/12/8
+        }
     }
 }

@@ -23,10 +23,10 @@ import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.MessageAdapter;
-import xyz.yluo.ruisiapp.myhttp.HttpUtil;
-import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.model.ListType;
 import xyz.yluo.ruisiapp.model.MessageData;
+import xyz.yluo.ruisiapp.myhttp.HttpUtil;
+import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 
 //回复我的
 //// TODO: 16-8-22  add 提到我的home.php?mod=space&do=notice&view=mypost&type=at&mobile=2

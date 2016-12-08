@@ -27,12 +27,12 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.HotNewListAdapter;
 import xyz.yluo.ruisiapp.database.MyDB;
-import xyz.yluo.ruisiapp.myhttp.HttpUtil;
-import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
-import xyz.yluo.ruisiapp.myhttp.SyncHttpClient;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.model.ArticleListData;
 import xyz.yluo.ruisiapp.model.GalleryData;
+import xyz.yluo.ruisiapp.myhttp.HttpUtil;
+import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
+import xyz.yluo.ruisiapp.myhttp.SyncHttpClient;
 import xyz.yluo.ruisiapp.utils.GetId;
 
 /**

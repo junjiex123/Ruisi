@@ -12,10 +12,10 @@ import android.widget.TextView;
 import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.view.MyGuildView;
 import xyz.yluo.ruisiapp.activity.PostActivity;
 import xyz.yluo.ruisiapp.model.ArticleListData;
 import xyz.yluo.ruisiapp.model.GalleryData;
+import xyz.yluo.ruisiapp.view.MyGuildView;
 
 /**
  * Created by free2 on 16-3-31.

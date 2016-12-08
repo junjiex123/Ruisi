@@ -1,12 +1,14 @@
 package xyz.yluo.ruisiapp.adapter;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +22,14 @@ import xyz.yluo.ruisiapp.listener.ListItemClickListener;
  */
 public class SmileyAdapter extends RecyclerView.Adapter<SmileyAdapter.SmileyViewHolder> {
 
-    private List<Drawable> images = new ArrayList<>();
+    private List<Pair<String, String>> smileys = new ArrayList<>();
     private ListItemClickListener itemListener;
+    private Context context;
 
-    public SmileyAdapter(ListItemClickListener itemListener, List<Drawable> images) {
-        this.images = images;
+    public SmileyAdapter(Context context,ListItemClickListener itemListener, List<Pair<String, String>> smileys) {
+        this.smileys = smileys;
         this.itemListener = itemListener;
+        this.context = context;
     }
 
 
@@ -42,7 +46,7 @@ public class SmileyAdapter extends RecyclerView.Adapter<SmileyAdapter.SmileyView
 
     @Override
     public int getItemCount() {
-        return images.size();
+        return smileys.size();
     }
 
     class SmileyViewHolder extends RecyclerView.ViewHolder {
@@ -56,7 +60,7 @@ public class SmileyAdapter extends RecyclerView.Adapter<SmileyAdapter.SmileyView
 
 
         private void setSmiley(int position) {
-            image.setImageDrawable(images.get(position));
+            Picasso.with(context).load(smileys.get(position).first).into(image);
         }
 
 

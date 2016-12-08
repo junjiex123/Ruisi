@@ -24,13 +24,13 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
 import xyz.yluo.ruisiapp.database.MyDB;
-import xyz.yluo.ruisiapp.myhttp.HttpUtil;
-import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.model.ArticleListData;
 import xyz.yluo.ruisiapp.model.FrageType;
 import xyz.yluo.ruisiapp.model.ListType;
 import xyz.yluo.ruisiapp.model.SimpleListData;
+import xyz.yluo.ruisiapp.myhttp.HttpUtil;
+import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 
 /**
  * Created by free2 on 16-7-14.

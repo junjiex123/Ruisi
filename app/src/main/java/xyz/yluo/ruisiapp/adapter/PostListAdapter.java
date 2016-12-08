@@ -15,11 +15,11 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.view.CircleImageView;
 import xyz.yluo.ruisiapp.activity.PostActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.model.ArticleListData;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
+import xyz.yluo.ruisiapp.view.CircleImageView;
 
 /**
  * Created by free2 on 16-3-5.

@@ -44,7 +44,7 @@ import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.myhttp.TextResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
-import xyz.yluo.ruisiapp.utils.ImeUtil;
+import xyz.yluo.ruisiapp.utils.KeyboardUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 import xyz.yluo.ruisiapp.view.AddFriendDialog;
 
@@ -182,7 +182,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
             Snackbar.make(recycler_view,
                     "请输入要搜索好友的名称！", Snackbar.LENGTH_SHORT).show();
         } else {
-            ImeUtil.hide_ime(this);
+            KeyboardUtil.hideKeyboard(this);
             String url = "home.php?username=" + str
                     + "&searchsubmit=true&op=&mod=spacecp&ac=search&type=all&mobile=2";
             adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
@@ -340,7 +340,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
 
                 @Override
                 public void onAnimationEnd(Animator animator) {
-                    ImeUtil.show_ime(FriendActivity.this, search_input);
+                    KeyboardUtil.showKeyboard(search_input);
                 }
 
                 @Override
@@ -357,7 +357,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
             animator.start();
         } else {
             search_card.setVisibility(View.VISIBLE);
-            ImeUtil.show_ime(FriendActivity.this, search_input);
+            KeyboardUtil.showKeyboard(search_input);
         }
     }
 

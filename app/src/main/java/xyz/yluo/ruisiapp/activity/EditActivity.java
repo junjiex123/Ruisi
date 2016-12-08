@@ -30,10 +30,10 @@ import java.util.Map;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
-import xyz.yluo.ruisiapp.utils.PostHandler;
 import xyz.yluo.ruisiapp.view.MyColorPicker;
 import xyz.yluo.ruisiapp.view.MySmileyPicker;
 import xyz.yluo.ruisiapp.view.MySpinner;
+import xyz.yluo.ruisiapp.view.emotioninput.EmotionInputHandler;
 
 /**
  * Created by free2 on 16-8-4.
@@ -72,15 +72,15 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
         typeiddatas = new ArrayList<>();
 
 
-        addToolbarMenu(R.drawable.ic_done_black_24dp)
-                .setOnClickListener(view -> {
-                    if (checkPostInput()) {
-                        dialog = new ProgressDialog(EditActivity.this);
-                        dialog.setMessage("提交中,请稍后......");
-                        dialog.show();
-                        start_post();
-                    }
-                });
+        View btnDone = addToolbarMenu(R.drawable.ic_done_black_24dp);
+        btnDone.setOnClickListener(view -> {
+            if (checkPostInput()) {
+                dialog = new ProgressDialog(EditActivity.this);
+                dialog.setMessage("提交中,请稍后......");
+                dialog.show();
+                start_post();
+            }
+        });
 
         findViewById(R.id.forum_container).setVisibility(View.GONE);
         type_id_container = findViewById(R.id.type_id_container);
@@ -125,11 +125,15 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
 
         myColorPicker.setListener((pos, v, color) -> handleInsert("[color=" + color + "][/color]"));
 
-        smileyPicker.setListener((str, a) -> {
-            PostHandler handler = new PostHandler(ed_content);
-            handler.insertSmiley("{:" + str + ":}", a);
+        EmotionInputHandler handler = new EmotionInputHandler(ed_content, (enable, s) -> {
+            if (enable) {
+                btnDone.setVisibility(View.VISIBLE);
+            } else {
+                btnDone.setVisibility(View.INVISIBLE);
+            }
         });
 
+        smileyPicker.setListener(handler::insertSmiley);
         start_edit();
     }
 
@@ -279,7 +283,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private boolean checkPostInput() {
-
         if (!TextUtils.isEmpty(typeId) && typeId.equals("0")) {
             Toast.makeText(this, "请选择主题分类", Toast.LENGTH_SHORT).show();
             return false;

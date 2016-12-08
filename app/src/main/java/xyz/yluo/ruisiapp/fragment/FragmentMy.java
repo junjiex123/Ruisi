@@ -1,6 +1,7 @@
 package xyz.yluo.ruisiapp.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
@@ -14,16 +15,17 @@ import com.squareup.picasso.Picasso;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.view.CircleImageView;
 import xyz.yluo.ruisiapp.activity.AboutActivity;
 import xyz.yluo.ruisiapp.activity.FragementActivity;
 import xyz.yluo.ruisiapp.activity.FriendActivity;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
+import xyz.yluo.ruisiapp.activity.SettingActivity;
 import xyz.yluo.ruisiapp.activity.SignActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.model.FrageType;
 import xyz.yluo.ruisiapp.utils.IntentUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
+import xyz.yluo.ruisiapp.view.CircleImageView;
 
 /**
  * TODO: 16-8-23  打开的时候检查是否签到显示在后面
@@ -130,7 +132,7 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener {
                 }
                 break;
             case R.id.setting:
-                FragementActivity.open(getActivity(), FrageType.SETTING);
+                startActivity(new Intent(getActivity(), SettingActivity.class));
                 break;
             case R.id.post:
                 if (isLogin()) {

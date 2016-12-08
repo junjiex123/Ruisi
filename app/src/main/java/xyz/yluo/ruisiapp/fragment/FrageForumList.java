@@ -24,20 +24,20 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.view.CircleImageView;
-import xyz.yluo.ruisiapp.view.MyGridDivider;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.PostsActivity;
 import xyz.yluo.ruisiapp.activity.SearchActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
 import xyz.yluo.ruisiapp.database.MyDB;
-import xyz.yluo.ruisiapp.myhttp.HttpUtil;
-import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.model.ForumListData;
+import xyz.yluo.ruisiapp.myhttp.HttpUtil;
+import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
+import xyz.yluo.ruisiapp.view.CircleImageView;
+import xyz.yluo.ruisiapp.view.MyGridDivider;
 
 /**
  * Created by free2 on 16-3-19.

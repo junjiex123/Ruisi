@@ -12,11 +12,11 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.view.CircleImageView;
 import xyz.yluo.ruisiapp.activity.ChatActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.listener.ListItemLongClickListener;
 import xyz.yluo.ruisiapp.model.FriendData;
+import xyz.yluo.ruisiapp.view.CircleImageView;
 
 /**
  * Created by free2 on 16-4-12.

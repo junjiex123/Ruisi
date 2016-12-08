@@ -4,6 +4,7 @@ package xyz.yluo.ruisiapp.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 import xyz.yluo.ruisiapp.fragment.FrageForumList;
 import xyz.yluo.ruisiapp.fragment.FrageHotNew;
@@ -26,6 +27,7 @@ public class MainPageAdapter extends FragmentStatePagerAdapter {
             switch (position) {
                 case 0:
                     to = new FrageForumList();
+                    Log.e("MainPageAdapter", "new FrageForumList");
                     break;
                 case 1:
                     to = new FrageHotNew();

@@ -44,6 +44,7 @@
             android:name=".activity.PostActivity"
             android:exported="true"
             android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.UserDetailActivity"
@@ -59,6 +60,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ChatActivity"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.NewPostActivity"
@@ -80,6 +82,7 @@
         <activity android:name=".activity.FragementActivity" />
         <activity android:name=".activity.FriendActivity" />
         <activity android:name=".activity.ViewImgActivity" />
+        <activity android:name=".activity.SettingActivity" />
     </application>
 
 </manifest>

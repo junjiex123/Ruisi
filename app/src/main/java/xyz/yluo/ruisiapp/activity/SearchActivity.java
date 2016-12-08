@@ -39,7 +39,7 @@ import xyz.yluo.ruisiapp.model.SimpleListData;
 import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
-import xyz.yluo.ruisiapp.utils.ImeUtil;
+import xyz.yluo.ruisiapp.utils.KeyboardUtil;
 
 /**
  * Created by free2 on 16-4-6.
@@ -113,7 +113,7 @@ public class SearchActivity extends BaseActivity
                 }
             });
         } else {
-            ImeUtil.show_ime(SearchActivity.this, search_input);
+            KeyboardUtil.showKeyboard(search_input);
         }
     }
 
@@ -127,8 +127,7 @@ public class SearchActivity extends BaseActivity
             hide_search_view();
             getData(str);
         }
-
-        ImeUtil.hide_ime(this);
+        KeyboardUtil.hideKeyboard(this);
         datas.clear();
         adapter.notifyDataSetChanged();
         isEnableLoadMore = true;
@@ -300,7 +299,7 @@ public class SearchActivity extends BaseActivity
 
                 @Override
                 public void onAnimationEnd(Animator animator) {
-                    ImeUtil.show_ime(SearchActivity.this, search_input);
+                    KeyboardUtil.showKeyboard(search_input);
                 }
 
                 @Override
@@ -315,7 +314,7 @@ public class SearchActivity extends BaseActivity
             });
         } else {
             search_card.setVisibility(View.VISIBLE);
-            ImeUtil.show_ime(SearchActivity.this, search_input);
+            KeyboardUtil.showKeyboard(search_input);
         }
     }
 

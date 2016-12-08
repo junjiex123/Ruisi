@@ -41,10 +41,6 @@ public class FragementActivity extends BaseActivity {
             case FrageType.HISTORY:
                 to = FrageTopicStarHistory.newInstance(FrageType.HISTORY);
                 break;
-            case FrageType.SETTING:
-                //to = new FragSetting();
-                // TODO: 2016/12/5
-                break;
         }
         getSupportFragmentManager().beginTransaction().replace(R.id.container, to).commit();
     }

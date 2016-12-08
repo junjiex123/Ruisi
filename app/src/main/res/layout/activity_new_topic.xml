@@ -88,7 +88,6 @@
             android:hint="标题"
             android:maxLines="2" />
 
-
         <include layout="@layout/my_editor_bar" />
 
         <EditText

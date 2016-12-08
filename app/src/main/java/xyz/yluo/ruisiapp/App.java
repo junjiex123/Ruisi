@@ -125,5 +125,4 @@ public class App extends Application {
 
 
     public static final String CHECK_UPDATE_URL = "forum.php?mod=viewthread&tid=" + App.POST_TID + "&mobile=2";
-
 }

@@ -65,7 +65,9 @@ public class HomeActivity extends BaseActivity
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         adapter = new MainPageAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(4);
         viewPager.addOnPageChangeListener(this);
+
         bottomTab = (MyBottomTab) findViewById(R.id.bottom_bar);
         bottomTab.setOnTabChangeListener(this);
 

@@ -31,11 +31,11 @@ import java.util.Map;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
-import xyz.yluo.ruisiapp.utils.PostHandler;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 import xyz.yluo.ruisiapp.view.MyColorPicker;
 import xyz.yluo.ruisiapp.view.MySmileyPicker;
 import xyz.yluo.ruisiapp.view.MySpinner;
+import xyz.yluo.ruisiapp.view.emotioninput.EmotionInputHandler;
 
 /**
  * Created by free2 on 16-3-6.
@@ -50,6 +50,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
     private TextView tv_select_forum, tv_select_type;
     private List<Pair<String, String>> typeiddatas;
     private View type_id_container;
+    private EmotionInputHandler handler;
     private String typeId = "";
 
     private static final int[] fids = new int[]{
@@ -140,9 +141,12 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
 
         myColorPicker.setListener((pos, v, color) -> handleInsert("[color=" + color + "][/color]"));
 
+        handler = new EmotionInputHandler(ed_content, (enable, s) -> {
+
+        });
+
         smileyPicker.setListener((str, a) -> {
-            PostHandler handler = new PostHandler(ed_content);
-            handler.insertSmiley("{:" + str + ":}", a);
+            handler.insertSmiley(str, a);
         });
 
         findViewById(R.id.action_backspace).setOnLongClickListener(v -> {

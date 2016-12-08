@@ -13,13 +13,13 @@ import java.util.List;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.view.CircleImageView;
-import xyz.yluo.ruisiapp.view.myhtmlview.HtmlView;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.model.SingleArticleData;
 import xyz.yluo.ruisiapp.model.SingleType;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
+import xyz.yluo.ruisiapp.view.CircleImageView;
+import xyz.yluo.ruisiapp.view.myhtmlview.HtmlView;
 
 /**
  * Created by free2 on 16-3-7.
@@ -141,7 +141,7 @@ public class PostAdapter extends BaseAdapter {
             tv_remove = (TextView) itemView.findViewById(R.id.tv_remove);
             tv_edit = (TextView) itemView.findViewById(R.id.tv_edit);
             replay_image = (ImageView) itemView.findViewById(R.id.article_user_image);
-            btn_reply_2 = (ImageView) itemView.findViewById(R.id.btn_reply_2);
+            btn_reply_2 = (ImageView) itemView.findViewById(R.id.btn_reply_cz);
             replay_author = (TextView) itemView.findViewById(R.id.replay_author);
             replay_index = (TextView) itemView.findViewById(R.id.replay_index);
             replay_time = (TextView) itemView.findViewById(R.id.replay_time);
