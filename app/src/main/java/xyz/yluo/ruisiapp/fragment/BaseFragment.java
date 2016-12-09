@@ -81,5 +81,4 @@ public abstract class BaseFragment extends Fragment {
     protected void switchActivity(Class<?> cls) {
         getActivity().startActivity(new Intent(getActivity(), cls));
     }
-
 }

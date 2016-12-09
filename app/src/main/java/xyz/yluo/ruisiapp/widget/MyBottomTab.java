@@ -134,14 +134,15 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
     @Override
     public void onClick(View v) {
         int tag = (Integer) v.getTag();
-        if (currentSelected == tag) {
-            return;
-        }
+        boolean change = (currentSelected != tag);
         if (listener != null) {
-            listener.tabselectChange(v, tag);
+            listener.tabClicked(v, tag, change);
         }
-        setTabSelect(currentSelected, tag);
-        currentSelected = tag;
+
+        if (change) {
+            setTabSelect(currentSelected, tag);
+            currentSelected = tag;
+        }
     }
 
     private View getSingleTab(int position) {
@@ -197,7 +198,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
     }
 
     public interface OnTabChangeListener {
-        void tabselectChange(View v, int position);
+        void tabClicked(View v, int position, boolean isChange);
     }
 
     public void setOnTabChangeListener(OnTabChangeListener linstener) {

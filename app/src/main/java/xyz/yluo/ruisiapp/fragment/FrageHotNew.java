@@ -2,7 +2,6 @@ package xyz.yluo.ruisiapp.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,7 +38,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * Created by free2 on 16-3-19.
  * 简单的fragment 首页第二页 展示最新的帖子等
  */
-public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoadMoreListener {
+public class FrageHotNew extends BaseLazyFragment implements LoadMoreListener.OnLoadMoreListener {
 
     private static final int TYPE_HOT = 0;
     private static final int TYPE_NEW = 1;
@@ -57,10 +56,8 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        RadioButton b1 = (RadioButton) mRootView.findViewById(R.id.btn_reply);
-        RadioButton b2 = (RadioButton) mRootView.findViewById(R.id.btn_pm);
-        b1.setText("新帖");
-        b2.setText("热贴");
+        ((RadioButton) mRootView.findViewById(R.id.btn_reply)).setText("新帖");
+        ((RadioButton) mRootView.findViewById(R.id.btn_pm)).setText("热贴");
         recycler_view = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
@@ -88,11 +85,15 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
                 refresh();
             }
         });
-
-        Handler mHandler = new Handler();
-        mHandler.postDelayed(() -> getData(),300);
         return mRootView;
     }
+
+    @Override
+    public void onFirstUserVisible() {
+        Log.e("FrageHotNew", "onFirstUserVisible");
+        getData();
+    }
+
 
     @Override
     protected int getLayoutId() {
@@ -148,7 +149,6 @@ public class FrageHotNew extends BaseFragment implements LoadMoreListener.OnLoad
                     String title = e.text();
                     String titleurl = e.select("a").attr("href");
                     String imgurl = e.select("img").attr("src");
-                    Log.e("imh", imgurl);
                     temp.add(new GalleryData(imgurl, title, titleurl));
                 }
             } catch (IOException e) {

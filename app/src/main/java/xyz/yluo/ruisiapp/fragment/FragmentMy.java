@@ -31,7 +31,7 @@ import xyz.yluo.ruisiapp.widget.CircleImageView;
  * TODO: 16-8-23  打开的时候检查是否签到显示在后面
  * 基础列表后面可以显示一些详情，如收藏的数目等...
  */
-public class FragmentMy extends BaseFragment implements View.OnClickListener {
+public class FragmentMy extends BaseLazyFragment implements View.OnClickListener {
 
     private String username, uid;
     private CircleImageView user_img;
@@ -43,7 +43,6 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        isLoginLast = App.ISLOGIN(getActivity());
         super.onCreateView(inflater, container, savedInstanceState);
         username = App.getName(getActivity());
         uid = App.getUid(getActivity());
@@ -65,26 +64,21 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener {
                 ii.setOnClickListener(this);
             }
         }
-        freshView();
+
         return mRootView;
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        if ((isLoginLast != App.ISLOGIN(getActivity()))) {
-            isLoginLast = !isLoginLast;
-            freshView();
-        }
+    public void onFirstUserVisible() {
+        isLoginLast = App.ISLOGIN(getActivity());
+        refreshAvaterView();
     }
 
-
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (!hidden && (isLoginLast != App.ISLOGIN(getActivity()))) {
+    public void onUserVisible() {
+        if (isLoginLast != App.ISLOGIN(getActivity())) {
             isLoginLast = !isLoginLast;
-            freshView();
+            refreshAvaterView();
         }
     }
 
@@ -93,7 +87,7 @@ public class FragmentMy extends BaseFragment implements View.OnClickListener {
         return R.layout.fragment_my;
     }
 
-    private void freshView() {
+    private void refreshAvaterView() {
         if (isLoginLast) {
             uid = App.getUid(getActivity());
             user_name.setText(username);

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.NotificationCompat;
@@ -21,14 +22,19 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.MainPageAdapter;
+import xyz.yluo.ruisiapp.fragment.FrageForumList;
 import xyz.yluo.ruisiapp.fragment.FrageHotNew;
+import xyz.yluo.ruisiapp.fragment.FrageMessage;
+import xyz.yluo.ruisiapp.fragment.FragmentMy;
 import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
@@ -56,18 +62,15 @@ public class HomeActivity extends BaseActivity
     private boolean isNeedCheckUpdate = false;
     private ViewPager viewPager;
     private MainPageAdapter adapter;
+    private List<Fragment> fragments = new ArrayList<>();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
-        adapter = new MainPageAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(4);
-        viewPager.addOnPageChangeListener(this);
 
+        initViewpager();
         bottomTab = (MyBottomTab) findViewById(R.id.bottom_bar);
         bottomTab.setOnTabChangeListener(this);
 
@@ -85,10 +88,26 @@ public class HomeActivity extends BaseActivity
         messageHandler = new MyHandler(bottomTab, this);
     }
 
-    @Override
-    public void tabselectChange(View v, int position) {
-        switchTab(position);
+    private void initViewpager() {
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        viewPager.setOffscreenPageLimit(4);
+        viewPager.addOnPageChangeListener(this);
+        fragments.add(new FrageForumList());
+        fragments.add(new FrageHotNew());
+        fragments.add(FrageMessage.newInstance(ishaveReply, ishavePm));
+        fragments.add(new FragmentMy());
+        adapter = new MainPageAdapter(getSupportFragmentManager(), fragments);
+        viewPager.setAdapter(adapter);
+
     }
+
+    @Override
+    public void tabClicked(View v, int position, boolean isChange) {
+        if (isChange) {
+            switchTab(position);
+        }
+    }
+
 
     //检查消息程序
     @Override
@@ -128,20 +147,6 @@ public class HomeActivity extends BaseActivity
     }
 
     @Override
-    public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
-        } else {
-            if ((System.currentTimeMillis() - mExitTime) > 1500) {
-                Toast.makeText(this, "再按一次退出手机睿思(｡･ω･｡)~~", Toast.LENGTH_SHORT).show();
-                mExitTime = System.currentTimeMillis();
-            } else {
-                finish();
-            }
-        }
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         // super.onSaveInstanceState(outState);
         //不然保存状态 放置白屏
@@ -173,6 +178,7 @@ public class HomeActivity extends BaseActivity
     public void onPageScrollStateChanged(int state) {
 
     }
+
 
     private class MyTimerTask extends TimerTask {
         public void run() {
@@ -322,6 +328,20 @@ public class HomeActivity extends BaseActivity
         final NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotifyMgr.notify(10, builder.build());
         Log.e("message", "发送未读消息弹窗");
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            if ((System.currentTimeMillis() - mExitTime) > 1500) {
+                Toast.makeText(this, "再按一次退出手机睿思(｡･ω･｡)~~", Toast.LENGTH_SHORT).show();
+                mExitTime = System.currentTimeMillis();
+            } else {
+                finish();
+            }
+        }
     }
 
 }

@@ -158,10 +158,10 @@ public class PostActivity extends BaseActivity
                 //当手指离开的时候
                 float dx = event.getX() - x;
                 float dy = event.getY() - y;
-                if (x < 180 && dx > 100 && dx > dy) {
+                if (x < 400 && dx > 100 && dx > dy) {
                     DisplayMetrics dm = getResources().getDisplayMetrics();
                     int w_screen = dm.widthPixels;
-                    if ((dx > 2 * w_screen / 5) && (x < 5 * w_screen / 6)) {
+                    if ((dx > 2 * w_screen / 5) && (x < 2 * w_screen / 5)) {
                         finish();
                     }
                 }
@@ -666,10 +666,11 @@ public class PostActivity extends BaseActivity
     private void setRefresh(boolean refresh) {
         if (refresh && !isRefreshing) {
             isRefreshing = true;
-            showLoading("处理中", "请稍后...");
+            //// TODO: 2016/12/9
+            //showLoading("处理中", "请稍后...");
         } else if (!refresh && isRefreshing) {
             isRefreshing = false;
-            dismissLoading();
+            //dismissLoading();
         }
     }
 

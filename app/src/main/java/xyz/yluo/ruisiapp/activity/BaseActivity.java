@@ -95,17 +95,4 @@ public class BaseActivity extends AppCompatActivity {
         }
         mToast.show();
     }
-
-    protected void showLoading(String title, String content) {
-        dialog = new ProgressDialog(this);
-        dialog.setTitle(title);
-        dialog.setMessage(content);
-        dialog.show();
-    }
-
-    protected void dismissLoading() {
-        if (dialog != null && dialog.isShowing()) {
-            dialog.dismiss();
-        }
-    }
 }

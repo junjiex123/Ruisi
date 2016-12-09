@@ -83,7 +83,7 @@
         <activity android:name=".activity.FriendActivity" />
         <activity android:name=".activity.ViewImgActivity" />
         <activity android:name=".activity.SettingActivity" />
-        <activity android:name=".activity.ReplyCzActivity"></activity>
+        <activity android:name=".activity.ReplyCzActivity"/>
     </application>
 
 </manifest>

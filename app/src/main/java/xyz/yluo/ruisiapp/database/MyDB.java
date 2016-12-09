@@ -57,9 +57,6 @@ public class MyDB {
         this.db.execSQL(sql);
         Log.e("mydb", "clear TABLE_READ_HISTORY");
 
-        String sql2 = "DELETE FROM " + TABLE_READ_HISTORY;
-        this.db.execSQL(sql2);
-
         String sql4 = "DELETE FROM " + TABLE_MESSAGE;
         this.db.execSQL(sql4);
         this.db.close();
@@ -107,7 +104,6 @@ public class MyDB {
             if (count != 0)//判断得到的返回数据是否为空
             {
                 data.isRead = true;
-                Log.e("mydb", tid + "is read");
             }
         }
         this.db.close();
@@ -135,7 +131,6 @@ public class MyDB {
         Object args[] = new Object[]{tid, title, author, read_time_str};
         this.db.execSQL(sql, args);
         this.db.close();
-        Log.e("mydb", tid + "insertReadHistory");
     }
 
     //更新操作
@@ -146,10 +141,9 @@ public class MyDB {
         Object args[] = new Object[]{title, read_time_str, tid};
         this.db.execSQL(sql, args);
         this.db.close();
-        Log.e("mydb", tid + "updateReadHistory" + author);
     }
 
-    public void clearHistory(){
+    public void clearHistory() {
         getDb();
         String sql = "DELETE FROM " + TABLE_READ_HISTORY;
         this.db.execSQL(sql);

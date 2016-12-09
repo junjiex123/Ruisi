@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -43,14 +44,14 @@ import xyz.yluo.ruisiapp.widget.MyGridDivider;
  * Created by free2 on 16-3-19.
  * 板块列表fragemnt
  */
-public class FrageForumList extends BaseFragment implements ListItemClickListener, View.OnClickListener {
+public class FrageForumList extends BaseLazyFragment implements ListItemClickListener, View.OnClickListener {
     protected SwipeRefreshLayout refreshLayout;
-    private List<ForumListData> datas = null;
+    private List<ForumListData> datas = new ArrayList<>();
     private ForumListAdapter adapter = null;
     private boolean isSetForumToDataBase = false;
     private SharedPreferences sharedPreferences;
     private CircleImageView userImg;
-
+    private RecyclerView recyclerView;
     //15分钟的缓存时间
     private static final int UPDATE_TIME = 1500 * 600;
     private static final String KEY = "FORUM_UPDATE_KEY";
@@ -59,25 +60,21 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        lastLoginState = App.ISLOGIN(getActivity());
         sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-        MyDB myDB = new MyDB(getActivity().getApplicationContext());
-        datas = myDB.getForums();
     }
 
+    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.e("FrageForumList", "onCreateView");
         super.onCreateView(inflater, container, savedInstanceState);
         userImg = (CircleImageView) mRootView.findViewById(R.id.img);
         refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
-        RecyclerView recyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
-        //设置可以滑出底栏
+        recyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         recyclerView.setClipToPadding(false);
         recyclerView.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
-        //刷新
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         mRootView.findViewById(R.id.search).setOnClickListener(this);
-        //先从数据库读出数据
         adapter = new ForumListAdapter(datas, getActivity(), this);
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -91,12 +88,21 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
             }
         });
         userImg.setOnClickListener(this);
-        recyclerView.addItemDecoration(new MyGridDivider(1,
-                ContextCompat.getColor(getActivity(), R.color.colorDivider)));
+        recyclerView.addItemDecoration(new MyGridDivider(1, ContextCompat.getColor(getActivity(), R.color.colorDivider)));
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-
         refreshLayout.setOnRefreshListener(this::getData);
+        return mRootView;
+    }
+
+    @Override
+    public void onFirstUserVisible() {
+        Log.e("FrageForumList", "onFirstUserVisible");
+        lastLoginState = App.ISLOGIN(getActivity());
+        MyDB myDB = new MyDB(getActivity().getApplicationContext());
+        datas.clear();
+        datas.addAll(myDB.getForums());
+        adapter.notifyDataSetChanged();
 
         //判断是否真正的需要请求服务器
         //获得新的数据
@@ -106,11 +112,21 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
             getData();
         }
 
-        refreshView();
-        return mRootView;
+        refreshAvaterView();
     }
 
-    private void refreshView() {
+    @Override
+    public void onUserVisible() {
+        Log.e("FrageForumList", "onUserVisible");
+        if (lastLoginState != App.ISLOGIN(getActivity())) {
+            lastLoginState = !lastLoginState;
+            getData();
+            refreshAvaterView();
+        }
+    }
+
+    private void refreshAvaterView() {
+        lastLoginState = App.ISLOGIN(getActivity());
         if (lastLoginState) {
             Picasso.with(getActivity()).load(UrlUtils.getAvaterurls(App.getUid(getActivity())))
                     .placeholder(R.drawable.image_placeholder)
@@ -120,21 +136,12 @@ public class FrageForumList extends BaseFragment implements ListItemClickListene
         }
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (!hidden && (lastLoginState != App.ISLOGIN(getActivity()))) {
-            lastLoginState = !lastLoginState;
-            getData();
-            refreshView();
-        }
-
-    }
 
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_forums;
     }
+
 
     private void getData() {
         refreshLayout.setRefreshing(true);

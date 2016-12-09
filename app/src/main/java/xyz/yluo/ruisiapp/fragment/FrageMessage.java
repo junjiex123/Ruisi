@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 //回复我的
 //// TODO: 16-8-22  add 提到我的home.php?mod=space&do=notice&view=mypost&type=at&mobile=2
 
-public class FrageMessage extends BaseFragment {
+public class FrageMessage extends BaseLazyFragment {
     protected RecyclerView recycler_view;
     private View pm_badge;
     protected SwipeRefreshLayout refreshLayout;
@@ -93,23 +94,26 @@ public class FrageMessage extends BaseFragment {
                 getData(true);
             }
         });
-
-        getData(false);
         return mRootView;
+    }
+
+    @Override
+    public void onFirstUserVisible() {
+        Log.e("FrageMessage", "onFirstUserVisible");
+        getData(false);
+    }
+
+    @Override
+    public void onUserVisible() {
+        if (lastLoginState != App.ISLOGIN(getActivity())) {
+            getData(true);
+            lastLoginState = !lastLoginState;
+        }
     }
 
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_msg_hot;
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (!hidden && (lastLoginState != App.ISLOGIN(getActivity()))) {
-            getData(true);
-            lastLoginState = !lastLoginState;
-        }
     }
 
     private void getData(boolean needRefresh) {
