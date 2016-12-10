@@ -14,13 +14,12 @@ import java.util.Locale;
 
 import xyz.yluo.ruisiapp.model.ArticleListData;
 import xyz.yluo.ruisiapp.model.ForumListData;
+import xyz.yluo.ruisiapp.model.ReadHistoryData;
 import xyz.yluo.ruisiapp.utils.GetId;
 
 
 public class MyDB {
     private Context context;
-    public static final int MODE_READ = 0;
-    public static final int MODE_WRITE = 1;
     /**
      * 浏览历史表
      */
@@ -29,7 +28,10 @@ public class MyDB {
      * 板块列表 表
      */
     static final String TABLE_FORUM_LIST = "rs_forum_list";
-
+    /**
+     * 板块收藏列表 表
+     */
+    static final String TABLE_FORUM_STAR = "rs_forum_star";
     /**
      * 消息列表
      */
@@ -57,8 +59,8 @@ public class MyDB {
         this.db.execSQL(sql);
         Log.e("mydb", "clear TABLE_READ_HISTORY");
 
-        String sql4 = "DELETE FROM " + TABLE_MESSAGE;
-        this.db.execSQL(sql4);
+        String sql2 = "DELETE FROM " + TABLE_MESSAGE;
+        this.db.execSQL(sql2);
         this.db.close();
         Log.e("mydb", "clear all TABLE_MESSAGE");
     }
@@ -174,22 +176,14 @@ public class MyDB {
         this.db.close();
     }
 
-    public List<ArticleListData> getHistory(int num) {
+    public List<ReadHistoryData> getHistory(int num) {
         getDb();
-        List<ArticleListData> datas = new ArrayList<>();
+        List<ReadHistoryData> datas = new ArrayList<>();
         String sql = "SELECT * FROM " + TABLE_READ_HISTORY + " order by read_time desc limit " + num;
         Cursor result = this.db.rawQuery(sql, null);    //执行查询语句
-        for (result.moveToFirst(); !result.isAfterLast(); result.moveToNext())    //采用循环的方式查询数据
-        {
-            /**
-             * tid VARCHAR(10) primary key,"
-             + "title VARCHAR(50),"
-             + "author VARCHAR(15),"
-             + "read_time DATETIME,"
-             */
-
-            //boolean haveImage,String title, String titleUrl, String author, String replayCount
-            datas.add(new ArticleListData(false, result.getString(1), result.getString(0), result.getString(2), "null", 0xff888888));
+        //采用循环的方式查询数据
+        for (result.moveToFirst(); !result.isAfterLast(); result.moveToNext()) {
+            datas.add(new ReadHistoryData(result.getString(0), result.getString(1), result.getString(3), result.getString(2)));
         }
         result.close();
         this.db.close();
@@ -214,9 +208,7 @@ public class MyDB {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
             this.db.close();
         }
     }
@@ -229,14 +221,8 @@ public class MyDB {
         List<ForumListData> datas = new ArrayList<>();
         String sql = "SELECT * FROM " + TABLE_FORUM_LIST;
         Cursor result = this.db.rawQuery(sql, null);    //执行查询语句
-        for (result.moveToFirst(); !result.isAfterLast(); result.moveToNext())    //采用循环的方式查询数据
-        {
-
-            boolean isHeader = false;
-            int isheader = result.getInt(3);
-            if (isheader == 1) {
-                isHeader = true;
-            }
+        for (result.moveToFirst(); !result.isAfterLast(); result.moveToNext()) {
+            boolean isHeader = (result.getInt(3) == 1);
             int fid = result.getInt(1);
             String name = result.getString(0);
             String todayNew = result.getString(2);
@@ -247,6 +233,72 @@ public class MyDB {
         this.db.close();
         return datas;
     }
+
+    /**
+     * 获得收藏板块列表
+     */
+    public List<ForumListData> getStarForums() {
+        getDb();
+        List<ForumListData> datas = new ArrayList<>();
+        String sql = "SELECT name,fid,todayNew,isHeader,star_id,star_name FROM "
+                + TABLE_FORUM_LIST + "," + TABLE_FORUM_STAR
+                + " where name = star_name AND fid in (SELECT star_fid from " + TABLE_FORUM_STAR + ")"
+                + " ORDER BY star_id ASC";
+        Cursor result = this.db.rawQuery(sql, null);    //执行查询语句
+        for (result.moveToFirst(); !result.isAfterLast(); result.moveToNext()) {
+            boolean isHeader = (result.getInt(3) == 1);
+            int fid = result.getInt(1);
+            String name = result.getString(0);
+            String todayNew = result.getString(2);
+            datas.add(new ForumListData(isHeader, name, todayNew, fid));
+        }
+        result.close();
+        this.db.close();
+        return datas;
+    }
+
+    //是否收藏
+    public boolean isFormStar(int fid) {
+        String sql = "SELECT * FROM " + TABLE_FORUM_STAR + " WHERE star_fid = ?";
+        getDb();
+        String args[] = new String[]{String.valueOf(fid)};
+        Cursor result = db.rawQuery(sql, args);
+        int count = result.getCount();
+        result.close();
+        this.db.close();
+        return count > 0;
+    }
+
+    //删除收藏
+    public void deleteFormStar(int fid) {
+        String sql = "DELETE FROM " + TABLE_FORUM_STAR + " WHERE star_fid = ?";
+        getDb();
+        Object args[] = new Object[]{fid};
+        this.db.execSQL(sql, args);
+        this.db.close();
+    }
+
+    //增加收藏
+    public void insertFormStar(String name, int fid) {
+        String sql = "INSERT INTO " + TABLE_FORUM_STAR + " (star_name,star_fid)" + " VALUES(?,?)";
+        getDb();
+        Object args[] = new Object[]{name, fid};
+        this.db.execSQL(sql, args);
+        this.db.close();
+    }
+
+
+    //设置收藏或者取消收藏
+    public void setFormStar(String name, int fid, boolean star) {
+        if (star) {
+            if (!isFormStar(fid)) {
+                insertFormStar(name, fid);
+            }
+        } else {
+            deleteFormStar(fid);
+        }
+    }
+
 
     /**
      * 清空板块数据库

@@ -3,13 +3,10 @@
     android:id="@+id/panel_content"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:background="#fffefefe"
+    android:background="@color/bg_primary"
     android:gravity="center"
     android:orientation="horizontal"
     android:padding="16dp">
-
-    <!--android:textColor="@color/text_color_sec"
-        android:textSize="14sp"-->
 
     <ImageView
         android:id="@+id/btn_star"

@@ -26,12 +26,10 @@ import java.util.List;
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.LoginActivity;
-import xyz.yluo.ruisiapp.activity.PostsActivity;
 import xyz.yluo.ruisiapp.activity.SearchActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
-import xyz.yluo.ruisiapp.adapter.ForumListAdapter;
+import xyz.yluo.ruisiapp.adapter.ForumsAdapter;
 import xyz.yluo.ruisiapp.database.MyDB;
-import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.model.ForumListData;
 import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
@@ -44,10 +42,11 @@ import xyz.yluo.ruisiapp.widget.MyGridDivider;
  * Created by free2 on 16-3-19.
  * 板块列表fragemnt
  */
-public class FrageForumList extends BaseLazyFragment implements ListItemClickListener, View.OnClickListener {
+public class FrageForumList extends BaseLazyFragment implements View.OnClickListener {
     protected SwipeRefreshLayout refreshLayout;
     private List<ForumListData> datas = new ArrayList<>();
-    private ForumListAdapter adapter = null;
+    private List<ForumListData> starDatas = new ArrayList<>();
+    private ForumsAdapter adapter = null;
     private boolean isSetForumToDataBase = false;
     private SharedPreferences sharedPreferences;
     private CircleImageView userImg;
@@ -75,7 +74,8 @@ public class FrageForumList extends BaseLazyFragment implements ListItemClickLis
         recyclerView.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         mRootView.findViewById(R.id.search).setOnClickListener(this);
-        adapter = new ForumListAdapter(datas, getActivity(), this);
+
+        adapter = new ForumsAdapter(getActivity(), starDatas, datas);
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -100,6 +100,10 @@ public class FrageForumList extends BaseLazyFragment implements ListItemClickLis
         Log.e("FrageForumList", "onFirstUserVisible");
         lastLoginState = App.ISLOGIN(getActivity());
         MyDB myDB = new MyDB(getActivity().getApplicationContext());
+
+        starDatas.clear();
+        starDatas.addAll(myDB.getStarForums());
+
         datas.clear();
         datas.addAll(myDB.getForums());
         adapter.notifyDataSetChanged();
@@ -160,17 +164,6 @@ public class FrageForumList extends BaseLazyFragment implements ListItemClickLis
     }
 
     @Override
-    public void onListItemClick(View v, int position) {
-        if (datas.get(position).isheader()) {
-            return;
-        }
-        int fid = datas.get(position).getFid();
-        //几个特殊的板块
-        String title = datas.get(position).getTitle();
-        PostsActivity.open(getActivity(), fid, title);
-    }
-
-    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.search:
@@ -209,14 +202,17 @@ public class FrageForumList extends BaseLazyFragment implements ListItemClickLis
                 }
             }
 
+            MyDB myDB = new MyDB(getActivity());
             if (!isSetForumToDataBase) {
-                MyDB myDB = new MyDB(getActivity().getApplicationContext());
                 myDB.setForums(simpledatas);
                 isSetForumToDataBase = true;
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putLong(KEY, System.currentTimeMillis());
                 editor.apply();
             }
+
+            starDatas.clear();
+            starDatas.addAll(myDB.getStarForums());
             return simpledatas;
         }
 

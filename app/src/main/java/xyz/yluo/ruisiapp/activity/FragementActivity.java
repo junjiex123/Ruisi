@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.fragment.FrageTopicStarHistory;
+import xyz.yluo.ruisiapp.fragment.FrageHistory;
+import xyz.yluo.ruisiapp.fragment.FrageTopicStar;
 import xyz.yluo.ruisiapp.model.FrageType;
 
 public class FragementActivity extends BaseActivity {
@@ -16,7 +17,6 @@ public class FragementActivity extends BaseActivity {
     public static void open(Context c, int type) {
         Intent intent = new Intent(c, FragementActivity.class);
         intent.putExtra("TYPE", type);
-
         c.startActivity(intent);
     }
 
@@ -33,13 +33,13 @@ public class FragementActivity extends BaseActivity {
         Bundle b = getIntent().getExtras();
         switch (b.getInt("TYPE")) {
             case FrageType.TOPIC:
-                to = FrageTopicStarHistory.newInstance(FrageType.TOPIC);
+                to = FrageTopicStar.newInstance(FrageType.TOPIC);
                 break;
             case FrageType.START:
-                to = FrageTopicStarHistory.newInstance(FrageType.START);
+                to = FrageTopicStar.newInstance(FrageType.START);
                 break;
             case FrageType.HISTORY:
-                to = FrageTopicStarHistory.newInstance(FrageType.HISTORY);
+                to = new FrageHistory();
                 break;
         }
         getSupportFragmentManager().beginTransaction().replace(R.id.container, to).commit();

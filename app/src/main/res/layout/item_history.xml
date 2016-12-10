@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_item_btn_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:paddingEnd="12dp"
+    android:paddingStart="12dp"
+    android:paddingTop="12dp">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/text_16_pri"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        tools:text="这是标题" />
+
+    <TextView
+        android:id="@+id/author"
+        style="@style/text_12_sec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="4dp"
+        android:maxLines="1"
+        tools:text="hehe" />
+
+    <TextView
+        android:id="@+id/time"
+        style="@style/text_12_sec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_toEndOf="@+id/author"
+        android:maxLines="1"
+        tools:text="2016 09:16" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/author"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorDivider" />
+</RelativeLayout>

@@ -70,8 +70,9 @@ public class SmileyView extends LinearLayout implements ViewPager.OnPageChangeLi
         this.context = context;
         SIZE_8 = DimmenUtils.dip2px(context, 8);
         setOrientation(VERTICAL);
-        COLOR_TAB = Color.parseColor("#ffffff");
-        COLOR_TAB_SEL = Color.parseColor("#dddddd");
+        setBackgroundColor(ContextCompat.getColor(context, R.color.bg_primary));
+        COLOR_TAB = ContextCompat.getColor(context, R.color.bg_secondary);
+        COLOR_TAB_SEL = ContextCompat.getColor(context, R.color.bg_blur);
 
         viewPager = new ViewPager(context);
         viewPager.setLayoutParams(new LayoutParams(LMP, LWC, 1));
@@ -88,7 +89,7 @@ public class SmileyView extends LinearLayout implements ViewPager.OnPageChangeLi
 
         View gap = new View(context);
         gap.setLayoutParams(new LayoutParams(LMP, DimmenUtils.dip2px(context, 0.6f)));
-        gap.setBackgroundColor(Color.parseColor("#1f000000"));
+        gap.setBackgroundColor(ContextCompat.getColor(context, R.color.colorDivider));
         addView(gap);
 
         tabContainer = new LinearLayout(context);

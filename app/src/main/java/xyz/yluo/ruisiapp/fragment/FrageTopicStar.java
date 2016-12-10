@@ -1,16 +1,13 @@
 package xyz.yluo.ruisiapp.fragment;
 
-import android.app.Dialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -23,9 +20,7 @@ import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.SimpleListAdapter;
-import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.listener.LoadMoreListener;
-import xyz.yluo.ruisiapp.model.ArticleListData;
 import xyz.yluo.ruisiapp.model.FrageType;
 import xyz.yluo.ruisiapp.model.ListType;
 import xyz.yluo.ruisiapp.model.SimpleListData;
@@ -37,7 +32,7 @@ import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
  * 收藏/主题/历史纪录
  * //todo 删除浏览历史
  */
-public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListener.OnLoadMoreListener {
+public class FrageTopicStar extends BaseFragment implements LoadMoreListener.OnLoadMoreListener {
 
     private List<SimpleListData> datas;
     private SimpleListAdapter adapter;
@@ -49,10 +44,10 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
 
     private String url;
 
-    public static FrageTopicStarHistory newInstance(int type) {
+    public static FrageTopicStar newInstance(int type) {
         Bundle args = new Bundle();
         args.putInt("type", type);
-        FrageTopicStarHistory fragment = new FrageTopicStarHistory();
+        FrageTopicStar fragment = new FrageTopicStar();
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,29 +67,9 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
                     currentIndex = 1;
                     title = "我的收藏";
                     break;
-                default:
-                    title = "浏览历史";
-                    currentIndex = 2;
             }
         }
         initToolbar(true, title);
-        if (currentIndex == 2)
-            addToolbarMenu(R.drawable.ic_delete_24dp).setOnClickListener(view -> {
-                Dialog alertDialog = new AlertDialog.Builder(getActivity()).
-                        setTitle("清空历史记录")
-                        .setMessage("你确定要清空浏览历史吗？？")
-                        .setPositiveButton("是的(=・ω・=)", (dialogInterface, i) -> {
-                            MyDB db = new MyDB(getActivity());
-                            db.clearHistory();
-                            datas.clear();
-                            adapter.notifyDataSetChanged();
-                            Toast.makeText(getActivity(), "浏览历史已清空~~", Toast.LENGTH_SHORT).show();
-                        })
-                        .setNegativeButton("取消", null)
-                        .setCancelable(true)
-                        .create();
-                alertDialog.show();
-            });
         RecyclerView recyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
@@ -142,12 +117,7 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
     private void refresh() {
         datas.clear();
         adapter.notifyDataSetChanged();
-        if (currentIndex == 2) {
-            getDbData();
-        } else {
-            getWebDatas();
-        }
-
+        getWebDatas();
     }
 
 
@@ -172,10 +142,6 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
         });
     }
 
-    private void getDbData() {
-        isEnableLoadMore = false;
-        new GetUserHistoryTask().execute(1);
-    }
 
     //获得主题
     private class GetUserArticles extends AsyncTask<String, Void, List<SimpleListData>> {
@@ -237,27 +203,6 @@ public class FrageTopicStarHistory extends BaseFragment implements LoadMoreListe
         }
     }
 
-
-    //获得历史记录
-    private class GetUserHistoryTask extends AsyncTask<Integer, Void, List<SimpleListData>> {
-
-        @Override
-        protected List<SimpleListData> doInBackground(Integer... ints) {
-            List<SimpleListData> temp = new ArrayList<>();
-            MyDB myDB = new MyDB(getActivity());
-            for (ArticleListData data : myDB.getHistory(30)) {
-                temp.add(new SimpleListData(data.title, data.author, "tid=" + data.titleUrl));
-            }
-            return temp;
-        }
-
-        @Override
-        protected void onPostExecute(List<SimpleListData> data) {
-            super.onPostExecute(data);
-            isHaveMore = false;
-            onLoadCompete(data);
-        }
-    }
 
     //加载完成
     private void onLoadCompete(List<SimpleListData> d) {

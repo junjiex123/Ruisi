@@ -51,6 +51,17 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 + ")";
         db.execSQL(sql2);
         Log.e("DATABASE", "TABLE_FORUM_LIST数据表创建成功");
+
+        /**
+         *  板块收藏列表
+         */
+        String sql3 = "CREATE TABLE " + MyDB.TABLE_FORUM_STAR + "("
+                + "star_id INTEGER primary key AUTOINCREMENT,"
+                + "star_name VARCHAR(20),"
+                + "star_fid INT UNIQUE"
+                + ")";
+        db.execSQL(sql3);
+        Log.e("DATABASE", "TABLE_FORUM_STAR数据表创建成功");
     }
 
 
@@ -63,6 +74,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
         String sql2 = "DROP TABLE IF EXISTS " + MyDB.TABLE_FORUM_LIST;
         db.execSQL(sql2);
+
+        String sql3 = "DROP TABLE IF EXISTS " + MyDB.TABLE_FORUM_STAR;
+        db.execSQL(sql3);
 
         this.onCreate(db);
         Log.e("DATABASE", "数据库已更新");

@@ -11,6 +11,7 @@ public class ForumListData {
     private String todayNew;
     //是不是头
     private boolean isheader;
+    public boolean isStar;
 
 
     public ForumListData(boolean isheader, String title, String todayNew, int fid) {
