@@ -6,14 +6,18 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.utils.DimmenUtils;
 
 /**
  * Created by free2 on 16-4-11.
@@ -71,6 +75,19 @@ public class BaseActivity extends AppCompatActivity {
             return i;
         }
         return null;
+    }
+
+    protected void addToolbarView(View v) {
+        FrameLayout toolbar = (FrameLayout) findViewById(R.id.myToolBar);
+        if (toolbar != null) {
+            FrameLayout.LayoutParams pls = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            v.setLayoutParams(pls);
+            int padding = DimmenUtils.dip2px(this, 12);
+            v.setPadding(padding, padding, padding, padding);
+            pls.setMarginEnd(padding);
+            pls.gravity = Gravity.END;
+            toolbar.addView(v);
+        }
     }
 
 

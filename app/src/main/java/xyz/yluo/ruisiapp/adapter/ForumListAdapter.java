@@ -1,19 +1,20 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.model.ForumListData;
-import xyz.yluo.ruisiapp.utils.ImageUtils;
+import xyz.yluo.ruisiapp.utils.DimmenUtils;
 
 /**
  * Created by free2 on 16-3-19.
@@ -76,6 +77,7 @@ public class ForumListAdapter extends BaseAdapter {
         TextView title;
         TextView today_count;
         View container;
+        int size = 42;
 
         ChildViewHolder(View itemView) {
             super(itemView);
@@ -83,6 +85,7 @@ public class ForumListAdapter extends BaseAdapter {
             title = (TextView) itemView.findViewById(R.id.title);
             today_count = (TextView) itemView.findViewById(R.id.today_count);
             container = itemView.findViewById(R.id.forum_list_item);
+            size = DimmenUtils.dip2px(context, 42);
         }
 
         @Override
@@ -96,8 +99,8 @@ public class ForumListAdapter extends BaseAdapter {
                 today_count.setVisibility(View.GONE);
             }
             int fid = single.getFid();
-            Drawable dra = ImageUtils.getForunlogo(context, fid);
-            img.setImageDrawable(dra);
+            String name = "file:///android_asset/forumlogo/common_" + fid + "_icon.gif";
+            Picasso.with(context).load(name).resize(size, size).error(R.drawable.image_placeholder).into(img);
         }
     }
 }

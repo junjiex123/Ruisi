@@ -1,7 +1,6 @@
 package xyz.yluo.ruisiapp.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 
 public abstract class BaseLazyFragment extends BaseFragment {
     private static final String TAG = BaseLazyFragment.class.getSimpleName();

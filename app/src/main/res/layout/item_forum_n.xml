@@ -1,50 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/forum_list_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
-    android:clickable="true">
+    android:clickable="true"
+    android:padding="4dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/image_placeholder" />
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/text_12_sec"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingBottom="10dp"
-        android:paddingEnd="8dp"
-        android:paddingStart="8dp"
-        android:paddingTop="8dp">
-
-        <ImageView
-            android:id="@+id/img"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginTop="6dp"
-            android:src="@drawable/image_placeholder" />
-
-        <TextView
-            android:id="@+id/title"
-            style="@style/text_12_sec"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:maxLines="1"
-            tools:text="板块的题目的标题" />
-    </LinearLayout>
+        android:layout_below="@+id/img"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textStyle="bold"
+        tools:text="板块的题目的标题" />
 
     <TextView
         android:id="@+id/today_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/img"
         android:layout_gravity="end"
-        android:layout_margin="6dp"
+        android:layout_marginStart="-10dp"
+        android:layout_marginTop="-5dp"
+        android:layout_toEndOf="@+id/img"
         android:background="@drawable/badge"
         android:gravity="center"
         android:maxLines="1"
-        android:padding="3dp"
+        android:paddingBottom="1dp"
+        android:paddingEnd="2dp"
+        android:paddingStart="2dp"
+        android:paddingTop="1dp"
         android:textColor="@android:color/white"
-        android:textSize="9sp"
-        tools:text="150" />
-</FrameLayout>
+        android:textSize="8sp"
+        android:textStyle="bold"
+        tools:text="18" />
+
+</RelativeLayout>

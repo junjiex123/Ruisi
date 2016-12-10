@@ -10,16 +10,14 @@
 
     <ProgressBar
         android:id="@+id/load_more_progress"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_marginBottom="6dp" />
+        android:layout_width="20dp"
+        android:layout_height="20dp"/>
 
     <TextView
         android:id="@+id/load_more_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
-        android:padding="16dp"
+        android:padding="12dp"
         android:text="正在加载..."
         android:textColor="?android:attr/textColorSecondary"
         android:textSize="14sp" />

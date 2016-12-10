@@ -47,12 +47,15 @@
         android:layout_alignBaseline="@+id/article_username"
         android:layout_marginStart="8dp"
         android:layout_toEndOf="@+id/article_username"
-        android:background="@drawable/type_bg_blue"
+        android:background="@drawable/badge"
+        android:paddingBottom="2dp"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
+        android:paddingTop="2dp"
         android:text="楼主"
         android:textColor="@android:color/white"
-        android:textSize="12sp" />
+        android:textSize="10sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/article_post_time"

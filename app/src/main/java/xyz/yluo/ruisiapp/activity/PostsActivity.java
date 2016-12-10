@@ -50,7 +50,7 @@ public class PostsActivity extends BaseActivity implements
     private int FID = 72;
     private String TITLE;
     protected SwipeRefreshLayout refreshLayout;
-    FloatingActionButton btn_refresh;
+    FloatingActionButton btnRefresh;
     RecyclerView mRecyclerView;
     //当前页数
     int CurrentPage = 1;
@@ -81,7 +81,7 @@ public class PostsActivity extends BaseActivity implements
             TITLE = getIntent().getExtras().getString("TITLE");
         }
         initToolBar(true, TITLE);
-        btn_refresh = (FloatingActionButton) findViewById(R.id.btn);
+        btnRefresh = (FloatingActionButton) findViewById(R.id.btn);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
@@ -108,7 +108,7 @@ public class PostsActivity extends BaseActivity implements
         mRecyclerView.setAdapter(adapter);
         myDB = new MyDB(this);
         datas.clear();
-        btn_refresh.setOnClickListener(v -> refresh());
+        btnRefresh.setOnClickListener(v -> refresh());
         init();
         //子类实现获取数据
         getData();
@@ -135,7 +135,7 @@ public class PostsActivity extends BaseActivity implements
     }
 
     private void init() {
-        btn_refresh.hide();
+        btnRefresh.hide();
         refreshLayout.setRefreshing(true);
 
         refreshLayout.setOnRefreshListener(this::refresh);
@@ -144,21 +144,21 @@ public class PostsActivity extends BaseActivity implements
         mRecyclerView.addOnScrollListener(new HidingScrollListener() {
             @Override
             public void onHide() {
-                FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) btn_refresh.getLayoutParams();
+                FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) btnRefresh.getLayoutParams();
                 int bottomMargin = lp.bottomMargin;
-                int distanceToScroll = btn_refresh.getHeight() + bottomMargin;
-                btn_refresh.animate().translationY(distanceToScroll).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
+                int distanceToScroll = btnRefresh.getHeight() + bottomMargin;
+                btnRefresh.animate().translationY(distanceToScroll).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
             }
 
             @Override
             public void onShow() {
-                btn_refresh.animate().translationY(0).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
+                btnRefresh.animate().translationY(0).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
             }
         });
     }
 
     private void refresh() {
-        btn_refresh.hide();
+        btnRefresh.hide();
         refreshLayout.setRefreshing(true);
         CurrentPage = 1;
         getData();
@@ -351,7 +351,7 @@ public class PostsActivity extends BaseActivity implements
     }
 
     private void getDataCompete(List<ArticleListData> dataset) {
-        btn_refresh.show();
+        btnRefresh.show();
         if (CurrentPage == 1) {
             datas.clear();
             adapter.notifyDataSetChanged();

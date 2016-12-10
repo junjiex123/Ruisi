@@ -1,11 +1,15 @@
 package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -148,13 +152,21 @@ public class PostAdapter extends BaseAdapter {
             htmlTextView = (HtmlView) itemView.findViewById(R.id.html_text);
             bt_lable_lz = (TextView) itemView.findViewById(R.id.bt_lable_lz);
 
+            htmlTextView.setOnLongClickListener(view -> {
+                String user = datalist.get(getAdapterPosition()).getUsername();
+                String content = htmlTextView.getText().toString().trim();
+                ClipboardManager cm = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setPrimaryClip(ClipData.newPlainText(null, content));
+                Toast.makeText(activity, "已复制" + user + "的评论", Toast.LENGTH_SHORT).show();
+                return true;
+            });
+
             replay_image.setOnClickListener(v -> UserDetailActivity.openWithAnimation(
                     activity, datalist.get(getAdapterPosition()).getUsername(),
                     replay_image, datalist.get(getAdapterPosition()).getUid()));
 
             tv_remove.setOnClickListener(this);
             tv_edit.setOnClickListener(this);
-
             btn_reply_2.setOnClickListener(this);
         }
 

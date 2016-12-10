@@ -34,9 +34,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:background="@drawable/type_bg_blue"
+            android:background="@drawable/badge"
+            android:paddingBottom="2dp"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
+            android:paddingTop="2dp"
             android:text="有图"
             android:textColor="@android:color/white"
             android:textSize="10sp" />

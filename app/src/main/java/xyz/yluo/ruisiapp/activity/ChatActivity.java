@@ -10,8 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -52,8 +52,8 @@ public class ChatActivity extends BaseActivity {
     private String touid = "";
     private long replyTime = 0;
     private EditText input;
+    private View btnSend;
     private MySmileyPicker smileyPicker;
-    private boolean isRefreshing = false;
     private EmotionInputHandler handler;
 
     public static void open(Context context, String username, String url) {
@@ -72,6 +72,7 @@ public class ChatActivity extends BaseActivity {
         smileyPicker = new MySmileyPicker(this);
         list = (RecyclerView) findViewById(R.id.list);
         input = (EditText) findViewById(R.id.ed_comment);
+        btnSend = findViewById(R.id.btn_send);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         adapter = new ChatListAdapter(this, datas);
         adapter.disableLoadMore();
@@ -79,21 +80,17 @@ public class ChatActivity extends BaseActivity {
         list.setAdapter(adapter);
         Bundle bundle = this.getIntent().getExtras();
         initToolBar(true, bundle.getString("username"));
+        addToolbarMenu(R.drawable.ic_refresh_24dp).setOnClickListener(view -> refresh());
         url = bundle.getString("url");
 
-        handler = new EmotionInputHandler(input, (enable, s) -> {
-
-        });
-
+        handler = new EmotionInputHandler(input, (enable, s) -> btnSend.setEnabled(enable));
         smileyPicker.setListener((str, a) -> handler.insertSmiley(str, a));
 
-        findViewById(R.id.action_send).setOnClickListener(v -> send_click());
-
-        findViewById(R.id.btn_smiley).setOnClickListener(view -> {
-            ((ImageView) view).setImageResource(R.drawable.ic_edit_emoticon_accent_24dp);
-            smileyPicker.showAtLocation(view, Gravity.BOTTOM, 32, DimmenUtils.dip2px(ChatActivity.this, 52));
-            smileyPicker.setOnDismissListener(() -> ((ImageView) view).setImageResource(R.drawable.ic_edit_emoticon_24dp));
+        findViewById(R.id.btn_emotion).setOnClickListener(view -> {
+            smileyPicker.showAtLocation(view, Gravity.BOTTOM, 32, DimmenUtils.dip2px(ChatActivity.this, 80));
         });
+
+        btnSend.setOnClickListener(view -> send_click());
         getData(true);
     }
 
@@ -105,9 +102,6 @@ public class ChatActivity extends BaseActivity {
     }
 
     private void getData(boolean needRefresh) {
-        if (needRefresh) setRefresh(true);
-        Log.e("chat", "get data...");
-
         new GetDataTask().execute(url);
     }
 
@@ -176,16 +170,14 @@ public class ChatActivity extends BaseActivity {
                     }
                 }
 
-                int add = 0;
                 for (int i = equalpos + 1; i < tepdata.size(); i++) {
                     datas.add(tepdata.get(i));
-                    add++;
                 }
-                adapter.notifyItemRangeInserted(datas.size() - add, add);
+
+                adapter.notifyDataSetChanged();
             }
 
             list.scrollToPosition(datas.size() - 1);
-            setRefresh(true);
         }
     }
 
@@ -230,7 +222,7 @@ public class ChatActivity extends BaseActivity {
                         list.postDelayed(() -> {
                             showToast("回复发表成功");
                             getData(false);
-                        }, 500);
+                        }, 600);
                         replyTime = System.currentTimeMillis();
                         input.setText("");
                     } else {
@@ -250,20 +242,10 @@ public class ChatActivity extends BaseActivity {
 
                 @Override
                 public void onFinish() {
-                    list.postDelayed(() -> snackbar.dismiss(), 500);
+                    list.postDelayed(() -> snackbar.dismiss(), 300);
                     super.onFinish();
                 }
             });
-        }
-    }
-
-    private void setRefresh(boolean refresh) {
-        if (refresh && !isRefreshing) {
-            isRefreshing = true;
-            //// TODO: 2016/12/8
-        } else if (!refresh && isRefreshing) {
-            isRefreshing = false;
-            //// TODO: 2016/12/8
         }
     }
 }

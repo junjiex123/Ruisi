@@ -55,7 +55,7 @@
 
         <TextView
             android:id="@+id/version"
-            style="@style/text_16_sec"
+            style="@style/text_14_sec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

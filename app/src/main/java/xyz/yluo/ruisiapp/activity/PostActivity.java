@@ -1,5 +1,8 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,8 +19,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -42,8 +48,8 @@ import xyz.yluo.ruisiapp.model.SingleArticleData;
 import xyz.yluo.ruisiapp.model.SingleType;
 import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
+import xyz.yluo.ruisiapp.utils.DimmenUtils;
 import xyz.yluo.ruisiapp.utils.GetId;
-import xyz.yluo.ruisiapp.utils.IntentUtils;
 import xyz.yluo.ruisiapp.utils.KeyboardUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 import xyz.yluo.ruisiapp.widget.emotioninput.PanelViewRoot;
@@ -61,25 +67,24 @@ public class PostActivity extends BaseActivity
     private RecyclerView topicList;
     //上一次回复时间
     private long replyTime = 0;
-    //当前第几页
     private int page_now = 1;
     private int page_sum = 1;
     private int edit_pos = -1;
     private boolean isGetTitle = false;
-    //是否允许加载更多
     private boolean enableLoadMore = false;
     //回复楼主的链接
     private String replyUrl = "";
     private PostAdapter adapter;
-    //存储数据 需要填充的列表
     private List<SingleArticleData> datas = new ArrayList<>();
-    //是否调到指定页数and楼层???
     private boolean isSaveToDataBase = false;
     private String Title, AuthorName, Tid, RedirectPid = "";
     private boolean showPlainText = false;
-    private boolean isRefreshing = false;
     private EditText input;
     private PanelViewRoot mPanelRoot;
+    private ArrayAdapter<String> spinnerAdapter;
+    private Spinner spinner;
+    private LinearLayoutManager mLayoutManager;
+    private List<String> pageSpinnerDatas = new ArrayList<>();
 
     public static void open(Context context, String url, @Nullable String author) {
         Intent intent = new Intent(context, PostActivity.class);
@@ -93,36 +98,12 @@ public class PostActivity extends BaseActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
-        initToolBar(true, "正文");
+        initToolBar(true, "加载中......");
         input = (EditText) findViewById(R.id.ed_comment);
-        SmileyInputRoot rootViewGroup = (SmileyInputRoot) findViewById(R.id.root);
-        mPanelRoot = rootViewGroup.getmPanelLayout();
+
         showPlainText = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("setting_show_plain", false);
-        topicList = (RecyclerView) findViewById(R.id.topic_list);
-        View btnSend = findViewById(R.id.btn_send);
-        btnSend.setOnClickListener(this);
-        View smuleyBtn = findViewById(R.id.btn_emotion);
-        View btnMore = findViewById(R.id.btn_more);
-
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        topicList.setLayoutManager(mLayoutManager);
-        adapter = new PostAdapter(this, this, datas);
-        /**
-         * 缓存数量
-         */
-        topicList.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 8));
-        topicList.setAdapter(adapter);
-
-        KeyboardUtil.attach(this, mPanelRoot, isShowing -> Log.e("key board", String.valueOf(isShowing)));
-        mPanelRoot.init(input, smuleyBtn, btnSend);
-        mPanelRoot.setMoreView(LayoutInflater.from(this).inflate(R.layout.my_smiley_menu, null), btnMore);
-        topicList.setOnTouchListener((view, motionEvent) -> {
-            if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                mPanelRoot.hidePanelAndKeyboard();
-            }
-            return false;
-        });
-
+        initCommentList();
+        initEmotionInput();
         Bundle b = getIntent().getExtras();
         String url = b.getString("url");
         AuthorName = b.getString("author");
@@ -142,6 +123,73 @@ public class PostActivity extends BaseActivity
         } else {
             firstGetData(1);
         }
+
+        initSpinner();
+    }
+
+    private void initCommentList() {
+        topicList = (RecyclerView) findViewById(R.id.topic_list);
+        mLayoutManager = new LinearLayoutManager(this);
+        topicList.setLayoutManager(mLayoutManager);
+        adapter = new PostAdapter(this, this, datas);
+        topicList.addOnScrollListener(new LoadMoreListener(mLayoutManager, this, 8));
+        topicList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                int page = mLayoutManager.findLastVisibleItemPosition() / 10 + 1;
+                int selection = spinner.getSelectedItemPosition() + 1;
+                if (page != selection && page <= pageSpinnerDatas.size()) {
+                    spinner.setSelection(page - 1);
+                }
+            }
+        });
+        topicList.setAdapter(adapter);
+    }
+
+    private void initEmotionInput() {
+        View smuleyBtn = findViewById(R.id.btn_emotion);
+        View btnMore = findViewById(R.id.btn_more);
+        View btnSend = findViewById(R.id.btn_send);
+        btnSend.setOnClickListener(this);
+        SmileyInputRoot rootViewGroup = (SmileyInputRoot) findViewById(R.id.root);
+        mPanelRoot = rootViewGroup.getmPanelLayout();
+        KeyboardUtil.attach(this, mPanelRoot, isShowing -> Log.e("key board", String.valueOf(isShowing)));
+        mPanelRoot.init(input, smuleyBtn, btnSend);
+        mPanelRoot.setMoreView(LayoutInflater.from(this).inflate(R.layout.my_smiley_menu, null), btnMore);
+        topicList.setOnTouchListener((view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                mPanelRoot.hidePanelAndKeyboard();
+            }
+            return false;
+        });
+
+        findViewById(R.id.btn_star).setOnClickListener(this);
+        findViewById(R.id.btn_link).setOnClickListener(this);
+        findViewById(R.id.btn_share).setOnClickListener(this);
+    }
+
+    private void initSpinner() {
+        spinner = new Spinner(this);
+        spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, pageSpinnerDatas);
+        pageSpinnerDatas.add("第1页");
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+                int page = mLayoutManager.findLastVisibleItemPosition() / 10 + 1;
+                if (pos + 1 != page) {
+                    jumpPage(pos + 1);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        addToolbarView(spinner);
     }
 
     private float x, y = 0;
@@ -158,8 +206,15 @@ public class PostActivity extends BaseActivity
                 //当手指离开的时候
                 float dx = event.getX() - x;
                 float dy = event.getY() - y;
-                if (x < 400 && dx > 100 && dx > dy) {
+                if (x < 320 && dx > 100 && dx > dy) {
                     DisplayMetrics dm = getResources().getDisplayMetrics();
+                    if (mPanelRoot.getVisibility() == View.VISIBLE) {
+                        int height = dm.heightPixels;
+                        int keyboardheight = DimmenUtils.dip2px(PostActivity.this, KeyboardUtil.getKeyboardHeight(PostActivity.this));
+                        if (event.getY() > (height - keyboardheight)) {
+                            break;
+                        }
+                    }
                     int w_screen = dm.widthPixels;
                     if ((dx > 2 * w_screen / 5) && (x < 2 * w_screen / 5)) {
                         finish();
@@ -291,9 +346,11 @@ public class PostActivity extends BaseActivity
                     starTask(view);
                 }
                 break;
-            case R.id.btn_browser:
+            case R.id.btn_link:
                 String url = UrlUtils.getSingleArticleUrl(Tid, page_now, false);
-                IntentUtils.openBroswer(this, url);
+                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setPrimaryClip(ClipData.newPlainText(null, url));
+                Toast.makeText(this, "已复制链接到剪切板", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btn_share:
                 Intent shareIntent = new Intent();
@@ -428,10 +485,13 @@ public class PostActivity extends BaseActivity
         @Override
         protected void onPostExecute(List<SingleArticleData> tepdata) {
             enableLoadMore = true;
+            if (isGetTitle) {
+                setTitle("帖子正文");
+            }
+
             if (!TextUtils.isEmpty(errorText)) {
                 Toast.makeText(PostActivity.this, errorText, Toast.LENGTH_SHORT).show();
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
-                setRefresh(false);
                 return;
             }
             if (tepdata.size() == 0) {
@@ -497,6 +557,16 @@ public class PostActivity extends BaseActivity
                 }
                 RedirectPid = "";
             }
+
+            int size = pageSpinnerDatas.size();
+            if (page_sum != size) {
+                pageSpinnerDatas.clear();
+                for (int i = 1; i <= page_sum; i++) {
+                    pageSpinnerDatas.add("第" + i + "页");
+                }
+                spinnerAdapter.notifyDataSetChanged();
+                spinner.setSelection(page_now - 1);
+            }
         }
     }
 
@@ -515,7 +585,7 @@ public class PostActivity extends BaseActivity
                     showToast("收藏成功");
                     if (v != null) {
                         final ImageView mv = (ImageView) v;
-                        mv.postDelayed(() -> mv.setImageResource(R.drawable.ic_star_accent_24dp), 300);
+                        mv.postDelayed(() -> mv.setImageResource(R.drawable.ic_star_32dp_yes), 300);
                     }
                 }
             }
@@ -565,6 +635,12 @@ public class PostActivity extends BaseActivity
         if (!(isLogin() && checkTime() && checkInput())) {
             return;
         }
+
+        ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setTitle("回复中");
+        dialog.setMessage("请稍后......");
+        dialog.show();
+
         String s = getPreparedReply(this, input.getText().toString());
         Map<String, String> params = new HashMap<>();
         params.put("message", s);
@@ -583,7 +659,7 @@ public class PostActivity extends BaseActivity
             @Override
             public void onFinish() {
                 super.onFinish();
-                setRefresh(false);
+                dialog.dismiss();
             }
         });
     }
@@ -638,10 +714,15 @@ public class PostActivity extends BaseActivity
     }
 
     //跳页
-    private void jump_page(int page) {
-        datas.clear();
-        adapter.notifyDataSetChanged();
-        getArticleData(page);
+    private void jumpPage(int page) {
+        int index = (page - 1) * 10;
+        if (index < datas.size()) {
+            topicList.scrollToPosition(index);
+        } else {
+            datas.clear();
+            adapter.notifyDataSetChanged();
+            getArticleData(page);
+        }
     }
 
     private boolean checkInput() {
@@ -660,17 +741,6 @@ public class PostActivity extends BaseActivity
         } else {
             showToast("还没到15s呢，再等等吧!");
             return false;
-        }
-    }
-
-    private void setRefresh(boolean refresh) {
-        if (refresh && !isRefreshing) {
-            isRefreshing = true;
-            //// TODO: 2016/12/9
-            //showLoading("处理中", "请稍后...");
-        } else if (!refresh && isRefreshing) {
-            isRefreshing = false;
-            //dismissLoading();
         }
     }
 

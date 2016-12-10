@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_window"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true">
 
     <xyz.yluo.ruisiapp.widget.CircleImageView
         android:id="@+id/article_user_image"
@@ -32,12 +34,15 @@
         android:layout_alignBaseline="@+id/replay_author"
         android:layout_marginStart="8dp"
         android:layout_toEndOf="@+id/replay_author"
-        android:background="@drawable/type_bg_blue"
+        android:background="@drawable/badge"
+        android:paddingBottom="2dp"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
+        android:paddingTop="2dp"
         android:text="楼主"
         android:textColor="@android:color/white"
-        android:textSize="12sp" />
+        android:textSize="10sp"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/btn_reply_cz"

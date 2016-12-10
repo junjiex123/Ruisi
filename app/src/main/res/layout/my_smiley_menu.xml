@@ -1,39 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/panel_content"
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:background="#fffefefe"
+    android:gravity="center"
     android:orientation="horizontal"
-    android:padding="10dp">
+    android:padding="16dp">
 
-    <TextView
+    <!--android:textColor="@color/text_color_sec"
+        android:textSize="14sp"-->
+
+    <ImageView
         android:id="@+id/btn_star"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_alignTop="@+id/btn_link"
+        android:layout_toStartOf="@+id/btn_link"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:padding="12dp"
+        android:src="@drawable/ic_star_32dp_not" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/btn_star"
+        android:layout_alignStart="@+id/btn_star"
+        android:layout_below="@+id/btn_star"
         android:gravity="center"
         android:text="收藏"
         android:textColor="@color/text_color_sec"
         android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/btn_browser"
+    <ImageView
+        android:id="@+id/btn_link"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:padding="12dp"
+        android:src="@drawable/ic_insert_link_36dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/btn_link"
+        android:layout_alignStart="@+id/btn_link"
+        android:layout_below="@+id/btn_link"
         android:gravity="center"
-        android:text="浏览器"
+        android:text="复制链接"
         android:textColor="@color/text_color_sec"
         android:textSize="14sp" />
 
-    <TextView
+    <ImageView
         android:id="@+id/btn_share"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_alignTop="@+id/btn_link"
+        android:layout_toEndOf="@+id/btn_link"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:padding="12dp"
+        android:src="@drawable/ic_share_32dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/btn_share"
+        android:layout_alignStart="@+id/btn_share"
+        android:layout_below="@+id/btn_share"
         android:gravity="center"
         android:text="分享"
         android:textColor="@color/text_color_sec"
         android:textSize="14sp" />
-</LinearLayout>
+
+
+</RelativeLayout>

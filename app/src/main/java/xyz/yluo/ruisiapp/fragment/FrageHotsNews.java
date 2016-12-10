@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +37,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
  * Created by free2 on 16-3-19.
  * 简单的fragment 首页第二页 展示最新的帖子等
  */
-public class FrageHotNew extends BaseLazyFragment implements LoadMoreListener.OnLoadMoreListener {
+public class FrageHotsNews extends BaseLazyFragment implements LoadMoreListener.OnLoadMoreListener {
 
     private static final int TYPE_HOT = 0;
     private static final int TYPE_NEW = 1;
@@ -90,7 +89,6 @@ public class FrageHotNew extends BaseLazyFragment implements LoadMoreListener.On
 
     @Override
     public void onFirstUserVisible() {
-        Log.e("FrageHotNew", "onFirstUserVisible");
         getData();
     }
 
@@ -102,7 +100,6 @@ public class FrageHotNew extends BaseLazyFragment implements LoadMoreListener.On
 
     private void refresh() {
         CurrentPage = 1;
-        isEnableLoadMore = false;
         getData();
     }
 
@@ -111,11 +108,11 @@ public class FrageHotNew extends BaseLazyFragment implements LoadMoreListener.On
         if (isEnableLoadMore) {
             CurrentPage++;
             getData();
-            isEnableLoadMore = false;
         }
     }
 
     private void getData() {
+        isEnableLoadMore = false;
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
         if (App.IS_SCHOOL_NET) {
             new getGalleryTask().execute();
@@ -184,10 +181,7 @@ public class FrageHotNew extends BaseLazyFragment implements LoadMoreListener.On
             Elements links = body.select("li");
             for (Element src : links) {
                 String url = src.select("a").attr("href");
-                int titleColor = GetId.getColor(
-                        getActivity(), src.select("a").attr("style"));
-                Log.e("style", src.select("a").attr("style"));
-                //Log.e("titleColor",titleColor+"");
+                int titleColor = GetId.getColor(getActivity(), src.select("a").attr("style"));
                 String author = src.select(".by").text();
                 src.select("span.by").remove();
                 String replyCount = src.select("span.num").text();

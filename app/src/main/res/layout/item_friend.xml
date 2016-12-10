@@ -38,15 +38,18 @@
         android:id="@+id/is_online"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/user_name"
+        android:layout_alignBottom="@+id/user_name"
         android:layout_marginStart="6dp"
         android:layout_toEndOf="@+id/user_name"
-        android:background="@drawable/type_bg_blue"
+        android:background="@drawable/badge"
+        android:paddingBottom="2dp"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
+        android:paddingTop="2dp"
         android:text="在线"
         android:textColor="@android:color/white"
-        android:textSize="12sp" />
+        android:textSize="10sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/user_info"

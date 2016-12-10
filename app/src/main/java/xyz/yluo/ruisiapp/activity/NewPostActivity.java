@@ -58,13 +58,13 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             110, 217, 142, 552, 560,
             554, 548, 216, 91, 555,
             145, 144, 152, 147, 215,
-            125, 140};
+            125, 140, 563};
     private static final String[] forums = new String[]{
             "灌水专区", "文章天地", "我是女生", "西电问答", "心灵花园",
             "普通交易", "缘聚睿思", "失物招领", "我要毕业啦", "技术博客",
             "就业信息发布", "学习交流", "我爱运动", "考研交流", "就业交流", "软件交流",
             "嵌入式交流", "竞赛交流", "原创精品", "西电后街", "音乐纵贯线",
-            "绝对漫域"};
+            "绝对漫域", "邀请专区"};
     private int fid = fids[0];
     private String title = forums[0];
 

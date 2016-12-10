@@ -154,7 +154,7 @@ public class FrageForumList extends BaseLazyFragment implements ListItemClickLis
 
             @Override
             public void onFailure(Throwable e) {
-                refreshLayout.postDelayed(() -> refreshLayout.setRefreshing(false), 500);
+                refreshLayout.postDelayed(() -> refreshLayout.setRefreshing(false), 300);
             }
         });
     }
@@ -227,7 +227,7 @@ public class FrageForumList extends BaseLazyFragment implements ListItemClickLis
                 datas.addAll(simpledatas);
                 adapter.notifyDataSetChanged();
             }
-            refreshLayout.postDelayed(() -> refreshLayout.setRefreshing(false), 500);
+            refreshLayout.setRefreshing(false);
         }
     }
 }

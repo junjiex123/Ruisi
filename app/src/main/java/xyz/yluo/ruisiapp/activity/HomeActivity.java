@@ -32,7 +32,7 @@ import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.MainPageAdapter;
 import xyz.yluo.ruisiapp.fragment.FrageForumList;
-import xyz.yluo.ruisiapp.fragment.FrageHotNew;
+import xyz.yluo.ruisiapp.fragment.FrageHotsNews;
 import xyz.yluo.ruisiapp.fragment.FrageMessage;
 import xyz.yluo.ruisiapp.fragment.FragmentMy;
 import xyz.yluo.ruisiapp.myhttp.HttpUtil;
@@ -44,7 +44,7 @@ import xyz.yluo.ruisiapp.widget.MyBottomTab;
  * Created by free2 on 16-3-17.
  * 这是首页 管理3个fragment
  * 1.板块列表{@link HomeActivity}
- * 2.新帖{@link FrageHotNew}
+ * 2.新帖{@link FrageHotsNews}
  */
 public class HomeActivity extends BaseActivity
         implements MyBottomTab.OnTabChangeListener, ViewPager.OnPageChangeListener {
@@ -93,7 +93,7 @@ public class HomeActivity extends BaseActivity
         viewPager.setOffscreenPageLimit(4);
         viewPager.addOnPageChangeListener(this);
         fragments.add(new FrageForumList());
-        fragments.add(new FrageHotNew());
+        fragments.add(new FrageHotsNews());
         fragments.add(FrageMessage.newInstance(ishaveReply, ishavePm));
         fragments.add(new FragmentMy());
         adapter = new MainPageAdapter(getSupportFragmentManager(), fragments);

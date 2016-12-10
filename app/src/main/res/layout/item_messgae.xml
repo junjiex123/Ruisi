@@ -62,12 +62,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/dimen_8"
                     android:layout_marginStart="@dimen/dimen_8"
-                    android:background="@drawable/type_bg_blue"
-                    android:paddingEnd="4dp"
-                    android:paddingStart="4dp"
+                    android:background="@drawable/badge"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="4dp"
+                    android:textStyle="bold"
+                    android:paddingRight="4dp"
+                    android:paddingTop="2dp"
+                    android:textSize="10sp"
                     android:text="未读"
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
+                    android:textColor="@color/white"/>
             </LinearLayout>
 
             <xyz.yluo.ruisiapp.widget.ArrowTextView

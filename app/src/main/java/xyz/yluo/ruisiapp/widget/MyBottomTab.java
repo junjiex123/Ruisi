@@ -38,9 +38,8 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
     private boolean ishaveMessage = false;
 
     //遵循md 设计规范
-    private int PADDING_8 = 8;
+    private int SIZE_2 = 2;
     private int BADGE_SIZE = 6;
-    private int PADDING_12 = 12;
     private int SIZE_ICON = 24;
     private int COLOR_SELECT;
     private int COLOR_UNSELECT;
@@ -83,8 +82,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
     private void init() {
         COLOR_SELECT = ContextCompat.getColor(context, R.color.colorAccent);
         COLOR_UNSELECT = ContextCompat.getColor(context, R.color.colorDisableHintIcon);
-        PADDING_8 = DimmenUtils.dip2px(context, PADDING_8);
-        PADDING_12 = DimmenUtils.dip2px(context, PADDING_12);
+        SIZE_2 = DimmenUtils.dip2px(context, SIZE_2);
         SIZE_ICON = DimmenUtils.dip2px(context, SIZE_ICON);
         BADGE_SIZE = DimmenUtils.dip2px(context, 3);
         int[] attrs = new int[]{R.attr.selectableItemBackgroundBorderless};
@@ -107,7 +105,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
 
         paint_badge.setColor(COLOR_SELECT);
         paint_badge.setStyle(Paint.Style.FILL);
-        paint_badge.setStrokeWidth(PADDING_8 / 2);
+        paint_badge.setStrokeWidth(SIZE_2 * 2);
         paint_badge.setAntiAlias(true);
     }
 
@@ -154,7 +152,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         // 设置宽高和权重
         view.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT, 1));
         view.setGravity(Gravity.CENTER);
-        view.setPadding(PADDING_12, PADDING_8, PADDING_12, PADDING_8);
+        view.setPadding(SIZE_2 * 6, SIZE_2 * 3, SIZE_2 * 6, SIZE_2 * 3);
 
         /**
          * 图标
@@ -190,8 +188,8 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
             int end = len / 4 * 3;
             int start = len / 2;
             int center = (end - start) / 2 + start;
-            int centx = center + PADDING_12;
-            int centy = PADDING_12;
+            int centx = center + SIZE_2 * 6;
+            int centy = SIZE_2 * 5;
             canvas.drawCircle(centx, centy, BADGE_SIZE, paint_badge);
         }
 

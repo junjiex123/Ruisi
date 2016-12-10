@@ -3,8 +3,7 @@
     android:id="@+id/comment_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_above="@+id/smiley_view"
-    android:background="#FAFAFA"
+    android:background="@drawable/bottom_tab_bg"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:gravity="bottom"
@@ -20,39 +19,39 @@
         android:inputType="textMultiLine"
         android:lineSpacingMultiplier="1.2"
         android:maxLines="4"
-        android:padding="12dp"
+        android:padding="10dp"
         android:textSize="15sp" />
 
     <ImageView
         android:id="@+id/btn_emotion"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="2dp"
+        android:background="?attr/selectableItemBackground"
         android:clickable="true"
+        android:padding="8dp"
         android:src="@drawable/post_emojtion" />
 
     <ImageView
         android:id="@+id/btn_more"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginEnd="2dp"
+        android:background="?attr/selectableItemBackground"
         android:clickable="true"
+        android:padding="8dp"
         android:src="@drawable/ic_add_black_24dp"
         android:visibility="gone" />
 
     <ImageView
         android:id="@+id/btn_send"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginEnd="2dp"
+        android:background="?attr/selectableItemBackground"
         android:clickable="true"
+        android:padding="8dp"
         android:src="@drawable/btn_post" />
 </LinearLayout>
