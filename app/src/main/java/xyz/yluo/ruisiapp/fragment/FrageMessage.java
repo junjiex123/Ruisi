@@ -27,16 +27,18 @@ import xyz.yluo.ruisiapp.model.ListType;
 import xyz.yluo.ruisiapp.model.MessageData;
 import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
+import xyz.yluo.ruisiapp.widget.MyListDivider;
 
 //回复我的
 //// TODO: 16-8-22  add 提到我的home.php?mod=space&do=notice&view=mypost&type=at&mobile=2
 
 public class FrageMessage extends BaseLazyFragment {
-    protected RecyclerView recycler_view;
+    protected RecyclerView messageList;
     private View pm_badge;
     protected SwipeRefreshLayout refreshLayout;
     private MessageAdapter adapter;
-    private List<MessageData> datas;
+    private List<MessageData> datas = new ArrayList<>();
+    ;
     private int index = 0;
     int last_message_id = 0;
     int current_noticeid = 1;
@@ -56,7 +58,6 @@ public class FrageMessage extends BaseLazyFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        datas = new ArrayList<>();
         Bundle bundle = getArguments();//从activity传过来的Bundle
         if (bundle != null) {
             boolean isHaveReply = bundle.getBoolean("isHaveReply", false);
@@ -71,16 +72,17 @@ public class FrageMessage extends BaseLazyFragment {
         if (isHavePm) {
             pm_badge.setVisibility(View.VISIBLE);
         }
-        recycler_view = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
+        messageList = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         //设置可以滑出底栏
-        recycler_view.setClipToPadding(false);
-        recycler_view.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
+        messageList.setClipToPadding(false);
+        messageList.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
         refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recycler_view.setLayoutManager(layoutManager);
+        messageList.setLayoutManager(layoutManager);
+        messageList.addItemDecoration(new MyListDivider(getActivity(), MyListDivider.VERTICAL));
         adapter = new MessageAdapter(getActivity(), datas);
-        recycler_view.setAdapter(adapter);
+        messageList.setAdapter(adapter);
         refreshLayout.setOnRefreshListener(() -> getData(false));
         RadioGroup swictchMes = (RadioGroup) mRootView.findViewById(R.id.btn_change);
         swictchMes.setOnCheckedChangeListener((radioGroup, id) -> {
@@ -107,6 +109,12 @@ public class FrageMessage extends BaseLazyFragment {
             getData(true);
             lastLoginState = !lastLoginState;
         }
+    }
+
+    @Override
+    public void ScrollToTop() {
+        if (datas.size() > 0)
+            messageList.scrollToPosition(0);
     }
 
     @Override

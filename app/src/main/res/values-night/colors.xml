@@ -7,7 +7,9 @@
     <color name="colorDisableHintIcon">#aaaaaa</color>
     <color name="text_color_pri">#f0f0f0</color>
     <color name="text_color_sec">#a0a0a0</color>
+
     <color name="bg_primary">#2e2e2e</color>
     <color name="bg_secondary">#333333</color>
     <color name="bg_blur">#f53b3b3b</color>
+    <color name="bg_select">#ff626262</color>
 </resources>

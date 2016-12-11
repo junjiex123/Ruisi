@@ -37,6 +37,7 @@ import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
+import xyz.yluo.ruisiapp.widget.MyListDivider;
 
 /**
  * 一般文章列表
@@ -85,8 +86,7 @@ public class PostsActivity extends BaseActivity implements
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
-        isHideZhiding = PreferenceManager.getDefaultSharedPreferences(this)
-                .getBoolean("setting_hide_zhidin", true);
+        isHideZhiding = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("setting_hide_zhidin", true);
         if (getType() == PostListAdapter.TYPE_IMAGE) {
             isEnableLoadMore = false;
             mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -95,8 +95,8 @@ public class PostsActivity extends BaseActivity implements
         } else {
             mLayoutManager = new LinearLayoutManager(this);
             mRecyclerView.setHasFixedSize(true);
-            mRecyclerView.addOnScrollListener(
-                    new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 8));
+            mRecyclerView.addItemDecoration(new MyListDivider(this, MyListDivider.VERTICAL));
+            mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 8));
             addToolbarMenu(R.drawable.ic_edit).setOnClickListener(this);
         }
 

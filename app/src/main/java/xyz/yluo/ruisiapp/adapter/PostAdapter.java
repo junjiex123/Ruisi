@@ -21,6 +21,7 @@ import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.listener.ListItemClickListener;
 import xyz.yluo.ruisiapp.model.SingleArticleData;
 import xyz.yluo.ruisiapp.model.SingleType;
+import xyz.yluo.ruisiapp.utils.DimmenUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 import xyz.yluo.ruisiapp.widget.CircleImageView;
 import xyz.yluo.ruisiapp.widget.myhtmlview.HtmlView;
@@ -36,6 +37,7 @@ public class PostAdapter extends BaseAdapter {
     private static final int CONTENT = 0;
     private static final int COMENT = 1;
     private static final int HEADER = 3;
+    private int size = 0;
 
 
     //数据
@@ -48,6 +50,7 @@ public class PostAdapter extends BaseAdapter {
 
         this.datalist = datalist;
         this.activity = activity;
+        size = DimmenUtils.dip2px(activity, 42);
         setItemListener(itemListener);
     }
 
@@ -112,7 +115,11 @@ public class PostAdapter extends BaseAdapter {
             article_title.setText(single.getTitle());
             article_username.setText(single.getUsername());
             String img_url = UrlUtils.getAvaterurlm(single.getImg());
-            Picasso.with(activity).load(img_url).placeholder(R.drawable.image_placeholder).into(article_user_image);
+            Picasso.with(activity)
+                    .load(img_url)
+                    .resize(size, size)
+                    .error(R.drawable.image_placeholder)
+                    .into(article_user_image);
             String post_time = "发表于:" + single.getPostTime();
             article_post_time.setText(post_time);
             htmlView.setHtmlText(single.getCotent(), true);
@@ -181,7 +188,11 @@ public class PostAdapter extends BaseAdapter {
             boolean isreply = single.getReplyUrlTitle().contains("action=reply");
             btn_reply_2.setVisibility(isreply ? View.VISIBLE : View.GONE);
             String img_url = UrlUtils.getAvaterurlm(single.getImg());
-            Picasso.with(activity).load(img_url).placeholder(R.drawable.image_placeholder).into(replay_image);
+            Picasso.with(activity)
+                    .load(img_url)
+                    .resize(size, size)
+                    .error(R.drawable.image_placeholder)
+                    .into(replay_image);
             replay_time.setText(single.getPostTime());
             replay_index.setText(single.getIndex());
             htmlTextView.setHtmlText(single.getCotent(), true);

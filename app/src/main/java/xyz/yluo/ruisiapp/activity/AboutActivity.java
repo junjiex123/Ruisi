@@ -57,7 +57,7 @@ public class AboutActivity extends BaseActivity {
         if (info != null) {
             int version_code = info.versionCode;
             String version_name = info.versionName;
-            String a = "版本号：" + version_code + "\n版本：" + version_name;
+            String a = "版本号:" + version_code + "\n版本:" + version_name;
             version.setText(a);
         }
 

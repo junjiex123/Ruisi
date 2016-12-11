@@ -51,6 +51,7 @@ import xyz.yluo.ruisiapp.utils.RuisUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 import xyz.yluo.ruisiapp.widget.AddFriendDialog;
 import xyz.yluo.ruisiapp.widget.CircleImageView;
+import xyz.yluo.ruisiapp.widget.MyListDivider;
 
 /**
  * 用户信息activity
@@ -59,7 +60,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
 
     private static final String NAME_IMG_AVATAR = "imgAvatar";
     private static String userUid = "";
-    protected RecyclerView recycler_view;
+    protected RecyclerView infoList;
     protected CoordinatorLayout layout;
     protected Toolbar toolbar;
     private CollapsingToolbarLayout toolbarLayout;
@@ -92,7 +93,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.transparent));
         }
         toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-        recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
+        infoList = (RecyclerView) findViewById(R.id.recycler_view);
         CircleImageView imageView = (CircleImageView) findViewById(R.id.user_detail_img_avatar);
         layout = (CoordinatorLayout) findViewById(R.id.main_window);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -112,8 +113,9 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         }
         adapter = new SimpleListAdapter(ListType.INFO, this, datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recycler_view.setLayoutManager(layoutManager);
-        recycler_view.setAdapter(adapter);
+        infoList.setLayoutManager(layoutManager);
+        infoList.addItemDecoration(new MyListDivider(this, MyListDivider.VERTICAL));
+        infoList.setAdapter(adapter);
         userUid = GetId.getid("uid=", imageUrl);
         //如果是自己
         if (userUid.equals(App.getUid(this))) {

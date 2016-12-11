@@ -83,6 +83,11 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
     }
 
     @Override
+    public void ScrollToTop() {
+        //do noting
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.fragment_my;
     }
@@ -139,9 +144,7 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
                 }
                 break;
             case R.id.history:
-                if (isLogin()) {
-                    FragementActivity.open(getActivity(), FrageType.HISTORY);
-                }
+                FragementActivity.open(getActivity(), FrageType.HISTORY);
                 break;
             case R.id.market:
                 if (!IntentUtils.openOnStore(getActivity())) {
@@ -149,12 +152,14 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
                 }
                 break;
             case R.id.friend:
-                switchActivity(FriendActivity.class);
+                if (isLogin()) {
+                    switchActivity(FriendActivity.class);
+                }
                 break;
             case R.id.share:
                 String data = "这个手机睿思客户端非常不错，分享给你们。" +
-                        "\n下载地址: http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=" + App.POST_TID +
-                        "\n下载地址2: http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid=" + App.POST_TID + "&mobile=2";
+                        "\n下载地址(校园网): http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=" + App.POST_TID +
+                        "\n下载地址2(校外网): http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid=" + App.POST_TID + "&mobile=2";
                 IntentUtils.shareApp(getActivity(), data);
                 break;
 

@@ -172,7 +172,7 @@ public class ForumsAdapter extends BaseAdapter {
                     alertDialog.show();
                 }
 
-                return false;
+                return true;
             });
         }
 

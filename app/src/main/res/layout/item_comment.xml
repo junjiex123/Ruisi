@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
-    android:clickable="true">
+    android:clickable="true"
+    android:paddingBottom="8dp">
 
     <xyz.yluo.ruisiapp.widget.CircleImageView
         android:id="@+id/article_user_image"
@@ -31,8 +32,8 @@
         android:id="@+id/bt_lable_lz"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/replay_author"
-        android:layout_marginStart="8dp"
+        android:layout_alignBottom="@+id/replay_author"
+        android:layout_marginStart="6dp"
         android:layout_toEndOf="@+id/replay_author"
         android:background="@drawable/badge"
         android:paddingBottom="2dp"
@@ -121,13 +122,4 @@
         android:text="删除"
         android:textColor="@color/colorAuthor"
         android:textSize="14sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.8dp"
-        android:layout_alignStart="@+id/replay_author"
-        android:layout_below="@+id/tv_edit"
-        android:layout_marginEnd="12dp"
-        android:layout_marginTop="8dp"
-        android:background="#1f000000" />
 </RelativeLayout>

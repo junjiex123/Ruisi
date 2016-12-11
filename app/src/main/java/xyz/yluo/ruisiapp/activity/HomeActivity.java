@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.NotificationCompat;
@@ -31,6 +30,7 @@ import java.util.TimerTask;
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.adapter.MainPageAdapter;
+import xyz.yluo.ruisiapp.fragment.BaseLazyFragment;
 import xyz.yluo.ruisiapp.fragment.FrageForumList;
 import xyz.yluo.ruisiapp.fragment.FrageHotsNews;
 import xyz.yluo.ruisiapp.fragment.FrageMessage;
@@ -62,7 +62,7 @@ public class HomeActivity extends BaseActivity
     private boolean isNeedCheckUpdate = false;
     private ViewPager viewPager;
     private MainPageAdapter adapter;
-    private List<Fragment> fragments = new ArrayList<>();
+    private List<BaseLazyFragment> fragments = new ArrayList<>();
 
 
     @Override
@@ -98,13 +98,14 @@ public class HomeActivity extends BaseActivity
         fragments.add(new FragmentMy());
         adapter = new MainPageAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(adapter);
-
     }
 
     @Override
     public void tabClicked(View v, int position, boolean isChange) {
         if (isChange) {
             switchTab(position);
+        } else {
+            fragments.get(position).ScrollToTop();
         }
     }
 
@@ -125,15 +126,14 @@ public class HomeActivity extends BaseActivity
     public void startCheckMessage() {
         //60s进行一次
         long need = interval - (System.currentTimeMillis() - lastCheckMsgTime);
-        if (need < 100) {
-            need = 100;
+        if (need < 800) {
+            need = 800;
         }
         if (timer == null) {
-            Log.e("message", "开始timer delay" + need);
             timer = new Timer(true);
         }
         task = new MyTimerTask();
-        timer.schedule(task, need, interval); //延时150ms后执行，60s间隔
+        timer.schedule(task, need, interval);
     }
 
     @Override
@@ -142,14 +142,7 @@ public class HomeActivity extends BaseActivity
         if (timer != null) {
             timer.cancel();
             timer = null;
-            Log.e("message", "停止timer");
         }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        // super.onSaveInstanceState(outState);
-        //不然保存状态 放置白屏
     }
 
     private void switchTab(int pos) {
@@ -158,7 +151,6 @@ public class HomeActivity extends BaseActivity
             bottomTab.invalidate();
         }
         viewPager.setCurrentItem(pos, false);
-
     }
 
     boolean ishaveReply = false;

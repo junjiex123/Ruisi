@@ -30,7 +30,7 @@
             android:layout_marginTop="16dp"
             android:text="睿思规定每日签到时间 07:00-23:00"
             android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:textSize="13sp" />
     </LinearLayout>
 
     <FrameLayout
@@ -68,7 +68,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
-                android:text="今日已签到" />
+                android:text="今日已签到"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/total_sign_day"
@@ -102,7 +103,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="选择心情："
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <Spinner
                 android:id="@+id/spinner"
@@ -116,7 +118,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="输入你最想说的话(选填)" />
+                android:hint="输入你最想说的话(选填)"
+                android:textSize="14sp" />
 
             <Button
                 android:id="@+id/btn_submit"
@@ -125,19 +128,19 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/btn_light_red_bg"
                 android:text="开始签到"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/sign_error"
-            style="@style/text_20_pri"
+            style="@style/text_18_pri"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="不在签到时间内无法签到"
+            android:textStyle="bold"
             android:visibility="gone" />
-
     </FrameLayout>
-
 
 </LinearLayout>

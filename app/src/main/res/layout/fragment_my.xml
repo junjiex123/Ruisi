@@ -92,7 +92,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="6dp"
                     android:gravity="center"
-                    android:text="浏览历史" />
+                    android:text="浏览历史"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -117,7 +118,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="6dp"
                     android:gravity="center"
-                    android:text="我的收藏" />
+                    android:text="我的收藏"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -142,7 +144,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="6dp"
                     android:gravity="center"
-                    android:text="我的好友" />
+                    android:text="我的好友"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -167,7 +170,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="6dp"
                     android:gravity="center"
-                    android:text="我的帖子" />
+                    android:text="我的帖子"
+                    android:textStyle="bold" />
             </LinearLayout>
 
         </LinearLayout>
@@ -211,8 +215,8 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/colorDivider" />
+            android:layout_height="0.6dp"
+            android:background="@drawable/my_divider" />
 
         <LinearLayout
             android:id="@+id/about"
@@ -248,8 +252,8 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/colorDivider" />
+            android:layout_height="0.6dp"
+            android:background="@drawable/my_divider" />
 
         <LinearLayout
             android:id="@+id/share"
@@ -285,8 +289,8 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/colorDivider" />
+            android:layout_height="0.6dp"
+            android:background="@drawable/my_divider" />
 
         <LinearLayout
             android:id="@+id/market"

@@ -26,6 +26,7 @@ import xyz.yluo.ruisiapp.model.ListType;
 import xyz.yluo.ruisiapp.model.SimpleListData;
 import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
+import xyz.yluo.ruisiapp.widget.MyListDivider;
 
 /**
  * Created by free2 on 16-7-14.
@@ -78,12 +79,10 @@ public class FrageTopicStar extends BaseFragment implements LoadMoreListener.OnL
         switch (currentIndex) {
             case 0:
                 //主题
-                //    actionBar.setTitle("我的帖子");
                 url = "home.php?mod=space&uid=" + uid + "&do=thread&view=me&mobile=2";
                 break;
             case 1:
                 //我的收藏
-                //   actionBar.setTitle("我的收藏");
                 url = "home.php?mod=space&uid=" + uid + "&do=favorite&view=me&type=thread&mobile=2";
                 break;
         }
@@ -91,6 +90,7 @@ public class FrageTopicStar extends BaseFragment implements LoadMoreListener.OnL
         datas = new ArrayList<>();
         adapter = new SimpleListAdapter(ListType.ARTICLE, getActivity(), datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.addItemDecoration(new MyListDivider(getActivity(), MyListDivider.VERTICAL));
         recyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) layoutManager, this, 10));
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);

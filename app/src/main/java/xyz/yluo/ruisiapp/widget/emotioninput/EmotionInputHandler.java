@@ -20,7 +20,7 @@ public class EmotionInputHandler implements TextWatcher {
     private final EditText mEditor;
     private final TextChangeListener listener;
     private final ArrayList<ImageSpan> mEmoticonsToRemove = new ArrayList<>();
-    private final ArrayList<TextEmotionSpan> mEmoticonsToRemove2 = new ArrayList<>();
+    private final ArrayList<ColorTextSpan> mEmoticonsToRemove2 = new ArrayList<>();
 
     public EmotionInputHandler(EditText editor, TextChangeListener listener) {
         mEditor = editor;
@@ -35,13 +35,13 @@ public class EmotionInputHandler implements TextWatcher {
         Editable editableText = mEditor.getEditableText();
 
         editableText.replace(start, end, s);
-        editableText.setSpan(new TextEmotionSpan(), start, start + s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        editableText.setSpan(new ColorTextSpan(), start, start + s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     public void insertSmiley(SmileyDataSet set, int index, Drawable drawable) {
         if (drawable != null) {
             String name = set.getSmileys().get(index).second;
-            insertSmiley(name,drawable);
+            insertSmiley(name, drawable);
         }
     }
 
@@ -89,8 +89,8 @@ public class EmotionInputHandler implements TextWatcher {
                 }
             }
 
-            TextEmotionSpan[] list2 = message.getSpans(start, end, TextEmotionSpan.class);
-            for (TextEmotionSpan span : list2) {
+            ColorTextSpan[] list2 = message.getSpans(start, end, ColorTextSpan.class);
+            for (ColorTextSpan span : list2) {
                 int spanStart = message.getSpanStart(span);
                 int spanEnd = message.getSpanEnd(span);
                 if ((spanStart < end) && (spanEnd > start)) {
@@ -114,7 +114,7 @@ public class EmotionInputHandler implements TextWatcher {
             }
         }
 
-        for (TextEmotionSpan span : mEmoticonsToRemove2) {
+        for (ColorTextSpan span : mEmoticonsToRemove2) {
             int start = message.getSpanStart(span);
             int end = message.getSpanEnd(span);
             message.removeSpan(span);
@@ -135,6 +135,7 @@ public class EmotionInputHandler implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence text, int start, int before, int count) {
+
     }
 
     public interface TextChangeListener {

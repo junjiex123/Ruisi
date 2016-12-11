@@ -20,25 +20,47 @@ import xyz.yluo.ruisiapp.R;
 public class GetId {
 
     public static String getid(String url) {
-        return getid("",url);
+        return getid("", url);
     }
 
     public static String getid(String prefix, String url) {
         Pattern pattern = null;
         int len = 0;
-        if(TextUtils.isEmpty(prefix)){
+        if (TextUtils.isEmpty(prefix)) {
             pattern = Pattern.compile("[0-9]+");
-        }else{
+        } else {
             len = prefix.length();
-            pattern = Pattern.compile(prefix+"[0-9]+");
+            pattern = Pattern.compile(prefix + "[0-9]+");
         }
         Matcher matcher = pattern.matcher(url);
 
         String id = "";
-        if(matcher.find()){
-            id = url.substring(matcher.start()+len, matcher.end());
+        if (matcher.find()) {
+            id = url.substring(matcher.start() + len, matcher.end());
         }
         return id;
+    }
+
+    public static int getFloor(String text) {
+        if (TextUtils.isEmpty(text)) {
+            return 0;
+        }
+        int floor = 0;
+        if (text.contains("沙发")) {
+            floor = 1;
+        } else if (text.contains("板凳")) {
+            floor = 2;
+        } else if (text.contains("地板")) {
+            floor = 3;
+        } else {
+            Pattern pattern = Pattern.compile("[0-9]+");
+            Matcher matcher = pattern.matcher(text);
+            if (matcher.find()) {
+                return Integer.parseInt(text.substring(matcher.start(), matcher.end()));
+            }
+        }
+
+        return floor;
     }
 
 
@@ -84,10 +106,10 @@ public class GetId {
     }
 
     public static int getFroumFid(String url) {
-        String fid =  getid("fid=",url);
-        if(TextUtils.isEmpty(fid)){
+        String fid = getid("fid=", url);
+        if (TextUtils.isEmpty(fid)) {
             return -1;
-        }else{
+        } else {
             if (fid.equals("106")) {
                 fid = "110";
             } else if (fid.equals("553")) {
@@ -98,29 +120,29 @@ public class GetId {
     }
 
     //htmlcolor 转换成android 的 int color
-    public static int getColor(Context c,String str) {
+    public static int getColor(Context c, String str) {
 
         // style="color: #EC1282;">
         int color = ContextCompat.getColor(c,
                 R.color.text_color_pri);
-        if(str.contains("color")){
+        if (str.contains("color")) {
             int start = str.indexOf("color");
-            int end = str.indexOf(";",start);
-            String temp = str.substring(start,end);
+            int end = str.indexOf(";", start);
+            String temp = str.substring(start, end);
 
             int start_c = temp.indexOf("#");
 
             String colorStr = temp.substring(start_c).trim();
             try {
-                color =  Color.parseColor(colorStr);
-            }catch (Exception e){
+                color = Color.parseColor(colorStr);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else if(str.startsWith("#")){
+        } else if (str.startsWith("#")) {
             try {
-                color =  Color.parseColor(str);
-            }catch (Exception e){
-                Log.e("color",color+"");
+                color = Color.parseColor(str);
+            } catch (Exception e) {
+                Log.e("color", color + "");
                 e.printStackTrace();
             }
         }

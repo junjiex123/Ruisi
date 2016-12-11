@@ -25,7 +25,8 @@
                 android:layout_height="wrap_content"
                 android:hint="用户名"
                 android:inputType="text"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:textSize="16sp" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -39,7 +40,8 @@
                 android:layout_height="wrap_content"
                 android:hint="密码"
                 android:inputType="textPassword"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:textSize="16sp" />
         </android.support.design.widget.TextInputLayout>
 
         <CheckBox
@@ -63,6 +65,7 @@
             android:hint="答案"
             android:inputType="text"
             android:maxLines="1"
+            android:textSize="16sp"
             android:visibility="gone" />
 
         <Button

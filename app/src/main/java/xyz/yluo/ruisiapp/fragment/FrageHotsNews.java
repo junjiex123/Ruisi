@@ -32,6 +32,7 @@ import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.myhttp.SyncHttpClient;
 import xyz.yluo.ruisiapp.utils.GetId;
+import xyz.yluo.ruisiapp.widget.MyListDivider;
 
 /**
  * Created by free2 on 16-3-19.
@@ -43,7 +44,7 @@ public class FrageHotsNews extends BaseLazyFragment implements LoadMoreListener.
     private static final int TYPE_NEW = 1;
 
     private int currentType = 1;
-    protected RecyclerView recycler_view;
+    protected RecyclerView postList;
     protected SwipeRefreshLayout refreshLayout;
     private List<GalleryData> galleryDatas = new ArrayList<>();
     private List<ArticleListData> mydataset = new ArrayList<>();
@@ -57,17 +58,18 @@ public class FrageHotsNews extends BaseLazyFragment implements LoadMoreListener.
         super.onCreateView(inflater, container, savedInstanceState);
         ((RadioButton) mRootView.findViewById(R.id.btn_reply)).setText("新帖");
         ((RadioButton) mRootView.findViewById(R.id.btn_pm)).setText("热贴");
-        recycler_view = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
+        postList = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        recycler_view.setLayoutManager(mLayoutManager);
+        postList.setLayoutManager(mLayoutManager);
+        postList.addItemDecoration(new MyListDivider(getActivity(), MyListDivider.VERTICAL));
         //设置可以滑出底栏
-        recycler_view.setClipToPadding(false);
-        recycler_view.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
+        postList.setClipToPadding(false);
+        postList.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
         adapter = new HotNewListAdapter(getActivity(), mydataset, galleryDatas);
-        recycler_view.setAdapter(adapter);
-        recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 10));
+        postList.setAdapter(adapter);
+        postList.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 10));
         refreshLayout.setOnRefreshListener(this::refresh);
 
         RadioGroup swictchMes = (RadioGroup) mRootView.findViewById(R.id.btn_change);
@@ -90,6 +92,12 @@ public class FrageHotsNews extends BaseLazyFragment implements LoadMoreListener.
     @Override
     public void onFirstUserVisible() {
         getData();
+    }
+
+    @Override
+    public void ScrollToTop() {
+        if(mydataset.size()>0)
+            postList.scrollToPosition(0);
     }
 
 

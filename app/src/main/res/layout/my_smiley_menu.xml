@@ -74,6 +74,4 @@
         android:text="分享"
         android:textColor="@color/text_color_sec"
         android:textSize="14sp" />
-
-
 </RelativeLayout>

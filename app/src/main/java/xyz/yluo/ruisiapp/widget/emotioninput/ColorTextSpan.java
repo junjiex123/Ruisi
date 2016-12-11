@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import android.text.style.ReplacementSpan;
 
 
-public class TextEmotionSpan extends ReplacementSpan {
+public class ColorTextSpan extends ReplacementSpan {
 
     private static final float PADDING = 10.0f;
 
@@ -20,7 +20,7 @@ public class TextEmotionSpan extends ReplacementSpan {
     public void draw(@NonNull Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, @NonNull Paint paint) {
         // Text
         paint.setAntiAlias(true);
-        paint.setColor(Color.parseColor("#8DB6CD"));
+        paint.setColor(Color.parseColor("#529ECC"));
         int xPos = Math.round(x + PADDING / 2);
         int yPos = (int) ((top + bottom) / 2 - (paint.descent() + paint.ascent()) / 2);
         canvas.drawText(text, start, end, xPos, yPos, paint);

@@ -50,7 +50,7 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
     private boolean isSetForumToDataBase = false;
     private SharedPreferences sharedPreferences;
     private CircleImageView userImg;
-    private RecyclerView recyclerView;
+    private RecyclerView formsList;
     //15分钟的缓存时间
     private static final int UPDATE_TIME = 1500 * 600;
     private static final String KEY = "FORUM_UPDATE_KEY";
@@ -69,9 +69,9 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
         super.onCreateView(inflater, container, savedInstanceState);
         userImg = (CircleImageView) mRootView.findViewById(R.id.img);
         refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
-        recyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
-        recyclerView.setClipToPadding(false);
-        recyclerView.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
+        formsList = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
+        formsList.setClipToPadding(false);
+        formsList.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         mRootView.findViewById(R.id.search).setOnClickListener(this);
 
@@ -88,9 +88,9 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
             }
         });
         userImg.setOnClickListener(this);
-        recyclerView.addItemDecoration(new MyGridDivider(1, ContextCompat.getColor(getActivity(), R.color.colorDivider)));
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+        formsList.addItemDecoration(new MyGridDivider(1, ContextCompat.getColor(getActivity(), R.color.colorDivider)));
+        formsList.setLayoutManager(layoutManager);
+        formsList.setAdapter(adapter);
         refreshLayout.setOnRefreshListener(this::getData);
         return mRootView;
     }
@@ -127,6 +127,12 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
             getData();
             refreshAvaterView();
         }
+    }
+
+    @Override
+    public void ScrollToTop() {
+        if (datas.size() > 0)
+            formsList.scrollToPosition(0);
     }
 
     private void refreshAvaterView() {

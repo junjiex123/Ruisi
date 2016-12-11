@@ -18,6 +18,7 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.activity.PostActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.model.ArticleListData;
+import xyz.yluo.ruisiapp.utils.DimmenUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 import xyz.yluo.ruisiapp.widget.CircleImageView;
 
@@ -30,6 +31,7 @@ public class PostListAdapter extends BaseAdapter {
     public static final int TYPE_NORMAL = 0;
     public static final int TYPE_NORMAL_MOBILE = 1;
     public static final int TYPE_IMAGE = 2;
+    private int size = 0;
 
     //数据
     private List<ArticleListData> DataSet;
@@ -42,6 +44,7 @@ public class PostListAdapter extends BaseAdapter {
         DataSet = data;
         this.activity = activity;
         this.type = type;
+        size = DimmenUtils.dip2px(activity, 42);
     }
 
 
@@ -118,8 +121,11 @@ public class PostListAdapter extends BaseAdapter {
             view_count.setText(single.viewCount);
 
             String imageUrl = UrlUtils.getAvaterurlm(single.authorUrl);
-            Picasso.with(activity).load(imageUrl).placeholder(R.drawable.image_placeholder).into(author_img);
-
+            Picasso.with(activity)
+                    .load(imageUrl)
+                    .resize(size, size)
+                    .error(R.drawable.image_placeholder)
+                    .into(author_img);
             int color = single.titleColor;
             int readcolor = ContextCompat.getColor(activity, R.color.text_color_sec);
             article_title.setTextColor(single.isRead ? readcolor : color);

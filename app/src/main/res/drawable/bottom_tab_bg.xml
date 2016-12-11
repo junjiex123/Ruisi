@@ -4,12 +4,12 @@
     <item>
         <shape>
             <stroke
-                android:width="0.6dp"
+                android:width="0.8dp"
                 android:color="@color/colorDivider" />
         </shape>
     </item>
     <!-- 主体背景颜色值 -->
-    <item android:top="0.6dp">
+    <item android:top="0.8dp">
         <shape>
             <solid android:color="@color/bg_blur" />
         </shape>

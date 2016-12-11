@@ -42,7 +42,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class LoginActivity extends BaseActivity {
 
-    private EditText ed_username, ed_pass ;
+    private EditText ed_username, ed_pass;
     private EditText anwser_text;
     private Button btn_login;
     private CheckBox rem_ck;
@@ -70,7 +70,7 @@ public class LoginActivity extends BaseActivity {
         Spinner anwser_select = (Spinner) findViewById(R.id.anwser_select);
         anwser_text = (EditText) findViewById(R.id.anwser_text);
 
-        initToolBar(true,getResources().getString(R.string.app_name));
+        initToolBar(true, "登陆");
         btn_login.setOnClickListener(v -> login_click());
 
         shp = getSharedPreferences(App.MY_SHP_NAME, Context.MODE_PRIVATE);
@@ -168,7 +168,7 @@ public class LoginActivity extends BaseActivity {
                 loginUrl = doc.select("form#loginform").attr("action");
                 Map<String, String> params = new HashMap<>();
                 String hash = doc.select("input#formhash").attr("value");
-                App.setHash(LoginActivity.this,hash);
+                App.setHash(LoginActivity.this, hash);
                 params.put("fastloginfield", "username");
                 params.put("cookietime", "2592000");
                 params.put("username", username);
@@ -216,11 +216,11 @@ public class LoginActivity extends BaseActivity {
         if (rem_ck.isChecked()) {
             editor.putBoolean(App.IS_REMBER_PASS_USER, true);
             editor.putString(App.LOGIN_NAME, ed_username.getText().toString().trim());
-            editor.putString(App.LOGIN_PASS,ed_pass.getText().toString().trim());
+            editor.putString(App.LOGIN_PASS, ed_pass.getText().toString().trim());
         } else {
             editor.putBoolean(App.IS_REMBER_PASS_USER, false);
-            editor.putString(App.LOGIN_NAME,"");
-            editor.putString(App.LOGIN_PASS,"");
+            editor.putString(App.LOGIN_NAME, "");
+            editor.putString(App.LOGIN_PASS, "");
         }
 
         int i = res.indexOf("欢迎您回来");

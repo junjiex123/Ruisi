@@ -7,6 +7,7 @@
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
     android:orientation="vertical"
+    android:paddingBottom="8dp"
     android:paddingEnd="12dp"
     android:paddingStart="12dp"
     android:paddingTop="12dp">
@@ -16,6 +17,8 @@
         style="@style/text_16_pri"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="4"
         android:paddingEnd="4dp"
         android:paddingStart="4dp"
         tools:text="话题的标题" />
@@ -75,11 +78,5 @@
             tools:text="222" />
 
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/colorDivider" />
 
 </LinearLayout>

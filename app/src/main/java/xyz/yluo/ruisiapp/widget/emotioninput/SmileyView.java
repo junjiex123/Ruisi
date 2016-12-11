@@ -71,8 +71,8 @@ public class SmileyView extends LinearLayout implements ViewPager.OnPageChangeLi
         SIZE_8 = DimmenUtils.dip2px(context, 8);
         setOrientation(VERTICAL);
         setBackgroundColor(ContextCompat.getColor(context, R.color.bg_primary));
-        COLOR_TAB = ContextCompat.getColor(context, R.color.bg_secondary);
-        COLOR_TAB_SEL = ContextCompat.getColor(context, R.color.bg_blur);
+        COLOR_TAB = ContextCompat.getColor(context, R.color.bg_primary);
+        COLOR_TAB_SEL = ContextCompat.getColor(context, R.color.bg_select);
 
         viewPager = new ViewPager(context);
         viewPager.setLayoutParams(new LayoutParams(LMP, LWC, 1));
@@ -82,7 +82,7 @@ public class SmileyView extends LinearLayout implements ViewPager.OnPageChangeLi
 
         dotContainer = new LinearLayout(context);
         dotContainer.setOrientation(LinearLayout.HORIZONTAL);
-        dotContainer.setLayoutParams(new LayoutParams(LMP, DimmenUtils.dip2px(context, 20)));
+        dotContainer.setLayoutParams(new LayoutParams(LMP, DimmenUtils.dip2px(context, 24)));
         dotContainer.setGravity(Gravity.CENTER);
         addView(dotContainer);
 
@@ -95,7 +95,8 @@ public class SmileyView extends LinearLayout implements ViewPager.OnPageChangeLi
         tabContainer = new LinearLayout(context);
         tabContainer.setOrientation(LinearLayout.HORIZONTAL);
         tabContainer.setGravity(Gravity.CENTER_VERTICAL);
-        tabContainer.setLayoutParams(new LayoutParams(LMP, DimmenUtils.dip2px(context, 32)));
+        tabContainer.setBackgroundColor(ContextCompat.getColor(context, R.color.bg_primary));
+        tabContainer.setLayoutParams(new LayoutParams(LMP, DimmenUtils.dip2px(context, 36)));
         addView(tabContainer);
     }
 
@@ -120,6 +121,7 @@ public class SmileyView extends LinearLayout implements ViewPager.OnPageChangeLi
             smileys.add(setTieba);
             smileys.add(setAcn);
             smileys.add(setJgz);
+            smileys.add(SmileyEmoji.getEmojis());
             smileys.add(setYwz);
             setSmileys(smileys);
             viewPager.setAdapter(adapter);
@@ -247,7 +249,7 @@ public class SmileyView extends LinearLayout implements ViewPager.OnPageChangeLi
             } else {
                 itemView = new TextView(context);
                 ((TextView) itemView).setText(set.getLogo());
-                ((TextView) itemView).setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
+                ((TextView) itemView).setTextSize(TypedValue.COMPLEX_UNIT_SP, set.textSize);
                 ((TextView) itemView).setGravity(Gravity.CENTER);
             }
 
@@ -408,10 +410,11 @@ public class SmileyView extends LinearLayout implements ViewPager.OnPageChangeLi
                 holder = new ViewHolder();
                 if (set.isImage()) {
                     convertView = new ImageView(context);
-                    convertView.setPadding(SIZE_8, SIZE_8, SIZE_8, SIZE_8);
+                    convertView.setPadding(SIZE_8 / 2 * 3, SIZE_8 / 2 * 3, SIZE_8 / 2 * 3, SIZE_8 / 2 * 3);
                 } else {
                     convertView = new TextView(context);
-                    ((TextView) convertView).setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
+                    ((TextView) convertView).setTextSize(TypedValue.COMPLEX_UNIT_SP, set.textSize);
+                    ((TextView) convertView).setTextColor(ContextCompat.getColor(context, R.color.text_color_pri));
                     convertView.setTextAlignment(TEXT_ALIGNMENT_CENTER);
                     ((TextView) convertView).setGravity(Gravity.CENTER);
                     convertView.setPadding(SIZE_8 / 4, 0, SIZE_8 / 4, 0);

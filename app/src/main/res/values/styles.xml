@@ -5,6 +5,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/bg_primary</item>
+        <item name="android:listDivider">@drawable/my_divider</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowAnimationStyle">@style/activityAnimation</item>
@@ -78,46 +79,4 @@
         <item name="android:textSize">16sp</item>
         <item name="android:background">@drawable/btn_primary_bg</item>
     </style>
-
-    <!--light blue btn_blue_bg-->
-    <style name="dialog_blue_button" parent="AppTheme">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">31dp</item>
-        <item name="android:background">@drawable/btn_light_blue_bg</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:paddingLeft">12dp</item>
-        <item name="android:paddingRight">12dp</item>
-        <item name="android:textColor">#ffffff</item>
-    </style>
-
-
-    <!--我的回复框dialog-->
-    <style name="replyBarDialogStyle" parent="@style/AppTheme">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <!-- 设置未浮动窗口 -->
-        <item name="android:windowIsFloating">true</item>
-        <!-- 设置无边框 -->
-        <item name="android:windowFrame">@null</item>
-        <!-- 设置无标题 -->
-        <item name="android:windowNoTitle">true</item>
-        <!-- 设置屏幕变暗 -->
-        <item name="android:backgroundDimEnabled">true</item>
-    </style>
-
-    <!--alert dialog-->
-    <style name="alert_dialog" parent="@style/AppTheme">
-        <!-- 设置浮动窗口 -->
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowIsTranslucent">false</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowFullscreen">false</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowAnimationStyle">@null</item>
-        <!-- 设置屏幕变暗 -->
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:backgroundDimAmount">0.4</item>
-    </style>
-
-
 </resources>

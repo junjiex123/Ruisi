@@ -33,17 +33,14 @@ public class MyGridDivider extends RecyclerView.ItemDecoration {
             final int right = child.getRight();
             final int top = child.getTop();
             final int bottom = child.getBottom();
-
             c.drawRect(left + devideWidth / 2, top + devideWidth / 2, right - devideWidth / 2, bottom - devideWidth / 2, maint);
         }
-
     }
 
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
-
         outRect.set(-devideWidth / 2, -devideWidth / 2, devideWidth / 2, devideWidth / 2);
     }
 }

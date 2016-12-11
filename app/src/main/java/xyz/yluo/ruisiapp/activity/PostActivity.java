@@ -52,6 +52,8 @@ import xyz.yluo.ruisiapp.utils.DimmenUtils;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.KeyboardUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
+import xyz.yluo.ruisiapp.widget.MyFriendPicker;
+import xyz.yluo.ruisiapp.widget.MyListDivider;
 import xyz.yluo.ruisiapp.widget.emotioninput.PanelViewRoot;
 import xyz.yluo.ruisiapp.widget.emotioninput.SmileyInputRoot;
 
@@ -100,7 +102,6 @@ public class PostActivity extends BaseActivity
         setContentView(R.layout.activity_post);
         initToolBar(true, "加载中......");
         input = (EditText) findViewById(R.id.ed_comment);
-
         showPlainText = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("setting_show_plain", false);
         initCommentList();
         initEmotionInput();
@@ -132,17 +133,8 @@ public class PostActivity extends BaseActivity
         mLayoutManager = new LinearLayoutManager(this);
         topicList.setLayoutManager(mLayoutManager);
         adapter = new PostAdapter(this, this, datas);
+        topicList.addItemDecoration(new MyListDivider(this, MyListDivider.VERTICAL));
         topicList.addOnScrollListener(new LoadMoreListener(mLayoutManager, this, 8));
-        topicList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                int page = mLayoutManager.findLastVisibleItemPosition() / 10 + 1;
-                int selection = spinner.getSelectedItemPosition() + 1;
-                if (page != selection && page <= pageSpinnerDatas.size()) {
-                    spinner.setSelection(page - 1);
-                }
-            }
-        });
         topicList.setAdapter(adapter);
     }
 
@@ -163,6 +155,7 @@ public class PostActivity extends BaseActivity
             return false;
         });
 
+        MyFriendPicker.attach(this, input);
         findViewById(R.id.btn_star).setOnClickListener(this);
         findViewById(R.id.btn_link).setOnClickListener(this);
         findViewById(R.id.btn_share).setOnClickListener(this);
@@ -177,8 +170,7 @@ public class PostActivity extends BaseActivity
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
-                int page = mLayoutManager.findLastVisibleItemPosition() / 10 + 1;
-                if (pos + 1 != page) {
+                if (pos + 1 != page_now) {
                     jumpPage(pos + 1);
                 }
             }
@@ -369,6 +361,7 @@ public class PostActivity extends BaseActivity
     private class DealWithArticleData extends AsyncTask<String, Void, List<SingleArticleData>> {
 
         private String errorText = "";
+        private int pageLoad = 1;
 
         @Override
         protected List<SingleArticleData> doInBackground(String... params) {
@@ -409,7 +402,7 @@ public class PostActivity extends BaseActivity
             //获取总页数 和当前页数
             if (doc.select(".pg").text().length() > 0) {
                 if (doc.select(".pg").text().length() > 0) {
-                    page_now = GetId.getNumber(doc.select(".pg").select("strong").text());
+                    pageLoad = GetId.getNumber(doc.select(".pg").select("strong").text());
                     int n = GetId.getNumber(doc.select(".pg").select("span").attr("title"));
                     if (n > 0 && n > page_sum) {
                         page_sum = n;
@@ -459,7 +452,7 @@ public class PostActivity extends BaseActivity
                 String edittime = contentels.select("i.pstatus").remove().text();
                 String finalcontent = contentels.html().trim();
 
-                if (page_now == 1 && i == 0) {
+                if (pageLoad == 1 && i == 0) {
                     data = new SingleArticleData(SingleType.CONTENT, Title, uid,
                             username, posttime.replace("收藏", ""),
                             commentindex, replyUrl, finalcontent, pid);
@@ -487,6 +480,11 @@ public class PostActivity extends BaseActivity
             enableLoadMore = true;
             if (isGetTitle) {
                 setTitle("帖子正文");
+            }
+
+            if (pageLoad != page_now) {
+                page_now = pageLoad;
+                spinner.setSelection(page_now - 1);
             }
 
             if (!TextUtils.isEmpty(errorText)) {
@@ -714,15 +712,10 @@ public class PostActivity extends BaseActivity
     }
 
     //跳页
-    private void jumpPage(int page) {
-        int index = (page - 1) * 10;
-        if (index < datas.size()) {
-            topicList.scrollToPosition(index);
-        } else {
-            datas.clear();
-            adapter.notifyDataSetChanged();
-            getArticleData(page);
-        }
+    private void jumpPage(int to) {
+        datas.clear();
+        adapter.notifyDataSetChanged();
+        getArticleData(to);
     }
 
     private boolean checkInput() {

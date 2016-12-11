@@ -7,11 +7,13 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.List;
 
+import xyz.yluo.ruisiapp.fragment.BaseLazyFragment;
+
 public class MainPageAdapter extends FragmentStatePagerAdapter {
 
-    private List<Fragment> fragments;
+    private List<BaseLazyFragment> fragments;
 
-    public MainPageAdapter(FragmentManager fm, List<Fragment> fragments) {
+    public MainPageAdapter(FragmentManager fm, List<BaseLazyFragment> fragments) {
         super(fm);
         this.fragments = fragments;
     }

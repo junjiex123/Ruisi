@@ -83,4 +83,6 @@ public abstract class BaseLazyFragment extends BaseFragment {
 
     }
 
+    public abstract void ScrollToTop();
+
 }

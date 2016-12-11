@@ -1,5 +1,6 @@
 package xyz.yluo.ruisiapp.fragment;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -10,6 +11,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatDelegate;
 import android.widget.Toast;
 
 import xyz.yluo.ruisiapp.App;
@@ -183,10 +185,13 @@ public class FragSetting extends PreferenceFragment
             case "setting_dark_mode":
                 bbbb = sharedPreferences.getBoolean("setting_dark_mode", false);
                 if (bbbb) {
-                    Toast.makeText(getActivity(), "成功切换到夜间模式，重启软件生效"
-                            , Toast.LENGTH_SHORT).show();
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    Toast.makeText(getActivity(), "切换到夜间模式", Toast.LENGTH_SHORT).show();
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 }
-
+                Activity a = getActivity();
+                if (a != null) a.recreate();
                 break;
         }
     }

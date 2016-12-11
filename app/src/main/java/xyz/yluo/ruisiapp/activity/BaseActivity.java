@@ -112,4 +112,14 @@ public class BaseActivity extends AppCompatActivity {
         }
         mToast.show();
     }
+
+    protected void showLongToast(String str) {
+        if (mToast == null) {
+            mToast = Toast.makeText(this, str, Toast.LENGTH_LONG);
+        } else {
+            mToast.setText(str);
+            mToast.setDuration(Toast.LENGTH_SHORT);
+        }
+        mToast.show();
+    }
 }
