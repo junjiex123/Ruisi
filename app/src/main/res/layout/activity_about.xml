@@ -58,11 +58,23 @@
             style="@style/text_14_sec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/server_version"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            tools:text="版本2.3.0" />
+
+        <TextView
+            android:id="@+id/server_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="16dp"
+            android:layout_marginTop="4dp"
             android:gravity="center"
-            tools:text="当前版本1.4 beta" />
+            android:textColor="@color/colorAuthor"
+            android:textSize="14sp"
+            tools:text="检查新版本中......" />
 
     </RelativeLayout>
 

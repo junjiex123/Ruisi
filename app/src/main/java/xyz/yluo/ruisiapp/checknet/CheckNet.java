@@ -41,7 +41,6 @@ public class CheckNet {
             } else {
                 try {
                     Connection con1 = Jsoup.connect("http://202.117.119.1/portal.php").timeout(1500);
-
                     if (con1.get().title().contains("西电睿思")) {
                         checkNetResponse.sendFinishMessage(1, "ok");
                         setData(true);

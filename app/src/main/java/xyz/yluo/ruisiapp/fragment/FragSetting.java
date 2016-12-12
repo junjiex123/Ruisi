@@ -36,7 +36,7 @@ public class FragSetting extends PreferenceFragment
     //论坛地址
     private ListPreference setting_forums_url;
     private SharedPreferences sharedPreferences;
-    private Preference about_this, clear_cache, open_sourse, exit_login;
+    private Preference aboutThis, clearCache, openSourse, exit_login;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -45,9 +45,9 @@ public class FragSetting extends PreferenceFragment
 
         setting_user_tail = (EditTextPreference) findPreference("setting_user_tail");
         setting_forums_url = (ListPreference) findPreference("setting_forums_url");
-        about_this = findPreference("about_this");
-        open_sourse = findPreference("open_sourse");
-        clear_cache = findPreference("clean_cache");
+        aboutThis = findPreference("aboutThis");
+        openSourse = findPreference("openSourse");
+        clearCache = findPreference("clean_cache");
         exit_login = findPreference("exit_login");
         sharedPreferences = getPreferenceScreen().getSharedPreferences();
         boolean b = sharedPreferences.getBoolean("setting_show_tail", false);
@@ -92,11 +92,12 @@ public class FragSetting extends PreferenceFragment
             version_code = info.versionCode;
             version_name = info.versionName;
         }
-        about_this.setSummary("当前版本" + version_name + "  version code:" + version_code);
+        aboutThis.setSummary("当前版本" + version_name + "  version code:" + version_code);
 
         //[2016年6月9日更新][code:25]睿思手机客户端
+        //更新逻辑 检查睿思帖子标题 比对版本号
         final int finalversion_code = version_code;
-        about_this.setOnPreferenceClickListener(
+        aboutThis.setOnPreferenceClickListener(
                 preference -> {
                     Toast.makeText(getActivity(), "正在检查更新", Toast.LENGTH_SHORT).show();
                     HttpUtil.get(getActivity(), App.CHECK_UPDATE_URL, new ResponseHandler() {
@@ -132,16 +133,16 @@ public class FragSetting extends PreferenceFragment
                     return true;
                 });
 
-        open_sourse.setOnPreferenceClickListener(preference -> {
+        openSourse.setOnPreferenceClickListener(preference -> {
             IntentUtils.openBroswer(getActivity(), "https://github.com/freedom10086/Ruisi");
             return false;
         });
-        clear_cache.setSummary("缓存大小：" + DataManager.getTotalCacheSize(getActivity()));
-        clear_cache.setOnPreferenceClickListener(preference -> {
+        clearCache.setSummary("缓存大小：" + DataManager.getTotalCacheSize(getActivity()));
+        clearCache.setOnPreferenceClickListener(preference -> {
             DataManager.cleanApplicationData(getActivity());
 
             Toast.makeText(getActivity(), "缓存清理成功!请重新登陆", Toast.LENGTH_SHORT).show();
-            clear_cache.setSummary("缓存大小：" + DataManager.getTotalCacheSize(getActivity()));
+            clearCache.setSummary("缓存大小：" + DataManager.getTotalCacheSize(getActivity()));
             return false;
         });
     }

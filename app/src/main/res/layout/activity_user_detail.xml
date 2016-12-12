@@ -38,6 +38,13 @@
                 app:civ_border_color="@android:color/white"
                 app:civ_border_width="2dp" />
 
+            <xyz.yluo.ruisiapp.widget.GradeProgressView
+                android:id="@+id/grade_progress"
+                android:layout_width="140dp"
+                android:layout_height="3.2dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="18dp" />
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"

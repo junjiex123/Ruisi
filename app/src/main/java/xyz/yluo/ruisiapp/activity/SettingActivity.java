@@ -12,6 +12,9 @@ import android.widget.LinearLayout;
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.fragment.FragSetting;
 
+/**
+ * 设置页面
+ */
 public class SettingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {

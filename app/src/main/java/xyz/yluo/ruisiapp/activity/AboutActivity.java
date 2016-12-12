@@ -1,5 +1,6 @@
 package xyz.yluo.ruisiapp.activity;
 
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -11,6 +12,9 @@ import android.widget.TextView;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.myhttp.HttpUtil;
+import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
+import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.IntentUtils;
 import xyz.yluo.ruisiapp.widget.myhtmlview.HtmlView;
 
@@ -31,6 +35,7 @@ public class AboutActivity extends BaseActivity {
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.transparent));
         }
         TextView version = (TextView) findViewById(R.id.version);
+        TextView serverVersion = (TextView) findViewById(R.id.server_version);
 
         findViewById(R.id.btn_back).setOnClickListener(view -> finish());
 
@@ -54,10 +59,11 @@ public class AboutActivity extends BaseActivity {
             e.printStackTrace();
         }
 
+        int versionCode = 0;
         if (info != null) {
-            int version_code = info.versionCode;
             String version_name = info.versionName;
-            String a = "版本号:" + version_code + "\n版本:" + version_name;
+            versionCode = info.versionCode;
+            String a = "当前版本:" + version_name;
             version.setText(a);
         }
 
@@ -70,6 +76,38 @@ public class AboutActivity extends BaseActivity {
                     IntentUtils.sendMail(getApplicationContext(), user);
                 })
                 .show());
+
+        int finalVersionCode = versionCode;
+        HttpUtil.get(this, App.CHECK_UPDATE_URL, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                int ih = res.indexOf("keywords");
+                int h_start = res.indexOf('\"', ih + 15);
+                int h_end = res.indexOf('\"', h_start + 1);
+                String title = res.substring(h_start + 1, h_end);
+                if (title.contains("code")) {
+                    SharedPreferences.Editor editor = getSharedPreferences(App.MY_SHP_NAME, MODE_PRIVATE).edit();
+                    editor.putLong(App.CHECK_UPDATE_KEY, System.currentTimeMillis());
+                    editor.apply();
+                    int st = title.indexOf("code");
+                    int code = GetId.getNumber(title.substring(st));
+                    if (code > finalVersionCode) {
+                        serverVersion.setText("检测到新版本点击查看");
+                        serverVersion.setOnClickListener(view -> PostActivity.open(AboutActivity.this, App.CHECK_UPDATE_URL, "谁用了FREEDOM"));
+                        return;
+                    }
+                }
+
+                serverVersion.setText("当前已是最新版本");
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                super.onFailure(e);
+                serverVersion.setText("检测新版本失败...");
+            }
+        });
     }
 
 }

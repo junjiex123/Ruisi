@@ -81,9 +81,6 @@ public class ScaleImageView extends ImageView {
 
     /**
      * 两点之间的距离
-     *
-     * @param event
-     * @return
      */
     private static float distance(MotionEvent event) {
         //两根线的距离
@@ -94,9 +91,6 @@ public class ScaleImageView extends ImageView {
 
     /**
      * 计算两点之间中心点的距离
-     *
-     * @param event
-     * @return
      */
     private static PointF mid(MotionEvent event) {
         float midx = event.getX(1) + event.getX(0);

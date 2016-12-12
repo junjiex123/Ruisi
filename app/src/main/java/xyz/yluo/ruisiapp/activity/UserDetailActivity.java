@@ -51,13 +51,13 @@ import xyz.yluo.ruisiapp.utils.RuisUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 import xyz.yluo.ruisiapp.widget.AddFriendDialog;
 import xyz.yluo.ruisiapp.widget.CircleImageView;
+import xyz.yluo.ruisiapp.widget.GradeProgressView;
 import xyz.yluo.ruisiapp.widget.MyListDivider;
 
 /**
  * 用户信息activity
  */
 public class UserDetailActivity extends BaseActivity implements AddFriendDialog.AddFriendListener {
-
     private static final String NAME_IMG_AVATAR = "imgAvatar";
     private static String userUid = "";
     protected RecyclerView infoList;
@@ -66,6 +66,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
     private CollapsingToolbarLayout toolbarLayout;
     private List<SimpleListData> datas = new ArrayList<>();
     private SimpleListAdapter adapter = null;
+    private GradeProgressView progressView;
     private String username = "";
     private String imageUrl = "";
 
@@ -97,6 +98,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         CircleImageView imageView = (CircleImageView) findViewById(R.id.user_detail_img_avatar);
         layout = (CoordinatorLayout) findViewById(R.id.main_window);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        progressView = (GradeProgressView) findViewById(R.id.grade_progress);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(v -> fab_click());
 
@@ -230,6 +232,8 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
 
     //获得用户个人信息
     private class GetUserInfoTask extends AsyncTask<String, Void, String> {
+        private float progress = 0;
+
         @Override
         protected String doInBackground(String... params) {
             String res = params[0];
@@ -243,6 +247,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
                 String key = tmp.text();
                 if (key.contains("积分")) {
                     String grade = RuisUtils.getLevel(Integer.parseInt(value));
+                    progress = RuisUtils.getLevelProgress(value);
                     datas.add(new SimpleListData("等级", grade, ""));
                 } else if (key.contains("上传量") || key.contains("下载量")) {
                     long a = Long.parseLong(value.trim());
@@ -263,6 +268,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
 
         @Override
         protected void onPostExecute(String s) {
+            progressView.setProgress(progress);
             toolbarLayout.setTitle(username);
             adapter.disableLoadMore();
             adapter.notifyDataSetChanged();

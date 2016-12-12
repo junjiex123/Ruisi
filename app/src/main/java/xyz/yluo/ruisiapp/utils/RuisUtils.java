@@ -43,24 +43,69 @@ public class RuisUtils {
         }
     }
 
-    public static String toHtml(String s){
-        s = s.replace("[b]","<b>");
-        s =  s.replace("[/b]","</b>");
+    public static float getLevelProgress(String s) {
+        int a = Integer.parseInt(s);
+        if (a >= 0 && a < 100) {
+            return a / 100f;
+        } else if (a < 200) {
+            return (a - 100) / 100f;
+        } else if (a < 500) {
+            return (a - 200) / 300f;
+        } else if (a < 1000) {
+            return (a - 500) / 500f;
+        } else if (a < 2000) {
+            return (a - 1000) / 1000f;
+        } else if (a < 2500) {
+            return (a - 2000) / 500f;
+        } else if (a < 3000) {
+            return (a - 2500) / 500f;
+        } else if (a < 3500) {
+            return (a - 3000) / 500f;
+        } else if (a < 6000) {
+            return (a - 3500) / 2500f;
+        } else if (a < 10000) {
+            return (a - 6000) / 4000f;
+        } else if (a < 14000) {
+            return (a - 10000) / 4000f;
+        } else if (a < 20000) {
+            return (a - 14000) / 6000f;
+        } else if (a < 25000) {
+            return (a - 20000) / 15000f;
+        } else if (a < 30000) {
+            return (a - 25000) / 5000f;
+        } else if (a < 35000) {
+            return (a - 30000) / 5000f;
+        } else if (a < 40000) {
+            return (a - 35000) / 5000f;
+        } else if (a >= 40000) {
+            float b = (a - 40000) / 60000f;
+            if (b > 1) b = 1;
+            return b;
+        } else {
+            return 0;
+        }
 
-        s = s.replace("[i]","<i>");
-        s =  s.replace("[/i]","</i>");
 
-        s = s.replace("[quote]","<blockquote>");
-        s =  s.replace("[/quote]","</blockquote>");
+    }
 
-        s = s.replace("[size=1]","<font size=\"1\">");//<font size="6">哈哈</font>
-        s = s.replace("[size=2]","<font size=\"2\">");
-        s = s.replace("[size=3]","<font size=\"3\">");
-        s = s.replace("[size=4]","<font size=\"4\">");
-        s = s.replace("[size=5]","<font size=\"5\">");
-        s = s.replace("[size=6]","<font size=\"6\">");
-        s = s.replace("[size=7]","<font size=\"7\">");
-        s =  s.replace("[/size]","</size>");
+    public static String toHtml(String s) {
+        s = s.replace("[b]", "<b>");
+        s = s.replace("[/b]", "</b>");
+
+        s = s.replace("[i]", "<i>");
+        s = s.replace("[/i]", "</i>");
+
+        s = s.replace("[quote]", "<blockquote>");
+        s = s.replace("[/quote]", "</blockquote>");
+
+        s = s.replace("[size=1]", "<font size=\"1\">");//<font size="6">哈哈</font>
+        s = s.replace("[size=2]", "<font size=\"2\">");
+        s = s.replace("[size=3]", "<font size=\"3\">");
+        s = s.replace("[size=4]", "<font size=\"4\">");
+        s = s.replace("[size=5]", "<font size=\"5\">");
+        s = s.replace("[size=6]", "<font size=\"6\">");
+        s = s.replace("[size=7]", "<font size=\"7\">");
+        s = s.replace("[/size]", "</size>");
 
         return s;
     }

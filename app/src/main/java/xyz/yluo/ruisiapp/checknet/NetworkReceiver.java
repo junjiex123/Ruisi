@@ -34,7 +34,7 @@ public class NetworkReceiver extends BroadcastReceiver {
                 }
             });
         } else {
-            Toast.makeText(context, "与服务器断开连接,请打开网络", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "与rs服务器断开连接,请打开网络", Toast.LENGTH_SHORT).show();
         }
     }
 

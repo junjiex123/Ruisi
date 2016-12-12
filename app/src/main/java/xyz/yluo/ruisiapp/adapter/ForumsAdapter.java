@@ -146,12 +146,12 @@ public class ForumsAdapter extends BaseAdapter {
                 String title12 = single.getTitle();
 
                 MyDB myDB = new MyDB(context);
-                if (myDB.isFormStar(fid)) {
+                if (myDB.isForumStar(fid)) {
                     Dialog alertDialog = new AlertDialog.Builder(context)
                             .setTitle("取消收藏")
                             .setMessage("你要取消收藏" + title12 + "吗？？")
                             .setPositiveButton("确定", (dialogInterface, i) -> {
-                                myDB.setFormStar(title12, fid1, false);
+                                myDB.setForumStar(title12, fid1, false);
                                 changeStar(single, false);
                             })
                             .setNegativeButton("关闭", null)
@@ -163,7 +163,7 @@ public class ForumsAdapter extends BaseAdapter {
                             .setTitle("收藏版块")
                             .setMessage("你要收藏" + title12 + "吗？？")
                             .setPositiveButton("收藏", (dialogInterface, i) -> {
-                                myDB.setFormStar(title12, fid1, true);
+                                myDB.setForumStar(title12, fid1, true);
                                 changeStar(single, true);
                             })
                             .setNegativeButton("关闭", null)

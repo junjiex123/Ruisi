@@ -15,8 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.RotateAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +23,7 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
@@ -41,7 +40,7 @@ import xyz.yluo.ruisiapp.widget.CircleImageView;
  * 读取相关设置写到{@link App}
  */
 public class LaunchActivity extends BaseActivity implements View.OnClickListener {
-    private final static int WAIT_TIME = 920;//等待时间
+    private final static int WAIT_TIME = 900;//最少等待时间ms
     private TextView launch_text;
     private CircleImageView user_image;
     private SharedPreferences shp = null;
@@ -56,7 +55,6 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         /**
          * 切换主题
          */
@@ -67,7 +65,7 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
-
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_launch);
         timeEnter = System.currentTimeMillis();
         launch_text = (TextView) findViewById(R.id.launch_text);
@@ -75,42 +73,25 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
         findViewById(R.id.btn_login_outer).setOnClickListener(this);
         findViewById(R.id.login_fail_view).setVisibility(View.INVISIBLE);
         user_image = (CircleImageView) findViewById(R.id.user_image);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         shp = getSharedPreferences(App.MY_SHP_NAME, MODE_PRIVATE);
         loadUserImg();
-        mHandler.postDelayed(finishRunable, 2500);
-        final String urlin = "http://rs.xidian.edu.cn/member.php?mod=logging&action=login&mobile=2";
-        final String urlout = "http://bbs.rs.xidian.me/member.php?mod=logging&action=login&mobile=2";
-
-        new Thread(() -> {
-            HttpUtil.get(LaunchActivity.this, urlin, new ResponseHandler() {
-                @Override
-                public void onSuccess(byte[] response) {
-                    pcResponse = new String(response);
-                    loginOk();
-                }
-            });
-
-            try {
-                Thread.sleep(300);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            if (!isLoginOk) {
-                HttpUtil.get(LaunchActivity.this, urlout, new ResponseHandler() {
-                    @Override
-                    public void onSuccess(byte[] response) {
-                        mobileRes = new String(response);
-                        if (!isLoginOk) {
-                            loginOk();
-                        }
-                    }
-                });
-            }
-        }).start();
+        setCopyRight();
+        startLogin();
     }
 
+    //自动续命copyright
+    private void setCopyRight() {
+        int year = 2016;
+        int yearNow = Calendar.getInstance().get(Calendar.YEAR);
+
+        if (year < yearNow) {
+            year = yearNow;
+        }
+        ((TextView) findViewById(R.id.copyright)).setText("©" + year + " 谁用了FREEDPOM");
+    }
+
+    //设置头像
     private void loadUserImg() {
         String uid = App.getUid(this);
         if (TextUtils.isEmpty(uid)) {
@@ -127,6 +108,38 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
         } else {
             new GetImageTask().execute(uid);
         }
+    }
+
+    private void startLogin() {
+        mHandler.postDelayed(finishRunable, 2500);
+
+        new Thread(() -> {
+            HttpUtil.get(LaunchActivity.this, App.LOGIN_RS, new ResponseHandler() {
+                @Override
+                public void onSuccess(byte[] response) {
+                    pcResponse = new String(response);
+                    loginOk();
+                }
+            });
+
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if (!isLoginOk) {
+                HttpUtil.get(LaunchActivity.this, App.LOGIN_ME, new ResponseHandler() {
+                    @Override
+                    public void onSuccess(byte[] response) {
+                        mobileRes = new String(response);
+                        if (!isLoginOk) {
+                            loginOk();
+                        }
+                    }
+                });
+            }
+        }).start();
     }
 
     private class GetImageTask extends AsyncTask<String, Void, Bitmap> {
@@ -195,11 +208,8 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
         super.onStart();
         AlphaAnimation alphaAnimation = new AlphaAnimation(0.4f, 1.0f);
         alphaAnimation.setDuration((long) (WAIT_TIME * 0.85));// 设置动画显示时间
-        RotateAnimation rotateAnimation = (RotateAnimation) AnimationUtils.loadAnimation(this, R.anim.always_rotate);
-        findViewById(R.id.loading_view).startAnimation(rotateAnimation);
         launch_text.startAnimation(alphaAnimation);
         user_image.startAnimation(alphaAnimation);
-
     }
 
     @Override
@@ -222,7 +232,6 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
     }
 
     private class CheckTask extends AsyncTask<Void, Void, Boolean> {
-
         @Override
         protected Boolean doInBackground(Void... voids) {
             String res = "";

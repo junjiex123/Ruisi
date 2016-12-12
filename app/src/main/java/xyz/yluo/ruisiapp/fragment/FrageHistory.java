@@ -20,6 +20,7 @@ import xyz.yluo.ruisiapp.adapter.BaseAdapter;
 import xyz.yluo.ruisiapp.adapter.HistoryAdapter;
 import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.model.ReadHistoryData;
+import xyz.yluo.ruisiapp.widget.MyListDivider;
 
 /**
  * Created by free2 on 16-7-14.
@@ -58,6 +59,7 @@ public class FrageHistory extends BaseFragment {
         refreshLayout.setEnabled(false);
         adapter = new HistoryAdapter(getActivity(), datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.addItemDecoration(new MyListDivider(getActivity(), MyListDivider.VERTICAL));
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         refresh();

@@ -49,11 +49,10 @@ import xyz.yluo.ruisiapp.utils.KeyboardUtil;
  * orderby=lastpost&amp;ascdesc=desc&amp;searchsubmit=yes&amp;page=20&amp;mobile=2
  * <p>
  * http://bbs.rs.xidian.me/search.php?mod=forum&searchid=865&orderby=lastpost&ascdesc=desc&searchsubmit=yes&kw=%E6%B5%8B%E8%AF%95&mobile=2
+ * todo 加入热搜 接口地址 http://rs.xidian.edu.cn/misc.php?mod=tag&inajax=1
  */
-public class SearchActivity extends BaseActivity
-        implements LoadMoreListener.OnLoadMoreListener,
-        View.OnClickListener,
-        EditText.OnEditorActionListener {
+public class SearchActivity extends BaseActivity implements LoadMoreListener.OnLoadMoreListener,
+        View.OnClickListener, EditText.OnEditorActionListener {
 
     private int totalPage = 1;
     private int currentPage = 1;

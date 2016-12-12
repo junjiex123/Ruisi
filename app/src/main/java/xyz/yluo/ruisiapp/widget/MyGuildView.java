@@ -25,9 +25,9 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.model.GalleryData;
 import xyz.yluo.ruisiapp.utils.DimmenUtils;
 
-
 /**
  * 图片轮流展示的view
+ * 用于热帖/新帖 上面的图片展示
  */
 public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChangeListener {
 

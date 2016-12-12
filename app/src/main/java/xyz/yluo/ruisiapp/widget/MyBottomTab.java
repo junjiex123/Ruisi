@@ -20,6 +20,7 @@ import xyz.yluo.ruisiapp.utils.DimmenUtils;
 
 /**
  * Created by free2 on 16-7-18.
+ * 首页4个页面底部tab 带消息小圆点
  * my tab
  */
 

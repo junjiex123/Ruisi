@@ -65,7 +65,6 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.e("FrageForumList", "onCreateView");
         super.onCreateView(inflater, container, savedInstanceState);
         userImg = (CircleImageView) mRootView.findViewById(R.id.img);
         refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
@@ -97,7 +96,6 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
 
     @Override
     public void onFirstUserVisible() {
-        Log.e("FrageForumList", "onFirstUserVisible");
         lastLoginState = App.ISLOGIN(getActivity());
         MyDB myDB = new MyDB(getActivity().getApplicationContext());
 
@@ -121,7 +119,6 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
 
     @Override
     public void onUserVisible() {
-        Log.e("FrageForumList", "onUserVisible");
         if (lastLoginState != App.ISLOGIN(getActivity())) {
             lastLoginState = !lastLoginState;
             getData();

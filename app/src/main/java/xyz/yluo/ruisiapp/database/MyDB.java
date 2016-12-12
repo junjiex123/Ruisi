@@ -32,10 +32,6 @@ public class MyDB {
      * 板块收藏列表 表
      */
     static final String TABLE_FORUM_STAR = "rs_forum_star";
-    /**
-     * 消息列表
-     */
-    static final String TABLE_MESSAGE = "rs_message";
 
     private SQLiteDatabase db = null;    //数据库操作
 
@@ -51,18 +47,6 @@ public class MyDB {
             this.db = new SQLiteHelper(context).getWritableDatabase();
         }
         return this.db;
-    }
-
-    public void clearAllDataBase() {
-        getDb();
-        String sql = "DELETE FROM " + TABLE_READ_HISTORY;
-        this.db.execSQL(sql);
-        Log.e("mydb", "clear TABLE_READ_HISTORY");
-
-        String sql2 = "DELETE FROM " + TABLE_MESSAGE;
-        this.db.execSQL(sql2);
-        this.db.close();
-        Log.e("mydb", "clear all TABLE_MESSAGE");
     }
 
     private String getTime() {
@@ -258,7 +242,7 @@ public class MyDB {
     }
 
     //是否收藏
-    public boolean isFormStar(int fid) {
+    public boolean isForumStar(int fid) {
         String sql = "SELECT * FROM " + TABLE_FORUM_STAR + " WHERE star_fid = ?";
         getDb();
         String args[] = new String[]{String.valueOf(fid)};
@@ -270,7 +254,7 @@ public class MyDB {
     }
 
     //删除收藏
-    public void deleteFormStar(int fid) {
+    private void deleteForumStar(int fid) {
         String sql = "DELETE FROM " + TABLE_FORUM_STAR + " WHERE star_fid = ?";
         getDb();
         Object args[] = new Object[]{fid};
@@ -279,7 +263,7 @@ public class MyDB {
     }
 
     //增加收藏
-    public void insertFormStar(String name, int fid) {
+    private void insertForumStar(String name, int fid) {
         String sql = "INSERT INTO " + TABLE_FORUM_STAR + " (star_name,star_fid)" + " VALUES(?,?)";
         getDb();
         Object args[] = new Object[]{name, fid};
@@ -289,13 +273,13 @@ public class MyDB {
 
 
     //设置收藏或者取消收藏
-    public void setFormStar(String name, int fid, boolean star) {
+    public void setForumStar(String name, int fid, boolean star) {
         if (star) {
-            if (!isFormStar(fid)) {
-                insertFormStar(name, fid);
+            if (!isForumStar(fid)) {
+                insertForumStar(name, fid);
             }
         } else {
-            deleteFormStar(fid);
+            deleteForumStar(fid);
         }
     }
 

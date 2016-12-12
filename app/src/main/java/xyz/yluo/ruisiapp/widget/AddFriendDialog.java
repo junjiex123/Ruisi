@@ -61,24 +61,16 @@ public class AddFriendDialog extends DialogFragment {
         ImageView imageView = (ImageView) view.findViewById(R.id.user_image);
         Picasso.with(getActivity()).load(userImage).placeholder(R.drawable.image_placeholder).into(imageView);
 
-        btn_send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (checkInput()) {
-                    dialogListener.OnAddFriendOkClick(
-                            content.getText().toString(),
-                            GetId.getid("uid=", userImage));
-                    AddFriendDialog.this.getDialog().cancel();
-                }
+        btn_send.setOnClickListener(view1 -> {
+            if (checkInput()) {
+                dialogListener.OnAddFriendOkClick(
+                        content.getText().toString(),
+                        GetId.getid("uid=", userImage));
+                AddFriendDialog.this.getDialog().cancel();
             }
         });
 
-        btn_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
+        btn_cancel.setOnClickListener(view12 -> dismiss());
 
         return builder.create();
     }

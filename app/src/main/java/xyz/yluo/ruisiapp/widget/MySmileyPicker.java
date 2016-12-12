@@ -24,6 +24,7 @@ import xyz.yluo.ruisiapp.adapter.SmileyAdapter;
 /**
  * Created by free2 on 16-7-19.
  * smiley picker
+ * 表情选择器
  */
 
 public class MySmileyPicker extends PopupWindow {

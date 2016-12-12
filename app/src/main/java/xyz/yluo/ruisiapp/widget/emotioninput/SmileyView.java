@@ -121,7 +121,8 @@ public class SmileyView extends LinearLayout implements ViewPager.OnPageChangeLi
             smileys.add(setTieba);
             smileys.add(setAcn);
             smileys.add(setJgz);
-            smileys.add(SmileyEmoji.getEmojis());
+            // TODO: 2016/12/11 睿思不支持emoji
+            //smileys.add(SmileyEmoji.getEmojis());
             smileys.add(setYwz);
             setSmileys(smileys);
             viewPager.setAdapter(adapter);

@@ -33,7 +33,7 @@ public class DownloadService extends Service {
 
     private NotificationCompat.Builder mBuilder;
     private NotificationManager mNotifyManager;
-    private Intent intent = new Intent("com.example.communication.RECEIVER");
+    private Intent intent = new Intent("xyz.yluo.ruisiapp.download");
 
     private FileResponseHandler handler;
 

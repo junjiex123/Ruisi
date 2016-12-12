@@ -45,7 +45,7 @@ public class DownLoadActivity extends AppCompatActivity {
         //动态注册广播接收器
         downloadMsgReceiver = new downloadMsgReceiver();
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("com.example.communication.RECEIVER");
+        intentFilter.addAction("xyz.yluo.ruisiapp.download");
         registerReceiver(downloadMsgReceiver, intentFilter);
         download_info.setText("下载" + fileName + " " + progress + "%");
         btnClose.setOnClickListener(v -> finish());

@@ -11,11 +11,12 @@
 
     <TextView
         android:id="@+id/title"
-        style="@style/text_14_pri"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="3"
+        android:textColor="@color/text_color_pri"
+        android:textSize="15sp"
         android:textStyle="bold"
         tools:text="这是标题" />
 

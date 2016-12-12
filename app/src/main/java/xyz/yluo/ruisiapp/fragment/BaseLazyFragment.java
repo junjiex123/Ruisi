@@ -3,7 +3,6 @@ package xyz.yluo.ruisiapp.fragment;
 import android.os.Bundle;
 
 public abstract class BaseLazyFragment extends BaseFragment {
-    private static final String TAG = BaseLazyFragment.class.getSimpleName();
     private boolean isPrepared;
 
     @Override
