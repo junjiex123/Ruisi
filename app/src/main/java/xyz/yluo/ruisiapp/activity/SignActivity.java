@@ -153,7 +153,7 @@ public class SignActivity extends BaseActivity {
     //点击签到按钮
     private void startDaka() {
         final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setMessage("真在签到...");
+        dialog.setMessage("正在签到...");
         dialog.show();
         String xinqin = getGroup1_select();
         //String formhash = hash;

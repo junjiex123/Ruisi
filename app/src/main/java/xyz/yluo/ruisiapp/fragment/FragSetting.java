@@ -45,8 +45,8 @@ public class FragSetting extends PreferenceFragment
 
         setting_user_tail = (EditTextPreference) findPreference("setting_user_tail");
         setting_forums_url = (ListPreference) findPreference("setting_forums_url");
-        aboutThis = findPreference("aboutThis");
-        openSourse = findPreference("openSourse");
+        aboutThis = findPreference("about_this");
+        openSourse = findPreference("open_sourse");
         clearCache = findPreference("clean_cache");
         exit_login = findPreference("exit_login");
         sharedPreferences = getPreferenceScreen().getSharedPreferences();
@@ -92,6 +92,7 @@ public class FragSetting extends PreferenceFragment
             version_code = info.versionCode;
             version_name = info.versionName;
         }
+
         aboutThis.setSummary("当前版本" + version_name + "  version code:" + version_code);
 
         //[2016年6月9日更新][code:25]睿思手机客户端

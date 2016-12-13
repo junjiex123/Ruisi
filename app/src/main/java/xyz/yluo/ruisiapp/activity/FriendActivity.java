@@ -47,11 +47,12 @@ import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.KeyboardUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 import xyz.yluo.ruisiapp.widget.AddFriendDialog;
+import xyz.yluo.ruisiapp.widget.MyListDivider;
 
 public class FriendActivity extends BaseActivity implements LoadMoreListener.OnLoadMoreListener,
         ListItemLongClickListener, TextView.OnEditorActionListener,
         View.OnClickListener, TextWatcher, AddFriendDialog.AddFriendListener {
-    protected RecyclerView recycler_view;
+    protected RecyclerView friends;
     private FriendAdapter adapter;
     private List<FriendData> datas, backUpdatas, totalDatas;
     private int CurrentPage = 1;
@@ -69,16 +70,17 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         setContentView(R.layout.activity_friend);
 
         initToolBar(true, "我的好友");
-        recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
+        friends = (RecyclerView) findViewById(R.id.recycler_view);
         datas = new ArrayList<>();
         backUpdatas = new ArrayList<>();
         totalDatas = new ArrayList<>();
         adapter = new FriendAdapter(this, datas, this);
-        recycler_view.setHasFixedSize(true);
+        friends.setHasFixedSize(true);
         LinearLayoutManager lm = new LinearLayoutManager(this);
-        recycler_view.setLayoutManager(lm);
-        recycler_view.addOnScrollListener(new LoadMoreListener(lm, this, 12));
-        recycler_view.setAdapter(adapter);
+        friends.addItemDecoration(new MyListDivider(this, MyListDivider.VERTICAL));
+        friends.setLayoutManager(lm);
+        friends.addOnScrollListener(new LoadMoreListener(lm, this, 12));
+        friends.setAdapter(adapter);
         search_input = (EditText) findViewById(R.id.search_input);
         search_input.setHint("查找好友");
         search_card = (CardView) findViewById(R.id.search_card);
@@ -179,7 +181,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
     private void startSearch() {
         String str = search_input.getText().toString().trim();
         if (TextUtils.isEmpty(str)) {
-            Snackbar.make(recycler_view,
+            Snackbar.make(friends,
                     "请输入要搜索好友的名称！", Snackbar.LENGTH_SHORT).show();
         } else {
             KeyboardUtil.hideKeyboard(this);
@@ -313,9 +315,9 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         if (b) {
             datas.remove(pos);
             adapter.notifyItemRemoved(pos);
-            Snackbar.make(recycler_view, "删除好友成功！", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(friends, "删除好友成功！", Snackbar.LENGTH_SHORT).show();
         } else {
-            Snackbar.make(recycler_view, "删除好友失败！", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(friends, "删除好友失败！", Snackbar.LENGTH_SHORT).show();
         }
     }
 

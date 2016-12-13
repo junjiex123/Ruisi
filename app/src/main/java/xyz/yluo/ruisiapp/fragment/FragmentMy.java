@@ -95,7 +95,7 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
     private void refreshAvaterView() {
         if (isLoginLast) {
             uid = App.getUid(getActivity());
-            user_name.setText(username);
+            user_name.setText(App.getName(getActivity()));
             user_grade.setVisibility(View.VISIBLE);
             user_grade.setText(App.getGrade(getActivity()));
             Picasso.with(getActivity()).load(UrlUtils.getAvaterurlm(uid))
