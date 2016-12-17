@@ -1,7 +1,25 @@
 package xyz.yluo.ruisiapp.utils;
 
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+
+import java.io.IOException;
+import java.io.InputStream;
+
 public class RuisUtils {
+
+    /**
+     * 获得板块图标
+     */
+    public static Drawable getForunlogo(Context contex, int fid) {
+        try {
+            InputStream ims = contex.getAssets().open("forumlogo/common_" + fid + "_icon.gif");
+            return Drawable.createFromStream(ims, null);
+        } catch (IOException ex) {
+            return null;
+        }
+    }
 
     public static String getLevel(int a) {
         if (a >= 0 && a < 100) {

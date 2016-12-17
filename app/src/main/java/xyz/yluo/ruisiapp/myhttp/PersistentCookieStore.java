@@ -32,7 +32,7 @@ class PersistentCookieStore {
     }
 
     void addCookie(String cookies) {
-        //讲cookies持久化到本地
+        //cookies持久化到本地
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
         for (String tmp : cookies.split(";")) {
             if (tmp.contains("=")) {

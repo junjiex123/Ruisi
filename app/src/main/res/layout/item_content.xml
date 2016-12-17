@@ -26,6 +26,7 @@
         android:layout_height="42dp"
         android:layout_below="@+id/article_title"
         android:layout_marginStart="12dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/image_placeholder" />
 
     <TextView

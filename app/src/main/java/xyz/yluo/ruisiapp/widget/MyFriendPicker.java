@@ -130,9 +130,10 @@ public class MyFriendPicker {
         new MyFriendPicker(context, editText);
     }
 
-    private static class FriendPickerAdapter extends RecyclerView.Adapter<ViewHolder> {
+    private static class FriendPickerAdapter extends RecyclerView.Adapter<FriendPickerAdapter.ViewHolder> {
 
         private List<SimpleData> datas;
+        private int count = 0;
 
         public FriendPickerAdapter(List<SimpleData> datas) {
             this.datas = datas;
@@ -148,26 +149,35 @@ public class MyFriendPicker {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             holder.userName.setText(datas.get(position).name);
-            holder.checkBox.setOnCheckedChangeListener((compoundButton, b) -> datas.get(position).isCheck = b);
+            holder.checkBox.setChecked(datas.get(position).isCheck);
         }
 
         @Override
         public int getItemCount() {
             return datas.size();
         }
-    }
 
-    private static class ViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView userName;
-        private CheckBox checkBox;
+            private TextView userName;
+            private CheckBox checkBox;
 
-        public ViewHolder(View itemView) {
-            super(itemView);
-            userName = (TextView) itemView.findViewById(R.id.name);
-            checkBox = (CheckBox) itemView.findViewById(R.id.check);
+            public ViewHolder(View itemView) {
+                super(itemView);
+                userName = (TextView) itemView.findViewById(R.id.name);
+                checkBox = (CheckBox) itemView.findViewById(R.id.check);
+                checkBox.setOnCheckedChangeListener((compoundButton, b) -> {
+                    datas.get(getAdapterPosition()).isCheck = b;
+                    if (b) {
+                        count++;
+                    } else {
+                        count--;
+                    }
+                });
+            }
         }
     }
+
 
     public class SimpleData {
         String name;

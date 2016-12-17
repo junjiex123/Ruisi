@@ -527,11 +527,13 @@ public class PostActivity extends BaseActivity
                     }
                 }
             }
+
             if (page_now < page_sum) {
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
             } else {
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
             }
+
             if (datas.size() > 0 && (datas.get(0).getType() != SingleType.CONTENT) &&
                     (datas.get(0).getType() != SingleType.HEADER)) {
                 datas.add(0, new SingleArticleData(SingleType.HEADER, Title,
@@ -633,7 +635,6 @@ public class PostActivity extends BaseActivity
         if (!(isLogin() && checkTime() && checkInput())) {
             return;
         }
-
         ProgressDialog dialog = new ProgressDialog(this);
         dialog.setTitle("回复中");
         dialog.setMessage("请稍后......");
@@ -697,10 +698,12 @@ public class PostActivity extends BaseActivity
                 Toast.makeText(this, "回复发表成功", Toast.LENGTH_SHORT).show();
                 input.setText(null);
                 replyTime = System.currentTimeMillis();
-                if (page_now == page_sum) {
+                mPanelRoot.hidePanelAndKeyboard();
+                if (page_sum == 1) {
+                    refresh();
+                } else if (page_now == page_sum) {
                     onLoadMore();
                 }
-                mPanelRoot.hidePanelAndKeyboard();
             } else if (res.contains("您两次发表间隔")) {
                 Toast.makeText(this, "您两次发表间隔太短了......", Toast.LENGTH_SHORT).show();
             } else {

@@ -2,14 +2,13 @@ package xyz.yluo.ruisiapp.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -18,6 +17,7 @@ import xyz.yluo.ruisiapp.activity.PostsActivity;
 import xyz.yluo.ruisiapp.database.MyDB;
 import xyz.yluo.ruisiapp.model.ForumListData;
 import xyz.yluo.ruisiapp.utils.DimmenUtils;
+import xyz.yluo.ruisiapp.utils.RuisUtils;
 
 /**
  * Created by free2 on 16-3-19.
@@ -132,8 +132,12 @@ public class ForumsAdapter extends BaseAdapter {
             }
 
             int fid = single.getFid();
-            String name = "file:///android_asset/forumlogo/common_" + fid + "_icon.gif";
-            Picasso.with(context).load(name).resize(size, size).error(R.drawable.image_placeholder).into(img);
+            Drawable a = RuisUtils.getForunlogo(context, fid);
+            if (a != null) {
+                img.setImageDrawable(a);
+            } else {
+                img.setImageResource(R.drawable.image_placeholder);
+            }
 
             itemView.setOnClickListener(view -> {
                 int fid1 = single.getFid();
