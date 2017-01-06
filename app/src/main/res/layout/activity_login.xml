@@ -48,14 +48,13 @@
             android:id="@+id/rem_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:text="记住帐号密码" />
 
         <Spinner
             android:id="@+id/anwser_select"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_16" />
+            android:layout_marginTop="4dp" />
 
         <EditText
             android:id="@+id/anwser_text"
@@ -74,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="16dp"
             android:enabled="false"
             android:text="登陆" />
     </LinearLayout>

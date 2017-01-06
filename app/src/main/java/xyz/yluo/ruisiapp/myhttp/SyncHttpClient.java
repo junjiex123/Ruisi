@@ -133,12 +133,9 @@ public class SyncHttpClient {
         Log.i("httputil", "request url " + url);
         try {
             connection = buildURLConnection(url, method);
-
-            // Request start
             handler.sendStartMessage();
 
             if (method == Method.POST) {
-                // Send content as form-urlencoded
                 byte[] content = encodeParameters(map);
                 connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + UTF8);
                 connection.setRequestProperty("Content-Length", Long.toString(content.length));
@@ -154,7 +151,8 @@ public class SyncHttpClient {
                 connection.connect();
                 return;
             }
-//            处理重定向
+
+            //处理重定向
             int code = connection.getResponseCode();
             if (code == 302 || code == 301) {
                 //如果会重定向，保存302 301重定向地址,然后重新发送请求(模拟请求)

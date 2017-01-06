@@ -51,28 +51,25 @@ public class PanelViewRoot extends FrameLayout {
         paint.setStrokeWidth(1.0f);
 
         smileyView = new SmileyView(getContext());
-        smileyView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        smileyView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
         addView(smileyView);
     }
 
     public void init(EditText editText, View smileyBtn, final View sendBtn) {
         sendBtn.setEnabled(false);
         this.sendBtn = sendBtn;
-        handler = new EmotionInputHandler(editText, new EmotionInputHandler.TextChangeListener() {
-            @Override
-            public void onTextChange(boolean enable, String s) {
-                sendBtn.setEnabled(enable);
-                if (moreView != null && moreViewBtn != null) {
-                    if (!enable) {
-                        sendBtn.setVisibility(GONE);
-                        moreViewBtn.setVisibility(VISIBLE);
-                    } else {
-                        moreViewBtn.setVisibility(GONE);
-                        sendBtn.setVisibility(VISIBLE);
-                    }
+        handler = new EmotionInputHandler(editText, (enable, s) -> {
+            sendBtn.setEnabled(enable);
+            if (moreView != null && moreViewBtn != null) {
+                if (!enable) {
+                    sendBtn.setVisibility(GONE);
+                    moreViewBtn.setVisibility(VISIBLE);
+                } else {
+                    moreViewBtn.setVisibility(GONE);
+                    sendBtn.setVisibility(VISIBLE);
                 }
-                Log.e("enable", "" + enable);
             }
+            Log.e("enable", "" + enable);
         });
         smileyView.setInputView(handler);
         this.editText = editText;
@@ -104,21 +101,18 @@ public class PanelViewRoot extends FrameLayout {
         this.moreViewBtn = moreBtn;
         this.moreViewBtn.setVisibility(VISIBLE);
         this.sendBtn.setVisibility(GONE);
-        moreViewBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (PanelViewRoot.this.getVisibility() == View.VISIBLE) {
-                    if (moreView.getVisibility() != VISIBLE) {
-                        moreView.setVisibility(VISIBLE);
-                        smileyView.setVisibility(GONE);
-                    } else {
-                        KeyboardUtil.showKeyboard(editText);
-                    }
-                } else {
+        moreViewBtn.setOnClickListener(view -> {
+            if (PanelViewRoot.this.getVisibility() == View.VISIBLE) {
+                if (moreView.getVisibility() != VISIBLE) {
                     moreView.setVisibility(VISIBLE);
                     smileyView.setVisibility(GONE);
-                    showPanel(PanelViewRoot.this);
+                } else {
+                    KeyboardUtil.showKeyboard(editText);
                 }
+            } else {
+                moreView.setVisibility(VISIBLE);
+                smileyView.setVisibility(GONE);
+                showPanel(PanelViewRoot.this);
             }
         });
     }

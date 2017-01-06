@@ -50,7 +50,6 @@ public class DownloadService extends Service {
 
         //取消下载按钮被电击
         if (intent.getExtras().containsKey("cancel")) {
-            Log.e("取消下载", "=====ok=====");
             if (handler != null) {
                 handler.cancelDownoad();
                 if (mNotifyManager != null) {

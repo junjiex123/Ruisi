@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
-import xyz.yluo.ruisiapp.activity.BaseActivity;
 
 
 /**
@@ -74,7 +73,7 @@ public abstract class BaseFragment extends Fragment {
     protected abstract int getLayoutId();
 
     protected boolean isLogin() {
-        return App.ISLOGIN(getActivity()) || ((BaseActivity) getActivity()).isLogin();
+        return App.ISLOGIN(getActivity());
     }
 
 

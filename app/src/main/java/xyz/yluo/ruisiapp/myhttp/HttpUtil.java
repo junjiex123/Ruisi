@@ -2,7 +2,6 @@ package xyz.yluo.ruisiapp.myhttp;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.Map;
 
@@ -38,7 +37,6 @@ public class HttpUtil {
             String hash = context.getSharedPreferences(App.MY_SHP_NAME, Context.MODE_PRIVATE).
                     getString(App.HASH_KEY, "");
             if (!TextUtils.isEmpty(hash)) {
-                Log.i("hash is", "===" + hash + "===");
                 map.put("formhash", hash);
             }
         }

@@ -85,7 +85,6 @@ public class PostActivity extends BaseActivity
     private PanelViewRoot mPanelRoot;
     private ArrayAdapter<String> spinnerAdapter;
     private Spinner spinner;
-    private LinearLayoutManager mLayoutManager;
     private List<String> pageSpinnerDatas = new ArrayList<>();
 
     public static void open(Context context, String url, @Nullable String author) {
@@ -130,7 +129,7 @@ public class PostActivity extends BaseActivity
 
     private void initCommentList() {
         topicList = (RecyclerView) findViewById(R.id.topic_list);
-        mLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         topicList.setLayoutManager(mLayoutManager);
         adapter = new PostAdapter(this, this, datas);
         topicList.addItemDecoration(new MyListDivider(this, MyListDivider.VERTICAL));
@@ -429,9 +428,7 @@ public class PostActivity extends BaseActivity
                     contentels.select("[style]").removeAttr("style");
                     contentels.select("font").removeAttr("color").removeAttr("size").removeAttr("face");
                 }
-                /**
-                 * 处理代码
-                 */
+                //处理代码
                 for (Element codee : contentels.select(".blockcode")) {
                     codee.html("<code>" + codee.html().trim() + "</code>");
                 }

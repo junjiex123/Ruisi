@@ -23,13 +23,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
+import xyz.yluo.ruisiapp.utils.RuisUtils;
 import xyz.yluo.ruisiapp.widget.MyColorPicker;
 import xyz.yluo.ruisiapp.widget.MySmileyPicker;
 import xyz.yluo.ruisiapp.widget.MySpinner;
@@ -50,7 +50,8 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
     private List<Pair<String, String>> typeiddatas;
     private View type_id_container;
     private String typeId = "";
-    private String fid, pid, tid;
+    private String pid, tid;
+    private Map<String, String> params;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -143,19 +144,19 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onSuccess(byte[] response) {
                 Document document = Jsoup.parse(new String(response));
-                Elements content = document.select("#e_textarea");
-                Elements title = document.select("input#needsubject");
-                fid = document.select("#fid").attr("value");
-                if (TextUtils.isEmpty(title.attr("value"))) {
+                params = RuisUtils.getForms(document, "postform");
+                String title = params.get("subject");
+                if (TextUtils.isEmpty(title)) {
                     ed_title.setVisibility(View.GONE);
                 } else {
-                    ed_title.setText(title.attr("value"));
+                    ed_title.setText(title);
                 }
-                if (TextUtils.isEmpty(content.html())) {
+
+                if (TextUtils.isEmpty(params.get("message"))) {
                     showToast("本贴不支持编辑！");
                     finish();
                 }
-                ed_content.setText(content.html());
+                ed_content.setText(params.get("message"));
 
                 Elements types = document.select("#typeid").select("option");
                 for (Element e : types) {
@@ -173,7 +174,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onFailure(Throwable e) {
                 super.onFailure(e);
-
                 showToast("网络错误");
             }
         });
@@ -181,18 +181,14 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
 
     private void start_post() {
         String url = "forum.php?mod=post&action=edit&extra=&editsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
-        Map<String, String> params = new HashMap<>();
-        //params.put("posttime", time);
         params.put("editsubmit", "yes");
         if (!TextUtils.isEmpty(typeId) && !typeId.equals("0")) {
             params.put("typeid", typeId);
         }
-        params.put("fid", fid);
-        params.put("tid", tid);
-        params.put("pid", pid);
-        params.put("page", "");
+
         params.put("subject", ed_title.getText().toString());
         params.put("message", ed_content.getText().toString());
+
         HttpUtil.post(this, url, params, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {

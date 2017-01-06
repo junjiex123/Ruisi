@@ -29,15 +29,12 @@ public abstract class ResponseHandler {
     }
 
     public void onStart() {
-        // Do nothing by default
     }
 
     public void onProgress(int progress, long totalBytes) {
-        // Do nothing by default
     }
 
     public void onFinish() {
-        // Do nothing by default
     }
 
     public void onStartDownlod(String fileName) {
@@ -47,7 +44,6 @@ public abstract class ResponseHandler {
     public abstract void onSuccess(byte[] response);
 
     public void onFailure(Throwable e) {
-        // Do nothing by default
     }
 
     void processResponse(HttpURLConnection connection) throws IOException {

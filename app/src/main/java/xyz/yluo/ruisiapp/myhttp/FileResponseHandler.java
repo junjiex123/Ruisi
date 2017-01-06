@@ -72,7 +72,6 @@ public abstract class FileResponseHandler extends ResponseHandler {
         if (mFile == null) {
             if (connection.getHeaderField("Content-Disposition") != null) {
                 fileName = connection.getHeaderField("Content-Disposition");
-                //attachment; filename="shoujirs_06_24.zip"
                 fileName = fileName.substring(22, fileName.length() - 1);
                 mFile = FileUtil.createFile(fileName);
             }
@@ -83,7 +82,6 @@ public abstract class FileResponseHandler extends ResponseHandler {
         try {
             byte[] tmp = new byte[1024];
             int len;
-            // do not send messages if request has been cancelled
             while ((len = instream.read(tmp)) != -1 && !Thread.currentThread().isInterrupted() && (!isCancel)) {
                 downloadCount += len;// 时时获取下载到的大小
                 fos.write(tmp, 0, len);

@@ -3,9 +3,16 @@ package xyz.yluo.ruisiapp.utils;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
+
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RuisUtils {
 
@@ -104,6 +111,30 @@ public class RuisUtils {
         }
 
 
+    }
+
+    public static Map<String, String> getForms(Document document, String id) {
+        Element element = document.getElementById(id);
+        Map<String, String> params = new HashMap<>();
+        if (element == null) return params;
+        Elements inputs = element.select("input");
+        for (Element ee : inputs) {
+            String key = ee.attr("name");
+            String type = ee.attr("type");
+            String value = ee.attr("value");
+            if (!TextUtils.isEmpty(key) && !"submit".equals(type)) {
+                params.put(key, value);
+            }
+        }
+
+        Elements textareas = element.select("textarea");
+        for (Element ee : textareas) {
+            String key = ee.attr("name");
+            String value = ee.html();
+            params.put(key, value);
+        }
+
+        return params;
     }
 
     public static String toHtml(String s) {

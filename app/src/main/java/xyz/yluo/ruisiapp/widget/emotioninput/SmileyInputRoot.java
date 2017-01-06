@@ -6,11 +6,9 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Build;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import xyz.yluo.ruisiapp.utils.DimmenUtils;
@@ -49,7 +47,7 @@ public class SmileyInputRoot extends LinearLayout {
         this.mIsTranslucentStatus = ViewUtil.isTranslucentStatus(activity);
 
         mPanelLayout = new PanelViewRoot(activity);
-        mPanelLayout.setLayoutParams(new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DimmenUtils.dip2px(activity, 200)));
+        mPanelLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, DimmenUtils.dip2px(activity, 200)));
         mPanelLayout.setBackgroundColor(Color.parseColor("#fffefefe"));
         mPanelLayout.setVisibility(GONE);
         addView(mPanelLayout);
@@ -85,10 +83,8 @@ public class SmileyInputRoot extends LinearLayout {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void handleBeforeMeasure(final int width, int height) {
-        // 由当前布局被键盘挤压，获知，由于键盘的活动，导致布局将要发生变化。
         if (mIsTranslucentStatus) {
             if (getFitsSystemWindows()) {
-                // In this case, the height is always the same one, so, we have to calculate below.
                 final Rect rect = new Rect();
                 getWindowVisibleDisplayFrame(rect);
                 height = rect.bottom - rect.top;
@@ -134,10 +130,7 @@ public class SmileyInputRoot extends LinearLayout {
             //键盘弹起 (offset > 0，高度变小)
             mPanelLayout.handleHide();
         } else if (mPanelLayout.isKeyboardShowing()) {
-            //在Android L下使用V7.Theme.AppCompat主题，并且不使用系统的ActionBar/ToolBar，V7.Theme.AppCompat主题,还是会先默认绘制一帧默认ActionBar，然后再将他去掉（略无语）
-            //键盘收回 (offset < 0，高度变大)
             if (mPanelLayout.isVisible()) {
-                // the panel is showing/will showing
                 mPanelLayout.handleShow();
             }
         }
