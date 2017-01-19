@@ -180,7 +180,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void start_post() {
-        String url = "forum.php?mod=post&action=edit&extra=&editsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
+        String url = "forum.php?mod=post&action=edit&extra=&editsubmit=yes&mobile=2&handlekey=postform&inajax=1";
         params.put("editsubmit", "yes");
         if (!TextUtils.isEmpty(typeId) && !typeId.equals("0")) {
             params.put("typeid", typeId);

@@ -187,7 +187,6 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
     private void begainPost() {
         String url = UrlUtils.getPostUrl(fid);
         Map<String, String> params = new HashMap<>();
-        //params.put("posttime", time);
         params.put("topicsubmit", "yes");
         if (!TextUtils.isEmpty(typeId) && !typeId.equals("0")) {
             params.put("typeid", typeId);
