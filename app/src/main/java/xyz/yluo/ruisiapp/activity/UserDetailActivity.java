@@ -1,6 +1,5 @@
 package xyz.yluo.ruisiapp.activity;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -19,11 +18,11 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.squareup.picasso.Picasso;
 
@@ -62,7 +61,6 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
     private static String userUid = "";
     protected RecyclerView infoList;
     protected CoordinatorLayout layout;
-    protected Toolbar toolbar;
     private CollapsingToolbarLayout toolbarLayout;
     private List<SimpleListData> datas = new ArrayList<>();
     private SimpleListAdapter adapter = null;
@@ -97,7 +95,6 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         infoList = (RecyclerView) findViewById(R.id.recycler_view);
         CircleImageView imageView = (CircleImageView) findViewById(R.id.user_detail_img_avatar);
         layout = (CoordinatorLayout) findViewById(R.id.main_window);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
         progressView = (GradeProgressView) findViewById(R.id.grade_progress);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(v -> fab_click());
@@ -108,11 +105,9 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         Picasso.with(this).load(imageUrl).placeholder(R.drawable.image_placeholder).into(imageView);
 
         toolbarLayout.setTitle(username);
-        setActionBar(toolbar);
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         adapter = new SimpleListAdapter(ListType.INFO, this, datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         infoList.setLayoutManager(layoutManager);

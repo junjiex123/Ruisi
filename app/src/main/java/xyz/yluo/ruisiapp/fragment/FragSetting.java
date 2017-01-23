@@ -22,6 +22,7 @@ import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.DataManager;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.IntentUtils;
+import xyz.yluo.ruisiapp.widget.MyDoubleTimePicker;
 
 /**
  * Created by free2 on 16-7-18.
@@ -36,7 +37,8 @@ public class FragSetting extends PreferenceFragment
     //论坛地址
     private ListPreference setting_forums_url;
     private SharedPreferences sharedPreferences;
-    private Preference aboutThis, clearCache, openSourse, exit_login;
+    private Preference aboutThis, clearCache, openSourse, exit_login, setDarkModeTime, setAutoDarkMode;
+    private MyDoubleTimePicker timePickerDialog;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -49,19 +51,31 @@ public class FragSetting extends PreferenceFragment
         openSourse = findPreference("open_sourse");
         clearCache = findPreference("clean_cache");
         exit_login = findPreference("exit_login");
+        setAutoDarkMode = findPreference("setting_auto_dark_mode");
+        setDarkModeTime = findPreference("setting_auto_dark_mode_time");
         sharedPreferences = getPreferenceScreen().getSharedPreferences();
         boolean b = sharedPreferences.getBoolean("setting_show_tail", false);
         setting_user_tail.setEnabled(b);
+        b = sharedPreferences.getBoolean("setting_dark_mode", false);
+        setDarkModeTime.setEnabled(!b && sharedPreferences.getBoolean("setting_auto_dark_mode", true));
+        setAutoDarkMode.setEnabled(!b);
         setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail", "无小尾巴"));
         setting_forums_url.setSummary(App.IS_SCHOOL_NET ? "当前网络校园网，点击切换" : "当前网络校外网，点击切换");
         setting_forums_url.setValue(App.IS_SCHOOL_NET ? "1" : "2");
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+        timePickerDialog = new MyDoubleTimePicker(getActivity(), null, 22, 0, 6, 0);
 
 
         if (!App.ISLOGIN(getActivity())) {
             ((PreferenceGroup) findPreference("group_other")).
                     removePreference(findPreference("exit_login"));//这是删除 二级
         }
+
+        setDarkModeTime.setOnPreferenceClickListener(preference -> {
+            timePickerDialog.show();
+            return false;
+        });
 
         exit_login.setOnPreferenceClickListener(preference -> {
             new AlertDialog.Builder(getActivity()).
@@ -175,12 +189,9 @@ public class FragSetting extends PreferenceFragment
                 setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail", "无小尾巴"));
                 break;
             case "setting_hide_zhidin":
-                boolean bbbb = sharedPreferences.getBoolean("setting_hide_zhidin", true);
-                Toast.makeText(getActivity(), bbbb ? "帖子列表不显示置顶帖" : "帖子列表显示置顶帖",
-                        Toast.LENGTH_SHORT).show();
                 break;
             case "setting_show_plain":
-                bbbb = sharedPreferences.getBoolean("setting_show_plain", false);
+                boolean bbbb = sharedPreferences.getBoolean("setting_show_plain", false);
                 Toast.makeText(getActivity(), bbbb ? "文章显示模式：简洁" : "文章显示模式：默认",
                         Toast.LENGTH_SHORT).show();
                 break;
@@ -192,8 +203,14 @@ public class FragSetting extends PreferenceFragment
                 } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 }
+                setDarkModeTime.setEnabled(!bbbb && sharedPreferences.getBoolean("setting_auto_dark_mode", true));
+                setAutoDarkMode.setEnabled(!bbbb);
                 Activity a = getActivity();
-                if (a != null) a.recreate();
+                if (a != null) a.onContentChanged();
+                break;
+            case "setting_auto_dark_mode":
+                bbbb = sharedPreferences.getBoolean("setting_auto_dark_mode", true);
+                setDarkModeTime.setEnabled(bbbb);
                 break;
         }
     }
