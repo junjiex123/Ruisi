@@ -101,18 +101,21 @@ public class PanelViewRoot extends FrameLayout {
         this.moreViewBtn = moreBtn;
         this.moreViewBtn.setVisibility(VISIBLE);
         this.sendBtn.setVisibility(GONE);
-        moreViewBtn.setOnClickListener(view -> {
-            if (PanelViewRoot.this.getVisibility() == View.VISIBLE) {
-                if (moreView.getVisibility() != VISIBLE) {
+        moreViewBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (PanelViewRoot.this.getVisibility() == View.VISIBLE) {
+                    if (moreView.getVisibility() != VISIBLE) {
+                        moreView.setVisibility(VISIBLE);
+                        smileyView.setVisibility(GONE);
+                    } else {
+                        KeyboardUtil.showKeyboard(editText);
+                    }
+                } else {
                     moreView.setVisibility(VISIBLE);
                     smileyView.setVisibility(GONE);
-                } else {
-                    KeyboardUtil.showKeyboard(editText);
+                    showPanel(PanelViewRoot.this);
                 }
-            } else {
-                moreView.setVisibility(VISIBLE);
-                smileyView.setVisibility(GONE);
-                showPanel(PanelViewRoot.this);
             }
         });
     }

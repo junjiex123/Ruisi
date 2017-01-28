@@ -138,14 +138,14 @@ public class PostActivity extends BaseActivity
     }
 
     private void initEmotionInput() {
-        View smuleyBtn = findViewById(R.id.btn_emotion);
+        View smileyBtn = findViewById(R.id.btn_emotion);
         View btnMore = findViewById(R.id.btn_more);
         View btnSend = findViewById(R.id.btn_send);
         btnSend.setOnClickListener(this);
         SmileyInputRoot rootViewGroup = (SmileyInputRoot) findViewById(R.id.root);
         mPanelRoot = rootViewGroup.getmPanelLayout();
         KeyboardUtil.attach(this, mPanelRoot, isShowing -> Log.e("key board", String.valueOf(isShowing)));
-        mPanelRoot.init(input, smuleyBtn, btnSend);
+        mPanelRoot.init(input, smileyBtn, btnSend);
         mPanelRoot.setMoreView(LayoutInflater.from(this).inflate(R.layout.my_smiley_menu, null), btnMore);
         topicList.setOnTouchListener((view, motionEvent) -> {
             if (motionEvent.getAction() == MotionEvent.ACTION_UP) {

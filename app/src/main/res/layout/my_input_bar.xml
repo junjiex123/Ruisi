@@ -7,7 +7,8 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:gravity="bottom"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="2dp">
 
     <EditText
         android:id="@+id/ed_comment"
@@ -19,43 +20,37 @@
         android:inputType="textMultiLine"
         android:lineSpacingMultiplier="1.2"
         android:maxLines="4"
-        android:padding="10dp"
-        android:textSize="15sp" />
+        android:padding="8dp"
+        android:textSize="16sp" />
 
     <ImageView
         android:id="@+id/btn_emotion"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="2dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
-        android:padding="8dp"
+        android:padding="6dp"
         android:src="@drawable/ic_edit_emoticon_24dp"
         android:tint="@color/colorDisableHintIcon" />
 
     <ImageView
         android:id="@+id/btn_more"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="2dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:layout_marginEnd="2dp"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
-        android:padding="8dp"
+        android:padding="6dp"
         android:src="@drawable/ic_add_black_24dp"
         android:visibility="gone" />
 
     <ImageView
         android:id="@+id/btn_send"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="2dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:layout_marginEnd="2dp"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
-        android:padding="8dp"
+        android:padding="6dp"
         android:src="@drawable/btn_post" />
 </LinearLayout>
