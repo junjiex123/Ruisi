@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -21,7 +20,6 @@ public class SmileyInputRoot extends LinearLayout {
     private int mStatusBarHeight;
     private PanelViewRoot mPanelLayout;
     private boolean mIsTranslucentStatus;
-    private static final String TAG = "KPSRootLayoutHandler";
 
 
     public SmileyInputRoot(Context context) {
@@ -91,7 +89,6 @@ public class SmileyInputRoot extends LinearLayout {
             }
         }
 
-        Log.d(TAG, "onMeasure, width: " + width + " height: " + height);
         if (height < 0) {
             return;
         }
@@ -104,25 +101,21 @@ public class SmileyInputRoot extends LinearLayout {
         final int offset = mOldHeight - height;
 
         if (offset == 0) {
-            Log.d(TAG, "" + offset + " == 0 break;");
             return;
         }
 
         if (Math.abs(offset) == mStatusBarHeight) {
-            Log.w(TAG, String.format("offset just equal statusBar height %d", offset));
             return;
         }
 
         mOldHeight = height;
 
         if (mPanelLayout == null) {
-            Log.w(TAG, "can't find the valid panel conflict layout, give up!");
             return;
         }
 
         // 检测到布局变化非键盘引起
         if (Math.abs(offset) < DimmenUtils.dip2px(getContext(), 80)) {
-            Log.w(TAG, "system bottom-menu-bar(such as HuaWei Mate7) causes layout changed");
             return;
         }
 

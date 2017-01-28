@@ -10,7 +10,6 @@ import java.util.List;
 public class SmileyDataSet {
     public String name;
     private boolean isImage = true;
-    public int textSize = 11;
     private List<Pair<String, String>> smileys;
     private static final String SMILEY_BASE = "file:///android_asset/static/image/smiley/";
 

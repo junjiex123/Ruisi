@@ -6,6 +6,10 @@ import android.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * emoji睿思不支持
+ */
 public class SmileyEmoji {
 
     public static final String newString(int codePoint) {
@@ -215,7 +219,7 @@ public class SmileyEmoji {
         for (String a : DATA) {
             smileys.add(new Pair<>(a, a));
         }
-        set.textSize = 22;
+        //set.textSize = 22;
         set.setSmileys(smileys);
 
         return set;

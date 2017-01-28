@@ -88,7 +88,7 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
         if (year < yearNow) {
             year = yearNow;
         }
-        ((TextView) findViewById(R.id.copyright)).setText("©" + year + " 谁用了FREEDPOM");
+        ((TextView) findViewById(R.id.copyright)).setText("©2016-" + year + " 谁用了FREEDPOM");
     }
 
     //设置头像

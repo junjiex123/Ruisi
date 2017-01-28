@@ -5,21 +5,15 @@ import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +22,8 @@ import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.utils.DimmenUtils;
 
 
-public class SmileyView extends LinearLayout implements ViewPager.OnPageChangeListener {
+public class SmileyView extends LinearLayout
+        implements ViewPager.OnPageChangeListener {
 
     private ViewPager viewPager;
     private Context context;
@@ -40,7 +35,7 @@ public class SmileyView extends LinearLayout implements ViewPager.OnPageChangeLi
     private EmotionInputHandler emotionInputHandler;
     private int currentTabPosition = -1;
     private int totalPageSize = 0;
-    private int SIZE_8 = 0;
+    private int SIZE_8 = 8;
 
     private static final int LMP = LayoutParams.MATCH_PARENT;
     private static final int LWC = LayoutParams.WRAP_CONTENT;
@@ -82,8 +77,8 @@ public class SmileyView extends LinearLayout implements ViewPager.OnPageChangeLi
 
         dotContainer = new LinearLayout(context);
         dotContainer.setOrientation(LinearLayout.HORIZONTAL);
-        dotContainer.setLayoutParams(new LayoutParams(LMP, DimmenUtils.dip2px(context, 24)));
-        dotContainer.setGravity(Gravity.CENTER);
+        dotContainer.setLayoutParams(new LayoutParams(LMP, DimmenUtils.dip2px(context, 16)));
+        dotContainer.setGravity(Gravity.CENTER_HORIZONTAL);
         addView(dotContainer);
 
 
@@ -108,8 +103,8 @@ public class SmileyView extends LinearLayout implements ViewPager.OnPageChangeLi
             int width = DimmenUtils.px2dip(context, r - l);
             int height = DimmenUtils.px2dip(context, b - t);
             COLOUM_COUNT = width / 60;
-            ROW_COUNT = height / 60;
-            Log.e("onLayout", "width: " + width + " height:" + height);
+            ROW_COUNT = (height - (36 + 16)) / 60;
+            Log.d("SmileyView onLayout", "width: " + width + " height:" + height);
 
             adapter = new PageAdapter();
             List<SmileyDataSet> smileys = new ArrayList<>();
@@ -228,8 +223,8 @@ public class SmileyView extends LinearLayout implements ViewPager.OnPageChangeLi
         for (int i = 0; i < dotContainer.getChildCount(); i++) {
             if (i == index) {
                 dotContainer.getChildAt(i).setEnabled(true);
-                dotContainer.getChildAt(i).setScaleX(1.35f);
-                dotContainer.getChildAt(i).setScaleY(1.35f);
+                dotContainer.getChildAt(i).setScaleX(1.2f);
+                dotContainer.getChildAt(i).setScaleY(1.2f);
             } else {
                 dotContainer.getChildAt(i).setEnabled(false);
                 dotContainer.getChildAt(i).setScaleX(1.0f);
@@ -243,29 +238,21 @@ public class SmileyView extends LinearLayout implements ViewPager.OnPageChangeLi
         for (int i = 0; i < smileys.size(); i++) {
             View itemView;
             SmileyDataSet set = smileys.get(i);
-            if (set.isImage()) {
-                itemView = new ImageView(context);
-                Picasso.with(context).load(set.getLogo()).resize(SIZE_8 * 2, SIZE_8 * 2).into((ImageView) itemView);
-                ((ImageView) itemView).setScaleType(ImageView.ScaleType.CENTER_CROP);
-            } else {
-                itemView = new TextView(context);
-                ((TextView) itemView).setText(set.getLogo());
-                ((TextView) itemView).setTextSize(TypedValue.COMPLEX_UNIT_SP, set.textSize);
-                ((TextView) itemView).setGravity(Gravity.CENTER);
-            }
+
+            itemView = new TextView(context);
+            ((TextView) itemView).setText(set.name);
+            ((TextView) itemView).setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+            ((TextView) itemView).setGravity(Gravity.CENTER);
 
             itemView.setPadding(SIZE_8 * 2, SIZE_8 / 2, SIZE_8 * 2, SIZE_8 / 2);
             itemView.setClickable(true);
             final int finalI = i;
             if (i == 0) itemView.setBackgroundColor(COLOR_TAB_SEL);
-            itemView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    switchTab(finalI);
-                    switchDot(0);
-                    int pageStart = getPageCountBefore(finalI);
-                    viewPager.setCurrentItem(pageStart, true);
-                }
+            itemView.setOnClickListener(view -> {
+                switchTab(finalI);
+                switchDot(0);
+                int pageStart = getPageCountBefore(finalI);
+                viewPager.setCurrentItem(pageStart, true);
             });
 
             tabContainer.addView(itemView, params);
@@ -280,12 +267,7 @@ public class SmileyView extends LinearLayout implements ViewPager.OnPageChangeLi
         delIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
         delIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.btn_back_space));
         delIcon.setClickable(true);
-        delIcon.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                emotionInputHandler.backSpace();
-            }
-        });
+        delIcon.setOnClickListener(view -> emotionInputHandler.backSpace());
         tabContainer.addView(delIcon, params);
     }
 
@@ -319,30 +301,14 @@ public class SmileyView extends LinearLayout implements ViewPager.OnPageChangeLi
 
         @Override
         public Object instantiateItem(ViewGroup container, final int page) {
-            GridView v = (GridView) container.findViewWithTag(page);
-
+            EmotionGridView v = (EmotionGridView) container.findViewWithTag(page);
             if (v == null) {
-                v = new GridView(context);
-                v.setNumColumns(COLOUM_COUNT);
-                //v.setSelector(android.R.color.transparent);
                 final int tabpos = pageToTabPos(page);
-                v.setAdapter(new SmileyAdapter(tabpos, page, smileys.get(tabpos)));
-                v.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        if (view instanceof ImageView) {
-                            ImageView v = (ImageView) view;
-                            SmileyDataSet set = smileys.get(tabpos);
-                            int pageStart = page - getPageCountBefore(tabpos);
-                            int index = pageStart * ROW_COUNT * COLOUM_COUNT + i;
-                            emotionInputHandler.insertSmiley(set, index, v.getDrawable());
-                        } else if (view instanceof TextView) {
-                            TextView v = (TextView) view;
-                            emotionInputHandler.insertString(v.getText().toString());
-                        }
+                int pageStart = page - getPageCountBefore(tabpos);
+                int index = pageStart * ROW_COUNT * COLOUM_COUNT;
 
-                    }
-                });
+                v = new EmotionGridView(context, smileys.get(tabpos),
+                        COLOUM_COUNT, ROW_COUNT, index,emotionInputHandler);
                 v.setLayoutParams(new LayoutParams(LMP, LMP));
                 v.setTag(page);
                 container.addView(v);
@@ -362,84 +328,6 @@ public class SmileyView extends LinearLayout implements ViewPager.OnPageChangeLi
         @Override
         public int getItemPosition(Object object) {
             return POSITION_NONE;
-        }
-    }
-
-    private class SmileyAdapter extends BaseAdapter {
-        private SmileyDataSet set;
-        private int startIndex;
-        private int pageStart = 0;
-        private int tab = 0;
-
-        SmileyAdapter(int tabpos, int page, SmileyDataSet set) {
-            this.set = set;
-            this.tab = tabpos;
-            pageStart = page - getPageCountBefore(tabpos);
-            startIndex = pageStart * ROW_COUNT * COLOUM_COUNT;
-        }
-
-        @Override
-        public int getCount() {
-            if (set == null) {
-                return 0;
-            }
-            int pages = getPageSize(tab);
-            if (pageStart < pages - 1) {
-                return ROW_COUNT * COLOUM_COUNT;
-            } else if (pageStart == pages - 1) {
-                return set.getCount() - startIndex;
-            } else {
-                return 0;
-            }
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return smileys.get(startIndex + i);
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return i + startIndex;
-        }
-
-        @Override
-        public View getView(int i, View convertView, ViewGroup viewGroup) {
-            final int pos = startIndex + i;
-            ViewHolder holder;
-            if (convertView == null) {
-                holder = new ViewHolder();
-                if (set.isImage()) {
-                    convertView = new ImageView(context);
-                    convertView.setPadding(SIZE_8 / 2 * 3, SIZE_8 / 2 * 3, SIZE_8 / 2 * 3, SIZE_8 / 2 * 3);
-                } else {
-                    convertView = new TextView(context);
-                    ((TextView) convertView).setTextSize(TypedValue.COMPLEX_UNIT_SP, set.textSize);
-                    ((TextView) convertView).setTextColor(ContextCompat.getColor(context, R.color.text_color_pri));
-                    convertView.setTextAlignment(TEXT_ALIGNMENT_CENTER);
-                    ((TextView) convertView).setGravity(Gravity.CENTER);
-                    convertView.setPadding(SIZE_8 / 4, 0, SIZE_8 / 4, 0);
-                }
-                holder.emoticon = convertView;
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            int realItemHeight = viewPager.getMeasuredHeight() / ROW_COUNT;
-            holder.emoticon.setLayoutParams(new LinearLayoutCompat.LayoutParams(LMP, realItemHeight));
-            if (realItemHeight > 0) {
-                if (set.isImage()) {
-                    Picasso.with(context).load(set.getSmileys().get(pos).first).resize(realItemHeight / 2, realItemHeight / 2).into((ImageView) holder.emoticon);
-                } else {
-                    ((TextView) holder.emoticon).setText(set.getSmileys().get(pos).first);
-                }
-            }
-            return convertView;
-        }
-
-        private class ViewHolder {
-            View emoticon;
         }
     }
 
