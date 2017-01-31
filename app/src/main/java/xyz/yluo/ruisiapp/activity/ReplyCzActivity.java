@@ -3,7 +3,6 @@ package xyz.yluo.ruisiapp.activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -26,13 +25,13 @@ import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.KeyboardUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
-import xyz.yluo.ruisiapp.widget.emotioninput.PanelViewRoot;
+import xyz.yluo.ruisiapp.widget.MyFriendPicker;
 import xyz.yluo.ruisiapp.widget.emotioninput.SmileyInputRoot;
 import xyz.yluo.ruisiapp.widget.myhtmlview.HtmlView;
 
 public class ReplyCzActivity extends BaseActivity {
 
-    private PanelViewRoot mPanelRoot;
+    private SmileyInputRoot rootView;
     private EditText input;
     Map<String, String> params = new HashMap<>();
     private String postUrl = "";
@@ -54,29 +53,27 @@ public class ReplyCzActivity extends BaseActivity {
         }
         initToolBar(true, title);
         input = (EditText) findViewById(R.id.ed_comment);
+        MyFriendPicker.attach(this, input);
         findViewById(R.id.tv_edit).setVisibility(View.GONE);
         findViewById(R.id.tv_remove).setVisibility(View.GONE);
         findViewById(R.id.bt_lable_lz).setVisibility(isLz ? View.VISIBLE : View.GONE);
 
-        SmileyInputRoot rootViewGroup = (SmileyInputRoot) findViewById(R.id.root);
-        mPanelRoot = rootViewGroup.getmPanelLayout();
+        rootView = (SmileyInputRoot) findViewById(R.id.root);
 
         View btnSend = findViewById(R.id.btn_send);
-        View smuleyBtn = findViewById(R.id.btn_emotion);
-        KeyboardUtil.attach(this, mPanelRoot, isShowing -> Log.e("key board", String.valueOf(isShowing)));
-        mPanelRoot.init(input, smuleyBtn, btnSend);
+        View smileyBtn = findViewById(R.id.btn_emotion);
+        rootView.initSmiley(input, smileyBtn, btnSend);
 
         findViewById(R.id.content).setOnTouchListener((view, motionEvent) -> {
             if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                mPanelRoot.hidePanelAndKeyboard();
+                KeyboardUtil.hideKeyboard(input);
+                rootView.hideSmileyContainer();
             }
             return false;
         });
 
         findViewById(R.id.btn_reply_cz).setOnClickListener(view -> {
-            if (!mPanelRoot.isKeyboardShowing()) {
-                KeyboardUtil.showKeyboard(input);
-            }
+            KeyboardUtil.showKeyboard(input);
         });
 
         if (data == null) {
@@ -168,7 +165,8 @@ public class ReplyCzActivity extends BaseActivity {
             if (res.contains("成功") || res.contains("层主")) {
                 Toast.makeText(this, "回复发表成功", Toast.LENGTH_SHORT).show();
                 input.setText(null);
-                mPanelRoot.hidePanelAndKeyboard();
+                KeyboardUtil.hideKeyboard(input);
+                rootView.hideSmileyContainer();
                 setResult(RESULT_OK);
                 finish();
             } else if (res.contains("您两次发表间隔")) {
@@ -183,9 +181,7 @@ public class ReplyCzActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (mPanelRoot.getVisibility() == View.VISIBLE) {
-            mPanelRoot.hidePanelAndKeyboard();
-        } else {
+        if (!rootView.hideSmileyContainer()) {
             super.onBackPressed();
         }
     }

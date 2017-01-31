@@ -2,17 +2,11 @@ package xyz.yluo.ruisiapp.widget.emotioninput;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.util.Pair;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import xyz.yluo.ruisiapp.R;
 
@@ -25,7 +19,6 @@ public class EmotionGridView extends ViewGroup implements View.OnClickListener {
     private SmileyDataSet set;
     private int startIndex;
     private EmotionInputHandler handler;
-    private static final int TAG_INDEX = 0x7f056666;
     private int CLICK_BG_RES;
 
     public EmotionGridView(Context context,
@@ -61,7 +54,7 @@ public class EmotionGridView extends ViewGroup implements View.OnClickListener {
         itemWidth = sizeWidth / colNum;
         itemHeight = sizeHeight / rowNum;
 
-        if (!isInitView) {
+        if (!isInitView && itemHeight > 0) {
             isInitView = true;
             initViews();
         }
@@ -75,29 +68,11 @@ public class EmotionGridView extends ViewGroup implements View.OnClickListener {
 
         LayoutParams lp = new LayoutParams(itemWidth, itemHeight);
         for (int i = startIndex; i < set.getCount() && ((i - startIndex) < colNum * rowNum); i++) {
-            Pair<String, String> d = set.getSmileys().get(i);
-            View v;
-            if (set.isImage()) {
-                v = new ImageView(context);
-                v.setPadding(marginLR, marginTB, marginLR, marginTB);
-                Picasso.with(context).load(d.first)
-                        .resize(size, size)
-                        .into((ImageView) v);
-            } else {
-                v = new TextView(context);
-                ((TextView) v).setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-                ((TextView) v).setTextColor(ContextCompat.getColor(context, R.color.text_color_pri));
-                //v.setTextAlignment(TEXT_ALIGNMENT_CENTER);
-                ((TextView) v).setGravity(Gravity.CENTER);
-                ((TextView) v).setText(d.first);
-                v.setPadding(marginLR / 2, marginTB, marginLR / 2, marginTB);
-            }
-            v.setTag(TAG_INDEX,d.second);
-            v.setClickable(true);
-            v.setBackgroundResource(CLICK_BG_RES);
-            v.setOnClickListener(this);
-            addView(v, lp);
-
+            View view = set.getSmileyItem(context, i, size);
+            view.setPadding(marginLR, marginTB, marginLR, marginTB);
+            view.setBackgroundResource(CLICK_BG_RES);
+            view.setOnClickListener(this);
+            addView(view, lp);
         }
 
         invalidate();
@@ -122,7 +97,8 @@ public class EmotionGridView extends ViewGroup implements View.OnClickListener {
     public void onClick(View view) {
         if (view instanceof ImageView) {
             ImageView v = (ImageView) view;
-            handler.insertSmiley((String) v.getTag(TAG_INDEX), v.getDrawable());
+            handler.insertSmiley((String) v.getTag(SmileyDataSet.TAG_INDEX),
+                    v.getDrawable());
         } else if (view instanceof TextView) {
             TextView v = (TextView) view;
             handler.insertString(v.getText().toString());

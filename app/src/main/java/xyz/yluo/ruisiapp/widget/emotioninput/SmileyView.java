@@ -102,16 +102,22 @@ public class SmileyView extends LinearLayout
             isInitSize = true;
             int width = DimmenUtils.px2dip(context, r - l);
             int height = DimmenUtils.px2dip(context, b - t);
-            COLOUM_COUNT = width / 60;
-            ROW_COUNT = (height - (36 + 16)) / 60;
+            if (width / 60 > 0) {
+                COLOUM_COUNT = width / 60;
+            }
+            int col = (height - (36 + 16)) / 60;
+            if (col > 0) {
+                ROW_COUNT = col;
+            }
+
             Log.d("SmileyView onLayout", "width: " + width + " height:" + height);
 
             adapter = new PageAdapter();
             List<SmileyDataSet> smileys = new ArrayList<>();
-            SmileyDataSet setTieba = SmileyDataSet.getDataSet(context, "贴吧", true, R.array.smiley_tieba);
-            SmileyDataSet setAcn = SmileyDataSet.getDataSet(context, "ac娘", true, R.array.smiley_acn);
-            SmileyDataSet setJgz = SmileyDataSet.getDataSet(context, "金馆长", true, R.array.smiley_jgz);
-            SmileyDataSet setYwz = SmileyDataSet.getDataSet(context, "颜文字", false, R.array.smiley_ywz);
+            SmileyDataSet setTieba = SmileyDataSet.getDataSet(context, "贴吧", SmileyDataSet.TYPE_IMAGE, R.array.smiley_tieba);
+            SmileyDataSet setAcn = SmileyDataSet.getDataSet(context, "ac娘", SmileyDataSet.TYPE_IMAGE, R.array.smiley_acn);
+            SmileyDataSet setJgz = SmileyDataSet.getDataSet(context, "金馆长", SmileyDataSet.TYPE_IMAGE, R.array.smiley_jgz);
+            SmileyDataSet setYwz = SmileyDataSet.getDataSet(context, "颜文字", SmileyDataSet.TYPE_TEXT, R.array.smiley_ywz);
 
             smileys.add(setTieba);
             smileys.add(setAcn);
@@ -241,18 +247,22 @@ public class SmileyView extends LinearLayout
 
             itemView = new TextView(context);
             ((TextView) itemView).setText(set.name);
-            ((TextView) itemView).setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+            ((TextView) itemView).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
             ((TextView) itemView).setGravity(Gravity.CENTER);
 
             itemView.setPadding(SIZE_8 * 2, SIZE_8 / 2, SIZE_8 * 2, SIZE_8 / 2);
             itemView.setClickable(true);
             final int finalI = i;
             if (i == 0) itemView.setBackgroundColor(COLOR_TAB_SEL);
-            itemView.setOnClickListener(view -> {
-                switchTab(finalI);
-                switchDot(0);
-                int pageStart = getPageCountBefore(finalI);
-                viewPager.setCurrentItem(pageStart, true);
+
+            itemView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    switchTab(finalI);
+                    switchDot(0);
+                    int pageStart = getPageCountBefore(finalI);
+                    viewPager.setCurrentItem(pageStart, true);
+                }
             });
 
             tabContainer.addView(itemView, params);
@@ -267,7 +277,12 @@ public class SmileyView extends LinearLayout
         delIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
         delIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.btn_back_space));
         delIcon.setClickable(true);
-        delIcon.setOnClickListener(view -> emotionInputHandler.backSpace());
+        delIcon.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                emotionInputHandler.backSpace();
+            }
+        });
         tabContainer.addView(delIcon, params);
     }
 
@@ -308,7 +323,7 @@ public class SmileyView extends LinearLayout
                 int index = pageStart * ROW_COUNT * COLOUM_COUNT;
 
                 v = new EmotionGridView(context, smileys.get(tabpos),
-                        COLOUM_COUNT, ROW_COUNT, index,emotionInputHandler);
+                        COLOUM_COUNT, ROW_COUNT, index, emotionInputHandler);
                 v.setLayoutParams(new LayoutParams(LMP, LMP));
                 v.setTag(page);
                 container.addView(v);
