@@ -18,6 +18,8 @@
 ![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/4.jpg)
 ![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/5.jpg)
 ![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/6.jpg)
+![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/7.jpg)
+![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/8.jpg)
 
 ### 意见和反馈
 - freedom10086 <2351386755@qq.com>
@@ -40,7 +42,7 @@
 
 ### License
 
-    Copyright 2016 freedom10086
+    Copyright 2016-2017 freedom10086
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
