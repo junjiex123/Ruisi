@@ -180,34 +180,6 @@ public class PostActivity extends BaseActivity
         addToolbarView(spinner);
     }
 
-    private float x, y = 0;
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                //当手指按下的时候
-                x = event.getX();
-                y = event.getY();
-                break;
-            case MotionEvent.ACTION_UP:
-                //当手指离开的时候
-                float dx = event.getX() - x;
-                float dy = event.getY() - y;
-                if (dx > 120 && dx > 1.7f * dy) {
-                    DisplayMetrics dm = getResources().getDisplayMetrics();
-                    int w_screen = dm.widthPixels;
-                    if ((dx > 2 * w_screen / 5) && (x < 2 * w_screen / 5)) {
-                        finish();
-                    }
-                }
-                x = event.getX();
-                y = event.getY();
-                break;
-        }
-        return super.dispatchTouchEvent(event);
-    }
-
     private void firstGetData(int page) {
         getArticleData(page);
     }

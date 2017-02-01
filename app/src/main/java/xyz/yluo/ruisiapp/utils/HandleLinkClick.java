@@ -13,7 +13,7 @@ import xyz.yluo.ruisiapp.activity.PostsActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.activity.ViewImgActivity;
 import xyz.yluo.ruisiapp.downloadfile.DownloadService;
-import xyz.yluo.ruisiapp.widget.myhtmlview.HtmlView;
+import xyz.yluo.ruisiapp.widget.htmlview.HtmlView;
 
 /**
  * Created by free2 on 16-4-12.

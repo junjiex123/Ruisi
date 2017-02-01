@@ -16,7 +16,7 @@ import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.IntentUtils;
-import xyz.yluo.ruisiapp.widget.myhtmlview.HtmlView;
+import xyz.yluo.ruisiapp.widget.htmlview.HtmlView;
 
 
 /**

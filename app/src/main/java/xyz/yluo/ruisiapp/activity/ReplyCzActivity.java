@@ -27,7 +27,7 @@ import xyz.yluo.ruisiapp.utils.KeyboardUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 import xyz.yluo.ruisiapp.widget.MyFriendPicker;
 import xyz.yluo.ruisiapp.widget.emotioninput.SmileyInputRoot;
-import xyz.yluo.ruisiapp.widget.myhtmlview.HtmlView;
+import xyz.yluo.ruisiapp.widget.htmlview.HtmlView;
 
 public class ReplyCzActivity extends BaseActivity {
 

@@ -1,4 +1,4 @@
-package xyz.yluo.ruisiapp.widget.myhtmlview;
+package xyz.yluo.ruisiapp.widget.htmlview;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -32,7 +32,7 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
 
     private Context context;
     private ImageGetter imageGetter;
-    private TagHandle tagHandle;
+    private HtmlTagHandler htmlTagHandler;
     private SpannableStringBuilder strBuilderContent;
     private int colorSec = 0;
 
@@ -56,14 +56,14 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
         colorSec = ContextCompat.getColor(context, R.color.text_color_sec);
         setMovementMethod(LinkMovementMethod.getInstance());
         setLinkTextColor(0xff529ECC);
-        tagHandle = new TagHandle();
+        htmlTagHandler = new HtmlTagHandler();
     }
 
     public void setHtmlText(String txt, boolean isLoadImage) {
         if (isLoadImage && imageGetter == null) {
             imageGetter = new ImageGetter(context, this);
         }
-        strBuilderContent = getSequence(context, txt, imageGetter, tagHandle);
+        strBuilderContent = getSequence(context, txt, imageGetter, htmlTagHandler);
         setText(strBuilderContent);
     }
 
@@ -78,7 +78,7 @@ public class HtmlView extends TextView implements ImageGetter.ImageDownLoadListe
 
     //获得textView 链接点击
     private SpannableStringBuilder getSequence(Context context, String html,
-                                               ImageGetter getter, TagHandle handler) {
+                                               ImageGetter getter, HtmlTagHandler handler) {
         Spanned spannedHtml;
         spannedHtml = Html.fromHtml(html, getter, handler);
         SpannableStringBuilder strBuilder = new SpannableStringBuilder(spannedHtml);
