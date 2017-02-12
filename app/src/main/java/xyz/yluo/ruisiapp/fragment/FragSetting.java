@@ -30,14 +30,16 @@ import xyz.yluo.ruisiapp.widget.MyDoubleTimePicker;
  */
 
 public class FragSetting extends PreferenceFragment
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
+        implements SharedPreferences.OnSharedPreferenceChangeListener,
+        MyDoubleTimePicker.OnTimeSetListener {
 
     //小尾巴string
     private EditTextPreference setting_user_tail;
     //论坛地址
     private ListPreference setting_forums_url;
     private SharedPreferences sharedPreferences;
-    private Preference aboutThis, clearCache, openSourse, exit_login, setDarkModeTime, setAutoDarkMode;
+    private Preference clearCache;
+    private Preference setDarkModeTime;
     private MyDoubleTimePicker timePickerDialog;
 
     @Override
@@ -47,24 +49,19 @@ public class FragSetting extends PreferenceFragment
 
         setting_user_tail = (EditTextPreference) findPreference("setting_user_tail");
         setting_forums_url = (ListPreference) findPreference("setting_forums_url");
-        aboutThis = findPreference("about_this");
-        openSourse = findPreference("open_sourse");
         clearCache = findPreference("clean_cache");
-        exit_login = findPreference("exit_login");
-        setAutoDarkMode = findPreference("setting_auto_dark_mode");
         setDarkModeTime = findPreference("setting_auto_dark_mode_time");
         sharedPreferences = getPreferenceScreen().getSharedPreferences();
         boolean b = sharedPreferences.getBoolean("setting_show_tail", false);
         setting_user_tail.setEnabled(b);
         b = sharedPreferences.getBoolean("setting_dark_mode", false);
-        setDarkModeTime.setEnabled(!b && sharedPreferences.getBoolean("setting_auto_dark_mode", true));
-        setAutoDarkMode.setEnabled(!b);
+        setDarkModeTime.setEnabled(b);
         setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail", "无小尾巴"));
         setting_forums_url.setSummary(App.IS_SCHOOL_NET ? "当前网络校园网，点击切换" : "当前网络校外网，点击切换");
         setting_forums_url.setValue(App.IS_SCHOOL_NET ? "1" : "2");
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-        timePickerDialog = new MyDoubleTimePicker(getActivity(), null, 22, 0, 6, 0);
+        timePickerDialog = new MyDoubleTimePicker(getActivity(), this, 0, 0, 24, 0);
 
 
         if (!App.ISLOGIN(getActivity())) {
@@ -77,7 +74,7 @@ public class FragSetting extends PreferenceFragment
             return false;
         });
 
-        exit_login.setOnPreferenceClickListener(preference -> {
+        findPreference("exit_login").setOnPreferenceClickListener(preference -> {
             new AlertDialog.Builder(getActivity()).
                     setTitle("退出登录").
                     setMessage("你确定要注销吗？").
@@ -107,12 +104,12 @@ public class FragSetting extends PreferenceFragment
             version_name = info.versionName;
         }
 
-        aboutThis.setSummary("当前版本" + version_name + "  version code:" + version_code);
+        findPreference("about_this").setSummary("当前版本" + version_name + "  version code:" + version_code);
 
         //[2016年6月9日更新][code:25]睿思手机客户端
         //更新逻辑 检查睿思帖子标题 比对版本号
         final int finalversion_code = version_code;
-        aboutThis.setOnPreferenceClickListener(
+        findPreference("about_this").setOnPreferenceClickListener(
                 preference -> {
                     Toast.makeText(getActivity(), "正在检查更新", Toast.LENGTH_SHORT).show();
                     HttpUtil.get(getActivity(), App.CHECK_UPDATE_URL, new ResponseHandler() {
@@ -148,7 +145,7 @@ public class FragSetting extends PreferenceFragment
                     return true;
                 });
 
-        openSourse.setOnPreferenceClickListener(preference -> {
+        findPreference("open_sourse").setOnPreferenceClickListener(preference -> {
             IntentUtils.openBroswer(getActivity(), "https://github.com/freedom10086/Ruisi");
             return false;
         });
@@ -203,8 +200,7 @@ public class FragSetting extends PreferenceFragment
                 } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 }
-                setDarkModeTime.setEnabled(!bbbb && sharedPreferences.getBoolean("setting_auto_dark_mode", true));
-                setAutoDarkMode.setEnabled(!bbbb);
+                setDarkModeTime.setEnabled(bbbb);
                 Activity a = getActivity();
                 if (a != null) a.onContentChanged();
                 break;
@@ -213,5 +209,11 @@ public class FragSetting extends PreferenceFragment
                 setDarkModeTime.setEnabled(bbbb);
                 break;
         }
+    }
+
+    @Override
+    public void onTimeSet(int startHour, int startMinute, int endHour, int endMinute) {
+        setDarkModeTime.setSummary("当前夜间时间为" +
+                startHour + ":" + startMinute + "~" + endHour + ":" + endMinute);
     }
 }

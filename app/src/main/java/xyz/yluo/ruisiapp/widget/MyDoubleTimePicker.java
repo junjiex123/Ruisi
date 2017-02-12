@@ -1,7 +1,6 @@
 package xyz.yluo.ruisiapp.widget;
 
 import android.app.AlertDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -21,18 +20,18 @@ public class MyDoubleTimePicker extends AlertDialog implements DialogInterface.O
     private static final String MINUTE_END = "minute_end";
 
     private final TimePicker mTimePickerStart, mTimePickerEnd;
-    private final TimePickerDialog.OnTimeSetListener mTimeSetListener;
+    private final OnTimeSetListener mTimeSetListener;
 
-    private final int mInitialHourOfDayStart,mInitialHourOfDayEnd;
-    private final int mInitialMinuteStart,mInitialMinuteEnd;
+    private final int mInitialHourOfDayStart, mInitialHourOfDayEnd;
+    private final int mInitialMinuteStart, mInitialMinuteEnd;
 
 
     public interface OnTimeSetListener {
-        void onTimeSet(TimePicker view, int hourOfDay, int minute);
+        void onTimeSet(int startHour, int startMinute, int endHour, int endMinute);
     }
 
 
-    public MyDoubleTimePicker(Context context, TimePickerDialog.OnTimeSetListener listener,
+    public MyDoubleTimePicker(Context context, OnTimeSetListener listener,
                               int hourOfDayStrt, int minuteStart,
                               int hourOfDayEnd, int minuteEnd) {
         super(context);
@@ -75,7 +74,9 @@ public class MyDoubleTimePicker extends AlertDialog implements DialogInterface.O
         switch (which) {
             case BUTTON_POSITIVE:
                 if (mTimeSetListener != null) {
-                    mTimeSetListener.onTimeSet(mTimePickerStart, mTimePickerStart.getCurrentHour(), mTimePickerStart.getCurrentMinute());
+                    mTimeSetListener.onTimeSet(
+                            mTimePickerStart.getCurrentHour(), mTimePickerStart.getCurrentMinute(),
+                            mTimePickerEnd.getCurrentHour(), mTimePickerEnd.getCurrentMinute());
                 }
                 break;
             case BUTTON_NEGATIVE:

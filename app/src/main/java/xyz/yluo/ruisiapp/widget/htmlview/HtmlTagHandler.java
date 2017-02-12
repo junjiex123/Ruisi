@@ -3,7 +3,6 @@ package xyz.yluo.ruisiapp.widget.htmlview;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.Html;
-import android.text.Spannable;
 import android.text.Spanned;
 
 import org.xml.sax.XMLReader;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_window"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -39,12 +39,30 @@
                 app:civ_border_color="@android:color/white"
                 app:civ_border_width="2dp" />
 
-            <xyz.yluo.ruisiapp.widget.GradeProgressView
-                android:id="@+id/grade_progress"
-                android:layout_width="140dp"
-                android:layout_height="3.2dp"
+            <LinearLayout
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|bottom"
-                android:layout_marginBottom="18dp" />
+                android:layout_marginBottom="4dp"
+                android:orientation="vertical">
+
+                <xyz.yluo.ruisiapp.widget.GradeProgressView
+                    android:id="@+id/grade_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="3.2dp" />
+
+                <TextView
+                    android:id="@+id/progress_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    tools:text="666/999" />
+
+            </LinearLayout>
+
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"

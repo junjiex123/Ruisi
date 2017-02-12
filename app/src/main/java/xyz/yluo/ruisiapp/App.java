@@ -104,6 +104,25 @@ public class App extends Application {
         return shp.getString(USER_GRADE_KEY, "");
     }
 
+    public static void setDarkModeTime(Context context, boolean isStart, int value) {
+        SharedPreferences shp = context.getSharedPreferences(MY_SHP_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = shp.edit();
+        if (isStart) {
+            editor.putInt(START_DARK_TIME_KEY, value);
+        } else {
+            editor.putInt(END_DARK_TIME_KEY, value);
+        }
+        editor.apply();
+    }
+
+    public static int[] getDarkModeTime(Context context) {
+        SharedPreferences shp = context.getSharedPreferences(MY_SHP_NAME, MODE_PRIVATE);
+        int[] ret = new int[2];
+        ret[0] = shp.getInt(START_DARK_TIME_KEY, 0);
+        ret[1] = shp.getInt(END_DARK_TIME_KEY, 24);
+        return ret;
+    }
+
 
     /**
      * config
@@ -114,6 +133,8 @@ public class App extends Application {
     public static final String MY_SHP_NAME = "ruisi_shp";
 
     public static final String NOTICE_MESSAGE_KEY = "message_notice";
+    public static final String START_DARK_TIME_KEY = "start_dart_time";
+    public static final String END_DARK_TIME_KEY = "end_dark_time";
     public static final String USER_UID_KEY = "user_uid";
     public static final String USER_NAME_KEY = "user_name";
     public static final String HASH_KEY = "forum_hash";

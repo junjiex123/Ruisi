@@ -68,8 +68,49 @@ public class RuisUtils {
         }
     }
 
-    public static float getLevelProgress(String s) {
-        int a = Integer.parseInt(s);
+
+    //获得到下一等级的积分
+    public static int getNextLevel(int a){
+        if (a >= 0 && a < 100) {
+            return 100;
+        } else if (a < 200) {
+            return 200;
+        } else if (a < 500) {
+            return 500;
+        } else if (a < 1000) {
+            return 1000;
+        } else if (a < 2000) {
+            return 2000;
+        } else if (a < 2500) {
+            return 2500;
+        } else if (a < 3000) {
+            return 3000;
+        } else if (a < 3500) {
+            return 3500;
+        } else if (a < 6000) {
+            return 6000;
+        } else if (a < 10000) {
+            return 10000;
+        } else if (a < 14000) {
+            return 14000;
+        } else if (a < 20000) {
+            return 20000;
+        } else if (a < 25000) {
+            return 25000;
+        } else if (a < 30000) {
+            return 30000;
+        } else if (a < 35000) {
+            return 35000;
+        } else if (a < 40000) {
+            return 40000;
+        } else if (a >= 40000) {
+            return 60000;
+        } else {
+            return 100;
+        }
+    }
+
+    public static float getLevelProgress(int a) {
         if (a >= 0 && a < 100) {
             return a / 100f;
         } else if (a < 200) {
