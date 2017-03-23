@@ -40,6 +40,7 @@ import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.KeyboardUtil;
+import xyz.yluo.ruisiapp.widget.MyListDivider;
 
 /**
  * Created by free2 on 16-4-6.
@@ -73,7 +74,7 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
         setContentView(R.layout.activity_search);
         main_window = findViewById(R.id.main_window);
         findViewById(R.id.btn_back).setOnClickListener(this);
-        RecyclerView recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView listView = (RecyclerView) findViewById(R.id.recycler_view);
         search_input = (EditText) findViewById(R.id.search_input);
         search_card = (CardView) findViewById(R.id.search_card);
         findViewById(R.id.start_search).setOnClickListener(this);
@@ -81,9 +82,10 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
         search_input.setHint("请输入搜索内容！");
         adapter = new SimpleListAdapter(ListType.SERRCH, this, datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recycler_view.setLayoutManager(layoutManager);
-        recycler_view.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) layoutManager, this, 20));
-        recycler_view.setAdapter(adapter);
+        listView.setLayoutManager(layoutManager);
+        listView.addItemDecoration(new MyListDivider(this, MyListDivider.VERTICAL));
+        listView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) layoutManager, this, 20));
+        listView.setAdapter(adapter);
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
         nav_title = (TextView) findViewById(R.id.nav_title);
         findViewById(R.id.nav_back).setOnClickListener(this);

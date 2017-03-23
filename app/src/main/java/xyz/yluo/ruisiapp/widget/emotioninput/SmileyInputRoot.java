@@ -1,27 +1,22 @@
 package xyz.yluo.ruisiapp.widget.emotioninput;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Rect;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import xyz.yluo.ruisiapp.utils.DimmenUtils;
-import xyz.yluo.ruisiapp.utils.ViewUtil;
 
 
 public class SmileyInputRoot extends LinearLayout {
 
     private int mOldHeight = -1;
-    private int mStatusBarHeight;
-    private PanelViewRoot mPanelLayout;
-    private boolean mIsTranslucentStatus;
-    private static final String TAG = "KPSRootLayoutHandler";
+    private SmileyContainer mSmileyContainer;
+    private int maxHeight = 100;
 
 
     public SmileyInputRoot(Context context) {
@@ -34,7 +29,6 @@ public class SmileyInputRoot extends LinearLayout {
         init();
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public SmileyInputRoot(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
@@ -42,101 +36,100 @@ public class SmileyInputRoot extends LinearLayout {
 
     private void init() {
         setOrientation(VERTICAL);
-        this.mStatusBarHeight = ViewUtil.getStatusBarHeight(getContext());
         final Activity activity = (Activity) getContext();
-        this.mIsTranslucentStatus = ViewUtil.isTranslucentStatus(activity);
+        mSmileyContainer = new SmileyContainer(activity);
+        mSmileyContainer.setBackgroundColor(Color.parseColor("#fffefefe"));
+        mSmileyContainer.setVisibility(GONE);
+        addView(mSmileyContainer);
+    }
 
-        mPanelLayout = new PanelViewRoot(activity);
-        mPanelLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, DimmenUtils.dip2px(activity, 200)));
-        mPanelLayout.setBackgroundColor(Color.parseColor("#fffefefe"));
-        mPanelLayout.setVisibility(GONE);
-        addView(mPanelLayout);
+    public void initSmiley(EditText editText, View smileyBtn, final View sendBtn) {
+        mSmileyContainer.init(editText, smileyBtn, sendBtn);
+    }
+
+    public void setMoreView(View moreViewIn, View moreBtn) {
+        mSmileyContainer.setMoreView(moreViewIn, moreBtn);
+    }
+
+    //return is handled
+    public boolean hideSmileyContainer() {
+        if (mSmileyContainer.getVisibility() == VISIBLE) {
+            mSmileyContainer.hideContainer(false);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        handleBeforeMeasure(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
+        int height = MeasureSpec.getSize(heightMeasureSpec);
 
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        // 记录总高度
-        int mTotalHeight = 0;
-        // 遍历所有子视图
-        int childCount = getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            View childView = getChildAt(i);
-            if (!(childView instanceof PanelViewRoot)) {
-                // 获取在onMeasure中计算的视图尺寸
-                int measureHeight = childView.getMeasuredHeight();
-                int measuredWidth = childView.getMeasuredWidth();
-                childView.layout(l, mTotalHeight, measuredWidth, mTotalHeight + measureHeight);
-                mTotalHeight += measureHeight;
-            }
+        Log.d("root onMeasure", "height is:" + height);
+
+        if (height > maxHeight) {
+            maxHeight = height;
         }
 
-        if (mPanelLayout != null) {
-            mPanelLayout.layout(l, mTotalHeight, r, b);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public void handleBeforeMeasure(final int width, int height) {
-        if (mIsTranslucentStatus) {
-            if (getFitsSystemWindows()) {
-                final Rect rect = new Rect();
-                getWindowVisibleDisplayFrame(rect);
-                height = rect.bottom - rect.top;
-            }
-        }
-
-        Log.d(TAG, "onMeasure, width: " + width + " height: " + height);
-        if (height < 0) {
+        if (height < 200 && mOldHeight == height) {
             return;
         }
 
-        if (mOldHeight < 0) {
+        //测得的时键盘未展开的高度
+        if (mOldHeight == -1) {
             mOldHeight = height;
             return;
         }
 
         final int offset = mOldHeight - height;
-
-        if (offset == 0) {
-            Log.d(TAG, "" + offset + " == 0 break;");
-            return;
-        }
-
-        if (Math.abs(offset) == mStatusBarHeight) {
-            Log.w(TAG, String.format("offset just equal statusBar height %d", offset));
-            return;
-        }
-
         mOldHeight = height;
 
-        if (mPanelLayout == null) {
-            Log.w(TAG, "can't find the valid panel conflict layout, give up!");
-            return;
-        }
-
         // 检测到布局变化非键盘引起
-        if (Math.abs(offset) < DimmenUtils.dip2px(getContext(), 80)) {
-            Log.w(TAG, "system bottom-menu-bar(such as HuaWei Mate7) causes layout changed");
+        if (Math.abs(offset) < DimmenUtils.dip2px(getContext(), 180)) {
             return;
         }
 
-        if (offset > 0) {
-            //键盘弹起 (offset > 0，高度变小)
-            mPanelLayout.handleHide();
-        } else if (mPanelLayout.isKeyboardShowing()) {
-            if (mPanelLayout.isVisible()) {
-                mPanelLayout.handleShow();
-            }
-        }
+        // offset > 0 键盘弹起了
+        if (mSmileyContainer != null)
+            mSmileyContainer.onMainViewSizeChange(offset);
     }
 
-    public PanelViewRoot getmPanelLayout() {
-        return mPanelLayout;
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        //Log.e("=========", changed + "||" + t + "||" + b);
+
+        if (!changed
+                && (maxHeight > (b - t))
+                && mSmileyContainer.isVisible
+                && mSmileyContainer.isKeyboardShowing) {
+            Log.e("=========", "return");
+            return;
+        }
+        int childTop = 0;
+        // 遍历所有子视图
+        int childCount = getChildCount();
+
+        for (int i = 0; i < childCount; i++) {
+            final View child = getChildAt(i);
+            if (child.getVisibility() != GONE) {
+                if (child instanceof SmileyContainer) {
+                    continue;
+                }
+
+                final int childWidth = child.getMeasuredWidth();
+                final int childHeight = child.getMeasuredHeight();
+
+                final LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) child.getLayoutParams();
+                childTop += lp.topMargin;
+
+                child.layout(l, childTop, l + childWidth + lp.leftMargin, childTop + childHeight);
+                childTop += childHeight + lp.bottomMargin;
+            }
+        }
+
+        if (mSmileyContainer != null && mSmileyContainer.getVisibility() != GONE) {
+            mSmileyContainer.layout(l, childTop, r, b);
+        }
     }
 }

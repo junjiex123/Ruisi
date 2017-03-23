@@ -22,6 +22,7 @@ import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
 import xyz.yluo.ruisiapp.utils.DataManager;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.IntentUtils;
+import xyz.yluo.ruisiapp.widget.MyDoubleTimePicker;
 
 /**
  * Created by free2 on 16-7-18.
@@ -29,14 +30,17 @@ import xyz.yluo.ruisiapp.utils.IntentUtils;
  */
 
 public class FragSetting extends PreferenceFragment
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
+        implements SharedPreferences.OnSharedPreferenceChangeListener,
+        MyDoubleTimePicker.OnTimeSetListener {
 
     //小尾巴string
     private EditTextPreference setting_user_tail;
     //论坛地址
     private ListPreference setting_forums_url;
     private SharedPreferences sharedPreferences;
-    private Preference aboutThis, clearCache, openSourse, exit_login;
+    private Preference clearCache;
+    private Preference setDarkModeTime;
+    private MyDoubleTimePicker timePickerDialog;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -45,17 +49,19 @@ public class FragSetting extends PreferenceFragment
 
         setting_user_tail = (EditTextPreference) findPreference("setting_user_tail");
         setting_forums_url = (ListPreference) findPreference("setting_forums_url");
-        aboutThis = findPreference("about_this");
-        openSourse = findPreference("open_sourse");
         clearCache = findPreference("clean_cache");
-        exit_login = findPreference("exit_login");
+        setDarkModeTime = findPreference("setting_auto_dark_mode_time");
         sharedPreferences = getPreferenceScreen().getSharedPreferences();
         boolean b = sharedPreferences.getBoolean("setting_show_tail", false);
         setting_user_tail.setEnabled(b);
+        b = sharedPreferences.getBoolean("setting_dark_mode", false);
+        setDarkModeTime.setEnabled(b);
         setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail", "无小尾巴"));
         setting_forums_url.setSummary(App.IS_SCHOOL_NET ? "当前网络校园网，点击切换" : "当前网络校外网，点击切换");
         setting_forums_url.setValue(App.IS_SCHOOL_NET ? "1" : "2");
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+        timePickerDialog = new MyDoubleTimePicker(getActivity(), this, 0, 0, 24, 0);
 
 
         if (!App.ISLOGIN(getActivity())) {
@@ -63,7 +69,12 @@ public class FragSetting extends PreferenceFragment
                     removePreference(findPreference("exit_login"));//这是删除 二级
         }
 
-        exit_login.setOnPreferenceClickListener(preference -> {
+        setDarkModeTime.setOnPreferenceClickListener(preference -> {
+            timePickerDialog.show();
+            return false;
+        });
+
+        findPreference("exit_login").setOnPreferenceClickListener(preference -> {
             new AlertDialog.Builder(getActivity()).
                     setTitle("退出登录").
                     setMessage("你确定要注销吗？").
@@ -93,12 +104,12 @@ public class FragSetting extends PreferenceFragment
             version_name = info.versionName;
         }
 
-        aboutThis.setSummary("当前版本" + version_name + "  version code:" + version_code);
+        findPreference("about_this").setSummary("当前版本" + version_name + "  version code:" + version_code);
 
         //[2016年6月9日更新][code:25]睿思手机客户端
         //更新逻辑 检查睿思帖子标题 比对版本号
         final int finalversion_code = version_code;
-        aboutThis.setOnPreferenceClickListener(
+        findPreference("about_this").setOnPreferenceClickListener(
                 preference -> {
                     Toast.makeText(getActivity(), "正在检查更新", Toast.LENGTH_SHORT).show();
                     HttpUtil.get(getActivity(), App.CHECK_UPDATE_URL, new ResponseHandler() {
@@ -134,7 +145,7 @@ public class FragSetting extends PreferenceFragment
                     return true;
                 });
 
-        openSourse.setOnPreferenceClickListener(preference -> {
+        findPreference("open_sourse").setOnPreferenceClickListener(preference -> {
             IntentUtils.openBroswer(getActivity(), "https://github.com/freedom10086/Ruisi");
             return false;
         });
@@ -175,12 +186,9 @@ public class FragSetting extends PreferenceFragment
                 setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail", "无小尾巴"));
                 break;
             case "setting_hide_zhidin":
-                boolean bbbb = sharedPreferences.getBoolean("setting_hide_zhidin", true);
-                Toast.makeText(getActivity(), bbbb ? "帖子列表不显示置顶帖" : "帖子列表显示置顶帖",
-                        Toast.LENGTH_SHORT).show();
                 break;
             case "setting_show_plain":
-                bbbb = sharedPreferences.getBoolean("setting_show_plain", false);
+                boolean bbbb = sharedPreferences.getBoolean("setting_show_plain", false);
                 Toast.makeText(getActivity(), bbbb ? "文章显示模式：简洁" : "文章显示模式：默认",
                         Toast.LENGTH_SHORT).show();
                 break;
@@ -192,9 +200,20 @@ public class FragSetting extends PreferenceFragment
                 } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 }
+                setDarkModeTime.setEnabled(bbbb);
                 Activity a = getActivity();
-                if (a != null) a.recreate();
+                if (a != null) a.onContentChanged();
+                break;
+            case "setting_auto_dark_mode":
+                bbbb = sharedPreferences.getBoolean("setting_auto_dark_mode", true);
+                setDarkModeTime.setEnabled(bbbb);
                 break;
         }
+    }
+
+    @Override
+    public void onTimeSet(int startHour, int startMinute, int endHour, int endMinute) {
+        setDarkModeTime.setSummary("当前夜间时间为" +
+                startHour + ":" + startMinute + "~" + endHour + ":" + endMinute);
     }
 }

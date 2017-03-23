@@ -78,7 +78,6 @@
             android:screenOrientation="portrait" />
 
         <service android:name=".downloadfile.DownloadService" />
-
         <activity android:name=".activity.FragementActivity" />
         <activity android:name=".activity.FriendActivity" />
         <activity android:name=".activity.ViewImgActivity" />

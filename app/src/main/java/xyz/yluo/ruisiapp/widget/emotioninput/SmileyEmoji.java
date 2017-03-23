@@ -6,6 +6,10 @@ import android.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * emoji睿思不支持
+ */
 public class SmileyEmoji {
 
     public static final String newString(int codePoint) {
@@ -210,12 +214,12 @@ public class SmileyEmoji {
     };
 
     public static SmileyDataSet getEmojis() {
-        SmileyDataSet set = new SmileyDataSet("emoji", false);
+        SmileyDataSet set = new SmileyDataSet("emoji", SmileyDataSet.TYPE_EMOJI);
         List<Pair<String, String>> smileys = new ArrayList<>();
         for (String a : DATA) {
             smileys.add(new Pair<>(a, a));
         }
-        set.textSize = 22;
+        //set.textSize = 22;
         set.setSmileys(smileys);
 
         return set;

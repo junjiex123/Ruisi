@@ -45,7 +45,7 @@
         android:layout_marginTop="200dp"
         android:orientation="vertical">
 
-        <xyz.yluo.ruisiapp.widget.myhtmlview.HtmlView
+        <xyz.yluo.ruisiapp.widget.htmlview.HtmlView
             android:id="@+id/html_text"
             style="@style/text_16_pri"
             android:layout_width="match_parent"

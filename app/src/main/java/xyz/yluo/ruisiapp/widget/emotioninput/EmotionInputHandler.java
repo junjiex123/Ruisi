@@ -38,20 +38,9 @@ public class EmotionInputHandler implements TextWatcher {
         editableText.setSpan(new ColorTextSpan(), start, start + s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
-    public void insertSmiley(SmileyDataSet set, int index, Drawable drawable) {
-        if (drawable != null) {
-            String name = set.getSmileys().get(index).second;
-            insertSmiley(name, drawable);
-        }
-    }
 
     public void insertSmiley(String s, Drawable drawable) {
         if (drawable != null) {
-            int itemHeight;
-            int itemWidth;
-            itemHeight = drawable.getIntrinsicHeight();
-            itemWidth = drawable.getIntrinsicWidth();
-            drawable.setBounds(0, 0, itemWidth, itemHeight);
             EmoticonSpan emoticonSpan = new EmoticonSpan(drawable);
             int start = mEditor.getSelectionStart();
             int end = mEditor.getSelectionEnd();

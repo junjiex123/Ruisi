@@ -14,7 +14,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -48,13 +47,11 @@ import xyz.yluo.ruisiapp.model.SingleArticleData;
 import xyz.yluo.ruisiapp.model.SingleType;
 import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
-import xyz.yluo.ruisiapp.utils.DimmenUtils;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.KeyboardUtil;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 import xyz.yluo.ruisiapp.widget.MyFriendPicker;
 import xyz.yluo.ruisiapp.widget.MyListDivider;
-import xyz.yluo.ruisiapp.widget.emotioninput.PanelViewRoot;
 import xyz.yluo.ruisiapp.widget.emotioninput.SmileyInputRoot;
 
 /**
@@ -82,7 +79,7 @@ public class PostActivity extends BaseActivity
     private String Title, AuthorName, Tid, RedirectPid = "";
     private boolean showPlainText = false;
     private EditText input;
-    private PanelViewRoot mPanelRoot;
+    private SmileyInputRoot rootView;
     private ArrayAdapter<String> spinnerAdapter;
     private Spinner spinner;
     private List<String> pageSpinnerDatas = new ArrayList<>();
@@ -138,18 +135,17 @@ public class PostActivity extends BaseActivity
     }
 
     private void initEmotionInput() {
-        View smuleyBtn = findViewById(R.id.btn_emotion);
+        View smileyBtn = findViewById(R.id.btn_emotion);
         View btnMore = findViewById(R.id.btn_more);
         View btnSend = findViewById(R.id.btn_send);
         btnSend.setOnClickListener(this);
-        SmileyInputRoot rootViewGroup = (SmileyInputRoot) findViewById(R.id.root);
-        mPanelRoot = rootViewGroup.getmPanelLayout();
-        KeyboardUtil.attach(this, mPanelRoot, isShowing -> Log.e("key board", String.valueOf(isShowing)));
-        mPanelRoot.init(input, smuleyBtn, btnSend);
-        mPanelRoot.setMoreView(LayoutInflater.from(this).inflate(R.layout.my_smiley_menu, null), btnMore);
+        rootView = (SmileyInputRoot) findViewById(R.id.root);
+        rootView.initSmiley(input, smileyBtn, btnSend);
+        rootView.setMoreView(LayoutInflater.from(this).inflate(R.layout.my_smiley_menu, null), btnMore);
         topicList.setOnTouchListener((view, motionEvent) -> {
             if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                mPanelRoot.hidePanelAndKeyboard();
+                KeyboardUtil.hideKeyboard(input);
+                rootView.hideSmileyContainer();
             }
             return false;
         });
@@ -181,41 +177,6 @@ public class PostActivity extends BaseActivity
         });
 
         addToolbarView(spinner);
-    }
-
-    private float x, y = 0;
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                //当手指按下的时候
-                x = event.getX();
-                y = event.getY();
-                break;
-            case MotionEvent.ACTION_UP:
-                //当手指离开的时候
-                float dx = event.getX() - x;
-                float dy = event.getY() - y;
-                if (x < 320 && dx > 100 && dx > dy) {
-                    DisplayMetrics dm = getResources().getDisplayMetrics();
-                    if (mPanelRoot.getVisibility() == View.VISIBLE) {
-                        int height = dm.heightPixels;
-                        int keyboardheight = DimmenUtils.dip2px(PostActivity.this, KeyboardUtil.getKeyboardHeight(PostActivity.this));
-                        if (event.getY() > (height - keyboardheight)) {
-                            break;
-                        }
-                    }
-                    int w_screen = dm.widthPixels;
-                    if ((dx > 2 * w_screen / 5) && (x < 2 * w_screen / 5)) {
-                        finish();
-                    }
-                }
-                x = event.getX();
-                y = event.getY();
-                break;
-        }
-        return super.dispatchTouchEvent(event);
     }
 
     private void firstGetData(int page) {
@@ -695,7 +656,8 @@ public class PostActivity extends BaseActivity
                 Toast.makeText(this, "回复发表成功", Toast.LENGTH_SHORT).show();
                 input.setText(null);
                 replyTime = System.currentTimeMillis();
-                mPanelRoot.hidePanelAndKeyboard();
+                KeyboardUtil.hideKeyboard(input);
+                rootView.hideSmileyContainer();
                 if (page_sum == 1) {
                     refresh();
                 } else if (page_now == page_sum) {
@@ -739,9 +701,7 @@ public class PostActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
-        if (mPanelRoot.getVisibility() == View.VISIBLE) {
-            mPanelRoot.hidePanelAndKeyboard();
-        } else {
+        if (!rootView.hideSmileyContainer()) {
             super.onBackPressed();
         }
     }

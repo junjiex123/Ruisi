@@ -1,32 +1,33 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="论坛设置">
-
         <SwitchPreference
             android:defaultValue="false"
             android:key="setting_dark_mode"
-            android:summaryOff="点击启用夜间模式(重启软件生效)"
-            android:summaryOn="点击关闭夜间模式(重启软件生效)"
-            android:title="夜间模式" />
+            android:title="启用夜间模式" />
+
+        <Preference
+            android:key="setting_auto_dark_mode_time"
+            android:summary="当前夜间时间为00:00~24:00"
+            android:title="自定义夜间模式时间" />
 
         <ListPreference
             android:entries="@array/setting_switch_url"
             android:entryValues="@array/setting_switch_url_value"
             android:key="setting_forums_url"
             android:summary="手动切换网络类型(校园网/外网)"
-            android:title="手动切换网络" />
+            android:title="手动切换网络类型" />
 
-        <SwitchPreference
+        <CheckBoxPreference
             android:defaultValue="true"
             android:key="setting_hide_zhidin"
-            android:summaryOff="帖子列表显示置顶帖"
-            android:summaryOn="帖子列表不显示置顶帖"
-            android:title="隐藏置顶帖(仅校园网环境生效)" />
+            android:summary="隐藏帖子列表的置顶帖(仅校园网环境生效)"
+            android:title="隐藏置顶帖"/>
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="setting_show_plain"
-            android:summaryOff="帖子内容样式得到保留，保留文字大小颜色等信息"
-            android:summaryOn="帖子内容为普通文本样式，去除了文字大小颜色等信息"
+            android:summaryOff="帖子内容保留css信息"
+            android:summaryOn="帖子内容去除一切css"
             android:title="简单帖子样式模式" />
 
         <SwitchPreference

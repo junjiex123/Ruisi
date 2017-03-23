@@ -24,7 +24,7 @@ import xyz.yluo.ruisiapp.model.SingleType;
 import xyz.yluo.ruisiapp.utils.DimmenUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 import xyz.yluo.ruisiapp.widget.CircleImageView;
-import xyz.yluo.ruisiapp.widget.myhtmlview.HtmlView;
+import xyz.yluo.ruisiapp.widget.htmlview.HtmlView;
 
 /**
  * Created by free2 on 16-3-7.

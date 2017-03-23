@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:text="©2016 谁用了FREEDPOM" />
+            android:text="©2016-2017 yluo.me" />
     </RelativeLayout>
 
     <LinearLayout
