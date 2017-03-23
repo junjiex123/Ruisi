@@ -43,7 +43,7 @@ public class SmileyView extends LinearLayout
     private static int ROW_COUNT = 4;
     private static int COLOUM_COUNT = 7;
     private int COLOR_TAB = Color.WHITE;
-    private int COLOR_TAB_SEL = Color.GRAY;
+    private int COLOR_TAB_SEL;
 
     public SmileyView(Context context) {
         super(context);
@@ -65,9 +65,8 @@ public class SmileyView extends LinearLayout
         this.context = context;
         SIZE_8 = DimmenUtils.dip2px(context, 8);
         setOrientation(VERTICAL);
-        setBackgroundColor(ContextCompat.getColor(context, R.color.bg_primary));
         COLOR_TAB = ContextCompat.getColor(context, R.color.bg_primary);
-        COLOR_TAB_SEL = ContextCompat.getColor(context, R.color.bg_select);
+        COLOR_TAB_SEL = ContextCompat.getColor(context, R.color.bg_secondary);
 
         viewPager = new ViewPager(context);
         viewPager.setLayoutParams(new LayoutParams(LMP, LWC, 1));
@@ -80,12 +79,6 @@ public class SmileyView extends LinearLayout
         dotContainer.setLayoutParams(new LayoutParams(LMP, DimmenUtils.dip2px(context, 16)));
         dotContainer.setGravity(Gravity.CENTER_HORIZONTAL);
         addView(dotContainer);
-
-
-        View gap = new View(context);
-        gap.setLayoutParams(new LayoutParams(LMP, DimmenUtils.dip2px(context, 0.6f)));
-        gap.setBackgroundColor(ContextCompat.getColor(context, R.color.colorDivider));
-        addView(gap);
 
         tabContainer = new LinearLayout(context);
         tabContainer.setOrientation(LinearLayout.HORIZONTAL);
@@ -105,7 +98,7 @@ public class SmileyView extends LinearLayout
             if (width / 60 > 0) {
                 COLOUM_COUNT = width / 60;
             }
-            int col = (height - (36 + 16)) / 60;
+            int col = (height - (36 + 16)) / 50;
             if (col > 0) {
                 ROW_COUNT = col;
             }

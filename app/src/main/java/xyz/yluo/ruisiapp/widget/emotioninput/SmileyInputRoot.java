@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import xyz.yluo.ruisiapp.R;
 import xyz.yluo.ruisiapp.utils.DimmenUtils;
 
 
@@ -38,7 +39,7 @@ public class SmileyInputRoot extends LinearLayout {
         setOrientation(VERTICAL);
         final Activity activity = (Activity) getContext();
         mSmileyContainer = new SmileyContainer(activity);
-        mSmileyContainer.setBackgroundColor(Color.parseColor("#fffefefe"));
+        mSmileyContainer.setBackgroundResource(R.color.bg_secondary);
         mSmileyContainer.setVisibility(GONE);
         addView(mSmileyContainer);
     }

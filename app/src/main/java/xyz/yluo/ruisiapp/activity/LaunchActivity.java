@@ -185,8 +185,8 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
         if (isForeGround) {
             mHandler.removeCallbacks(finishRunable);
             startActivity(new Intent(this, HomeActivity.class));
-            finish();
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            finish();
         }
     }
 

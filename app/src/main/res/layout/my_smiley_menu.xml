@@ -3,7 +3,6 @@
     android:id="@+id/panel_content"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:background="@color/bg_primary"
     android:gravity="center"
     android:orientation="horizontal"
     android:padding="16dp">

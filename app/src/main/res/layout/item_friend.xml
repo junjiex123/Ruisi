@@ -22,7 +22,6 @@
 
     <TextView
         android:id="@+id/user_name"
-        style="@style/text_14_pri"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/user_image"
@@ -30,7 +29,7 @@
         android:layout_marginTop="4dp"
         android:layout_toEndOf="@+id/user_image"
         android:maxLines="1"
-        android:textStyle="bold"
+        style="@style/text_16_pri"
         tools:text="hualong95" />
 
     <TextView

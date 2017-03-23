@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <FrameLayout
+        android:elevation="4dp"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ToolBarHeight"
         android:background="@color/colorPrimary"
@@ -50,6 +51,7 @@
     </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
+        android:background="@color/bg_primary"
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

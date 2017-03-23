@@ -3,8 +3,8 @@ package xyz.yluo.ruisiapp.widget.emotioninput;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import xyz.yluo.ruisiapp.R;
+import xyz.yluo.ruisiapp.utils.DimmenUtils;
 import xyz.yluo.ruisiapp.utils.KeyboardUtil;
 
 
@@ -34,9 +36,11 @@ public class SmileyContainer extends FrameLayout {
 
     private void init() {
         savedHeight = KeyBoardHeightPreference.get(getContext(), 200);
+        setElevation(DimmenUtils.dip2px(getContext(), 4));
         setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, savedHeight));
-        paint.setColor(Color.parseColor("#d5d3d5"));
+        setBackgroundResource(R.color.bg_secondary);
+        paint.setColor(ContextCompat.getColor(getContext(), R.color.colorDivider));
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(1.0f);
 
@@ -146,7 +150,6 @@ public class SmileyContainer extends FrameLayout {
             setVisibility(VISIBLE);
         }
     }
-
 
 
     //参数代表是否由键盘弹起
