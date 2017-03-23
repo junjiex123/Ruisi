@@ -5,22 +5,16 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import xyz.yluo.ruisiapp.App;
@@ -29,25 +23,18 @@ import xyz.yluo.ruisiapp.activity.LoginActivity;
 import xyz.yluo.ruisiapp.activity.SearchActivity;
 import xyz.yluo.ruisiapp.activity.UserDetailActivity;
 import xyz.yluo.ruisiapp.adapter.ForumsAdapter;
-import xyz.yluo.ruisiapp.database.MyDB;
-import xyz.yluo.ruisiapp.model.ForumListData;
-import xyz.yluo.ruisiapp.myhttp.HttpUtil;
-import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
-import xyz.yluo.ruisiapp.utils.GetId;
+import xyz.yluo.ruisiapp.model.Category;
+import xyz.yluo.ruisiapp.model.Forum;
+import xyz.yluo.ruisiapp.utils.RuisUtils;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 import xyz.yluo.ruisiapp.widget.CircleImageView;
-import xyz.yluo.ruisiapp.widget.MyGridDivider;
 
 /**
  * Created by free2 on 16-3-19.
  * 板块列表fragemnt
  */
 public class FrageForumList extends BaseLazyFragment implements View.OnClickListener {
-    protected SwipeRefreshLayout refreshLayout;
-    private List<ForumListData> datas = new ArrayList<>();
-    private List<ForumListData> starDatas = new ArrayList<>();
     private ForumsAdapter adapter = null;
-    private boolean isSetForumToDataBase = false;
     private SharedPreferences sharedPreferences;
     private CircleImageView userImg;
     private RecyclerView formsList;
@@ -55,6 +42,7 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
     private static final int UPDATE_TIME = 1500 * 600;
     private static final String KEY = "FORUM_UPDATE_KEY";
     private boolean lastLoginState;
+    private List<Category> forumDatas;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,19 +55,16 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         userImg = (CircleImageView) mRootView.findViewById(R.id.img);
-        refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
         formsList = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         formsList.setClipToPadding(false);
         formsList.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
-        refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         mRootView.findViewById(R.id.search).setOnClickListener(this);
-
-        adapter = new ForumsAdapter(getActivity(), starDatas, datas);
+        adapter = new ForumsAdapter(getActivity());
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                if (adapter.getItemViewType(position) == 0) {
+                if (adapter.getItemViewType(position) == ForumsAdapter.TYPE_HEADER) {
                     return 4;
                 } else {
                     return 1;
@@ -87,52 +72,41 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
             }
         });
         userImg.setOnClickListener(this);
-        formsList.addItemDecoration(new MyGridDivider(1, ContextCompat.getColor(getActivity(), R.color.colorDivider)));
         formsList.setLayoutManager(layoutManager);
         formsList.setAdapter(adapter);
-        refreshLayout.setOnRefreshListener(this::getData);
         return mRootView;
     }
 
     @Override
     public void onFirstUserVisible() {
-        lastLoginState = App.ISLOGIN(getActivity());
-        MyDB myDB = new MyDB(getActivity().getApplicationContext());
-
-        starDatas.clear();
-        starDatas.addAll(myDB.getStarForums());
-
-        datas.clear();
-        datas.addAll(myDB.getForums());
-        adapter.notifyDataSetChanged();
-
         //判断是否真正的需要请求服务器
         //获得新的数据
         long time = sharedPreferences.getLong(KEY, 0);
-        if (System.currentTimeMillis() - time > UPDATE_TIME || datas == null || datas.size() == 0) {
-            Log.e("板块列表", "过了缓存时间需要刷新");
-            getData();
+        if (System.currentTimeMillis() - time > UPDATE_TIME) {
+            Log.d("板块列表", "过了缓存时间需要刷新");
+            //todo update batch
         }
-
-        refreshAvaterView();
+        lastLoginState = App.ISLOGIN(getActivity());
+        initForums(lastLoginState);
+        initAvater();
     }
 
     @Override
     public void onUserVisible() {
         if (lastLoginState != App.ISLOGIN(getActivity())) {
             lastLoginState = !lastLoginState;
-            getData();
-            refreshAvaterView();
+            initForums(lastLoginState);
+            initAvater();
         }
     }
 
     @Override
     public void ScrollToTop() {
-        if (datas.size() > 0)
+        if (forumDatas != null && forumDatas.size() > 0)
             formsList.scrollToPosition(0);
     }
 
-    private void refreshAvaterView() {
+    private void initAvater() {
         lastLoginState = App.ISLOGIN(getActivity());
         if (lastLoginState) {
             Picasso.with(getActivity()).load(UrlUtils.getAvaterurls(App.getUid(getActivity())))
@@ -149,22 +123,10 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
         return R.layout.fragment_forums;
     }
 
-
-    private void getData() {
-        refreshLayout.setRefreshing(true);
-        String url = "forum.php?forumlist=1&mobile=2";
-        HttpUtil.get(getActivity(), url, new ResponseHandler() {
-            @Override
-            public void onSuccess(byte[] response) {
-                new GetForumList().execute(new String(response));
-            }
-
-            @Override
-            public void onFailure(Throwable e) {
-                refreshLayout.postDelayed(() -> refreshLayout.setRefreshing(false), 300);
-            }
-        });
+    void initForums(boolean loginstate) {
+        new GetForumList().execute(loginstate);
     }
+
 
     @Override
     public void onClick(View view) {
@@ -186,47 +148,36 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
     }
 
     //获取首页板块数据 板块列表
-    private class GetForumList extends AsyncTask<String, Void, List<ForumListData>> {
+    private class GetForumList extends AsyncTask<Boolean, Void, List<Category>> {
         @Override
-        protected List<ForumListData> doInBackground(String... params) {
-            String response = params[0];
-            List<ForumListData> simpledatas = new ArrayList<>();
-            Elements elements = Jsoup.parse(response).select("#wp.wp.wm").select(".bm.bmw.fl");
-            for (Element ele : elements) {
-                String header = ele.select("h2").text();
-                simpledatas.add(new ForumListData(true, header, "0", -1));
-                for (Element tmp : ele.select("li")) {
-                    String todayNew = tmp.select("span.num").text();
-                    tmp.select("span.num").remove();
-                    String title = tmp.text().replace("西电睿思", "");
-                    String titleUrl = tmp.select("a").attr("href");
-                    int fid = GetId.getFroumFid(titleUrl);
-                    simpledatas.add(new ForumListData(false, title, todayNew, fid));
+        protected List<Category> doInBackground(Boolean... params) {
+            boolean b = params[0];
+            if (!b && forumDatas != null && forumDatas.size() > 0) {
+                //由登陆变为不登录 只需移除需要登录的板块
+                for (Category c : forumDatas) {
+                    if (c.login) {
+                        forumDatas.remove(c);
+                        continue;
+                    }
+                    for (Forum f : c.forums) {
+                        if (f.login) {
+                            c.forums.remove(f);
+                        }
+                    }
                 }
+                return forumDatas;
             }
 
-            MyDB myDB = new MyDB(getActivity());
-            if (!isSetForumToDataBase) {
-                myDB.setForums(simpledatas);
-                isSetForumToDataBase = true;
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putLong(KEY, System.currentTimeMillis());
-                editor.apply();
-            }
-
-            starDatas.clear();
-            starDatas.addAll(myDB.getStarForums());
-            return simpledatas;
+            return RuisUtils.getForums(getActivity(), params[0]);
         }
 
         @Override
-        protected void onPostExecute(List<ForumListData> simpledatas) {
-            if (simpledatas.size() > 0) {
-                datas.clear();
-                datas.addAll(simpledatas);
-                adapter.notifyDataSetChanged();
+        protected void onPostExecute(List<Category> ss) {
+            if (ss == null || ss.size() == 0) {
+                Toast.makeText(getActivity(), "获取板块列表失败", Toast.LENGTH_LONG).show();
             }
-            refreshLayout.setRefreshing(false);
+            forumDatas = ss;
+            adapter.setDatas(forumDatas);
         }
     }
 }

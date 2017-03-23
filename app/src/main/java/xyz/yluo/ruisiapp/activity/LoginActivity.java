@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -12,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -34,7 +34,7 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
 
 
 /**
- * Created by free2 on 2016/1/11 0011.
+ * Created by yang on 2016/1/11 0011.
  * <p>
  * edit in 2016 03 14
  * <p>
@@ -42,16 +42,17 @@ import xyz.yluo.ruisiapp.utils.UrlUtils;
  */
 public class LoginActivity extends BaseActivity {
 
-    private EditText ed_username, ed_pass;
-    private EditText anwser_text;
-    private Button btn_login;
-    private CheckBox rem_ck;
+    private EditText edUsername, edPassword;
+    private EditText edAnswer;
+    private CheckBox remPassword;
+    private View btnLogin;
 
     private SharedPreferences shp;
     private List<String> list = new ArrayList<>();
     private String loginUrl;
     private int answerSelect = 0;
     private ProgressDialog dialog;
+    private TextInputLayout usernameTextInput;
 
     public static void open(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -63,23 +64,24 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ed_username = (EditText) findViewById(R.id.login_name);
-        ed_pass = (EditText) findViewById(R.id.login_pas);
-        btn_login = (Button) findViewById(R.id.btn_login);
-        rem_ck = (CheckBox) findViewById(R.id.rem_user);
-        Spinner anwser_select = (Spinner) findViewById(R.id.anwser_select);
-        anwser_text = (EditText) findViewById(R.id.anwser_text);
 
         initToolBar(true, "登陆");
-        btn_login.setOnClickListener(v -> login_click());
+        edUsername = (EditText) findViewById(R.id.login_name);
+        edPassword = (EditText) findViewById(R.id.login_pas);
+        btnLogin = findViewById(R.id.btn_login);
+        remPassword = (CheckBox) findViewById(R.id.rem_user);
+
+        edAnswer = (EditText) findViewById(R.id.anwser_text);
+        usernameTextInput = (TextInputLayout) findViewById(R.id.username_input);
 
         shp = getSharedPreferences(App.MY_SHP_NAME, Context.MODE_PRIVATE);
-        boolean rember = shp.getBoolean(App.IS_REMBER_PASS_USER, false);
-        if (rember) {
-            rem_ck.setChecked(true);
-            ed_username.setText(shp.getString(App.LOGIN_NAME, ""));
-            ed_pass.setText(shp.getString(App.LOGIN_PASS, ""));
+        if (shp.getBoolean(App.IS_REMBER_PASS_USER, false)) {
+            remPassword.setChecked(true);
+            edUsername.setText(shp.getString(App.LOGIN_NAME, ""));
+            edPassword.setText(shp.getString(App.LOGIN_PASS, ""));
         }
+
+        btnLogin.setOnClickListener(v -> startLogin());
 
         list.add("安全提问(未设置请忽略)");
         list.add("母亲的名字");
@@ -92,15 +94,17 @@ public class LoginActivity extends BaseActivity {
 
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        anwser_select.setAdapter(spinnerAdapter);
-        anwser_select.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+        Spinner questionSpinner = (Spinner) findViewById(R.id.anwser_select);
+        questionSpinner.setAdapter(spinnerAdapter);
+        questionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 answerSelect = i;
                 if (i != 0) {
-                    anwser_text.setVisibility(View.VISIBLE);
+                    edAnswer.setVisibility(View.VISIBLE);
                 } else {
-                    anwser_text.setVisibility(View.GONE);
+                    edAnswer.setVisibility(View.GONE);
                 }
             }
 
@@ -110,7 +114,7 @@ public class LoginActivity extends BaseActivity {
             }
         });
 
-        ed_username.addTextChangedListener(new TextWatcher() {
+        edUsername.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -123,14 +127,16 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (!TextUtils.isEmpty(ed_username.getText()) && !TextUtils.isEmpty(ed_pass.getText())) {
-                    btn_login.setEnabled(true);
+                usernameTextInput.setError(null);
+                if (!TextUtils.isEmpty(edUsername.getText()) && !TextUtils.isEmpty(edPassword.getText())) {
+                    btnLogin.setEnabled(true);
                 } else {
-                    btn_login.setEnabled(false);
+                    btnLogin.setEnabled(false);
                 }
             }
         });
-        ed_pass.addTextChangedListener(new TextWatcher() {
+
+        edPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -143,24 +149,24 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (!TextUtils.isEmpty(ed_username.getText()) && !TextUtils.isEmpty(ed_pass.getText())) {
-                    btn_login.setEnabled(true);
+                if (!TextUtils.isEmpty(edUsername.getText()) && !TextUtils.isEmpty(edPassword.getText())) {
+                    btnLogin.setEnabled(true);
                 } else {
-                    btn_login.setEnabled(false);
+                    btnLogin.setEnabled(false);
                 }
             }
         });
     }
 
-    private void login_click() {
+    private void startLogin() {
         dialog = new ProgressDialog(this);
         dialog.setMessage("登陆中，请稍后......");
         dialog.show();
 
-        final String username = ed_username.getText().toString().trim();
-        final String passNo = ed_pass.getText().toString().trim();
+        final String username = edUsername.getText().toString().trim();
+        final String passNo = edPassword.getText().toString().trim();
         String url = UrlUtils.getLoginUrl(false);
-        HttpUtil.get(getApplicationContext(), url, new ResponseHandler() {
+        HttpUtil.get(LoginActivity.this, url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
@@ -177,52 +183,49 @@ public class LoginActivity extends BaseActivity {
                 if (answerSelect == 0) {
                     params.put("answer", "");
                 } else {
-                    params.put("answer", anwser_text.getText().toString());
+                    params.put("answer", edAnswer.getText().toString());
                 }
-                begain_login(params);
+
+                HttpUtil.post(LoginActivity.this, loginUrl, params, new ResponseHandler() {
+                    @Override
+                    public void onSuccess(byte[] response) {
+                        String res = new String(response);
+                        if (res.contains("欢迎您回来")) {
+                            loginOk(res);
+                        } else {
+                            passwordOrUsernameErr();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable e) {
+                        networkErr("网络异常");
+                    }
+                });
             }
 
             @Override
             public void onFailure(Throwable e) {
-                login_fail("网络异常！！！");
+                networkErr("网络异常！！！");
                 dialog.dismiss();
             }
         });
     }
 
-    private void begain_login(Map<String, String> params) {
-        HttpUtil.post(getApplicationContext(), loginUrl, params, new ResponseHandler() {
-            @Override
-            public void onSuccess(byte[] response) {
-                String res = new String(response);
-                if (res.contains("欢迎您回来")) {
-                    login_ok(res);
-                } else {
-                    login_fail("账号或者密码错误");
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable e) {
-                login_fail("网络异常");
-            }
-        });
-    }
 
     //登陆成功执行
-    private void login_ok(String res) {
+    private void loginOk(String res) {
         //写入到首选项
         SharedPreferences.Editor editor = shp.edit();
-        if (rem_ck.isChecked()) {
+        if (remPassword.isChecked()) {
             editor.putBoolean(App.IS_REMBER_PASS_USER, true);
-            editor.putString(App.LOGIN_NAME, ed_username.getText().toString().trim());
-            editor.putString(App.LOGIN_PASS, ed_pass.getText().toString().trim());
+            editor.putString(App.LOGIN_NAME, edUsername.getText().toString().trim());
+            editor.putString(App.LOGIN_PASS, edPassword.getText().toString().trim());
         } else {
             editor.putBoolean(App.IS_REMBER_PASS_USER, false);
             editor.putString(App.LOGIN_NAME, "");
             editor.putString(App.LOGIN_PASS, "");
         }
-
         int i = res.indexOf("欢迎您回来");
         String info = res.substring(i + 6, i + 26);
         int pos1 = info.indexOf(" ");
@@ -232,7 +235,6 @@ public class LoginActivity extends BaseActivity {
         String uid = GetId.getid("uid=", res.substring(i));
         int indexhash = res.indexOf("formhash");
         String hash = res.substring(indexhash + 9, indexhash + 17);
-
         editor.putString(App.USER_UID_KEY, uid);
         editor.putString(App.USER_NAME_KEY, name);
         editor.putString(App.USER_GRADE_KEY, grade);
@@ -250,8 +252,13 @@ public class LoginActivity extends BaseActivity {
         finish();
     }
 
+    private void passwordOrUsernameErr() {
+        dialog.dismiss();
+        usernameTextInput.setError("账号或者密码错误");
+    }
+
     //登陆失败执行
-    private void login_fail(String res) {
+    private void networkErr(String res) {
         dialog.dismiss();
         showToast(res);
     }

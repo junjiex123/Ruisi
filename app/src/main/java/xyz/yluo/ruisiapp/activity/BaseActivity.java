@@ -31,10 +31,10 @@ public class BaseActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(App.getUid(this))) {
             return true;
         } else {
-            Dialog alertDialog = new AlertDialog.Builder(this).
-                    setTitle("需要登陆").
-                    setMessage("你还没有登陆，要去登陆吗？？").
-                    setPositiveButton("登陆", (dialog, which) -> startActivity(new Intent(BaseActivity.this, LoginActivity.class)))
+            Dialog alertDialog = new AlertDialog.Builder(this)
+                    .setTitle("需要登陆")
+                    .setMessage("你还没有登陆，要去登陆吗？？")
+                    .setPositiveButton("登陆", (dialog, which) -> startActivity(new Intent(BaseActivity.this, LoginActivity.class)))
                     .setNegativeButton("取消", null)
                     .setCancelable(true)
                     .create();

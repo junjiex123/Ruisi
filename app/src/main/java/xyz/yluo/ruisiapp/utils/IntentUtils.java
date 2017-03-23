@@ -31,7 +31,7 @@ public class IntentUtils {
         activity.startActivity(intent);
     }
 
-    public static boolean openOnStore(Context context) {
+    public static boolean openStore(Context context) {
         try {
             Uri uri = Uri.parse("market://details?id=" + context.getPackageName());
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);

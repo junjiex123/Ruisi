@@ -7,7 +7,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/ToolBarHeight"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorPrimary"
+        android:elevation="4dp">
 
         <RadioGroup
             android:id="@+id/btn_change"
@@ -70,7 +71,8 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="@color/bg_primary" />
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>
 

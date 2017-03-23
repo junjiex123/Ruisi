@@ -65,6 +65,7 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
+
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_launch);
         timeEnter = System.currentTimeMillis();

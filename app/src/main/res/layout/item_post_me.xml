@@ -8,9 +8,9 @@
     android:clickable="true"
     android:orientation="vertical"
     android:paddingBottom="8dp"
-    android:paddingEnd="12dp"
-    android:paddingStart="12dp"
-    android:paddingTop="12dp">
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp"
+    android:paddingTop="16dp">
 
     <TextView
         android:id="@+id/article_title"
@@ -27,29 +27,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:gravity="center_vertical|end"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingEnd="4dp"
         android:paddingStart="4dp">
 
-        <TextView
-            android:id="@+id/is_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:background="@drawable/badge"
-            android:paddingBottom="2dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:paddingTop="2dp"
-            android:text="有图"
-            android:textColor="@android:color/white"
-            android:textSize="10sp" />
 
         <ImageView
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:layout_marginStart="12dp"
             android:src="@drawable/ic_person_12dp"
             android:tint="@color/colorDisableHintIcon" />
 
@@ -77,6 +63,19 @@
             android:layout_marginStart="3dp"
             tools:text="222" />
 
+        <TextView
+            android:id="@+id/is_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/badge"
+            android:paddingBottom="2dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="2dp"
+            android:text="有图"
+            android:textColor="@android:color/white"
+            android:textSize="10sp" />
     </LinearLayout>
 
 </LinearLayout>

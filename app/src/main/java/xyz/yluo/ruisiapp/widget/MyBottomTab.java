@@ -92,9 +92,10 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         typedArray.recycle();
 
         setOrientation(LinearLayout.HORIZONTAL);// 水平布局
-        setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
-        setBackgroundResource(R.drawable.bottom_tab_bg);
+        setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, DimmenUtils.dip2px(context, 56)));
+        setBackgroundResource(R.color.bg_primary);
+        //4dp飘起
+        setElevation(DimmenUtils.dip2px(context, 4));
 
         for (int i = 0; i < tab_names.length; i++) {
             View v = getSingleTab(i);
@@ -147,29 +148,26 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
     private View getSingleTab(int position) {
         LinearLayout view = new LinearLayout(getContext());
         view.setClickable(true);
+        view.setGravity(Gravity.CENTER);
         view.setBackgroundResource(CLICK_BG_RES);
-
         view.setOrientation(LinearLayout.VERTICAL);
         // 设置宽高和权重
-        view.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT, 1));
-        view.setGravity(Gravity.CENTER);
-        view.setPadding(SIZE_2 * 6, SIZE_2 * 3, SIZE_2 * 6, SIZE_2 * 3);
+        view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT, 1));
+        //view.setPadding(SIZE_2 * 6, SIZE_2 * 3, SIZE_2 * 6, SIZE_2 * 3);
 
-        /**
-         * 图标
-         */
+        //图标
         ImageView iconView = new ImageView(getContext());
         //三个参数的构造可以设置权重
         iconView.setLayoutParams(new LayoutParams(SIZE_ICON, SIZE_ICON));
         iconView.setImageResource(icons_unselect[position]);
         iconView.setColorFilter(COLOR_UNSELECT);
-        /**
-         * 标题
-         */
+        //标题
         TextView textView = new TextView(getContext());
         textView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         textView.setTextAlignment(TEXT_ALIGNMENT_CENTER);
+        textView.setGravity(Gravity.CENTER);
         textView.setTextColor(COLOR_UNSELECT);
         textView.setText(tab_names[position]);
         view.addView(iconView);

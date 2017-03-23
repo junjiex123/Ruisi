@@ -5,14 +5,22 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import xyz.yluo.ruisiapp.model.Category;
+import xyz.yluo.ruisiapp.model.Forum;
 
 public class RuisUtils {
 
@@ -135,6 +143,49 @@ public class RuisUtils {
         }
 
         return params;
+    }
+
+    public static List<Category> getForums(Context context, boolean isLogin) {
+        InputStream in = null;
+        String s;
+        try {
+            in = context.getAssets().open("forums.json");
+            int size = in.available();
+            byte[] buffer = new byte[size];
+            in.read(buffer);
+            s = new String(buffer);
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        List<Category> cates = new ArrayList<>();
+        JSONArray jsonArray = null;
+        try {
+            jsonArray = new JSONArray(s);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject o = jsonArray.getJSONObject(i);
+                boolean cateLogin = o.getBoolean("login");
+                if (!isLogin && cateLogin) {//false true
+                    continue;
+                }
+                List<Forum> fs = new ArrayList<>();
+                JSONArray forums = o.getJSONArray("forums");
+                for (int j = 0; j < forums.length(); j++) {
+                    JSONObject oo = forums.getJSONObject(j);
+                    boolean forumLogin = oo.getBoolean("login");
+                    if (!isLogin && forumLogin) {//false true
+                        continue;
+                    }
+                    fs.add(new Forum(oo.getString("name"), oo.getInt("fid"), forumLogin));
+                }
+                cates.add(new Category(o.getString("name"), o.getInt("gid"), cateLogin, fs));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return cates;
     }
 
     public static String toHtml(String s) {

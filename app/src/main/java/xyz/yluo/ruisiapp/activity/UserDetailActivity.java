@@ -1,6 +1,5 @@
 package xyz.yluo.ruisiapp.activity;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -16,14 +15,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.squareup.picasso.Picasso;
 
@@ -108,8 +108,8 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         Picasso.with(this).load(imageUrl).placeholder(R.drawable.image_placeholder).into(imageView);
 
         toolbarLayout.setTitle(username);
-        setActionBar(toolbar);
-        ActionBar actionBar = getActionBar();
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -126,6 +126,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         String url0 = UrlUtils.getUserHomeUrl(userUid, false);
         getdata(url0);
     }
+
 
     private void getdata(String url) {
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);

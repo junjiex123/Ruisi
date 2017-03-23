@@ -4,14 +4,22 @@ package xyz.yluo.ruisiapp.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import xyz.yluo.ruisiapp.App;
 import xyz.yluo.ruisiapp.R;
@@ -31,14 +39,29 @@ import xyz.yluo.ruisiapp.widget.CircleImageView;
  * TODO: 16-8-23  打开的时候检查是否签到显示在后面
  * 基础列表后面可以显示一些详情，如收藏的数目等...
  */
-public class FragmentMy extends BaseLazyFragment implements View.OnClickListener {
+public class FragmentMy extends BaseLazyFragment implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     private String username, uid;
-    private CircleImageView user_img;
-    private TextView user_name, user_grade;
+    private CircleImageView userAvater;
+    private TextView userName, userGrade;
     //记录上次创建时候是否登录
     private boolean isLoginLast = false;
-    private LinearLayout containerlist;
+
+    private final int[] icons = new int[]{
+            R.drawable.ic_autorenew_black_24dp,
+            R.drawable.ic_info_24dp,
+            R.drawable.ic_menu_share_24dp,
+            R.drawable.ic_favorite_white_12dp,
+            R.drawable.ic_settings_24dp,
+    };
+
+    private final String[] titles = new String[]{
+            "签到中心",
+            "关于本程序",
+            "分享手机睿思",
+            "到商店评分",
+            "设置",
+    };
 
 
     @Override
@@ -47,24 +70,27 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
         username = App.getName(getActivity());
         uid = App.getUid(getActivity());
 
-        user_img = (CircleImageView) mRootView.findViewById(R.id.user_img);
-        user_name = (TextView) mRootView.findViewById(R.id.user_name);
-        user_grade = (TextView) mRootView.findViewById(R.id.user_grade);
-        user_img.setOnClickListener(this);
-        mRootView.findViewById(R.id.setting).setOnClickListener(this);
+        userAvater = (CircleImageView) mRootView.findViewById(R.id.user_img);
+        userName = (TextView) mRootView.findViewById(R.id.user_name);
+        userGrade = (TextView) mRootView.findViewById(R.id.user_grade);
+        userAvater.setOnClickListener(this);
         mRootView.findViewById(R.id.history).setOnClickListener(this);
         mRootView.findViewById(R.id.star).setOnClickListener(this);
         mRootView.findViewById(R.id.friend).setOnClickListener(this);
         mRootView.findViewById(R.id.post).setOnClickListener(this);
 
-        containerlist = (LinearLayout) mRootView.findViewById(R.id.container);
-        for (int i = 0; i < containerlist.getChildCount(); i++) {
-            View ii = containerlist.getChildAt(i);
-            if (ii instanceof LinearLayout) {
-                ii.setOnClickListener(this);
-            }
+        ListView listView = (ListView) mRootView.findViewById(R.id.function_list);
+        List<Map<String, Object>> fs = new ArrayList<>();
+        for (int i = 0; i < icons.length; i++) {
+            Map<String, Object> d = new HashMap<>();
+            d.put("icon", icons[i]);
+            d.put("title", titles[i]);
+            fs.add(d);
         }
-
+        listView.setOnItemClickListener(this);
+        Log.d("onItemClick", "=====");
+        listView.setAdapter(new SimpleAdapter(getActivity(), fs, R.layout.item_function,
+                new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
         return mRootView;
     }
 
@@ -95,15 +121,15 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
     private void refreshAvaterView() {
         if (isLoginLast) {
             uid = App.getUid(getActivity());
-            user_name.setText(App.getName(getActivity()));
-            user_grade.setVisibility(View.VISIBLE);
-            user_grade.setText(App.getGrade(getActivity()));
+            userName.setText(App.getName(getActivity()));
+            userGrade.setVisibility(View.VISIBLE);
+            userGrade.setText(App.getGrade(getActivity()));
             Picasso.with(getActivity()).load(UrlUtils.getAvaterurlm(uid))
-                    .placeholder(R.drawable.image_placeholder).into(user_img);
+                    .placeholder(R.drawable.image_placeholder).into(userAvater);
         } else {
-            user_name.setText("点击头像登陆");
-            user_grade.setVisibility(View.GONE);
-            user_img.setImageResource(R.drawable.image_placeholder);
+            userName.setText("点击头像登陆");
+            userGrade.setVisibility(View.GONE);
+            userAvater.setImageResource(R.drawable.image_placeholder);
         }
     }
 
@@ -113,25 +139,10 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
             case R.id.user_img:
                 if (App.ISLOGIN(getActivity())) {
                     UserDetailActivity.openWithAnimation(
-                            getActivity(), username, user_img, uid);
+                            getActivity(), username, userAvater, uid);
                 } else {
                     switchActivity(LoginActivity.class);
                 }
-                break;
-            case R.id.about:
-                switchActivity(AboutActivity.class);
-                break;
-            case R.id.sign:
-                if (isLogin()) {
-                    if (App.IS_SCHOOL_NET) {
-                        switchActivity(SignActivity.class);
-                    } else {
-                        Snackbar.make(containerlist, "校园网环境下才可以签到", Snackbar.LENGTH_SHORT).show();
-                    }
-                }
-                break;
-            case R.id.setting:
-                startActivity(new Intent(getActivity(), SettingActivity.class));
                 break;
             case R.id.post:
                 if (isLogin()) {
@@ -146,23 +157,44 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
             case R.id.history:
                 FragementActivity.open(getActivity(), FrageType.HISTORY);
                 break;
-            case R.id.market:
-                if (!IntentUtils.openOnStore(getActivity())) {
-                    Toast.makeText(getActivity(), "确保你的手机安装了相关应用商城", Toast.LENGTH_SHORT).show();
-                }
-                break;
             case R.id.friend:
                 if (isLogin()) {
                     switchActivity(FriendActivity.class);
                 }
                 break;
-            case R.id.share:
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.d("onItemClick", "onItemClick" + position);
+        switch (position) {
+            case 0:
+                if (isLogin()) {
+                    if (App.IS_SCHOOL_NET) {
+                        switchActivity(SignActivity.class);
+                    } else {
+                        Snackbar.make(mRootView, "校园网环境下才可以签到", Snackbar.LENGTH_SHORT).show();
+                    }
+                }
+                break;
+            case 1:
+                switchActivity(AboutActivity.class);
+                break;
+            case 2:
                 String data = "这个手机睿思客户端非常不错，分享给你们。" +
                         "\n下载地址(校园网): http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=" + App.POST_TID +
                         "\n下载地址2(校外网): http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid=" + App.POST_TID + "&mobile=2";
                 IntentUtils.shareApp(getActivity(), data);
                 break;
-
+            case 3:
+                if (!IntentUtils.openStore(getActivity())) {
+                    Toast.makeText(getActivity(), "确保你的手机安装了相关应用商城", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case 4:
+                startActivity(new Intent(getActivity(), SettingActivity.class));
+                break;
         }
     }
 }

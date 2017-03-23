@@ -28,10 +28,6 @@ public class MyDB {
      * 板块列表 表
      */
     static final String TABLE_FORUM_LIST = "rs_forum_list";
-    /**
-     * 板块收藏列表 表
-     */
-    static final String TABLE_FORUM_STAR = "rs_forum_star";
 
     private SQLiteDatabase db = null;    //数据库操作
 
@@ -185,8 +181,8 @@ public class MyDB {
             for (ForumListData d : datas) {
                 String sql = "INSERT INTO " + TABLE_FORUM_LIST + " (name,fid,todayNew,isHeader)"
                         + " VALUES(?,?,?,?)";
-                int isHeader = d.isheader() ? 1 : 0;
-                Object args[] = new Object[]{d.getTitle(), d.getFid(), d.getTodayNew(), isHeader};
+                int isHeader = d.isheader ? 1 : 0;
+                Object args[] = new Object[]{d.title, d.fid, d.todayNew, isHeader};
                 try {
                     this.db.execSQL(sql, args);
                 } catch (Exception e) {
@@ -211,76 +207,11 @@ public class MyDB {
             String name = result.getString(0);
             String todayNew = result.getString(2);
             //String todayNew, String titleUrl
-            datas.add(new ForumListData(isHeader, name, todayNew, fid));
+            datas.add(new ForumListData(isHeader, name, fid));
         }
         result.close();
         this.db.close();
         return datas;
-    }
-
-    /**
-     * 获得收藏板块列表
-     */
-    public List<ForumListData> getStarForums() {
-        getDb();
-        List<ForumListData> datas = new ArrayList<>();
-        String sql = "SELECT name,fid,todayNew,isHeader,star_id,star_name FROM "
-                + TABLE_FORUM_LIST + "," + TABLE_FORUM_STAR
-                + " where name = star_name AND fid in (SELECT star_fid from " + TABLE_FORUM_STAR + ")"
-                + " ORDER BY star_id ASC";
-        Cursor result = this.db.rawQuery(sql, null);    //执行查询语句
-        for (result.moveToFirst(); !result.isAfterLast(); result.moveToNext()) {
-            boolean isHeader = (result.getInt(3) == 1);
-            int fid = result.getInt(1);
-            String name = result.getString(0);
-            String todayNew = result.getString(2);
-            datas.add(new ForumListData(isHeader, name, todayNew, fid));
-        }
-        result.close();
-        this.db.close();
-        return datas;
-    }
-
-    //是否收藏
-    public boolean isForumStar(int fid) {
-        String sql = "SELECT * FROM " + TABLE_FORUM_STAR + " WHERE star_fid = ?";
-        getDb();
-        String args[] = new String[]{String.valueOf(fid)};
-        Cursor result = db.rawQuery(sql, args);
-        int count = result.getCount();
-        result.close();
-        this.db.close();
-        return count > 0;
-    }
-
-    //删除收藏
-    private void deleteForumStar(int fid) {
-        String sql = "DELETE FROM " + TABLE_FORUM_STAR + " WHERE star_fid = ?";
-        getDb();
-        Object args[] = new Object[]{fid};
-        this.db.execSQL(sql, args);
-        this.db.close();
-    }
-
-    //增加收藏
-    private void insertForumStar(String name, int fid) {
-        String sql = "INSERT INTO " + TABLE_FORUM_STAR + " (star_name,star_fid)" + " VALUES(?,?)";
-        getDb();
-        Object args[] = new Object[]{name, fid};
-        this.db.execSQL(sql, args);
-        this.db.close();
-    }
-
-
-    //设置收藏或者取消收藏
-    public void setForumStar(String name, int fid, boolean star) {
-        if (star) {
-            if (!isForumStar(fid)) {
-                insertForumStar(name, fid);
-            }
-        } else {
-            deleteForumStar(fid);
-        }
     }
 
 

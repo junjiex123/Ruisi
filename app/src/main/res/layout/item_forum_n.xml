@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/forum_list_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
-    android:padding="4dp">
+    android:padding="12dp">
 
     <ImageView
         android:id="@+id/img"
@@ -27,28 +26,6 @@
         android:layout_marginTop="4dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textStyle="bold"
         tools:text="板块的题目的标题" />
-
-    <TextView
-        android:id="@+id/today_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/img"
-        android:layout_gravity="end"
-        android:layout_marginStart="-10dp"
-        android:layout_marginTop="-5dp"
-        android:layout_toEndOf="@+id/img"
-        android:background="@drawable/badge"
-        android:gravity="center"
-        android:maxLines="1"
-        android:paddingBottom="1dp"
-        android:paddingEnd="2dp"
-        android:paddingStart="2dp"
-        android:paddingTop="1dp"
-        android:textColor="@android:color/white"
-        android:textSize="8sp"
-        android:textStyle="bold"
-        tools:text="18" />
 
 </RelativeLayout>
