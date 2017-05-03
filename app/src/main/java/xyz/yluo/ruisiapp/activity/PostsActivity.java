@@ -163,7 +163,7 @@ public class PostsActivity extends BaseActivity implements
         refreshLayout.setOnRefreshListener(this::refresh);
 
         //隐藏按钮
-        mRecyclerView.addOnScrollListener(new HidingScrollListener(getResources().getDimensionPixelSize(R.dimen.ToolBarHeight)) {
+        mRecyclerView.addOnScrollListener(new HidingScrollListener(getResources().getDimensionPixelSize(R.dimen.toolbarHeight)) {
             @Override
             public void onHide() {
                 int distanceToScroll = btnRefresh.getHeight() + DimmenUtils.dip2px(PostsActivity.this, 16);

@@ -68,7 +68,7 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/ToolBarHeight"
+                android:layout_height="@dimen/toolbarHeight"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
                 app:titleTextColor="@color/white" />

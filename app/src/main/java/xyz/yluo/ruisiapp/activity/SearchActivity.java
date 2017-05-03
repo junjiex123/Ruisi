@@ -61,10 +61,10 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
     private boolean isEnableLoadMore = false;
     private SimpleListAdapter adapter;
     private List<SimpleListData> datas = new ArrayList<>();
-    private EditText search_input;
-    private CardView search_card;
+    private EditText searchInput;
+    private CardView searchCard;
     private Animator animator;
-    private TextView nav_title;
+    private TextView navTitle;
     View main_window;
 
 
@@ -75,11 +75,11 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
         main_window = findViewById(R.id.main_window);
         findViewById(R.id.btn_back).setOnClickListener(this);
         RecyclerView listView = (RecyclerView) findViewById(R.id.recycler_view);
-        search_input = (EditText) findViewById(R.id.search_input);
-        search_card = (CardView) findViewById(R.id.search_card);
+        searchInput = (EditText) findViewById(R.id.search_input);
+        searchCard = (CardView) findViewById(R.id.search_card);
         findViewById(R.id.start_search).setOnClickListener(this);
         findViewById(R.id.nav_search).setOnClickListener(this);
-        search_input.setHint("请输入搜索内容！");
+        searchInput.setHint("请输入搜索内容！");
         adapter = new SimpleListAdapter(ListType.SERRCH, this, datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         listView.setLayoutManager(layoutManager);
@@ -87,9 +87,9 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
         listView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) layoutManager, this, 20));
         listView.setAdapter(adapter);
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
-        nav_title = (TextView) findViewById(R.id.nav_title);
+        navTitle = (TextView) findViewById(R.id.nav_title);
         findViewById(R.id.nav_back).setOnClickListener(this);
-        search_input.setOnEditorActionListener(this);
+        searchInput.setOnEditorActionListener(this);
     }
 
     @Override
@@ -106,7 +106,7 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
     protected void onStart() {
         super.onStart();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            search_card.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            searchCard.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
                 @Override
                 public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                     v.removeOnLayoutChangeListener(this);
@@ -114,17 +114,17 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
                 }
             });
         } else {
-            KeyboardUtil.showKeyboard(search_input);
+            KeyboardUtil.showKeyboard(searchInput);
         }
     }
 
     private void start_search_click() {
-        String str = search_input.getText().toString();
+        String str = searchInput.getText().toString();
         if (TextUtils.isEmpty(str)) {
             Snackbar.make(main_window, "你还没写内容呢", Snackbar.LENGTH_SHORT).show();
             return;
         } else {
-            nav_title.setText("搜索:" + str);
+            navTitle.setText("搜索:" + str);
             hide_search_view();
             getData(str);
         }
@@ -164,7 +164,7 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
     }
 
     private void getSomePageData(int page) {
-        String str = search_input.getText().toString();
+        String str = searchInput.getText().toString();
         String url = "search.php?mod=forum&searchid=" + searchid
                 + "&orderby=lastpost&ascdesc=desc&searchsubmit=yes&kw=" + str
                 + "&page=" + page + "&mobile=2";
@@ -260,7 +260,7 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
         protected void onPostExecute(List<SimpleListData> dataset) {
             isEnableLoadMore = true;
             if (!TextUtils.isEmpty(searchRes) && currentPage == 1) {
-                nav_title.setText(searchRes.substring(3));
+                navTitle.setText(searchRes.substring(3));
             }
             if (dataset.size() == 0) {
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
@@ -281,13 +281,13 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
 
     private void show_search_view() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            search_card.setVisibility(View.VISIBLE);
+            searchCard.setVisibility(View.VISIBLE);
             animator = ViewAnimationUtils.createCircularReveal(
-                    search_card,
-                    search_card.getWidth(),
+                    searchCard,
+                    searchCard.getWidth(),
                     0,
                     0,
-                    (float) Math.hypot(search_card.getWidth(), search_card.getHeight()));
+                    (float) Math.hypot(searchCard.getWidth(), searchCard.getHeight()));
 
             animator.setInterpolator(new AccelerateInterpolator());
             animator.setDuration(260);
@@ -300,7 +300,7 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
 
                 @Override
                 public void onAnimationEnd(Animator animator) {
-                    KeyboardUtil.showKeyboard(search_input);
+                    KeyboardUtil.showKeyboard(searchInput);
                 }
 
                 @Override
@@ -314,18 +314,18 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
                 }
             });
         } else {
-            search_card.setVisibility(View.VISIBLE);
-            KeyboardUtil.showKeyboard(search_input);
+            searchCard.setVisibility(View.VISIBLE);
+            KeyboardUtil.showKeyboard(searchInput);
         }
     }
 
     private void hide_search_view() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             animator = ViewAnimationUtils.createCircularReveal(
-                    search_card,
-                    search_card.getWidth(),
+                    searchCard,
+                    searchCard.getWidth(),
                     0,
-                    (float) Math.hypot(search_card.getWidth(), search_card.getHeight()),
+                    (float) Math.hypot(searchCard.getWidth(), searchCard.getHeight()),
                     0);
 
             animator.setInterpolator(new DecelerateInterpolator());
@@ -339,7 +339,7 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
 
                 @Override
                 public void onAnimationEnd(Animator animator) {
-                    search_card.setVisibility(View.GONE);
+                    searchCard.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -353,7 +353,7 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
                 }
             });
         } else {
-            search_card.setVisibility(View.GONE);
+            searchCard.setVisibility(View.GONE);
         }
     }
 }

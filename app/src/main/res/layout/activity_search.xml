@@ -8,7 +8,7 @@
     <FrameLayout
         android:elevation="4dp"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/ToolBarHeight"
+        android:layout_height="@dimen/toolbarHeight"
         android:background="@color/colorPrimary"
         android:gravity="center_vertical|center_horizontal">
 
@@ -47,7 +47,7 @@
                 android:src="@drawable/ic_search_white_24dp" />
         </LinearLayout>
 
-        <include layout="@layout/my_scearch_card" />
+        <include layout="@layout/my_search_card" />
     </FrameLayout>
 
     <android.support.v7.widget.RecyclerView

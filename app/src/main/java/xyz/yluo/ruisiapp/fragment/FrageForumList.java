@@ -57,7 +57,7 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
         userImg = (CircleImageView) mRootView.findViewById(R.id.img);
         formsList = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         formsList.setClipToPadding(false);
-        formsList.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
+        formsList.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.bottombarHeight));
         mRootView.findViewById(R.id.search).setOnClickListener(this);
         adapter = new ForumsAdapter(getActivity());
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);

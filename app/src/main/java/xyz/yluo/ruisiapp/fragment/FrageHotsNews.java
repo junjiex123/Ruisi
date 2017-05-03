@@ -66,7 +66,7 @@ public class FrageHotsNews extends BaseLazyFragment implements LoadMoreListener.
         postList.addItemDecoration(new MyListDivider(getActivity(), MyListDivider.VERTICAL));
         //设置可以滑出底栏
         postList.setClipToPadding(false);
-        postList.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
+        postList.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.bottombarHeight));
         adapter = new HotNewListAdapter(getActivity(), mydataset, galleryDatas);
         postList.setAdapter(adapter);
         postList.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 10));

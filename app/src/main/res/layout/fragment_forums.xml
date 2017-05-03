@@ -7,7 +7,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/ToolBarHeight"
+        android:layout_height="@dimen/toolbarHeight"
         android:background="@color/colorPrimary"
         android:elevation="4dp">
 
@@ -35,8 +35,8 @@
 
         <ImageView
             android:id="@+id/search"
-            android:layout_width="@dimen/ToolBarHeight"
-            android:layout_height="@dimen/ToolBarHeight"
+            android:layout_width="@dimen/toolbarHeight"
+            android:layout_height="@dimen/toolbarHeight"
             android:layout_gravity="end"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"

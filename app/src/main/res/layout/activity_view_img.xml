@@ -16,7 +16,7 @@
     <FrameLayout
         android:id="@+id/myToolBar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/ToolBarHeight"
+        android:layout_height="@dimen/toolbarHeight"
         android:background="#A0A9B2B7">
 
         <ImageView

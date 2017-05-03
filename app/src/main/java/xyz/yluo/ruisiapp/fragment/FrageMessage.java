@@ -75,7 +75,7 @@ public class FrageMessage extends BaseLazyFragment {
         messageList = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         //设置可以滑出底栏
         messageList.setClipToPadding(false);
-        messageList.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.BottomBarHeight));
+        messageList.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.bottombarHeight));
         refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
