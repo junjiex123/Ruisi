@@ -62,7 +62,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         if (b != ishaveMessage) {
             ishaveMessage = b;
             drawableStateChanged();
-            invalidate();
+            refreshDrawableState();
         }
     }
 
@@ -97,11 +97,13 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         //4dp飘起
         setElevation(DimmenUtils.dip2px(context, 4));
 
+        LayoutParams p = new LayoutParams(LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT, 1);
         for (int i = 0; i < tab_names.length; i++) {
             View v = getSingleTab(i);
             v.setTag(i);
             v.setOnClickListener(this);
-            addView(v);
+            addView(v,p);
         }
         setTabSelect(-1, 0);
 
@@ -116,19 +118,28 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
             ViewGroup tab_item_from = (ViewGroup) this.findViewWithTag(from);
             ImageView pre_img = (ImageView) tab_item_from.getChildAt(0);
             TextView pre_text = (TextView) tab_item_from.getChildAt(1);
-            pre_text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+            //pre_text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
             pre_img.setColorFilter(COLOR_UNSELECT);
             pre_text.setTextColor(COLOR_UNSELECT);
+
+            pre_text.setPivotX(pre_img.getWidth()/2);
+            pre_text.setScaleX(1.0f);
+            pre_text.setScaleY(1.0f);
         }
 
         ViewGroup tab_item_to = (ViewGroup) this.findViewWithTag(to);
         ImageView to_img = (ImageView) tab_item_to.getChildAt(0);
         TextView to_text = (TextView) tab_item_to.getChildAt(1);
-        to_text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+        //to_text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         to_img.setImageResource(icons_unselect[to]);
         to_img.setColorFilter(COLOR_SELECT);
         to_text.setTextColor(COLOR_SELECT);
-        invalidate();
+
+        to_text.setPivotX(to_text.getWidth()/2);
+        to_text.setScaleX(1.08f);
+        to_text.setScaleY(1.08f);
+
+        refreshDrawableState();
     }
 
     @Override
@@ -151,10 +162,6 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         view.setGravity(Gravity.CENTER);
         view.setBackgroundResource(CLICK_BG_RES);
         view.setOrientation(LinearLayout.VERTICAL);
-        // 设置宽高和权重
-        view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-                LayoutParams.MATCH_PARENT, 1));
-        //view.setPadding(SIZE_2 * 6, SIZE_2 * 3, SIZE_2 * 6, SIZE_2 * 3);
 
         //图标
         ImageView iconView = new ImageView(getContext());

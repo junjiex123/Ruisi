@@ -51,7 +51,7 @@ public class HttpUtil {
     private static void init(Context context) {
         client.setConnectionTimeout(4000);
         if (context != null && store == null) {
-            store = new PersistentCookieStore(context);
+            store = new PersistentCookieStore(context.getApplicationContext());
             client.setStore(store);
         }
 

@@ -7,9 +7,19 @@ import android.support.v7.widget.RecyclerView;
  * 监听RecyclerView 滚动隐藏view
  */
 public abstract class HidingScrollListener extends RecyclerView.OnScrollListener {
-    private static final int HIDE_THRESHOLD = 10;
+    private int HIDE_THRESHOLD = 15;//隐藏触发距离
+    private int SHOW_THRESHOLD = 10;//显示触发距离
     private int scrolledDistance = 0;
     private boolean controlsVisible = true;
+
+    public HidingScrollListener(int hide) {
+        this.HIDE_THRESHOLD = hide;
+    }
+
+    public HidingScrollListener(int hide, int show) {
+        this.HIDE_THRESHOLD = hide;
+        this.SHOW_THRESHOLD = show;
+    }
 
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -19,7 +29,7 @@ public abstract class HidingScrollListener extends RecyclerView.OnScrollListener
             onHide();
             controlsVisible = false;
             scrolledDistance = 0;
-        } else if (scrolledDistance < -HIDE_THRESHOLD && !controlsVisible) {
+        } else if (scrolledDistance < -SHOW_THRESHOLD && !controlsVisible) {
             onShow();
             controlsVisible = true;
             scrolledDistance = 0;

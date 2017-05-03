@@ -246,11 +246,25 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
             if (!TextUtils.isEmpty(res)) {
                 int i = res.indexOf("欢迎您回来");
                 if (i > 0) {
-                    String info = res.substring(i + 6, i + 26);
-                    int pos1 = info.indexOf(" ");
-                    int pos2 = info.indexOf("，");
-                    String grade = info.substring(0, pos1);
-                    String name = info.substring(pos1 + 1, pos2);
+                    String grade, name;
+                    //<p>欢迎您回来，实习版主 激萌路小叔，现在将转入登录前页面</p>
+                    //<p>欢迎您回来，<font color="#0099FF">实习版主</font> 激萌路小叔，现在将转入登录前页面</p>
+                    String info = res.substring(i, i + 70);
+                    int pos = info.indexOf("，");
+                    if (info.charAt(pos + 1) == '<') {//管理员
+                        int pos2 = info.indexOf(">", pos);
+                        int pos3 = info.indexOf("<", pos2);
+                        grade = info.substring(pos2 + 1, pos3);
+                        int pos4 = info.indexOf(" ", pos3);
+                        int pos5 = info.indexOf("，", pos4);
+                        name = info.substring(pos4 + 1, pos5);
+                    } else {
+                        int pos2 = info.indexOf(" ", pos);
+                        grade = info.substring(pos + 1, pos2);
+                        int pos3 = info.indexOf("，", pos2);
+                        name = info.substring(pos2 + 1, pos3);
+                    }
+
                     String uid = GetId.getid("uid=", res.substring(i));
                     int indexhash = res.indexOf("formhash");
                     String hash = res.substring(indexhash + 9, indexhash + 17);

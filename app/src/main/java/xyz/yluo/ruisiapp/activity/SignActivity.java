@@ -37,11 +37,11 @@ import xyz.yluo.ruisiapp.widget.CircleImageView;
  */
 public class SignActivity extends BaseActivity {
 
-    protected CircleImageView user_image;
+    protected CircleImageView userImage;
     protected ProgressBar progressBar;
-    private View sign_yes, sign_no;
-    private TextView sign_error;
-    private int spinner__select = 0;
+    private View signYes, signNo;
+    private TextView signError;
+    private int spinnerSelect = 0;
     private String qdxq = "kx";
 
     @Override
@@ -51,13 +51,13 @@ public class SignActivity extends BaseActivity {
         initToolBar(true, "签到中心");
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        sign_yes = findViewById(R.id.sign_yes);
-        sign_no = findViewById(R.id.sign_not);
-        sign_error = (TextView) findViewById(R.id.sign_error);
-        sign_yes.setVisibility(View.GONE);
-        sign_no.setVisibility(View.GONE);
-        sign_error.setVisibility(View.GONE);
-        user_image = (CircleImageView) findViewById(R.id.user_image);
+        signYes = findViewById(R.id.sign_yes);
+        signNo = findViewById(R.id.sign_not);
+        signError = (TextView) findViewById(R.id.sign_error);
+        signYes.setVisibility(View.GONE);
+        signNo.setVisibility(View.GONE);
+        signError.setVisibility(View.GONE);
+        userImage = (CircleImageView) findViewById(R.id.user_image);
 
         checkState();
     }
@@ -66,7 +66,7 @@ public class SignActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         Picasso.with(this).load(UrlUtils.getAvaterurlb(App.getUid(this))).
-                placeholder(R.drawable.image_placeholder).into(user_image);
+                placeholder(R.drawable.image_placeholder).into(userImage);
     }
 
     //看看是否已经签到
@@ -115,12 +115,12 @@ public class SignActivity extends BaseActivity {
 
     private void sign_error() {
         progressBar.setVisibility(View.GONE);
-        sign_error.setVisibility(View.VISIBLE);
+        signError.setVisibility(View.VISIBLE);
     }
 
     private void sign_yes(String day, String month) {
         progressBar.setVisibility(View.GONE);
-        sign_yes.setVisibility(View.VISIBLE);
+        signYes.setVisibility(View.VISIBLE);
         TextView total_day = (TextView) findViewById(R.id.total_sign_day);
         TextView total_month = (TextView) findViewById(R.id.total_sign_month);
         total_day.setText(day);
@@ -129,7 +129,7 @@ public class SignActivity extends BaseActivity {
 
     private void sign_no() {
         progressBar.setVisibility(View.GONE);
-        sign_no.setVisibility(View.VISIBLE);
+        signNo.setVisibility(View.VISIBLE);
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         final String[] mItems = {"开心", "难过", "郁闷", "无聊", "怒", "擦汗", "奋斗", "慵懒", "衰"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mItems);
@@ -138,7 +138,7 @@ public class SignActivity extends BaseActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                spinner__select = pos;
+                spinnerSelect = pos;
             }
 
             @Override
@@ -184,7 +184,7 @@ public class SignActivity extends BaseActivity {
                 if (start > 0) {
                     int end = res.indexOf("</div>", start);
                     showNtice(res.substring(start, end));
-                    sign_no.setVisibility(View.GONE);
+                    signNo.setVisibility(View.GONE);
                     checkState();
                 } else {
                     showNtice("未知错误,签到失败");
@@ -206,7 +206,7 @@ public class SignActivity extends BaseActivity {
 
     //获得选择的心情
     private String getGroup1_select() {
-        switch (spinner__select) {
+        switch (spinnerSelect) {
             case 0:
                 qdxq = "kx";
                 break;

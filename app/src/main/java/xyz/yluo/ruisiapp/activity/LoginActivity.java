@@ -227,7 +227,7 @@ public class LoginActivity extends BaseActivity {
             editor.putString(App.LOGIN_PASS, "");
         }
         int i = res.indexOf("欢迎您回来");
-        String info = res.substring(i + 6, i + 26);
+        String info = res.substring(i + 6, i + 40);
         int pos1 = info.indexOf(" ");
         int pos2 = info.indexOf("，");
         String grade = info.substring(0, pos1);

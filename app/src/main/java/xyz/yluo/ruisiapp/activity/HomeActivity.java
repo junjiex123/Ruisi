@@ -41,7 +41,7 @@ import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.widget.MyBottomTab;
 
 /**
- * Created by free2 on 16-3-17.
+ * Created by yang on 16-3-17.
  * 这是首页 管理3个fragment
  * 1.板块列表{@link HomeActivity}
  * 2.新帖{@link FrageHotsNews}

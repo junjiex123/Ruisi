@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,8 +15,10 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -35,6 +38,7 @@ import xyz.yluo.ruisiapp.listener.LoadMoreListener;
 import xyz.yluo.ruisiapp.model.ArticleListData;
 import xyz.yluo.ruisiapp.myhttp.HttpUtil;
 import xyz.yluo.ruisiapp.myhttp.ResponseHandler;
+import xyz.yluo.ruisiapp.utils.DimmenUtils;
 import xyz.yluo.ruisiapp.utils.GetId;
 import xyz.yluo.ruisiapp.utils.UrlUtils;
 import xyz.yluo.ruisiapp.widget.MyListDivider;
@@ -53,16 +57,25 @@ public class PostsActivity extends BaseActivity implements
     protected SwipeRefreshLayout refreshLayout;
     FloatingActionButton btnRefresh;
     RecyclerView mRecyclerView;
+    private View myToolbar;
     //当前页数
     int CurrentPage = 1;
     boolean isEnableLoadMore = false;
     RecyclerView.LayoutManager mLayoutManager;
+    private TabLayout tab;
 
     boolean isHideZhiding = false;
     //一般板块/图片板块/手机板块数据列表
     private List<ArticleListData> datas;
     private PostListAdapter adapter;
     private MyDB myDB = null;
+    private final String[] orders = new String[]{
+            "&filter=lastpost&orderby=lastpost",
+            "&filter=heat&orderby=heats",
+            "&filter=hot",
+            "&filter=digest&digest=1"
+    };
+    private int currentTabindex = 0;
 
 
     public static void open(Context context, int fid, String title) {
@@ -76,16 +89,22 @@ public class PostsActivity extends BaseActivity implements
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         datas = new ArrayList<>();
-        setContentView(R.layout.list_toolbar_btn);
+        setContentView(R.layout.activity_posts);
         if (getIntent().getExtras() != null) {
             FID = getIntent().getExtras().getInt("FID");
             TITLE = getIntent().getExtras().getString("TITLE");
         }
         initToolBar(true, TITLE);
+        myToolbar = findViewById(R.id.myToolBar);
         btnRefresh = (FloatingActionButton) findViewById(R.id.btn);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        tab = (TabLayout) findViewById(R.id.tab);
+
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
+        int top = DimmenUtils.dip2px(this, 60);
+        refreshLayout.setProgressViewOffset(true, top, top + 60);
+
         isHideZhiding = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("setting_hide_zhidin", true);
         if (getType() == PostListAdapter.TYPE_IMAGE) {
             isEnableLoadMore = false;
@@ -99,6 +118,11 @@ public class PostsActivity extends BaseActivity implements
             mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 8));
             addToolbarMenu(R.drawable.ic_edit).setOnClickListener(this);
         }
+
+        tab.addTab(tab.newTab().setText("最新"));
+        tab.addTab(tab.newTab().setText("热门"));
+        tab.addTab(tab.newTab().setText("热帖"));
+        tab.addTab(tab.newTab().setText("精华"));
 
         adapter = new PostListAdapter(this, datas, getType());
         if (getType() == PostListAdapter.TYPE_IMAGE) {
@@ -130,29 +154,52 @@ public class PostsActivity extends BaseActivity implements
             CurrentPage++;
             isEnableLoadMore = false;
             getData();
-
         }
     }
 
     private void init() {
         btnRefresh.hide();
         refreshLayout.setRefreshing(true);
-
         refreshLayout.setOnRefreshListener(this::refresh);
 
         //隐藏按钮
-        mRecyclerView.addOnScrollListener(new HidingScrollListener() {
+        mRecyclerView.addOnScrollListener(new HidingScrollListener(getResources().getDimensionPixelSize(R.dimen.ToolBarHeight)) {
             @Override
             public void onHide() {
-                FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) btnRefresh.getLayoutParams();
-                int bottomMargin = lp.bottomMargin;
-                int distanceToScroll = btnRefresh.getHeight() + bottomMargin;
+                int distanceToScroll = btnRefresh.getHeight() + DimmenUtils.dip2px(PostsActivity.this, 16);
                 btnRefresh.animate().translationY(distanceToScroll).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
+
+                //隐藏toolbar
+                myToolbar.animate().translationY(-myToolbar.getHeight()).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
+                tab.animate().translationY(-myToolbar.getHeight()).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
             }
 
             @Override
             public void onShow() {
                 btnRefresh.animate().translationY(0).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
+
+                //显示toolbar
+                myToolbar.animate().translationY(0).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
+                tab.animate().translationY(0).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
+            }
+        });
+
+
+        tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                currentTabindex = tab.getPosition();
+                refresh();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                mRecyclerView.scrollToPosition(0);
             }
         });
     }
@@ -171,6 +218,7 @@ public class PostsActivity extends BaseActivity implements
         if (!App.IS_SCHOOL_NET) {
             url = url + UrlUtils.getArticleListUrl(FID, CurrentPage, false);
         }
+        url = url + orders[currentTabindex];
         HttpUtil.get(this, url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {

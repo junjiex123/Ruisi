@@ -80,12 +80,7 @@ public class HotNewListAdapter extends BaseAdapter {
             author_name = (TextView) v.findViewById(R.id.author_name);
             is_image = (TextView) v.findViewById(R.id.is_image);
             reply_count = (TextView) v.findViewById(R.id.reply_count);
-            v.findViewById(R.id.main_item_btn_item).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBtnItemClick();
-                }
-            });
+            v.findViewById(R.id.main_item_btn_item).setOnClickListener(v1 -> onBtnItemClick());
         }
 
         //设置listItem的数据
