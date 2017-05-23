@@ -31,7 +31,7 @@
                 android:layout_alignBottom="@+id/user_detail_layout_info"
                 android:adjustViewBounds="true" />
 
-            <xyz.yluo.ruisiapp.widget.CircleImageView
+            <me.yluo.ruisiapp.widget.CircleImageView
                 android:id="@+id/user_detail_img_avatar"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
@@ -47,7 +47,7 @@
                 android:layout_marginBottom="4dp"
                 android:orientation="vertical">
 
-                <xyz.yluo.ruisiapp.widget.GradeProgressView
+                <me.yluo.ruisiapp.widget.GradeProgressView
                     android:id="@+id/grade_progress"
                     android:layout_width="match_parent"
                     android:layout_height="3.2dp" />

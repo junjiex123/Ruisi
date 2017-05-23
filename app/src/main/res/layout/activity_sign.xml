@@ -19,7 +19,7 @@
         android:orientation="vertical"
         android:padding="@dimen/dimen_16">
 
-        <xyz.yluo.ruisiapp.widget.CircleImageView
+        <me.yluo.ruisiapp.widget.CircleImageView
             android:id="@+id/user_image"
             android:layout_width="82dp"
             android:layout_height="82dp"

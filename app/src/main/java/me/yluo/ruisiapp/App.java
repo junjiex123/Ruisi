@@ -20,7 +20,6 @@ public class App extends Application {
     private Context context;
     private NetworkReceiver receiver = new NetworkReceiver();
 
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -104,6 +103,18 @@ public class App extends Application {
         return shp.getString(USER_GRADE_KEY, "");
     }
 
+    public static boolean isAutoDarkMode(Context context) {
+        SharedPreferences shp = context.getSharedPreferences(MY_SHP_NAME, MODE_PRIVATE);
+        return shp.getBoolean(AUTO_DARK_MODE_KEY, true);
+    }
+
+    public static void setAutoDarkMode(Context context, boolean value) {
+        SharedPreferences shp = context.getSharedPreferences(MY_SHP_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = shp.edit();
+        editor.putBoolean(AUTO_DARK_MODE_KEY, value);
+        editor.apply();
+    }
+
     public static void setDarkModeTime(Context context, boolean isStart, int value) {
         SharedPreferences shp = context.getSharedPreferences(MY_SHP_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = shp.edit();
@@ -118,8 +129,8 @@ public class App extends Application {
     public static int[] getDarkModeTime(Context context) {
         SharedPreferences shp = context.getSharedPreferences(MY_SHP_NAME, MODE_PRIVATE);
         int[] ret = new int[2];
-        ret[0] = shp.getInt(START_DARK_TIME_KEY, 0);
-        ret[1] = shp.getInt(END_DARK_TIME_KEY, 24);
+        ret[0] = shp.getInt(START_DARK_TIME_KEY, 21);
+        ret[1] = shp.getInt(END_DARK_TIME_KEY, 6);
         return ret;
     }
 
@@ -133,6 +144,7 @@ public class App extends Application {
     public static final String MY_SHP_NAME = "ruisi_shp";
 
     public static final String NOTICE_MESSAGE_KEY = "message_notice";
+    public static final String AUTO_DARK_MODE_KEY = "auto_dark_mode";
     public static final String START_DARK_TIME_KEY = "start_dart_time";
     public static final String END_DARK_TIME_KEY = "end_dark_time";
     public static final String USER_UID_KEY = "user_uid";

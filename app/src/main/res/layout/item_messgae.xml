@@ -15,7 +15,7 @@
     android:paddingRight="@dimen/dimen_16"
     android:paddingTop="@dimen/dimen_16">
 
-    <xyz.yluo.ruisiapp.widget.CircleImageView
+    <me.yluo.ruisiapp.widget.CircleImageView
         android:id="@+id/article_user_image"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -70,7 +70,7 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <xyz.yluo.ruisiapp.widget.ArrowTextView
+        <me.yluo.ruisiapp.widget.ArrowTextView
             android:id="@+id/reply_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

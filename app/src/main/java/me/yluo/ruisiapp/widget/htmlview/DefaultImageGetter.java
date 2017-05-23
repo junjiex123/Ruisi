@@ -70,7 +70,10 @@ public class DefaultImageGetter implements ImageGetter {
             if (source.startsWith(SMILEY_PREFIX)) {
                 //assets 表情
                 String fileToSave = source.substring(source.indexOf("smiley"));
-                if (source.contains("tieba") || source.contains("jgz") || source.contains("acn")) {
+                if (source.contains("/tieba") || source.contains("/jgz") || source.contains("/acn") || source.contains("/default")) {
+                    if(source.contains("/default")){
+                        fileToSave = fileToSave.replace(".gif",".png");
+                    }
                     try {
                         b = decodeBitmapFromStream(context.getAssets().open(fileToSave), false, smileySize);
                     } catch (IOException e) {

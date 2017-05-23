@@ -66,8 +66,6 @@ public class SmileyInputRoot extends LinearLayout {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
 
-        Log.d("root onMeasure", "height is:" + height);
-
         if (height > maxHeight) {
             maxHeight = height;
         }
@@ -97,13 +95,10 @@ public class SmileyInputRoot extends LinearLayout {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        //Log.e("=========", changed + "||" + t + "||" + b);
-
         if (!changed
                 && (maxHeight > (b - t))
                 && mSmileyContainer.isVisible
                 && mSmileyContainer.isKeyboardShowing) {
-            Log.e("=========", "return");
             return;
         }
         int childTop = 0;

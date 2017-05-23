@@ -8,7 +8,7 @@
     android:clickable="true"
     android:paddingBottom="8dp">
 
-    <xyz.yluo.ruisiapp.widget.CircleImageView
+    <me.yluo.ruisiapp.widget.CircleImageView
         android:scaleType="centerCrop"
         android:id="@+id/article_user_image"
         android:layout_width="40dp"

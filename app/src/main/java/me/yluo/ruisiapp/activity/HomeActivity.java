@@ -240,7 +240,6 @@ public class HomeActivity extends BaseActivity
                                 .setCancelable(true)
                                 .create()
                                 .show();
-
                     }
                 }
             }
@@ -293,12 +292,12 @@ public class HomeActivity extends BaseActivity
             switch (msg.what) {
                 //-1 - 无消息 0-有
                 case -1:
-                    Log.e("message", "无未读消息");
+                    Log.d("message", "无未读消息");
                     t.setMessage(false);
                     break;
                 case 0:
                     a.mkNotify();
-                    Log.e("message", "有未读消息");
+                    Log.d("message", "有未读消息");
                     t.setMessage(true);
                     break;
             }
@@ -306,9 +305,9 @@ public class HomeActivity extends BaseActivity
     }
 
     private void mkNotify() {
-        boolean isnotify = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this)
+        boolean isNotify = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this)
                 .getBoolean("setting_show_notify", false);
-        if (!isnotify) {
+        if (!isNotify) {
             return;
         }
         final NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
@@ -335,5 +334,4 @@ public class HomeActivity extends BaseActivity
             }
         }
     }
-
 }

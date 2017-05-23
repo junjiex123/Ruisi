@@ -18,7 +18,6 @@ public class Quote extends CharacterStyle implements LeadingMarginSpan, LineHeig
     //margin-bottom: 16px;
     private static final float STRIPE_WIDTH = HtmlView.FONT_SIZE / 4;
     private static final float GAP_WIDTH = HtmlView.FONT_SIZE;
-    private static final int GAP_COLOR = 0xffdddddd;
     private static final int TEXT_COLOR = 0xff777777;
     private static final float LINE_HEIGHT = 1.25f / HtmlView.LINE_HEIGHT;
 
@@ -37,7 +36,7 @@ public class Quote extends CharacterStyle implements LeadingMarginSpan, LineHeig
         int color = p.getColor();
 
         p.setStyle(Paint.Style.FILL);
-        p.setColor(GAP_COLOR);
+        p.setColor(0xff777777);
 
         if (!first) {
             top = top - (bottom - baseline);

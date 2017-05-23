@@ -19,7 +19,6 @@ public class HtmlView implements ViewChangeNotify {
 
     private static final String TAG = HtmlView.class.getSimpleName();
     public static final float LINE_HEIGHT = 1.4f;
-    public static final int TEXT_COLOR = 0xff333333;
     public static final int URL_COLOR = 0xff4078c0;
     public static float FONT_SIZE = 40;
     public static int VIEW_WIDTH = 1080;
@@ -56,7 +55,6 @@ public class HtmlView implements ViewChangeNotify {
             this.target = new WeakReference<>(target);
         }
 
-
         if (imageGetter == null) {
             WindowManager wm = (WindowManager) target.getContext()
                     .getSystemService(Context.WINDOW_SERVICE);
@@ -73,7 +71,6 @@ public class HtmlView implements ViewChangeNotify {
         FONT_SIZE = target.getTextSize();
         spanned = SpanConverter.convert(source, imageGetter, clickListener, this);
         target.setMovementMethod(LinkMovementMethod.getInstance());
-        target.setTextColor(TEXT_COLOR);
         target.setLineSpacing(0, LINE_HEIGHT);
         target.setText(spanned);
         isViewSet = true;

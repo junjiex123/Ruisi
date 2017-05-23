@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         tools:text="帖子的标题" />
 
-    <xyz.yluo.ruisiapp.widget.CircleImageView
+    <me.yluo.ruisiapp.widget.CircleImageView
         android:id="@+id/author_img"
         android:layout_width="40dp"
         android:layout_height="40dp"

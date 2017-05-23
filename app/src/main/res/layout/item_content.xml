@@ -20,7 +20,7 @@
         android:textStyle="bold"
         tools:text="尴尬，Xbox One 2与PS4.5太快推出压力重重,尴尬，Xbox One 2" />
 
-    <xyz.yluo.ruisiapp.widget.CircleImageView
+    <me.yluo.ruisiapp.widget.CircleImageView
         android:id="@+id/article_user_image"
         android:layout_width="42dp"
         android:layout_height="42dp"
@@ -91,7 +91,7 @@
         android:paddingEnd="12dp"
         android:paddingStart="12dp"
         android:paddingTop="8dp"
-        android:textColor="?android:attr/textColorPrimary"
+        android:textColor="?android:textColorPrimary"
         android:textSize="16sp"
         tools:text="在点(110,10)处绘制一个宽和高均为50像素的正方形边框 context.strokeRect(110,10,50,50); //在点(30,10)处绘制一个宽和高均为50像素的正方形边框 " />
 

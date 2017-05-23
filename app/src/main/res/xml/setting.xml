@@ -6,9 +6,10 @@
             android:title="启用夜间模式" />
 
         <Preference
-            android:key="setting_auto_dark_mode_time"
-            android:summary="当前夜间时间为00:00~24:00"
-            android:title="自定义夜间模式时间" />
+            android:enabled="false"
+            android:key="dark_mode_settings"
+            android:summary="当前模式:自动切换(21:00~6:00)"
+            android:title="夜间模式设置" />
 
         <ListPreference
             android:entries="@array/setting_switch_url"
@@ -21,7 +22,7 @@
             android:defaultValue="true"
             android:key="setting_hide_zhidin"
             android:summary="隐藏帖子列表的置顶帖(仅校园网环境生效)"
-            android:title="隐藏置顶帖"/>
+            android:title="隐藏置顶帖" />
 
         <SwitchPreference
             android:defaultValue="false"

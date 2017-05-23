@@ -1,6 +1,7 @@
 package me.yluo.ruisiapp.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -12,17 +13,18 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
+import android.util.Log;
 import android.widget.Toast;
 
 import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
+import me.yluo.ruisiapp.activity.NightModeActivity;
 import me.yluo.ruisiapp.activity.PostActivity;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.utils.DataManager;
 import me.yluo.ruisiapp.utils.GetId;
 import me.yluo.ruisiapp.utils.IntentUtils;
-import me.yluo.ruisiapp.widget.MyDoubleTimePicker;
 
 /**
  * Created by free2 on 16-7-18.
@@ -30,8 +32,7 @@ import me.yluo.ruisiapp.widget.MyDoubleTimePicker;
  */
 
 public class FragSetting extends PreferenceFragment
-        implements SharedPreferences.OnSharedPreferenceChangeListener,
-        MyDoubleTimePicker.OnTimeSetListener {
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     //小尾巴string
     private EditTextPreference setting_user_tail;
@@ -39,8 +40,7 @@ public class FragSetting extends PreferenceFragment
     private ListPreference setting_forums_url;
     private SharedPreferences sharedPreferences;
     private Preference clearCache;
-    private Preference setDarkModeTime;
-    private MyDoubleTimePicker timePickerDialog;
+    private Preference darkModeSettings;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -50,18 +50,16 @@ public class FragSetting extends PreferenceFragment
         setting_user_tail = (EditTextPreference) findPreference("setting_user_tail");
         setting_forums_url = (ListPreference) findPreference("setting_forums_url");
         clearCache = findPreference("clean_cache");
-        setDarkModeTime = findPreference("setting_auto_dark_mode_time");
+        darkModeSettings = findPreference("dark_mode_settings");
         sharedPreferences = getPreferenceScreen().getSharedPreferences();
         boolean b = sharedPreferences.getBoolean("setting_show_tail", false);
         setting_user_tail.setEnabled(b);
-        b = sharedPreferences.getBoolean("setting_dark_mode", false);
-        setDarkModeTime.setEnabled(b);
+        b = sharedPreferences.getBoolean("setting_dark_mode", true);
+        darkModeSettings.setEnabled(b);
         setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail", "无小尾巴"));
         setting_forums_url.setSummary(App.IS_SCHOOL_NET ? "当前网络校园网，点击切换" : "当前网络校外网，点击切换");
         setting_forums_url.setValue(App.IS_SCHOOL_NET ? "1" : "2");
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-
-        timePickerDialog = new MyDoubleTimePicker(getActivity(), this, 0, 0, 24, 0);
 
 
         if (!App.ISLOGIN(getActivity())) {
@@ -69,8 +67,8 @@ public class FragSetting extends PreferenceFragment
                     removePreference(findPreference("exit_login"));//这是删除 二级
         }
 
-        setDarkModeTime.setOnPreferenceClickListener(preference -> {
-            timePickerDialog.show();
+        darkModeSettings.setOnPreferenceClickListener(preference -> {
+            startActivity(new Intent(getActivity(), NightModeActivity.class));
             return false;
         });
 
@@ -160,6 +158,26 @@ public class FragSetting extends PreferenceFragment
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        boolean isEnable = sharedPreferences.getBoolean("setting_dark_mode", true);
+        if (isEnable) {
+            if (App.isAutoDarkMode(getActivity())) {
+                darkModeSettings.setSummary("当前夜间模式:自动切换(" +
+                        App.getDarkModeTime(getActivity())[0] +
+                        ":00~" +
+                        App.getDarkModeTime(getActivity())[1] +
+                        ":00)");
+            } else {
+                darkModeSettings.setSummary("当前夜间模式:开");
+            }
+        } else {
+            darkModeSettings.setSummary("当前夜间模式:关");
+        }
+    }
+
+    @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
             case "setting_forums_url":
@@ -193,27 +211,18 @@ public class FragSetting extends PreferenceFragment
                         Toast.LENGTH_SHORT).show();
                 break;
             case "setting_dark_mode":
-                bbbb = sharedPreferences.getBoolean("setting_dark_mode", false);
+                bbbb = sharedPreferences.getBoolean("setting_dark_mode", true);
                 if (bbbb) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                     Toast.makeText(getActivity(), "切换到夜间模式", Toast.LENGTH_SHORT).show();
                 } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 }
-                setDarkModeTime.setEnabled(bbbb);
+                darkModeSettings.setSummary("当前夜间模式:" + (bbbb ? "开" : "关"));
+                darkModeSettings.setEnabled(bbbb);
                 Activity a = getActivity();
                 if (a != null) a.onContentChanged();
                 break;
-            case "setting_auto_dark_mode":
-                bbbb = sharedPreferences.getBoolean("setting_auto_dark_mode", true);
-                setDarkModeTime.setEnabled(bbbb);
-                break;
         }
-    }
-
-    @Override
-    public void onTimeSet(int startHour, int startMinute, int endHour, int endMinute) {
-        setDarkModeTime.setSummary("当前夜间时间为" +
-                startHour + ":" + startMinute + "~" + endHour + ":" + endMinute);
     }
 }

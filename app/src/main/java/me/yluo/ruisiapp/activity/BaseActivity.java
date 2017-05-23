@@ -2,8 +2,10 @@ package me.yluo.ruisiapp.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -14,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.utils.DimmenUtils;
@@ -23,6 +27,44 @@ import me.yluo.ruisiapp.utils.DimmenUtils;
  * 所有activity的基类
  */
 public class BaseActivity extends AppCompatActivity {
+
+    @Override
+    protected void onResume() {
+        switchTheme();
+        super.onResume();
+    }
+
+    //切换主题
+    public void switchTheme() {
+        boolean enableDarkMode = PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean("setting_dark_mode", false);
+        boolean auto = false;
+        int cur = AppCompatDelegate.getDefaultNightMode();
+        int to = cur;
+        if (enableDarkMode) {//允许夜间模式
+            if (auto = App.isAutoDarkMode(this)) {//自动夜间模式
+                int[] time = App.getDarkModeTime(this);
+                int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+                if ((hour >= time[0] || hour < time[1])) {
+                    to = AppCompatDelegate.MODE_NIGHT_YES;
+                } else {
+                    to = AppCompatDelegate.MODE_NIGHT_NO;
+                }
+            } else {
+                to = AppCompatDelegate.MODE_NIGHT_YES;
+            }
+        } else {//不允许夜间模式
+            to = AppCompatDelegate.MODE_NIGHT_NO;
+        }
+
+        if (cur != to) {
+            AppCompatDelegate.setDefaultNightMode(to);
+            if (auto) {
+                showToast("自动切换到" + (to == AppCompatDelegate.MODE_NIGHT_YES ?
+                        "夜间模式" : "日间模式"));
+            }
+        }
+    }
 
     private static Toast mToast;
 
