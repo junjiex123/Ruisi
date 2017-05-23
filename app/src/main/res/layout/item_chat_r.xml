@@ -29,7 +29,7 @@
             app:civ_border_color="@android:color/white"
             app:civ_border_width="1dp" />
 
-        <xyz.yluo.ruisiapp.widget.htmlview.HtmlView
+        <TextView
             android:id="@+id/content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             android:background="@drawable/sl_chat_me"
             android:textColor="@android:color/white"
             android:textSize="16sp"
-            tool:text="testtesttesttesttesttesttesttesttesttesttes" />
+            tool:text="聊天内容" />
     </RelativeLayout>
 
 
