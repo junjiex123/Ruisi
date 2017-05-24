@@ -65,7 +65,7 @@ public class AddFriendDialog extends DialogFragment {
             if (checkInput()) {
                 dialogListener.OnAddFriendOkClick(
                         content.getText().toString(),
-                        GetId.getid("uid=", userImage));
+                        GetId.getId("uid=", userImage));
                 AddFriendDialog.this.getDialog().cancel();
             }
         });

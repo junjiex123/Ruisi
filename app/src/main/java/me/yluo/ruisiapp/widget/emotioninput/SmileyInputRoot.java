@@ -3,7 +3,6 @@ package me.yluo.ruisiapp.widget.emotioninput;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;

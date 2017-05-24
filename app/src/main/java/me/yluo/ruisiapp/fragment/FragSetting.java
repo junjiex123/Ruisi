@@ -13,7 +13,6 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
-import android.util.Log;
 import android.widget.Toast;
 
 import me.yluo.ruisiapp.App;

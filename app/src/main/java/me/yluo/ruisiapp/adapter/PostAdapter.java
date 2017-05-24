@@ -62,9 +62,9 @@ public class PostAdapter extends BaseAdapter {
 
     @Override
     protected int getItemType(int pos) {
-        if (datalist.get(pos).getType() == SingleType.CONTENT) {
+        if (datalist.get(pos).type == SingleType.CONTENT) {
             return CONTENT;
-        } else if (datalist.get(pos).getType() == SingleType.HEADER) {
+        } else if (datalist.get(pos).type == SingleType.HEADER) {
             return HEADER;
         } else {
             return COMENT;
@@ -99,7 +99,7 @@ public class PostAdapter extends BaseAdapter {
             postTime = (TextView) itemView.findViewById(R.id.article_post_time);
             content = (TextView) itemView.findViewById(R.id.content);
             userAvatar.setOnClickListener(v -> UserDetailActivity.openWithAnimation(
-                    activity, datalist.get(0).getUsername(), userAvatar, datalist.get(0).getUid()));
+                    activity, datalist.get(0).username, userAvatar, datalist.get(0).uid));
 
             btnRemove.setOnClickListener(this);
             btnEdit.setOnClickListener(this);
@@ -108,20 +108,20 @@ public class PostAdapter extends BaseAdapter {
         @Override
         void setData(int position) {
             final SingleArticleData single = datalist.get(position);
-            title.setText(single.getTitle());
-            userName.setText(single.getUsername());
+            title.setText(single.title);
+            userName.setText(single.username);
             String img_url = UrlUtils.getAvaterurlm(single.getImg());
             Picasso.with(activity)
                     .load(img_url)
                     .resize(size, size)
                     .error(R.drawable.image_placeholder)
                     .into(userAvatar);
-            String post_time = "发表于:" + single.getPostTime();
+            String post_time = "发表于:" + single.postTime;
             postTime.setText(post_time);
-            HtmlView.parseHtml(single.getCotent()).into(content);
+            HtmlView.parseHtml(single.content).into(content);
 
             //判断是不是自己
-            if (App.ISLOGIN(activity) && App.getUid(activity).equals(single.getUid())) {
+            if (App.ISLOGIN(activity) && App.getUid(activity).equals(single.uid)) {
                 btnEdit.setVisibility(View.VISIBLE);
                 if (getItemCount() > 2) {
                     btnRemove.setVisibility(View.GONE);
@@ -152,7 +152,7 @@ public class PostAdapter extends BaseAdapter {
             labelLz = (TextView) itemView.findViewById(R.id.bt_lable_lz);
 
             comment.setOnLongClickListener(view -> {
-                String user = datalist.get(getAdapterPosition()).getUsername();
+                String user = datalist.get(getAdapterPosition()).username;
                 String content = comment.getText().toString().trim();
                 ClipboardManager cm = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
                 cm.setPrimaryClip(ClipData.newPlainText(null, content));
@@ -161,8 +161,8 @@ public class PostAdapter extends BaseAdapter {
             });
 
             avatar.setOnClickListener(v -> UserDetailActivity.openWithAnimation(
-                    activity, datalist.get(getAdapterPosition()).getUsername(),
-                    avatar, datalist.get(getAdapterPosition()).getUid()));
+                    activity, datalist.get(getAdapterPosition()).username,
+                    avatar, datalist.get(getAdapterPosition()).uid));
 
             btnRemove.setOnClickListener(this);
             btnEdit.setOnClickListener(this);
@@ -173,11 +173,11 @@ public class PostAdapter extends BaseAdapter {
         @Override
         void setData(int position) {
             final SingleArticleData single = datalist.get(position);
-            username.setText(single.getUsername());
+            username.setText(single.username);
             //判断是不是楼主
-            boolean isLz = datalist.get(position).getUsername().equals(datalist.get(0).getUsername());
+            boolean isLz = datalist.get(position).username.equals(datalist.get(0).username);
             labelLz.setVisibility(isLz ? View.VISIBLE : View.GONE);
-            boolean isReply = single.getReplyUrlTitle().contains("action=reply");
+            boolean isReply = single.replyUrlTitle.contains("action=reply");
             btn_reply_2.setVisibility(isReply ? View.VISIBLE : View.GONE);
             String img_url = UrlUtils.getAvaterurlm(single.getImg());
             Picasso.with(activity)
@@ -185,13 +185,13 @@ public class PostAdapter extends BaseAdapter {
                     .resize(size, size)
                     .error(R.drawable.image_placeholder)
                     .into(avatar);
-            replyTime.setText(single.getPostTime());
-            index.setText(single.getIndex());
+            replyTime.setText(single.postTime);
+            index.setText(single.index);
 
-            HtmlView.parseHtml(single.getCotent()).into(comment);
+            HtmlView.parseHtml(single.content).into(comment);
 
             //判断是不是自己
-            if (App.ISLOGIN(activity) && App.getUid(activity).equals(single.getUid())) {
+            if (App.ISLOGIN(activity) && App.getUid(activity).equals(single.uid)) {
                 btnRemove.setVisibility(View.VISIBLE);
                 btnEdit.setVisibility(View.VISIBLE);
             } else {

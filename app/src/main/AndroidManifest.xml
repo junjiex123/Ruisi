@@ -78,13 +78,12 @@
             android:screenOrientation="portrait" />
 
         <service android:name=".downloadfile.DownloadService" />
-
         <activity android:name=".activity.FragementActivity" />
         <activity android:name=".activity.FriendActivity" />
         <activity android:name=".activity.ViewImgActivity" />
         <activity android:name=".activity.SettingActivity" />
         <activity android:name=".activity.ReplyCzActivity" />
-        <activity android:name=".activity.NightModeActivity"></activity>
+        <activity android:name=".activity.NightModeActivity" />
     </application>
 
 </manifest>

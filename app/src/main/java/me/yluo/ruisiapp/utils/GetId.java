@@ -19,11 +19,11 @@ import me.yluo.ruisiapp.R;
  */
 public class GetId {
 
-    public static String getid(String url) {
-        return getid("", url);
+    public static String getId(String url) {
+        return getId("", url);
     }
 
-    public static String getid(String prefix, String url) {
+    public static String getId(String prefix, String url) {
         Pattern pattern = null;
         int len = 0;
         if (TextUtils.isEmpty(prefix)) {
@@ -83,6 +83,7 @@ public class GetId {
 
     }
 
+
     public static int getNumber(String text) {
         Pattern pattern = Pattern.compile("[0-9]+");
         Matcher matcher = pattern.matcher(text);
@@ -106,7 +107,7 @@ public class GetId {
     }
 
     public static int getFroumFid(String url) {
-        String fid = getid("fid=", url);
+        String fid = getId("fid=", url);
         if (TextUtils.isEmpty(fid)) {
             return -1;
         } else {

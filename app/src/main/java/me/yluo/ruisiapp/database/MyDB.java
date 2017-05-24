@@ -78,7 +78,7 @@ public class MyDB {
         getDb();
         String sql = "SELECT tid from " + TABLE_READ_HISTORY + " where tid = ?";
         for (ArticleListData data : datas) {
-            String tid = GetId.getid("tid=", data.titleUrl);
+            String tid = GetId.getId("tid=", data.titleUrl);
             String args[] = new String[]{String.valueOf(tid)};
             Cursor result = db.rawQuery(sql, args);
             int count = result.getCount();

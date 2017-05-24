@@ -121,7 +121,7 @@ public class ChatActivity extends BaseActivity {
                         replyUrl = temps;
                         touid = doc.select("input[name=touid]").attr("value");
                     } else {
-                        touid = GetId.getid("touid=", url);
+                        touid = GetId.getId("touid=", url);
                         replyUrl = "home.php?mod=spacecp&ac=pm&op=send&pmid=" + touid + "&daterange=0&pmsubmit=yes&mobile=2";
                     }
                     Elements elements = doc.select(".msgbox.b_m");

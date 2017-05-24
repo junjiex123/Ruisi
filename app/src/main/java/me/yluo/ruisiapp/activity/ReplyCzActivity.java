@@ -49,7 +49,7 @@ public class ReplyCzActivity extends BaseActivity {
         if (b != null) {
             data = b.getParcelable("data");
             isLz = b.getBoolean("islz", false);
-            title = "回复" + data.getIndex() + ": " + data.getUsername();
+            title = "回复" + data.index + ": " + data.username;
         }
         initToolBar(true, title);
         input = (EditText) findViewById(R.id.ed_comment);
@@ -83,21 +83,21 @@ public class ReplyCzActivity extends BaseActivity {
             ImageView imageView = (ImageView) findViewById(R.id.article_user_image);
             String img_url = UrlUtils.getAvaterurlm(data.getImg());
             Picasso.with(this).load(img_url).placeholder(R.drawable.image_placeholder).into(imageView);
-            ((TextView) findViewById(R.id.replay_author)).setText(data.getUsername());
-            ((TextView) findViewById(R.id.replay_index)).setText(data.getIndex());
-            ((TextView) findViewById(R.id.replay_time)).setText(data.getPostTime());
+            ((TextView) findViewById(R.id.replay_author)).setText(data.username);
+            ((TextView) findViewById(R.id.replay_index)).setText(data.index);
+            ((TextView) findViewById(R.id.replay_time)).setText(data.postTime);
 
             TextView t =  (TextView) findViewById(R.id.html_text);
-            HtmlView.parseHtml(data.getCotent()).into(t);
-            input.setHint("回复: " + data.getUsername());
+            HtmlView.parseHtml(data.content).into(t);
+            input.setHint("回复: " + data.username);
 
             imageView.setOnClickListener(v -> UserDetailActivity.openWithAnimation(
-                    this, data.getUsername(),
-                    imageView, data.getUid()));
+                    this, data.username,
+                    imageView, data.uid));
 
         }
 
-        HttpUtil.get(this, data.getReplyUrlTitle(), new ResponseHandler() {
+        HttpUtil.get(this, data.replyUrlTitle, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 Document document = Jsoup.parse(new String(response));

@@ -243,7 +243,7 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
                     totalPage = n;
                 }
                 if (totalPage > 1) {
-                    searchid = GetId.getid("searchid=", pageinfos.select("a").attr("href"));
+                    searchid = GetId.getId("searchid=", pageinfos.select("a").attr("href"));
                 }
             }
 

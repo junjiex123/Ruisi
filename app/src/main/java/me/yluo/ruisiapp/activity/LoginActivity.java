@@ -232,7 +232,7 @@ public class LoginActivity extends BaseActivity {
         int pos2 = info.indexOf("，");
         String grade = info.substring(0, pos1);
         String name = info.substring(pos1 + 1, pos2);
-        String uid = GetId.getid("uid=", res.substring(i));
+        String uid = GetId.getId("uid=", res.substring(i));
         int indexhash = res.indexOf("formhash");
         String hash = res.substring(indexhash + 9, indexhash + 17);
         editor.putString(App.USER_UID_KEY, uid);

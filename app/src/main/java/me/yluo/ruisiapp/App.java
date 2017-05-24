@@ -43,7 +43,7 @@ public class App extends Application {
 
         //注册网络变化广播
         if (receiver != null) {
-            Log.e("application onTerminate", "取消注册广播");
+            Log.d("application onTerminate", "取消注册广播");
             unregisterReceiver(receiver);
         }
 

@@ -27,10 +27,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import me.yluo.ruisiapp.App;
+import me.yluo.ruisiapp.utils.GetId;
 import me.yluo.ruisiapp.widget.htmlview.callback.ImageGetter;
 import me.yluo.ruisiapp.widget.htmlview.callback.ImageGetterCallBack;
 
 //rs 表情static/image/smiley/jgz/jgz065.png
+//小图 不动
 public class DefaultImageGetter implements ImageGetter {
 
     private static final String TAG = DefaultImageGetter.class.getSimpleName();
@@ -43,6 +45,7 @@ public class DefaultImageGetter implements ImageGetter {
 
     //表情链接
     private static final String SMILEY_PREFIX = "static/image/smiley/";
+    private static final String ALBUM_PREFIX = "forum.php?mod=image&aid=";
 
     static {
         taskCollection = new HashSet<>();
@@ -53,7 +56,7 @@ public class DefaultImageGetter implements ImageGetter {
     }
 
 
-    public DefaultImageGetter(int maxWidth, Context context) {
+    public DefaultImageGetter(Context context, int maxWidth) {
         this.context = context;
         this.maxWidth = maxWidth;
         imageCacher = ImageCacher.instance(context.getCacheDir() + "/imageCache/");
@@ -64,20 +67,29 @@ public class DefaultImageGetter implements ImageGetter {
     @Override
     public void getDrawable(String source, int start, int end, ImageGetterCallBack callBack) {
         if (callBack == null) return;
-        //检查内存缓存
-        Bitmap b = imageCacher.getMemCache(source);
-        if (b == null && !TextUtils.isEmpty(source)) {
-            if (source.startsWith(SMILEY_PREFIX)) {
+        boolean isInRam = true; //是否在内存
+        String cacheKey = source; //缓存key
+        Bitmap b = null;
+        if (!TextUtils.isEmpty(source)) {
+            if (source.startsWith(SMILEY_PREFIX)) { //表情文件 内存->assets->文件->网络
+                cacheKey = source.substring(source.indexOf("smiley/"));
+                //内存
+                b = imageCacher.getMemCache(cacheKey);
+
                 //assets 表情
-                String fileToSave = source.substring(source.indexOf("smiley"));
-                if (source.contains("/tieba") || source.contains("/jgz") || source.contains("/acn") || source.contains("/default")) {
-                    if(source.contains("/default")){
-                        fileToSave = fileToSave.replace(".gif",".png");
-                    }
-                    try {
-                        b = decodeBitmapFromStream(context.getAssets().open(fileToSave), false, smileySize);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                String fileToSave = null;
+                if (b == null) {
+                    isInRam = false;
+                    fileToSave = source.substring(source.indexOf("smiley"));
+                    if (source.contains("/tieba") || source.contains("/jgz") || source.contains("/acn") || source.contains("/default")) {
+                        if (source.contains("/default")) {
+                            fileToSave = fileToSave.replace(".gif", ".png");
+                        }
+                        try {
+                            b = decodeBitmapFromStream(context.getAssets().open(fileToSave), false, smileySize);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
 
@@ -93,19 +105,37 @@ public class DefaultImageGetter implements ImageGetter {
                     }
                 }
                 b = scaleSmiley(b, smileySize);
-            } else {
-                //网络图片再检查硬盘缓存
-                b = BitmapFactory.decodeStream(imageCacher.getDiskCacheStream(source));
-                b = limitBitmap(b, maxWidth);
+            } else if (source.startsWith(ALBUM_PREFIX)) {//图片文件 可以浏览大图
+                cacheKey = GetId.getId("aid=", source); //cacheKey = aid
+                if (!TextUtils.isEmpty(cacheKey)) {
+                    //内存
+                    b = imageCacher.getMemCache(cacheKey);
+                    if (b == null) {
+                        isInRam = false;
+
+                        //硬盘
+                        b = BitmapFactory.decodeStream(imageCacher.getDiskCacheStream(cacheKey));
+                        b = limitBitmap(b, maxWidth);
+                    }
+                }
+            } else {//其余图片
+                b = imageCacher.getMemCache(cacheKey);
+                if (b == null) {
+                    isInRam = false;
+                    //检查硬盘
+                    b = BitmapFactory.decodeStream(imageCacher.getDiskCacheStream(cacheKey));
+                    b = limitBitmap(b, maxWidth);
+                }
             }
 
-            //放到内存缓存
-            if (b != null) {
-                imageCacher.putMemCache(source, b);
-            } else {
+            if (!isInRam && b != null) {//放到内存缓存
+                imageCacher.putMemCache(cacheKey, b);
+            }
+
+            if (b == null) {
                 //没有缓存去下载
                 if (!mPool.isShutdown()) {
-                    mPool.execute(new BitmapWorkerTask(source, start, end, callBack));
+                    mPool.execute(new BitmapWorkerTask(source, cacheKey, start, end, callBack));
                 }
             }
         }
@@ -129,17 +159,18 @@ public class DefaultImageGetter implements ImageGetter {
 
     //图片下载及存储
     private class BitmapWorkerTask implements Runnable {
-        private String imageUrl;
+        private String source;
         private boolean isCancel;
         private int start, end;
         private ImageGetterCallBack callBack;
-        private boolean isSmiley = false;
+        private String cacheKey;
 
-        public BitmapWorkerTask(String imageUrl, int start, int end, ImageGetterCallBack callBack) {
-            this.imageUrl = imageUrl;
+        public BitmapWorkerTask(String source, String key, int start, int end, ImageGetterCallBack callBack) {
+            this.source = source;
             this.start = start;
             this.end = end;
             this.callBack = callBack;
+            this.cacheKey = key;
         }
 
         public void cancel() {
@@ -148,37 +179,38 @@ public class DefaultImageGetter implements ImageGetter {
 
         @Override
         public void run() {
+            boolean isSmiley = false;
             taskCollection.add(this);
-            Log.d(TAG, "start download image " + imageUrl);
+            Log.d(TAG, "start download image " + source);
             HttpURLConnection urlConnection = null;
             BufferedOutputStream out = null;
             BufferedInputStream in = null;
             Bitmap bitmap = null;
+
+            isSmiley = source.startsWith(SMILEY_PREFIX); //表情
+
             try {
-                //表情文件
-                isSmiley = imageUrl.startsWith(SMILEY_PREFIX);
-                final URL url = new URL(imageUrl.startsWith("http") ? imageUrl : App.getBaseUrl() + imageUrl);
+                final URL url = new URL(source.startsWith("http") ? source : App.getBaseUrl() + source);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 in = new BufferedInputStream(urlConnection.getInputStream(), 4 * 1024);
                 bitmap = BitmapFactory.decodeStream(in);
                 if (bitmap != null && !isCancel) {
-                    Log.d(TAG, "download image compete " + imageUrl);
-                    //存到硬盘
+                    Log.d(TAG, "download image compete " + source);
                     Bitmap.CompressFormat f = Bitmap.CompressFormat.PNG;
-                    if (imageUrl.endsWith(".jpg") || imageUrl.endsWith(".jpeg") ||
-                            imageUrl.endsWith(".JPG") || imageUrl.endsWith(".JPEG")) {
+                    if (source.endsWith(".jpg") || source.endsWith(".jpeg") ||
+                            source.endsWith(".JPG") || source.endsWith(".JPEG")) {
                         f = Bitmap.CompressFormat.JPEG;
-                    } else if (imageUrl.endsWith(".webp")) {
+                    } else if (source.endsWith(".webp")) {
                         f = Bitmap.CompressFormat.WEBP;
                     }
 
                     if (isSmiley) { //缓存表情
-                        String fileDir = imageUrl.substring(imageUrl.indexOf("/smiley"), imageUrl.lastIndexOf("/"));
+                        String fileDir = source.substring(source.indexOf("/smiley"), source.lastIndexOf("/"));
                         File dir = new File(context.getFilesDir() + fileDir);
                         if (!dir.exists()) {
-                            Log.e("image getter", "创建目录" + dir.mkdirs());
+                            Log.d("image getter", "创建目录" + dir.mkdirs());
                         }
-                        String path = imageUrl.substring(imageUrl.indexOf("/smiley"));
+                        String path = source.substring(source.indexOf("/smiley"));
                         File file = new File(context.getFilesDir() + path);
                         Log.d(TAG, "save smiley to file:" + file);
 
@@ -188,16 +220,17 @@ public class DefaultImageGetter implements ImageGetter {
                         bitmap = scaleSmiley(bitmap, smileySize);
                     } else { //缓存一般图片
                         out = new BufferedOutputStream(
-                                imageCacher.newDiskCacheStream(imageUrl), 4 * 1024);
+                                imageCacher.newDiskCacheStream(cacheKey), 4 * 1024);
                         bitmap.compress(f, 90, out);
                         out.flush();
                         //存到内存之前需要压缩
                         bitmap = limitBitmap(bitmap, maxWidth);
                     }
 
-                    imageCacher.putMemCache(imageUrl, bitmap);
+                    //存入内存缓存
+                    imageCacher.putMemCache(cacheKey, bitmap);
                 } else {
-                    Log.d(TAG, "download image error " + imageUrl);
+                    Log.d(TAG, "download image error " + source);
                 }
             } catch (final IOException e) {
                 e.printStackTrace();
@@ -219,9 +252,8 @@ public class DefaultImageGetter implements ImageGetter {
             taskCollection.remove(this);
 
             if (!isCancel && bitmap != null) {
-                Log.d(TAG, "notify update " + imageUrl);
                 //如果下载失败就不用返回了 因为之前以前有holder了
-                callBack.onImageReady(imageUrl, start, end, bmpToDrawable(imageUrl, bitmap));
+                callBack.onImageReady(source, start, end, bmpToDrawable(source, bitmap));
             }
         }
     }

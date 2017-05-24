@@ -52,7 +52,7 @@ public class UrlUtils {
     public static String getAvaterurls(String urlUid) {
         String uid = urlUid;
         if (urlUid.contains("uid")) {
-            uid = GetId.getid("uid=", urlUid);
+            uid = GetId.getId("uid=", urlUid);
         }
         return App.getBaseUrl() + "ucenter/avatar.php?uid=" + uid + "&size=small";
     }
@@ -60,7 +60,7 @@ public class UrlUtils {
     public static String getAvaterurlm(String urlUid) {
         String uid = urlUid;
         if (urlUid.contains("uid")) {
-            uid = GetId.getid("uid=", urlUid);
+            uid = GetId.getId("uid=", urlUid);
         }
         return App.getBaseUrl() + "ucenter/avatar.php?uid=" + uid + "&size=middle";
     }
@@ -68,7 +68,7 @@ public class UrlUtils {
     public static String getAvaterurlb(String urlUid) {
         String uid = urlUid;
         if (urlUid.contains("uid")) {
-            uid = GetId.getid("uid=", urlUid);
+            uid = GetId.getId("uid=", urlUid);
         }
         return App.getBaseUrl() + "ucenter/avatar.php?uid=" + uid + "&size=big";
     }

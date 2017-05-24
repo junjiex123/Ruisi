@@ -12,92 +12,33 @@ import me.yluo.ruisiapp.utils.UrlUtils;
 public class SingleArticleData implements Parcelable {
 
     //用来标识是楼主还是内容还是loadmore
-    private SingleType type;
-    private String username;
-    private String postTime;
-    private String uid;
-    private String pid;
+    public SingleType type;
+    public String username;
+    public String postTime;
+    public String uid;
+    public String pid;
     //楼层
-    private String index;
+    public String index;
     //回复链接
-    private String replyUrlTitle;
-    private String cotent;
-    private String title;
-    private String editTime;
+    public String replyUrlTitle;
+    public String content;
+    public String title;
 
-    public SingleArticleData(SingleType type, String title, String uid, String username, String postTime, String index, String replyUrl, String cotent, String pid) {
+    public SingleArticleData(SingleType type, String title, String uid, String username, String postTime, String index, String replyUrl, String content, String pid) {
         this.type = type;
         this.username = username;
         this.postTime = postTime;
         this.index = index;
         this.replyUrlTitle = replyUrl;
-        this.cotent = cotent;
+        this.content = content;
         this.title = title;
         this.pid = pid;
         this.uid = uid;
     }
 
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getImg() {
         return UrlUtils.getAvaterurlm(uid);
     }
-
-    public String getPid() {
-        return pid;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getReplyUrlTitle() {
-        return replyUrlTitle;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setEditTime(String editTime) {
-        this.editTime = editTime;
-    }
-
-    public String getEditTime() {
-        return editTime;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public String getPostTime() {
-        return postTime;
-    }
-
-    public String getCotent() {
-        return cotent;
-    }
-
-    public String getIndex() {
-        return index;
-    }
-
-    public SingleType getType() {
-        return type;
-    }
-
-    public void setCotent(String cotent) {
-        this.cotent = cotent;
-    }
-
-    public void setType(SingleType type) {
-        this.type = type;
-    }
-
 
     @Override
     public int describeContents() {
@@ -113,9 +54,8 @@ public class SingleArticleData implements Parcelable {
         dest.writeString(this.pid);
         dest.writeString(this.index);
         dest.writeString(this.replyUrlTitle);
-        dest.writeString(this.cotent);
+        dest.writeString(this.content);
         dest.writeString(this.title);
-        dest.writeString(this.editTime);
     }
 
     protected SingleArticleData(Parcel in) {
@@ -127,9 +67,8 @@ public class SingleArticleData implements Parcelable {
         this.pid = in.readString();
         this.index = in.readString();
         this.replyUrlTitle = in.readString();
-        this.cotent = in.readString();
+        this.content = in.readString();
         this.title = in.readString();
-        this.editTime = in.readString();
     }
 
     public static final Parcelable.Creator<SingleArticleData> CREATOR = new Parcelable.Creator<SingleArticleData>() {

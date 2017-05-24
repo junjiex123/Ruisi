@@ -116,7 +116,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         infoList.setLayoutManager(layoutManager);
         infoList.addItemDecoration(new MyListDivider(this, MyListDivider.VERTICAL));
         infoList.setAdapter(adapter);
-        userUid = GetId.getid("uid=", imageUrl);
+        userUid = GetId.getId("uid=", imageUrl);
         //如果是自己
         if (userUid.equals(App.getUid(this))) {
             fab.setImageResource(R.drawable.ic_close_24dp);

@@ -104,9 +104,9 @@ public class PostActivity extends BaseActivity
         Bundle b = getIntent().getExtras();
         String url = b.getString("url");
         AuthorName = b.getString("author");
-        Tid = GetId.getid("tid=", url);
+        Tid = GetId.getId("tid=", url);
         if (url != null && url.contains("redirect")) {
-            RedirectPid = GetId.getid("pid=", url);
+            RedirectPid = GetId.getId("pid=", url);
             if (!App.IS_SCHOOL_NET) {
                 url = url + "&mobile=2";
             }
@@ -231,7 +231,7 @@ public class PostActivity extends BaseActivity
                 if (isLogin()) {
                     SingleArticleData single = datas.get(position);
                     Intent i = new Intent(PostActivity.this, ReplyCzActivity.class);
-                    i.putExtra("islz", single.getUid().equals(datas.get(0).getUid()));
+                    i.putExtra("islz", single.uid.equals(datas.get(0).uid));
                     i.putExtra("data", single);
                     startActivityForResult(i, 20);
                 }
@@ -242,7 +242,7 @@ public class PostActivity extends BaseActivity
             case R.id.tv_edit:
                 edit_pos = position;
                 Intent i = new Intent(this, EditActivity.class);
-                i.putExtra("PID", datas.get(position).getPid());
+                i.putExtra("PID", datas.get(position).pid);
                 i.putExtra("TID", Tid);
                 startActivityForResult(i, 10);
                 break;
@@ -270,9 +270,9 @@ public class PostActivity extends BaseActivity
                 String title = b.getString("TITLE", "");
                 String content = b.getString("CONTENT", "");
                 if (edit_pos == 0 && !TextUtils.isEmpty(title)) {
-                    datas.get(0).setTitle(title);
+                    datas.get(0).title = title;
                 }
-                datas.get(edit_pos).setCotent(content);
+                datas.get(edit_pos).content = content;
                 adapter.notifyItemChanged(edit_pos);
             } else if (requestCode == 20) {
                 //回复层主返回
@@ -338,7 +338,9 @@ public class PostActivity extends BaseActivity
                 }
             }
 
-            Document doc = Jsoup.parse(htmlData);
+            Document doc = Jsoup.parse(htmlData.substring(
+                    htmlData.indexOf("<body"),
+                    htmlData.lastIndexOf("</body>") + 7));
             //判断错误
             Elements elements = doc.select(".postlist");
             if (elements.size() <= 0) {
@@ -352,11 +354,9 @@ public class PostActivity extends BaseActivity
 
             //获得回复楼主的url
             if (TextUtils.isEmpty(replyUrl)) {
-                //获取回复/hash
-                if (!doc.select("input[name=formhash]").isEmpty()) {
-                    replyUrl = doc.select("form#fastpostform").attr("action");
-                    //String hash = doc.select("input[name=formhash]").attr("value");
-                }
+                String s = elements.select("form#fastpostform").attr("action");
+                if (!TextUtils.isEmpty(s))
+                    replyUrl = s;
             }
 
             //获取总页数 和当前页数
@@ -374,13 +374,12 @@ public class PostActivity extends BaseActivity
             int size = postlist.size();
             for (int i = 0; i < size; i++) {
                 Element temp = postlist.get(i);
-                SingleArticleData data;
                 String pid = temp.attr("id").substring(3);
-                String uid = GetId.getid("uid=", temp.select("span[class=avatar]").select("img").attr("src"));
+                String uid = GetId.getId("uid=", temp.select("span[class=avatar]").select("img").attr("src"));
                 Elements userInfo = temp.select("ul.authi");
-                String commentindex = userInfo.select("li.grey").select("em").text();
+                String commentIndex = userInfo.select("li.grey").select("em").text();
                 String username = userInfo.select("a[href^=home.php?mod=space&uid=]").text();
-                String posttime = userInfo.select("li.grey.rela").text();
+                String postTime = userInfo.select("li.grey.rela").text().replace("收藏", "");
                 String replyUrl = temp.select(".replybtn").select("input").attr("href");
                 Elements contentels = temp.select(".message");
                 //是否移除所有样式
@@ -389,31 +388,32 @@ public class PostActivity extends BaseActivity
                     contentels.select("[style]").removeAttr("style");
                     contentels.select("font").removeAttr("color").removeAttr("size").removeAttr("face");
                 }
+
                 //处理代码
                 for (Element codee : contentels.select(".blockcode")) {
                     codee.html("<code>" + codee.html().trim() + "</code>");
                 }
+
                 //处理引用
                 for (Element codee : contentels.select("blockquote")) {
                     int start = codee.html().indexOf("发表于");
                     if (start > 0) {
-                        int end = codee.html().indexOf("</font>", start);
-                        if (end > start) {
-                            int c = end - start;
-                            codee.html(codee.html().replaceAll("发表于.{" + (c - 3) + "}", ""));
+                        Elements es = codee.select("a");
+                        if (es.size() > 0 && es.get(0).text().contains("发表于")) {
+                            String user = es.get(0).text().substring(0, es.get(0).text().indexOf(" "));
+                            int sstart = codee.html().indexOf("<br>", start) + 4;
+                            codee.html(user + ":" + codee.html().substring(sstart).replaceAll("<br>", " "));
                             break;
                         }
                     }
                 }
 
-                //删除修改日期
-                String edittime = contentels.select("i.pstatus").remove().text();
                 String finalcontent = contentels.html().trim();
-
+                SingleArticleData data;
                 if (pageLoad == 1 && i == 0) {
                     data = new SingleArticleData(SingleType.CONTENT, Title, uid,
-                            username, posttime.replace("收藏", ""),
-                            commentindex, replyUrl, finalcontent, pid);
+                            username, postTime,
+                            commentIndex, replyUrl, finalcontent, pid);
                     AuthorName = username;
                     if (!isSaveToDataBase) {
                         //插入数据库
@@ -423,10 +423,7 @@ public class PostActivity extends BaseActivity
                     }
                 } else {
                     data = new SingleArticleData(SingleType.COMMENT, Title, uid,
-                            username, posttime, commentindex, replyUrl, finalcontent, pid);
-                }
-                if (!TextUtils.isEmpty(edittime)) {
-                    data.setEditTime(edittime);
+                            username, postTime, commentIndex, replyUrl, finalcontent, pid);
                 }
                 tepdata.add(data);
             }
@@ -459,7 +456,7 @@ public class PostActivity extends BaseActivity
             if (datas.size() == 0) {
                 datas.addAll(tepdata);
             } else {
-                String strindex = datas.get(datas.size() - 1).getIndex();
+                String strindex = datas.get(datas.size() - 1).index;
                 if (TextUtils.isEmpty(strindex)) {
                     strindex = "-1";
                 } else if (strindex.equals("沙发")) {
@@ -471,7 +468,7 @@ public class PostActivity extends BaseActivity
                 }
                 int index = GetId.getNumber(strindex);
                 for (int i = 0; i < tepdata.size(); i++) {
-                    String strindexp = tepdata.get(i).getIndex();
+                    String strindexp = tepdata.get(i).index;
                     if (strindexp.equals("沙发")) {
                         strindexp = "1";
                     } else if (strindex.equals("板凳")) {
@@ -492,8 +489,8 @@ public class PostActivity extends BaseActivity
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
             }
 
-            if (datas.size() > 0 && (datas.get(0).getType() != SingleType.CONTENT) &&
-                    (datas.get(0).getType() != SingleType.HEADER)) {
+            if (datas.size() > 0 && (datas.get(0).type != SingleType.CONTENT) &&
+                    (datas.get(0).type != SingleType.HEADER)) {
                 datas.add(0, new SingleArticleData(SingleType.HEADER, Title,
                         null, null, null, null, null, null, null));
             }
@@ -507,8 +504,8 @@ public class PostActivity extends BaseActivity
             //打开的时候移动到指定楼层
             if (!TextUtils.isEmpty(RedirectPid)) {
                 for (int i = 0; i < datas.size(); i++) {
-                    if (!TextUtils.isEmpty(datas.get(i).getPid())
-                            && datas.get(i).getPid().equals(RedirectPid)) {
+                    if (!TextUtils.isEmpty(datas.get(i).pid)
+                            && datas.get(i).pid.equals(RedirectPid)) {
                         topicList.scrollToPosition(i);
                         break;
                     }
@@ -526,6 +523,7 @@ public class PostActivity extends BaseActivity
                 spinner.setSelection(page_now - 1);
             }
         }
+
     }
 
     /**
@@ -556,7 +554,7 @@ public class PostActivity extends BaseActivity
         params.put("editsubmit", "yes");
         //params.put("fid",);
         params.put("tid", Tid);
-        params.put("pid", datas.get(pos).getPid());
+        params.put("pid", datas.get(pos).pid);
         params.put("delete", "1");
         HttpUtil.post(this, UrlUtils.getDeleteReplyUrl(), params, new ResponseHandler() {
             @Override
@@ -564,7 +562,7 @@ public class PostActivity extends BaseActivity
                 String res = new String(response);
                 Log.e("resoult", res);
                 if (res.contains("主题删除成功")) {
-                    if (datas.get(pos).getType() == SingleType.CONTENT) {
+                    if (datas.get(pos).type == SingleType.CONTENT) {
                         showToast("主题删除成功");
                         finish();
                     } else {

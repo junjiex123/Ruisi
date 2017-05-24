@@ -515,6 +515,7 @@ public class HtmlParser {
 
     private boolean equalTag(int start, String b) {
         int len = b.length();
+
         while (len-- != 0) {
             if (buf[start] != b.charAt(start))
                 return false;
@@ -665,33 +666,35 @@ public class HtmlParser {
                 }
                 break;
             case 5:
-                if (equalTag(2, "dio")) {
-                    if (buf[0] == 'a' && buf[1] == 'u') {
-                        return HtmlTag.AUDIO;
-                    } else if (buf[0] == 'v' && buf[1] == 'e') {
-                        return HtmlTag.VEDIO;
-                    }
-                } else {
-                    switch (buf[0]) {
-                        case 's':
-                            if (equalTag(1, "mall")) {
-                                return HtmlTag.SMALL;
-                            }
-                            break;
-                        case 't':
-                            if (equalTag(1, "able")) {
-                                return HtmlTag.TABLE;
-                            } else if (equalTag(1, "body")) {
-                                return HtmlTag.TBODY;
-                            } else if (equalTag(1, "head")) {
-                                return HtmlTag.THEAD;
-                            } else if (equalTag(1, "foot")) {
-                                return HtmlTag.TFOOT;
-                            }
-                            break;
-                        default:
-                            return HtmlTag.UNKNOWN;
-                    }
+                switch (buf[0]) {
+                    case 's':
+                        if (equalTag(1, "mall")) {
+                            return HtmlTag.SMALL;
+                        }
+                        break;
+                    case 't':
+                        if (equalTag(1, "able")) {
+                            return HtmlTag.TABLE;
+                        } else if (equalTag(1, "body")) {
+                            return HtmlTag.TBODY;
+                        } else if (equalTag(1, "head")) {
+                            return HtmlTag.THEAD;
+                        } else if (equalTag(1, "foot")) {
+                            return HtmlTag.TFOOT;
+                        }
+                        break;
+                    case 'a':
+                        if (equalTag(1, "udio")) {
+                            return HtmlTag.AUDIO;
+                        }
+                        break;
+                    case 'v':
+                        if (equalTag(1, "edio")) {
+                            return HtmlTag.VEDIO;
+                        }
+                        break;
+                    default:
+                        return HtmlTag.UNKNOWN;
                 }
                 break;
             case 6:

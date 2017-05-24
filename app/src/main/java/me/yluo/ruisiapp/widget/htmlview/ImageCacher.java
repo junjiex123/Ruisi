@@ -59,6 +59,7 @@ public class ImageCacher {
 
     //存到内存
     public void putMemCache(String key, Bitmap bitmap) {
+        if (bitmap == null) return;
         mMemoryCache.put(key, bitmap);
     }
 

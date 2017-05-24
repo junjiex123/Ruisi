@@ -65,8 +65,8 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
         Bundle b = getIntent().getExtras();
         String url = b.getString("url");
 
-        final String tid = GetId.getid("tid=", url);
-        aid = GetId.getid("aid=", url);
+        final String tid = GetId.getId("tid=", url);
+        aid = GetId.getId("aid=", url);
         String urll = "forum.php?mod=viewthread&tid="
                 + tid + "&aid=" + aid + "&from=album&mobile=2";
         HttpUtil.get(ViewImgActivity.this, urll, new ResponseHandler() {

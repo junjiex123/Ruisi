@@ -61,7 +61,7 @@ public class HtmlView implements ViewChangeNotify {
             Point p = new Point();
             wm.getDefaultDisplay().getSize(p);
             VIEW_WIDTH = p.x - target.getPaddingStart() - target.getPaddingEnd();
-            imageGetter = new DefaultImageGetter(VIEW_WIDTH, target.getContext());
+            imageGetter = new DefaultImageGetter(target.getContext(), VIEW_WIDTH);
         }
 
         if (clickListener == null) {
@@ -71,6 +71,7 @@ public class HtmlView implements ViewChangeNotify {
         FONT_SIZE = target.getTextSize();
         spanned = SpanConverter.convert(source, imageGetter, clickListener, this);
         target.setMovementMethod(LinkMovementMethod.getInstance());
+        target.setLinkTextColor(URL_COLOR);
         target.setLineSpacing(0, LINE_HEIGHT);
         target.setText(spanned);
         isViewSet = true;

@@ -54,7 +54,7 @@ public class HomeActivity extends BaseActivity
     private MyTimerTask task = null;
     private MyBottomTab bottomTab;
     private long lastCheckMsgTime = 0;
-    private static int interval = 45000;//60s
+    private static int interval = 120_000;//120s
     private MyHandler messageHandler;
     //间隔3天检查更新一次
     private static final int UPDATE_TIME = 1000 * 3600 * 24 * 3;
@@ -76,8 +76,9 @@ public class HomeActivity extends BaseActivity
 
         Calendar c = Calendar.getInstance();
         int HOUR_OF_DAY = c.get(Calendar.HOUR_OF_DAY);
-        if (HOUR_OF_DAY < 10 && HOUR_OF_DAY > 1) {
-            //晚上一点到早上10点间隔,不同时间段检查消息间隔不同 减轻服务器压力
+        if (HOUR_OF_DAY < 9 && HOUR_OF_DAY > 1) {
+            //晚上一点到早上9点间隔,不同时间段检查消息间隔不同 减轻服务器压力
+            //240s
             interval = interval * 2;
         }
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);

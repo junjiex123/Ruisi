@@ -1,15 +1,11 @@
 package me.yluo.ruisiapp.activity;
 
 import android.app.TimePickerDialog;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;

@@ -8,8 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -78,7 +76,8 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
         if (year < yearNow) {
             year = yearNow;
         }
-        ((TextView) findViewById(R.id.copyright)).setText("©2016-" + year + " 谁用了FREEDPOM");
+        ((TextView) findViewById(R.id.copyright))
+                .setText("©2016-" + year + " 谁用了FREEDPOM");
     }
 
     //设置头像
@@ -254,7 +253,7 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
                         name = info.substring(pos2 + 1, pos3);
                     }
 
-                    String uid = GetId.getid("uid=", res.substring(i));
+                    String uid = GetId.getId("uid=", res.substring(i));
                     int indexhash = res.indexOf("formhash");
                     String hash = res.substring(indexhash + 9, indexhash + 17);
                     SharedPreferences.Editor ed = shp.edit();
