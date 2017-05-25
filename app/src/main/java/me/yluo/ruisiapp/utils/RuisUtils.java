@@ -2,8 +2,14 @@ package me.yluo.ruisiapp.utils;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,13 +18,17 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.model.Category;
 import me.yluo.ruisiapp.model.Forum;
 
@@ -27,12 +37,61 @@ public class RuisUtils {
     /**
      * 获得板块图标
      */
-    public static Drawable getForunlogo(Context contex, int fid) {
+    public static Drawable getForumlogo(Context contex, int fid) {
         try {
             InputStream ims = contex.getAssets().open("forumlogo/common_" + fid + "_icon.gif");
             return Drawable.createFromStream(ims, null);
         } catch (IOException ex) {
             return null;
+        }
+    }
+
+    //加载我的头像
+    //size s m l
+    public static void LoadMyAvatar(WeakReference<Context> context, String uid, WeakReference<ImageView> target, String size) {
+        File f = new File(context.get().getFilesDir() + uid + size);
+        String url;
+        if (size.equals("s")) {
+            url = UrlUtils.getAvaterurls(uid);
+        } else if (size.equals("b")) {
+            url = UrlUtils.getAvaterurlb(uid);
+        } else {
+            url = UrlUtils.getAvaterurlm(uid);
+        }
+
+        if (f.exists()) {
+            Picasso.with(context.get())
+                    .load(f)
+                    .error(R.drawable.image_placeholder)
+                    .into(target.get());
+        } else {
+            new AsyncTask<String, Void, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(String... params) {
+                    Bitmap b = null;
+                    Context c = context.get();
+                    if (c == null) return null;
+                    try {
+                        b = Picasso.with(c).load(params[0]).get();
+                        FileOutputStream out = new FileOutputStream(f);
+                        b.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                        out.flush();
+                        out.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return b;
+                }
+
+                @Override
+                protected void onPostExecute(Bitmap bitmap) {
+                    super.onPostExecute(bitmap);
+                    if (bitmap != null && target.get() != null && context.get() != null) {
+                        Drawable d = new BitmapDrawable(context.get().getResources(), bitmap);
+                        target.get().setImageDrawable(d);
+                    }
+                }
+            }.execute(url);
         }
     }
 
@@ -78,7 +137,7 @@ public class RuisUtils {
 
 
     //获得到下一等级的积分
-    public static int getNextLevel(int a){
+    public static int getNextLevel(int a) {
         if (a >= 0 && a < 100) {
             return 100;
         } else if (a < 200) {

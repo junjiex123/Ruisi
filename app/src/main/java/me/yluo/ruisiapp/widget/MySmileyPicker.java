@@ -119,7 +119,7 @@ public class MySmileyPicker extends PopupWindow {
 
     private void getSmileys() {
         smileys.clear();
-        String smiley_dir = "file:///android_asset/static/image/smiley/";
+        String smiley_dir = "file:///android_asset/smiley/";
         int stringId = R.array.smiley_tieba;
         if (smiley_type == SMILEY_TB) {
             stringId = R.array.smiley_tieba;

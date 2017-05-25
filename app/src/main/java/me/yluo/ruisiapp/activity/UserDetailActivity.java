@@ -19,6 +19,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -78,11 +79,14 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         ActivityCompat.startActivity(activity, intent, options.toBundle());
     }
 
-    public static void open(Context context, String username, String avatarUrl) {
+    public static void open(Context context, String username, String avatarUrl, String uid) {
         Intent intent = new Intent(context, UserDetailActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("loginName", username);
         intent.putExtra("avatarUrl", avatarUrl);
+        if(!TextUtils.isEmpty(uid)){
+            intent.putExtra("uid", uid);
+        }
         context.startActivity(intent);
     }
 
@@ -105,6 +109,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         ViewCompat.setTransitionName(imageView, NAME_IMG_AVATAR);
         username = getIntent().getStringExtra("loginName");
         imageUrl = getIntent().getStringExtra("avatarUrl");
+
         Picasso.with(this).load(imageUrl).placeholder(R.drawable.image_placeholder).into(imageView);
 
         toolbarLayout.setTitle(username);
@@ -116,7 +121,12 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         infoList.setLayoutManager(layoutManager);
         infoList.addItemDecoration(new MyListDivider(this, MyListDivider.VERTICAL));
         infoList.setAdapter(adapter);
-        userUid = GetId.getId("uid=", imageUrl);
+
+        userUid =  getIntent().getStringExtra("uid");
+        if(TextUtils.isEmpty(userUid)){
+            userUid = GetId.getId("uid=", imageUrl);
+        }
+
         //如果是自己
         if (userUid.equals(App.getUid(this))) {
             fab.setImageResource(R.drawable.ic_close_24dp);

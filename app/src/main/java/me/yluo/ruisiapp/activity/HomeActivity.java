@@ -31,7 +31,7 @@ import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.adapter.MainPageAdapter;
 import me.yluo.ruisiapp.fragment.BaseLazyFragment;
-import me.yluo.ruisiapp.fragment.FrageForumList;
+import me.yluo.ruisiapp.fragment.FrageForums;
 import me.yluo.ruisiapp.fragment.FrageHotsNews;
 import me.yluo.ruisiapp.fragment.FrageMessage;
 import me.yluo.ruisiapp.fragment.FragmentMy;
@@ -93,7 +93,7 @@ public class HomeActivity extends BaseActivity
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         viewPager.setOffscreenPageLimit(4);
         viewPager.addOnPageChangeListener(this);
-        fragments.add(new FrageForumList());
+        fragments.add(new FrageForums());
         fragments.add(new FrageHotsNews());
         fragments.add(FrageMessage.newInstance(ishaveReply, ishavePm));
         fragments.add(new FragmentMy());

@@ -13,8 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 import me.yluo.ruisiapp.App;
@@ -25,6 +31,9 @@ import me.yluo.ruisiapp.activity.UserDetailActivity;
 import me.yluo.ruisiapp.adapter.ForumsAdapter;
 import me.yluo.ruisiapp.model.Category;
 import me.yluo.ruisiapp.model.Forum;
+import me.yluo.ruisiapp.model.WaterData;
+import me.yluo.ruisiapp.myhttp.SyncHttpClient;
+import me.yluo.ruisiapp.utils.GetId;
 import me.yluo.ruisiapp.utils.RuisUtils;
 import me.yluo.ruisiapp.utils.UrlUtils;
 import me.yluo.ruisiapp.widget.CircleImageView;
@@ -33,7 +42,7 @@ import me.yluo.ruisiapp.widget.CircleImageView;
  * Created by free2 on 16-3-19.
  * 板块列表fragemnt
  */
-public class FrageForumList extends BaseLazyFragment implements View.OnClickListener {
+public class FrageForums extends BaseLazyFragment implements View.OnClickListener {
     private ForumsAdapter adapter = null;
     private SharedPreferences sharedPreferences;
     private CircleImageView userImg;
@@ -42,12 +51,14 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
     private static final int UPDATE_TIME = 1500 * 600;
     private static final String KEY = "FORUM_UPDATE_KEY";
     private boolean lastLoginState;
+
     private List<Category> forumDatas;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        forumDatas = new ArrayList<>();
     }
 
     @Nullable
@@ -64,7 +75,8 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                if (adapter.getItemViewType(position) == ForumsAdapter.TYPE_HEADER) {
+                int type = adapter.getItemViewType(position);
+                if (type == ForumsAdapter.TYPE_HEADER || type == ForumsAdapter.TYPE_WATER) {
                     return 4;
                 } else {
                     return 1;
@@ -88,7 +100,7 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
         }
         lastLoginState = App.ISLOGIN(getActivity());
         initForums(lastLoginState);
-        initAvater();
+        initAvatar();
     }
 
     @Override
@@ -96,7 +108,7 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
         if (lastLoginState != App.ISLOGIN(getActivity())) {
             lastLoginState = !lastLoginState;
             initForums(lastLoginState);
-            initAvater();
+            initAvatar();
         }
     }
 
@@ -106,12 +118,12 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
             formsList.scrollToPosition(0);
     }
 
-    private void initAvater() {
+    private void initAvatar() {
         lastLoginState = App.ISLOGIN(getActivity());
         if (lastLoginState) {
-            Picasso.with(getActivity()).load(UrlUtils.getAvaterurls(App.getUid(getActivity())))
-                    .placeholder(R.drawable.image_placeholder)
-                    .into(userImg);
+            RuisUtils.LoadMyAvatar(new WeakReference<>(getActivity()),
+                    App.getUid(getActivity()),
+                    new WeakReference<>(userImg), "s");
         } else {
             userImg.setImageResource(R.drawable.image_placeholder);
         }
@@ -125,6 +137,8 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
 
     void initForums(boolean loginstate) {
         new GetForumList().execute(loginstate);
+        if (App.IS_SCHOOL_NET)
+            new GetWaterBTask().execute();
     }
 
 
@@ -139,7 +153,8 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
             case R.id.img:
                 if (lastLoginState) {
                     String imgurl = UrlUtils.getAvaterurlb(App.getUid(getActivity()));
-                    UserDetailActivity.open(getActivity(), App.getName(getActivity()), imgurl);
+                    UserDetailActivity.open(getActivity(), App.getName(getActivity()),
+                            imgurl, App.getUid(getActivity()));
                 } else {
                     switchActivity(LoginActivity.class);
                 }
@@ -148,9 +163,9 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
     }
 
     //获取首页板块数据 板块列表
-    private class GetForumList extends AsyncTask<Boolean, Void, List<Category>> {
+    private class GetForumList extends AsyncTask<Boolean, Void, Void> {
         @Override
-        protected List<Category> doInBackground(Boolean... params) {
+        protected Void doInBackground(Boolean... params) {
             boolean b = params[0];
             if (!b && forumDatas != null && forumDatas.size() > 0) {
                 //由登陆变为不登录 只需移除需要登录的板块
@@ -165,19 +180,63 @@ public class FrageForumList extends BaseLazyFragment implements View.OnClickList
                         }
                     }
                 }
-                return forumDatas;
+
+                return null;
             }
 
-            return RuisUtils.getForums(getActivity(), params[0]);
+            forumDatas = RuisUtils.getForums(getActivity(), params[0]);
+            return null;
         }
 
         @Override
-        protected void onPostExecute(List<Category> ss) {
-            if (ss == null || ss.size() == 0) {
+        protected void onPostExecute(Void v) {
+            if (forumDatas == null || forumDatas.size() == 0) {
                 Toast.makeText(getActivity(), "获取板块列表失败", Toast.LENGTH_LONG).show();
             }
-            forumDatas = ss;
+
             adapter.setDatas(forumDatas);
+        }
+    }
+
+    //获得水神版
+    private class GetWaterBTask extends AsyncTask<Void, Void, List<WaterData>> {
+        @Override
+        protected List<WaterData> doInBackground(Void... voids) {
+            List<WaterData> temps = new ArrayList<>();
+            String url = "http://rs.xidian.edu.cn/forum.php";
+            Document doc;
+            try {
+                doc = Jsoup.connect(url).userAgent(SyncHttpClient.DEFAULT_USER_AGENT).get();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return temps;
+            }
+
+            Elements waters = doc.select("#portal_block_317").select("li");
+            for (Element e : waters) {
+                Elements es = e.select("p").select("a[href^=home.php?mod=space]");
+                String uid = GetId.getId("uid=", es.attr("href"));
+                String imgSrc = e.select("img").attr("src");
+                String uname = es.text();
+                int num = 0;
+                if (e.select("p").size() > 1) {
+                    if (e.select("p").get(1).text().contains("帖数")) {
+                        num = GetId.getNumber(e.select("p").get(1).text());
+                    }
+                }
+                temps.add(new WaterData(uname, uid, num, imgSrc));
+                if (temps.size() >= 16) break;
+            }
+            return temps;
+        }
+
+        @Override
+        protected void onPostExecute(List<WaterData> data) {
+            super.onPostExecute(data);
+            if (data.size() == 0) {
+                return;
+            }
+            adapter.setWaterData(data);
         }
     }
 }

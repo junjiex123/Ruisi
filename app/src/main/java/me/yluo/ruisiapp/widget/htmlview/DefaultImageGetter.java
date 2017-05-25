@@ -346,7 +346,7 @@ public class DefaultImageGetter implements ImageGetter {
 
     //缩放图片
     private Bitmap scaleSmiley(Bitmap origin, int dstWidth) {
-        if (origin == null) {
+        if (origin == null || origin.isRecycled()) {
             return null;
         }
         int height = origin.getHeight();
@@ -357,6 +357,7 @@ public class DefaultImageGetter implements ImageGetter {
         if (Math.abs(scale - 1) < 0.15) {
             return origin;
         }
+
         Matrix matrix = new Matrix();
         matrix.postScale(scale, scale);// 使用后乘
         Bitmap newBM = Bitmap.createBitmap(origin, 0, 0, width, height, matrix, false);

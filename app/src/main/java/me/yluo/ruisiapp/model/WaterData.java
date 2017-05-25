@@ -8,5 +8,13 @@ package me.yluo.ruisiapp.model;
 public class WaterData {
     public String name;
     public String uid;
-    public String num;
+    public int num;
+    public String imgSrc;
+
+    public WaterData(String name, String uid, int num, String imgSrc) {
+        this.name = name;
+        this.uid = uid;
+        this.num = num;
+        this.imgSrc = imgSrc;
+    }
 }

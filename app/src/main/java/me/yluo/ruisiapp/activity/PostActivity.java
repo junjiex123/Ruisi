@@ -50,8 +50,8 @@ import me.yluo.ruisiapp.model.VoteData;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.utils.GetId;
-import me.yluo.ruisiapp.utils.LinkClickHandler;
 import me.yluo.ruisiapp.utils.KeyboardUtil;
+import me.yluo.ruisiapp.utils.LinkClickHandler;
 import me.yluo.ruisiapp.utils.UrlUtils;
 import me.yluo.ruisiapp.widget.MyFriendPicker;
 import me.yluo.ruisiapp.widget.MyListDivider;
@@ -162,7 +162,7 @@ public class PostActivity extends BaseActivity
 
     private void initSpinner() {
         spinner = new Spinner(this);
-        spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, pageSpinnerDatas);
+        spinnerAdapter = new ArrayAdapter<>(this, R.layout.my_post_spinner_item, pageSpinnerDatas);
         pageSpinnerDatas.add("第1页");
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
@@ -179,6 +179,7 @@ public class PostActivity extends BaseActivity
 
             }
         });
+
 
         addToolbarView(spinner);
     }
@@ -386,6 +387,10 @@ public class PostActivity extends BaseActivity
                 String postTime = userInfo.select("li.grey.rela").text().replace("收藏", "");
                 String replyUrl = temp.select(".replybtn").select("input").attr("href");
                 Elements contentels = temp.select(".message");
+
+                //去除script
+                contentels.select("script").remove();
+
                 //是否移除所有样式
                 if (showPlainText) {
                     //移除所有style

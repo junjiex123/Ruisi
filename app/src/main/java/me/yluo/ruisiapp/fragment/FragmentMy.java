@@ -4,7 +4,6 @@ package me.yluo.ruisiapp.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +13,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +30,7 @@ import me.yluo.ruisiapp.activity.SignActivity;
 import me.yluo.ruisiapp.activity.UserDetailActivity;
 import me.yluo.ruisiapp.model.FrageType;
 import me.yluo.ruisiapp.utils.IntentUtils;
-import me.yluo.ruisiapp.utils.UrlUtils;
+import me.yluo.ruisiapp.utils.RuisUtils;
 import me.yluo.ruisiapp.widget.CircleImageView;
 
 /**
@@ -42,7 +40,7 @@ import me.yluo.ruisiapp.widget.CircleImageView;
 public class FragmentMy extends BaseLazyFragment implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     private String username, uid;
-    private CircleImageView userAvater;
+    private CircleImageView userImg;
     private TextView userName, userGrade;
     //记录上次创建时候是否登录
     private boolean isLoginLast = false;
@@ -70,10 +68,10 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
         username = App.getName(getActivity());
         uid = App.getUid(getActivity());
 
-        userAvater = (CircleImageView) mRootView.findViewById(R.id.user_img);
+        userImg = (CircleImageView) mRootView.findViewById(R.id.user_img);
         userName = (TextView) mRootView.findViewById(R.id.user_name);
         userGrade = (TextView) mRootView.findViewById(R.id.user_grade);
-        userAvater.setOnClickListener(this);
+        userImg.setOnClickListener(this);
         mRootView.findViewById(R.id.history).setOnClickListener(this);
         mRootView.findViewById(R.id.star).setOnClickListener(this);
         mRootView.findViewById(R.id.friend).setOnClickListener(this);
@@ -88,7 +86,6 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
             fs.add(d);
         }
         listView.setOnItemClickListener(this);
-        Log.d("onItemClick", "=====");
         listView.setAdapter(new SimpleAdapter(getActivity(), fs, R.layout.item_function,
                 new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
         return mRootView;
@@ -97,14 +94,14 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
     @Override
     public void onFirstUserVisible() {
         isLoginLast = App.ISLOGIN(getActivity());
-        refreshAvaterView();
+        refreshAvatarView();
     }
 
     @Override
     public void onUserVisible() {
         if (isLoginLast != App.ISLOGIN(getActivity())) {
             isLoginLast = !isLoginLast;
-            refreshAvaterView();
+            refreshAvatarView();
         }
     }
 
@@ -118,18 +115,20 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
         return R.layout.fragment_my;
     }
 
-    private void refreshAvaterView() {
+    private void refreshAvatarView() {
         if (isLoginLast) {
             uid = App.getUid(getActivity());
             userName.setText(App.getName(getActivity()));
             userGrade.setVisibility(View.VISIBLE);
             userGrade.setText(App.getGrade(getActivity()));
-            Picasso.with(getActivity()).load(UrlUtils.getAvaterurlm(uid))
-                    .placeholder(R.drawable.image_placeholder).into(userAvater);
+
+            RuisUtils.LoadMyAvatar(new WeakReference<>(getActivity()),
+                    uid,
+                    new WeakReference<>(userImg),"m");
         } else {
             userName.setText("点击头像登陆");
             userGrade.setVisibility(View.GONE);
-            userAvater.setImageResource(R.drawable.image_placeholder);
+            userImg.setImageResource(R.drawable.image_placeholder);
         }
     }
 
@@ -139,7 +138,7 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
             case R.id.user_img:
                 if (App.ISLOGIN(getActivity())) {
                     UserDetailActivity.openWithAnimation(
-                            getActivity(), username, userAvater, uid);
+                            getActivity(), username, userImg, uid);
                 } else {
                     switchActivity(LoginActivity.class);
                 }
@@ -167,7 +166,6 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.d("onItemClick", "onItemClick" + position);
         switch (position) {
             case 0:
                 if (isLogin()) {

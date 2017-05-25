@@ -22,6 +22,7 @@ import me.yluo.ruisiapp.downloadfile.DownloadService;
 public class LinkClickHandler {
     public static final String VOTE_URL = "rsvote://";
 
+    //// TODO: 2017/5/25  回复链接
     public static void handleClick(final Context context, String url) {
         Log.d("handle the link", url);
         //点击了图片
@@ -31,7 +32,7 @@ public class LinkClickHandler {
             PostActivity.open(context, url, null);
         } else if (url.contains("home.php?mod=space&uid=")) { // 用户
             String imageUrl = UrlUtils.getAvaterurlb(url);
-            UserDetailActivity.open(context, "name", imageUrl);
+            UserDetailActivity.open(context, "name", imageUrl, "");
         } else if (url.contains("forum.php?mod=post&action=newthread")) { //发帖链接
             context.startActivity(new Intent(context, NewPostActivity.class));
         } else if (url.contains("member.php?mod=logging&action=login")) {//登陆

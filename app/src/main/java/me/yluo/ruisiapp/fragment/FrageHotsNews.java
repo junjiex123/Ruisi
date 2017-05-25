@@ -28,7 +28,6 @@ import me.yluo.ruisiapp.database.MyDB;
 import me.yluo.ruisiapp.listener.LoadMoreListener;
 import me.yluo.ruisiapp.model.ArticleListData;
 import me.yluo.ruisiapp.model.GalleryData;
-import me.yluo.ruisiapp.model.WaterData;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.myhttp.SyncHttpClient;
@@ -128,7 +127,7 @@ public class FrageHotsNews extends BaseLazyFragment implements LoadMoreListener.
         isEnableLoadMore = false;
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
         if (App.IS_SCHOOL_NET) {
-            new getGalleryTask().execute();
+            new GetGalleryTask().execute();
         }
         String type = (currentType == TYPE_HOT) ? "hot" : "new";
         String url = "forum.php?mod=guide&view=" + type + "&page=" + CurrentPage + "&mobile=2";
@@ -147,24 +146,27 @@ public class FrageHotsNews extends BaseLazyFragment implements LoadMoreListener.
         });
     }
 
-    private class getGalleryTask extends AsyncTask<Void, Void, List<GalleryData>> {
+    private class GetGalleryTask extends AsyncTask<Void, Void, List<GalleryData>> {
         @Override
         protected List<GalleryData> doInBackground(Void... voids) {
-            List<GalleryData> temp = new ArrayList<>();
+            List<GalleryData> temps = new ArrayList<>();
             String url = "http://rs.xidian.edu.cn/forum.php";
+            Document doc;
             try {
-                Document doc = Jsoup.connect(url).userAgent(SyncHttpClient.DEFAULT_USER_AGENT).get();
-                Elements listgallerys = doc.select("#wp").select("ul.slideshow");
-                for (Element e : listgallerys.select("li")) {
-                    String title = e.text();
-                    String titleurl = e.select("a").attr("href");
-                    String imgurl = e.select("img").attr("src");
-                    temp.add(new GalleryData(imgurl, title, titleurl));
-                }
+                doc = Jsoup.connect(url).userAgent(SyncHttpClient.DEFAULT_USER_AGENT).get();
             } catch (IOException e) {
                 e.printStackTrace();
+                return temps;
             }
-            return temp;
+
+            Elements listgallerys = doc.select("#wp").select("ul.slideshow");
+            for (Element e : listgallerys.select("li")) {
+                String title = e.text();
+                String titleurl = e.select("a").attr("href");
+                String imgurl = e.select("img").attr("src");
+                temps.add(new GalleryData(imgurl, title, titleurl));
+            }
+            return temps;
         }
 
         @Override

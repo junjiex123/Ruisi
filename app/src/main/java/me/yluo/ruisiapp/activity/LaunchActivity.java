@@ -2,9 +2,6 @@ package me.yluo.ruisiapp.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,11 +13,7 @@ import android.view.animation.AlphaAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.Calendar;
 
 import me.yluo.ruisiapp.App;
@@ -28,7 +21,7 @@ import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.utils.GetId;
-import me.yluo.ruisiapp.utils.UrlUtils;
+import me.yluo.ruisiapp.utils.RuisUtils;
 import me.yluo.ruisiapp.widget.CircleImageView;
 
 /**
@@ -40,7 +33,7 @@ import me.yluo.ruisiapp.widget.CircleImageView;
 public class LaunchActivity extends BaseActivity implements View.OnClickListener {
     private final static int WAIT_TIME = 900;//最少等待时间ms
     private TextView launch_text;
-    private CircleImageView user_image;
+    private CircleImageView avatarImg;
     private SharedPreferences shp = null;
     private boolean isForeGround = true;
     private Handler mHandler = new Handler();
@@ -60,7 +53,7 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
         findViewById(R.id.btn_login_inner).setOnClickListener(this);
         findViewById(R.id.btn_login_outer).setOnClickListener(this);
         findViewById(R.id.login_fail_view).setVisibility(View.INVISIBLE);
-        user_image = (CircleImageView) findViewById(R.id.user_image);
+        avatarImg = (CircleImageView) findViewById(R.id.user_image);
 
         shp = getSharedPreferences(App.MY_SHP_NAME, MODE_PRIVATE);
         loadUserImg();
@@ -84,19 +77,12 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
     private void loadUserImg() {
         String uid = App.getUid(this);
         if (TextUtils.isEmpty(uid)) {
-            user_image.setVisibility(View.GONE);
+            avatarImg.setVisibility(View.GONE);
             return;
         }
 
-        File f = new File(getFilesDir() + uid);
-        if (f.exists()) {
-            Picasso.with(this)
-                    .load(f)
-                    .error(R.drawable.image_placeholder)
-                    .into(user_image);
-        } else {
-            new GetImageTask().execute(uid);
-        }
+        RuisUtils.LoadMyAvatar(new WeakReference<>(this),
+                uid, new WeakReference<>(avatarImg), "m");
     }
 
     private void startLogin() {
@@ -129,35 +115,6 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
                 });
             }
         }).start();
-    }
-
-    private class GetImageTask extends AsyncTask<String, Void, Bitmap> {
-
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            String url = UrlUtils.getAvaterurlm(strings[0]);
-            File f = new File(getFilesDir() + strings[0]);
-            Bitmap b = null;
-            try {
-                b = Picasso.with(LaunchActivity.this).load(url).get();
-                FileOutputStream out = new FileOutputStream(f);
-                b.compress(Bitmap.CompressFormat.JPEG, 90, out);
-                out.flush();
-                out.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return b;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            if (bitmap != null) {
-                Drawable d = new BitmapDrawable(getResources(), bitmap);
-                user_image.setImageDrawable(d);
-            }
-        }
     }
 
     private Runnable finishRunable = this::loginOk;
@@ -198,7 +155,7 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
         AlphaAnimation alphaAnimation = new AlphaAnimation(0.4f, 1.0f);
         alphaAnimation.setDuration((long) (WAIT_TIME * 0.85));// 设置动画显示时间
         launch_text.startAnimation(alphaAnimation);
-        user_image.startAnimation(alphaAnimation);
+        avatarImg.startAnimation(alphaAnimation);
     }
 
     @Override

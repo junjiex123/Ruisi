@@ -1,22 +1,15 @@
 package me.yluo.ruisiapp.widget.htmlview;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.design.widget.BottomSheetDialog;
-import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.Spanned;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,9 +24,7 @@ import me.yluo.ruisiapp.activity.PostActivity;
 import me.yluo.ruisiapp.model.VoteData;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
-import me.yluo.ruisiapp.utils.KeyboardUtil;
 import me.yluo.ruisiapp.widget.MyListDivider;
-import me.yluo.ruisiapp.widget.emotioninput.ColorTextSpan;
 
 /**
  * Created by yang on 2017/5/24.

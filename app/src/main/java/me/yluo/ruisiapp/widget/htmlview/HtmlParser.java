@@ -33,6 +33,7 @@ public class HtmlParser {
     private char readItem = EOF, lastRead = EOF;
     private ParserCallback handler;
     private Stack<HtmlNode> stack;
+    private int cuurEleType = HtmlTag.UNKNOWN;
 
     public HtmlParser() {
         stack = new Stack<>();
@@ -184,6 +185,7 @@ public class HtmlParser {
             }
             HtmlNode n = new HtmlNode(type, name, attr);
             pushNode(n);
+            cuurEleType = type;
             handler.startElement(n);
         }
     }
