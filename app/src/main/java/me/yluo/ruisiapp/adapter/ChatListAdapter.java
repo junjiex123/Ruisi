@@ -66,7 +66,7 @@ public class ChatListAdapter extends BaseAdapter {
         MyViewHolder(View itemView) {
             super(itemView);
             content = (TextView) itemView.findViewById(R.id.content);
-            avatar = (CircleImageView) itemView.findViewById(R.id.user_image);
+            avatar = (CircleImageView) itemView.findViewById(R.id.logo);
             time = (TextView) itemView.findViewById(R.id.post_time);
 
             avatar.setOnClickListener(v -> {

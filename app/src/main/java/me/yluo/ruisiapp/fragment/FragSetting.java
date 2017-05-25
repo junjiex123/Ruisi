@@ -9,16 +9,13 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceGroup;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatDelegate;
 import android.widget.Toast;
 
 import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
-import me.yluo.ruisiapp.activity.NightModeActivity;
 import me.yluo.ruisiapp.activity.PostActivity;
-import me.yluo.ruisiapp.activity.SettingActivity;
+import me.yluo.ruisiapp.activity.ThemeActivity;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.utils.DataManager;
@@ -39,7 +36,6 @@ public class FragSetting extends PreferenceFragment
     private ListPreference setting_forums_url;
     private SharedPreferences sharedPreferences;
     private Preference clearCache;
-    private Preference darkModeSettings;
 
 
     @Override
@@ -50,42 +46,13 @@ public class FragSetting extends PreferenceFragment
         setting_user_tail = (EditTextPreference) findPreference("setting_user_tail");
         setting_forums_url = (ListPreference) findPreference("setting_forums_url");
         clearCache = findPreference("clean_cache");
-        darkModeSettings = findPreference("dark_mode_settings");
         sharedPreferences = getPreferenceScreen().getSharedPreferences();
         boolean b = sharedPreferences.getBoolean("setting_show_tail", false);
         setting_user_tail.setEnabled(b);
-        b = sharedPreferences.getBoolean("setting_dark_mode", true);
-        darkModeSettings.setEnabled(b);
         setting_user_tail.setSummary(sharedPreferences.getString("setting_user_tail", "无小尾巴"));
         setting_forums_url.setSummary(App.IS_SCHOOL_NET ? "当前网络校园网，点击切换" : "当前网络校外网，点击切换");
         setting_forums_url.setValue(App.IS_SCHOOL_NET ? "1" : "2");
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-
-
-        if (!App.ISLOGIN(getActivity())) {
-            ((PreferenceGroup) findPreference("group_other")).
-                    removePreference(findPreference("exit_login"));//这是删除 二级
-        }
-
-        darkModeSettings.setOnPreferenceClickListener(preference -> {
-            startActivity(new Intent(getActivity(), NightModeActivity.class));
-            return false;
-        });
-
-        findPreference("exit_login").setOnPreferenceClickListener(preference -> {
-            new AlertDialog.Builder(getActivity()).
-                    setTitle("退出登录").
-                    setMessage("你确定要注销吗？").
-                    setPositiveButton("注销", (dialog, which) -> {
-                        DataManager.cleanApplicationData(getActivity());
-                        getActivity().finish();
-                    })
-                    .setNegativeButton("取消", null)
-                    .setCancelable(true)
-                    .create()
-                    .show();
-            return true;
-        });
 
         PackageManager manager;
         PackageInfo info = null;
@@ -102,7 +69,13 @@ public class FragSetting extends PreferenceFragment
             version_name = info.versionName;
         }
 
-        findPreference("about_this").setSummary("当前版本" + version_name + "  version code:" + version_code);
+        findPreference("about_this")
+                .setSummary("当前版本" + version_name + "  version code:" + version_code);
+
+        findPreference("theme_settings").setOnPreferenceClickListener(preference -> {
+            startActivity(new Intent(getActivity(), ThemeActivity.class));
+            return true;
+        });
 
         //[2016年6月9日更新][code:25]睿思手机客户端
         //更新逻辑 检查睿思帖子标题 比对版本号
@@ -128,7 +101,9 @@ public class FragSetting extends PreferenceFragment
                                     new AlertDialog.Builder(getActivity()).
                                             setTitle("检测到新版本").
                                             setMessage(title).
-                                            setPositiveButton("查看", (dialog, which) -> PostActivity.open(getActivity(), App.CHECK_UPDATE_URL, "谁用了FREEDOM"))
+                                            setPositiveButton("查看",
+                                                    (dialog, which) -> PostActivity.open(getActivity(),
+                                                            App.CHECK_UPDATE_URL, "谁用了FREEDOM"))
                                             .setNegativeButton("取消", null)
                                             .setCancelable(true)
                                             .create()
@@ -164,6 +139,12 @@ public class FragSetting extends PreferenceFragment
     }
 
     private void updateView() {
+        //todo
+
+        /*
+        findPreference("theme_settings").setSummary("");
+
+
         boolean isEnable = sharedPreferences.getBoolean("setting_dark_mode", true);
         if (isEnable) {
             if (App.isAutoDarkMode(getActivity())) {
@@ -178,6 +159,18 @@ public class FragSetting extends PreferenceFragment
         } else {
             darkModeSettings.setSummary("当前夜间模式:关");
         }
+
+
+        case "setting_dark_mode":
+        updateView();
+        int now = AppCompatDelegate.getDefaultNightMode();
+        SettingActivity s = (SettingActivity) getActivity();
+        darkModeSettings.setEnabled(sharedPreferences.getBoolean("setting_dark_mode", true));
+        s.switchTheme();
+        if (AppCompatDelegate.getDefaultNightMode() != now)
+            Toast.makeText(getActivity(), "已切换主题", Toast.LENGTH_SHORT).show();
+        break;
+        */
     }
 
     @Override
@@ -212,15 +205,6 @@ public class FragSetting extends PreferenceFragment
                 boolean bbbb = sharedPreferences.getBoolean("setting_show_plain", false);
                 Toast.makeText(getActivity(), bbbb ? "文章显示模式：简洁" : "文章显示模式：默认",
                         Toast.LENGTH_SHORT).show();
-                break;
-            case "setting_dark_mode":
-                updateView();
-                int now = AppCompatDelegate.getDefaultNightMode();
-                SettingActivity s = (SettingActivity) getActivity();
-                darkModeSettings.setEnabled(sharedPreferences.getBoolean("setting_dark_mode", true));
-                s.switchTheme();
-                if (AppCompatDelegate.getDefaultNightMode() != now)
-                    Toast.makeText(getActivity(), "已切换主题", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

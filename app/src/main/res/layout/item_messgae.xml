@@ -16,6 +16,7 @@
     android:paddingTop="@dimen/dimen_16">
 
     <me.yluo.ruisiapp.widget.CircleImageView
+        android:scaleType="centerCrop"
         android:id="@+id/article_user_image"
         android:layout_width="40dp"
         android:layout_height="40dp"

@@ -57,7 +57,7 @@ public class FriendAdapter extends BaseAdapter {
 
         FriendViewHolder(View itemView) {
             super(itemView);
-            user_image = (CircleImageView) itemView.findViewById(R.id.user_image);
+            user_image = (CircleImageView) itemView.findViewById(R.id.logo);
             user_name = (TextView) itemView.findViewById(R.id.user_name);
             user_info = (TextView) itemView.findViewById(R.id.user_info);
             is_online = (TextView) itemView.findViewById(R.id.is_online);

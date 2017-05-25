@@ -33,7 +33,7 @@ import me.yluo.ruisiapp.widget.CircleImageView;
 public class LaunchActivity extends BaseActivity implements View.OnClickListener {
     private final static int WAIT_TIME = 900;//最少等待时间ms
     private TextView launch_text;
-    private CircleImageView avatarImg;
+    private CircleImageView logo;
     private SharedPreferences shp = null;
     private boolean isForeGround = true;
     private Handler mHandler = new Handler();
@@ -46,15 +46,15 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_launch);
         timeEnter = System.currentTimeMillis();
-        launch_text = (TextView) findViewById(R.id.launch_text);
+        launch_text = (TextView) findViewById(R.id.app_name);
         findViewById(R.id.btn_login_inner).setOnClickListener(this);
         findViewById(R.id.btn_login_outer).setOnClickListener(this);
         findViewById(R.id.login_fail_view).setVisibility(View.INVISIBLE);
-        avatarImg = (CircleImageView) findViewById(R.id.user_image);
-
+        logo = (CircleImageView) findViewById(R.id.logo);
         shp = getSharedPreferences(App.MY_SHP_NAME, MODE_PRIVATE);
         loadUserImg();
         setCopyRight();
@@ -76,13 +76,10 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
     //设置头像
     private void loadUserImg() {
         String uid = App.getUid(this);
-        if (TextUtils.isEmpty(uid)) {
-            avatarImg.setVisibility(View.GONE);
-            return;
+        if (!TextUtils.isEmpty(uid)) {
+            RuisUtils.LoadMyAvatar(new WeakReference<>(this),
+                    uid, new WeakReference<>(logo), "m");
         }
-
-        RuisUtils.LoadMyAvatar(new WeakReference<>(this),
-                uid, new WeakReference<>(avatarImg), "m");
     }
 
     private void startLogin() {
@@ -130,8 +127,8 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
         if (isForeGround) {
             mHandler.removeCallbacks(finishRunable);
             startActivity(new Intent(this, HomeActivity.class));
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             finish();
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
     }
 
@@ -155,7 +152,7 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
         AlphaAnimation alphaAnimation = new AlphaAnimation(0.4f, 1.0f);
         alphaAnimation.setDuration((long) (WAIT_TIME * 0.85));// 设置动画显示时间
         launch_text.startAnimation(alphaAnimation);
-        avatarImg.startAnimation(alphaAnimation);
+        logo.startAnimation(alphaAnimation);
     }
 
     @Override
@@ -236,7 +233,7 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
                     new Thread(() -> {
                         try {
                             Thread.sleep(-need);
-                            enterHome();
+                            runOnUiThread(LaunchActivity.this::enterHome);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -247,9 +244,8 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
             } else {
                 Toast.makeText(LaunchActivity.this, "没有网络,或者睿思服务器又崩溃了！",
                         Toast.LENGTH_SHORT).show();
-                findViewById(R.id.login_view).setVisibility(View.GONE);
-                View fail = findViewById(R.id.login_fail_view);
-                fail.setVisibility(View.VISIBLE);
+                findViewById(R.id.app_name).setVisibility(View.GONE);
+                findViewById(R.id.login_fail_view).setVisibility(View.VISIBLE);
             }
         }
     }

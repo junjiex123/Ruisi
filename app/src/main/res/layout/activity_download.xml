@@ -76,7 +76,7 @@
             android:clickable="true"
             android:padding="@dimen/dimen_16"
             android:text="关闭"
-            android:textColor="@color/colorAccent"
+            android:textColor="?attr/colorAccent"
             android:textSize="16sp" />
     </LinearLayout>
 </LinearLayout>

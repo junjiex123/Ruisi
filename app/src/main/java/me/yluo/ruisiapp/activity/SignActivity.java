@@ -57,7 +57,7 @@ public class SignActivity extends BaseActivity {
         signYes.setVisibility(View.GONE);
         signNo.setVisibility(View.GONE);
         signError.setVisibility(View.GONE);
-        userImage = (CircleImageView) findViewById(R.id.user_image);
+        userImage = (CircleImageView) findViewById(R.id.logo);
 
         checkState();
     }

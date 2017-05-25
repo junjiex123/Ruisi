@@ -754,4 +754,10 @@ public class PostActivity extends BaseActivity
         }
         showToast("投票数据异常无法投票");
     }
+
+    //用户点击了回复链接
+    //显示软键盘
+    public void showReplyKeyboard() {
+        KeyboardUtil.showKeyboard(input);
+    }
 }

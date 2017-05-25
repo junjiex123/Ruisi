@@ -16,8 +16,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <xyz.yluo.ruisiapp.widget.CircleImageView
-            android:id="@+id/user_image"
+        <me.yluo.ruisiapp.widget.CircleImageView
+            android:id="@+id/logo"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/image_placeholder"
@@ -72,7 +72,7 @@
             android:clickable="true"
             android:padding="@dimen/dimen_16"
             android:text="添加"
-            android:textColor="@color/colorAccent"
+            android:textColor="?attr/colorAccent"
             android:textSize="16sp" />
     </LinearLayout>
 </LinearLayout>

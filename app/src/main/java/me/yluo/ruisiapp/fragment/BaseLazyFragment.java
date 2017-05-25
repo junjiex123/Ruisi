@@ -12,7 +12,8 @@ public abstract class BaseLazyFragment extends BaseFragment {
     }
 
     /**
-     * 第一次onResume中的调用onUserVisible避免操作与onFirstUserVisible操作重复
+     * 第一次onResume中的调用onUserVisible
+     * 避免操作与onFirstUserVisible操作重复
      */
     private boolean isFirstResume = true;
 

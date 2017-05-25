@@ -2,10 +2,10 @@ package me.yluo.ruisiapp.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.preference.PreferenceManager;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -15,8 +15,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.Calendar;
 
 import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
@@ -29,6 +27,17 @@ import me.yluo.ruisiapp.utils.DimmenUtils;
 public class BaseActivity extends AppCompatActivity {
 
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        int theme = App.getCustomTheme(this);
+        if (theme == 0 || theme == 1) {
+            //夜间 白天
+        } else {
+            setTheme(theme);
+        }
+    }
+
+    @Override
     protected void onResume() {
         switchTheme();
         super.onResume();
@@ -36,6 +45,7 @@ public class BaseActivity extends AppCompatActivity {
 
     //切换主题
     public void switchTheme() {
+        /*
         boolean enableDarkMode = PreferenceManager.getDefaultSharedPreferences(this)
                 .getBoolean("setting_dark_mode", false);
         boolean auto = false;
@@ -64,6 +74,7 @@ public class BaseActivity extends AppCompatActivity {
                         "夜间模式" : "日间模式"));
             }
         }
+        */
     }
 
     private static Toast mToast;

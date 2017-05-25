@@ -1,15 +1,9 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="论坛设置">
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="setting_dark_mode"
-            android:title="启用夜间模式" />
-
         <Preference
-            android:enabled="false"
-            android:key="dark_mode_settings"
+            android:key="theme_settings"
             android:summary="当前模式:自动切换(21:00~6:00)"
-            android:title="夜间模式设置" />
+            android:title="主题设置" />
 
         <ListPreference
             android:entries="@array/setting_switch_url"
@@ -50,7 +44,7 @@
 
         <EditTextPreference
             android:capitalize="words"
-            android:defaultValue="[size=1][color=#ff0000]-----来自[url=http://rs.xidian.edu.cn/forum.php?mod=viewthread&amp;tid=805203]手机睿思[/url][/color][/size]"
+            android:defaultValue="[size=1][color=Gray]-----来自[url=http://rs.xidian.edu.cn/forum.php?mod=viewthread&amp;tid=805203]手机睿思[/url][/color][/size]"
             android:inputType="textCapWords"
             android:key="setting_user_tail"
             android:maxLines="3"
@@ -75,10 +69,6 @@
             android:key="clean_cache"
             android:summary="当前缓存大小1MB"
             android:title="清除缓存" />
-
-        <Preference
-            android:key="exit_login"
-            android:layout="@layout/my_exit_btn" />
     </PreferenceCategory>
 
 </PreferenceScreen>

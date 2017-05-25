@@ -81,7 +81,8 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
      * 初始化视图
      */
     private void init() {
-        COLOR_SELECT = ContextCompat.getColor(context, R.color.colorAccent);
+        //COLOR_SELECT = ContextCompat.getColor(context, R.color.colorAccent);
+        COLOR_SELECT = ThemeUtil.getThemeColor(context, R.attr.colorAccent);
         COLOR_UNSELECT = ContextCompat.getColor(context, R.color.colorDisableHintIcon);
         SIZE_2 = DimmenUtils.dip2px(context, SIZE_2);
         SIZE_ICON = DimmenUtils.dip2px(context, SIZE_ICON);
@@ -103,7 +104,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
             View v = getSingleTab(i);
             v.setTag(i);
             v.setOnClickListener(this);
-            addView(v,p);
+            addView(v, p);
         }
         setTabSelect(-1, 0);
 
@@ -122,7 +123,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
             pre_img.setColorFilter(COLOR_UNSELECT);
             pre_text.setTextColor(COLOR_UNSELECT);
 
-            pre_text.setPivotX(pre_img.getWidth()/2);
+            pre_text.setPivotX(pre_img.getWidth() / 2);
             pre_text.setScaleX(1.0f);
             pre_text.setScaleY(1.0f);
         }
@@ -135,7 +136,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         to_img.setColorFilter(COLOR_SELECT);
         to_text.setTextColor(COLOR_SELECT);
 
-        to_text.setPivotX(to_text.getWidth()/2);
+        to_text.setPivotX(to_text.getWidth() / 2);
         to_text.setScaleX(1.08f);
         to_text.setScaleY(1.08f);
 
