@@ -24,6 +24,10 @@ public class SingleArticleData implements Parcelable {
     public String content;
     public String title;
 
+    //投票
+    public VoteData vote;
+
+
     public SingleArticleData(SingleType type, String title, String uid, String username, String postTime, String index, String replyUrl, String content, String pid) {
         this.type = type;
         this.username = username;
@@ -82,4 +86,5 @@ public class SingleArticleData implements Parcelable {
             return new SingleArticleData[size];
         }
     };
+
 }

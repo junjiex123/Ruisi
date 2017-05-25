@@ -28,6 +28,7 @@ import me.yluo.ruisiapp.database.MyDB;
 import me.yluo.ruisiapp.listener.LoadMoreListener;
 import me.yluo.ruisiapp.model.ArticleListData;
 import me.yluo.ruisiapp.model.GalleryData;
+import me.yluo.ruisiapp.model.WaterData;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.myhttp.SyncHttpClient;
@@ -56,8 +57,11 @@ public class FrageHotsNews extends BaseLazyFragment implements LoadMoreListener.
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        ((RadioButton) mRootView.findViewById(R.id.btn_reply)).setText("新帖");
-        ((RadioButton) mRootView.findViewById(R.id.btn_pm)).setText("热贴");
+
+        ((RadioButton) mRootView.findViewById(R.id.btn_1)).setText("新帖");
+        mRootView.findViewById(R.id.btn_2).setVisibility(View.GONE);
+        ((RadioButton) mRootView.findViewById(R.id.btn_3)).setText("热贴");
+
         postList = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
@@ -75,11 +79,12 @@ public class FrageHotsNews extends BaseLazyFragment implements LoadMoreListener.
         RadioGroup swictchMes = (RadioGroup) mRootView.findViewById(R.id.btn_change);
         swictchMes.setOnCheckedChangeListener((radioGroup, id) -> {
             int pos = -1;
-            if (id == R.id.btn_reply) {
+            if (id == R.id.btn_1) {
                 pos = TYPE_NEW;
             } else {
                 pos = TYPE_HOT;
             }
+
             if (pos != currentType) {
                 currentType = pos;
                 refreshLayout.setRefreshing(true);
@@ -96,7 +101,7 @@ public class FrageHotsNews extends BaseLazyFragment implements LoadMoreListener.
 
     @Override
     public void ScrollToTop() {
-        if(mydataset.size()>0)
+        if (mydataset.size() > 0)
             postList.scrollToPosition(0);
     }
 

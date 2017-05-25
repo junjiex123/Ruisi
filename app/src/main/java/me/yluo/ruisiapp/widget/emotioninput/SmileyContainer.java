@@ -54,30 +54,24 @@ public class SmileyContainer extends FrameLayout {
     public void init(EditText editText, View smileyBtn, final View sendBtn) {
         sendBtn.setEnabled(false);
         this.sendBtn = sendBtn;
-        EmotionInputHandler handler = new EmotionInputHandler(editText, new EmotionInputHandler.TextChangeListener() {
-            @Override
-            public void onTextChange(boolean enable, String s) {
-                sendBtn.setEnabled(enable);
-                if (moreView != null && moreViewBtn != null) {
-                    if (!enable) {
-                        sendBtn.setVisibility(GONE);
-                        moreViewBtn.setVisibility(VISIBLE);
-                    } else {
-                        moreViewBtn.setVisibility(GONE);
-                        sendBtn.setVisibility(VISIBLE);
-                    }
+        EmotionInputHandler handler = new EmotionInputHandler(editText, (enable, s) -> {
+            sendBtn.setEnabled(enable);
+            if (moreView != null && moreViewBtn != null) {
+                if (!enable) {
+                    sendBtn.setVisibility(GONE);
+                    moreViewBtn.setVisibility(VISIBLE);
+                } else {
+                    moreViewBtn.setVisibility(GONE);
+                    sendBtn.setVisibility(VISIBLE);
                 }
             }
         });
 
         smileyView.setInputView(handler);
         this.editText = editText;
-        this.editText.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                hideContainer(true);
-                return false;
-            }
+        this.editText.setOnTouchListener((v, event) -> {
+            hideContainer(true);
+            return false;
         });
         setSmileyView(smileyBtn);
     }
@@ -94,21 +88,18 @@ public class SmileyContainer extends FrameLayout {
     }
 
     private void setSmileyView(View smileyBtn) {
-        smileyBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (getVisibility() != VISIBLE) {
+        smileyBtn.setOnClickListener(v -> {
+            if (getVisibility() != VISIBLE) {
+                smileyView.setVisibility(VISIBLE);
+                if (moreView != null) moreView.setVisibility(GONE);
+                showContainer();
+            } else {
+                if (smileyView.getVisibility() == VISIBLE) {
+                    hideContainer(true);
+                    KeyboardUtil.showKeyboard(editText);
+                } else {
                     smileyView.setVisibility(VISIBLE);
                     if (moreView != null) moreView.setVisibility(GONE);
-                    showContainer();
-                } else {
-                    if (smileyView.getVisibility() == VISIBLE) {
-                        hideContainer(true);
-                        KeyboardUtil.showKeyboard(editText);
-                    } else {
-                        smileyView.setVisibility(VISIBLE);
-                        if (moreView != null) moreView.setVisibility(GONE);
-                    }
                 }
             }
         });
@@ -122,21 +113,18 @@ public class SmileyContainer extends FrameLayout {
         this.moreViewBtn.setVisibility(VISIBLE);
         this.sendBtn.setVisibility(GONE);
 
-        moreViewBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (getVisibility() != VISIBLE) {
+        moreViewBtn.setOnClickListener(v -> {
+            if (getVisibility() != VISIBLE) {
+                moreView.setVisibility(VISIBLE);
+                smileyView.setVisibility(GONE);
+                showContainer();
+            } else {
+                if (moreView.getVisibility() == VISIBLE) {
+                    hideContainer(true);
+                    KeyboardUtil.showKeyboard(editText);
+                } else {
                     moreView.setVisibility(VISIBLE);
                     smileyView.setVisibility(GONE);
-                    showContainer();
-                } else {
-                    if (moreView.getVisibility() == VISIBLE) {
-                        hideContainer(true);
-                        KeyboardUtil.showKeyboard(editText);
-                    } else {
-                        moreView.setVisibility(VISIBLE);
-                        smileyView.setVisibility(GONE);
-                    }
                 }
             }
         });
@@ -174,7 +162,6 @@ public class SmileyContainer extends FrameLayout {
             }
             hideContainer(true);
         } else if (offset < 0) {
-            Log.e("______", "keyboard hide :" + offset);
             this.isKeyboardShowing = false;
         }
     }

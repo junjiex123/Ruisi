@@ -29,21 +29,20 @@ import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.widget.MyListDivider;
 
-//回复我的
-//// TODO: 16-8-22  add 提到我的home.php?mod=space&do=notice&view=mypost&type=at&mobile=2
+//消息页面 回复/提到/AT
+//TODO 翻页
 
 public class FrageMessage extends BaseLazyFragment {
     protected RecyclerView messageList;
-    private View pm_badge;
     protected SwipeRefreshLayout refreshLayout;
     private MessageAdapter adapter;
     private List<MessageData> datas = new ArrayList<>();
     ;
     private int index = 0;
-    int last_message_id = 0;
-    int current_noticeid = 1;
+    int lastReplyId = 0, lastAtId = 0;
+    int currReplyId = 1, currAtId = 1;
     private boolean lastLoginState = false;
-    private boolean isHavePm;
+    private boolean isHavePm, isHaveAt;
 
     public static FrageMessage newInstance(boolean isHaveReply, boolean isHavePm) {
         Bundle args = new Bundle();
@@ -68,10 +67,6 @@ public class FrageMessage extends BaseLazyFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        pm_badge = mRootView.findViewById(R.id.pm_badge);
-        if (isHavePm) {
-            pm_badge.setVisibility(View.VISIBLE);
-        }
         messageList = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         //设置可以滑出底栏
         messageList.setClipToPadding(false);
@@ -85,11 +80,15 @@ public class FrageMessage extends BaseLazyFragment {
         messageList.setAdapter(adapter);
         refreshLayout.setOnRefreshListener(() -> getData(false));
         RadioGroup swictchMes = (RadioGroup) mRootView.findViewById(R.id.btn_change);
+
         swictchMes.setOnCheckedChangeListener((radioGroup, id) -> {
-            int pos = 1;
-            if (id == R.id.btn_reply) {
+            int pos = 2;
+            if (id == R.id.btn_1) {
                 pos = 0;
+            } else if (id == R.id.btn_2) {
+                pos = 1;
             }
+
             if (pos != index) {
                 index = pos;
                 getData(true);
@@ -135,25 +134,33 @@ public class FrageMessage extends BaseLazyFragment {
             refreshLayout.setRefreshing(true);
         }
 
-        last_message_id = getActivity().getSharedPreferences(App.MY_SHP_NAME, Activity.MODE_PRIVATE)
-                .getInt(App.NOTICE_MESSAGE_KEY, 0);
-        current_noticeid = last_message_id;
+        lastReplyId = getActivity().getSharedPreferences(App.MY_SHP_NAME, Activity.MODE_PRIVATE)
+                .getInt(App.NOTICE_MESSAGE_REPLY_KEY, 0);
+        currReplyId = lastReplyId;
+
+        lastAtId = getActivity().getSharedPreferences(App.MY_SHP_NAME, Activity.MODE_PRIVATE)
+                .getInt(App.NOTICE_MESSAGE_AT_KEY, 0);
+        currAtId = lastAtId;
+
         //reply
-        String url = "home.php?mod=space&do=notice&mobile=2";
-        if (index != 0) {
-            //pm
+        String url;
+        if (index == 0) { //reply
+            url = "home.php?mod=space&do=notice&mobile=2";
+        } else if (index == 1) { //pm
             url = "home.php?mod=space&do=pm&mobile=2";
+        } else { //@wo
+            url = "home.php?mod=space&do=notice&view=mypost&type=at&mobile=2";
         }
+
         HttpUtil.get(getActivity(), url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                if (index != 0) {
+                if (index == 1) {
                     new GetUserPmTask().execute(res);
                 } else {
-                    new GetUserReplyTask().execute(res);
+                    new GetMessageTask(index).execute(res);
                 }
-
             }
 
             @Override
@@ -175,7 +182,17 @@ public class FrageMessage extends BaseLazyFragment {
     }
 
     //获得回复我的
-    private class GetUserReplyTask extends AsyncTask<String, Void, List<MessageData>> {
+    //获得@我的
+    private class GetMessageTask extends AsyncTask<String, Void, List<MessageData>> {
+
+        private int type; //0 reply 2-@
+        private static final int TYPE_REPLY = 0;
+        private static final int TYPE_AT = 2;
+
+        public GetMessageTask(int type) {
+            this.type = type;
+        }
+
         @Override
         protected List<MessageData> doInBackground(String... params) {
             //pmbox
@@ -185,41 +202,65 @@ public class FrageMessage extends BaseLazyFragment {
                 int noticeId = Integer.parseInt(tmp.attr("notice"));
                 String authorImage = tmp.select(".avt").select("img").attr("src");
                 String time = tmp.select(".xg1.xw0").text();
-                String authorTitle = "";
-                String titleUrl = "";
-                String content = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").text().replace("查看", "");
-                if (content.isEmpty()) {
-                    //这是系统消息
-                    authorTitle = "系统消息";
-                    titleUrl = tmp.select(".ntc_body").select("a").attr("href");
-                    authorImage = App.getBaseUrl() + authorImage;
-                    content = tmp.select(".ntc_body").text();
-                } else {
-                    //这是回复消息
-                    authorTitle = tmp.select(".ntc_body").select("a[href^=home.php]").text() + " 回复了我";
+                String authorTitle;
+                String titleUrl;
+                String content;
+
+                if (type == TYPE_REPLY) {
+                    content = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").text().replace("查看", "");
+                    if (content.isEmpty()) {
+                        //这是系统消息
+                        authorTitle = "系统消息";
+                        titleUrl = tmp.select(".ntc_body").select("a").attr("href");
+                        authorImage = App.getBaseUrl() + authorImage;
+                        content = tmp.select(".ntc_body").text();
+                    } else {
+                        //这是回复消息
+                        authorTitle = tmp.select(".ntc_body").select("a[href^=home.php]").text() + " 回复了我";
+                        titleUrl = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
+                    }
+                } else { //@消息
+                    authorTitle = tmp.select(".ntc_body").select("a[href^=home.php]").text() + " 提到了我";
                     titleUrl = tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").attr("href");
+                    content = "在主题[" + tmp.select(".ntc_body").select("a[href^=forum.php?mod=redirect]").text() + "]\n" +
+                            tmp.select(".ntc_body").select(".quote").text();
                 }
 
-                boolean isRead = (noticeId <= last_message_id);
-                if (noticeId > current_noticeid) {
-                    current_noticeid = noticeId;
+
+                boolean isRead;
+                SharedPreferences prf = getActivity().getSharedPreferences(App.MY_SHP_NAME, Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prf.edit();
+                if (type == TYPE_REPLY) {
+                    isRead = (noticeId <= lastReplyId);
+                    if (noticeId > currReplyId) {
+                        currReplyId = noticeId;
+                    }
+
+                    if (lastReplyId < currReplyId) {
+                        editor.putInt(App.NOTICE_MESSAGE_REPLY_KEY, currReplyId);
+                        editor.apply();
+                    }
+                } else {
+                    isRead = (noticeId <= lastAtId);
+                    if (noticeId > currAtId) {
+                        currAtId = noticeId;
+                    }
+
+                    if (lastAtId < currAtId) {
+                        editor.putInt(App.NOTICE_MESSAGE_AT_KEY, currReplyId);
+                        editor.apply();
+                    }
                 }
                 tempdatas.add(new MessageData(ListType.REPLAYME, authorTitle, titleUrl, authorImage, time, isRead, content));
             }
 
-            if (last_message_id < current_noticeid) {
-                SharedPreferences prf = getActivity().getSharedPreferences(App.MY_SHP_NAME, Activity.MODE_PRIVATE);
-                SharedPreferences.Editor editor = prf.edit();
-                editor.putInt(App.NOTICE_MESSAGE_KEY, current_noticeid);
-                editor.apply();
-            }
+
             return tempdatas;
         }
 
         @Override
         protected void onPostExecute(List<MessageData> tempdatas) {
             finishGetData(tempdatas);
-            //todo 记录是否未读
         }
     }
 
@@ -249,10 +290,6 @@ public class FrageMessage extends BaseLazyFragment {
         @Override
         protected void onPostExecute(List<MessageData> tempdatas) {
             finishGetData(tempdatas);
-            if (isHavePm) {
-                isHavePm = false;
-                pm_badge.setVisibility(View.GONE);
-            }
         }
     }
 }

@@ -130,7 +130,7 @@ public class SyncHttpClient {
     void request(final String url, final Method method, final Map<String, String> map,
                  final ResponseHandler handler) {
         HttpURLConnection connection = null;
-        Log.i("httputil", "request url " + url);
+        Log.d("httputil", "request url :" + url);
         try {
             connection = buildURLConnection(url, method);
             handler.sendStartMessage();

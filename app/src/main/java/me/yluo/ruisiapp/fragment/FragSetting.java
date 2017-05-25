@@ -19,6 +19,7 @@ import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.activity.NightModeActivity;
 import me.yluo.ruisiapp.activity.PostActivity;
+import me.yluo.ruisiapp.activity.SettingActivity;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.utils.DataManager;
@@ -40,6 +41,7 @@ public class FragSetting extends PreferenceFragment
     private SharedPreferences sharedPreferences;
     private Preference clearCache;
     private Preference darkModeSettings;
+
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -159,7 +161,10 @@ public class FragSetting extends PreferenceFragment
     @Override
     public void onResume() {
         super.onResume();
+        updateView();
+    }
 
+    private void updateView() {
         boolean isEnable = sharedPreferences.getBoolean("setting_dark_mode", true);
         if (isEnable) {
             if (App.isAutoDarkMode(getActivity())) {
@@ -210,17 +215,13 @@ public class FragSetting extends PreferenceFragment
                         Toast.LENGTH_SHORT).show();
                 break;
             case "setting_dark_mode":
-                bbbb = sharedPreferences.getBoolean("setting_dark_mode", true);
-                if (bbbb) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    Toast.makeText(getActivity(), "切换到夜间模式", Toast.LENGTH_SHORT).show();
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                }
-                darkModeSettings.setSummary("当前夜间模式:" + (bbbb ? "开" : "关"));
-                darkModeSettings.setEnabled(bbbb);
-                Activity a = getActivity();
-                if (a != null) a.onContentChanged();
+                updateView();
+                int now = AppCompatDelegate.getDefaultNightMode();
+                SettingActivity s = (SettingActivity) getActivity();
+                darkModeSettings.setEnabled(sharedPreferences.getBoolean("setting_dark_mode", true));
+                s.switchTheme();
+                if (AppCompatDelegate.getDefaultNightMode() != now)
+                    Toast.makeText(getActivity(), "已切换主题", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

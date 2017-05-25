@@ -12,15 +12,15 @@
 
         <RadioGroup
             android:id="@+id/btn_change"
-            android:layout_width="110dp"
+            android:layout_width="140dp"
             android:layout_height="28dp"
             android:layout_gravity="center"
-            android:checkedButton="@+id/btn_reply"
+            android:checkedButton="@+id/btn_1"
             android:gravity="center"
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/btn_reply"
+                android:id="@+id/btn_1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -29,36 +29,32 @@
                 android:gravity="center"
                 android:text="回复"
                 android:textColor="@color/text_primary_white"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
 
             <RadioButton
-                android:id="@+id/btn_pm"
+                android:id="@+id/btn_2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/switch_center_bg"
+                android:button="@null"
+                android:gravity="center"
+                android:text="消息"
+                android:textColor="@color/text_primary_white"
+                android:textSize="13sp" />
+
+            <RadioButton
+                android:id="@+id/btn_3"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/switch_right_bg"
                 android:button="@null"
                 android:gravity="center"
-                android:text="消息"
+                android:text="提到"
                 android:textColor="@color/text_primary_white"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
         </RadioGroup>
-
-        <RelativeLayout
-            android:id="@+id/pm_badge"
-            android:layout_width="110dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center"
-            android:visibility="gone">
-
-            <View
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="6dp"
-                android:background="@drawable/badge" />
-
-        </RelativeLayout>
 
 
     </FrameLayout>

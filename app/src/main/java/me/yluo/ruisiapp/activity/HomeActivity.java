@@ -257,7 +257,7 @@ public class HomeActivity extends BaseActivity
         if (isReply) {
             Elements elemens = document.select(".nts").select("dl.cl");
             if (elemens.size() > 0) {
-                int last_message_id = getSharedPreferences(App.MY_SHP_NAME, MODE_PRIVATE).getInt(App.NOTICE_MESSAGE_KEY, 0);
+                int last_message_id = getSharedPreferences(App.MY_SHP_NAME, MODE_PRIVATE).getInt(App.NOTICE_MESSAGE_REPLY_KEY, 0);
                 int noticeId = Integer.parseInt(elemens.get(0).attr("notice"));
                 ishaveReply = last_message_id < noticeId;
             }

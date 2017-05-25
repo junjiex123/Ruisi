@@ -83,7 +83,6 @@ public class EmotionGridView extends ViewGroup implements View.OnClickListener {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int childCount = getChildCount();
         int startX, startY;
-        Log.d("EmotionGridView.layout", l + "||" + t);
         for (int i = 0; i < childCount; i++) {
             startX = ((i % colNum) * itemWidth);
             startY = ((i / colNum) * itemHeight);

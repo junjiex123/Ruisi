@@ -24,7 +24,7 @@ public class SmileyDataSet {
     public String name;
     public int type;
     private List<Pair<String, String>> smileys;
-    private static final String SMILEY_BASE = "file:///android_asset/static/image/smiley/";
+    private static final String SMILEY_BASE = "file:///android_asset/smiley/";
 
     public SmileyDataSet(String name, int type) {
         this.type = type;

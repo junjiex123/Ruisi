@@ -4,8 +4,12 @@ import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.util.Log;
+
+import java.util.Calendar;
 
 import me.yluo.ruisiapp.checknet.NetworkReceiver;
 import me.yluo.ruisiapp.database.MyDB;
@@ -26,7 +30,6 @@ public class App extends Application {
         this.context = getApplicationContext();
 
         //注册网络变化广播
-        Log.e("application create消息广播", "注册广播");
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(receiver, intentFilter);
@@ -35,6 +38,31 @@ public class App extends Application {
         MyDB myDB = new MyDB(context);
         //最多缓存2000条历史纪录
         myDB.deleteOldHistory(2000);
+
+        boolean enableDarkMode = PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean("setting_dark_mode", false);
+        boolean auto = false;
+        int cur = AppCompatDelegate.getDefaultNightMode();
+        int to = cur;
+        if (enableDarkMode) {//允许夜间模式
+            if (auto = App.isAutoDarkMode(this)) {//自动夜间模式
+                int[] time = App.getDarkModeTime(this);
+                int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+                if ((hour >= time[0] || hour < time[1])) {
+                    to = AppCompatDelegate.MODE_NIGHT_YES;
+                } else {
+                    to = AppCompatDelegate.MODE_NIGHT_NO;
+                }
+            } else {
+                to = AppCompatDelegate.MODE_NIGHT_YES;
+            }
+        } else {//不允许夜间模式
+            to = AppCompatDelegate.MODE_NIGHT_NO;
+        }
+
+        if (cur != to) {
+            AppCompatDelegate.setDefaultNightMode(to);
+        }
     }
 
     @Override
@@ -143,7 +171,9 @@ public class App extends Application {
     //记录上次未读消息的id
     public static final String MY_SHP_NAME = "ruisi_shp";
 
-    public static final String NOTICE_MESSAGE_KEY = "message_notice";
+    public static final String NOTICE_MESSAGE_REPLY_KEY = "message_notice_reply";
+    public static final String NOTICE_MESSAGE_AT_KEY = "message_notice_at";
+
     public static final String AUTO_DARK_MODE_KEY = "auto_dark_mode";
     public static final String START_DARK_TIME_KEY = "start_dart_time";
     public static final String END_DARK_TIME_KEY = "end_dark_time";

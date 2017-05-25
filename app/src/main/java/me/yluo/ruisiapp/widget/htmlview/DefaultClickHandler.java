@@ -3,7 +3,7 @@ package me.yluo.ruisiapp.widget.htmlview;
 import android.content.Context;
 import android.util.Log;
 
-import me.yluo.ruisiapp.utils.HandleLinkClick;
+import me.yluo.ruisiapp.utils.LinkClickHandler;
 import me.yluo.ruisiapp.widget.htmlview.callback.SpanClickListener;
 
 
@@ -22,6 +22,6 @@ public class DefaultClickHandler implements SpanClickListener {
     @Override
     public void onSpanClick(int type, String source) {
         Log.d(TAG, "span click type is " + type + " source is:" + source);
-        HandleLinkClick.handleClick(context, source);
+        LinkClickHandler.handleClick(context, source);
     }
 }

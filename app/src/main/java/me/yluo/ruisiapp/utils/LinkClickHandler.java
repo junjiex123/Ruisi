@@ -19,7 +19,9 @@ import me.yluo.ruisiapp.downloadfile.DownloadService;
  * 处理WebView和 链接点击
  * <p>
  */
-public class HandleLinkClick {
+public class LinkClickHandler {
+    public static final String VOTE_URL = "rsvote://";
+
     public static void handleClick(final Context context, String url) {
         Log.d("handle the link", url);
         //点击了图片
@@ -54,6 +56,13 @@ public class HandleLinkClick {
                     .setCancelable(true)
                     .create()
                     .show();
+
+        } else if (url.startsWith(VOTE_URL)) {
+            if (context instanceof PostActivity) {
+                PostActivity a = (PostActivity) context;
+                a.showVoteView();
+            }
+
 
         } else {
             if (!url.startsWith("http")) {

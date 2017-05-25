@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,14 +46,17 @@ import me.yluo.ruisiapp.listener.ListItemClickListener;
 import me.yluo.ruisiapp.listener.LoadMoreListener;
 import me.yluo.ruisiapp.model.SingleArticleData;
 import me.yluo.ruisiapp.model.SingleType;
+import me.yluo.ruisiapp.model.VoteData;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.utils.GetId;
+import me.yluo.ruisiapp.utils.LinkClickHandler;
 import me.yluo.ruisiapp.utils.KeyboardUtil;
 import me.yluo.ruisiapp.utils.UrlUtils;
 import me.yluo.ruisiapp.widget.MyFriendPicker;
 import me.yluo.ruisiapp.widget.MyListDivider;
 import me.yluo.ruisiapp.widget.emotioninput.SmileyInputRoot;
+import me.yluo.ruisiapp.widget.htmlview.VoteDialog;
 
 /**
  * Created by free2 on 16-3-6.
@@ -196,7 +200,7 @@ public class PostActivity extends BaseActivity
         }
     }
 
-    private void refresh() {
+    public void refresh() {
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
         //数据填充
         datas.clear();
@@ -408,12 +412,41 @@ public class PostActivity extends BaseActivity
                     }
                 }
 
-                String finalcontent = contentels.html().trim();
+
                 SingleArticleData data;
-                if (pageLoad == 1 && i == 0) {
+                if (pageLoad == 1 && i == 0) {//内容
+                    //处理投票
+                    VoteData d = null;
+                    int maxSelection = 1;
+                    Elements vote = contentels.select("form[action^=forum.php?mod=misc&action=votepoll]");
+                    if (vote.size() > 0 && vote.select("input[type=submit]").size() > 0) {// 有且有投票权
+                        if (vote.text().contains("单选投票")) {
+                            maxSelection = 1;
+                        } else if (vote.text().contains("多选投票")) {
+                            int start = vote.text().indexOf("多选投票");
+                            maxSelection = GetId.getNumber(vote.text().substring(start, start + 20));
+                        }
+
+                        Elements ps = vote.select("p");
+                        List<Pair<String, String>> options = new ArrayList<>();
+                        for (Element p : ps) {
+                            if (p.select("input").size() > 0)
+                                options.add(new Pair<>(p.select("input").attr("value"),
+                                        p.select("label").text()));
+                        }
+
+                        if (ps.select("input").get(0).attr("type").equals("radio")) {
+                            maxSelection = 1;
+                        }
+
+                        vote.select("input[type=submit]").get(0).html("<a href=\"" +
+                                LinkClickHandler.VOTE_URL + "\">点此投票</a><br>");
+                        d = new VoteData(vote.attr("action"), options, maxSelection);
+                    }
                     data = new SingleArticleData(SingleType.CONTENT, Title, uid,
                             username, postTime,
-                            commentIndex, replyUrl, finalcontent, pid);
+                            commentIndex, replyUrl, contentels.html().trim(), pid);
+                    data.vote = d;
                     AuthorName = username;
                     if (!isSaveToDataBase) {
                         //插入数据库
@@ -421,9 +454,9 @@ public class PostActivity extends BaseActivity
                         myDB.handSingleReadHistory(Tid, Title, AuthorName);
                         isSaveToDataBase = true;
                     }
-                } else {
+                } else {//评论
                     data = new SingleArticleData(SingleType.COMMENT, Title, uid,
-                            username, postTime, commentIndex, replyUrl, finalcontent, pid);
+                            username, postTime, commentIndex, replyUrl, contentels.html().trim(), pid);
                 }
                 tepdata.add(data);
             }
@@ -702,5 +735,18 @@ public class PostActivity extends BaseActivity
         if (!rootView.hideSmileyContainer()) {
             super.onBackPressed();
         }
+    }
+
+    //显示投票dialog
+    public void showVoteView() {
+        if (datas.get(0).type == SingleType.CONTENT) {
+            VoteData d = datas.get(0).vote;
+            if (d != null) {
+                VoteDialog.show(this, d);
+                return;
+            }
+
+        }
+        showToast("投票数据异常无法投票");
     }
 }

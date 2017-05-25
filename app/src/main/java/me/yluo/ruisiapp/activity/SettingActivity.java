@@ -38,4 +38,5 @@ public class SettingActivity extends BaseActivity {
         Fragment to = new FragSetting();
         getFragmentManager().beginTransaction().replace(R.id.container, to).commit();
     }
+
 }
