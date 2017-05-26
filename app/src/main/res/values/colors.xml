@@ -10,8 +10,6 @@
 
     <color name="bg_primary">#ffffffff</color>
     <color name="bg_secondary">#fff5f5f5</color>
-    <color name="bg_blur">#f1fafafa</color>
-    <color name="bg_select">#ffd2d2d2</color>
 
 
     <color name="colorAuthor">#529ECC</color>
@@ -23,8 +21,6 @@
     <color name="orange_light">#ffffbb33</color>
 
     <!--自定义主题-->
-    <color name="main_color_0">#d12121</color>
-    <color name="main_color_1">#1e1e1e</color>
     <color name="main_color_2">#f44836</color>
     <color name="main_color_3">#f2821e</color>
     <color name="main_color_4">#7bb736</color>

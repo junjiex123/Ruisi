@@ -20,10 +20,11 @@
         android:padding="@dimen/dimen_16">
 
         <me.yluo.ruisiapp.widget.CircleImageView
-            android:id="@+id/logo"
+            android:id="@+id/avatar"
             android:layout_width="82dp"
             android:layout_height="82dp"
             android:src="@drawable/image_placeholder" />
+
 
         <TextView
             android:layout_width="wrap_content"

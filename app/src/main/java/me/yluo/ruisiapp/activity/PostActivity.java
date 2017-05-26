@@ -146,6 +146,7 @@ public class PostActivity extends BaseActivity
         rootView = (SmileyInputRoot) findViewById(R.id.root);
         rootView.initSmiley(input, smileyBtn, btnSend);
         rootView.setMoreView(LayoutInflater.from(this).inflate(R.layout.my_smiley_menu, null), btnMore);
+
         topicList.setOnTouchListener((view, motionEvent) -> {
             if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 KeyboardUtil.hideKeyboard(input);
@@ -700,9 +701,11 @@ public class PostActivity extends BaseActivity
                     onLoadMore();
                 }
             } else if (res.contains("您两次发表间隔")) {
-                Toast.makeText(this, "您两次发表间隔太短了......", Toast.LENGTH_SHORT).show();
+                showToast("您两次发表间隔太短了......");
+            } else if (res.contains("主题自动关闭")) {
+                showLongToast("此主题已关闭回复,无法回复");
             } else {
-                Toast.makeText(this, "由于未知原因发表失败", Toast.LENGTH_SHORT).show();
+                showToast("由于未知原因发表失败");
             }
         } else {
             Toast.makeText(this, "网络错误", Toast.LENGTH_SHORT).show();

@@ -22,11 +22,14 @@ import java.util.Map;
 import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.activity.AboutActivity;
+import me.yluo.ruisiapp.activity.BaseActivity;
 import me.yluo.ruisiapp.activity.FragementActivity;
 import me.yluo.ruisiapp.activity.FriendActivity;
+import me.yluo.ruisiapp.activity.HomeActivity;
 import me.yluo.ruisiapp.activity.LoginActivity;
 import me.yluo.ruisiapp.activity.SettingActivity;
 import me.yluo.ruisiapp.activity.SignActivity;
+import me.yluo.ruisiapp.activity.ThemeActivity;
 import me.yluo.ruisiapp.activity.UserDetailActivity;
 import me.yluo.ruisiapp.model.FrageType;
 import me.yluo.ruisiapp.utils.IntentUtils;
@@ -47,18 +50,21 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
 
     private final int[] icons = new int[]{
             R.drawable.ic_autorenew_black_24dp,
+            R.drawable.ic_palette_black_24dp,
+            R.drawable.ic_settings_24dp,
             R.drawable.ic_info_24dp,
             R.drawable.ic_menu_share_24dp,
             R.drawable.ic_favorite_white_12dp,
-            R.drawable.ic_settings_24dp,
+
     };
 
     private final String[] titles = new String[]{
             "签到中心",
+            "主题设置",
+            "设置",
             "关于本程序",
             "分享手机睿思",
             "到商店评分",
-            "设置",
     };
 
 
@@ -124,7 +130,7 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
 
             RuisUtils.LoadMyAvatar(new WeakReference<>(getActivity()),
                     uid,
-                    new WeakReference<>(userImg),"m");
+                    new WeakReference<>(userImg), "m");
         } else {
             userName.setText("点击头像登陆");
             userGrade.setVisibility(View.GONE);
@@ -134,6 +140,7 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
 
     @Override
     public void onClick(View view) {
+        BaseActivity b = (BaseActivity) getActivity();
         switch (view.getId()) {
             case R.id.user_img:
                 if (App.ISLOGIN(getActivity())) {
@@ -144,12 +151,12 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
                 }
                 break;
             case R.id.post:
-                if (isLogin()) {
+                if (b.isLogin()) {
                     FragementActivity.open(getActivity(), FrageType.TOPIC);
                 }
                 break;
             case R.id.star:
-                if (isLogin()) {
+                if (b.isLogin()) {
                     FragementActivity.open(getActivity(), FrageType.START);
                 }
                 break;
@@ -157,7 +164,7 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
                 FragementActivity.open(getActivity(), FrageType.HISTORY);
                 break;
             case R.id.friend:
-                if (isLogin()) {
+                if (b.isLogin()) {
                     switchActivity(FriendActivity.class);
                 }
                 break;
@@ -168,7 +175,8 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
             case 0:
-                if (isLogin()) {
+                HomeActivity a = (HomeActivity) getActivity();
+                if (a.isLogin()) {
                     if (App.IS_SCHOOL_NET) {
                         switchActivity(SignActivity.class);
                     } else {
@@ -177,21 +185,25 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
                 }
                 break;
             case 1:
-                switchActivity(AboutActivity.class);
+                Intent i = new Intent(getActivity(), ThemeActivity.class);
+                getActivity().startActivityForResult(i, ThemeActivity.requestCode);
                 break;
             case 2:
+                switchActivity(SettingActivity.class);
+                break;
+            case 3:
+                switchActivity(AboutActivity.class);
+                break;
+            case 4:
                 String data = "这个手机睿思客户端非常不错，分享给你们。" +
                         "\n下载地址(校园网): http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=" + App.POST_TID +
                         "\n下载地址2(校外网): http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid=" + App.POST_TID + "&mobile=2";
                 IntentUtils.shareApp(getActivity(), data);
                 break;
-            case 3:
+            case 5:
                 if (!IntentUtils.openStore(getActivity())) {
                     Toast.makeText(getActivity(), "确保你的手机安装了相关应用商城", Toast.LENGTH_SHORT).show();
                 }
-                break;
-            case 4:
-                startActivity(new Intent(getActivity(), SettingActivity.class));
                 break;
         }
     }

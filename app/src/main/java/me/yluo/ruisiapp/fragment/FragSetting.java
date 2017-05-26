@@ -1,6 +1,5 @@
 package me.yluo.ruisiapp.fragment;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -15,7 +14,6 @@ import android.widget.Toast;
 import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.activity.PostActivity;
-import me.yluo.ruisiapp.activity.ThemeActivity;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.utils.DataManager;
@@ -72,10 +70,6 @@ public class FragSetting extends PreferenceFragment
         findPreference("about_this")
                 .setSummary("当前版本" + version_name + "  version code:" + version_code);
 
-        findPreference("theme_settings").setOnPreferenceClickListener(preference -> {
-            startActivity(new Intent(getActivity(), ThemeActivity.class));
-            return true;
-        });
 
         //[2016年6月9日更新][code:25]睿思手机客户端
         //更新逻辑 检查睿思帖子标题 比对版本号
@@ -130,47 +124,6 @@ public class FragSetting extends PreferenceFragment
             clearCache.setSummary("缓存大小：" + DataManager.getTotalCacheSize(getActivity()));
             return false;
         });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateView();
-    }
-
-    private void updateView() {
-        //todo
-
-        /*
-        findPreference("theme_settings").setSummary("");
-
-
-        boolean isEnable = sharedPreferences.getBoolean("setting_dark_mode", true);
-        if (isEnable) {
-            if (App.isAutoDarkMode(getActivity())) {
-                darkModeSettings.setSummary("当前夜间模式:自动切换(" +
-                        App.getDarkModeTime(getActivity())[0] +
-                        ":00~" +
-                        App.getDarkModeTime(getActivity())[1] +
-                        ":00)");
-            } else {
-                darkModeSettings.setSummary("当前夜间模式:开");
-            }
-        } else {
-            darkModeSettings.setSummary("当前夜间模式:关");
-        }
-
-
-        case "setting_dark_mode":
-        updateView();
-        int now = AppCompatDelegate.getDefaultNightMode();
-        SettingActivity s = (SettingActivity) getActivity();
-        darkModeSettings.setEnabled(sharedPreferences.getBoolean("setting_dark_mode", true));
-        s.switchTheme();
-        if (AppCompatDelegate.getDefaultNightMode() != now)
-            Toast.makeText(getActivity(), "已切换主题", Toast.LENGTH_SHORT).show();
-        break;
-        */
     }
 
     @Override

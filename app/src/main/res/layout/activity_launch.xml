@@ -71,8 +71,9 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="8dp"
+        android:alpha="0.6"
         android:text="rs.xidian.edu.cn"
-        android:textColor="#CCd14141"
+        android:textColor="?attr/colorPrimary"
         android:textSize="10sp" />
 
 </RelativeLayout>

@@ -2,6 +2,7 @@ package me.yluo.ruisiapp.activity;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -256,7 +257,8 @@ public class HomeActivity extends BaseActivity
         if (isReply) {
             Elements elemens = document.select(".nts").select("dl.cl");
             if (elemens.size() > 0) {
-                int last_message_id = getSharedPreferences(App.MY_SHP_NAME, MODE_PRIVATE).getInt(App.NOTICE_MESSAGE_REPLY_KEY, 0);
+                int last_message_id = getSharedPreferences(App.MY_SHP_NAME, MODE_PRIVATE)
+                        .getInt(App.NOTICE_MESSAGE_REPLY_KEY, 0);
                 int noticeId = Integer.parseInt(elemens.get(0).attr("notice"));
                 ishaveReply = last_message_id < noticeId;
             }
@@ -332,6 +334,16 @@ public class HomeActivity extends BaseActivity
             } else {
                 finish();
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ThemeActivity.requestCode && resultCode == RESULT_OK) {
+            //切换主题
+            Log.d("main", "切换主题");
+            recreate();
         }
     }
 }

@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
 
 
@@ -71,10 +70,6 @@ public abstract class BaseFragment extends Fragment {
 
 
     protected abstract int getLayoutId();
-
-    protected boolean isLogin() {
-        return App.ISLOGIN(getActivity());
-    }
 
 
     protected void switchActivity(Class<?> cls) {

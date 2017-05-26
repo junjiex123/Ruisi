@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -15,6 +16,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Calendar;
 
 import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
@@ -29,52 +32,52 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int theme = App.getCustomTheme(this);
-        if (theme == 0 || theme == 1) {
-            //夜间 白天
-        } else {
-            setTheme(theme);
-        }
-    }
-
-    @Override
-    protected void onResume() {
         switchTheme();
-        super.onResume();
     }
 
-    //切换主题
+
+    //中途 切换主题
     public void switchTheme() {
-        /*
-        boolean enableDarkMode = PreferenceManager.getDefaultSharedPreferences(this)
-                .getBoolean("setting_dark_mode", false);
-        boolean auto = false;
+        //直接夜间 设置退出
+        int theme = App.getCustomTheme(this);
         int cur = AppCompatDelegate.getDefaultNightMode();
         int to = cur;
-        if (enableDarkMode) {//允许夜间模式
-            if (auto = App.isAutoDarkMode(this)) {//自动夜间模式
+        boolean autoChnage = false;
+
+        //夜间主题
+        if (theme == ThemeActivity.THEME_NIGHT) {
+            to = AppCompatDelegate.MODE_NIGHT_YES;
+        } else {//白天主题
+            if (App.isAutoDarkMode(this)) {
+                autoChnage = true;
                 int[] time = App.getDarkModeTime(this);
                 int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
                 if ((hour >= time[0] || hour < time[1])) {
+                    //自动切换
                     to = AppCompatDelegate.MODE_NIGHT_YES;
                 } else {
                     to = AppCompatDelegate.MODE_NIGHT_NO;
                 }
             } else {
-                to = AppCompatDelegate.MODE_NIGHT_YES;
+                to = AppCompatDelegate.MODE_NIGHT_NO;
             }
-        } else {//不允许夜间模式
-            to = AppCompatDelegate.MODE_NIGHT_NO;
         }
 
-        if (cur != to) {
-            AppCompatDelegate.setDefaultNightMode(to);
-            if (auto) {
-                showToast("已自动切换到" + (to == AppCompatDelegate.MODE_NIGHT_YES ?
-                        "夜间模式" : "日间模式"));
-            }
+        if (to == AppCompatDelegate.MODE_NIGHT_YES) {
+            //夜间模式主题
+            setTheme(R.style.AppTheme);
+        } else {
+            setTheme(theme);
         }
-        */
+
+        //黑白发生了变化
+        if (to != cur) {
+            if (autoChnage) {
+                showToast("自动" + (to == AppCompatDelegate.MODE_NIGHT_YES ?
+                        "切换到夜间模式" : "关闭夜间模式"));
+            }
+            AppCompatDelegate.setDefaultNightMode(to);
+        }
     }
 
     private static Toast mToast;

@@ -1,10 +1,5 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="论坛设置">
-        <Preference
-            android:key="theme_settings"
-            android:summary="当前模式:自动切换(21:00~6:00)"
-            android:title="主题设置" />
-
         <ListPreference
             android:entries="@array/setting_switch_url"
             android:entryValues="@array/setting_switch_url_value"

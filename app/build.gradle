@@ -11,9 +11,6 @@ android {
         versionCode 25
         versionName '2.5.0'
 
-        jackOptions {
-            enabled true
-        }
     }
 
     compileOptions {

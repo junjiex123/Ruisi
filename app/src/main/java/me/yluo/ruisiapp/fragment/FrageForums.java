@@ -25,6 +25,7 @@ import java.util.List;
 
 import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
+import me.yluo.ruisiapp.activity.BaseActivity;
 import me.yluo.ruisiapp.activity.LoginActivity;
 import me.yluo.ruisiapp.activity.SearchActivity;
 import me.yluo.ruisiapp.activity.UserDetailActivity;
@@ -146,7 +147,8 @@ public class FrageForums extends BaseLazyFragment implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.search:
-                if (isLogin()) {
+                BaseActivity b = (BaseActivity) getActivity();
+                if (b.isLogin()) {
                     switchActivity(SearchActivity.class);
                 }
                 break;

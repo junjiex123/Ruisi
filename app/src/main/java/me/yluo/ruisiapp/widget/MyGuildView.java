@@ -63,7 +63,7 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
 
     private void init(Context context) {
         this.context = context;
-        dotMargine = DimmenUtils.dip2px(context, 3);
+        dotMargine = DimmenUtils.dip2px(context, 2);
         containerPaddingTB = DimmenUtils.dip2px(context, 8);
         containerPaddingLR = DimmenUtils.dip2px(context, 12);
 

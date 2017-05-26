@@ -4,11 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.util.Log;
 
-import me.yluo.ruisiapp.activity.ThemeActivity;
 import me.yluo.ruisiapp.checknet.NetworkReceiver;
 import me.yluo.ruisiapp.database.MyDB;
 import me.yluo.ruisiapp.database.SQLiteHelper;
@@ -36,49 +34,6 @@ public class App extends Application {
         MyDB myDB = new MyDB(context);
         //最多缓存2000条历史纪录
         myDB.deleteOldHistory(2000);
-
-        int theme = getCustomTheme(this);
-        Log.d("===", "theme:" + theme);
-        if (theme == ThemeActivity.THEME_DEFAULT) {
-            //do nothing
-        } else if (theme == ThemeActivity.THEME_NIGHT) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
-            setTheme(theme);
-        }
-
-
-        /**
-
-         boolean enableDarkMode = PreferenceManager.getDefaultSharedPreferences(this)
-         .getBoolean("setting_dark_mode", false);
-
-         boolean auto = false;
-         int cur = AppCompatDelegate.getDefaultNightMode();
-         int to = cur;
-         if (enableDarkMode) {//允许夜间模式
-         if (auto = App.isAutoDarkMode(this)) {//自动夜间模式
-         int[] time = App.getDarkModeTime(this);
-         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-         if ((hour >= time[0] || hour < time[1])) {
-         to = AppCompatDelegate.MODE_NIGHT_YES;
-         } else {
-         to = AppCompatDelegate.MODE_NIGHT_NO;
-         }
-         } else {
-         to = AppCompatDelegate.MODE_NIGHT_YES;
-         }
-         } else {//不允许夜间模式
-         to = AppCompatDelegate.MODE_NIGHT_NO;
-         }
-
-         if (cur != to) {
-         AppCompatDelegate.setDefaultNightMode(to);
-         }
-
-         */
-
-
     }
 
     @Override
