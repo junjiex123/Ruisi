@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "me.yluo.ruisiapp"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 25
         versionCode 25
         versionName '2.5.0'

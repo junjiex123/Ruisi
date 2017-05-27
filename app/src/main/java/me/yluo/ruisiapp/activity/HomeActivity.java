@@ -57,8 +57,8 @@ public class HomeActivity extends BaseActivity
     private long lastCheckMsgTime = 0;
     private static int interval = 120_000;//120s
     private MyHandler messageHandler;
-    //间隔3天检查更新一次
-    private static final int UPDATE_TIME = 1000 * 3600 * 24 * 3;
+    //间隔20天检查更新一次
+    private static final int UPDATE_TIME = 1000 * 3600 * 24 * 20;
     private SharedPreferences sharedPreferences;
     private boolean isNeedCheckUpdate = false;
     private ViewPager viewPager;

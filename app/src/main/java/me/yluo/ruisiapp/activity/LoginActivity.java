@@ -226,20 +226,36 @@ public class LoginActivity extends BaseActivity {
             editor.putString(App.LOGIN_NAME, "");
             editor.putString(App.LOGIN_PASS, "");
         }
+
         int i = res.indexOf("欢迎您回来");
-        String info = res.substring(i + 6, i + 40);
-        int pos1 = info.indexOf(" ");
-        int pos2 = info.indexOf("，");
-        String grade = info.substring(0, pos1);
-        String name = info.substring(pos1 + 1, pos2);
+        String grade, name;
+
+        String info = res.substring(i, i + 70);
+        int pos = info.indexOf("，");
+        if (info.charAt(pos + 1) == '<') {//管理员
+            int pos2 = info.indexOf(">", pos);
+            int pos3 = info.indexOf("<", pos2);
+            grade = info.substring(pos2 + 1, pos3);
+            int pos4 = info.indexOf(" ", pos3);
+            int pos5 = info.indexOf("，", pos4);
+            name = info.substring(pos4 + 1, pos5);
+        } else {
+            int pos2 = info.indexOf(" ", pos);
+            grade = info.substring(pos + 1, pos2);
+            int pos3 = info.indexOf("，", pos2);
+            name = info.substring(pos2 + 1, pos3);
+        }
+
         String uid = GetId.getId("uid=", res.substring(i));
         int indexhash = res.indexOf("formhash");
         String hash = res.substring(indexhash + 9, indexhash + 17);
-        editor.putString(App.USER_UID_KEY, uid);
-        editor.putString(App.USER_NAME_KEY, name);
-        editor.putString(App.USER_GRADE_KEY, grade);
-        editor.putString(App.HASH_KEY, hash);
-        editor.apply();
+        SharedPreferences.Editor ed = shp.edit();
+        ed.putString(App.USER_UID_KEY, uid);
+        ed.putString(App.USER_NAME_KEY, name);
+        ed.putString(App.USER_GRADE_KEY, grade);
+        ed.putString(App.HASH_KEY, hash);
+        ed.apply();
+        Log.e("res", "grade " + grade + " uid " + uid + " name " + name + " hash " + hash);
 
         showToast("欢迎你" + name + "登陆成功");
         Log.e("res", "grade " + grade + " uid " + uid + " name " + name + " hash " + hash);
