@@ -249,16 +249,14 @@ public class LoginActivity extends BaseActivity {
         String uid = GetId.getId("uid=", res.substring(i));
         int indexhash = res.indexOf("formhash");
         String hash = res.substring(indexhash + 9, indexhash + 17);
-        SharedPreferences.Editor ed = shp.edit();
-        ed.putString(App.USER_UID_KEY, uid);
-        ed.putString(App.USER_NAME_KEY, name);
-        ed.putString(App.USER_GRADE_KEY, grade);
-        ed.putString(App.HASH_KEY, hash);
-        ed.apply();
-        Log.e("res", "grade " + grade + " uid " + uid + " name " + name + " hash " + hash);
 
+        editor.putString(App.USER_UID_KEY, uid);
+        editor.putString(App.USER_NAME_KEY, name);
+        editor.putString(App.USER_GRADE_KEY, grade);
+        editor.putString(App.HASH_KEY, hash);
+        editor.apply();
         showToast("欢迎你" + name + "登陆成功");
-        Log.e("res", "grade " + grade + " uid " + uid + " name " + name + " hash " + hash);
+        Log.d("login result", "grade " + grade + " uid " + uid + " name " + name + " hash " + hash);
 
         Intent intent = new Intent();
         intent.putExtra("status", "ok");

@@ -114,6 +114,7 @@ public class PostAdapter extends BaseAdapter {
             Picasso.with(activity)
                     .load(img_url)
                     .resize(size, size)
+                    .placeholder(R.drawable.image_placeholder)
                     .error(R.drawable.image_placeholder)
                     .into(userAvatar);
             String post_time = "发表于:" + single.postTime;
@@ -183,6 +184,7 @@ public class PostAdapter extends BaseAdapter {
             Picasso.with(activity)
                     .load(img_url)
                     .resize(size, size)
+                    .placeholder(R.drawable.image_placeholder)
                     .error(R.drawable.image_placeholder)
                     .into(avatar);
             replyTime.setText(single.postTime);

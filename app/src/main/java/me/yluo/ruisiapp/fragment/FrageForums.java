@@ -1,13 +1,11 @@
 package me.yluo.ruisiapp.fragment;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,12 +43,8 @@ import me.yluo.ruisiapp.widget.CircleImageView;
  */
 public class FrageForums extends BaseLazyFragment implements View.OnClickListener {
     private ForumsAdapter adapter = null;
-    private SharedPreferences sharedPreferences;
     private CircleImageView userImg;
     private RecyclerView formsList;
-    //15分钟的缓存时间
-    private static final int UPDATE_TIME = 1500 * 600;
-    private static final String KEY = "FORUM_UPDATE_KEY";
     private boolean lastLoginState;
 
     private List<Category> forumDatas;
@@ -58,7 +52,6 @@ public class FrageForums extends BaseLazyFragment implements View.OnClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         forumDatas = new ArrayList<>();
     }
 
@@ -92,13 +85,6 @@ public class FrageForums extends BaseLazyFragment implements View.OnClickListene
 
     @Override
     public void onFirstUserVisible() {
-        //判断是否真正的需要请求服务器
-        //获得新的数据
-        long time = sharedPreferences.getLong(KEY, 0);
-        if (System.currentTimeMillis() - time > UPDATE_TIME) {
-            Log.d("板块列表", "过了缓存时间需要刷新");
-            //todo update batch
-        }
         lastLoginState = App.ISLOGIN(getActivity());
         initForums(lastLoginState);
         initAvatar();

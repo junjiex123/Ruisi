@@ -91,8 +91,6 @@ public class HomeActivity extends BaseActivity
             isNeedCheckUpdate = true;
         }
         messageHandler = new MyHandler(bottomTab, this);
-
-        checkPermissions();
     }
 
     private void initViewpager() {
@@ -113,30 +111,6 @@ public class HomeActivity extends BaseActivity
             switchTab(position);
         } else {
             fragments.get(position).ScrollToTop();
-        }
-    }
-
-
-    private void checkPermissions() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            // No explanation needed, we can request the permission.
-            // 请求sd卡权限
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 666);
-            //请求结果在onRequestPermissionsResult返回
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
-                                           @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case 666: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d("permission ", "允许读写sd卡");
-                }
-            }
         }
     }
 

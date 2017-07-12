@@ -30,7 +30,6 @@ import me.yluo.ruisiapp.widget.MyListDivider;
 public class FrageHistory extends BaseFragment {
 
     private List<ReadHistoryData> datas = new ArrayList<>();
-    ;
     private HistoryAdapter adapter;
 
     @Override
@@ -58,6 +57,7 @@ public class FrageHistory extends BaseFragment {
         SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
         refreshLayout.setEnabled(false);
         adapter = new HistoryAdapter(getActivity(), datas);
+        adapter.setPlaceHolderText("暂无浏览历史");
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.addItemDecoration(new MyListDivider(getActivity(), MyListDivider.VERTICAL));
         recyclerView.setLayoutManager(layoutManager);

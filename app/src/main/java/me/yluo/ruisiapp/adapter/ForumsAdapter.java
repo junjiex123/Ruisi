@@ -46,7 +46,7 @@ public class ForumsAdapter extends BaseAdapter {
     public ForumsAdapter(Context context) {
         this.context = context;
         disableLoadMore();
-        setIsenablePlaceHolder(false);
+        setEnablePlaceHolder(false);
     }
 
     public void setDatas(List<Category> ds) {
@@ -175,7 +175,7 @@ public class ForumsAdapter extends BaseAdapter {
 
             g.setOnItemLongClickListener((parent, view, position, id) -> {
                 WaterData d = ds.get(position);
-                Toast.makeText(context, "帖子数:"+d.num, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, d.name + "\n帖子数:" + d.num, Toast.LENGTH_SHORT).show();
                 return true;
             });
         }
@@ -205,21 +205,21 @@ public class ForumsAdapter extends BaseAdapter {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            CircleImageView imageview; // 声明ImageView的对象
+            CircleImageView imageView; // 声明ImageView的对象
             if (convertView == null) {
-                imageview = new CircleImageView(context);
+                imageView = new CircleImageView(context);
                 AbsListView.LayoutParams p = new AbsListView.LayoutParams(itemWidth, itemWidth);
-                imageview.setLayoutParams(p);
-                imageview.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                imageView.setLayoutParams(p);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             } else {
-                imageview = (CircleImageView) convertView;
+                imageView = (CircleImageView) convertView;
             }
 
             Picasso.with(context)
                     .load(ds.get(position).imgSrc)
                     .placeholder(R.drawable.image_placeholder)
-                    .into(imageview);
-            return imageview;
+                    .into(imageView);
+            return imageView;
         }
     }
 }

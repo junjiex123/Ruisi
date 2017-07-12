@@ -124,6 +124,7 @@ public class PostListAdapter extends BaseAdapter {
             Picasso.with(activity)
                     .load(imageUrl)
                     .resize(size, size)
+                    .placeholder(R.drawable.image_placeholder)
                     .error(R.drawable.image_placeholder)
                     .into(author_img);
             int color = single.titleColor;
@@ -213,7 +214,11 @@ public class PostListAdapter extends BaseAdapter {
             img_card_title.setText(DataSet.get(position).title);
             img_card_like.setText(DataSet.get(position).replayCount);
             if (!TextUtils.isEmpty(DataSet.get(position).imUrl)) {
-                Picasso.with(activity).load(App.getBaseUrl() + DataSet.get(position).imUrl).placeholder(R.drawable.image_placeholder).into(img_card_image);
+                Picasso.with(activity)
+                        .load(App.getBaseUrl() + DataSet.get(position).imUrl)
+                        .placeholder(R.drawable.image_placeholder)
+                        .error(R.drawable.image_placeholder)
+                        .into(img_card_image);
             } else {
                 img_card_image.setImageResource(R.drawable.image_placeholder);
             }

@@ -1,7 +1,9 @@
 package me.yluo.ruisiapp.utils;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
@@ -10,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import me.yluo.ruisiapp.App;
+import me.yluo.ruisiapp.activity.BaseActivity;
 import me.yluo.ruisiapp.activity.LoginActivity;
 import me.yluo.ruisiapp.activity.NewPostActivity;
 import me.yluo.ruisiapp.activity.PostActivity;
@@ -54,8 +57,15 @@ public class LinkClickHandler {
                 // 没有权限
                 new AlertDialog.Builder(context).
                         setTitle("权限错误").
-                        setMessage("没有写入内部存储的权限,无法下载,请到设置中打开").
-                        setPositiveButton("关闭", null)
+                        setMessage("没有写入内部存储的权限,无法下载").
+                        setPositiveButton("授权", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ActivityCompat.requestPermissions((BaseActivity) context,
+                                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                                //请求结果在onRequestPermissionsResult返回
+                            }
+                        })
                         .setNegativeButton("取消", null)
                         .setCancelable(true)
                         .create()

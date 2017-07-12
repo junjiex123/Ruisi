@@ -38,7 +38,6 @@ public class AboutActivity extends BaseActivity {
 
         findViewById(R.id.btn_back).setOnClickListener(view -> finish());
 
-
         String ss = "<b>西电睿思手机客户端</b><br />功能不断完善中，bug较多还请多多反馈......<br />" +
                 "bug反馈:<br />" +
                 "1.到 <a href=\"forum.php?mod=viewthread&tid=" + App.POST_TID + "&mobile=2\">本帖</a> 回复<br />" +

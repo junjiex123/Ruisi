@@ -62,7 +62,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
     private CardView search_card;
     private Animator animator;
     //是否在搜索模式中
-    private boolean isInsearchMode = false;
+    private boolean searchMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +97,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
     @Override
     public void onLoadMore() {
         //加载更多被电击
-        if (isEnableLoadMore && isHaveMore && !isInsearchMode) {
+        if (isEnableLoadMore && isHaveMore && !searchMode) {
             isEnableLoadMore = false;
             CurrentPage++;
             String url = "home.php?mod=space&do=friend&mobile=2" + "&page=" + CurrentPage;
@@ -209,7 +209,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
 
     private void enterSearchMode() {
         ////进入搜索模式
-        isInsearchMode = true;
+        searchMode = true;
         backUpdatas.clear();
         backUpdatas.addAll(datas);
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
@@ -218,7 +218,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
 
     private void exitSearchMode() {
         //退出搜索模式
-        isInsearchMode = false;
+        searchMode = false;
         datas.clear();
         datas.addAll(backUpdatas);
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
@@ -263,14 +263,14 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         @Override
         protected void onPostExecute(List<FriendData> s) {
             super.onPostExecute(s);
-            if (!isHaveMore || isInsearchMode) {
+            if (!isHaveMore || searchMode) {
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
             } else {
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
             }
             int i = datas.size();
             datas.addAll(s);
-            if (!isInsearchMode) {
+            if (!searchMode) {
                 totalDatas.addAll(s);
             }
             if (i == 0) {
@@ -403,7 +403,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
 
     @Override
     public void onBackPressed() {
-        if (isInsearchMode) {
+        if (searchMode) {
             exitSearchMode();
             return;
         }

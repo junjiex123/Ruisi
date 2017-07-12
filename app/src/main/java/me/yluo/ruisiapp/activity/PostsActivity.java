@@ -123,7 +123,7 @@ public class PostsActivity extends BaseActivity implements
 
         adapter = new PostListAdapter(this, datas, getType());
         if (getType() == PostListAdapter.TYPE_IMAGE) {
-            adapter.setIsenablePlaceHolder(false);
+            adapter.setEnablePlaceHolder(false);
         }
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(adapter);
