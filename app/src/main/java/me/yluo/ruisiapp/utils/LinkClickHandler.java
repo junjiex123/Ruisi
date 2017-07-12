@@ -1,7 +1,11 @@
 package me.yluo.ruisiapp.utils;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
@@ -45,23 +49,33 @@ public class LinkClickHandler {
                 a.showReplyKeyboard();
             }
         } else if (url.contains("forum.php?mod=attachment")) {
-            final String finalUrl = url;
-            /**
-             * 启动下载服务
-             */
-            new AlertDialog.Builder(context).
-                    setTitle("下载附件").
-                    setMessage("你要开始下载此附件吗？").
-                    setPositiveButton("下载", (dialog, which) -> {
-                        Intent intent = new Intent(context, DownloadService.class);
-                        intent.putExtra("download_url", finalUrl);
-                        context.startService(intent);
-                    })
-                    .setNegativeButton("取消", null)
-                    .setCancelable(true)
-                    .create()
-                    .show();
-
+            if (ContextCompat.checkSelfPermission(context,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                // 没有权限
+                new AlertDialog.Builder(context).
+                        setTitle("权限错误").
+                        setMessage("没有写入内部存储的权限,无法下载,请到设置中打开").
+                        setPositiveButton("关闭", null)
+                        .setNegativeButton("取消", null)
+                        .setCancelable(true)
+                        .create()
+                        .show();
+            } else {
+                // 启动下载服务
+                final String finalUrl = url;
+                new AlertDialog.Builder(context).
+                        setTitle("下载附件").
+                        setMessage("你要开始下载此附件吗？").
+                        setPositiveButton("下载", (dialog, which) -> {
+                            Intent intent = new Intent(context, DownloadService.class);
+                            intent.putExtra("download_url", finalUrl);
+                            context.startService(intent);
+                        })
+                        .setNegativeButton("取消", null)
+                        .setCancelable(true)
+                        .create()
+                        .show();
+            }
         } else if (url.startsWith(VOTE_URL)) {
             if (context instanceof PostActivity) {
                 PostActivity a = (PostActivity) context;

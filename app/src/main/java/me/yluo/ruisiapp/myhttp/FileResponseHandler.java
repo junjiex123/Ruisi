@@ -14,7 +14,7 @@ public abstract class FileResponseHandler extends ResponseHandler {
     private boolean isCancel = false;
 
 
-    public void cancelDownoad() {
+    public void cancelDownload() {
         isCancel = true;
     }
 
@@ -37,7 +37,7 @@ public abstract class FileResponseHandler extends ResponseHandler {
     }
 
     @Override
-    public void onStartDownlod(String fileName) {
+    public void onStartDownload(String fileName) {
         onStartDownLoad(fileName);
     }
 

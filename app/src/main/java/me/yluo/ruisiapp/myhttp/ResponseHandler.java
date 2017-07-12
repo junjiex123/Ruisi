@@ -37,7 +37,7 @@ public abstract class ResponseHandler {
     public void onFinish() {
     }
 
-    public void onStartDownlod(String fileName) {
+    public void onStartDownload(String fileName) {
 
     }
 
@@ -78,7 +78,7 @@ public abstract class ResponseHandler {
                 }
                 break;
             case MSG_START_DOWN:
-                onStartDownlod((String) msg.obj);
+                onStartDownload((String) msg.obj);
                 break;
         }
     }

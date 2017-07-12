@@ -29,13 +29,13 @@ public class FileUtil {
         File fileDir, downFile = null;
 
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-
             fileDir = new File(Environment.getExternalStorageDirectory() + "/" + path + "/");
-            downFile = new File(fileDir + "/" + filename);
-
             if (!fileDir.exists()) {
                 boolean b = fileDir.mkdirs();
             }
+
+            System.out.println("download file dir " + fileDir.exists());
+            downFile = new File(fileDir + "/" + filename);
             if (downFile.exists()) {
                 if (downFile.delete()) {
                     try {
@@ -79,16 +79,14 @@ public class FileUtil {
             intent.setDataAndType(uri, "application/vnd.android.package-archive");
             context.startActivity(intent);
         } else {
-            String filetype = fileExt(fileName).substring(1);
-            MimeTypeMap myMime = MimeTypeMap.getSingleton();
-            Intent newIntent = new Intent(Intent.ACTION_VIEW);
-            String mimeType = myMime.getMimeTypeFromExtension(filetype);
-            newIntent.setDataAndType(Uri.fromFile(file), mimeType);
-            newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            try {
-                context.startActivity(newIntent);
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(context, "请选择打开此文件的应用程序~~~~~~", Toast.LENGTH_SHORT).show();
+            Uri uri = Uri.parse(Environment.getExternalStorageDirectory().getPath() + "/" + path);
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setDataAndType(uri, "*/*");
+            if (intent.resolveActivityInfo(context.getPackageManager(), 0) != null) {
+                context.startActivity(intent);
+            } else {
+                Toast.makeText(context, "没有打开目录的合适app,请自行打开目录 " + path, Toast.LENGTH_LONG).show();
             }
         }
     }

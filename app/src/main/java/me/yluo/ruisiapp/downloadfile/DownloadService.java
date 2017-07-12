@@ -51,7 +51,7 @@ public class DownloadService extends Service {
         //取消下载按钮被电击
         if (intent.getExtras().containsKey("cancel")) {
             if (handler != null) {
-                handler.cancelDownoad();
+                handler.cancelDownload();
                 if (mNotifyManager != null) {
                     mNotifyManager.cancel(0);
                     FileUtil.deleteFile(filename);
@@ -99,6 +99,7 @@ public class DownloadService extends Service {
         HttpUtil.get(this, down_url, handler);
         return super.onStartCommand(intent, flags, startId);
     }
+
 
     /**
      * 方法描述：createNotification方法

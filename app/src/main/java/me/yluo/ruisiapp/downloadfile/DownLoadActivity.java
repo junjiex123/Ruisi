@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import me.yluo.ruisiapp.R;
 
@@ -38,7 +39,7 @@ public class DownLoadActivity extends AppCompatActivity {
         mProgressBar.setProgress(progress);
         btn_cancel.setOnClickListener(v -> cancelDown());
         if (progress == 100) {
-            download_compete();
+            downloadCompete();
             return;
         }
 
@@ -70,13 +71,12 @@ public class DownLoadActivity extends AppCompatActivity {
     /**
      * 下载完成
      */
-    private void download_compete() {
+    private void downloadCompete() {
         download_info.setText(fileName + "下载完成！");
         mProgressBar.setProgress(100);
-        btnClose.setText("打开");
-
+        Toast.makeText(this, "下载完成,文件保存在" + FileUtil.path,Toast.LENGTH_LONG).show();
+        btnClose.setText("浏览");
         btnClose.setOnClickListener(v -> FileUtil.requestHandleFile(getApplicationContext(), fileName));
-
         btn_cancel.setText("关闭");
         btn_cancel.setOnClickListener(view -> finish());
     }
@@ -105,7 +105,7 @@ public class DownLoadActivity extends AppCompatActivity {
                 case DownloadService.DOWN_OK:
 
                     Log.i("recieve ok 广播", ".............");
-                    download_compete();
+                    downloadCompete();
                     break;
             }
 

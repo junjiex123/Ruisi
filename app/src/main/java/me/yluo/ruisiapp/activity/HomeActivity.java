@@ -1,5 +1,6 @@
 package me.yluo.ruisiapp.activity;
 
+import android.Manifest;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.NotificationCompat;
@@ -87,6 +91,8 @@ public class HomeActivity extends BaseActivity
             isNeedCheckUpdate = true;
         }
         messageHandler = new MyHandler(bottomTab, this);
+
+        checkPermissions();
     }
 
     private void initViewpager() {
@@ -110,6 +116,29 @@ public class HomeActivity extends BaseActivity
         }
     }
 
+
+    private void checkPermissions() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // No explanation needed, we can request the permission.
+            // 请求sd卡权限
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 666);
+            //请求结果在onRequestPermissionsResult返回
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 666: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("permission ", "允许读写sd卡");
+                }
+            }
+        }
+    }
 
     //检查消息程序
     @Override

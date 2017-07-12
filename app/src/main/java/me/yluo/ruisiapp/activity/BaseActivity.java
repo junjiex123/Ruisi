@@ -72,10 +72,10 @@ public class BaseActivity extends AppCompatActivity {
 
         //黑白发生了变化
         if (to != cur) {
-            if (autoChnage) {
-                showToast("自动" + (to == AppCompatDelegate.MODE_NIGHT_YES ?
-                        "切换到夜间模式" : "关闭夜间模式"));
-            }
+//            if (autoChnage) {
+//                showToast("自动" + (to == AppCompatDelegate.MODE_NIGHT_YES ?
+//                        "切换到夜间模式" : "关闭夜间模式"));
+//            }
             AppCompatDelegate.setDefaultNightMode(to);
         }
     }
