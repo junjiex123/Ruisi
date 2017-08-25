@@ -48,7 +48,6 @@ public class App extends Application {
 
         //关闭数据库
         new SQLiteHelper(context).close();
-
     }
 
     public Context getContext() {
@@ -169,6 +168,8 @@ public class App extends Application {
     public static final String LOGIN_NAME = "login_name";
     public static final String LOGIN_PASS = "login_pass";
     public static final String CHECK_UPDATE_KEY = "check_update_time";
+
+    public static final String LOGIN_URL = "member.php?mod=logging&action=login";
     public static final String LOGIN_RS = "http://rs.xidian.edu.cn/member.php?mod=logging&action=login&mobile=2";
     public static final String LOGIN_ME = "http://bbs.rs.xidian.me/member.php?mod=logging&action=login&mobile=2";
 

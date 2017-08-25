@@ -12,6 +12,7 @@ import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
 import me.yluo.ruisiapp.App;
@@ -25,6 +26,7 @@ public class SyncHttpClient {
     private Map<String, String> headers;
     //重定向地址
     private String Location = null;
+    public static Throwable NeedLoginError = new Throwable("需要登录");
 
     SyncHttpClient() {
         headers = Collections.synchronizedMap(new LinkedHashMap<String, String>());
@@ -158,7 +160,18 @@ public class SyncHttpClient {
                 //如果会重定向，保存302 301重定向地址,然后重新发送请求(模拟请求)
                 String location = connection.getHeaderField("Location");
                 Log.i("httputil", "302 new location is " + location);
-                if (TextUtils.isEmpty(Location) || (!Location.equals(location))) {
+                if (!TextUtils.isEmpty(location)) {
+                    if (Objects.equals(Location, location)) {
+                        handler.sendFailureMessage(new Throwable("重定向错误"));
+                        connection.disconnect();
+                        return;
+                    }
+
+                    if (location.contains(App.LOGIN_URL)) { //需要登录
+                        handler.sendFailureMessage(NeedLoginError);
+                        connection.disconnect();
+                        return;
+                    }
                     Location = location;
                     request(App.getBaseUrl() + location, Method.GET, map, handler);
                 } else {

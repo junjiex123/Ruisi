@@ -50,7 +50,7 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_launch);
         timeEnter = System.currentTimeMillis();
-        launch_text = (TextView) findViewById(R.id.app_name);
+        launch_text =  findViewById(R.id.app_name);
         findViewById(R.id.btn_login_inner).setOnClickListener(this);
         findViewById(R.id.btn_login_outer).setOnClickListener(this);
         findViewById(R.id.login_fail_view).setVisibility(View.INVISIBLE);
@@ -84,7 +84,6 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
 
     private void startLogin() {
         mHandler.postDelayed(finishRunable, 2500);
-
         new Thread(() -> {
             HttpUtil.get(LaunchActivity.this, App.LOGIN_RS, new ResponseHandler() {
                 @Override

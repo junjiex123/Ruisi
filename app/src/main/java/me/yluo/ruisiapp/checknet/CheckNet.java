@@ -46,7 +46,6 @@ public class CheckNet {
                         setData(true);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
                     Connection con2 = Jsoup.connect("http://bbs.rs.xidian.me/forum.php?mod=guide&view=hot&mobile=2").timeout(1500);
                     try {
                         if (con2.get().title().contains("西电睿思")) {

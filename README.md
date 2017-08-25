@@ -3,12 +3,11 @@
 ### 更新地址:
 
 #### 论坛下载
-[校外网访问](http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid=805203&mobile=2)
+[校外网访问](http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid=805203&mobile=2) |
 [校园网访问](http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=805203)
 
 #### 第三方市场
-[豌豆荚](http://www.wandoujia.com/apps/com.yluo.ruisiapp)
-[魅族应用商店](http://app.meizu.com/apps/public/detail?package_name=com.yluo.ruisiapp)
+[酷安](https://www.coolapk.com/apk/me.yluo.ruisiapp)
 
 ### 软件截图
 ![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/1.jpg)
@@ -22,7 +21,6 @@
 
 ### 意见和反馈
 - freedom10086 <2351386755@qq.com>
-- xhinliang <xhinliang@gmail.com>
 
 ### 参考和用到的开源库和软件：
 

@@ -49,6 +49,7 @@ import me.yluo.ruisiapp.model.SingleType;
 import me.yluo.ruisiapp.model.VoteData;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
+import me.yluo.ruisiapp.myhttp.SyncHttpClient;
 import me.yluo.ruisiapp.utils.GetId;
 import me.yluo.ruisiapp.utils.KeyboardUtil;
 import me.yluo.ruisiapp.utils.LinkClickHandler;
@@ -222,6 +223,11 @@ public class PostActivity extends BaseActivity
 
             @Override
             public void onFailure(Throwable e) {
+                if (e != null && e == SyncHttpClient.NeedLoginError) {
+                    isLogin();
+                    Toast.makeText(getApplicationContext(), "此贴需要登录", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 enableLoadMore = true;
                 e.printStackTrace();
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);

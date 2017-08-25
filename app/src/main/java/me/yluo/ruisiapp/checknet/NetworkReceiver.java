@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
-import android.widget.Toast;
 
 import me.yluo.ruisiapp.App;
 
@@ -17,7 +15,6 @@ import me.yluo.ruisiapp.App;
 public class NetworkReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
-        Log.e("check net", "网络变化");
         checkNetWork(context);
     }
 
@@ -30,15 +27,13 @@ public class NetworkReceiver extends BroadcastReceiver {
             new CheckNet(context).startCheck(new CheckNetResponse() {
                 @Override
                 public void onFinish(int type, String response) {
-                    checknet(type);
+                    checkNet(type);
                 }
             });
-        } else {
-            Toast.makeText(context, "与rs服务器断开连接,请打开网络", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void checknet(int type) {
+    private void checkNet(int type) {
         App.IS_SCHOOL_NET = (type == 1);
     }
 }

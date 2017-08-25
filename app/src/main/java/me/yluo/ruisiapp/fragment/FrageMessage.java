@@ -77,6 +77,9 @@ public class FrageMessage extends BaseLazyFragment {
         messageList.setLayoutManager(layoutManager);
         messageList.addItemDecoration(new MyListDivider(getActivity(), MyListDivider.VERTICAL));
         adapter = new MessageAdapter(getActivity(), datas);
+        if (!App.ISLOGIN(getActivity())) {
+            adapter.changeLoadMoreState(BaseAdapter.STATE_NEED_LOGIN);
+        }
         messageList.setAdapter(adapter);
         refreshLayout.setOnRefreshListener(() -> getData(false));
         RadioGroup swictchMes = (RadioGroup) mRootView.findViewById(R.id.btn_change);
@@ -107,6 +110,9 @@ public class FrageMessage extends BaseLazyFragment {
         if (lastLoginState != App.ISLOGIN(getActivity())) {
             getData(true);
             lastLoginState = !lastLoginState;
+            if(lastLoginState){
+                adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
+            }
         }
     }
 
@@ -253,7 +259,6 @@ public class FrageMessage extends BaseLazyFragment {
                 }
                 tempdatas.add(new MessageData(ListType.REPLAYME, authorTitle, titleUrl, authorImage, time, isRead, content));
             }
-
 
             return tempdatas;
         }
