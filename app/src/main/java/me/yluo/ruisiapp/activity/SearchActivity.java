@@ -105,17 +105,13 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
     @Override
     protected void onStart() {
         super.onStart();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            searchCard.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-                @Override
-                public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                    v.removeOnLayoutChangeListener(this);
-                    show_search_view();
-                }
-            });
-        } else {
-            KeyboardUtil.showKeyboard(searchInput);
-        }
+        searchCard.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                v.removeOnLayoutChangeListener(this);
+                show_search_view();
+            }
+        });
     }
 
     private void start_search_click() {
@@ -280,80 +276,72 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
     }
 
     private void show_search_view() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            searchCard.setVisibility(View.VISIBLE);
-            animator = ViewAnimationUtils.createCircularReveal(
-                    searchCard,
-                    searchCard.getWidth(),
-                    0,
-                    0,
-                    (float) Math.hypot(searchCard.getWidth(), searchCard.getHeight()));
+        searchCard.setVisibility(View.VISIBLE);
+        animator = ViewAnimationUtils.createCircularReveal(
+                searchCard,
+                searchCard.getWidth(),
+                0,
+                0,
+                (float) Math.hypot(searchCard.getWidth(), searchCard.getHeight()));
 
-            animator.setInterpolator(new AccelerateInterpolator());
-            animator.setDuration(260);
-            animator.start();
-            animator.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animator) {
+        animator.setInterpolator(new AccelerateInterpolator());
+        animator.setDuration(260);
+        animator.start();
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
 
-                }
+            }
 
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    KeyboardUtil.showKeyboard(searchInput);
-                }
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                KeyboardUtil.showKeyboard(searchInput);
+            }
 
-                @Override
-                public void onAnimationCancel(Animator animator) {
+            @Override
+            public void onAnimationCancel(Animator animator) {
 
-                }
+            }
 
-                @Override
-                public void onAnimationRepeat(Animator animator) {
+            @Override
+            public void onAnimationRepeat(Animator animator) {
 
-                }
-            });
-        } else {
-            searchCard.setVisibility(View.VISIBLE);
-            KeyboardUtil.showKeyboard(searchInput);
-        }
+            }
+        });
     }
 
     private void hide_search_view() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            animator = ViewAnimationUtils.createCircularReveal(
-                    searchCard,
-                    searchCard.getWidth(),
-                    0,
-                    (float) Math.hypot(searchCard.getWidth(), searchCard.getHeight()),
-                    0);
+        animator = ViewAnimationUtils.createCircularReveal(
+                searchCard,
+                searchCard.getWidth(),
+                0,
+                (float) Math.hypot(searchCard.getWidth(), searchCard.getHeight()),
+                0);
 
-            animator.setInterpolator(new DecelerateInterpolator());
-            animator.setDuration(260);
-            animator.start();
-            animator.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animator) {
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.setDuration(260);
+        animator.start();
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
 
-                }
+            }
 
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    searchCard.setVisibility(View.GONE);
-                }
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                searchCard.setVisibility(View.GONE);
+            }
 
-                @Override
-                public void onAnimationCancel(Animator animator) {
+            @Override
+            public void onAnimationCancel(Animator animator) {
 
-                }
+            }
 
-                @Override
-                public void onAnimationRepeat(Animator animator) {
+            @Override
+            public void onAnimationRepeat(Animator animator) {
 
-                }
-            });
-        } else {
-            searchCard.setVisibility(View.GONE);
-        }
+            }
+        });
+
     }
 }

@@ -10,7 +10,7 @@
         android:id="@+id/logo"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:padding="13dp"
         android:src="@drawable/ic_arraw_back_white" />
@@ -32,7 +32,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="end"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:padding="13dp"
         android:src="@drawable/ic_search_white_24dp"

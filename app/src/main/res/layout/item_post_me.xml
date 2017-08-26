@@ -4,7 +4,7 @@
     android:id="@+id/main_item_btn_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
+    android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:orientation="vertical"
     android:paddingBottom="8dp"

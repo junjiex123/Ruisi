@@ -12,10 +12,12 @@
     </style>
 
 
+    <!--v21 5.0以上的使用此-->
     <style name="AppTheme" parent="BaseTheme">
-        <!--这一句加上status就和primary颜色一样额-->
-        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
     </style>
+
 
     <style name="AppTheme.2">
         <item name="colorPrimary">@color/main_color_2</item>
@@ -136,13 +138,5 @@
     <style name="text_12_sec">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/text_color_sec</item>
-    </style>
-
-
-    <!-- Button -->
-    <style name="btn_pri" parent="AppTheme">
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:background">@drawable/btn_primary_bg</item>
     </style>
 </resources>
