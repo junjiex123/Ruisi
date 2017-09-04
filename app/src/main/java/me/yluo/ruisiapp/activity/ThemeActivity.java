@@ -119,21 +119,21 @@ public class ThemeActivity extends BaseActivity implements AdapterView.OnItemCli
             finish();
         });
 
-        GridView gridView = (GridView) findViewById(R.id.commons_colors);
+        GridView gridView = findViewById(R.id.commons_colors);
         adpter = new ColorAdapter();
         gridView.setAdapter(adpter);
         gridView.setOnItemClickListener(this);
 
 
-        auto = (CheckBox) findViewById(R.id.auto_dark_mode);
+        auto = findViewById(R.id.auto_dark_mode);
         boolean isAuto = App.isAutoDarkMode(this);
         auto.setChecked(isAuto);
 
         startView = findViewById(R.id.start_time);
         endView = findViewById(R.id.end_time);
         nightViews = findViewById(R.id.night_views);
-        startText = (TextView) findViewById(R.id.start_time_text);
-        endText = (TextView) findViewById(R.id.end_time_text);
+        startText = findViewById(R.id.start_time_text);
+        endText = findViewById(R.id.end_time_text);
 
         currentTheme = App.getCustomTheme(this);
         currentSelect = getSelect();
@@ -237,7 +237,7 @@ public class ThemeActivity extends BaseActivity implements AdapterView.OnItemCli
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = getLayoutInflater().inflate(R.layout.item_color, null);
-            MyCircleView circleView = (MyCircleView) convertView.findViewById(R.id.color);
+            MyCircleView circleView = convertView.findViewById(R.id.color);
             circleView.setColor(colors[position]);
             circleView.setSelect(position == currentSelect);
             ((TextView) convertView.findViewById(R.id.name)).setText(names[position]);

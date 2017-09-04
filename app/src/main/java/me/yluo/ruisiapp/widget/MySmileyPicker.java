@@ -50,8 +50,8 @@ public class MySmileyPicker extends PopupWindow {
 
     private void init() {
         View v = LayoutInflater.from(mContext).inflate(R.layout.my_smiley_view, null);
-        TabLayout tab = (TabLayout) v.findViewById(R.id.mytab);
-        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
+        TabLayout tab = v.findViewById(R.id.mytab);
+        RecyclerView recyclerView = v.findViewById(R.id.recyclerView);
 
         getSmileys();
         tab.addTab(tab.newTab().setText("贴吧"));

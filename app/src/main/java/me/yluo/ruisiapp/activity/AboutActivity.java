@@ -33,8 +33,8 @@ public class AboutActivity extends BaseActivity {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.transparent));
         }
-        TextView version =  findViewById(R.id.version);
-        TextView serverVersion =  findViewById(R.id.server_version);
+        TextView version = findViewById(R.id.version);
+        TextView serverVersion = findViewById(R.id.server_version);
 
         findViewById(R.id.btn_back).setOnClickListener(view -> finish());
 
@@ -45,7 +45,7 @@ public class AboutActivity extends BaseActivity {
                 "3.本站 <a href=\"home.php?mod=space&uid=261098&do=profile&mobile=2\">@wangfuyang</a><br />" +
                 "4.github提交 <a href=\"https://github.com/freedom10086/Ruisi/issues\">点击这儿<br /></a><br />";
 
-        TextView htmlView =  findViewById(R.id.html_text);
+        TextView htmlView = findViewById(R.id.html_text);
         HtmlView.parseHtml(ss).into(htmlView);
 
         PackageInfo info = null;

@@ -76,10 +76,10 @@ public class HotNewListAdapter extends BaseAdapter {
         //构造
         NormalViewHolderMe(View v) {
             super(v);
-            article_title = (TextView) v.findViewById(R.id.article_title);
-            author_name = (TextView) v.findViewById(R.id.author_name);
-            is_image = (TextView) v.findViewById(R.id.is_image);
-            reply_count = (TextView) v.findViewById(R.id.reply_count);
+            article_title = v.findViewById(R.id.article_title);
+            author_name = v.findViewById(R.id.author_name);
+            is_image = v.findViewById(R.id.is_image);
+            reply_count = v.findViewById(R.id.reply_count);
             v.findViewById(R.id.main_item_btn_item).setOnClickListener(v1 -> onBtnItemClick());
         }
 
@@ -93,8 +93,8 @@ public class HotNewListAdapter extends BaseAdapter {
             int color = single.titleColor;
             article_title.setTextColor(single.isRead ? readcolor : color);
             article_title.setText(single.title);
-            author_name.setText(single.author);
-            reply_count.setText(single.replayCount);
+            author_name.setText("\uf2c0 " + single.author);
+            reply_count.setText("\uf0e6 " + single.replayCount);
             is_image.setVisibility(single.ishaveImage ? View.VISIBLE : View.GONE);
         }
 

@@ -52,9 +52,9 @@ public class FrageHistory extends BaseFragment {
                     .create();
             alertDialog.show();
         });
-        RecyclerView recyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = mRootView.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
+        SwipeRefreshLayout refreshLayout = mRootView.findViewById(R.id.refresh_layout);
         refreshLayout.setEnabled(false);
         adapter = new HistoryAdapter(getActivity(), datas);
         adapter.setPlaceHolderText("暂无浏览历史");

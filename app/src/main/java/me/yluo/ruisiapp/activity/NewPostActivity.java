@@ -95,13 +95,13 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         typeiddatas = new ArrayList<>();
         type_id_container = findViewById(R.id.type_id_container);
         type_id_container.setVisibility(View.GONE);
-        tv_select_forum = (TextView) findViewById(R.id.tv_select_forum);
-        tv_select_type = (TextView) findViewById(R.id.tv_select_type);
+        tv_select_forum = findViewById(R.id.tv_select_forum);
+        tv_select_type = findViewById(R.id.tv_select_type);
         tv_select_forum.setOnClickListener(this);
         tv_select_forum.setText(title);
         tv_select_type.setOnClickListener(this);
-        ed_title = (EditText) findViewById(R.id.ed_title);
-        ed_content = (EditText) findViewById(R.id.ed_content);
+        ed_title = findViewById(R.id.ed_title);
+        ed_content = findViewById(R.id.ed_content);
 
         forum_spinner.setData(forums);
         forum_spinner.setListener((pos, v) -> {
@@ -113,7 +113,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             typeId = typeiddatas.get(pos).first;
             tv_select_type.setText(typeiddatas.get(pos).second);
         });
-        final LinearLayout edit_bar = (LinearLayout) findViewById(R.id.edit_bar);
+        final LinearLayout edit_bar = findViewById(R.id.edit_bar);
         for (int i = 0; i < edit_bar.getChildCount(); i++) {
             View c = edit_bar.getChildAt(i);
             if (c instanceof ImageView) {
@@ -121,7 +121,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             }
         }
 
-        Spinner setSize = (Spinner) findViewById(R.id.action_text_size);
+        Spinner setSize = findViewById(R.id.action_text_size);
         setSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

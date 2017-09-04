@@ -3,15 +3,16 @@
     android:id="@+id/myToolBar"
     android:layout_width="match_parent"
     android:layout_height="@dimen/toolbarHeight"
-    android:background="?attr/colorPrimary"
+    android:background="?android:attr/colorPrimary"
     android:elevation="4dp">
 
     <ImageView
         android:id="@+id/logo"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
+        android:focusable="true"
         android:padding="13dp"
         android:src="@drawable/ic_arraw_back_white" />
 
@@ -32,8 +33,9 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="end"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
+        android:focusable="true"
         android:padding="13dp"
         android:src="@drawable/ic_search_white_24dp"
         android:visibility="invisible" />

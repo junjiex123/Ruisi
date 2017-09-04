@@ -102,7 +102,7 @@ public class PostActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
         initToolBar(true, "加载中......");
-        input = (EditText) findViewById(R.id.ed_comment);
+        input = findViewById(R.id.ed_comment);
         showPlainText = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("setting_show_plain", false);
         initCommentList();
         initEmotionInput();
@@ -130,7 +130,7 @@ public class PostActivity extends BaseActivity
     }
 
     private void initCommentList() {
-        topicList = (RecyclerView) findViewById(R.id.topic_list);
+        topicList = findViewById(R.id.topic_list);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         topicList.setLayoutManager(mLayoutManager);
         adapter = new PostAdapter(this, this, datas);
@@ -144,7 +144,7 @@ public class PostActivity extends BaseActivity
         View btnMore = findViewById(R.id.btn_more);
         View btnSend = findViewById(R.id.btn_send);
         btnSend.setOnClickListener(this);
-        rootView = (SmileyInputRoot) findViewById(R.id.root);
+        rootView = findViewById(R.id.root);
         rootView.initSmiley(input, smileyBtn, btnSend);
         rootView.setMoreView(LayoutInflater.from(this).inflate(R.layout.my_smiley_menu, null), btnMore);
 

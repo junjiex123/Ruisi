@@ -123,7 +123,7 @@ public class BaseActivity extends AppCompatActivity {
     protected ImageView addToolbarMenu(int resid) {
         View toolbar = findViewById(R.id.myToolBar);
         if (toolbar != null) {
-            ImageView i = (ImageView) toolbar.findViewById(R.id.menu);
+            ImageView i = toolbar.findViewById(R.id.menu);
             i.setImageResource(resid);
             i.setVisibility(View.VISIBLE);
             return i;
@@ -132,7 +132,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void addToolbarView(View v) {
-        FrameLayout toolbar = (FrameLayout) findViewById(R.id.myToolBar);
+        FrameLayout toolbar = findViewById(R.id.myToolBar);
         if (toolbar != null) {
             FrameLayout.LayoutParams pls = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
             v.setLayoutParams(pls);

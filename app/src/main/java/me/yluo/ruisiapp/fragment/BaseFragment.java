@@ -34,9 +34,9 @@ public abstract class BaseFragment extends Fragment {
     protected void initToolbar(boolean isCloseAble, String title) {
         toolBar = mRootView.findViewById(R.id.myToolBar);
         if (toolBar != null) {
-            TextView titles = (TextView) toolBar.findViewById(R.id.title);
+            TextView titles = toolBar.findViewById(R.id.title);
             titles.setText(title);
-            ImageView i = (ImageView) toolBar.findViewById(R.id.logo);
+            ImageView i = toolBar.findViewById(R.id.logo);
             if (isCloseAble) {
                 i.setImageResource(R.drawable.ic_arraw_back_white);
                 i.setOnClickListener(view -> getActivity().finish());
@@ -49,7 +49,7 @@ public abstract class BaseFragment extends Fragment {
     protected ImageView addToolbarMenu(int resid) {
         toolBar = mRootView.findViewById(R.id.myToolBar);
         if (toolBar != null) {
-            ImageView i = (ImageView) toolBar.findViewById(R.id.menu);
+            ImageView i = toolBar.findViewById(R.id.menu);
             i.setVisibility(View.VISIBLE);
             i.setImageResource(resid);
             return i;
@@ -60,7 +60,7 @@ public abstract class BaseFragment extends Fragment {
     protected ImageView setToolbarLogo(int resid) {
         toolBar = mRootView.findViewById(R.id.myToolBar);
         if (toolBar != null) {
-            ImageView i = (ImageView) toolBar.findViewById(R.id.logo);
+            ImageView i = toolBar.findViewById(R.id.logo);
             i.setVisibility(View.VISIBLE);
             i.setImageResource(resid);
             return i;

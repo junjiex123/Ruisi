@@ -61,11 +61,11 @@ public class MessageAdapter extends BaseAdapter {
         //url
         MessageReplyListHolder(View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.title);
-            time = (TextView) itemView.findViewById(R.id.time);
-            article_user_image = (CircleImageView) itemView.findViewById(R.id.article_user_image);
-            reply_content = (ArrowTextView) itemView.findViewById(R.id.reply_content);
-            isRead = (TextView) itemView.findViewById(R.id.is_read);
+            title = itemView.findViewById(R.id.title);
+            time = itemView.findViewById(R.id.time);
+            article_user_image = itemView.findViewById(R.id.article_user_image);
+            reply_content = itemView.findViewById(R.id.reply_content);
+            isRead = itemView.findViewById(R.id.is_read);
 
             article_user_image.setOnClickListener(v -> user_click());
             itemView.findViewById(R.id.main_item_btn_item).setOnClickListener(v -> item_click());

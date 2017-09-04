@@ -70,8 +70,8 @@ public class ChatActivity extends BaseActivity {
         setContentView(R.layout.activity_chat);
 
         smileyPicker = new MySmileyPicker(this);
-        list = (RecyclerView) findViewById(R.id.list);
-        input = (EditText) findViewById(R.id.ed_comment);
+        list = findViewById(R.id.list);
+        input = findViewById(R.id.ed_comment);
         btnSend = findViewById(R.id.btn_send);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         adapter = new ChatListAdapter(this, datas);

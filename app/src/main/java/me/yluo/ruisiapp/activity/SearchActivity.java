@@ -74,9 +74,9 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
         setContentView(R.layout.activity_search);
         main_window = findViewById(R.id.main_window);
         findViewById(R.id.btn_back).setOnClickListener(this);
-        RecyclerView listView = (RecyclerView) findViewById(R.id.recycler_view);
-        searchInput = (EditText) findViewById(R.id.search_input);
-        searchCard = (CardView) findViewById(R.id.search_card);
+        RecyclerView listView = findViewById(R.id.recycler_view);
+        searchInput = findViewById(R.id.search_input);
+        searchCard = findViewById(R.id.search_card);
         findViewById(R.id.start_search).setOnClickListener(this);
         findViewById(R.id.nav_search).setOnClickListener(this);
         searchInput.setHint("请输入搜索内容！");
@@ -87,7 +87,7 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
         listView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) layoutManager, this, 20));
         listView.setAdapter(adapter);
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
-        navTitle = (TextView) findViewById(R.id.nav_title);
+        navTitle = findViewById(R.id.nav_title);
         findViewById(R.id.nav_back).setOnClickListener(this);
         searchInput.setOnEditorActionListener(this);
     }

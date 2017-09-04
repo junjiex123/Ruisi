@@ -95,13 +95,13 @@ public class PostListAdapter extends BaseAdapter {
         //构造
         NormalViewHolder(View v) {
             super(v);
-            article_type = (TextView) v.findViewById(R.id.article_type);
-            article_title = (TextView) v.findViewById(R.id.article_title);
-            author_img = (CircleImageView) v.findViewById(R.id.author_img);
-            author_name = (TextView) v.findViewById(R.id.author_name);
-            post_time = (TextView) v.findViewById(R.id.post_time);
-            reply_count = (TextView) v.findViewById(R.id.reply_count);
-            view_count = (TextView) v.findViewById(R.id.view_count);
+            article_type = v.findViewById(R.id.article_type);
+            article_title = v.findViewById(R.id.article_title);
+            author_img = v.findViewById(R.id.author_img);
+            author_name = v.findViewById(R.id.author_name);
+            post_time = v.findViewById(R.id.post_time);
+            reply_count = v.findViewById(R.id.reply_count);
+            view_count = v.findViewById(R.id.view_count);
             v.findViewById(R.id.main_item_btn_item).setOnClickListener(v1 -> onBtnItemClick());
             author_img.setOnClickListener(v2 -> onBtnAvatarClick());
         }
@@ -117,8 +117,11 @@ public class PostListAdapter extends BaseAdapter {
             } else {
                 article_type.setVisibility(View.GONE);
             }
-            post_time.setText(single.postTime);
-            view_count.setText(single.viewCount);
+
+            post_time.setText("\uf017 " + single.postTime);
+            view_count.setText("\uf06e " + single.viewCount);
+            reply_count.setText("\uf0e6 " + single.replayCount);
+            author_name.setText("\uf2c0 " + single.author);
 
             String imageUrl = UrlUtils.getAvaterurlm(single.authorUrl);
             Picasso.with(activity)
@@ -131,8 +134,7 @@ public class PostListAdapter extends BaseAdapter {
             int readcolor = ContextCompat.getColor(activity, R.color.text_color_sec);
             article_title.setTextColor(single.isRead ? readcolor : color);
             article_title.setText(TextUtils.isEmpty(single.tag) ? single.title : "[" + single.tag + "] " + single.title);
-            author_name.setText(single.author);
-            reply_count.setText(single.replayCount);
+
         }
 
         void onBtnAvatarClick() {
@@ -162,10 +164,10 @@ public class PostListAdapter extends BaseAdapter {
         //构造
         NormalViewHolderMe(View v) {
             super(v);
-            article_title = (TextView) v.findViewById(R.id.article_title);
-            author_name = (TextView) v.findViewById(R.id.author_name);
-            is_image = (TextView) v.findViewById(R.id.is_image);
-            reply_count = (TextView) v.findViewById(R.id.reply_count);
+            article_title = v.findViewById(R.id.article_title);
+            author_name = v.findViewById(R.id.author_name);
+            is_image = v.findViewById(R.id.is_image);
+            reply_count = v.findViewById(R.id.reply_count);
             v.findViewById(R.id.main_item_btn_item).setOnClickListener(v1 -> onBtnItemClick());
         }
 
@@ -176,8 +178,8 @@ public class PostListAdapter extends BaseAdapter {
             int color = single.titleColor;
             article_title.setTextColor(single.isRead ? 0xff888888 : color);
             article_title.setText(single.title);
-            author_name.setText(single.author);
-            reply_count.setText(single.replayCount);
+            author_name.setText("\uf2c0 " + single.author);
+            reply_count.setText("\uf0e6 " + single.replayCount);
             is_image.setVisibility(single.ishaveImage ? View.VISIBLE : View.GONE);
         }
 
@@ -201,10 +203,10 @@ public class PostListAdapter extends BaseAdapter {
 
         ImageCardViewHolder(View itemView) {
             super(itemView);
-            img_card_image = (ImageView) itemView.findViewById(R.id.img_card_image);
-            img_card_title = (TextView) itemView.findViewById(R.id.img_card_title);
-            img_card_author = (TextView) itemView.findViewById(R.id.img_card_author);
-            img_card_like = (TextView) itemView.findViewById(R.id.img_card_like);
+            img_card_image = itemView.findViewById(R.id.img_card_image);
+            img_card_title = itemView.findViewById(R.id.img_card_title);
+            img_card_author = itemView.findViewById(R.id.img_card_author);
+            img_card_like = itemView.findViewById(R.id.img_card_like);
 
             itemView.findViewById(R.id.card_list_item).setOnClickListener(v -> item_click());
         }

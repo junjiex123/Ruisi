@@ -71,7 +71,7 @@ public class HomeActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         initViewpager();
-        bottomTab = (MyBottomTab) findViewById(R.id.bottom_bar);
+        bottomTab = findViewById(R.id.bottom_bar);
         bottomTab.setOnTabChangeListener(this);
 
         Calendar c = Calendar.getInstance();
@@ -90,7 +90,7 @@ public class HomeActivity extends BaseActivity
     }
 
     private void initViewpager() {
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        viewPager = findViewById(R.id.view_pager);
         viewPager.setOffscreenPageLimit(4);
         viewPager.addOnPageChangeListener(this);
         fragments.add(new FrageForums());

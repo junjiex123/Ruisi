@@ -37,7 +37,6 @@ public class FrageMessage extends BaseLazyFragment {
     protected SwipeRefreshLayout refreshLayout;
     private MessageAdapter adapter;
     private List<MessageData> datas = new ArrayList<>();
-    ;
     private int index = 0;
     int lastReplyId = 0, lastAtId = 0;
     int currReplyId = 1, currAtId = 1;
@@ -67,11 +66,11 @@ public class FrageMessage extends BaseLazyFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        messageList = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
+        messageList = mRootView.findViewById(R.id.recycler_view);
         //设置可以滑出底栏
         messageList.setClipToPadding(false);
         messageList.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.bottombarHeight));
-        refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
+        refreshLayout = mRootView.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         messageList.setLayoutManager(layoutManager);
@@ -82,7 +81,7 @@ public class FrageMessage extends BaseLazyFragment {
         }
         messageList.setAdapter(adapter);
         refreshLayout.setOnRefreshListener(() -> getData(false));
-        RadioGroup swictchMes = (RadioGroup) mRootView.findViewById(R.id.btn_change);
+        RadioGroup swictchMes = mRootView.findViewById(R.id.btn_change);
 
         swictchMes.setOnCheckedChangeListener((radioGroup, id) -> {
             int pos = 2;

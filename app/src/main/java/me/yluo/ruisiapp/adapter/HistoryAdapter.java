@@ -49,9 +49,9 @@ public class HistoryAdapter extends BaseAdapter {
 
         HistoryVivwHolder(View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.title);
-            author = (TextView) itemView.findViewById(R.id.author);
-            time = (TextView) itemView.findViewById(R.id.time);
+            title = itemView.findViewById(R.id.title);
+            author = itemView.findViewById(R.id.author);
+            time = itemView.findViewById(R.id.time);
             itemView.findViewById(R.id.main_item_btn_item).setOnClickListener(v -> item_click());
         }
 

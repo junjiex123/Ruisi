@@ -103,7 +103,7 @@ public class ForumsAdapter extends BaseAdapter {
 
         HeadView(View itemView) {
             super(itemView);
-            head = (TextView) itemView.findViewById(R.id.header_title);
+            head = itemView.findViewById(R.id.header_title);
         }
 
         @Override
@@ -122,8 +122,8 @@ public class ForumsAdapter extends BaseAdapter {
 
         ChildViewHolder(View itemView) {
             super(itemView);
-            img = (ImageView) itemView.findViewById(R.id.img);
-            title = (TextView) itemView.findViewById(R.id.title);
+            img = itemView.findViewById(R.id.img);
+            title = itemView.findViewById(R.id.title);
             size = DimmenUtils.dip2px(context, 42);
         }
 

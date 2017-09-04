@@ -70,7 +70,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         setContentView(R.layout.activity_friend);
 
         initToolBar(true, "我的好友");
-        friends = (RecyclerView) findViewById(R.id.recycler_view);
+        friends = findViewById(R.id.recycler_view);
         datas = new ArrayList<>();
         backUpdatas = new ArrayList<>();
         totalDatas = new ArrayList<>();
@@ -81,9 +81,9 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         friends.setLayoutManager(lm);
         friends.addOnScrollListener(new LoadMoreListener(lm, this, 12));
         friends.setAdapter(adapter);
-        search_input = (EditText) findViewById(R.id.search_input);
+        search_input = findViewById(R.id.search_input);
         search_input.setHint("查找好友");
-        search_card = (CardView) findViewById(R.id.search_card);
+        search_card = findViewById(R.id.search_card);
         final String url = "home.php?mod=space&do=friend&mobile=2";
         new GetDataTask().execute(url);
         search_input.setOnEditorActionListener(this);

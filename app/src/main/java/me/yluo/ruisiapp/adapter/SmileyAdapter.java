@@ -54,7 +54,7 @@ public class SmileyAdapter extends RecyclerView.Adapter<SmileyAdapter.SmileyView
 
         SmileyViewHolder(View itemView) {
             super(itemView);
-            image = (ImageView) itemView.findViewById(R.id.smiley);
+            image = itemView.findViewById(R.id.smiley);
             image.setOnClickListener(view -> itemListener.onListItemClick(image, getAdapterPosition()));
         }
 

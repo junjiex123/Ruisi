@@ -61,12 +61,6 @@ public class CheckNet {
         } else {
             checkNetResponse.sendFinishMessage(0, "请打开网络连接");
         }
-
-
-        /*
-
-
-        */
     }
 
     private void setData(boolean isInner) {

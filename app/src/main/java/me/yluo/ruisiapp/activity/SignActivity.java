@@ -50,14 +50,14 @@ public class SignActivity extends BaseActivity {
         setContentView(R.layout.activity_sign);
         initToolBar(true, "签到中心");
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar = findViewById(R.id.progressBar);
         signYes = findViewById(R.id.sign_yes);
         signNo = findViewById(R.id.sign_not);
-        signError = (TextView) findViewById(R.id.sign_error);
+        signError = findViewById(R.id.sign_error);
         signYes.setVisibility(View.GONE);
         signNo.setVisibility(View.GONE);
         signError.setVisibility(View.GONE);
-        userImage = (CircleImageView) findViewById(R.id.avatar);
+        userImage = findViewById(R.id.avatar);
 
         checkState();
     }
@@ -121,8 +121,8 @@ public class SignActivity extends BaseActivity {
     private void sign_yes(String day, String month) {
         progressBar.setVisibility(View.GONE);
         signYes.setVisibility(View.VISIBLE);
-        TextView total_day = (TextView) findViewById(R.id.total_sign_day);
-        TextView total_month = (TextView) findViewById(R.id.total_sign_month);
+        TextView total_day = findViewById(R.id.total_sign_day);
+        TextView total_month = findViewById(R.id.total_sign_month);
         total_day.setText(day);
         total_month.setText(month);
     }
@@ -130,7 +130,7 @@ public class SignActivity extends BaseActivity {
     private void sign_no() {
         progressBar.setVisibility(View.GONE);
         signNo.setVisibility(View.VISIBLE);
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        Spinner spinner = findViewById(R.id.spinner);
         final String[] mItems = {"开心", "难过", "郁闷", "无聊", "怒", "擦汗", "奋斗", "慵懒", "衰"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mItems);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -146,7 +146,7 @@ public class SignActivity extends BaseActivity {
             }
         });
 
-        Button b = (Button) findViewById(R.id.btn_submit);
+        Button b = findViewById(R.id.btn_submit);
         b.setOnClickListener(view -> startDaka());
     }
 
@@ -160,7 +160,7 @@ public class SignActivity extends BaseActivity {
         String qdmode;
         String todaysay = "";
 
-        EditText input = (EditText) findViewById(R.id.input);
+        EditText input = findViewById(R.id.input);
         if (!TextUtils.isEmpty(input.getText().toString())) {
             qdmode = "1";
             todaysay = input.getText().toString() + "  --来自睿思手机客户端";

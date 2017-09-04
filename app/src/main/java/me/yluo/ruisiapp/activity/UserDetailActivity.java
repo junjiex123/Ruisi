@@ -97,13 +97,13 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.transparent));
         }
-        toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-        infoList = (RecyclerView) findViewById(R.id.recycler_view);
-        CircleImageView imageView = (CircleImageView) findViewById(R.id.user_detail_img_avatar);
-        layout = (CoordinatorLayout) findViewById(R.id.main_window);
-        progressView = (GradeProgressView) findViewById(R.id.grade_progress);
-        progresText = (TextView) findViewById(R.id.progress_text);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        toolbarLayout = findViewById(R.id.toolbar_layout);
+        infoList = findViewById(R.id.recycler_view);
+        CircleImageView imageView = findViewById(R.id.user_detail_img_avatar);
+        layout = findViewById(R.id.main_window);
+        progressView = findViewById(R.id.grade_progress);
+        progresText = findViewById(R.id.progress_text);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(v -> fab_click());
 
         ViewCompat.setTransitionName(imageView, NAME_IMG_AVATAR);
@@ -113,7 +113,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         Picasso.with(this).load(imageUrl).placeholder(R.drawable.image_placeholder).into(imageView);
 
         toolbarLayout.setTitle(username);
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         adapter = new SimpleListAdapter(ListType.INFO, this, datas);

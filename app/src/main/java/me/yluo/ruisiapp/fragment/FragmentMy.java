@@ -74,16 +74,16 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
         username = App.getName(getActivity());
         uid = App.getUid(getActivity());
 
-        userImg = (CircleImageView) mRootView.findViewById(R.id.user_img);
-        userName = (TextView) mRootView.findViewById(R.id.user_name);
-        userGrade = (TextView) mRootView.findViewById(R.id.user_grade);
+        userImg = mRootView.findViewById(R.id.user_img);
+        userName = mRootView.findViewById(R.id.user_name);
+        userGrade = mRootView.findViewById(R.id.user_grade);
         userImg.setOnClickListener(this);
         mRootView.findViewById(R.id.history).setOnClickListener(this);
         mRootView.findViewById(R.id.star).setOnClickListener(this);
         mRootView.findViewById(R.id.friend).setOnClickListener(this);
         mRootView.findViewById(R.id.post).setOnClickListener(this);
 
-        ListView listView = (ListView) mRootView.findViewById(R.id.function_list);
+        ListView listView = mRootView.findViewById(R.id.function_list);
         List<Map<String, Object>> fs = new ArrayList<>();
         for (int i = 0; i < icons.length; i++) {
             Map<String, Object> d = new HashMap<>();

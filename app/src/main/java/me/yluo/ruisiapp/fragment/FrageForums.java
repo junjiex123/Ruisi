@@ -59,8 +59,8 @@ public class FrageForums extends BaseLazyFragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        userImg = (CircleImageView) mRootView.findViewById(R.id.img);
-        formsList = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
+        userImg = mRootView.findViewById(R.id.img);
+        formsList = mRootView.findViewById(R.id.recycler_view);
         formsList.setClipToPadding(false);
         formsList.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.bottombarHeight));
         mRootView.findViewById(R.id.search).setOnClickListener(this);

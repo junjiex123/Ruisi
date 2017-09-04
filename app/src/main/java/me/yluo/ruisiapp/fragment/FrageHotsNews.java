@@ -61,8 +61,8 @@ public class FrageHotsNews extends BaseLazyFragment implements LoadMoreListener.
         mRootView.findViewById(R.id.btn_2).setVisibility(View.GONE);
         ((RadioButton) mRootView.findViewById(R.id.btn_3)).setText("热贴");
 
-        postList = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
-        refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
+        postList = mRootView.findViewById(R.id.recycler_view);
+        refreshLayout = mRootView.findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         postList.setLayoutManager(mLayoutManager);
@@ -75,7 +75,7 @@ public class FrageHotsNews extends BaseLazyFragment implements LoadMoreListener.
         postList.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 10));
         refreshLayout.setOnRefreshListener(this::refresh);
 
-        RadioGroup swictchMes = (RadioGroup) mRootView.findViewById(R.id.btn_change);
+        RadioGroup swictchMes = mRootView.findViewById(R.id.btn_change);
         swictchMes.setOnCheckedChangeListener((radioGroup, id) -> {
             int pos = -1;
             if (id == R.id.btn_1) {

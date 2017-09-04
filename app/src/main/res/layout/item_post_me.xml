@@ -1,81 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_item_btn_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
+    android:focusable="true"
     android:orientation="vertical"
-    android:paddingBottom="8dp"
-    android:paddingEnd="16dp"
-    android:paddingStart="16dp"
-    android:paddingTop="16dp">
+    android:padding="12dp">
 
     <TextView
         android:id="@+id/article_title"
         style="@style/text_16_pri"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
         android:ellipsize="end"
         android:maxLines="4"
         android:paddingEnd="4dp"
         android:paddingStart="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="话题的标题" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/author_name"
+        style="@style/text_12_sec"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingEnd="4dp"
-        android:paddingStart="4dp">
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/fontawesome"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/article_title"
+        tools:text="&#xf2c0; some" />
 
+    <TextView
+        android:id="@+id/reply_count"
+        style="@style/text_12_sec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@font/fontawesome"
+        app:layout_constraintBaseline_toBaselineOf="@+id/author_name"
+        app:layout_constraintStart_toEndOf="@+id/author_name"
+        tools:text="&#xf0e6; 222" />
 
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:src="@drawable/ic_person_12dp"
-            android:tint="@color/colorDisableHintIcon" />
+    <TextView
+        android:id="@+id/is_image"
+        style="@style/text_12_sec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@font/fontawesome"
+        android:text="&#xf03e;"
+        app:layout_constraintBaseline_toBaselineOf="@+id/reply_count"
+        app:layout_constraintStart_toEndOf="@+id/reply_count"
+        tools:layout_editor_absoluteY="12dp" />
 
-        <TextView
-            android:id="@+id/author_name"
-            style="@style/text_12_sec"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
-            tools:text="some" />
-
-
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_marginStart="12dp"
-            android:src="@drawable/ic_message_12dp"
-            android:tint="@color/colorDisableHintIcon" />
-
-        <TextView
-            android:id="@+id/reply_count"
-            style="@style/text_12_sec"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="3dp"
-            tools:text="222" />
-
-        <TextView
-            android:id="@+id/is_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:background="@drawable/badge"
-            android:paddingBottom="2dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:paddingTop="2dp"
-            android:text="有图"
-            android:textColor="@android:color/white"
-            android:textSize="10sp" />
-    </LinearLayout>
-
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

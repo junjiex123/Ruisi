@@ -93,11 +93,11 @@ public class PostsActivity extends BaseActivity implements
         }
         initToolBar(true, TITLE);
         myToolbar = findViewById(R.id.myToolBar);
-        btnRefresh = (FloatingActionButton) findViewById(R.id.btn);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        tab = (TabLayout) findViewById(R.id.tab);
+        btnRefresh = findViewById(R.id.btn);
+        mRecyclerView = findViewById(R.id.recycler_view);
+        tab = findViewById(R.id.tab);
 
-        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
+        refreshLayout = findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         int top = DimmenUtils.dip2px(this, 60);
         refreshLayout.setProgressViewOffset(true, top, top + 60);

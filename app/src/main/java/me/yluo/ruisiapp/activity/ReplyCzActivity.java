@@ -52,13 +52,13 @@ public class ReplyCzActivity extends BaseActivity {
             title = "回复" + data.index + ": " + data.username;
         }
         initToolBar(true, title);
-        input = (EditText) findViewById(R.id.ed_comment);
+        input = findViewById(R.id.ed_comment);
         MyFriendPicker.attach(this, input);
         findViewById(R.id.tv_edit).setVisibility(View.GONE);
         findViewById(R.id.tv_remove).setVisibility(View.GONE);
         findViewById(R.id.bt_lable_lz).setVisibility(isLz ? View.VISIBLE : View.GONE);
 
-        rootView = (SmileyInputRoot) findViewById(R.id.root);
+        rootView = findViewById(R.id.root);
 
         View btnSend = findViewById(R.id.btn_send);
         View smileyBtn = findViewById(R.id.btn_emotion);
@@ -80,14 +80,14 @@ public class ReplyCzActivity extends BaseActivity {
             showToast("加载失败......");
             return;
         } else {
-            ImageView imageView = (ImageView) findViewById(R.id.article_user_image);
+            ImageView imageView = findViewById(R.id.article_user_image);
             String img_url = UrlUtils.getAvaterurlm(data.getImg());
             Picasso.with(this).load(img_url).placeholder(R.drawable.image_placeholder).into(imageView);
             ((TextView) findViewById(R.id.replay_author)).setText(data.username);
             ((TextView) findViewById(R.id.replay_index)).setText(data.index);
             ((TextView) findViewById(R.id.replay_time)).setText(data.postTime);
 
-            TextView t =  (TextView) findViewById(R.id.html_text);
+            TextView t = findViewById(R.id.html_text);
             HtmlView.parseHtml(data.content).into(t);
             input.setHint("回复: " + data.username);
 

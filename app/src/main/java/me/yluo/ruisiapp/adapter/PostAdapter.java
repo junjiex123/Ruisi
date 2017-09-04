@@ -91,13 +91,13 @@ public class PostAdapter extends BaseAdapter {
 
         ArticleContentViewHolder(View itemView) {
             super(itemView);
-            btnRemove = (TextView) itemView.findViewById(R.id.tv_remove);
-            btnEdit = (TextView) itemView.findViewById(R.id.tv_edit);
-            title = (TextView) itemView.findViewById(R.id.article_title);
-            userAvatar = (CircleImageView) itemView.findViewById(R.id.article_user_image);
-            userName = (TextView) itemView.findViewById(R.id.article_username);
-            postTime = (TextView) itemView.findViewById(R.id.article_post_time);
-            content = (TextView) itemView.findViewById(R.id.content);
+            btnRemove = itemView.findViewById(R.id.tv_remove);
+            btnEdit = itemView.findViewById(R.id.tv_edit);
+            title = itemView.findViewById(R.id.article_title);
+            userAvatar = itemView.findViewById(R.id.article_user_image);
+            userName = itemView.findViewById(R.id.article_username);
+            postTime = itemView.findViewById(R.id.article_post_time);
+            content = itemView.findViewById(R.id.content);
             userAvatar.setOnClickListener(v -> UserDetailActivity.openWithAnimation(
                     activity, datalist.get(0).username, userAvatar, datalist.get(0).uid));
 
@@ -137,20 +137,21 @@ public class PostAdapter extends BaseAdapter {
     }
 
     private class CommentViewHolder extends BaseViewHolder {
-        ImageView avatar,btn_reply_2;
-        TextView username,index,replyTime,comment,btnRemove, btnEdit,labelLz;
+        ImageView avatar;
+        TextView username, index, replyTime, comment, btnRemove, btnEdit, labelLz;
+        View btnReplyCz;
 
         CommentViewHolder(View itemView) {
             super(itemView);
-            btnRemove = (TextView) itemView.findViewById(R.id.tv_remove);
-            btnEdit = (TextView) itemView.findViewById(R.id.tv_edit);
-            avatar = (ImageView) itemView.findViewById(R.id.article_user_image);
-            btn_reply_2 = (ImageView) itemView.findViewById(R.id.btn_reply_cz);
-            username = (TextView) itemView.findViewById(R.id.replay_author);
-            index = (TextView) itemView.findViewById(R.id.replay_index);
-            replyTime = (TextView) itemView.findViewById(R.id.replay_time);
-            comment = (TextView) itemView.findViewById(R.id.html_text);
-            labelLz = (TextView) itemView.findViewById(R.id.bt_lable_lz);
+            btnRemove = itemView.findViewById(R.id.tv_remove);
+            btnEdit = itemView.findViewById(R.id.tv_edit);
+            avatar = itemView.findViewById(R.id.article_user_image);
+            btnReplyCz = itemView.findViewById(R.id.btn_reply_cz);
+            username = itemView.findViewById(R.id.replay_author);
+            index = itemView.findViewById(R.id.replay_index);
+            replyTime = itemView.findViewById(R.id.replay_time);
+            comment = itemView.findViewById(R.id.html_text);
+            labelLz = itemView.findViewById(R.id.bt_lable_lz);
 
             comment.setOnLongClickListener(view -> {
                 String user = datalist.get(getAdapterPosition()).username;
@@ -167,7 +168,7 @@ public class PostAdapter extends BaseAdapter {
 
             btnRemove.setOnClickListener(this);
             btnEdit.setOnClickListener(this);
-            btn_reply_2.setOnClickListener(this);
+            btnReplyCz.setOnClickListener(this);
         }
 
         //设置listItem的数据
@@ -179,7 +180,7 @@ public class PostAdapter extends BaseAdapter {
             boolean isLz = datalist.get(position).username.equals(datalist.get(0).username);
             labelLz.setVisibility(isLz ? View.VISIBLE : View.GONE);
             boolean isReply = single.replyUrlTitle.contains("action=reply");
-            btn_reply_2.setVisibility(isReply ? View.VISIBLE : View.GONE);
+            btnReplyCz.setVisibility(isReply ? View.VISIBLE : View.GONE);
             String img_url = UrlUtils.getAvaterurlm(single.getImg());
             Picasso.with(activity)
                     .load(img_url)

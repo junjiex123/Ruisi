@@ -71,9 +71,9 @@ public class FrageTopicStar extends BaseFragment implements LoadMoreListener.OnL
             }
         }
         initToolbar(true, title);
-        RecyclerView recyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = mRootView.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout);
+        SwipeRefreshLayout refreshLayout = mRootView.findViewById(R.id.refresh_layout);
         refreshLayout.setEnabled(false);
         String uid = App.getUid(getActivity());
         switch (currentIndex) {

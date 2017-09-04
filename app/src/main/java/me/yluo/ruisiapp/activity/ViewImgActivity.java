@@ -54,8 +54,8 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
             getWindow().setStatusBarColor(Color.rgb(138, 145, 151));
         }
 
-        pager = (ViewPager) findViewById(R.id.pager);
-        index = (TextView) findViewById(R.id.index);
+        pager = findViewById(R.id.pager);
+        index = findViewById(R.id.index);
         findViewById(R.id.nav_back).setOnClickListener(v -> finish());
 
         pager.addOnPageChangeListener(this);
@@ -79,7 +79,7 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
                     int h_start = doc.head().html().indexOf('\"', ih + 15);
                     int h_end = doc.head().html().indexOf('\"', h_start + 1);
                     String title = doc.head().html().substring(h_start + 1, h_end);
-                    TextView v = (TextView) findViewById(R.id.title);
+                    TextView v = findViewById(R.id.title);
                     v.setText(title);
                 }
                 Elements elements = doc.select("ul.postalbum_c").select("li");
@@ -142,7 +142,7 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
 
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
-            ScaleImageView v = (ScaleImageView) container.findViewWithTag(position);
+            ScaleImageView v = container.findViewWithTag(position);
             if (v == null) {
                 v = new ScaleImageView(ViewImgActivity.this);
                 v.setScaleType(ImageView.ScaleType.CENTER_INSIDE);

@@ -66,13 +66,13 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
 
         initToolBar(true, "登陆");
-        edUsername = (EditText) findViewById(R.id.login_name);
-        edPassword = (EditText) findViewById(R.id.login_pas);
+        edUsername = findViewById(R.id.login_name);
+        edPassword = findViewById(R.id.login_pas);
         btnLogin = findViewById(R.id.btn_login);
-        remPassword = (CheckBox) findViewById(R.id.rem_user);
+        remPassword = findViewById(R.id.rem_user);
 
-        edAnswer = (EditText) findViewById(R.id.anwser_text);
-        usernameTextInput = (TextInputLayout) findViewById(R.id.username_input);
+        edAnswer = findViewById(R.id.anwser_text);
+        usernameTextInput = findViewById(R.id.username_input);
 
         shp = getSharedPreferences(App.MY_SHP_NAME, Context.MODE_PRIVATE);
         if (shp.getBoolean(App.IS_REMBER_PASS_USER, false)) {
@@ -95,7 +95,7 @@ public class LoginActivity extends BaseActivity {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        Spinner questionSpinner = (Spinner) findViewById(R.id.anwser_select);
+        Spinner questionSpinner = findViewById(R.id.anwser_select);
         questionSpinner.setAdapter(spinnerAdapter);
         questionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

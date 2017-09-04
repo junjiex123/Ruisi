@@ -64,10 +64,10 @@ public class MyFriendPicker {
         dialog.setCancelable(true);
         List<SimpleData> datas = new ArrayList<>();
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_friend_picker, null);
-        ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress_view);
+        ProgressBar progressBar = view.findViewById(R.id.progress_view);
         View infoView = view.findViewById(R.id.info_view);
-        TextView infoText = (TextView) view.findViewById(R.id.info_text);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.friend_list);
+        TextView infoText = view.findViewById(R.id.info_text);
+        RecyclerView recyclerView = view.findViewById(R.id.friend_list);
         view.findViewById(R.id.btn_close).setOnClickListener(view1 -> dialog.dismiss());
         view.findViewById(R.id.btn_ok).setOnClickListener(view12 -> {
             int j = 0;
@@ -164,8 +164,8 @@ public class MyFriendPicker {
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                userName = (TextView) itemView.findViewById(R.id.name);
-                checkBox = (CheckBox) itemView.findViewById(R.id.check);
+                userName = itemView.findViewById(R.id.name);
+                checkBox = itemView.findViewById(R.id.check);
                 checkBox.setOnCheckedChangeListener((compoundButton, b) -> {
                     datas.get(getAdapterPosition()).isCheck = b;
                     if (b) {

@@ -10,11 +10,11 @@
     <include layout="@layout/my_toolbar" />
 
     <LinearLayout
-        android:elevation="4dp"
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="?android:attr/colorPrimary"
+        android:elevation="4dp"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="@dimen/dimen_16">
@@ -125,10 +125,13 @@
 
             <Button
                 android:id="@+id/btn_submit"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/btn_light_red_bg"
                 android:text="开始签到"
                 android:textColor="@color/white"
                 android:textSize="14sp" />

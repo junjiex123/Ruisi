@@ -54,7 +54,7 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
         findViewById(R.id.btn_login_inner).setOnClickListener(this);
         findViewById(R.id.btn_login_outer).setOnClickListener(this);
         findViewById(R.id.login_fail_view).setVisibility(View.INVISIBLE);
-        logo = (CircleImageView) findViewById(R.id.logo);
+        logo = findViewById(R.id.logo);
         shp = getSharedPreferences(App.MY_SHP_NAME, MODE_PRIVATE);
         loadUserImg();
         setCopyRight();
