@@ -212,9 +212,9 @@ public class PostListAdapter extends BaseAdapter {
         }
 
         void setData(int position) {
-            img_card_author.setText(DataSet.get(position).author);
+            img_card_author.setText("\uf2c0 " + DataSet.get(position).author);
             img_card_title.setText(DataSet.get(position).title);
-            img_card_like.setText(DataSet.get(position).replayCount);
+            img_card_like.setText("\uf08a " + DataSet.get(position).replayCount);
             if (!TextUtils.isEmpty(DataSet.get(position).imUrl)) {
                 Picasso.with(activity)
                         .load(App.getBaseUrl() + DataSet.get(position).imUrl)

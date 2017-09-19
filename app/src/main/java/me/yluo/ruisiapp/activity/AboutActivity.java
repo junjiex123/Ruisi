@@ -33,9 +33,9 @@ public class AboutActivity extends BaseActivity {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.transparent));
         }
+
         TextView version = findViewById(R.id.version);
         TextView serverVersion = findViewById(R.id.server_version);
-
         findViewById(R.id.btn_back).setOnClickListener(view -> finish());
 
         String ss = "<b>西电睿思手机客户端</b><br />功能不断完善中，bug较多还请多多反馈......<br />" +

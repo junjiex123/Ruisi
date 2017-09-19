@@ -21,7 +21,7 @@ public class SyncHttpClient {
     public static final String DEFAULT_USER_AGENT = "myRuisiAsyncLiteHttp/1.0";
     static final String UTF8 = "UTF-8";
     private static PersistentCookieStore store;
-    private final int dataRetrievalTimeout = 8000;
+    private int dataRetrievalTimeout = 8000;
     private int connectionTimeout = 8000;
     private Map<String, String> headers;
     //重定向地址
@@ -42,6 +42,10 @@ public class SyncHttpClient {
 
     public void setConnectionTimeout(int connectionTimeout) {
         this.connectionTimeout = connectionTimeout;
+    }
+
+    public void setReadTimeout(int timeout){
+        this.dataRetrievalTimeout = timeout;
     }
 
     public void setUserAgent(String userAgent) {

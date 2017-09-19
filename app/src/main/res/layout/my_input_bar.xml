@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/bg_primary"
-    android:elevation="4dp"
+    android:elevation="5dp"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:gravity="bottom"
@@ -38,7 +38,7 @@
         android:id="@+id/btn_more"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginEnd="2dp"
+        android:layout_marginEnd="12dp"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:padding="8dp"
@@ -46,13 +46,16 @@
         android:tint="@color/colorDisableHintIcon"
         android:visibility="gone" />
 
-    <ImageView
+    <Button
         android:id="@+id/btn_send"
-        android:layout_width="40dp"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="50dp"
         android:layout_height="40dp"
         android:layout_marginEnd="2dp"
-        android:background="?attr/selectableItemBackground"
         android:clickable="true"
+        android:focusable="true"
         android:padding="8dp"
-        android:src="@drawable/btn_post" />
+        android:src="@drawable/btn_post"
+        android:text="回复"
+        android:textSize="10sp" />
 </LinearLayout>

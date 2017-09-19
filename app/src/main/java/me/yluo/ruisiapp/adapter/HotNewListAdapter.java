@@ -118,7 +118,7 @@ public class HotNewListAdapter extends BaseAdapter {
 
         HeadViewHolder(View itemView) {
             super(itemView);
-            guildView = (MyGuildView) itemView.findViewById(R.id.myGuideView);
+            guildView = itemView.findViewById(R.id.myGuideView);
 
         }
 

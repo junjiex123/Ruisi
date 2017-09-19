@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,9 +93,12 @@ public class FrageForums extends BaseLazyFragment implements View.OnClickListene
 
     @Override
     public void onUserVisible() {
+        Log.d("=========", lastLoginState+"");
+        Log.d("=========", App.ISLOGIN(getActivity()) + "");
+
         if (lastLoginState != App.ISLOGIN(getActivity())) {
             lastLoginState = !lastLoginState;
-            initForums(lastLoginState);
+            initForums(App.ISLOGIN(getActivity()));
             initAvatar();
         }
     }
@@ -151,37 +155,20 @@ public class FrageForums extends BaseLazyFragment implements View.OnClickListene
     }
 
     //获取首页板块数据 板块列表
-    private class GetForumList extends AsyncTask<Boolean, Void, Void> {
+    private class GetForumList extends AsyncTask<Boolean, Void, Boolean> {
         @Override
-        protected Void doInBackground(Boolean... params) {
-            boolean b = params[0];
-            if (!b && forumDatas != null && forumDatas.size() > 0) {
-                //由登陆变为不登录 只需移除需要登录的板块
-                for (Category c : forumDatas) {
-                    if (c.login) {
-                        forumDatas.remove(c);
-                        continue;
-                    }
-                    for (Forum f : c.forums) {
-                        if (f.login) {
-                            c.forums.remove(f);
-                        }
-                    }
-                }
-
-                return null;
-            }
-
+        protected Boolean doInBackground(Boolean... params) {
             forumDatas = RuisUtils.getForums(getActivity(), params[0]);
-            return null;
+            return true;
         }
 
         @Override
-        protected void onPostExecute(Void v) {
+        protected void onPostExecute(Boolean b) {
             if (forumDatas == null || forumDatas.size() == 0) {
                 Toast.makeText(getActivity(), "获取板块列表失败", Toast.LENGTH_LONG).show();
             }
 
+            adapter.notifyDataSetChanged();
             adapter.setDatas(forumDatas);
         }
     }

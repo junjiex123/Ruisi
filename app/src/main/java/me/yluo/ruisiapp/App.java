@@ -81,6 +81,13 @@ public class App extends Application {
         return shp.getString(USER_UID_KEY, "");
     }
 
+    public static void setUid(Context context, String uid) {
+        SharedPreferences shp = context.getSharedPreferences(MY_SHP_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = shp.edit();
+        editor.putString(USER_UID_KEY, uid);
+        editor.apply();
+    }
+
     public static void setHash(Context context, String hash) {
         if (TextUtils.isEmpty(hash)) {
             return;

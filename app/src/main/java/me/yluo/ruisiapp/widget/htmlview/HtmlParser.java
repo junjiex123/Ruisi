@@ -43,7 +43,7 @@ public class HtmlParser {
         this.handler = handler;
     }
 
-    public void parase(InputStream is) throws IOException {
+    public void parse(InputStream is) throws IOException {
         if (handler == null) {
             throw new NullPointerException("you must set ParserCallback");
         }
@@ -59,7 +59,7 @@ public class HtmlParser {
         parse();
     }
 
-    public void parase(String s) throws IOException {
+    public void parse(String s) throws IOException {
         if (s == null) {
             throw new NullPointerException("input cant be null");
         }

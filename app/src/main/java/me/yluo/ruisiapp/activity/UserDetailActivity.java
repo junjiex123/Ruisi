@@ -3,6 +3,7 @@ package me.yluo.ruisiapp.activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -22,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,7 +86,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("loginName", username);
         intent.putExtra("avatarUrl", avatarUrl);
-        if(!TextUtils.isEmpty(uid)){
+        if (!TextUtils.isEmpty(uid)) {
             intent.putExtra("uid", uid);
         }
         context.startActivity(intent);
@@ -122,14 +124,27 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         infoList.addItemDecoration(new MyListDivider(this, MyListDivider.VERTICAL));
         infoList.setAdapter(adapter);
 
-        userUid =  getIntent().getStringExtra("uid");
-        if(TextUtils.isEmpty(userUid)){
+        userUid = getIntent().getStringExtra("uid");
+        if (TextUtils.isEmpty(userUid)) {
             userUid = GetId.getId("uid=", imageUrl);
         }
 
         //如果是自己
         if (userUid.equals(App.getUid(this))) {
             fab.setImageResource(R.drawable.ic_close_24dp);
+            imageView.setOnClickListener(view -> {
+                final String[] items = {"修改密码"};
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+                alertBuilder.setTitle("操作");
+                alertBuilder.setItems(items, (arg0, index) -> {
+                    if (index == 0) {
+                        startActivity(new Intent(UserDetailActivity.this, ChangePasswordActivity.class));
+                    }
+                });
+                AlertDialog d = alertBuilder.create();
+                d.show();
+            });
+
         }
         String url0 = UrlUtils.getUserHomeUrl(userUid, false);
         getdata(url0);

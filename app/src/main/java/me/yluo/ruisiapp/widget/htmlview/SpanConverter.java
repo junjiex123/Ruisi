@@ -62,7 +62,7 @@ public class SpanConverter implements ParserCallback, ImageGetterCallBack {
 
     private Spanned startConvert() {
         try {
-            parser.parase(mSource);
+            parser.parse(mSource);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -291,6 +291,9 @@ public class SpanConverter implements ParserCallback, ImageGetterCallBack {
     }
 
     private void handleBlockquote(int start) {
+        spannedBuilder.insert(start, "“ ");
+        spannedBuilder.append("”");
+        position += 3;
         setSpan(start, new Quote());
     }
 

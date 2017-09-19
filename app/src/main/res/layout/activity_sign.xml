@@ -30,7 +30,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="睿思规定每日签到时间 07:00-23:00"
+            android:fontFamily="@font/fontawesome"
+            android:text="&#xf129; 睿思规定每日签到时间 07:00-23:00"
             android:textColor="@color/white"
             android:textSize="13sp" />
     </LinearLayout>
@@ -38,8 +39,7 @@
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="250dp"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <ProgressBar
@@ -54,15 +54,11 @@
             android:id="@+id/sign_yes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="72dp"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone">
 
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@drawable/sign_yy" />
 
             <TextView
                 style="@style/text_16_pri"
@@ -70,7 +66,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
-                android:text="今日已签到"
+                android:fontFamily="@font/fontawesome"
+                android:text="&#xf05d; 今日已签到"
+                android:textColor="@color/blue_light"
                 android:textStyle="bold" />
 
             <TextView
