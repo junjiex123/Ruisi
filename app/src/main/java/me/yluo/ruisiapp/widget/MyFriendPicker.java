@@ -91,7 +91,7 @@ public class MyFriendPicker {
         dialog.setOnDismissListener(dialogInterface -> KeyboardUtil.showKeyboard(editText));
         dialog.show();
 
-        HttpUtil.get(context, "misc.php?mod=getatuser&inajax=1&mobile=2", new ResponseHandler() {
+        HttpUtil.get("misc.php?mod=getatuser&inajax=1&mobile=2", new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);

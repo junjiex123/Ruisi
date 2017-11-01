@@ -216,7 +216,7 @@ public class PostsActivity extends BaseActivity implements
             url = url + UrlUtils.getArticleListUrl(FID, CurrentPage, false);
         }
         url = url + orders[currentTabindex];
-        HttpUtil.get(this, url, new ResponseHandler() {
+        HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String s = new String(response);

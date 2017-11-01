@@ -214,7 +214,7 @@ public class ChatActivity extends BaseActivity {
             Map<String, String> params = new HashMap<>();
             params.put("touid", touid);
             params.put("message", text);
-            HttpUtil.post(this, replyUrl, params, new ResponseHandler() {
+            HttpUtil.post(replyUrl, params, new ResponseHandler() {
                 @Override
                 public void onSuccess(byte[] response) {
                     String res = new String(response);

@@ -1,5 +1,6 @@
 package me.yluo.ruisiapp.activity;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +13,6 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -62,7 +62,6 @@ public class HomeActivity extends BaseActivity
     private SharedPreferences sharedPreferences;
     private boolean isNeedCheckUpdate = false;
     private ViewPager viewPager;
-    private MainPageAdapter adapter;
     private List<BaseLazyFragment> fragments = new ArrayList<>();
 
 
@@ -97,7 +96,7 @@ public class HomeActivity extends BaseActivity
         fragments.add(new FrageHotsNews());
         fragments.add(FrageMessage.newInstance(ishaveReply, ishavePm));
         fragments.add(new FragmentMy());
-        adapter = new MainPageAdapter(getSupportFragmentManager(), fragments);
+        MainPageAdapter adapter = new MainPageAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(adapter);
     }
 
@@ -216,7 +215,7 @@ public class HomeActivity extends BaseActivity
             version_code = info.versionCode;
         }
         final int finalVersion_code = version_code;
-        HttpUtil.get(HomeActivity.this, App.CHECK_UPDATE_URL, new ResponseHandler() {
+        HttpUtil.get(App.CHECK_UPDATE_URL, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
@@ -311,15 +310,16 @@ public class HomeActivity extends BaseActivity
         if (!isNotify) {
             return;
         }
-        final NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+        final Notification.Builder builder = new Notification.Builder(this)
                 .setSmallIcon(R.mipmap.logo)
-                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setDefaults(Notification.DEFAULT_ALL)
                 .setContentTitle("未读消息提醒")
                 .setContentText("你有未读的消息哦,去我的消息页面查看吧！")
                 .setAutoCancel(true);
         final NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        mNotifyMgr.notify(10, builder.build());
-        Log.e("message", "发送未读消息弹窗");
+        if (mNotifyMgr != null) {
+            mNotifyMgr.notify(10, builder.build());
+        }
     }
 
     @Override

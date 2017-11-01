@@ -10,6 +10,7 @@ import android.util.Log;
 import me.yluo.ruisiapp.checknet.NetworkReceiver;
 import me.yluo.ruisiapp.database.MyDB;
 import me.yluo.ruisiapp.database.SQLiteHelper;
+import me.yluo.ruisiapp.myhttp.HttpUtil;
 
 /**
  * Created by free2 on 16-3-11.
@@ -24,6 +25,9 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         this.context = getApplicationContext();
+
+        //初始化http
+        HttpUtil.init(getApplicationContext());
 
         //注册网络变化广播
         IntentFilter intentFilter = new IntentFilter();
@@ -58,7 +62,7 @@ public class App extends Application {
     public static final String POST_TID = "805203";
     //启动时设定
     //论坛基地址
-    private static final String BASE_URL_ME = "http://bbs.rs.xidian.me/";
+    private static final String BASE_URL_ME = "http://rsbbs.xidian.edu.cn/";
     private static final String BASE_URL_RS = "http://rs.xidian.edu.cn/";
     //是否为校园网
     public static boolean IS_SCHOOL_NET = false;
@@ -177,8 +181,8 @@ public class App extends Application {
     public static final String CHECK_UPDATE_KEY = "check_update_time";
 
     public static final String LOGIN_URL = "member.php?mod=logging&action=login";
-    public static final String LOGIN_RS = "http://rs.xidian.edu.cn/member.php?mod=logging&action=login&mobile=2";
-    public static final String LOGIN_ME = "http://bbs.rs.xidian.me/member.php?mod=logging&action=login&mobile=2";
+    public static final String LOGIN_RS = App.BASE_URL_RS + "member.php?mod=logging&action=login&mobile=2";
+    public static final String LOGIN_ME = App.BASE_URL_ME + "member.php?mod=logging&action=login&mobile=2";
 
     public static final String CHECK_UPDATE_URL = "forum.php?mod=viewthread&tid=" + App.POST_TID + "&mobile=2";
 }

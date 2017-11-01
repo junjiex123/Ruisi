@@ -131,7 +131,7 @@ public class FrageHotsNews extends BaseLazyFragment implements LoadMoreListener.
         }
         String type = (currentType == TYPE_HOT) ? "hot" : "new";
         String url = "forum.php?mod=guide&view=" + type + "&page=" + CurrentPage + "&mobile=2";
-        HttpUtil.get(getActivity(), url, new ResponseHandler() {
+        HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 new GetNewArticleListTaskMe().execute(new String(response));

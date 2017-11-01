@@ -1,6 +1,5 @@
 package me.yluo.ruisiapp.fragment;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,7 +29,6 @@ import me.yluo.ruisiapp.activity.SearchActivity;
 import me.yluo.ruisiapp.activity.UserDetailActivity;
 import me.yluo.ruisiapp.adapter.ForumsAdapter;
 import me.yluo.ruisiapp.model.Category;
-import me.yluo.ruisiapp.model.Forum;
 import me.yluo.ruisiapp.model.WaterData;
 import me.yluo.ruisiapp.myhttp.SyncHttpClient;
 import me.yluo.ruisiapp.utils.GetId;

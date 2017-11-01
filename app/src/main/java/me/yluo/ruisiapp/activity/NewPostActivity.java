@@ -195,7 +195,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         }
         params.put("subject", ed_title.getText().toString());
         params.put("message", ed_content.getText().toString());
-        HttpUtil.post(getApplicationContext(), url, params, new ResponseHandler() {
+        HttpUtil.post(url, params, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
@@ -318,7 +318,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         typeiddatas.clear();
         typeId = "";
         String url = "forum.php?mod=post&action=newthread&fid=" + fid + "&mobile=2";
-        HttpUtil.get(this, url, new ResponseHandler() {
+        HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 Document document = Jsoup.parse(new String(response));

@@ -8,7 +8,6 @@ import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -32,7 +31,6 @@ import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
-import me.yluo.ruisiapp.utils.DataManager;
 
 public class ChangePasswordActivity extends BaseActivity {
 
@@ -228,7 +226,7 @@ public class ChangePasswordActivity extends BaseActivity {
         HttpUtil.getClient().setConnectionTimeout(20000);
         HttpUtil.getClient().setReadTimeout(20000);
 
-        HttpUtil.post(this, "home.php?mod=spacecp&ac=profile&mobile=2", ps, new ResponseHandler() {
+        HttpUtil.post("home.php?mod=spacecp&ac=profile&mobile=2", ps, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 dialog.dismiss();

@@ -143,7 +143,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         paras.put("note", mes);
         paras.put("gid", "1");
         paras.put("addsubmit_btn", "true");
-        HttpUtil.post(this, UrlUtils.getAddFrirndUrl(uid), paras, new ResponseHandler() {
+        HttpUtil.post(UrlUtils.getAddFrirndUrl(uid), paras, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
@@ -291,7 +291,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         }
         HashMap<String, String> pa = new HashMap<>();
         pa.put("friendsubmit", "true");
-        HttpUtil.post(this, url, pa, new ResponseHandler() {
+        HttpUtil.post(url, pa, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String s = new String(response);

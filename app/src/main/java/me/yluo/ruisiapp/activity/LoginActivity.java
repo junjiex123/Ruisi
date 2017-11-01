@@ -166,7 +166,7 @@ public class LoginActivity extends BaseActivity {
         final String username = edUsername.getText().toString().trim();
         final String passNo = edPassword.getText().toString().trim();
         String url = UrlUtils.getLoginUrl(false);
-        HttpUtil.get(LoginActivity.this, url, new ResponseHandler() {
+        HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
@@ -186,7 +186,7 @@ public class LoginActivity extends BaseActivity {
                     params.put("answer", edAnswer.getText().toString());
                 }
 
-                HttpUtil.post(LoginActivity.this, loginUrl, params, new ResponseHandler() {
+                HttpUtil.post(loginUrl, params, new ResponseHandler() {
                     @Override
                     public void onSuccess(byte[] response) {
                         String res = new String(response);

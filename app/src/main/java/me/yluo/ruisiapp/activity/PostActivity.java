@@ -115,7 +115,7 @@ public class PostActivity extends BaseActivity
             if (!App.IS_SCHOOL_NET) {
                 url = url + "&mobile=2";
             }
-            HttpUtil.head(this, url, null, new ResponseHandler() {
+            HttpUtil.head(url, null, new ResponseHandler() {
                 @Override
                 public void onSuccess(byte[] response) {
                     int page = GetId.getPage(new String(response));
@@ -214,7 +214,7 @@ public class PostActivity extends BaseActivity
     //文章一页的html 根据页数 Tid
     private void getArticleData(final int page) {
         String url = UrlUtils.getSingleArticleUrl(Tid, page, false);
-        HttpUtil.get(this, url, new ResponseHandler() {
+        HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
@@ -578,7 +578,7 @@ public class PostActivity extends BaseActivity
         final String url = UrlUtils.getStarUrl(Tid);
         Map<String, String> params = new HashMap<>();
         params.put("favoritesubmit", "true");
-        HttpUtil.post(this, url, params, new ResponseHandler() {
+        HttpUtil.post(url, params, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
@@ -601,7 +601,7 @@ public class PostActivity extends BaseActivity
         params.put("tid", Tid);
         params.put("pid", datas.get(pos).pid);
         params.put("delete", "1");
-        HttpUtil.post(this, UrlUtils.getDeleteReplyUrl(), params, new ResponseHandler() {
+        HttpUtil.post(UrlUtils.getDeleteReplyUrl(), params, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
@@ -644,7 +644,7 @@ public class PostActivity extends BaseActivity
         String s = getPreparedReply(this, input.getText().toString());
         Map<String, String> params = new HashMap<>();
         params.put("message", s);
-        HttpUtil.post(this, url + "&handlekey=fastpost&loc=1&inajax=1", params, new ResponseHandler() {
+        HttpUtil.post(url + "&handlekey=fastpost&loc=1&inajax=1", params, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);

@@ -80,7 +80,7 @@ public class SignActivity extends BaseActivity {
         }
 
         String urlget = "plugin.php?id=dsu_paulsign:sign";
-        HttpUtil.get(this, urlget, new ResponseHandler() {
+        HttpUtil.get(urlget, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
@@ -176,7 +176,7 @@ public class SignActivity extends BaseActivity {
         params.put("fastreplay", "0");
 
         String url = UrlUtils.getSignUrl();
-        HttpUtil.post(this, url, params, new ResponseHandler() {
+        HttpUtil.post(url, params, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);

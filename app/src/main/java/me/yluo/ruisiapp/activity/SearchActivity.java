@@ -2,7 +2,6 @@ package me.yluo.ruisiapp.activity;
 
 import android.animation.Animator;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -138,7 +137,7 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
         paras.put("searchsubmit", "yes");
         paras.put("srchtxt", str);
 
-        HttpUtil.post(this, url, paras, new ResponseHandler() {
+        HttpUtil.post(url, paras, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
@@ -164,7 +163,7 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
         String url = "search.php?mod=forum&searchid=" + searchid
                 + "&orderby=lastpost&ascdesc=desc&searchsubmit=yes&kw=" + str
                 + "&page=" + page + "&mobile=2";
-        HttpUtil.get(this, url, new ResponseHandler() {
+        HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 new GetResultListTaskMe().execute(new String(response));

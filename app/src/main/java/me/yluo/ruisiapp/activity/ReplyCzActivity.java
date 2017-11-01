@@ -97,7 +97,7 @@ public class ReplyCzActivity extends BaseActivity {
 
         }
 
-        HttpUtil.get(this, data.replyUrlTitle, new ResponseHandler() {
+        HttpUtil.get(data.replyUrlTitle, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 Document document = Jsoup.parse(new String(response));
@@ -140,7 +140,7 @@ public class ReplyCzActivity extends BaseActivity {
     private void replyCz(String url) {
         String inputStr = PostActivity.getPreparedReply(this, input.getText().toString());
         params.put("message", inputStr);
-        HttpUtil.post(ReplyCzActivity.this, url, params, new ResponseHandler() {
+        HttpUtil.post(url, params, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);

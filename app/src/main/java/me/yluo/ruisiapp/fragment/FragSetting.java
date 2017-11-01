@@ -77,7 +77,7 @@ public class FragSetting extends PreferenceFragment
         findPreference("about_this").setOnPreferenceClickListener(
                 preference -> {
                     Toast.makeText(getActivity(), "正在检查更新", Toast.LENGTH_SHORT).show();
-                    HttpUtil.get(getActivity(), App.CHECK_UPDATE_URL, new ResponseHandler() {
+                    HttpUtil.get(App.CHECK_UPDATE_URL, new ResponseHandler() {
                         @Override
                         public void onSuccess(byte[] response) {
                             String res = new String(response);

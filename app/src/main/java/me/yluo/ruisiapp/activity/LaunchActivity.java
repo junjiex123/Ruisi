@@ -85,7 +85,7 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
     private void startLogin() {
         mHandler.postDelayed(finishRunable, 2500);
         new Thread(() -> {
-            HttpUtil.get(LaunchActivity.this, App.LOGIN_RS, new ResponseHandler() {
+            HttpUtil.get(App.LOGIN_RS, new ResponseHandler() {
                 @Override
                 public void onSuccess(byte[] response) {
                     pcResponse = new String(response);
@@ -100,7 +100,7 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
             }
 
             if (!isLoginOk) {
-                HttpUtil.get(LaunchActivity.this, App.LOGIN_ME, new ResponseHandler() {
+                HttpUtil.get(App.LOGIN_ME, new ResponseHandler() {
                     @Override
                     public void onSuccess(byte[] response) {
                         mobileRes = new String(response);

@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.1'
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "me.yluo.ruisiapp"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 25
-        versionName '2.5.0'
+        versionCode 26
+        versionName '2.6.0'
 
     }
 
@@ -25,9 +25,9 @@ repositories {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:design:26.0.1'
-    compile 'com.android.support:cardview-v7:26.0.1'
-    compile 'com.android.support:recyclerview-v7:26.0.1'
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.android.support:cardview-v7:26.1.0'
+    compile 'com.android.support:recyclerview-v7:26.1.0'
     compile 'org.jsoup:jsoup:1.10.3'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'

@@ -55,7 +55,6 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
             R.drawable.ic_info_24dp,
             R.drawable.ic_menu_share_24dp,
             R.drawable.ic_favorite_white_12dp,
-
     };
 
     private final String[] titles = new String[]{
@@ -92,8 +91,7 @@ public class FragmentMy extends BaseLazyFragment implements View.OnClickListener
             fs.add(d);
         }
         listView.setOnItemClickListener(this);
-        listView.setAdapter(new SimpleAdapter(getActivity(), fs, R.layout.item_function,
-                new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
+        listView.setAdapter(new SimpleAdapter(getActivity(), fs, R.layout.item_function, new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
         return mRootView;
     }
 

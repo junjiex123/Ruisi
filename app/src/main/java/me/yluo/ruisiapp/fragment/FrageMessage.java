@@ -157,7 +157,7 @@ public class FrageMessage extends BaseLazyFragment {
             url = "home.php?mod=space&do=notice&view=mypost&type=at&mobile=2";
         }
 
-        HttpUtil.get(getActivity(), url, new ResponseHandler() {
+        HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);

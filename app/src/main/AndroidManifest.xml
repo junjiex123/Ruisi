@@ -87,7 +87,7 @@
         <activity android:name=".activity.SettingActivity" />
         <activity android:name=".activity.ReplyCzActivity" />
         <activity android:name=".activity.ThemeActivity" />
-        <activity android:name=".activity.ChangePasswordActivity"></activity>
+        <activity android:name=".activity.ChangePasswordActivity"/>
     </application>
 
 </manifest>

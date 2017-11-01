@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 
-import me.yluo.ruisiapp.App;
-
 public abstract class ResponseHandler {
     private static final int MSG_SUCCESS = 0;
     private static final int MSG_FAILURE = 1;

@@ -3,7 +3,6 @@ package me.yluo.ruisiapp.activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -23,7 +22,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -152,7 +150,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
 
     private void getdata(String url) {
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
-        HttpUtil.get(this, url, new ResponseHandler() {
+        HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 new GetUserInfoTask().execute(new String(response));
@@ -203,7 +201,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         paras.put("note", mes);
         paras.put("gid", "1");
         paras.put("addsubmit_btn", "true");
-        HttpUtil.post(this, UrlUtils.getAddFrirndUrl(uid), paras, new ResponseHandler() {
+        HttpUtil.post(UrlUtils.getAddFrirndUrl(uid), paras, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);

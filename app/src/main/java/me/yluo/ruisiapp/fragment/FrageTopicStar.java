@@ -123,7 +123,7 @@ public class FrageTopicStar extends BaseFragment implements LoadMoreListener.OnL
 
     private void getWebDatas() {
         String newurl = url + "&page=" + CurrentPage;
-        HttpUtil.get(getActivity(), newurl, new ResponseHandler() {
+        HttpUtil.get(newurl, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);

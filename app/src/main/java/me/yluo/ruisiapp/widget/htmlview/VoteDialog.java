@@ -83,7 +83,7 @@ public class VoteDialog {
 
 
             Toast.makeText(context, "提交中", Toast.LENGTH_SHORT).show();
-            HttpUtil.post(context, data.url, paras, new ResponseHandler() {
+            HttpUtil.post(data.url, paras, new ResponseHandler() {
                 @Override
                 public void onSuccess(byte[] response) {
                     String s = new String(response);

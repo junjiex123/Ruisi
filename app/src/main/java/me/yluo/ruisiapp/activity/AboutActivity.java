@@ -75,7 +75,7 @@ public class AboutActivity extends BaseActivity {
                 .show());
 
         int finalVersionCode = versionCode;
-        HttpUtil.get(this, App.CHECK_UPDATE_URL, new ResponseHandler() {
+        HttpUtil.get(App.CHECK_UPDATE_URL, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);

@@ -96,7 +96,7 @@ public class DownloadService extends Service {
                 updateProgress(DOWN_ERROR, 0);
             }
         };
-        HttpUtil.get(this, down_url, handler);
+        HttpUtil.get(down_url, handler);
         return super.onStartCommand(intent, flags, startId);
     }
 
