@@ -3,7 +3,7 @@
 ### 更新地址:
 
 #### 论坛下载
-[校外网访问](http://bbs.rs.xidian.me/forum.php?mod=viewthread&tid=805203&mobile=2) |
+[校外网访问](http://rsbbs.rs.xidian.me/forum.php?mod=viewthread&tid=805203&mobile=2) |
 [校园网访问](http://rs.xidian.edu.cn/forum.php?mod=viewthread&tid=805203)
 
 #### 第三方市场
