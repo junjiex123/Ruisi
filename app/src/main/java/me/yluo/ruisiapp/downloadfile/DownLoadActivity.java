@@ -32,10 +32,10 @@ public class DownLoadActivity extends AppCompatActivity {
         TextView downPath = (TextView) findViewById(R.id.down_path);
         downPath.setText("文件下载目录：" + FileUtil.path);
 
-        download_info = (TextView) findViewById(R.id.download_info);
-        mProgressBar = (ProgressBar) findViewById(R.id.download_progress);
-        btnClose = (TextView) findViewById(R.id.btn_close);
-        btn_cancel = (TextView) findViewById(R.id.btn_cancel);
+        download_info = findViewById(R.id.download_info);
+        mProgressBar = findViewById(R.id.download_progress);
+        btnClose = findViewById(R.id.btn_close);
+        btn_cancel = findViewById(R.id.btn_cancel);
         mProgressBar.setProgress(progress);
         btn_cancel.setOnClickListener(v -> cancelDown());
         if (progress == 100) {
@@ -46,7 +46,7 @@ public class DownLoadActivity extends AppCompatActivity {
         //动态注册广播接收器
         downloadMsgReceiver = new downloadMsgReceiver();
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("xyz.yluo.ruisiapp.download");
+        intentFilter.addAction("me.yluo.ruisiapp.download");
         registerReceiver(downloadMsgReceiver, intentFilter);
         download_info.setText("下载" + fileName + " " + progress + "%");
         btnClose.setOnClickListener(v -> finish());

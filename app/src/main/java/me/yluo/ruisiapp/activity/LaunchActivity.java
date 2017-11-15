@@ -70,7 +70,7 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
             year = yearNow;
         }
         ((TextView) findViewById(R.id.copyright))
-                .setText("©2016-" + year + " 谁用了FREEDPOM");
+                .setText("©2016-" + year + " 谁用了FREEDOM");
     }
 
     //设置头像

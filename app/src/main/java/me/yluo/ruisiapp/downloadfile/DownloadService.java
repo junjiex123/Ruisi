@@ -1,5 +1,6 @@
 package me.yluo.ruisiapp.downloadfile;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -9,7 +10,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -31,9 +31,9 @@ public class DownloadService extends Service {
     private String filename = null;
     private int downloadProgress = 0;
 
-    private NotificationCompat.Builder mBuilder;
+    private Notification.Builder mBuilder;
     private NotificationManager mNotifyManager;
-    private Intent intent = new Intent("xyz.yluo.ruisiapp.download");
+    private Intent intent = new Intent("me.yluo.ruisiapp.download");
 
     private FileResponseHandler handler;
 
@@ -92,7 +92,7 @@ public class DownloadService extends Service {
 
             @Override
             public void onFailure(Throwable throwable, File file) {
-                Log.e("error", "===========");
+                Log.e("error", throwable.getMessage());
                 updateProgress(DOWN_ERROR, 0);
             }
         };
@@ -101,11 +101,6 @@ public class DownloadService extends Service {
     }
 
 
-    /**
-     * 方法描述：createNotification方法
-     *
-     * @see DownloadService
-     */
     public void createNotification(final String filename) {
         Handler handler = new Handler(Looper.getMainLooper());
 
@@ -116,7 +111,7 @@ public class DownloadService extends Service {
         // Creates the PendingIntent
         PendingIntent notifyPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mBuilder = new NotificationCompat.Builder(this);
+        mBuilder = new Notification.Builder(this);
         mBuilder.setContentTitle("下载文件" + filename)
                 .setContentIntent(notifyPendingIntent)
                 .setSmallIcon(R.mipmap.logo);
@@ -135,7 +130,7 @@ public class DownloadService extends Service {
         intent.putExtra("progress", progress);
         intent.putExtra("type", type);
         sendBroadcast(intent);
-        Log.i("===发送广播===", type + " " + progress);
+        Log.d("===发送广播===", type + " " + progress);
         switch (type) {
             case DOWN_ERROR:
                 mBuilder.setContentText("文件下载失败！")
@@ -160,7 +155,7 @@ public class DownloadService extends Service {
                 okIntent.putExtra("progress", 100);
                 // Creates the PendingIntent
                 PendingIntent notifyPendingIntent = PendingIntent.getActivity(this, 1, okIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                mBuilder = new NotificationCompat.Builder(this);
+                mBuilder = new Notification.Builder(this);
                 mBuilder.setContentTitle(filename + "下载完成")
                         .setContentText("文件下载完成，点击打开！！")
                         .setContentIntent(notifyPendingIntent)

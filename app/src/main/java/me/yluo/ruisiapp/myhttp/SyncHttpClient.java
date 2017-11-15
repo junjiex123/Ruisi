@@ -184,6 +184,7 @@ public class SyncHttpClient {
                 connection.disconnect();
                 return;
             } else {
+                Location = null;
                 handler.processResponse(connection);
                 //获取cookie
                 if (store != null) {

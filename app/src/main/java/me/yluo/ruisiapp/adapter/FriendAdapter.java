@@ -51,9 +51,9 @@ public class FriendAdapter extends BaseAdapter {
     }
 
     private class FriendViewHolder extends BaseViewHolder {
-        protected CircleImageView user_image;
+        CircleImageView user_image;
         TextView user_name, user_info, is_online;
-        private View container;
+        View container;
 
         FriendViewHolder(View itemView) {
             super(itemView);
