@@ -20,17 +20,17 @@ import me.yluo.ruisiapp.model.ReadHistoryData;
 public class HistoryAdapter extends BaseAdapter {
 
     private static final int CONTENT = 0;
-    private List<ReadHistoryData> Datas;
+    private List<ReadHistoryData> datas;
     private Context context;
 
     public HistoryAdapter(Context context, List<ReadHistoryData> datas) {
-        Datas = datas;
+        this.datas = datas;
         this.context = context;
     }
 
     @Override
     protected int getDataCount() {
-        return Datas.size();
+        return datas.size();
     }
 
     @Override
@@ -57,15 +57,15 @@ public class HistoryAdapter extends BaseAdapter {
 
         @Override
         void setData(int position) {
-            title.setText(Datas.get(position).title);
-            author.setText(Datas.get(position).author);
-            time.setText(Datas.get(position).readTime);
+            title.setText(datas.get(position).title);
+            author.setText(datas.get(position).author);
+            time.setText(datas.get(position).readTime);
         }
 
         void item_click() {
-            String tid = Datas.get(getAdapterPosition()).tid;
+            String tid = datas.get(getAdapterPosition()).tid;
             if (!TextUtils.isEmpty(tid))
-                PostActivity.open(context, "tid=" + tid, Datas.get(getAdapterPosition()).author);
+                PostActivity.open(context, "tid=" + tid, datas.get(getAdapterPosition()).author);
         }
     }
 }
