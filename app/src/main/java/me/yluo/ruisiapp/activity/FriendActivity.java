@@ -323,82 +323,73 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
 
 
     private void show_search_view() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            search_card.setVisibility(View.VISIBLE);
-            animator = ViewAnimationUtils.createCircularReveal(
-                    search_card,
-                    search_card.getWidth(),
-                    0,
-                    0,
-                    (float) Math.hypot(search_card.getWidth(), search_card.getHeight()));
+        search_card.setVisibility(View.VISIBLE);
+        animator = ViewAnimationUtils.createCircularReveal(
+                search_card,
+                search_card.getWidth(),
+                0,
+                0,
+                (float) Math.hypot(search_card.getWidth(), search_card.getHeight()));
 
-            animator.setInterpolator(new AccelerateInterpolator());
-            animator.setDuration(260);
-            animator.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animator) {
+        animator.setInterpolator(new AccelerateInterpolator());
+        animator.setDuration(260);
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
 
-                }
+            }
 
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    KeyboardUtil.showKeyboard(search_input);
-                }
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                KeyboardUtil.showKeyboard(search_input);
+            }
 
-                @Override
-                public void onAnimationCancel(Animator animator) {
+            @Override
+            public void onAnimationCancel(Animator animator) {
 
-                }
+            }
 
-                @Override
-                public void onAnimationRepeat(Animator animator) {
+            @Override
+            public void onAnimationRepeat(Animator animator) {
 
-                }
-            });
+            }
+        });
 
-            animator.start();
-        } else {
-            search_card.setVisibility(View.VISIBLE);
-            KeyboardUtil.showKeyboard(search_input);
-        }
+        animator.start();
     }
 
     private void hide_search_view() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            animator = ViewAnimationUtils.createCircularReveal(
-                    search_card,
-                    search_card.getWidth(),
-                    0,
-                    (float) Math.hypot(search_card.getWidth(), search_card.getHeight()),
-                    0);
+        animator = ViewAnimationUtils.createCircularReveal(
+                search_card,
+                search_card.getWidth(),
+                0,
+                (float) Math.hypot(search_card.getWidth(), search_card.getHeight()),
+                0);
 
-            animator.setInterpolator(new DecelerateInterpolator());
-            animator.setDuration(260);
-            animator.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animator) {
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.setDuration(260);
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
 
-                }
+            }
 
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    search_card.setVisibility(View.GONE);
-                }
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                search_card.setVisibility(View.GONE);
+            }
 
-                @Override
-                public void onAnimationCancel(Animator animator) {
+            @Override
+            public void onAnimationCancel(Animator animator) {
 
-                }
+            }
 
-                @Override
-                public void onAnimationRepeat(Animator animator) {
+            @Override
+            public void onAnimationRepeat(Animator animator) {
 
-                }
-            });
-            animator.start();
-        } else {
-            search_card.setVisibility(View.GONE);
-        }
+            }
+        });
+        animator.start();
     }
 
     @Override
