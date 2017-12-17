@@ -14,21 +14,15 @@ Ios版见[Ruisi_Ios](https://github.com/freedom10086/Ruisi_Ios)
 
 ### 软件截图
 ![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/1.jpeg)
-
 ![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/2.jpeg)
 
-![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/3.png)
-
 ![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/4.png)
-
 ![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/5.jpeg)
 
 ![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/6.jpeg)
-
 ![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/7.jpeg)
 
 ![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/8.jpeg)
-
 ![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/9.jpeg)
 
 ### 意见和反馈
