@@ -1,10 +1,13 @@
 package me.yluo.ruisiapp.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -28,6 +31,7 @@ import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.utils.GetId;
+import me.yluo.ruisiapp.utils.UrlUtils;
 import me.yluo.ruisiapp.widget.ScaleImageView;
 
 public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
@@ -38,11 +42,15 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
     private TextView index;
     private MyAdapter adapter;
     private int position = 0;
+    private static boolean needAnimate = false;
+
 
     public static void open(Context context, String url) {
         Intent intent = new Intent(context, ViewImgActivity.class);
         intent.putExtra("url", url);
-        context.startActivity(intent);
+        needAnimate = true;
+        ActivityOptionsCompat compat = ActivityOptionsCompat.makeCustomAnimation(context, R.anim.fade_in, R.anim.fade_out);
+        ActivityCompat.startActivity(context, intent, compat.toBundle());
     }
 
     @Override
@@ -108,6 +116,15 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
                 pager.setCurrentItem(position);
             }
         });
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        // 去掉自带的转场动画
+        if (needAnimate) {
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        }
     }
 
     private void changeIndex(int pos) {

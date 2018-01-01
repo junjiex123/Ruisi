@@ -70,11 +70,13 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
     private TextView progresText;
     private String username = "";
     private String imageUrl = "";
+    private static boolean needAnimate = false;
 
     public static void openWithAnimation(Activity activity, String username, ImageView imgAvatar, String uid) {
         Intent intent = new Intent(activity, UserDetailActivity.class);
         intent.putExtra("loginName", username);
         intent.putExtra("avatarUrl", UrlUtils.getAvaterurlm(uid));
+        needAnimate = true;
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, imgAvatar, NAME_IMG_AVATAR);
         ActivityCompat.startActivity(activity, intent, options.toBundle());
     }
@@ -87,6 +89,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         if (!TextUtils.isEmpty(uid)) {
             intent.putExtra("uid", uid);
         }
+        needAnimate = false;
         context.startActivity(intent);
     }
 
@@ -144,11 +147,19 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
             });
 
         }
-        String url0 = UrlUtils.getUserHomeUrl(userUid, false);
-        getdata(url0);
+        loadData(UrlUtils.getUserHomeUrl(userUid, false));
     }
 
-    private void getdata(String url) {
+    @Override
+    public void finish() {
+        super.finish();
+        // 去掉自带的转场动画
+        if (needAnimate) {
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        }
+    }
+
+    private void loadData(String url) {
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
         HttpUtil.get(url, new ResponseHandler() {
             @Override

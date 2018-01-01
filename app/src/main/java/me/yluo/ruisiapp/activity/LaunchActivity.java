@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -125,11 +127,19 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
     private void enterHome() {
         if (isForeGround) {
             mHandler.removeCallbacks(finishRunable);
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            ActivityOptionsCompat compat = ActivityOptionsCompat.makeCustomAnimation(this, R.anim.fade_in, R.anim.fade_out);
+            ActivityCompat.startActivity(this,new Intent(this, HomeActivity.class), compat.toBundle());
+            new Handler().postDelayed(() -> finish(),300);
         }
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+        // 去掉自带的转场动画
+        overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
+    }
+
 
     @Override
     public void onClick(View view) {
