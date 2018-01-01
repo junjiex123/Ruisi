@@ -130,8 +130,8 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
 
         LoadMoreViewHolder(View itemView) {
             super(itemView);
-            loadMoreProgress = (ProgressBar) itemView.findViewById(R.id.load_more_progress);
-            loadMoreText = (TextView) itemView.findViewById(R.id.load_more_text);
+            loadMoreProgress = itemView.findViewById(R.id.load_more_progress);
+            loadMoreText = itemView.findViewById(R.id.load_more_text);
             container = itemView.findViewById(R.id.main_container);
         }
 

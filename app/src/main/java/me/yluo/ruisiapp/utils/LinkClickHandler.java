@@ -101,6 +101,7 @@ public class LinkClickHandler {
             CustomTabsIntent customTabsIntent = builder.build();
             String packageName = TabsHelper.getPackageNameToUse(context);
             if (packageName == null) { // 不支持 chrometabs
+                Log.d("link click","not support chrome tabs");
                 IntentUtils.openBroswer(context, url);
             } else {
                 customTabsIntent.intent.setPackage(packageName);
