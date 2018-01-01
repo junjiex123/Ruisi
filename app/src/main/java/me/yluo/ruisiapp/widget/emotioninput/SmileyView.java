@@ -63,6 +63,7 @@ public class SmileyView extends LinearLayout
 
     private void init(Context context) {
         this.context = context;
+        setElevation(DimmenUtils.dip2px(context, 4));
         SIZE_8 = DimmenUtils.dip2px(context, 8);
         setOrientation(VERTICAL);
         COLOR_TAB = ContextCompat.getColor(context, R.color.bg_primary);
@@ -248,14 +249,11 @@ public class SmileyView extends LinearLayout
             final int finalI = i;
             if (i == 0) itemView.setBackgroundColor(COLOR_TAB_SEL);
 
-            itemView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    switchTab(finalI);
-                    switchDot(0);
-                    int pageStart = getPageCountBefore(finalI);
-                    viewPager.setCurrentItem(pageStart, true);
-                }
+            itemView.setOnClickListener(v -> {
+                switchTab(finalI);
+                switchDot(0);
+                int pageStart = getPageCountBefore(finalI);
+                viewPager.setCurrentItem(pageStart, true);
             });
 
             tabContainer.addView(itemView, params);
@@ -270,12 +268,7 @@ public class SmileyView extends LinearLayout
         delIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
         delIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.btn_back_space));
         delIcon.setClickable(true);
-        delIcon.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                emotionInputHandler.backSpace();
-            }
-        });
+        delIcon.setOnClickListener(v1 -> emotionInputHandler.backSpace());
         tabContainer.addView(delIcon, params);
     }
 
@@ -309,7 +302,7 @@ public class SmileyView extends LinearLayout
 
         @Override
         public Object instantiateItem(ViewGroup container, final int page) {
-            EmotionGridView v = (EmotionGridView) container.findViewWithTag(page);
+            EmotionGridView v = container.findViewWithTag(page);
             if (v == null) {
                 final int tabpos = pageToTabPos(page);
                 int pageStart = page - getPageCountBefore(tabpos);
