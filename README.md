@@ -1,5 +1,8 @@
 ## 西电睿思手机客户端
-西安电子科技大学校园睿思论坛客户端。本客户端在校园网和校外网环境下均可使用。如有bug,建议等欢迎反馈
+西安电子科技大学校园睿思论坛Android客户端。    
+支持夜间模式，支持主题，如有bug，或者新功能建议欢迎提出Issue .   
+Ios版见[Ruisi_Ios](https://github.com/freedom10086/Ruisi_Ios)
+
 ### 更新地址:
 
 #### 论坛下载
@@ -10,14 +13,17 @@
 [酷安](https://www.coolapk.com/apk/me.yluo.ruisiapp)
 
 ### 软件截图
-![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/1.jpg)
-![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/2.jpg)
-![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/3.jpg)
-![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/4.jpg)
-![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/5.jpg)
-![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/6.jpg)
-![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/7.jpg)
-![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/8.jpg)
+![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/1.jpeg)
+![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/2.jpeg)
+
+![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/4.png)
+![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/5.jpeg)
+
+![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/6.jpeg)
+![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/7.jpeg)
+
+![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/8.jpeg)
+![image](https://github.com/freedom10086/Ruisi/blob/master/screenshots/9.jpeg)
 
 ### 意见和反馈
 - freedom10086 <2351386755@qq.com>
