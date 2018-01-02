@@ -29,6 +29,7 @@ public abstract class ResponseHandler {
     }
 
     public void onStart() {
+
     }
 
     public void onProgress(int progress, long totalBytes) {
@@ -47,16 +48,6 @@ public abstract class ResponseHandler {
 
     }
 
-    void processResponse(HttpURLConnection connection) throws IOException {
-        int responseCode = connection.getResponseCode();
-        long contentLength = connection.getContentLength();
-        if (responseCode >= 200 && responseCode < 303) {
-            byte[] responseContent = readFrom(connection.getInputStream(), contentLength);
-            sendSuccessMessage(responseContent);
-        } else {
-            sendFailureMessage(new Throwable("responseCode is " + responseCode));
-        }
-    }
 
     private void handleMessage(Message msg) {
         switch (msg.what) {
@@ -84,20 +75,6 @@ public abstract class ResponseHandler {
         }
     }
 
-    private byte[] readFrom(InputStream inputStream, long length) throws IOException {
-        if (inputStream == null) {
-            return new byte[0];
-        }
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        byte[] buffer = new byte[4096];
-        int bytesRead;
-        while ((bytesRead = inputStream.read(buffer, 0, buffer.length)) != -1) {
-            os.write(buffer, 0, bytesRead);
-        }
-        os.flush();
-        os.close();
-        return os.toByteArray();
-    }
 
     final void sendStartDownloadMessage(String fileName) {
         handleMessage(obtainMessage(MSG_START_DOWN, fileName));
@@ -125,6 +102,32 @@ public abstract class ResponseHandler {
 
     private Message obtainMessage(int responseMessageId, Object responseMessageData) {
         return Message.obtain(handler, responseMessageId, responseMessageData);
+    }
+
+    private byte[] readFrom(InputStream inputStream, long length) throws IOException {
+        if (inputStream == null) {
+            return new byte[0];
+        }
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        byte[] buffer = new byte[4096];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer, 0, buffer.length)) != -1) {
+            os.write(buffer, 0, bytesRead);
+        }
+        os.flush();
+        os.close();
+        return os.toByteArray();
+    }
+
+    void processResponse(HttpURLConnection connection) throws IOException {
+        int responseCode = connection.getResponseCode();
+        long contentLength = connection.getContentLength();
+        if (responseCode >= 200 && responseCode < 303) {
+            byte[] responseContent = readFrom(connection.getInputStream(), contentLength);
+            sendSuccessMessage(responseContent);
+        } else {
+            sendFailureMessage(new Throwable("responseCode is " + responseCode));
+        }
     }
 
     /**

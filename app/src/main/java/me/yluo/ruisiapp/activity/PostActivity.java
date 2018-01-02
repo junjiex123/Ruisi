@@ -353,6 +353,14 @@ public class PostActivity extends BaseActivity
             Document doc = Jsoup.parse(htmlData.substring(
                     htmlData.indexOf("<body"),
                     htmlData.lastIndexOf("</body>") + 7));
+
+            Elements as = doc.select(".footer a");
+            if (as.size() > 1) {
+                String hash = GetId.getHash(as.get(1).attr("href"));
+                Log.v("hash", "hash is " + hash);
+                App.setHash(PostActivity.this, hash);
+            }
+
             //判断错误
             Elements elements = doc.select(".postlist");
             if (elements.size() <= 0) {
