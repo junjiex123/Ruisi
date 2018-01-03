@@ -297,7 +297,6 @@ public class LoginActivity extends BaseActivity {
         String uid = GetId.getId("uid=", res.substring(i));
         int indexhash = res.indexOf("formhash");
         String hash = res.substring(indexhash + 9, indexhash + 17);
-
         editor.putString(App.USER_UID_KEY, uid);
         editor.putString(App.USER_NAME_KEY, name);
         editor.putString(App.USER_GRADE_KEY, grade);
@@ -311,6 +310,7 @@ public class LoginActivity extends BaseActivity {
         //设置返回数据
         dialog.dismiss();
         LoginActivity.this.setResult(RESULT_OK, intent);
+
         finish();
     }
 

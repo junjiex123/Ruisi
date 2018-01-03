@@ -2,15 +2,17 @@ package me.yluo.ruisiapp.utils;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import me.yluo.ruisiapp.App;
+import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.activity.BaseActivity;
 import me.yluo.ruisiapp.activity.LoginActivity;
 import me.yluo.ruisiapp.activity.NewPostActivity;
@@ -57,13 +59,10 @@ public class LinkClickHandler {
                 new AlertDialog.Builder(context).
                         setTitle("权限错误").
                         setMessage("没有写入内部存储的权限,无法下载").
-                        setPositiveButton("授权", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ActivityCompat.requestPermissions((BaseActivity) context,
-                                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
-                                //请求结果在onRequestPermissionsResult返回
-                            }
+                        setPositiveButton("授权", (dialog, which) -> {
+                            ActivityCompat.requestPermissions((BaseActivity) context,
+                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                            //请求结果在onRequestPermissionsResult返回
                         })
                         .setNegativeButton("取消", null)
                         .setCancelable(true)
@@ -85,18 +84,29 @@ public class LinkClickHandler {
                         .create()
                         .show();
             }
-        } else if (url.startsWith(VOTE_URL)) {
+        } else if (url.startsWith(VOTE_URL)) { //投票
             if (context instanceof PostActivity) {
                 PostActivity a = (PostActivity) context;
                 a.showVoteView();
             }
 
-
         } else {
             if (!url.startsWith("http")) {
                 url = App.getBaseUrl() + url;
             }
-            IntentUtils.openBroswer(context, url);
+
+
+            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+            builder.setToolbarColor(ContextCompat.getColor(context, R.color.colorPrimary));
+            CustomTabsIntent customTabsIntent = builder.build();
+            String packageName = TabsHelper.getPackageNameToUse(context);
+            if (packageName == null) { // 不支持 chrometabs
+                Log.d("link click","not support chrome tabs");
+                IntentUtils.openBroswer(context, url);
+            } else {
+                customTabsIntent.intent.setPackage(packageName);
+                customTabsIntent.launchUrl(context, Uri.parse(url));
+            }
         }
     }
 }

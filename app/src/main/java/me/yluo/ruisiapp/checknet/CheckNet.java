@@ -40,13 +40,13 @@ public class CheckNet {
                 setData(false);
             } else {
                 try {
-                    Connection con1 = Jsoup.connect("http://202.117.119.1/portal.php").timeout(1500);
+                    Connection con1 = Jsoup.connect("http://rs.xidian.edu.cn/forum.php?mod=guide&view=hot&mobile=2").timeout(1500);
                     if (con1.get().title().contains("西电睿思")) {
                         checkNetResponse.sendFinishMessage(1, "ok");
                         setData(true);
                     }
                 } catch (Exception e) {
-                    Connection con2 = Jsoup.connect("http://bbs.rs.xidian.me/forum.php?mod=guide&view=hot&mobile=2").timeout(1500);
+                    Connection con2 = Jsoup.connect("http://rsbbs.xidian.edu.cn/forum.php?mod=guide&view=hot&mobile=2").timeout(1500);
                     try {
                         if (con2.get().title().contains("西电睿思")) {
                             checkNetResponse.sendFinishMessage(2, "ok");

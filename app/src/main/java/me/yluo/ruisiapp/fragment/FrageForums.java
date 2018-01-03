@@ -30,6 +30,8 @@ import me.yluo.ruisiapp.activity.UserDetailActivity;
 import me.yluo.ruisiapp.adapter.ForumsAdapter;
 import me.yluo.ruisiapp.model.Category;
 import me.yluo.ruisiapp.model.WaterData;
+import me.yluo.ruisiapp.myhttp.HttpUtil;
+import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.myhttp.SyncHttpClient;
 import me.yluo.ruisiapp.utils.GetId;
 import me.yluo.ruisiapp.utils.RuisUtils;
@@ -91,8 +93,9 @@ public class FrageForums extends BaseLazyFragment implements View.OnClickListene
 
     @Override
     public void onUserVisible() {
-        Log.d("=========", lastLoginState+"");
+        Log.d("=========", lastLoginState + "");
         Log.d("=========", App.ISLOGIN(getActivity()) + "");
+        Log.d("=========", "is school net:" + App.IS_SCHOOL_NET);
 
         if (lastLoginState != App.ISLOGIN(getActivity())) {
             lastLoginState = !lastLoginState;
@@ -126,8 +129,36 @@ public class FrageForums extends BaseLazyFragment implements View.OnClickListene
 
     void initForums(boolean loginstate) {
         new GetForumList().execute(loginstate);
-        if (App.IS_SCHOOL_NET)
-            new GetWaterBTask().execute();
+        if (App.IS_SCHOOL_NET) {
+
+            String url = "http://rs.xidian.edu.cn/forum.php";
+            HttpUtil.get(url, new ResponseHandler() {
+                @Override
+                public void onSuccess(byte[] response) {
+                    List<WaterData> temps = new ArrayList<>();
+                    Document doc = Jsoup.parse(new String(response));
+                    Elements waters = doc.select("#portal_block_317").select("li");
+                    for (Element e : waters) {
+                        Elements es = e.select("p").select("a[href^=home.php?mod=space]");
+                        String uid = GetId.getId("uid=", es.attr("href"));
+                        String imgSrc = e.select("img").attr("src");
+                        String uname = es.text();
+                        int num = 0;
+                        if (e.select("p").size() > 1) {
+                            if (e.select("p").get(1).text().contains("帖数")) {
+                                num = GetId.getNumber(e.select("p").get(1).text());
+                            }
+                        }
+                        temps.add(new WaterData(uname, uid, num, imgSrc));
+                        if (temps.size() >= 16) break;
+                    }
+
+                    if (temps.size() > 0)
+                        adapter.setWaterData(temps);
+                }
+            });
+        }
+
     }
 
 
@@ -168,48 +199,6 @@ public class FrageForums extends BaseLazyFragment implements View.OnClickListene
 
             adapter.notifyDataSetChanged();
             adapter.setDatas(forumDatas);
-        }
-    }
-
-    //获得水神版
-    private class GetWaterBTask extends AsyncTask<Void, Void, List<WaterData>> {
-        @Override
-        protected List<WaterData> doInBackground(Void... voids) {
-            List<WaterData> temps = new ArrayList<>();
-            String url = "http://rs.xidian.edu.cn/forum.php";
-            Document doc;
-            try {
-                doc = Jsoup.connect(url).userAgent(SyncHttpClient.DEFAULT_USER_AGENT).get();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return temps;
-            }
-
-            Elements waters = doc.select("#portal_block_317").select("li");
-            for (Element e : waters) {
-                Elements es = e.select("p").select("a[href^=home.php?mod=space]");
-                String uid = GetId.getId("uid=", es.attr("href"));
-                String imgSrc = e.select("img").attr("src");
-                String uname = es.text();
-                int num = 0;
-                if (e.select("p").size() > 1) {
-                    if (e.select("p").get(1).text().contains("帖数")) {
-                        num = GetId.getNumber(e.select("p").get(1).text());
-                    }
-                }
-                temps.add(new WaterData(uname, uid, num, imgSrc));
-                if (temps.size() >= 16) break;
-            }
-            return temps;
-        }
-
-        @Override
-        protected void onPostExecute(List<WaterData> data) {
-            super.onPostExecute(data);
-            if (data.size() == 0) {
-                return;
-            }
-            adapter.setWaterData(data);
         }
     }
 }

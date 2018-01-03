@@ -71,8 +71,8 @@ public class PostActivity extends BaseActivity
     private RecyclerView topicList;
     //上一次回复时间
     private long replyTime = 0;
-    private int page_now = 1;
-    private int page_sum = 1;
+    private int currentPage = 1;
+    private int sumPage = 1;
     private int edit_pos = -1;
     private boolean isGetTitle = false;
     private boolean enableLoadMore = false;
@@ -171,7 +171,7 @@ public class PostActivity extends BaseActivity
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
-                if (pos + 1 != page_now) {
+                if (pos + 1 != currentPage) {
                     jumpPage(pos + 1);
                 }
             }
@@ -195,9 +195,9 @@ public class PostActivity extends BaseActivity
         //加载更多被电击
         if (enableLoadMore) {
             enableLoadMore = false;
-            int page = page_now;
-            if (page_now < page_sum) {
-                page = page_now + 1;
+            int page = currentPage;
+            if (currentPage < sumPage) {
+                page = currentPage + 1;
             }
             getArticleData(page);
         }
@@ -289,7 +289,7 @@ public class PostActivity extends BaseActivity
             } else if (requestCode == 20) {
                 //回复层主返回
                 replyTime = System.currentTimeMillis();
-                if (page_now == page_sum) {
+                if (currentPage == sumPage) {
                     onLoadMore();
                 }
             }
@@ -311,7 +311,7 @@ public class PostActivity extends BaseActivity
                 }
                 break;
             case R.id.btn_link:
-                String url = UrlUtils.getSingleArticleUrl(Tid, page_now, false);
+                String url = UrlUtils.getSingleArticleUrl(Tid, currentPage, false);
                 ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 cm.setPrimaryClip(ClipData.newPlainText(null, url));
                 Toast.makeText(this, "已复制链接到剪切板", Toast.LENGTH_SHORT).show();
@@ -319,7 +319,7 @@ public class PostActivity extends BaseActivity
             case R.id.btn_share:
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_TEXT, Title + UrlUtils.getSingleArticleUrl(Tid, page_now, App.IS_SCHOOL_NET));
+                shareIntent.putExtra(Intent.EXTRA_TEXT, Title + UrlUtils.getSingleArticleUrl(Tid, currentPage, App.IS_SCHOOL_NET));
                 shareIntent.setType("text/plain");
                 //设置分享列表的标题，并且每次都显示分享列表
                 startActivity(Intent.createChooser(shareIntent, "分享到文章到:"));
@@ -353,6 +353,14 @@ public class PostActivity extends BaseActivity
             Document doc = Jsoup.parse(htmlData.substring(
                     htmlData.indexOf("<body"),
                     htmlData.lastIndexOf("</body>") + 7));
+
+            Elements as = doc.select(".footer a");
+            if (as.size() > 1) {
+                String hash = GetId.getHash(as.get(1).attr("href"));
+                Log.v("hash", "hash is " + hash);
+                App.setHash(PostActivity.this, hash);
+            }
+
             //判断错误
             Elements elements = doc.select(".postlist");
             if (elements.size() <= 0) {
@@ -376,8 +384,8 @@ public class PostActivity extends BaseActivity
                 if (doc.select(".pg").text().length() > 0) {
                     pageLoad = GetId.getNumber(doc.select(".pg").select("strong").text());
                     int n = GetId.getNumber(doc.select(".pg").select("span").attr("title"));
-                    if (n > 0 && n > page_sum) {
-                        page_sum = n;
+                    if (n > 0 && n > sumPage) {
+                        sumPage = n;
                     }
                 }
             }
@@ -482,9 +490,9 @@ public class PostActivity extends BaseActivity
                 setTitle("帖子正文");
             }
 
-            if (pageLoad != page_now) {
-                page_now = pageLoad;
-                spinner.setSelection(page_now - 1);
+            if (pageLoad != currentPage) {
+                currentPage = pageLoad;
+                spinner.setSelection(currentPage - 1);
             }
 
             if (!TextUtils.isEmpty(errorText)) {
@@ -528,7 +536,7 @@ public class PostActivity extends BaseActivity
                 }
             }
 
-            if (page_now < page_sum) {
+            if (currentPage < sumPage) {
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
             } else {
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
@@ -559,13 +567,13 @@ public class PostActivity extends BaseActivity
             }
 
             int size = pageSpinnerDatas.size();
-            if (page_sum != size) {
+            if (sumPage != size) {
                 pageSpinnerDatas.clear();
-                for (int i = 1; i <= page_sum; i++) {
+                for (int i = 1; i <= sumPage; i++) {
                     pageSpinnerDatas.add("第" + i + "页");
                 }
                 spinnerAdapter.notifyDataSetChanged();
-                spinner.setSelection(page_now - 1);
+                spinner.setSelection(currentPage - 1);
             }
         }
 
@@ -701,9 +709,9 @@ public class PostActivity extends BaseActivity
                 replyTime = System.currentTimeMillis();
                 KeyboardUtil.hideKeyboard(input);
                 rootView.hideSmileyContainer();
-                if (page_sum == 1) {
+                if (sumPage == 1) {
                     refresh();
-                } else if (page_now == page_sum) {
+                } else if (currentPage == sumPage) {
                     onLoadMore();
                 }
             } else if (res.contains("您两次发表间隔")) {

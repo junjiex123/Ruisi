@@ -188,7 +188,7 @@ public class HomeActivity extends BaseActivity
             });
             lastCheckMsgTime = System.currentTimeMillis();
             try {
-                Thread.sleep(100);
+                Thread.sleep(300);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -255,6 +255,13 @@ public class HomeActivity extends BaseActivity
      * check unread message
      */
     private void dealMessage(boolean isReply, String res) {
+        int hashIndex = res.indexOf("formhash");
+        if (hashIndex > 0) {
+            String hash = res.substring(hashIndex + 9, hashIndex + 17);
+            Log.v("hash", hash);
+            App.setHash(HomeActivity.this, hash);
+        }
+
         Document document = Jsoup.parse(res);
         //回复
         if (isReply) {

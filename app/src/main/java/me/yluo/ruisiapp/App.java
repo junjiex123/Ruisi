@@ -18,7 +18,7 @@ import me.yluo.ruisiapp.myhttp.HttpUtil;
  */
 public class App extends Application {
 
-    private Context context;
+    public static Context context;
     private NetworkReceiver receiver = new NetworkReceiver();
 
     @Override
@@ -102,6 +102,11 @@ public class App extends Application {
         editor.apply();
     }
 
+    public static String getHash(Context context) {
+        SharedPreferences shp = context.getSharedPreferences(MY_SHP_NAME, MODE_PRIVATE);
+        return shp.getString(HASH_KEY,"");
+    }
+
     public static String getName(Context context) {
         SharedPreferences shp = context.getSharedPreferences(MY_SHP_NAME, MODE_PRIVATE);
         return shp.getString(USER_NAME_KEY, "");
@@ -111,7 +116,6 @@ public class App extends Application {
         SharedPreferences shp = context.getSharedPreferences(MY_SHP_NAME, MODE_PRIVATE);
         return shp.getString(USER_GRADE_KEY, "");
     }
-
 
     public static int getCustomTheme(Context context) {
         SharedPreferences shp = context.getSharedPreferences(MY_SHP_NAME, MODE_PRIVATE);

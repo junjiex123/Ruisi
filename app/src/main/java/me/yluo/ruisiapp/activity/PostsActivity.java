@@ -56,7 +56,7 @@ public class PostsActivity extends BaseActivity implements
     RecyclerView mRecyclerView;
     private View myToolbar;
     //当前页数
-    int CurrentPage = 1;
+    int currentPage = 1;
     boolean isEnableLoadMore = false;
     RecyclerView.LayoutManager mLayoutManager;
     private TabLayout tab;
@@ -148,7 +148,7 @@ public class PostsActivity extends BaseActivity implements
     @Override
     public void onLoadMore() {
         if (isEnableLoadMore) {
-            CurrentPage++;
+            currentPage++;
             isEnableLoadMore = false;
             getData();
         }
@@ -204,16 +204,16 @@ public class PostsActivity extends BaseActivity implements
     private void refresh() {
         btnRefresh.hide();
         refreshLayout.setRefreshing(true);
-        CurrentPage = 1;
+        currentPage = 1;
         getData();
     }
 
 
     private void getData() {
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
-        String url = UrlUtils.getArticleListUrl(FID, CurrentPage, true);
+        String url = UrlUtils.getArticleListUrl(FID, currentPage, true);
         if (!App.IS_SCHOOL_NET) {
-            url = url + UrlUtils.getArticleListUrl(FID, CurrentPage, false);
+            url = url + UrlUtils.getArticleListUrl(FID, currentPage, false);
         }
         url = url + orders[currentTabindex];
         HttpUtil.get(url, new ResponseHandler() {
@@ -397,7 +397,7 @@ public class PostsActivity extends BaseActivity implements
 
     private void getDataCompete(List<ArticleListData> dataset) {
         btnRefresh.show();
-        if (CurrentPage == 1) {
+        if (currentPage == 1) {
             datas.clear();
             adapter.notifyDataSetChanged();
         }

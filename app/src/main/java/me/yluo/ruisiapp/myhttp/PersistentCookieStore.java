@@ -48,12 +48,12 @@ class PersistentCookieStore {
     }
 
     String getCookie() {
-        String fulcookie = "";
+        StringBuilder fulcookie = new StringBuilder();
         for (Map.Entry<String, String> entry : listCookie.entrySet()) {
             String temp = entry.getKey() + "=" + entry.getValue() + ";";
-            fulcookie += temp;
+            fulcookie.append(temp);
         }
-        return fulcookie;
+        return fulcookie.toString();
     }
 
 
