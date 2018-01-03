@@ -27,6 +27,7 @@ import me.yluo.ruisiapp.model.ListType;
 import me.yluo.ruisiapp.model.MessageData;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
+import me.yluo.ruisiapp.widget.BatchRadioButton;
 import me.yluo.ruisiapp.widget.MyListDivider;
 
 //消息页面 回复/提到/AT
@@ -41,32 +42,26 @@ public class FrageMessage extends BaseLazyFragment {
     int lastReplyId = 0, lastAtId = 0;
     int currReplyId = 1, currAtId = 1;
     private boolean lastLoginState = false;
-    private boolean isHavePm, isHaveAt;
+    private boolean haveReply, isHavePm, isHaveAt;
+    private BatchRadioButton tab1, tab2, tab3;
 
-    public static FrageMessage newInstance(boolean isHaveReply, boolean isHavePm) {
-        Bundle args = new Bundle();
-        args.putBoolean("isHaveReply", isHaveReply);
-        args.putBoolean("isHavePm", isHavePm);
-        FrageMessage fragment = new FrageMessage();
-        fragment.setArguments(args);
-        return fragment;
+    public static FrageMessage newInstance() {
+        return new FrageMessage();
     }
 
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle bundle = getArguments();//从activity传过来的Bundle
-        if (bundle != null) {
-            boolean isHaveReply = bundle.getBoolean("isHaveReply", false);
-            isHavePm = bundle.getBoolean("isHavePm", false);
-        }
+    public void updateNotifiCations(boolean haveReply, boolean havePm, boolean haveAt) {
+        this.haveReply = haveReply;
+        this.isHavePm = havePm;
+        this.isHaveAt = haveAt;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         messageList = mRootView.findViewById(R.id.recycler_view);
+        tab1 = mRootView.findViewById(R.id.btn_1);
+        tab2 = mRootView.findViewById(R.id.btn_2);
+        tab3 = mRootView.findViewById(R.id.btn_3);
         //设置可以滑出底栏
         messageList.setClipToPadding(false);
         messageList.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.bottombarHeight));
@@ -101,6 +96,7 @@ public class FrageMessage extends BaseLazyFragment {
 
     @Override
     public void onFirstUserVisible() {
+        updateBatch();
         getData(false);
     }
 
@@ -109,10 +105,17 @@ public class FrageMessage extends BaseLazyFragment {
         if (lastLoginState != App.ISLOGIN(getActivity())) {
             getData(true);
             lastLoginState = !lastLoginState;
-            if(lastLoginState){
+            if (lastLoginState) {
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
             }
         }
+        updateBatch();
+    }
+
+    private void updateBatch() {
+        tab1.setState(haveReply);
+        tab2.setState(isHavePm);
+        tab3.setState(isHaveAt);
     }
 
     @Override

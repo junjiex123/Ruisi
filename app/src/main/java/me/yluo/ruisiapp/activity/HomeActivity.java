@@ -94,7 +94,7 @@ public class HomeActivity extends BaseActivity
         viewPager.addOnPageChangeListener(this);
         fragments.add(new FrageForums());
         fragments.add(new FrageHotsNews());
-        fragments.add(FrageMessage.newInstance(ishaveReply, ishavePm));
+        fragments.add(FrageMessage.newInstance());
         fragments.add(new FragmentMy());
         MainPageAdapter adapter = new MainPageAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(adapter);
@@ -103,6 +103,11 @@ public class HomeActivity extends BaseActivity
     @Override
     public void tabClicked(View v, int position, boolean isChange) {
         if (isChange) {
+            if (fragments.get(position) instanceof FrageMessage) {
+                FrageMessage m = (FrageMessage) fragments.get(position);
+                // TODO
+                m.updateNotifiCations(ishaveReply, ishavePm, false);
+            }
             switchTab(position);
         } else {
             fragments.get(position).ScrollToTop();

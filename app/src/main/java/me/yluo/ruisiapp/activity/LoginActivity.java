@@ -1,7 +1,9 @@
 package me.yluo.ruisiapp.activity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import android.widget.Spinner;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +56,12 @@ public class LoginActivity extends BaseActivity {
     private int answerSelect = 0;
     private ProgressDialog dialog;
     private TextInputLayout usernameTextInput;
+
+    // 验证码相关
+    private boolean haveValid = false;
+    private String seccodehash = null;
+    private String validValue = null; //验证码输入值
+    private String validImageSrc = null; //验证码图片地址
 
     public static void open(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -156,6 +165,47 @@ public class LoginActivity extends BaseActivity {
                 }
             }
         });
+
+        loadData();
+    }
+
+    private void loadData() {
+        String url = UrlUtils.getLoginUrl(false);
+        HttpUtil.get(url, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                Document doc = Jsoup.parse(res);
+
+                //判断是否有验证码
+                Element element = doc.select("#loginform .sec_code").first();
+                if (element != null) {
+                    haveValid = true;
+                    seccodehash = element.select("input[name=seccodehash]").attr("value");
+                    validImageSrc = element.select("img").attr("src");
+                }
+
+                loginUrl = doc.select("form#loginform").attr("action");
+                String hash = doc.select("input#formhash").attr("value");
+                App.setHash(LoginActivity.this, hash);
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                AlertDialog dialog = new AlertDialog.Builder(LoginActivity.this)
+                        .setTitle("加载失败")
+                        .setMessage("是否重新加载")
+                        .setPositiveButton("重新加载", (dialogInterface, i) -> loadData())
+                        .setNegativeButton("关闭", (dialogInterface, i) -> finish())
+                        .create();
+                dialog.show();
+            }
+        });
+    }
+
+    //显示填写验证码框子
+    private void showInputValidDialog() {
+        // TODO
     }
 
     private void startLogin() {
@@ -165,49 +215,47 @@ public class LoginActivity extends BaseActivity {
 
         final String username = edUsername.getText().toString().trim();
         final String passNo = edPassword.getText().toString().trim();
-        String url = UrlUtils.getLoginUrl(false);
-        HttpUtil.get(url, new ResponseHandler() {
+
+        Map<String, String> params = new HashMap<>();
+        params.put("fastloginfield", "username");
+        params.put("cookietime", "2592000");
+        params.put("username", username);
+        params.put("password", passNo);
+        params.put("questionid", answerSelect + "");
+
+        if (haveValid) { //是否有验证码
+            params.put("seccodehash", seccodehash);
+            params.put("seccodeverify", validValue);
+        }
+
+        if (answerSelect == 0) {
+            params.put("answer", "");
+        } else {
+            params.put("answer", edAnswer.getText().toString());
+        }
+
+        HttpUtil.post(loginUrl, params, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                Document doc = Jsoup.parse(res);
-                loginUrl = doc.select("form#loginform").attr("action");
-                Map<String, String> params = new HashMap<>();
-                String hash = doc.select("input#formhash").attr("value");
-                App.setHash(LoginActivity.this, hash);
-                params.put("fastloginfield", "username");
-                params.put("cookietime", "2592000");
-                params.put("username", username);
-                params.put("password", passNo);
-                params.put("questionid", answerSelect + "");
-                if (answerSelect == 0) {
-                    params.put("answer", "");
+                if (res.contains("欢迎您回来")) {
+                    loginOk(res);
+                } else if (res.contains("class=\"jump_c\"")) {
+                    int start = res.indexOf("<p>", res.indexOf("class=\"jump_c\"")) + 3;
+                    int end = res.indexOf("</p>", start);
+                    String reason = res.substring(start, end);
+                    networkErr(reason);
+                    if ("抱歉，验证码填写错误".equals(reason)) {
+                        showInputValidDialog();
+                    }
                 } else {
-                    params.put("answer", edAnswer.getText().toString());
+                    passwordOrUsernameErr();
                 }
-
-                HttpUtil.post(loginUrl, params, new ResponseHandler() {
-                    @Override
-                    public void onSuccess(byte[] response) {
-                        String res = new String(response);
-                        if (res.contains("欢迎您回来")) {
-                            loginOk(res);
-                        } else {
-                            passwordOrUsernameErr();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Throwable e) {
-                        networkErr("网络异常");
-                    }
-                });
             }
 
             @Override
             public void onFailure(Throwable e) {
-                networkErr("网络异常！！！");
-                dialog.dismiss();
+                networkErr("网络异常");
             }
         });
     }
