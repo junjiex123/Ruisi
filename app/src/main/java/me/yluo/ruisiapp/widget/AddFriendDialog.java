@@ -53,15 +53,13 @@ public class AddFriendDialog extends DialogFragment {
         builder.setView(view);
 
         builder.setTitle("添加好友");
-        content = (EditText) view.findViewById(R.id.message);
-        TextView textView = (TextView) view.findViewById(R.id.user_name);
+        content = view.findViewById(R.id.message);
+        TextView textView = view.findViewById(R.id.user_name);
         textView.setText(userName);
-        TextView btn_cancel = (TextView) view.findViewById(R.id.btn_cancel);
-        TextView btn_send = (TextView) view.findViewById(R.id.btn_send);
-        ImageView imageView = (ImageView) view.findViewById(R.id.logo);
+        ImageView imageView = view.findViewById(R.id.logo);
         Picasso.with(getActivity()).load(userImage).placeholder(R.drawable.image_placeholder).into(imageView);
 
-        btn_send.setOnClickListener(view1 -> {
+        view.findViewById(R.id.btn_send).setOnClickListener(view1 -> {
             if (checkInput()) {
                 dialogListener.OnAddFriendOkClick(
                         content.getText().toString(),
@@ -70,7 +68,7 @@ public class AddFriendDialog extends DialogFragment {
             }
         });
 
-        btn_cancel.setOnClickListener(view12 -> dismiss());
+        view.findViewById(R.id.btn_cancel).setOnClickListener(view12 -> dismiss());
 
         return builder.create();
     }

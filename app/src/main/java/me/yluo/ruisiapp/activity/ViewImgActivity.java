@@ -1,6 +1,5 @@
 package me.yluo.ruisiapp.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -31,7 +30,6 @@ import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.utils.GetId;
-import me.yluo.ruisiapp.utils.UrlUtils;
 import me.yluo.ruisiapp.widget.ScaleImageView;
 
 public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageChangeListener {

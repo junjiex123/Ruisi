@@ -14,14 +14,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-class PersistentCookieStore {
+public class PersistentCookieStore {
 
     private static final String COOKIE_PREFS = "Rs_Cookies";
     private final SharedPreferences cookiePrefs;
     private Map<String, String> listCookie = new HashMap<>();
 
 
-    PersistentCookieStore(Context context) {
+    public PersistentCookieStore(Context context) {
         cookiePrefs = context.getSharedPreferences(COOKIE_PREFS, 0);
         Map<String, ?> allContent = cookiePrefs.getAll();
 
@@ -31,7 +31,7 @@ class PersistentCookieStore {
         }
     }
 
-    void addCookie(String cookies) {
+    public void addCookie(String cookies) {
         //cookies持久化到本地
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
         for (String tmp : cookies.split(";")) {
@@ -47,7 +47,7 @@ class PersistentCookieStore {
         prefsWriter.apply();
     }
 
-    String getCookie() {
+    public String getCookie() {
         StringBuilder fulcookie = new StringBuilder();
         for (Map.Entry<String, String> entry : listCookie.entrySet()) {
             String temp = entry.getKey() + "=" + entry.getValue() + ";";

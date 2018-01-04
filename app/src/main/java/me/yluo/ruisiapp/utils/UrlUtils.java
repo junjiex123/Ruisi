@@ -38,15 +38,8 @@ public class UrlUtils {
         }
     }
 
-    public static String getLoginUrl(boolean isInner) {
-        String url = "member.php?mod=logging&action=login";
-        if (isInner) {
-            return url;
-        } else {
-            url += "&mobile=2";
-        }
-
-        return url;
+    public static String getLoginUrl() {
+        return "member.php?mod=logging&action=login&mobile=2";
     }
 
     public static String getAvaterurls(String urlUid) {

@@ -44,7 +44,7 @@ public class SyncHttpClient {
         this.connectionTimeout = connectionTimeout;
     }
 
-    public void setReadTimeout(int timeout){
+    public void setReadTimeout(int timeout) {
         this.dataRetrievalTimeout = timeout;
     }
 

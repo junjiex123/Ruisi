@@ -8,7 +8,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,7 +82,7 @@ public class FrageMessage extends BaseLazyFragment implements LoadMoreListener.O
             adapter.changeLoadMoreState(BaseAdapter.STATE_NEED_LOGIN);
         }
         messageList.setAdapter(adapter);
-        refreshLayout.setOnRefreshListener(() -> getData(true));
+        refreshLayout.setOnRefreshListener(() -> pullRefresh());
         RadioGroup swictchMes = mRootView.findViewById(R.id.btn_change);
 
         swictchMes.setOnCheckedChangeListener((radioGroup, id) -> {
@@ -100,6 +99,10 @@ public class FrageMessage extends BaseLazyFragment implements LoadMoreListener.O
             }
         });
         return mRootView;
+    }
+
+    private void pullRefresh() {
+        getData(true);
     }
 
     @Override
@@ -210,6 +213,19 @@ public class FrageMessage extends BaseLazyFragment implements LoadMoreListener.O
         }
         refreshLayout.postDelayed(() -> refreshLayout.setRefreshing(false), 500);
         enableLoadMore = true;
+
+        boolean haveUnRead = false;
+        for (MessageData d : datas) {
+            if (!d.isRead()) {
+                haveUnRead = true;
+                break;
+            }
+        }
+
+        if (index == 0) haveReply = haveUnRead;
+        if (index == 1) isHavePm = haveUnRead;
+        if (index == 2) isHaveAt = haveUnRead;
+        updateBatch();
     }
 
     @Override

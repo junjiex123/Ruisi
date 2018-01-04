@@ -50,8 +50,8 @@ public class BatchRadioButton extends android.support.v7.widget.AppCompatRadioBu
         super.onDraw(canvas);
 
         if (haveBatch) {
-            int centx = (int) (getWidth() - BADGE_SIZE * 1.5);
-            int centy = (int) (BADGE_SIZE * 1.5);
+            int centx = getWidth() - BADGE_SIZE * 2;
+            int centy = BADGE_SIZE * 2;
             canvas.drawCircle(centx, centy, BADGE_SIZE, paint_badge);
         }
     }

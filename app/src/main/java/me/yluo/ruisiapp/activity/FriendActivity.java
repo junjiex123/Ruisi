@@ -3,7 +3,6 @@ package me.yluo.ruisiapp.activity;
 import android.animation.Animator;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;

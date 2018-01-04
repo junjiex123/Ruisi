@@ -129,7 +129,7 @@ public class LaunchActivity extends BaseActivity implements View.OnClickListener
             mHandler.removeCallbacks(finishRunable);
             ActivityOptionsCompat compat = ActivityOptionsCompat.makeCustomAnimation(this, R.anim.fade_in, R.anim.fade_out);
             ActivityCompat.startActivity(this,new Intent(this, HomeActivity.class), compat.toBundle());
-            new Handler().postDelayed(() -> finish(),300);
+            new Handler().postDelayed(() -> finish(),305);
         }
     }
 

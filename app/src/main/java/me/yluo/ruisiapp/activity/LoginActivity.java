@@ -3,10 +3,10 @@ package me.yluo.ruisiapp.activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -34,6 +34,7 @@ import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.utils.GetId;
 import me.yluo.ruisiapp.utils.UrlUtils;
+import me.yluo.ruisiapp.widget.InputValidDialog;
 
 
 /**
@@ -43,9 +44,9 @@ import me.yluo.ruisiapp.utils.UrlUtils;
  * <p>
  * 登陆activity
  */
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements InputValidDialog.OnInputValidListener {
 
-    private EditText edUsername, edPassword;
+    private TextInputEditText edUsername, edPassword;
     private EditText edAnswer;
     private CheckBox remPassword;
     private View btnLogin;
@@ -170,7 +171,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void loadData() {
-        String url = UrlUtils.getLoginUrl(false);
+        String url = UrlUtils.getLoginUrl();
         HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -205,10 +206,16 @@ public class LoginActivity extends BaseActivity {
 
     //显示填写验证码框子
     private void showInputValidDialog() {
-        // TODO
+        InputValidDialog dialog = InputValidDialog.newInstance(this, seccodehash, validImageSrc);
+        dialog.show(getFragmentManager(), "valid");
     }
 
     private void startLogin() {
+        if (haveValid && TextUtils.isEmpty(validValue)) {
+            showInputValidDialog();
+            return;
+        }
+
         dialog = new ProgressDialog(this);
         dialog.setMessage("登陆中，请稍后......");
         dialog.show();
@@ -256,6 +263,11 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onFailure(Throwable e) {
                 networkErr("网络异常");
+            }
+
+            @Override
+            public void onFinish() {
+                dialog.dismiss();
             }
         });
     }
@@ -308,21 +320,25 @@ public class LoginActivity extends BaseActivity {
         Intent intent = new Intent();
         intent.putExtra("status", "ok");
         //设置返回数据
-        dialog.dismiss();
         LoginActivity.this.setResult(RESULT_OK, intent);
 
         finish();
     }
 
     private void passwordOrUsernameErr() {
-        dialog.dismiss();
         usernameTextInput.setError("账号或者密码错误");
     }
 
     //登陆失败执行
     private void networkErr(String res) {
-        dialog.dismiss();
         showToast(res);
+    }
+
+    @Override
+    public void onInputFinish(String hash, String value) {
+        // 输入验证码
+        seccodehash = hash;
+        validValue = value;
     }
 }
 
