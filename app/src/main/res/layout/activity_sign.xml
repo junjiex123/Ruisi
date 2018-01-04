@@ -17,14 +17,14 @@
         android:elevation="4dp"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/dimen_16">
+        android:paddingTop="2dp"
+        android:paddingBottom="16dp">
 
         <me.yluo.ruisiapp.widget.CircleImageView
             android:id="@+id/avatar"
-            android:layout_width="82dp"
-            android:layout_height="82dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:src="@drawable/image_placeholder" />
-
 
         <TextView
             android:layout_width="wrap_content"
