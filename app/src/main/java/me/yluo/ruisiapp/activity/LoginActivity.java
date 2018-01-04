@@ -251,10 +251,12 @@ public class LoginActivity extends BaseActivity implements InputValidDialog.OnIn
                     int start = res.indexOf("<p>", res.indexOf("class=\"jump_c\"")) + 3;
                     int end = res.indexOf("</p>", start);
                     String reason = res.substring(start, end);
-                    networkErr(reason);
                     if ("抱歉，验证码填写错误".equals(reason)) {
                         showInputValidDialog();
+                    } else if (reason.contains("登录失败") && reason.contains("您还可以尝试")) {
+                        reason = reason.replace("登录失败", "账号或者密码错误");
                     }
+                    networkErr(reason);
                 } else {
                     passwordOrUsernameErr();
                 }
@@ -335,10 +337,13 @@ public class LoginActivity extends BaseActivity implements InputValidDialog.OnIn
     }
 
     @Override
-    public void onInputFinish(String hash, String value) {
+    public void onInputFinish(boolean click, String hash, String value) {
         // 输入验证码
         seccodehash = hash;
         validValue = value;
+        if (click) { //提交
+            startLogin();
+        }
     }
 }
 

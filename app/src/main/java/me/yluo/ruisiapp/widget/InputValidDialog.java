@@ -21,6 +21,7 @@ import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
+import me.yluo.ruisiapp.utils.KeyboardUtil;
 import me.yluo.ruisiapp.utils.UrlUtils;
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
@@ -88,8 +89,9 @@ public class InputValidDialog extends DialogFragment {
 
         view.findViewById(R.id.btn_ok).setOnClickListener(view1 -> {
             if (checkInput()) {
-                dialogListener.onInputFinish(hash, input.getText().toString().trim());
-                InputValidDialog.this.getDialog().cancel();
+                KeyboardUtil.hideKeyboard(input);
+                InputValidDialog.this.getDialog().dismiss();
+                dialogListener.onInputFinish(true, hash, input.getText().toString().trim());
             }
         });
         view.findViewById(R.id.btn_cancel).setOnClickListener(view12 -> dismiss());
@@ -102,6 +104,7 @@ public class InputValidDialog extends DialogFragment {
     private void changeValid() {
         input.setText(null);
         hash = "S" + new Random().nextInt(999);
+        dialogListener.onInputFinish(false, hash, null);
         loadImage(hash, imageUrl); //misc.php?mod=seccode&update=27663&idhash=SszZ1&mobile=2
     }
 
@@ -124,7 +127,7 @@ public class InputValidDialog extends DialogFragment {
                 if (res.contains("succeed")) {
                     statusView.setText("正确");
                     statusView.setTextColor(ContextCompat.getColor(getActivity(), R.color.green_light));
-                    dialogListener.onInputFinish(hash, value);
+                    dialogListener.onInputFinish(false, hash, value);
                 } else {
                     statusView.setText("错误");
                     statusView.setTextColor(ContextCompat.getColor(getActivity(), R.color.orange_light));
@@ -182,6 +185,6 @@ public class InputValidDialog extends DialogFragment {
     }
 
     public interface OnInputValidListener {
-        void onInputFinish(String hash, String value);
+        void onInputFinish(boolean click, String hash, String value);
     }
 }
