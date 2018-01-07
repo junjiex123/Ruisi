@@ -40,9 +40,10 @@ public class BatchRadioButton extends android.support.v7.widget.AppCompatRadioBu
     }
 
     public void setState(boolean batch) {
-        if (haveBatch == batch) return;
-        haveBatch = batch;
-        invalidate();
+        // TODO 有bug暂时不做了
+        //if (haveBatch == batch) return;
+        //haveBatch = batch;
+        //invalidate();
     }
 
     @Override

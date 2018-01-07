@@ -188,5 +188,6 @@ public class App extends Application {
     public static final String LOGIN_RS = App.BASE_URL_RS + "member.php?mod=logging&action=login&mobile=2";
     public static final String LOGIN_ME = App.BASE_URL_ME + "member.php?mod=logging&action=login&mobile=2";
 
+    public static final String CHECK_POST_URL = "forum.php?mod=ajax&action=checkpostrule&ac=newthread&mobile=2";
     public static final String CHECK_UPDATE_URL = "forum.php?mod=viewthread&tid=" + App.POST_TID + "&mobile=2";
 }

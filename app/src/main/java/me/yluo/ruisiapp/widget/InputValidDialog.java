@@ -35,15 +35,17 @@ public class InputValidDialog extends DialogFragment {
     private ProgressBar progressBar;
     private TextView statusView;
     private String hash = "";
-    private String imageUrl = "";
+    private String update = "48265";
     private OnInputValidListener dialogListener;
+    private int type = 0; //0--login 1--发帖
 
 
-    public static InputValidDialog newInstance(OnInputValidListener var, String hash, String imgUrl) {
+    public static InputValidDialog newInstance(OnInputValidListener var, String hash, String update, int type) {
         InputValidDialog frag = new InputValidDialog();
         frag.hash = hash;
-        frag.imageUrl = imgUrl;
         frag.dialogListener = var;
+        frag.type = type;
+        frag.update = update;
         return frag;
     }
 
@@ -95,7 +97,7 @@ public class InputValidDialog extends DialogFragment {
             }
         });
         view.findViewById(R.id.btn_cancel).setOnClickListener(view12 -> dismiss());
-        loadImage(hash, imageUrl);
+        loadImage(hash);
 
         gifImageView.setOnClickListener(view13 -> changeValid());
         return builder.create();
@@ -103,14 +105,20 @@ public class InputValidDialog extends DialogFragment {
 
     private void changeValid() {
         input.setText(null);
+        statusView.setVisibility(View.GONE);
+
         hash = "S" + new Random().nextInt(999);
         dialogListener.onInputFinish(false, hash, null);
-        loadImage(hash, imageUrl); //misc.php?mod=seccode&update=27663&idhash=SszZ1&mobile=2
+        loadImage(hash);
+        //misc.php?mod=seccode&update=27663&idhash=SszZ1&mobile=2
+        //misc.php?mod=seccode&action=update&idhash=cSAJKv8nZ&0.7333009992460238&modid=forum::ajax
     }
 
     // 检查验证码
     private void checkValid(String hash, String value) {
-        HttpUtil.get("misc.php?mod=seccode&action=check&inajax=1&modid=member::logging&idhash=" + hash + "&secverify=" + value, new ResponseHandler() {
+        //misc.php?mod=seccode&action=check&inajax=1&modid=forum::ajax&idhash=cSAJKv8nZ&secverify=ewmf
+        HttpUtil.get("misc.php?mod=seccode&action=check&inajax=1&modid=" + (type == 0 ? "member::logging" : "forum::ajax")
+                + "&idhash=" + hash + "&secverify=" + value, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 // err
@@ -136,7 +144,9 @@ public class InputValidDialog extends DialogFragment {
         });
     }
 
-    private void loadImage(String hash, String url) {
+    private void loadImage(String hash) {
+        //misc.php?mod=seccode&update=23834&idhash=cSAMi22nd
+        String url = "misc.php?mod=seccode&update=" + update + "&idhash=cSAMi22nd&mobile=2";
         if (!url.contains(hash)) {
             int start = url.indexOf("idhash") + 7;
             int end = url.indexOf("&", start);
@@ -144,8 +154,7 @@ public class InputValidDialog extends DialogFragment {
             url = url.replace(url.substring(start, end), hash);
         }
 
-        //misc.php?mod=seccode&update=27663&idhash=SszZ1&mobile=2
-        Log.v("===", HttpUtil.getStore(getActivity()).getCookie());
+        //Log.v("===", HttpUtil.getStore(getActivity()).getCookie());
         HttpUtil.getClient().addHeader("Referer", App.getBaseUrl() + UrlUtils.getLoginUrl());
         HttpUtil.get(url, new ResponseHandler() {
             @Override

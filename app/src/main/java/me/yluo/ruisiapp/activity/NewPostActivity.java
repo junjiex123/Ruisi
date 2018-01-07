@@ -28,10 +28,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
+import me.yluo.ruisiapp.utils.GetId;
 import me.yluo.ruisiapp.utils.UrlUtils;
+import me.yluo.ruisiapp.widget.InputValidDialog;
 import me.yluo.ruisiapp.widget.MyColorPicker;
 import me.yluo.ruisiapp.widget.MySmileyPicker;
 import me.yluo.ruisiapp.widget.MySpinner;
@@ -41,7 +44,7 @@ import me.yluo.ruisiapp.widget.emotioninput.EmotionInputHandler;
  * Created by free2 on 16-3-6.
  * 发帖activity
  */
-public class NewPostActivity extends BaseActivity implements View.OnClickListener {
+public class NewPostActivity extends BaseActivity implements View.OnClickListener, InputValidDialog.OnInputValidListener {
 
     private EditText ed_title, ed_content;
     private MySpinner forum_spinner, typeid_spinner;
@@ -52,6 +55,12 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
     private View type_id_container;
     private EmotionInputHandler handler;
     private String typeId = "";
+
+    // 验证码相关
+    private boolean haveValid = false;
+    private String seccodehash = null;
+    private String validValue = null; //验证码输入值
+    private String validUpdate = null; //验证码id
 
     private static final int[] fids = new int[]{
             72, 549, 108, 551, 550,
@@ -168,6 +177,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         });
 
         switchFid(fid);
+        checkValid();
     }
 
     private boolean checkPostInput() {
@@ -185,6 +195,56 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         return true;
     }
 
+    //显示填写验证码框子
+    private void showInputValidDialog() {
+        InputValidDialog dialog = InputValidDialog.newInstance(this, seccodehash, validUpdate, 1);
+        dialog.show(getFragmentManager(), "valid");
+    }
+
+    // 判断是否有验证码
+    private void checkValid() {
+        HttpUtil.get(App.CHECK_POST_URL, new ResponseHandler() {
+            @Override
+            public void onStart() {
+                haveValid = false;
+            }
+
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                int index = res.indexOf("updateseccode");
+                if (index > 0) {
+                    haveValid = true;
+                    int start = res.indexOf("'", index) + 1;
+                    int end = res.indexOf("'", start);
+                    seccodehash = res.substring(start, end);
+                    Log.v("valid", "seccodehash:" + seccodehash);
+
+                    HttpUtil.get("misc.php?mod=seccode&action=update&idhash=" + seccodehash + "&modid=forum::ajax&mobile=2", new ResponseHandler() {
+                        @Override
+                        public void onSuccess(byte[] response) {
+                            String res2 = new String(response);
+                            validUpdate = GetId.getId("update=", res2);
+                            Log.v("===update===", validUpdate);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void prePost() {
+        if (checkPostInput()) {
+            if (haveValid && TextUtils.isEmpty(validValue)) {
+                showInputValidDialog();
+                return;
+            }
+            dialog.setMessage("发贴中,请稍后......");
+            dialog.show();
+            begainPost();
+        }
+    }
+
     //开始发帖
     private void begainPost() {
         String url = UrlUtils.getPostUrl(fid);
@@ -195,13 +255,22 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         }
         params.put("subject", ed_title.getText().toString());
         params.put("message", ed_content.getText().toString());
+
+        if (haveValid) { //是否有验证码
+            params.put("seccodehash", seccodehash);
+            params.put("seccodeverify", validValue);
+        }
+
         HttpUtil.post(url, params, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                Log.e("post", res);
+                Log.e("==========", res);
                 if (res.contains("已经被系统拒绝")) {
                     postFail("由于未知原因发帖失败");
+                } else if (res.contains("抱歉，验证码填写错误")) {
+                    Toast.makeText(NewPostActivity.this,"抱歉，验证码填写错误",Toast.LENGTH_SHORT).show();
+                    showInputValidDialog();
                 } else {
                     postSuccess();
                 }
@@ -209,7 +278,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
 
             @Override
             public void onFailure(Throwable e) {
-                postFail("由于未知原因发帖失败");
+                postFail("发帖失败:" + e.getMessage());
             }
 
             @Override
@@ -234,7 +303,6 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
 
     }
 
-    //
     //发帖失败执行
     private void postFail(String str) {
         dialog.dismiss();
@@ -256,18 +324,13 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-
     private ProgressDialog dialog;
 
     @Override
     public void onClick(final View view) {
         switch (view.getId()) {
             case R.id.menu:
-                if (checkPostInput()) {
-                    dialog.setMessage("发贴中,请稍后......");
-                    dialog.show();
-                    begainPost();
-                }
+                prePost();
                 break;
             case R.id.action_bold:
                 handleInsert("[b][/b]");
@@ -337,4 +400,13 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
+    @Override
+    public void onInputFinish(boolean click, String hash, String value) {
+        // 输入验证码
+        seccodehash = hash;
+        validValue = value;
+        if (click) { //提交
+            prePost();
+        }
+    }
 }

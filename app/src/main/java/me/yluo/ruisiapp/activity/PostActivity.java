@@ -625,7 +625,8 @@ public class PostActivity extends BaseActivity
                     }
                 } else {
                     int start = res.indexOf("<p>");
-                    String ss = res.substring(start + 3, start + 20);
+                    int end = res.indexOf("<", start + 5);
+                    String ss = res.substring(start + 3, end);
                     showToast(ss);
                 }
 
