@@ -207,7 +207,7 @@ public class LoginActivity extends BaseActivity implements InputValidDialog.OnIn
     //显示填写验证码框子
     private void showInputValidDialog() {
         String update = GetId.getId("update=",validImageSrc);
-        InputValidDialog dialog = InputValidDialog.newInstance(this, seccodehash, update, 0);
+        InputValidDialog dialog = InputValidDialog.newInstance(this, seccodehash, update);
         dialog.show(getFragmentManager(), "valid");
     }
 

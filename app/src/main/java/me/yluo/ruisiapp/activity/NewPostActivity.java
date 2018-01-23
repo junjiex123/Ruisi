@@ -60,7 +60,6 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
     private boolean haveValid = false;
     private String seccodehash = null;
     private String validValue = null; //验证码输入值
-    private String validUpdate = null; //验证码id
 
     private static final int[] fids = new int[]{
             72, 549, 108, 551, 550,
@@ -197,7 +196,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
 
     //显示填写验证码框子
     private void showInputValidDialog() {
-        InputValidDialog dialog = InputValidDialog.newInstance(this, seccodehash, validUpdate, 1);
+        InputValidDialog dialog = InputValidDialog.newInstance(this, seccodehash, "");
         dialog.show(getFragmentManager(), "valid");
     }
 
@@ -219,15 +218,6 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
                     int end = res.indexOf("'", start);
                     seccodehash = res.substring(start, end);
                     Log.v("valid", "seccodehash:" + seccodehash);
-
-                    HttpUtil.get("misc.php?mod=seccode&action=update&idhash=" + seccodehash + "&modid=forum::ajax&mobile=2", new ResponseHandler() {
-                        @Override
-                        public void onSuccess(byte[] response) {
-                            String res2 = new String(response);
-                            validUpdate = GetId.getId("update=", res2);
-                            Log.v("===update===", validUpdate);
-                        }
-                    });
                 }
             }
         });

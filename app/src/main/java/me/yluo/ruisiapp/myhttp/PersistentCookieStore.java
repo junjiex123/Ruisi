@@ -37,8 +37,9 @@ public class PersistentCookieStore {
         for (String tmp : cookies.split(";")) {
             if (tmp.contains("=")) {
                 String key = tmp.split("=")[0];
-                if (key.startsWith("Q8qA_2132")) {
-                    String value = tmp.split("=")[1];
+                String value = tmp.split("=")[1];
+                //Q8qA_2132_  oJp9_2132_
+                if (key.contains("_2132_")) {
                     listCookie.put(key, value);
                     prefsWriter.putString(key, value);
                 }

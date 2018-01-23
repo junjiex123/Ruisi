@@ -60,10 +60,11 @@ public class App extends Application {
 
     //发布地址tid
     public static final String POST_TID = "805203";
-    //启动时设定
-    //论坛基地址
+
+    //论坛基地址2个地址 第一个校园玩才能访问，第二个都可以
     private static final String BASE_URL_ME = "http://rsbbs.xidian.edu.cn/";
     private static final String BASE_URL_RS = "http://rs.xidian.edu.cn/";
+
     //是否为校园网
     public static boolean IS_SCHOOL_NET = false;
 

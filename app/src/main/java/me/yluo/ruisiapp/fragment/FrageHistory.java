@@ -89,7 +89,7 @@ public class FrageHistory extends BaseFragment {
         @Override
         protected List<ReadHistoryData> doInBackground(Integer... ints) {
             MyDB myDB = new MyDB(getActivity());
-            return myDB.getHistory(50);
+            return myDB.getHistory(100);
         }
 
         @Override
@@ -98,8 +98,11 @@ public class FrageHistory extends BaseFragment {
             adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
             if (data.size() > 0) {
                 datas.addAll(data);
-                adapter.notifyDataSetChanged();
+            } else {
+                adapter.setPlaceHolderText("你还没有浏览过任何帖子");
             }
+
+            adapter.notifyDataSetChanged();
         }
     }
 }

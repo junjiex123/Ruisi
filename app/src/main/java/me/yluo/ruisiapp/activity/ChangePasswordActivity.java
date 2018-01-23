@@ -8,6 +8,7 @@ import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -31,8 +32,10 @@ import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
+import me.yluo.ruisiapp.utils.GetId;
+import me.yluo.ruisiapp.widget.InputValidDialog;
 
-public class ChangePasswordActivity extends BaseActivity {
+public class ChangePasswordActivity extends BaseActivity implements InputValidDialog.OnInputValidListener {
 
     private EditText password1, password2, password3;
     private TextInputLayout passwordLayout;
@@ -42,6 +45,12 @@ public class ChangePasswordActivity extends BaseActivity {
     private ProgressDialog dialog;
     boolean err = true;
     private String emailNew;
+    private boolean isLoad = false;//是否已经加载
+
+    // 验证码相关
+    private boolean haveValid = false;
+    private String seccodehash = null;
+    private String validValue = null; //验证码输入值
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +60,10 @@ public class ChangePasswordActivity extends BaseActivity {
         password1 = findViewById(R.id.old_pass);
         password2 = findViewById(R.id.new_pass);
         password3 = findViewById(R.id.new_pass2);
+
+        addToolbarMenu(R.drawable.ic_check_24dp).setOnClickListener(view -> {
+            submit();
+        });
 
         passwordLayout = findViewById(R.id.new_pass_c2);
         edAnswer = findViewById(R.id.anwser_text);
@@ -122,7 +135,11 @@ public class ChangePasswordActivity extends BaseActivity {
             }
         });
 
-        showToast("加载中...");
+        loadData(false);
+    }
+
+    private void loadData(boolean fromSubmit) {
+        if (isLoad) return;
         HttpUtil.get("home.php?mod=spacecp&ac=profile&op=password&mobile=2", new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -130,24 +147,34 @@ public class ChangePasswordActivity extends BaseActivity {
                 //<input type="text" name="emailnew" id="emailnew" value="2351386755@qq.com" class="px">
                 Document document = Jsoup.parse(res);
                 Elements es = document.select("#emailnew");
+
+                //updateseccode('cSiB0UMM', '<table cellspacing="0" cellpadding="0" class="tfm"><tr><th><sec></th><td><sec><p class="d"><sec></p></td></tr></table>', 'home::spacecp')
+                int index = res.indexOf("updateseccode");
+                if (index > 0) {
+                    haveValid = true;
+                    int start = res.indexOf("'", index) + 1;
+                    int end = res.indexOf("'", start);
+                    seccodehash = res.substring(start, end);
+                }
+
                 if (es.size() > 0) {
                     emailNew = es.get(0).attr("value");
                     if (!TextUtils.isEmpty(emailNew)) {
-                        addToolbarMenu(R.drawable.ic_check_24dp).setOnClickListener(view -> {
-                            submit();
-                        });
+                        isLoad = true;
                         return;
                     }
                 }
 
-                showToast("加载失败");
-                finish();
+                if (fromSubmit) {
+                    showToast("提交失败,请重试");
+                }
             }
 
             @Override
             public void onFailure(Throwable e) {
-                showToast("网络错误");
-                finish();
+                if (fromSubmit) {
+                    showToast("网络错误:" + e.getMessage());
+                }
             }
         });
     }
@@ -183,6 +210,14 @@ public class ChangePasswordActivity extends BaseActivity {
     private void submit() {
         checkInput();
         if (err) return;
+
+        if (haveValid && TextUtils.isEmpty(validValue)) {
+            showInputValidDialog();
+            return;
+        }
+
+        if (!isLoad) loadData(true);
+
         String old = password1.getText().toString();
         String new1 = password2.getText().toString();
         String new2 = password3.getText().toString();
@@ -211,6 +246,11 @@ public class ChangePasswordActivity extends BaseActivity {
         ps.put("newpassword2", new1);
         ps.put("emailnew", emailNew);
 
+        if (haveValid) { //是否有验证码
+            ps.put("seccodehash", seccodehash);
+            ps.put("seccodeverify", validValue);
+        }
+
         if (answerSelect <= 0) {
             ps.put("questionidnew", "");
             ps.put("answernew", "");
@@ -238,20 +278,22 @@ public class ChangePasswordActivity extends BaseActivity {
                     HttpUtil.exit();
                     finish();
                     startActivity(new Intent(ChangePasswordActivity.this, LoginActivity.class));
-                } else {
-                    Document document = Jsoup.parse(res);
-                    Elements es = document.select("#messagetext");
-
-                    if (es.size() > 0) {
-                        passwordLayout.setError(es.get(0).text());
-                        err = true;
+                } else if (res.contains("class=\"jump_c\"")) {
+                    int start = res.indexOf("<p>", res.indexOf("class=\"jump_c\"")) + 3;
+                    int end = res.indexOf("</p>", start);
+                    String reason = res.substring(start, end);
+                    if ("抱歉，验证码填写错误".equals(reason)) {
+                        showInputValidDialog();
                     }
+                    Toast.makeText(ChangePasswordActivity.this, reason, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ChangePasswordActivity.this, "我也不知道出了什么问题", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Throwable e) {
-                Toast.makeText(ChangePasswordActivity.this, "网络错误",
+                Toast.makeText(ChangePasswordActivity.this, "连接超时,可能修改成功",
                         Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
@@ -280,4 +322,19 @@ public class ChangePasswordActivity extends BaseActivity {
     }
 
 
+    //显示填写验证码框子
+    private void showInputValidDialog() {
+        InputValidDialog dialog = InputValidDialog.newInstance(this, seccodehash, "");
+        dialog.show(getFragmentManager(), "valid");
+    }
+
+    @Override
+    public void onInputFinish(boolean click, String hash, String value) {
+        // 输入验证码
+        seccodehash = hash;
+        validValue = value;
+        if (click) { //提交
+            submit();
+        }
+    }
 }

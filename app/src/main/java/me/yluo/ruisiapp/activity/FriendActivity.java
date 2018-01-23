@@ -212,7 +212,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         backUpdatas.clear();
         backUpdatas.addAll(datas);
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
-        show_search_view();
+        showSearchView();
     }
 
     private void exitSearchMode() {
@@ -222,7 +222,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         datas.addAll(backUpdatas);
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
         adapter.notifyDataSetChanged();
-        hide_search_view();
+        hideSearchView();
     }
 
 
@@ -248,7 +248,6 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
                             temp.add(new FriendData(userName, imgurl, info, uid, online));
                         }
                     }
-
                 }
 
                 @Override
@@ -273,6 +272,11 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
                 totalDatas.addAll(s);
             }
             if (i == 0) {
+                if (!searchMode && datas.size() == 0) {
+                    adapter.setPlaceHolderText("你还没有好友");
+                } else {
+                    adapter.setPlaceHolderText("暂无数据");
+                }
                 adapter.notifyDataSetChanged();
             } else {
                 adapter.notifyItemRangeInserted(i, s.size());
@@ -321,7 +325,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
     }
 
 
-    private void show_search_view() {
+    private void showSearchView() {
         search_card.setVisibility(View.VISIBLE);
         animator = ViewAnimationUtils.createCircularReveal(
                 search_card,
@@ -357,7 +361,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         animator.start();
     }
 
-    private void hide_search_view() {
+    private void hideSearchView() {
         animator = ViewAnimationUtils.createCircularReveal(
                 search_card,
                 search_card.getWidth(),

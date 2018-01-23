@@ -169,6 +169,9 @@ public class FrageTopicStar extends BaseFragment implements LoadMoreListener.OnL
 
         @Override
         protected void onPostExecute(List<SimpleListData> aVoid) {
+            if (datas.size() == 0 && aVoid.size() == 0) {
+                adapter.setPlaceHolderText("你还没有发过帖子");
+            }
             onLoadCompete(aVoid);
         }
 
@@ -199,6 +202,9 @@ public class FrageTopicStar extends BaseFragment implements LoadMoreListener.OnL
         @Override
         protected void onPostExecute(List<SimpleListData> data) {
             super.onPostExecute(data);
+            if (datas.size() == 0 && data.size() == 0) {
+                adapter.setPlaceHolderText("你还没有收藏");
+            }
             onLoadCompete(data);
         }
     }
@@ -211,6 +217,7 @@ public class FrageTopicStar extends BaseFragment implements LoadMoreListener.OnL
         } else {
             adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
         }
+
         if (d.size() > 0) {
             int i = datas.size();
             datas.addAll(d);
@@ -219,7 +226,8 @@ public class FrageTopicStar extends BaseFragment implements LoadMoreListener.OnL
             } else {
                 adapter.notifyItemRangeInserted(i, d.size());
             }
-
+        } else if (datas.size() == 0) {
+            adapter.notifyDataSetChanged();
         }
         isEnableLoadMore = true;
     }

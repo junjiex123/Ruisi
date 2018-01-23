@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
+import me.yluo.ruisiapp.utils.GetId;
 import me.yluo.ruisiapp.utils.KeyboardUtil;
 import me.yluo.ruisiapp.utils.UrlUtils;
 import pl.droidsonroids.gif.GifDrawable;
@@ -37,14 +39,12 @@ public class InputValidDialog extends DialogFragment {
     private String hash = "";
     private String update = "48265";
     private OnInputValidListener dialogListener;
-    private int type = 0; //0--login 1--发帖
 
 
-    public static InputValidDialog newInstance(OnInputValidListener var, String hash, String update, int type) {
+    public static InputValidDialog newInstance(OnInputValidListener var, String hash, String update) {
         InputValidDialog frag = new InputValidDialog();
         frag.hash = hash;
         frag.dialogListener = var;
-        frag.type = type;
         frag.update = update;
         return frag;
     }
@@ -111,14 +111,12 @@ public class InputValidDialog extends DialogFragment {
         dialogListener.onInputFinish(false, hash, null);
         loadImage(hash);
         //misc.php?mod=seccode&update=27663&idhash=SszZ1&mobile=2
-        //misc.php?mod=seccode&action=update&idhash=cSAJKv8nZ&0.7333009992460238&modid=forum::ajax
     }
 
     // 检查验证码
     private void checkValid(String hash, String value) {
         //misc.php?mod=seccode&action=check&inajax=1&modid=forum::ajax&idhash=cSAJKv8nZ&secverify=ewmf
-        HttpUtil.get("misc.php?mod=seccode&action=check&inajax=1&modid=" + (type == 0 ? "member::logging" : "forum::ajax")
-                + "&idhash=" + hash + "&secverify=" + value, new ResponseHandler() {
+        HttpUtil.get("misc.php?mod=seccode&action=check&inajax=1&idhash=" + hash + "&secverify=" + value + "&mobile=2", new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 // err
@@ -131,7 +129,6 @@ public class InputValidDialog extends DialogFragment {
 
                 statusView.setVisibility(View.VISIBLE);
                 String res = new String(response);
-                Log.v("check", res);
                 if (res.contains("succeed")) {
                     statusView.setText("正确");
                     statusView.setTextColor(ContextCompat.getColor(getActivity(), R.color.green_light));
@@ -144,7 +141,22 @@ public class InputValidDialog extends DialogFragment {
         });
     }
 
+    private void loadUpdate() {
+        HttpUtil.get("misc.php?mod=seccode&action=update&idhash=" + hash + "&mobile=2", new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res2 = new String(response);
+                update = GetId.getId("update=", res2);
+                loadImage(hash);
+            }
+        });
+    }
+
     private void loadImage(String hash) {
+        if (TextUtils.isEmpty(update)) {
+            loadUpdate();
+            return;
+        }
         //misc.php?mod=seccode&update=23834&idhash=cSAMi22nd
         String url = "misc.php?mod=seccode&update=" + update + "&idhash=cSAMi22nd&mobile=2";
         if (!url.contains(hash)) {

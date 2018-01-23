@@ -75,6 +75,9 @@ public class AboutActivity extends BaseActivity {
                 .show());
 
         int finalVersionCode = versionCode;
+
+        // 检查更新实现 读取我发帖的标题比较版本号
+        // 我会把版本号写在标题上[code:xxx]
         HttpUtil.get(App.CHECK_UPDATE_URL, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
