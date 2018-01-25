@@ -13,7 +13,10 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import java.util.List;
+
 import me.yluo.ruisiapp.R;
+import me.yluo.ruisiapp.model.Forum;
 import me.yluo.ruisiapp.utils.DimmenUtils;
 
 
@@ -24,7 +27,7 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
     private OnItemSelectListener listener;
     private MySpinnerListAdapter adapter;
 
-    private int currnetSelect = 0;
+    private int currentSelect = 0;
 
     public MySpinner(Context context) {
         super(context);
@@ -34,7 +37,6 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
 
 
     private void init() {
-
         listView = new ListView(mContext);
         listView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         listView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.bg_secondary));
@@ -48,7 +50,7 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
         setContentView(listView);
     }
 
-    public void setData(String[] datas) {
+    public void setData(List<Forum> datas) {
         adapter = new MySpinnerListAdapter(datas, mContext);
         listView.setAdapter(adapter);
     }
@@ -57,12 +59,16 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
         this.listener = listener;
     }
 
+    public int getSelectFid() {
+        return ((Forum) adapter.getItem(currentSelect)).fid;
+    }
+
 
     @Override
     public void onItemClick(AdapterView<?> arg0, View view, int pos, long arg3) {
         dismiss();
-        if (listener != null && currnetSelect != pos) {
-            currnetSelect = pos;
+        if (listener != null && currentSelect != pos) {
+            currentSelect = pos;
             listener.onItemSelectChanged(pos, view);
         }
 
@@ -74,11 +80,11 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
 
     private class MySpinnerListAdapter extends BaseAdapter {
 
-        private String[] datas;
+        private List<Forum> datas;
         private Context context;
 
 
-        MySpinnerListAdapter(String[] datas, Context context) {
+        MySpinnerListAdapter(List<Forum> datas, Context context) {
             this.datas = datas;
             this.context = context;
         }
@@ -86,12 +92,12 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
 
         @Override
         public int getCount() {
-            return datas.length;
+            return datas.size();
         }
 
         @Override
         public Object getItem(int i) {
-            return datas[i];
+            return datas.get(i);
         }
 
         @Override
@@ -104,7 +110,7 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
             TextView v = new TextView(context);
             v.setTag(i);
             v.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            v.setText(datas[i]);
+            v.setText(datas.get(i).name);
             v.setLayoutParams(new AbsListView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
             //textView.setTextColor(COLOR_UNSELECT);
             int padding1 = DimmenUtils.dip2px(mContext, 8);

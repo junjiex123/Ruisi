@@ -258,10 +258,12 @@ public class PostsActivity extends BaseActivity implements
                         m.setSpanCount(1);
                     }
                 } else {
-                    Intent i = new Intent(this, NewPostActivity.class);
-                    i.putExtra("FID", FID);
-                    i.putExtra("TITLE", TITLE);
-                    startActivityForResult(i, 0);
+                    if (isLogin()) {
+                        Intent i = new Intent(this, NewPostActivity.class);
+                        i.putExtra("FID", FID);
+                        i.putExtra("TITLE", TITLE);
+                        startActivityForResult(i, 0);
+                    }
                 }
         }
     }

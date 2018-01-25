@@ -45,7 +45,6 @@ public class FrageForums extends BaseLazyFragment implements View.OnClickListene
     private CircleImageView userImg;
     private RecyclerView formsList;
     private boolean lastLoginState;
-
     private List<Category> forumDatas;
 
     @Override
@@ -93,7 +92,7 @@ public class FrageForums extends BaseLazyFragment implements View.OnClickListene
     public void onUserVisible() {
         Log.d("=========", lastLoginState + "");
         Log.d("=========", App.ISLOGIN(getActivity()) + "");
-        Log.d("=========", "is school net:" + App.IS_SCHOOL_NET);
+        Log.d("=========", "是否是校园网:" + App.IS_SCHOOL_NET);
 
         if (lastLoginState != App.ISLOGIN(getActivity())) {
             lastLoginState = !lastLoginState;
@@ -127,9 +126,8 @@ public class FrageForums extends BaseLazyFragment implements View.OnClickListene
 
     void initForums(boolean loginstate) {
         new GetForumList().execute(loginstate);
-        if (App.IS_SCHOOL_NET) {
-
-            String url = "http://rs.xidian.edu.cn/forum.php";
+        if (App.IS_SCHOOL_NET) { //是校园网
+            String url = App.BASE_URL_RS + "forum.php";
             HttpUtil.get(url, new ResponseHandler() {
                 @Override
                 public void onSuccess(byte[] response) {
@@ -156,7 +154,6 @@ public class FrageForums extends BaseLazyFragment implements View.OnClickListene
                 }
             });
         }
-
     }
 
 

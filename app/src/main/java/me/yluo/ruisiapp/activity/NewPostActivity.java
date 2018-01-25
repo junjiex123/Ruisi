@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -30,9 +29,11 @@ import java.util.Map;
 
 import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
+import me.yluo.ruisiapp.model.Category;
+import me.yluo.ruisiapp.model.Forum;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
-import me.yluo.ruisiapp.utils.GetId;
+import me.yluo.ruisiapp.utils.RuisUtils;
 import me.yluo.ruisiapp.utils.UrlUtils;
 import me.yluo.ruisiapp.widget.InputValidDialog;
 import me.yluo.ruisiapp.widget.MyColorPicker;
@@ -46,37 +47,28 @@ import me.yluo.ruisiapp.widget.emotioninput.EmotionInputHandler;
  */
 public class NewPostActivity extends BaseActivity implements View.OnClickListener, InputValidDialog.OnInputValidListener {
 
-    private EditText ed_title, ed_content;
-    private MySpinner forum_spinner, typeid_spinner;
+    private EditText edTitle, edContent;
+    private MySpinner forumSpinner, typeidSpinner;
     private MyColorPicker myColorPicker;
     private MySmileyPicker smileyPicker;
-    private TextView tv_select_forum, tv_select_type;
-    private List<Pair<String, String>> typeiddatas;
-    private View type_id_container;
+    private TextView tvSelectForum, tvSelectType;
+
+    private View typeIdContainer;
     private EmotionInputHandler handler;
-    private String typeId = "";
 
     // 验证码相关
     private boolean haveValid = false;
     private String seccodehash = null;
     private String validValue = null; //验证码输入值
 
-    private static final int[] fids = new int[]{
-            72, 549, 108, 551, 550,
-            110, 217, 142, 552, 560,
-            554, 548, 216, 91, 555,
-            145, 144, 152, 147, 215,
-            125, 140, 563, 566};
+    //板块列表
+    private List<Forum> datas = new ArrayList<>();
+    //子版块列表
+    private List<Forum> typeiddatas = new ArrayList<>();
 
-    private static final String[] forums = new String[]{
-            "灌水专区", "文章天地", "我是女生", "西电问答", "心灵花园",
-            "普通交易", "缘聚睿思", "失物招领", "我要毕业啦", "技术博客",
-            "就业信息发布", "学习交流", "我爱运动", "考研交流", "就业交流", "软件交流",
-            "嵌入式交流", "竞赛交流", "原创精品", "西电后街", "音乐纵贯线",
-            "绝对漫域", "邀请专区", "新人指南"};
-
-    private int fid = fids[0];
-    private String title = forums[0];
+    private int fid;
+    private String title;
+    private int typeId;
 
 
     public static void open(Context context, int fid, String title) {
@@ -97,31 +89,51 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             fid = getIntent().getExtras().getInt("FID");
             title = getIntent().getExtras().getString("TITLE");
         }
+
         addToolbarMenu(R.drawable.ic_send_white_24dp).setOnClickListener(this);
         myColorPicker = new MyColorPicker(this);
         smileyPicker = new MySmileyPicker(this);
-        forum_spinner = new MySpinner(this);
-        typeid_spinner = new MySpinner(this);
-        typeiddatas = new ArrayList<>();
-        type_id_container = findViewById(R.id.type_id_container);
-        type_id_container.setVisibility(View.GONE);
-        tv_select_forum = findViewById(R.id.tv_select_forum);
-        tv_select_type = findViewById(R.id.tv_select_type);
-        tv_select_forum.setOnClickListener(this);
-        tv_select_forum.setText(title);
-        tv_select_type.setOnClickListener(this);
-        ed_title = findViewById(R.id.ed_title);
-        ed_content = findViewById(R.id.ed_content);
+        forumSpinner = new MySpinner(this);
+        typeidSpinner = new MySpinner(this);
+        typeIdContainer = findViewById(R.id.type_id_container);
+        typeIdContainer.setVisibility(View.GONE);
+        tvSelectForum = findViewById(R.id.tv_select_forum);
+        tvSelectType = findViewById(R.id.tv_select_type);
+        tvSelectForum.setOnClickListener(this);
 
-        forum_spinner.setData(forums);
-        forum_spinner.setListener((pos, v) -> {
-            fid = fids[pos];
-            tv_select_forum.setText(forums[pos]);
+        tvSelectType.setOnClickListener(this);
+        edTitle = findViewById(R.id.ed_title);
+        edContent = findViewById(R.id.ed_content);
+
+        List<Category> categories = RuisUtils.getForums(this, true);
+        if (categories == null) {
+            showLongToast("读取板块列表出错,请确保assets目录有forums.json文件");
+            finish();
+            return;
+        }
+
+        for (Category c : categories) {
+            if (c.canPost) {
+                datas.addAll(c.forums);
+            }
+        }
+
+        if (TextUtils.isEmpty(title) || fid <= 0) {
+            title = datas.get(0).name;
+            fid = datas.get(0).fid;
+        }
+
+        tvSelectForum.setText(title);
+        forumSpinner.setData(datas);
+        forumSpinner.setListener((pos, v) -> {
+            fid = datas.get(pos).fid;
+            tvSelectForum.setText(datas.get(pos).name);
             switchFid(fid);
         });
-        typeid_spinner.setListener((pos, v) -> {
-            typeId = typeiddatas.get(pos).first;
-            tv_select_type.setText(typeiddatas.get(pos).second);
+
+        typeidSpinner.setListener((pos, v) -> {
+            typeId = typeiddatas.get(pos).fid;
+            tvSelectType.setText(typeiddatas.get(pos).name);
         });
         final LinearLayout edit_bar = findViewById(R.id.edit_bar);
         for (int i = 0; i < edit_bar.getChildCount(); i++) {
@@ -136,7 +148,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 //[size=7][/size]
-                if (ed_content == null || (ed_content.getText().length() <= 0 && i == 0)) {
+                if (edContent == null || (edContent.getText().length() <= 0 && i == 0)) {
                     return;
                 }
                 handleInsert("[size=" + (i + 1) + "][/size]");
@@ -151,7 +163,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
 
         myColorPicker.setListener((pos, v, color) -> handleInsert("[color=" + color + "][/color]"));
 
-        handler = new EmotionInputHandler(ed_content, (enable, s) -> {
+        handler = new EmotionInputHandler(edContent, (enable, s) -> {
 
         });
 
@@ -160,8 +172,8 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         });
 
         findViewById(R.id.action_backspace).setOnLongClickListener(v -> {
-            int start = ed_content.getSelectionStart();
-            int end = ed_content.getSelectionEnd();
+            int start = edContent.getSelectionStart();
+            int end = edContent.getSelectionEnd();
             if (start == 0) {
                 return false;
             }
@@ -171,7 +183,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             if (start < 0) {
                 start = 0;
             }
-            ed_content.getText().delete(start, end);
+            edContent.getText().delete(start, end);
             return true;
         });
 
@@ -180,15 +192,14 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
     }
 
     private boolean checkPostInput() {
-
-        if (!TextUtils.isEmpty(typeId) && typeId.equals("0")) {
+        if (typeiddatas.size() > 0 && typeId <= 0) {
             Toast.makeText(this, "请选择主题分类", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (TextUtils.isEmpty(ed_title.getText().toString().trim())) {
-            Toast.makeText(this, "标题不能为空啊", Toast.LENGTH_SHORT).show();
+        } else if (TextUtils.isEmpty(edTitle.getText().toString().trim())) {
+            Toast.makeText(this, "标题不能为空", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (TextUtils.isEmpty(ed_content.getText().toString().trim())) {
-            Toast.makeText(this, "内容不能为空啊", Toast.LENGTH_SHORT).show();
+        } else if (TextUtils.isEmpty(edContent.getText().toString().trim())) {
+            Toast.makeText(this, "内容不能为空", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -231,20 +242,20 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             }
             dialog.setMessage("发贴中,请稍后......");
             dialog.show();
-            begainPost();
+            beginPost();
         }
     }
 
     //开始发帖
-    private void begainPost() {
+    private void beginPost() {
         String url = UrlUtils.getPostUrl(fid);
         Map<String, String> params = new HashMap<>();
         params.put("topicsubmit", "yes");
-        if (!TextUtils.isEmpty(typeId) && !typeId.equals("0")) {
-            params.put("typeid", typeId);
+        if (typeId > 0) {
+            params.put("typeid", String.valueOf(typeId));
         }
-        params.put("subject", ed_title.getText().toString());
-        params.put("message", ed_content.getText().toString());
+        params.put("subject", edTitle.getText().toString());
+        params.put("message", edContent.getText().toString());
 
         if (haveValid) { //是否有验证码
             params.put("seccodehash", seccodehash);
@@ -255,12 +266,16 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                Log.e("==========", res);
-                if (res.contains("已经被系统拒绝")) {
-                    postFail("由于未知原因发帖失败");
-                } else if (res.contains("抱歉，验证码填写错误")) {
-                    Toast.makeText(NewPostActivity.this,"抱歉，验证码填写错误",Toast.LENGTH_SHORT).show();
-                    showInputValidDialog();
+                //Log.e("==========", res);
+                if (res.contains("class=\"jump_c\"")) {
+                    int start = res.indexOf("<p>", res.indexOf("class=\"jump_c\"")) + 3;
+                    int end = res.indexOf("</p>", start);
+                    String reason = res.substring(start, end);
+                    if ("抱歉，验证码填写错误".equals(reason)) {
+                        showInputValidDialog();
+                        reason = "抱歉，验证码填写错误";
+                    }
+                    postFail(reason);
                 } else {
                     postSuccess();
                 }
@@ -296,12 +311,12 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
     //发帖失败执行
     private void postFail(String str) {
         dialog.dismiss();
-        Toast.makeText(this, "发帖失败", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "发帖失败:" + str, Toast.LENGTH_SHORT).show();
     }
 
     private void handleInsert(String s) {
-        int start = ed_content.getSelectionStart();
-        Editable edit = ed_content.getEditableText();//获取EditText的文字
+        int start = edContent.getSelectionStart();
+        Editable edit = edContent.getEditableText();//获取EditText的文字
         if (start < 0 || start >= edit.length()) {
             edit.append(s);
         } else {
@@ -310,7 +325,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         //[size=7][/size]
         int a = s.indexOf("[/");
         if (a > 0) {
-            ed_content.setSelection(start + a);
+            edContent.setSelection(start + a);
         }
     }
 
@@ -340,36 +355,32 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
                 smileyPicker.setOnDismissListener(() -> ((ImageView) view).setImageResource(R.drawable.ic_edit_emoticon_24dp));
                 break;
             case R.id.action_backspace:
-                int start = ed_content.getSelectionStart();
-                int end = ed_content.getSelectionEnd();
+                int start = edContent.getSelectionStart();
+                int end = edContent.getSelectionEnd();
                 if (start == 0) {
                     return;
                 }
                 if ((start == end) && start > 0) {
                     start = start - 1;
                 }
-                ed_content.getText().delete(start, end);
+                edContent.getText().delete(start, end);
                 break;
             case R.id.tv_select_forum:
-                forum_spinner.setWidth(view.getWidth());
+                forumSpinner.setWidth(view.getWidth());
                 //MySpinner.setWidth(mTView.getWidth());
-                forum_spinner.showAsDropDown(view, 0, 15);
+                forumSpinner.showAsDropDown(view, 0, 15);
                 break;
             case R.id.tv_select_type:
-                String[] names = new String[typeiddatas.size()];
-                for (int i = 0; i < typeiddatas.size(); i++) {
-                    names[i] = typeiddatas.get(i).second;
-                }
-                typeid_spinner.setData(names);
-                typeid_spinner.setWidth(view.getWidth());
-                typeid_spinner.showAsDropDown(view, 0, 15);
+                typeidSpinner.setData(typeiddatas);
+                typeidSpinner.setWidth(view.getWidth());
+                typeidSpinner.showAsDropDown(view, 0, 15);
         }
 
     }
 
     private void switchFid(int fid) {
         typeiddatas.clear();
-        typeId = "";
+        typeId = 0;
         String url = "forum.php?mod=post&action=newthread&fid=" + fid + "&mobile=2";
         HttpUtil.get(url, new ResponseHandler() {
             @Override
@@ -377,14 +388,15 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
                 Document document = Jsoup.parse(new String(response));
                 Elements types = document.select("#typeid").select("option");
                 for (Element e : types) {
-                    typeiddatas.add(new Pair<>(e.attr("value"), e.text()));
+                    typeiddatas.add(new Forum(Integer.parseInt(e.attr("value")), e.text()));
                 }
+
                 if (typeiddatas.size() > 0) {
-                    type_id_container.setVisibility(View.VISIBLE);
-                    tv_select_type.setText(typeiddatas.get(0).second);
-                    typeId = typeiddatas.get(0).first;
+                    typeIdContainer.setVisibility(View.VISIBLE);
+                    tvSelectType.setText(typeiddatas.get(0).name);
+                    typeId = typeiddatas.get(0).fid;
                 } else {
-                    type_id_container.setVisibility(View.GONE);
+                    typeIdContainer.setVisibility(View.GONE);
                 }
             }
         });

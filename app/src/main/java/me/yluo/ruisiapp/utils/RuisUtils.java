@@ -270,6 +270,8 @@ public class RuisUtils {
                 if (!isLogin && cateLogin) {//false true
                     continue;
                 }
+
+                boolean cateCanPost = o.getBoolean("canPost");
                 List<Forum> fs = new ArrayList<>();
                 JSONArray forums = o.getJSONArray("forums");
                 for (int j = 0; j < forums.length(); j++) {
@@ -280,7 +282,7 @@ public class RuisUtils {
                     }
                     fs.add(new Forum(oo.getString("name"), oo.getInt("fid"), forumLogin));
                 }
-                cates.add(new Category(o.getString("name"), o.getInt("gid"), cateLogin, fs));
+                cates.add(new Category(o.getString("name"), o.getInt("gid"), cateLogin, cateCanPost, fs));
             }
         } catch (JSONException e) {
             e.printStackTrace();

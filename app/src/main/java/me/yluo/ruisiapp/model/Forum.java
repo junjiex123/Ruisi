@@ -13,7 +13,12 @@ public class Forum {
     public Forum() {
     }
 
-    public Forum(String name, int fid,boolean login) {
+    public Forum(int fid, String name) {
+        this.name = name;
+        this.fid = fid;
+    }
+
+    public Forum(String name, int fid, boolean login) {
         this.name = name;
         this.fid = fid;
         this.login = login;
