@@ -4,12 +4,18 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -31,7 +37,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +52,7 @@ import me.yluo.ruisiapp.model.Category;
 import me.yluo.ruisiapp.model.Forum;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
+import me.yluo.ruisiapp.utils.DimmenUtils;
 import me.yluo.ruisiapp.utils.RuisUtils;
 import me.yluo.ruisiapp.utils.UrlUtils;
 import me.yluo.ruisiapp.widget.InputValidDialog;
@@ -78,10 +89,6 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
     private int fid;
     private String title;
     private int typeId;
-
-    private static final int REQUEST_CODE_TAKE_PICTURE = 1;
-    private static final int REQUEST_CODE_SELECT_IMAGE = 2;
-
 
     public static void open(Context context, int fid, String title) {
         Intent intent = new Intent(context, NewPostActivity.class);
@@ -367,22 +374,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
                 smileyPicker.setOnDismissListener(() -> ((ImageView) view).setImageResource(R.drawable.ic_edit_emoticon_24dp));
                 break;
             case R.id.action_insert_photo:
-                AlertDialog.Builder builder = new AlertDialog.Builder(NewPostActivity.this);
-                builder.setTitle("视频");
-                builder.setItems(new String[]{"拍照", "相册"}, (arg0, arg1) -> {
-                    if (arg1 == 0) {
-                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        if (intent.resolveActivity(getPackageManager()) != null) {
-                            startActivityForResult(intent, REQUEST_CODE_TAKE_PICTURE);
-                        }
-                    } else if (arg1 == 1) {
-                        Intent intent = new Intent();
-                        intent.setType("image/*");
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(Intent.createChooser(intent, "选择图片"), REQUEST_CODE_SELECT_IMAGE);
-                    }
-                });
-                builder.create().show();
+                startActivityForResult(getPickImageChooserIntent(), 200);
                 break;
             case R.id.action_backspace:
                 int start = edContent.getSelectionStart();
@@ -445,48 +437,128 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_TAKE_PICTURE && resultCode == Activity.RESULT_OK && data != null) {
-            Bundle extras = data.getExtras();
-            Bitmap thumbnail = (Bitmap) extras.get("data");
-            Log.v("========", (thumbnail == null) + "||");
-
-            handler.insertImage("111", new BitmapDrawable(getResources(), thumbnail));
-        } else if (requestCode == REQUEST_CODE_SELECT_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
-//            Uri selectedImage = data.getData(); //获取系统返回的照片的Uri
-//            if (selectedImage.toString().startsWith("content://")) {
-//                String[] proj = {MediaStore.Images.Media.DATA};
-//                Cursor cursor = getContentResolver().query(selectedImage, proj, null, null, null);
-//                if (cursor != null && cursor.moveToFirst()) {
-//                    String img_path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-//                    File file = new File(img_path);
-//                    path = file.getPath();
-//                    cursor.close();
-//                }
-//            } else {
-//                path = selectedImage.getPath();
-//            }
-//            //selectedImage.getPath()
-//            //coversFile = new File(selectedImage.getPath());
-//            final InputStream imageStream = getContentResolver().openInputStream(selectedImage);
-//            final Bitmap bitmap = BitmapFactory.decodeStream(imageStream);
+        Bitmap bitmap = null;
+        Log.v("=======", "requestCode:" + requestCode + "result:" + resultCode);
+        if (resultCode == Activity.RESULT_OK) {
+            if (getPickImageResultUri(data) != null) {
+                Uri picUri = getPickImageResultUri(data);
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), picUri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                bitmap = (Bitmap) data.getExtras().get("data");
+            }
         }
+
+        if (bitmap != null) {
+            bitmap = getResizedBitmap(bitmap, 1080);
+            handler.insertImage("111.jpg", new BitmapDrawable(getResources(), bitmap),
+                    edContent.getWidth() - DimmenUtils.dip2px(NewPostActivity.this, 16));
+        }
+    }
+
+    public Bitmap getResizedBitmap(Bitmap image, int maxWidth) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        if (width > maxWidth) {
+            float bitmapRatio = (float) width / (float) height;
+            width = maxWidth;
+            height = (int) (width / bitmapRatio);
+            return Bitmap.createScaledBitmap(image, width, height, true);
+        }
+        return image;
+    }
+
+    public Uri getPickImageResultUri(Intent data) {
+        boolean isCamera = true;
+        if (data != null) {
+            String action = data.getAction();
+            isCamera = action != null && action.equals(MediaStore.ACTION_IMAGE_CAPTURE);
+        }
+        return isCamera ? lastFile : data.getData();
+    }
+
+    public Intent getPickImageChooserIntent() {
+        // Determine Uri of camera image to save.
+        Uri outputFileUri = getCaptureImageOutputUri();
+
+        List<Intent> allIntents = new ArrayList<>();
+        PackageManager packageManager = getPackageManager();
+
+        // collect all camera intents
+        Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
+        for (ResolveInfo res : listCam) {
+            Intent intent = new Intent(captureIntent);
+            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+            intent.setPackage(res.activityInfo.packageName);
+            if (outputFileUri != null) {
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            }
+            allIntents.add(intent);
+        }
+
+        // collect all gallery intents
+        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        galleryIntent.setType("image/*");
+        List<ResolveInfo> listGallery = packageManager.queryIntentActivities(galleryIntent, 0);
+        for (ResolveInfo res : listGallery) {
+            Intent intent = new Intent(galleryIntent);
+            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+            intent.setPackage(res.activityInfo.packageName);
+            allIntents.add(intent);
+        }
+
+        // the main intent is the last in the list (fucking android) so pickup the useless one
+        Intent mainIntent = allIntents.get(allIntents.size() - 1);
+        for (Intent intent : allIntents) {
+            if (intent.getComponent().getClassName().equals("com.android.documentsui.DocumentsActivity")) {
+                mainIntent = intent;
+                break;
+            }
+        }
+        allIntents.remove(mainIntent);
+
+        // Create a chooser from the main intent
+        Intent chooserIntent = Intent.createChooser(mainIntent, "选择图片");
+
+        // Add all other intents
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, allIntents.toArray(new Parcelable[allIntents.size()]));
+
+        return chooserIntent;
+    }
+
+    private Uri lastFile;
+    private Uri getCaptureImageOutputUri() {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalCacheDir();
+        Uri outputFileUri = null;
+        if (storageDir != null) {
+            File image = null;
+            try {
+                image = File.createTempFile(imageFileName, ".jpg", storageDir);
+                Log.d("==", "create file success " + image.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            outputFileUri = Uri.fromFile(image);
+        }
+        lastFile = outputFileUri;
+        return outputFileUri;
     }
 
 
     //动态申请权限 Android6.0+
     private boolean checkCameraPermission() {
         List<String> permissions = new ArrayList<>();
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            permissions.add(Manifest.permission.CAMERA);
         }
-
-
-//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-//                != PackageManager.PERMISSION_GRANTED) {
-//            permissions.add(Manifest.permission.CAMERA);
-//        }
 
         if (permissions.size() > 0) {
             String[] s = new String[permissions.size()];

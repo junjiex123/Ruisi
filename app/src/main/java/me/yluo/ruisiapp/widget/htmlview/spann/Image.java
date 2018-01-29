@@ -1,8 +1,10 @@
 package me.yluo.ruisiapp.widget.htmlview.spann;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.style.ReplacementSpan;
 
@@ -79,8 +81,14 @@ public class Image extends ReplacementSpan {
     public void draw(Canvas canvas, CharSequence text, int start, int end,
                      float x, int top, int y, int bottom, Paint paint) {
         Drawable b = getCachedDrawable();
-        canvas.save();
+        if (b instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) b;
+            Bitmap bitmap = bitmapDrawable.getBitmap();
+            if (bitmap.isRecycled()) return;
+        }
 
+
+        canvas.save();
         int transY = 0;
         if (isInline()) {//base line对其
             transY = bottom - b.getBounds().bottom;

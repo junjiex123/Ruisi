@@ -20,7 +20,8 @@ public class EmotionInputHandler implements TextWatcher {
     private final EditText mEditor;
     private final TextChangeListener listener;
     private final ArrayList<ImageSpan> mEmoticonsToRemove = new ArrayList<>();
-    private final ArrayList<ColorTextSpan> mEmoticonsToRemove2 = new ArrayList<>();
+    private final ArrayList<ColorTextSpan> colorTextSpansToRemove = new ArrayList<>();
+    private final ArrayList<AttachImage> imageSpansToRemove = new ArrayList<>();
 
     public EmotionInputHandler(EditText editor, TextChangeListener listener) {
         mEditor = editor;
@@ -38,7 +39,6 @@ public class EmotionInputHandler implements TextWatcher {
         editableText.setSpan(new ColorTextSpan(), start, start + s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
-
     public void insertSmiley(String s, Drawable drawable) {
         if (drawable != null) {
             EmoticonSpan emoticonSpan = new EmoticonSpan(drawable);
@@ -51,15 +51,15 @@ public class EmotionInputHandler implements TextWatcher {
         }
     }
 
-    public void insertImage(String s, Drawable drawable) {
+    public void insertImage(String s, Drawable drawable, int maxWidth) {
         if (drawable != null) {
-            EmoticonSpan emoticonSpan = new EmoticonSpan(drawable);
+            AttachImage imageSpan = new AttachImage(s, drawable, maxWidth);
             int start = mEditor.getSelectionStart();
             int end = mEditor.getSelectionEnd();
             Editable editableText = mEditor.getEditableText();
             // Insert the emoticon.
             editableText.replace(start, end, s);
-            editableText.setSpan(emoticonSpan, start, start + s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            editableText.setSpan(imageSpan, start, start + s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
 
@@ -96,10 +96,20 @@ public class EmotionInputHandler implements TextWatcher {
                 int spanEnd = message.getSpanEnd(span);
                 if ((spanStart < end) && (spanEnd > start)) {
                     // Add to remove list
-                    mEmoticonsToRemove2.add(span);
+                    colorTextSpansToRemove.add(span);
                 }
             }
 
+
+            AttachImage[] list3 = message.getSpans(start, end, AttachImage.class);
+            for (AttachImage span : list3) {
+                int spanStart = message.getSpanStart(span);
+                int spanEnd = message.getSpanEnd(span);
+                if ((spanStart < end) && (spanEnd > start)) {
+                    // Add to remove list
+                    imageSpansToRemove.add(span);
+                }
+            }
         }
     }
 
@@ -115,7 +125,7 @@ public class EmotionInputHandler implements TextWatcher {
             }
         }
 
-        for (ColorTextSpan span : mEmoticonsToRemove2) {
+        for (ColorTextSpan span : colorTextSpansToRemove) {
             int start = message.getSpanStart(span);
             int end = message.getSpanEnd(span);
             message.removeSpan(span);
@@ -124,8 +134,19 @@ public class EmotionInputHandler implements TextWatcher {
             }
         }
 
+        for (AttachImage span : imageSpansToRemove) {
+            int start = message.getSpanStart(span);
+            int end = message.getSpanEnd(span);
+            message.removeSpan(span);
+            if (start != end) {
+                message.delete(start, end);
+            }
+        }
+
+
         mEmoticonsToRemove.clear();
-        mEmoticonsToRemove2.clear();
+        colorTextSpansToRemove.clear();
+        imageSpansToRemove.clear();
 
         if (!TextUtils.isEmpty(mEditor.getText().toString())) {
             listener.onTextChange(true, mEditor.getText().toString());
