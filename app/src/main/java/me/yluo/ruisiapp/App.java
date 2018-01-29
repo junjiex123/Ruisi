@@ -19,43 +19,53 @@ import me.yluo.ruisiapp.myhttp.HttpUtil;
 public class App extends Application {
 
     public static Context context;
-    private NetworkReceiver receiver = new NetworkReceiver();
+    private NetworkReceiver receiver;
 
     @Override
     public void onCreate() {
         super.onCreate();
         this.context = getApplicationContext();
-
         //初始化http
         HttpUtil.init(getApplicationContext());
-
-        //注册网络变化广播
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        registerReceiver(receiver, intentFilter);
 
         //清空消息数据库
         MyDB myDB = new MyDB(context);
         //最多缓存2000条历史纪录
         myDB.deleteOldHistory(2000);
+
+        regReciever();
     }
 
     @Override
     public void onTerminate() {
-        super.onTerminate();
-
-        //注册网络变化广播
-        if (receiver != null) {
-            Log.d("application onTerminate", "取消注册广播");
-            unregisterReceiver(receiver);
-        }
-
         //关闭数据库
         new SQLiteHelper(context).close();
+        unRegRecieve();
+
+        context = null;
+        super.onTerminate();
     }
 
     public Context getContext() {
         return context;
+    }
+
+    public void regReciever() {
+        if (receiver != null) return;
+        //注册网络变化广播
+        receiver = new NetworkReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(receiver, intentFilter);
+    }
+
+    public void unRegRecieve() {
+        //注册网络变化广播
+        if (receiver != null) {
+            Log.d("onDestroy", "取消注册广播");
+            unregisterReceiver(receiver);
+            receiver = null;
+        }
     }
 
     //发布地址tid
@@ -105,7 +115,7 @@ public class App extends Application {
 
     public static String getHash(Context context) {
         SharedPreferences shp = context.getSharedPreferences(MY_SHP_NAME, MODE_PRIVATE);
-        return shp.getString(HASH_KEY,"");
+        return shp.getString(HASH_KEY, "");
     }
 
     public static String getName(Context context) {

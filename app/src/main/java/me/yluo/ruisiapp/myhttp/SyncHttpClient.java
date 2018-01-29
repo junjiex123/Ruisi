@@ -9,10 +9,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -136,6 +134,10 @@ public class SyncHttpClient {
         request(url, Method.HEAD, map, handler);
     }
 
+    public void upload(final String url, Map<String, String> map, String imageName, byte[] imageData, final ResponseHandler handler) {
+        uploadImage(url, map, imageName, imageData, handler);
+    }
+
     void request(final String url, final Method method, final Map<String, String> map,
                  final ResponseHandler handler) {
         HttpURLConnection connection = null;
@@ -206,23 +208,8 @@ public class SyncHttpClient {
         }
     }
 
-    private static Map<String, String> uploadImageErrors = new HashMap<String, String>() {{
-        put("-1", "内部服务器错误");
-        put("0", "上传成功");
-        put("1", "不支持此类扩展名");
-        put("2", "服务器限制无法上传那么大的附件");
-        put("3", "用户组限制无法上传那么大的附件");
-        put("4", "不支持此类扩展名");
-        put("5", "文件类型限制无法上传那么大的附件");
-        put("6", "今日您已无法上传更多的附件");
-        put("7", "请选择图片文件");
-        put("8", "附件文件无法保存");
-        put("9", "没有合法的文件被上传");
-        put("10", "非法操作");
-        put("11", "今日您已无法上传那么大的附件");
-    }};
 
-    void uploadImage(final String url, Map<String, String> map, String imageName,byte[] imageData,  final ResponseHandler handler) {
+    void uploadImage(final String url, Map<String, String> map, String imageName, byte[] imageData, final ResponseHandler handler) {
         HttpURLConnection connection = null;
         Log.d("httputil", "request url :" + url);
         try {
@@ -230,7 +217,7 @@ public class SyncHttpClient {
             handler.sendStartMessage();
 
             final String boundary = "------multipartformboundary" + System.currentTimeMillis();
-            connection.addRequestProperty("content-type","multipart/form-data; boundary="+boundary);
+            connection.addRequestProperty("content-type", "multipart/form-data; boundary=" + boundary);
 
             if (map == null) {
                 map = new TreeMap<>();
@@ -240,10 +227,10 @@ public class SyncHttpClient {
 
             // 表单数据
             for (Map.Entry<String, String> entry : map.entrySet()) {
-                    encodedParams.append("--"+boundary+"\r\n");
-                    encodedParams.append("Content-Disposition: form-data; name=\""+URLEncoder.encode(entry.getKey(), UTF8)+"\"\r\n\r\n");
-                    String v = entry.getValue() == null ? "" : entry.getValue();
-                    encodedParams.append( URLEncoder.encode(v, UTF8)+"\r\n");
+                encodedParams.append("--" + boundary + "\r\n");
+                encodedParams.append("Content-Disposition: form-data; name=\"" + URLEncoder.encode(entry.getKey(), UTF8) + "\"\r\n\r\n");
+                String v = entry.getValue() == null ? "" : entry.getValue();
+                encodedParams.append(URLEncoder.encode(v, UTF8) + "\r\n");
             }
 
             // 图片数据
@@ -256,20 +243,20 @@ public class SyncHttpClient {
 
             ByteBuffer buffer = ByteBuffer.allocate(imageData.length + 1024);
             //let imageData = /*UIImageJPEGRepresentation(imageData, 1)!*/ UIImagePNGRepresentation(image)!
-            encodedParams.append( "--"+boundary+"\r\n");
-            encodedParams.append( "Content-Disposition: form-data; name=\"Filedata\"; filename=\""+URLEncoder.encode(imageName, UTF8)+"\"\r\n");
-            encodedParams.append("Content-Type: "+mimetype+"\r\n\r\n");
+            encodedParams.append("--" + boundary + "\r\n");
+            encodedParams.append("Content-Disposition: form-data; name=\"Filedata\"; filename=\"" + URLEncoder.encode(imageName, UTF8) + "\"\r\n");
+            encodedParams.append("Content-Type: " + mimetype + "\r\n\r\n");
 
-            buffer.put(encodedParams.toString().getBytes());
+            buffer.put(encodedParams.toString().getBytes(UTF8));
             buffer.put(imageData);
 
             encodedParams = new StringBuilder();
-            encodedParams.append( "\r\n");
-            encodedParams.append( "--"+boundary+"--\r\n");
+            encodedParams.append("\r\n");
+            encodedParams.append("--" + boundary + "--\r\n");
 
-            buffer.put(encodedParams.toString().getBytes());
+            buffer.put(encodedParams.toString().getBytes(UTF8));
 
-            byte[] content = new byte[buffer.remaining()];
+            byte[] content = new byte[buffer.position()];
             buffer.get(content, 0, content.length);
 
             connection.setRequestProperty("Content-Length", Long.toString(content.length));

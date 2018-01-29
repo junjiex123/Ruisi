@@ -51,6 +51,18 @@ public class EmotionInputHandler implements TextWatcher {
         }
     }
 
+    public void insertImage(String s, Drawable drawable) {
+        if (drawable != null) {
+            EmoticonSpan emoticonSpan = new EmoticonSpan(drawable);
+            int start = mEditor.getSelectionStart();
+            int end = mEditor.getSelectionEnd();
+            Editable editableText = mEditor.getEditableText();
+            // Insert the emoticon.
+            editableText.replace(start, end, s);
+            editableText.setSpan(emoticonSpan, start, start + s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+    }
+
     public void backSpace() {
         int start = mEditor.getSelectionStart();
         int end = mEditor.getSelectionEnd();

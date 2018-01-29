@@ -22,6 +22,7 @@ public class Image extends ReplacementSpan {
     public Image(String source, Drawable d) {
         this.source = source;
         mDrawable = d;
+        mDrawableRef = new WeakReference<>(d);
     }
 
 
@@ -36,11 +37,9 @@ public class Image extends ReplacementSpan {
     }
 
     private Drawable getCachedDrawable() {
-        WeakReference<Drawable> wr = mDrawableRef;
         Drawable d = null;
-
-        if (wr != null)
-            d = wr.get();
+        if (mDrawableRef != null)
+            d = mDrawableRef.get();
 
         if (d == null) {
             d = getDrawable();

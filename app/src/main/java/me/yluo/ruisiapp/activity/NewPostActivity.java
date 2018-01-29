@@ -1,10 +1,19 @@
 package me.yluo.ruisiapp.activity;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -69,6 +78,9 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
     private int fid;
     private String title;
     private int typeId;
+
+    private static final int REQUEST_CODE_TAKE_PICTURE = 1;
+    private static final int REQUEST_CODE_SELECT_IMAGE = 2;
 
 
     public static void open(Context context, int fid, String title) {
@@ -354,6 +366,24 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
                 smileyPicker.showAsDropDown(view, 0, 10);
                 smileyPicker.setOnDismissListener(() -> ((ImageView) view).setImageResource(R.drawable.ic_edit_emoticon_24dp));
                 break;
+            case R.id.action_insert_photo:
+                AlertDialog.Builder builder = new AlertDialog.Builder(NewPostActivity.this);
+                builder.setTitle("视频");
+                builder.setItems(new String[]{"拍照", "相册"}, (arg0, arg1) -> {
+                    if (arg1 == 0) {
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            startActivityForResult(intent, REQUEST_CODE_TAKE_PICTURE);
+                        }
+                    } else if (arg1 == 1) {
+                        Intent intent = new Intent();
+                        intent.setType("image/*");
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(Intent.createChooser(intent, "选择图片"), REQUEST_CODE_SELECT_IMAGE);
+                    }
+                });
+                builder.create().show();
+                break;
             case R.id.action_backspace:
                 int start = edContent.getSelectionStart();
                 int end = edContent.getSelectionEnd();
@@ -410,5 +440,64 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         if (click) { //提交
             prePost();
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_TAKE_PICTURE && resultCode == Activity.RESULT_OK && data != null) {
+            Bundle extras = data.getExtras();
+            Bitmap thumbnail = (Bitmap) extras.get("data");
+            Log.v("========", (thumbnail == null) + "||");
+
+            handler.insertImage("111", new BitmapDrawable(getResources(), thumbnail));
+        } else if (requestCode == REQUEST_CODE_SELECT_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+//            Uri selectedImage = data.getData(); //获取系统返回的照片的Uri
+//            if (selectedImage.toString().startsWith("content://")) {
+//                String[] proj = {MediaStore.Images.Media.DATA};
+//                Cursor cursor = getContentResolver().query(selectedImage, proj, null, null, null);
+//                if (cursor != null && cursor.moveToFirst()) {
+//                    String img_path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+//                    File file = new File(img_path);
+//                    path = file.getPath();
+//                    cursor.close();
+//                }
+//            } else {
+//                path = selectedImage.getPath();
+//            }
+//            //selectedImage.getPath()
+//            //coversFile = new File(selectedImage.getPath());
+//            final InputStream imageStream = getContentResolver().openInputStream(selectedImage);
+//            final Bitmap bitmap = BitmapFactory.decodeStream(imageStream);
+        }
+    }
+
+
+    //动态申请权限 Android6.0+
+    private boolean checkCameraPermission() {
+        List<String> permissions = new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+
+
+//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            permissions.add(Manifest.permission.CAMERA);
+//        }
+
+        if (permissions.size() > 0) {
+            String[] s = new String[permissions.size()];
+            for (int i = 0; i < permissions.size(); i++) {
+                s[i] = permissions.get(i);
+            }
+            ActivityCompat.requestPermissions(this, s, 0);
+
+            return false;
+        }
+
+        return true;
     }
 }

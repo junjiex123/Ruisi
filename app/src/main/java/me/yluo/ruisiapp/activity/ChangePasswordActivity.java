@@ -8,7 +8,6 @@ import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -32,7 +31,6 @@ import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
-import me.yluo.ruisiapp.utils.GetId;
 import me.yluo.ruisiapp.widget.InputValidDialog;
 
 public class ChangePasswordActivity extends BaseActivity implements InputValidDialog.OnInputValidListener {

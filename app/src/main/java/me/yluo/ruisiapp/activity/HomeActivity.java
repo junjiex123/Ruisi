@@ -55,7 +55,7 @@ public class HomeActivity extends BaseActivity
     private MyTimerTask task = null;
     private MyBottomTab bottomTab;
     private long lastCheckMsgTime = 0;
-    private static int interval = 120_000;//120s
+    private static int interval = 180_000;//180s
     private MyHandler messageHandler;
     //间隔20天检查更新一次
     private static final int UPDATE_TIME = 1000 * 3600 * 24 * 20;
@@ -64,12 +64,12 @@ public class HomeActivity extends BaseActivity
     private ViewPager viewPager;
     private List<BaseLazyFragment> fragments = new ArrayList<>();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         initViewpager();
+
         bottomTab = findViewById(R.id.bottom_bar);
         bottomTab.setOnTabChangeListener(this);
 
@@ -175,7 +175,6 @@ public class HomeActivity extends BaseActivity
 
     }
 
-
     private class MyTimerTask extends TimerTask {
         public void run() {
             String url_reply = "home.php?mod=space&do=notice&view=mypost&type=post" + (App.IS_SCHOOL_NET ? "" : "&mobile=2");
@@ -258,7 +257,6 @@ public class HomeActivity extends BaseActivity
         int hashIndex = res.indexOf("formhash");
         if (hashIndex > 0) {
             String hash = res.substring(hashIndex + 9, hashIndex + 17);
-            Log.v("hash", hash);
             App.setHash(HomeActivity.this, hash);
         }
 
@@ -356,5 +354,12 @@ public class HomeActivity extends BaseActivity
             Log.d("main", "切换主题");
             recreate();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        App app = (App) getApplication();
+        app.unRegRecieve();
+        super.onDestroy();
     }
 }
