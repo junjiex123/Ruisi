@@ -134,9 +134,6 @@ public class SyncHttpClient {
         request(url, Method.HEAD, map, handler);
     }
 
-    public void upload(final String url, Map<String, String> map, String imageName, byte[] imageData, final ResponseHandler handler) {
-        uploadImage(url, map, imageName, imageData, handler);
-    }
 
     void request(final String url, final Method method, final Map<String, String> map,
                  final ResponseHandler handler) {
@@ -241,28 +238,26 @@ public class SyncHttpClient {
                 mimetype = "image/jpg";
             }
 
-            ByteBuffer buffer = ByteBuffer.allocate(imageData.length + 1024);
             //let imageData = /*UIImageJPEGRepresentation(imageData, 1)!*/ UIImagePNGRepresentation(image)!
             encodedParams.append("--" + boundary + "\r\n");
             encodedParams.append("Content-Disposition: form-data; name=\"Filedata\"; filename=\"" + URLEncoder.encode(imageName, UTF8) + "\"\r\n");
             encodedParams.append("Content-Type: " + mimetype + "\r\n\r\n");
 
-            buffer.put(encodedParams.toString().getBytes(UTF8));
-            buffer.put(imageData);
 
-            encodedParams = new StringBuilder();
-            encodedParams.append("\r\n");
-            encodedParams.append("--" + boundary + "--\r\n");
+            StringBuilder  encodedParams2 = new StringBuilder();
+            encodedParams2.append("\r\n");
+            encodedParams2.append("--" + boundary + "--\r\n");
 
-            buffer.put(encodedParams.toString().getBytes(UTF8));
+            byte[] data1 = encodedParams.toString().getBytes(UTF8);
+            byte[] data3 = encodedParams2.toString().getBytes(UTF8);
+            int len = data1.length + imageData.length + data3.length;
 
-            byte[] content = new byte[buffer.position()];
-            buffer.get(content, 0, content.length);
-
-            connection.setRequestProperty("Content-Length", Long.toString(content.length));
-            connection.setFixedLengthStreamingMode(content.length);
+            connection.setRequestProperty("Content-Length", Long.toString(len));
+            connection.setFixedLengthStreamingMode(len);
             OutputStream os = connection.getOutputStream();
-            os.write(content);
+            os.write(data1);
+            os.write(imageData);
+            os.write(data3);
             os.flush();
             os.close();
 

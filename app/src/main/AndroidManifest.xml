@@ -67,7 +67,8 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activity.NewPostActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.SearchActivity"
             android:screenOrientation="portrait" />

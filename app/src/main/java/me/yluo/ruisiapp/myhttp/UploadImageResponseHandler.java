@@ -2,6 +2,7 @@ package me.yluo.ruisiapp.myhttp;
 
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,11 +32,12 @@ public abstract class UploadImageResponseHandler extends ResponseHandler {
         String res = new String(response);
         String errMsg;
         boolean success = false;
+        Log.v("response", res);
         if (TextUtils.isEmpty(res) || !res.contains("|")) {
             errMsg = "上传失败，请稍后再试";
         } else {
-            //DISCUZUPLOAD|1|0|931707|1|201712/17/190135adz38c3vodhw6zct.png|tb001.png|0
-            String[] ress = res.split("|");
+            //DISCUZUPLOAD|1|0|939668|1|201801/30/221334oe2emm22geg0vmeq.jpg|1517321613953.jpg|0
+            String[] ress = res.split("\\|");
             if ("DISCUZUPLOAD".equals(ress[0]) && "0".equals(ress[2])) {
                 success = true;
                 errMsg = ress[3];

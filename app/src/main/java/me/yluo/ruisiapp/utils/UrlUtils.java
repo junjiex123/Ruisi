@@ -88,4 +88,8 @@ public class UrlUtils {
     public static String getDeleteReplyUrl() {
         return "forum.php?mod=post&action=edit&extra=&editsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
     }
+
+    public static String getUploadImageUrl() {
+        return  "misc.php?mod=swfupload&operation=upload&type=image&inajax=yes&infloat=yes&simple=2&mobile=2";
+    }
 }

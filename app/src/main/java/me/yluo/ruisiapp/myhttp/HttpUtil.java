@@ -61,6 +61,20 @@ public class HttpUtil {
         syncHttpClient.get(getUrl(url), handler);
     }
 
+
+    //同步 上传图片
+    public static void uploadImage(Context context, final String url, Map<String, String> map, String imageName, byte[] imageData, final ResponseHandler handler) {
+        init(context);
+        client.uploadImage(getUrl(url), map, imageName, imageData, handler);
+    }
+
+
+    //同步 上传图片
+    public static void SyncUpload(Context context, final String url, Map<String, String> map, String imageName, byte[] imageData, final ResponseHandler handler) {
+        init(context);
+        syncHttpClient.uploadImage(getUrl(url), map, imageName, imageData, handler);
+    }
+
     public static void exit() {
         store.clearCookie();
     }

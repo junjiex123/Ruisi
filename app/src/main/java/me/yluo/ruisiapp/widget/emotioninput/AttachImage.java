@@ -17,7 +17,6 @@ public class AttachImage extends ImageSpan {
         if (width > maxWidth) {
             height = (int) (height * maxWidth * 1.0f / width);
             width = maxWidth;
-            aid += '\n';
         }
         drawable.setBounds(0, 0, width, height);
     }

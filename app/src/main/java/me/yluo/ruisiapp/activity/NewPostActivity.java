@@ -2,7 +2,6 @@ package me.yluo.ruisiapp.activity;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -12,9 +11,8 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Build;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -37,6 +35,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -52,6 +51,7 @@ import me.yluo.ruisiapp.model.Category;
 import me.yluo.ruisiapp.model.Forum;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
+import me.yluo.ruisiapp.myhttp.UploadImageResponseHandler;
 import me.yluo.ruisiapp.utils.DimmenUtils;
 import me.yluo.ruisiapp.utils.RuisUtils;
 import me.yluo.ruisiapp.utils.UrlUtils;
@@ -85,6 +85,9 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
     private List<Forum> datas = new ArrayList<>();
     //子版块列表
     private List<Forum> typeiddatas = new ArrayList<>();
+    private String uploadHash = null;
+    private ProgressDialog uploadDialog;
+    private ProgressDialog postDialog;
 
     private int fid;
     private String title;
@@ -97,13 +100,11 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         context.startActivity(intent);
     }
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_topic);
         initToolBar(true, "发表新帖");
-        dialog = new ProgressDialog(this);
         if (getIntent().getExtras() != null) {
             fid = getIntent().getExtras().getInt("FID");
             title = getIntent().getExtras().getString("TITLE");
@@ -241,6 +242,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
+                //检查验证码
                 int index = res.indexOf("updateseccode");
                 if (index > 0) {
                     haveValid = true;
@@ -259,8 +261,9 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
                 showInputValidDialog();
                 return;
             }
-            dialog.setMessage("发贴中,请稍后......");
-            dialog.show();
+            postDialog = new ProgressDialog(this);
+            postDialog.setMessage("发贴中,请稍后......");
+            postDialog.show();
             beginPost();
         }
     }
@@ -308,20 +311,19 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onFinish() {
                 super.onFinish();
-                dialog.dismiss();
+                postDialog.dismiss();
             }
         });
     }
 
     //发帖成功执行
     private void postSuccess() {
-        dialog.dismiss();
+        postDialog.dismiss();
         Toast.makeText(this, "主题发表成功", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent();
         intent.putExtra("status", "ok");
         //设置返回数据
-        dialog.dismiss();
         NewPostActivity.this.setResult(RESULT_OK, intent);
         finish();
 
@@ -329,7 +331,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
 
     //发帖失败执行
     private void postFail(String str) {
-        dialog.dismiss();
+        postDialog.dismiss();
         Toast.makeText(this, "发帖失败:" + str, Toast.LENGTH_SHORT).show();
     }
 
@@ -348,7 +350,6 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    private ProgressDialog dialog;
 
     @Override
     public void onClick(final View view) {
@@ -374,7 +375,11 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
                 smileyPicker.setOnDismissListener(() -> ((ImageView) view).setImageResource(R.drawable.ic_edit_emoticon_24dp));
                 break;
             case R.id.action_insert_photo:
-                startActivityForResult(getPickImageChooserIntent(), 200);
+                if (TextUtils.isEmpty(uploadHash)) {
+                    Toast.makeText(NewPostActivity.this, "你无法上传图片", Toast.LENGTH_SHORT).show();
+                } else {
+                    startActivityForResult(getPickImageChooserIntent(), 200);
+                }
                 break;
             case R.id.action_backspace:
                 int start = edContent.getSelectionStart();
@@ -420,6 +425,17 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
                 } else {
                     typeIdContainer.setVisibility(View.GONE);
                 }
+
+                //检查是否能上传图片
+                //uploadformdata:{uid:"252553", hash:"fe626ed21ff334263dfe552cd9a4c209"},
+                String res = new String(response);
+                int index = res.indexOf("uploadformdata:");
+                if (index > 0) {
+                    int start = res.indexOf("hash", index) + 6;
+                    int end = res.indexOf("\"", start + 5);
+                    uploadHash = res.substring(start, end);
+                    Log.v("===", "uploadhash:" + uploadHash);
+                }
             }
         });
     }
@@ -453,10 +469,68 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         }
 
         if (bitmap != null) {
-            bitmap = getResizedBitmap(bitmap, 1080);
-            handler.insertImage("111.jpg", new BitmapDrawable(getResources(), bitmap),
-                    edContent.getWidth() - DimmenUtils.dip2px(NewPostActivity.this, 16));
+            uploadImage(bitmap);
         }
+    }
+
+    private void uploadImage(Bitmap bitmap) {
+        uploadDialog = new ProgressDialog(this);
+        uploadDialog.setTitle("上传中...");
+        uploadDialog.setMessage("图片上传中请稍后");
+        uploadDialog.setCancelable(false);
+        uploadDialog.show();
+        new UploadTask().execute(bitmap);
+    }
+
+
+    private Bitmap returnBitmap = null;
+
+    private class UploadTask extends AsyncTask<Bitmap, Void, byte[]> {
+        @Override
+        protected byte[] doInBackground(Bitmap... bitmaps) {
+            Bitmap bitmap = bitmaps[0];
+            bitmap = getResizedBitmap(bitmap, 1080);
+            byte[] bytes = Bitmap2Bytes(bitmap);
+            returnBitmap = bitmap;
+
+            return bytes;
+        }
+
+        @Override
+        protected void onPostExecute(byte[] data) {
+            Map<String, String> params = new HashMap<>();
+            params.put("uid", App.getUid(NewPostActivity.this));
+            params.put("hash", uploadHash);
+
+            HttpUtil.uploadImage(NewPostActivity.this, UrlUtils.getUploadImageUrl(),
+                    params, System.currentTimeMillis() + ".jpg", data, new UploadImageResponseHandler() {
+                        @Override
+                        public void onSuccess(String aid) {
+                            Log.v("===", "upload success aid:" + aid);
+                            handler.insertImage(aid, new BitmapDrawable(getResources(), returnBitmap),
+                                    edContent.getWidth() - DimmenUtils.dip2px(NewPostActivity.this, 16));
+                        }
+
+                        @Override
+                        public void onFailure(Throwable e) {
+                            Log.v("===", "upload failed:" + e.getMessage());
+                            Toast.makeText(NewPostActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            super.onFinish();
+                            uploadDialog.dismiss();
+                        }
+                    });
+        }
+    }
+
+
+    public static byte[] Bitmap2Bytes(Bitmap bm) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 85, baos);
+        return baos.toByteArray();
     }
 
     public Bitmap getResizedBitmap(Bitmap image, int maxWidth) {
@@ -532,6 +606,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
     }
 
     private Uri lastFile;
+
     private Uri getCaptureImageOutputUri() {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";

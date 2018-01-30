@@ -28,7 +28,7 @@ public class AsyncHttpClient extends SyncHttpClient {
     }
 
     @Override
-    public void upload(final String url, Map<String, String> map, String imageName, byte[] imageData, final ResponseHandler handler) {
-        threadPool.execute(() -> uploadImage(url, map, imageName, imageData, handler));
+    public void uploadImage(final String url, Map<String, String> map, String imageName, byte[] imageData, final ResponseHandler handler) {
+        threadPool.execute(() -> super.uploadImage(url, map, imageName, imageData, handler));
     }
 }

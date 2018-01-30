@@ -53,6 +53,7 @@ public class EmotionInputHandler implements TextWatcher {
 
     public void insertImage(String s, Drawable drawable, int maxWidth) {
         if (drawable != null) {
+            s = "[attachimg]" + s + "[/attachimg]";
             AttachImage imageSpan = new AttachImage(s, drawable, maxWidth);
             int start = mEditor.getSelectionStart();
             int end = mEditor.getSelectionEnd();
