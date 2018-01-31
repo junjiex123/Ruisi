@@ -284,6 +284,12 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             params.put("seccodeverify", validValue);
         }
 
+        //params["attachnew[\(aid)]"] = ""
+        List<String> aids = handler.getImagesAids();
+        for (String aid : aids) {
+            params.put("attachnew[" + aid + "]", "");
+        }
+
         HttpUtil.post(url, params, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -646,5 +652,19 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         }
 
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        File storageDir = getExternalCacheDir();
+        if (storageDir != null) {
+            for (File f : storageDir.listFiles()) {
+                if (f.getName().startsWith("JPEG_")) {
+                    f.delete();
+                }
+            }
+        }
+
+        super.onDestroy();
     }
 }

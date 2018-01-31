@@ -9,6 +9,7 @@ import android.text.style.ImageSpan;
 import android.widget.EditText;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by free2 on 16-3-20.
@@ -49,6 +50,28 @@ public class EmotionInputHandler implements TextWatcher {
             editableText.replace(start, end, s);
             editableText.setSpan(emoticonSpan, start, start + s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
+    }
+
+    public List<String> getImagesAids() {
+        Editable message = mEditor.getEditableText();
+        int end = mEditor.getText().toString().length();
+        List<String> returns = new ArrayList<>();
+
+        AttachImage[] list3 = message.getSpans(0, end, AttachImage.class);
+        for (AttachImage span : list3) {
+            int spanStart = message.getSpanStart(span);
+            int spanEnd = message.getSpanEnd(span);
+            if ((spanStart < end) && (spanEnd > 0)) {
+                //[attachimg]12345[/attachimg] -> 12345
+                String aid = span.aid.replace("[attachimg]", "").replace("[/attachimg]", "").trim();
+                if (!TextUtils.isEmpty(aid)){
+                    returns.add(aid);
+                }
+
+            }
+        }
+
+        return returns;
     }
 
     public void insertImage(String s, Drawable drawable, int maxWidth) {

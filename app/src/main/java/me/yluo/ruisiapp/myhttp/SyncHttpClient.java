@@ -3,6 +3,7 @@ package me.yluo.ruisiapp.myhttp;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -209,9 +210,11 @@ public class SyncHttpClient {
     void uploadImage(final String url, Map<String, String> map, String imageName, byte[] imageData, final ResponseHandler handler) {
         HttpURLConnection connection = null;
         Log.d("httputil", "request url :" + url);
+        DataOutputStream ds = null;
+
         try {
-            connection = buildURLConnection(url, Method.POST);
             handler.sendStartMessage();
+            connection = buildURLConnection(url, Method.POST);
 
             final String boundary = "------multipartformboundary" + System.currentTimeMillis();
             connection.addRequestProperty("content-type", "multipart/form-data; boundary=" + boundary);
@@ -220,14 +223,13 @@ public class SyncHttpClient {
                 map = new TreeMap<>();
             }
 
-            StringBuilder encodedParams = new StringBuilder();
-
+            ds = new DataOutputStream(connection.getOutputStream());
             // 表单数据
             for (Map.Entry<String, String> entry : map.entrySet()) {
-                encodedParams.append("--" + boundary + "\r\n");
-                encodedParams.append("Content-Disposition: form-data; name=\"" + URLEncoder.encode(entry.getKey(), UTF8) + "\"\r\n\r\n");
+                ds.writeBytes("--" + boundary + "\r\n");
+                ds.writeBytes("Content-Disposition: form-data; name=\"" + entry.getKey() + "\"\r\n\r\n");
                 String v = entry.getValue() == null ? "" : entry.getValue();
-                encodedParams.append(URLEncoder.encode(v, UTF8) + "\r\n");
+                ds.writeBytes(v + "\r\n");
             }
 
             // 图片数据
@@ -239,27 +241,15 @@ public class SyncHttpClient {
             }
 
             //let imageData = /*UIImageJPEGRepresentation(imageData, 1)!*/ UIImagePNGRepresentation(image)!
-            encodedParams.append("--" + boundary + "\r\n");
-            encodedParams.append("Content-Disposition: form-data; name=\"Filedata\"; filename=\"" + URLEncoder.encode(imageName, UTF8) + "\"\r\n");
-            encodedParams.append("Content-Type: " + mimetype + "\r\n\r\n");
+            ds.writeBytes("--" + boundary + "\r\n");
+            ds.writeBytes("Content-Disposition: form-data; name=\"Filedata\"; filename=\"" + imageName + "\"\r\n");
+            ds.writeBytes("Content-Type: " + mimetype + "\r\n\r\n");
 
+            ds.write(imageData);
+            ds.writeBytes("\r\n");
+            ds.writeBytes("--" + boundary + "--\r\n");
 
-            StringBuilder  encodedParams2 = new StringBuilder();
-            encodedParams2.append("\r\n");
-            encodedParams2.append("--" + boundary + "--\r\n");
-
-            byte[] data1 = encodedParams.toString().getBytes(UTF8);
-            byte[] data3 = encodedParams2.toString().getBytes(UTF8);
-            int len = data1.length + imageData.length + data3.length;
-
-            connection.setRequestProperty("Content-Length", Long.toString(len));
-            connection.setFixedLengthStreamingMode(len);
-            OutputStream os = connection.getOutputStream();
-            os.write(data1);
-            os.write(imageData);
-            os.write(data3);
-            os.flush();
-            os.close();
+            ds.flush();
 
             handler.processResponse(connection);
             //获取cookie
@@ -270,6 +260,14 @@ public class SyncHttpClient {
             e.printStackTrace();
             handler.sendFailureMessage(e);
         } finally {
+            if (ds != null) {
+                try {
+                    ds.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
             if (connection != null) {
                 connection.disconnect();
             }
