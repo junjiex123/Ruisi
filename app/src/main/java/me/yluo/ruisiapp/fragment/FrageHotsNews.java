@@ -150,7 +150,7 @@ public class FrageHotsNews extends BaseLazyFragment implements LoadMoreListener.
         @Override
         protected List<GalleryData> doInBackground(Void... voids) {
             List<GalleryData> temps = new ArrayList<>();
-            String url = "http://rs.xidian.edu.cn/forum.php";
+            String url = App.BASE_URL_RS + "forum.php";
             Document doc;
             try {
                 doc = Jsoup.connect(url).userAgent(SyncHttpClient.DEFAULT_USER_AGENT).get();
