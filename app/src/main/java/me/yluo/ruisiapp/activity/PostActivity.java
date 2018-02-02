@@ -195,11 +195,10 @@ public class PostActivity extends BaseActivity
         //加载更多被电击
         if (enableLoadMore) {
             enableLoadMore = false;
-            int page = currentPage;
             if (currentPage < sumPage) {
-                page = currentPage + 1;
+                currentPage++;
             }
-            getArticleData(page);
+            getArticleData(currentPage);
         }
     }
 

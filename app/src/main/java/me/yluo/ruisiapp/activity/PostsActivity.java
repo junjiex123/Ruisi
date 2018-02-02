@@ -57,6 +57,7 @@ public class PostsActivity extends BaseActivity implements
     private View myToolbar;
     //当前页数
     int currentPage = 1;
+    int maxPage = 1;
     boolean isEnableLoadMore = false;
     RecyclerView.LayoutManager mLayoutManager;
     private TabLayout tab;
@@ -148,7 +149,9 @@ public class PostsActivity extends BaseActivity implements
     @Override
     public void onLoadMore() {
         if (isEnableLoadMore) {
-            currentPage++;
+            if (currentPage < maxPage) {
+                currentPage++;
+            }
             isEnableLoadMore = false;
             getData();
         }
@@ -205,6 +208,7 @@ public class PostsActivity extends BaseActivity implements
         btnRefresh.hide();
         refreshLayout.setRefreshing(true);
         currentPage = 1;
+        maxPage = 1;
         getData();
     }
 
@@ -285,7 +289,8 @@ public class PostsActivity extends BaseActivity implements
         protected List<ArticleListData> doInBackground(String... params) {
             String res = params[0];
             List<ArticleListData> tempDatas = new ArrayList<>();
-            Elements list = Jsoup.parse(res).select("#threadlist tbody");
+            Document document = Jsoup.parse(res);
+            Elements list = document.select("#threadlist tbody");
             ArticleListData temp;
             for (Element src : list) {
                 if (src.getElementsByAttributeValue("class", "by").first() != null) {
@@ -301,6 +306,12 @@ public class PostsActivity extends BaseActivity implements
                     } else {
                         type = "normal";
                     }
+
+                    if (isHideZhiding && type.equals("置顶")) {
+                        continue;
+                        //Log.i("article list", "ignore zhidin");
+                    }
+
                     Elements tempEles = src.select("th").select("a[href^=forum.php?mod=viewthread][class=s xst]");
                     String title = tempEles.text();
                     String titleUrl = tempEles.attr("href");
@@ -312,18 +323,21 @@ public class PostsActivity extends BaseActivity implements
                     String replaycount = src.getElementsByAttributeValue("class", "num").select("a").text();
                     String tag = src.select("em a[href^=forum.php?mod=forumdisplay]").text();
 
-                    if (isHideZhiding && type.equals("置顶")) {
-                        Log.i("article list", "ignore zhidin");
-                    } else {
-                        if (title.length() > 0 && author.length() > 0) {
-                            temp = new ArticleListData(type, title, titleUrl, author, authorUrl, time, viewcount, replaycount, titleColor);
-                            if (!TextUtils.isEmpty(tag)) temp.tag = tag;
-                            tempDatas.add(temp);
-                        }
+                    if (title.length() > 0 && author.length() > 0) {
+                        temp = new ArticleListData(type, title, titleUrl, author, authorUrl, time, viewcount, replaycount, titleColor);
+                        if (!TextUtils.isEmpty(tag)) temp.tag = tag;
+                        tempDatas.add(temp);
                     }
-
                 }
             }
+
+            Element page = document.select("#fd_page_bottom .pg").first();
+            if (page == null) {
+                maxPage = currentPage;
+            } else {
+                maxPage = GetId.getNumber(page.select("label span").text());
+            }
+
             return myDB.handReadHistoryList(tempDatas);
         }
 
@@ -358,6 +372,14 @@ public class PostsActivity extends BaseActivity implements
                 temp = new ArticleListData(hasImage, title, url, author, replyCount, titleColor);
                 dataset.add(temp);
             }
+
+            Element page = doc.select(".pg").first();
+            if (page == null) {
+                maxPage = currentPage;
+            } else {
+                maxPage = GetId.getNumber(page.select("label span").text());
+            }
+
             return myDB.handReadHistoryList(dataset);
         }
 
@@ -374,7 +396,8 @@ public class PostsActivity extends BaseActivity implements
         @Override
         protected List<ArticleListData> doInBackground(String... params) {
             String response = params[0];
-            Elements list = Jsoup.parse(response).select("ul[id=waterfall]");
+            Document document = Jsoup.parse(response);
+            Elements list = document.select("ul[id=waterfall]");
             Elements imagelist = list.select("li");
             List<ArticleListData> temps = new ArrayList<>();
             for (Element tmp : imagelist) {
@@ -388,6 +411,14 @@ public class PostsActivity extends BaseActivity implements
                 tmp.select(".xg1.y").select("a[href^=forum.php]").remove();
                 temps.add(new ArticleListData(title, url, img, author, replyCount));
             }
+
+            Element page = document.select("#fd_page_bottom .pg").first();
+            if (page == null) {
+                maxPage = currentPage;
+            } else {
+                maxPage = GetId.getNumber(page.select("label span").text());
+            }
+
             return temps;
         }
 
@@ -407,8 +438,13 @@ public class PostsActivity extends BaseActivity implements
         datas.addAll(dataset);
 
         adapter.notifyItemRangeInserted(start, dataset.size());
-        isEnableLoadMore = true;
 
+        if (currentPage < maxPage) {
+            adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
+        } else {
+            adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
+        }
+        isEnableLoadMore = true;
         refreshLayout.postDelayed(() -> refreshLayout.setRefreshing(false), 500);
     }
 }
