@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/fontawesome"
-            android:text="&#xf129; 睿思每日签到时间 07:00-23:00"
+            android:text="&#xf129; 睿思每日签到时间 07:00-23:59"
             android:textColor="@color/white"
             android:textSize="13sp" />
     </LinearLayout>
