@@ -1,7 +1,8 @@
 ## 西电睿思手机客户端
 西安电子科技大学校园睿思论坛Android客户端。    
-支持夜间模式，支持主题，如有bug，或者新功能建议欢迎提出Issue .   
-Ios版见[Ruisi_Ios](https://github.com/freedom10086/Ruisi_Ios)
+支持夜间模式，支持主题，如有bug，或者新功能建议欢迎提出Issue .
+
+iOS版见[Ruisi_Ios](https://github.com/freedom10086/Ruisi_Ios)
 
 ### 更新地址:
 
