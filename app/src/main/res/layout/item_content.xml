@@ -103,10 +103,12 @@
         android:layout_below="@+id/content"
         android:layout_marginEnd="12dp"
         android:layout_marginTop="4dp"
+        android:fontFamily="@font/fontawesome"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:padding="8dp"
-        android:text="编辑"
+        android:text="&#xf044; 编辑"
+        android:visibility="invisible"
         android:textColor="@color/colorAuthor"
         android:textSize="14sp" />
 
@@ -114,14 +116,63 @@
         android:id="@+id/tv_remove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/fontawesome"
         android:layout_alignBaseline="@+id/tv_edit"
         android:layout_toStartOf="@+id/tv_edit"
+        android:layout_below="@+id/content"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:padding="8dp"
-        android:text="删除"
+        android:text="&#xf014; 删除"
+        android:visibility="invisible"
         android:textColor="@color/colorAuthor"
         android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_block"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tv_remove"
+        android:layout_toStartOf="@+id/tv_remove"
+        android:fontFamily="@font/fontawesome"
+        android:layout_below="@+id/content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:padding="8dp"
+        android:text="&#xf070; 屏蔽"
+        android:visibility="invisible"
+        android:textColor="@color/colorAuthor"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/tv_warn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tv_block"
+        android:layout_toStartOf="@+id/tv_block"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:fontFamily="@font/fontawesome"
+        android:padding="8dp"
+        android:text="&#xf071; 警告"
+        android:visibility="invisible"
+        android:textColor="@color/colorAuthor"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tv_warn"
+        android:layout_toStartOf="@+id/tv_warn"
+        android:fontFamily="@font/fontawesome"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:padding="8dp"
+        android:text="&#xf05c; 关闭"
+        android:visibility="invisible"
+        android:textColor="@color/colorAuthor"
+        android:textSize="14sp"/>
 
     <View
         android:layout_width="match_parent"
