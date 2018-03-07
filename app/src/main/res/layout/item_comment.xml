@@ -130,11 +130,59 @@
         android:layout_marginEnd="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
+        android:fontFamily="@font/fontawesome"
         android:padding="8dp"
         android:text="&#xf014; 删除"
-        android:fontFamily="@font/fontawesome"
         android:textColor="@color/colorAuthor"
         android:textSize="14sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_edit"
         app:layout_constraintEnd_toStartOf="@+id/tv_edit" />
+
+    <TextView
+        android:id="@+id/tv_block"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:fontFamily="@font/fontawesome"
+        android:padding="8dp"
+        android:text="&#xf070; 屏蔽"
+        android:textColor="@color/colorAuthor"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_remove"
+        app:layout_constraintEnd_toStartOf="@+id/tv_remove" />
+
+    <TextView
+        android:id="@+id/tv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:fontFamily="@font/fontawesome"
+        android:padding="8dp"
+        android:textColor="@color/colorAuthor"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_block"
+        app:layout_constraintEnd_toStartOf="@+id/tv_block"
+        android:text="&#xf05c; 关闭" />
+
+    <TextView
+        android:id="@+id/tv_warn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:fontFamily="@font/fontawesome"
+        android:padding="8dp"
+        android:textColor="@color/colorAuthor"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_close"
+        app:layout_constraintEnd_toStartOf="@+id/tv_close"
+        android:text="&#xf05c; 警告" />
 </android.support.constraint.ConstraintLayout>

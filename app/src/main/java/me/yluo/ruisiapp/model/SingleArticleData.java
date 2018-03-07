@@ -40,6 +40,13 @@ public class SingleArticleData implements Parcelable {
         this.uid = uid;
     }
 
+    public SingleArticleData(SingleType type, String title, String uid, String username,
+                             String postTime, String index, String replyUrl,
+                             String content, String pid, boolean canManage) {
+        this(type, title, uid, username, postTime, index, replyUrl, content, pid);
+        //TODO 存储数据canManage以及管理功能
+    }
+
     public String getImg() {
         return UrlUtils.getAvaterurlm(uid);
     }
