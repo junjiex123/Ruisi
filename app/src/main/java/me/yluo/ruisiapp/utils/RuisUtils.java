@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.model.Category;
 import me.yluo.ruisiapp.model.Forum;
@@ -280,6 +281,10 @@ public class RuisUtils {
                     if (!isLogin && forumLogin) {//false true
                         continue;
                     }
+                    if (oo.has("manager") && !isManager(App.getGrade(context))){
+                        // 需要管理权限
+                        continue;
+                    }
                     fs.add(new Forum(oo.getString("name"), oo.getInt("fid"), forumLogin));
                 }
                 cates.add(new Category(o.getString("name"), o.getInt("gid"), cateLogin, cateCanPost, fs));
@@ -310,5 +315,16 @@ public class RuisUtils {
         s = s.replace("[/size]", "</size>");
 
         return s;
+    }
+
+    public static boolean isManager(String grade){
+        String [] managers = {"管理员","超级版主","版主","游戏补丁更新组",
+                "睿思助理","RS助理","邀请发放专员","轮值超版","美工组","实习版主"};
+        for (String str : managers){
+            if (str.equals(grade)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

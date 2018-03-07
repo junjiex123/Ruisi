@@ -91,7 +91,8 @@
       {"name": "帮助专区", "fid": 2, "login": false},
       {"name": "发展建议", "fid": 141, "login": false},
       {"name": "邀请码申请", "fid": 137, "login": false},
-      {"name": "公告活动", "fid": 94, "login": false}
+      {"name": "公告活动", "fid": 94, "login": false},
+      {"name": "站务管理", "fid": 69, "login": true, "manager":"true"}
     ]
   }
 ]
