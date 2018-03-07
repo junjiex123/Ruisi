@@ -268,6 +268,13 @@ public class PostActivity extends BaseActivity
                         .create()
                         .show();
                 break;
+                //TODO 处理点击事件
+            case R.id.tv_block:
+                break;
+            case R.id.tv_close:
+                break;
+            case R.id.tv_warn:
+                break;
         }
     }
 
@@ -396,13 +403,22 @@ public class PostActivity extends BaseActivity
                 String pid = temp.attr("id").substring(3);
                 String uid = GetId.getId("uid=", temp.select("span[class=avatar]").select("img").attr("src"));
                 Elements userInfo = temp.select("ul.authi");
-                // commentIndex拿到的数据是"楼层 管理"
+                // 手机版commentIndex拿到的原始数据是"楼层 管理"
                 String commentIndex = userInfo.select("li.grey").select("em").first().text();
                 String username = userInfo.select("a[href^=home.php?mod=space&uid=]").text();
-                // postTime拿到的数据是"管理 收藏 时间"
-                //TODO 根据 canManage来显示管理功能
-                boolean canManage = userInfo.select("li.grey.rela").select("em").first()
-                        .select("a").text().equals("管理");
+                boolean canManage;
+                // 判别是否对该帖子是否有管理权限
+                if (App.IS_SCHOOL_NET) {
+                    // 校园网
+                    canManage = temp.select("div.plc.cl").select("div.display.pi")
+                            .select("ul.authi").select("li.grey.rela").select("em").first()
+                            .select("a").text().equals("管理");
+                } else {
+                    // 校外网
+                    canManage = userInfo.select("li.grey.rela").select("em").first()
+                             .select("a").text().equals("管理");
+                }
+                // 手机版postTime拿到的原始数据是"管理 收藏 时间"
                 String postTime = userInfo.select("li.grey.rela").text()
                         .replace("收藏", "")
                         .replace("管理","");
@@ -471,7 +487,7 @@ public class PostActivity extends BaseActivity
                     }
                     data = new SingleArticleData(SingleType.CONTENT, Title, uid,
                             username, postTime,
-                            commentIndex, replyUrl, contentels.html().trim(), pid);
+                            commentIndex, replyUrl, contentels.html().trim(), pid, canManage);
                     data.vote = d;
                     AuthorName = username;
                     if (!isSaveToDataBase) {
@@ -482,7 +498,8 @@ public class PostActivity extends BaseActivity
                     }
                 } else {//评论
                     data = new SingleArticleData(SingleType.COMMENT, Title, uid,
-                            username, postTime, commentIndex, replyUrl, contentels.html().trim(), pid);
+                            username, postTime, commentIndex, replyUrl,
+                            contentels.html().trim(), pid, canManage);
                 }
                 tepdata.add(data);
             }
