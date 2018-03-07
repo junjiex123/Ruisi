@@ -201,4 +201,10 @@ public class App extends Application {
 
     public static final String CHECK_POST_URL = "forum.php?mod=ajax&action=checkpostrule&ac=newthread&mobile=2";
     public static final String CHECK_UPDATE_URL = "forum.php?mod=viewthread&tid=" + App.POST_TID + "&mobile=2";
+
+    public static final int MANAGE_TYPE_EDIT = 0;
+    public static final int MANAGE_TYPE_DELETE = 1;
+    public static final int MANAGE_TYPE_BLOCK = 2;
+    public static final int MANAGE_TYPE_WARN = 3;
+    public static final int MANAGE_TYPE_CLOSE = 4;
 }

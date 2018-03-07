@@ -1,9 +1,11 @@
 package me.yluo.ruisiapp.activity;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -259,19 +261,15 @@ public class PostActivity extends BaseActivity
                 break;
             case R.id.tv_remove:
                 edit_pos = position;
-                new AlertDialog.Builder(this).
-                        setTitle("删除帖子!").
-                        setMessage("你要删除本贴/回复吗？").
-                        setPositiveButton("删除", (dialog, which) -> removeItem(position))
-                        .setNegativeButton("取消", null)
-                        .setCancelable(true)
-                        .create()
-                        .show();
+                showDialog("删除帖子!", "你要删除本贴/回复吗？", "删除",
+                        position, App.MANAGE_TYPE_DELETE);
                 break;
                 //TODO 处理点击事件
             case R.id.tv_block:
                 break;
             case R.id.tv_close:
+                showDialog("打开或者关闭主题", "按照格式\"打开(关闭)|2018-04-03 14:21\"填写",
+                        "提交", 0, App.MANAGE_TYPE_CLOSE);
                 break;
             case R.id.tv_warn:
                 break;
@@ -624,6 +622,12 @@ public class PostActivity extends BaseActivity
         });
     }
 
+    // TODO 打开或者关闭帖子
+    private void closeArticle(String [] str){
+        String url = UrlUtils.getClosrArticleUrl();
+        Map<String, String> params = new HashMap<>();
+    }
+
     //删除帖子或者回复
     private void removeItem(final int pos) {
         Map<String, String> params = new HashMap<>();
@@ -800,5 +804,43 @@ public class PostActivity extends BaseActivity
     //显示软键盘
     public void showReplyKeyboard() {
         KeyboardUtil.showKeyboard(input);
+    }
+
+    // 管理按钮点击后的确认窗口
+    public void showDialog(String title, String message, String posStr,
+                           int position, int type){
+        final EditText edt = new EditText(this);
+        //TODO 确认窗口以及提交数据,窗口最多可能需要两个输入框
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setNegativeButton("取消", null)
+                .setCancelable(true);
+        switch (type){
+            case App.MANAGE_TYPE_EDIT:
+                break;
+            case App.MANAGE_TYPE_DELETE:
+                builder.setPositiveButton(posStr, (dialog, which) -> removeItem(position));
+                break;
+            case App.MANAGE_TYPE_BLOCK:
+                break;
+            case App.MANAGE_TYPE_WARN:
+                break;
+            case App.MANAGE_TYPE_CLOSE:
+                builder.setView(edt);
+                builder.setPositiveButton(posStr, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        String [] time = edt.getText().toString().split("|");
+                        if (time.length == 2 && ("打开".equals(time[0])) || "关闭".equals(time[0])) {
+                            closeArticle(time);
+                        }
+                    }
+                });
+                break;
+            default:
+                break;
+        }
+        builder.create().show();
     }
 }
