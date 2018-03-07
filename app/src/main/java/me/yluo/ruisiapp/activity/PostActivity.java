@@ -396,9 +396,14 @@ public class PostActivity extends BaseActivity
                 String pid = temp.attr("id").substring(3);
                 String uid = GetId.getId("uid=", temp.select("span[class=avatar]").select("img").attr("src"));
                 Elements userInfo = temp.select("ul.authi");
-                String commentIndex = userInfo.select("li.grey").select("em").text();
+                // commentIndex拿到的数据是"楼层 管理"
+                String commentIndex = userInfo.select("li.grey").select("em").text()
+                        .replace("管理", "");
                 String username = userInfo.select("a[href^=home.php?mod=space&uid=]").text();
-                String postTime = userInfo.select("li.grey.rela").text().replace("收藏", "");
+                // postTime拿到的数据是"管理 收藏 时间"
+                String postTime = userInfo.select("li.grey.rela").text()
+                        .replace("收藏", "")
+                        .replace("管理","");
                 String replyUrl = temp.select(".replybtn").select("input").attr("href");
                 Elements contentels = temp.select(".message");
 
