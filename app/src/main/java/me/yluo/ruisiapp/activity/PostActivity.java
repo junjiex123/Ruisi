@@ -270,9 +270,10 @@ public class PostActivity extends BaseActivity
             case R.id.tv_block:
                 break;
             case R.id.tv_close:
-                showDialog("打开或者关闭主题", "按照格式\n打开(关闭)|yyyy-MM-dd|hh:mm\n"
-                                + "填写,例:\n关闭|2018-04-03|04:03\n时间也可不填",
-                        "提交", 0, App.MANAGE_TYPE_CLOSE);
+                edit_pos = position;
+                showDialog("打开或者关闭主题", "按照格式\n功能(打开/关闭)|yyyy-MM-dd|hh:mm\n"
+                                + "填写,例:\n关闭|2018-04-03|04:03\n时间不填为永久",
+                        "提交", position, App.MANAGE_TYPE_CLOSE);
                 break;
             case R.id.tv_warn:
                 break;
@@ -629,9 +630,16 @@ public class PostActivity extends BaseActivity
     }
 
     private void startClose(){
-        String url = "forum.php?mod=topicadmin&action=moderate&fid=" + Fid
-                + "&moderate[]=" + Tid + "&from=" + Tid
-                + "&optgroup=4&mobile=2";
+        String url = "";
+        if (App.IS_SCHOOL_NET) {
+            url = "forum.php?mod=topicadmin&action=moderate&fid=" + Fid + "&moderate[]=" + Tid + "&handlekey=mods" +
+                    "&infloat=yes&nopost=yes&from=" + Tid + "&inajax=1";
+            //url = "forum.php?mod=topicadmin&action=moderate&optgroup=4&modsubmit=yes&infloat=yes&inajax=1";
+        } else {
+            url = "forum.php?mod=topicadmin&action=moderate&fid=" + Fid
+                    + "&moderate[]=" + Tid + "&from=" + Tid
+                    + "&optgroup=4&mobile=2";
+        }
         params = null;
         HttpUtil.get(url, new ResponseHandler() {
             @Override
@@ -653,15 +661,18 @@ public class PostActivity extends BaseActivity
     }
 
     // 打开或者关闭帖子
-    private void closeArticle(String [] str, int position){
+    private void closeArticle(String [] str){
         if (str.length == 3) {
             params.put("expirationclose", str[1] + " " + str[2]);
+        } else {
+            params.put("expirationclose", "");
         }
         if (str[0].equals("打开")) {
             params.put("operations[]", "open");
         } else if (str[0].equals("关闭")){
             params.put("operations[]", "close");
         }
+        params.put("reason", "手机版主题操作");
         HttpUtil.post(UrlUtils.getCloseArticleUrl(), params, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -892,7 +903,7 @@ public class PostActivity extends BaseActivity
                     public void onClick(DialogInterface dialog, int i) {
                         String [] time = edt.getText().toString().split("\\|");
                         if (("打开".equals(time[0]) || "关闭".equals(time[0]) && (time.length ==1 || time.length == 3))) {
-                            closeArticle(time, position);
+                            closeArticle(time);
                         } else {
                             showToast("输入格式错误，请重新输入");
                         }
