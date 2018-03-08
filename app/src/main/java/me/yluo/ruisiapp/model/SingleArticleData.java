@@ -31,7 +31,9 @@ public class SingleArticleData implements Parcelable {
     public VoteData vote;
 
 
-    public SingleArticleData(SingleType type, String title, String uid, String username, String postTime, String index, String replyUrl, String content, String pid) {
+    public SingleArticleData(SingleType type, String title, String uid,
+                             String username, String postTime, String index,
+                             String replyUrl, String content, String pid) {
         this.type = type;
         this.username = username;
         this.postTime = postTime;

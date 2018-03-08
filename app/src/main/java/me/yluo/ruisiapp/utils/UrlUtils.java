@@ -93,8 +93,7 @@ public class UrlUtils {
         return  "misc.php?mod=swfupload&operation=upload&type=image&inajax=yes&infloat=yes&simple=2&mobile=2";
     }
 
-    //TODO 打开或者关闭帖子的连接
-    public static String getClosrArticleUrl() {
-        return "forum.php?mod=topicadmin&action=moderate&opt=group=4&modsubmit=yes&mobile=2&handlekey=moderateform&inajax=1";
+    public static String getCloseArticleUrl() {
+        return "forum.php?mod=topicadmin&action=moderate&optgroup=4&modsubmit=yes&mobile=2&handlekey=moderateform&inajax=1";
     }
 }

@@ -1,6 +1,5 @@
 package me.yluo.ruisiapp.activity;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -55,6 +54,7 @@ import me.yluo.ruisiapp.myhttp.SyncHttpClient;
 import me.yluo.ruisiapp.utils.GetId;
 import me.yluo.ruisiapp.utils.KeyboardUtil;
 import me.yluo.ruisiapp.utils.LinkClickHandler;
+import me.yluo.ruisiapp.utils.RuisUtils;
 import me.yluo.ruisiapp.utils.UrlUtils;
 import me.yluo.ruisiapp.widget.MyFriendPicker;
 import me.yluo.ruisiapp.widget.MyListDivider;
@@ -83,13 +83,15 @@ public class PostActivity extends BaseActivity
     private PostAdapter adapter;
     private List<SingleArticleData> datas = new ArrayList<>();
     private boolean isSaveToDataBase = false;
-    private String Title, AuthorName, Tid, RedirectPid = "";
+    private String Title, AuthorName, Tid, Fid, RedirectPid = "";
     private boolean showPlainText = false;
     private EditText input;
     private SmileyInputRoot rootView;
     private ArrayAdapter<String> spinnerAdapter;
     private Spinner spinner;
     private List<String> pageSpinnerDatas = new ArrayList<>();
+
+    private Map<String, String> params;
 
     public static void open(Context context, String url, @Nullable String author) {
         Intent intent = new Intent(context, PostActivity.class);
@@ -268,7 +270,8 @@ public class PostActivity extends BaseActivity
             case R.id.tv_block:
                 break;
             case R.id.tv_close:
-                showDialog("打开或者关闭主题", "按照格式\"打开(关闭)|2018-04-03 14:21\"填写",
+                showDialog("打开或者关闭主题", "按照格式\n打开(关闭)|yyyy-MM-dd|hh:mm\n"
+                                + "填写,例:\n关闭|2018-04-03|04:03\n时间也可不填",
                         "提交", 0, App.MANAGE_TYPE_CLOSE);
                 break;
             case R.id.tv_warn:
@@ -379,8 +382,11 @@ public class PostActivity extends BaseActivity
             //获得回复楼主的url
             if (TextUtils.isEmpty(replyUrl)) {
                 String s = elements.select("form#fastpostform").attr("action");
-                if (!TextUtils.isEmpty(s))
+                if (!TextUtils.isEmpty(s)) {
                     replyUrl = s;
+                    //获得板块ID用于请求数据
+                    Fid = GetId.getId("fid=", replyUrl);
+                }
             }
 
             //获取总页数 和当前页数
@@ -622,10 +628,62 @@ public class PostActivity extends BaseActivity
         });
     }
 
-    // TODO 打开或者关闭帖子
-    private void closeArticle(String [] str){
-        String url = UrlUtils.getClosrArticleUrl();
-        Map<String, String> params = new HashMap<>();
+    private void startClose(){
+        String url = "forum.php?mod=topicadmin&action=moderate&fid=" + Fid
+                + "&moderate[]=" + Tid + "&from=" + Tid
+                + "&optgroup=4&mobile=2";
+        params = null;
+        HttpUtil.get(url, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String tmp = new String(response);
+                int start = tmp.indexOf("<div");
+                int last = tmp.lastIndexOf("</div>") + 6;
+                Document document = Jsoup.parse(tmp.substring(start, last));
+                params = RuisUtils.getForms(document, "moderateform");
+                params.put("redirect", "");
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                super.onFailure(e);
+                showToast("网络错误！请重试");
+            }
+        });
+    }
+
+    // 打开或者关闭帖子
+    private void closeArticle(String [] str, int position){
+        if (str.length == 3) {
+            params.put("expirationclose", str[1] + " " + str[2]);
+        }
+        if (str[0].equals("打开")) {
+            params.put("operations[]", "open");
+        } else if (str[0].equals("关闭")){
+            params.put("operations[]", "close");
+        }
+        HttpUtil.post(UrlUtils.getCloseArticleUrl(), params, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                if (res.contains("成功")) {
+                    showToast("管理操作成功");
+                } else {
+                    showToast("管理操作失败,我也不知道哪里有问题");
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                super.onFailure(e);
+                showToast("网络错误，关闭/打开帖子失败！");
+            }
+        });
+    }
+
+    //TODO 读取删除框的数据
+    private void startDelete(){
+        //String url = "forum.php?mod=topicadmin&action=moderate&fid=" + Fid+ "&moderate[]=" + Tid+ "&operation=delete&optgroup=3&from=" + Tid + "&mobile=2";
     }
 
     //删除帖子或者回复
@@ -640,7 +698,7 @@ public class PostActivity extends BaseActivity
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                Log.e("resoult", res);
+                Log.e("result", res);
                 if (res.contains("主题删除成功")) {
                     if (datas.get(pos).type == SingleType.CONTENT) {
                         showToast("主题删除成功");
@@ -827,13 +885,16 @@ public class PostActivity extends BaseActivity
             case App.MANAGE_TYPE_WARN:
                 break;
             case App.MANAGE_TYPE_CLOSE:
+                startClose();
                 builder.setView(edt);
                 builder.setPositiveButton(posStr, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
-                        String [] time = edt.getText().toString().split("|");
-                        if (time.length == 2 && ("打开".equals(time[0])) || "关闭".equals(time[0])) {
-                            closeArticle(time);
+                        String [] time = edt.getText().toString().split("\\|");
+                        if (("打开".equals(time[0]) || "关闭".equals(time[0]) && (time.length ==1 || time.length == 3))) {
+                            closeArticle(time, position);
+                        } else {
+                            showToast("输入格式错误，请重新输入");
                         }
                     }
                 });
