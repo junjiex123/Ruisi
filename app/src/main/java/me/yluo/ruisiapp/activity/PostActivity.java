@@ -221,7 +221,7 @@ public class PostActivity extends BaseActivity
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                new DealWithArticleData().execute(res);
+                new DealWithArticleData(PostActivity.this).execute(res);
             }
 
             @Override
@@ -342,6 +342,11 @@ public class PostActivity extends BaseActivity
 
         private String errorText = "";
         private int pageLoad = 1;
+        private Context context;
+
+        DealWithArticleData(Context context){
+            this.context = context;
+        }
 
         @Override
         protected List<SingleArticleData> doInBackground(String... params) {
@@ -411,17 +416,27 @@ public class PostActivity extends BaseActivity
                 // 手机版commentIndex拿到的原始数据是"楼层 管理"
                 String commentIndex = userInfo.select("li.grey").select("em").first().text();
                 String username = userInfo.select("a[href^=home.php?mod=space&uid=]").text();
-                boolean canManage;
+                boolean canManage = false;
                 // 判别是否对该帖子是否有管理权限
-                if (App.IS_SCHOOL_NET) {
-                    // 校园网
-                    canManage = temp.select("div.plc.cl").select("div.display.pi")
-                            .select("ul.authi").select("li.grey.rela").select("em").first()
-                            .select("a").text().equals("管理");
-                } else {
-                    // 校外网
-                    canManage = userInfo.select("li.grey.rela").select("em").first()
-                             .select("a").text().equals("管理");
+                if (App.ISLOGIN(context)) {
+                    if (App.IS_SCHOOL_NET) {
+                        // 校园网
+                        Elements es = temp.select("div.plc.cl").select("div.display.pi")
+                                .select("ul.authi").select("li.grey.rela").select("em");
+                        //TODO 校园网下无管理权限用户读取数据问题
+                        if (es != null && es.size() != 0) {
+                            canManage = es.first()
+                                    .select("a").text().equals("管理");
+
+                        }
+                    } else {
+                        // 校外网
+                        Elements es = userInfo.select("li.grey.rela").select("em");
+                        if (es != null && es.size() != 0) {
+                            canManage = es.first()
+                                    .select("a").text().equals("管理");
+                        }
+                    }
                 }
                 // 手机版postTime拿到的原始数据是"管理 收藏 时间"
                 String postTime = userInfo.select("li.grey.rela").text()
@@ -678,7 +693,7 @@ public class PostActivity extends BaseActivity
             public void onSuccess(byte[] response) {
                 String res = new String(response);
                 if (res.contains("成功")) {
-                    showToast("管理操作成功");
+                    showToast(str[0] + "帖子操作成功");
                 } else {
                     showToast("管理操作失败,我也不知道哪里有问题");
                 }
@@ -687,14 +702,39 @@ public class PostActivity extends BaseActivity
             @Override
             public void onFailure(Throwable e) {
                 super.onFailure(e);
-                showToast("网络错误，关闭/打开帖子失败！");
+                showToast("网络错误，"+ str[0] + "帖子失败！");
             }
         });
     }
 
     //TODO 读取删除框的数据
-    private void startDelete(){
-        //String url = "forum.php?mod=topicadmin&action=moderate&fid=" + Fid+ "&moderate[]=" + Tid+ "&operation=delete&optgroup=3&from=" + Tid + "&mobile=2";
+    private void startDelete(int position){
+        String url;
+        if (position == 0) {
+            //删除整个帖子
+            url = "forum.php?mod=topicadmin&action=moderate&fid=" + Fid
+                    + "&moderate[]=" + Tid+ "&operation=delete&optgroup=3&from="
+                    + Tid + "&mobile=2&inajax=1";
+        } else {
+            //删除评论
+            //forum.php?mod=topicadmin&action=delpost&fid=72&tid=921699&operation=&optgroup=&page=&topiclist[]=23621280&mobile=2&inajax=1
+            url = "forum.php?mod=topicadmin&action=delpost&fid=" + Fid
+                    + "&tid=" + Tid+ "&operation=&optgroup=&page=&topiclist[]="
+                    + datas.get(position).pid + "&mobile=2&inajax=1";
+        }
+        HttpUtil.get(url, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String tmp = new String(response);
+                showToast(tmp);
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                super.onFailure(e);
+                showToast("网络错误！");
+            }
+        });
     }
 
     //删除帖子或者回复
@@ -884,20 +924,20 @@ public class PostActivity extends BaseActivity
                 .setTitle(title)
                 .setMessage(message)
                 .setNegativeButton("取消", null)
+                .setView(edt)
                 .setCancelable(true);
         switch (type){
             case App.MANAGE_TYPE_EDIT:
                 break;
             case App.MANAGE_TYPE_DELETE:
                 builder.setPositiveButton(posStr, (dialog, which) -> removeItem(position));
+                startDelete(position);
                 break;
             case App.MANAGE_TYPE_BLOCK:
                 break;
             case App.MANAGE_TYPE_WARN:
                 break;
             case App.MANAGE_TYPE_CLOSE:
-                startClose();
-                builder.setView(edt);
                 builder.setPositiveButton(posStr, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
@@ -909,6 +949,7 @@ public class PostActivity extends BaseActivity
                         }
                     }
                 });
+                startClose();
                 break;
             default:
                 break;
