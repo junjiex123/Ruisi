@@ -263,7 +263,7 @@ public class PostActivity extends BaseActivity
                 break;
             case R.id.tv_remove:
                 edit_pos = position;
-                showDialog("删除帖子!", "你要删除本贴/回复吗？", "删除",
+                showDialog("删除帖子!", "请输入删帖理由", "删除",
                         position, App.MANAGE_TYPE_DELETE);
                 break;
                 //TODO 处理点击事件
@@ -423,7 +423,6 @@ public class PostActivity extends BaseActivity
                         // 校园网
                         Elements es = temp.select("div.plc.cl").select("div.display.pi")
                                 .select("ul.authi").select("li.grey.rela").select("em");
-                        //TODO 校园网下无管理权限用户读取数据问题
                         if (es != null && es.size() != 0) {
                             canManage = es.first()
                                     .select("a").text().equals("管理");
@@ -710,7 +709,8 @@ public class PostActivity extends BaseActivity
     //TODO 读取删除框的数据
     private void startDelete(int position){
         String url;
-        if (position == 0) {
+        // 一下仅仅针对手机版做了测试
+        if (datas.get(position).type == SingleType.CONTENT) {
             //删除整个帖子
             url = "forum.php?mod=topicadmin&action=moderate&fid=" + Fid
                     + "&moderate[]=" + Tid+ "&operation=delete&optgroup=3&from="
@@ -722,11 +722,19 @@ public class PostActivity extends BaseActivity
                     + "&tid=" + Tid+ "&operation=&optgroup=&page=&topiclist[]="
                     + datas.get(position).pid + "&mobile=2&inajax=1";
         }
+        params = null;
         HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String tmp = new String(response);
-                showToast(tmp);
+                int start = tmp.indexOf("<div");
+                int last = tmp.lastIndexOf("</div>") + 6;
+                Document document = Jsoup.parse(tmp.substring(start, last));
+                if (position == 0) {
+                    params = RuisUtils.getForms(document, "moderateform");
+                } else {
+                    params = RuisUtils.getForms(document, "topicadminform");
+                }
             }
 
             @Override
@@ -738,19 +746,15 @@ public class PostActivity extends BaseActivity
     }
 
     //删除帖子或者回复
-    private void removeItem(final int pos) {
-        Map<String, String> params = new HashMap<>();
-        params.put("editsubmit", "yes");
-        //params.put("fid",);
-        params.put("tid", Tid);
-        params.put("pid", datas.get(pos).pid);
-        params.put("delete", "1");
-        HttpUtil.post(UrlUtils.getDeleteReplyUrl(), params, new ResponseHandler() {
+    private void removeItem(final int pos, String reason) {
+        params.put("redirect", "");
+        params.put("reason", reason);
+        HttpUtil.post(UrlUtils.getDeleteReplyUrl(datas.get(pos).type), params, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
                 Log.e("result", res);
-                if (res.contains("主题删除成功")) {
+                if (res.contains("成功")) {
                     if (datas.get(pos).type == SingleType.CONTENT) {
                         showToast("主题删除成功");
                         finish();
@@ -930,7 +934,13 @@ public class PostActivity extends BaseActivity
             case App.MANAGE_TYPE_EDIT:
                 break;
             case App.MANAGE_TYPE_DELETE:
-                builder.setPositiveButton(posStr, (dialog, which) -> removeItem(position));
+                builder.setPositiveButton(posStr, (dialog, which) -> {
+                    if (!edt.getText().toString().equals("")) {
+                        removeItem(position, edt.getText().toString());
+                    } else {
+                        showToast("请输入删帖理由!");
+                    }
+                });
                 startDelete(position);
                 break;
             case App.MANAGE_TYPE_BLOCK:
@@ -938,15 +948,12 @@ public class PostActivity extends BaseActivity
             case App.MANAGE_TYPE_WARN:
                 break;
             case App.MANAGE_TYPE_CLOSE:
-                builder.setPositiveButton(posStr, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int i) {
-                        String [] time = edt.getText().toString().split("\\|");
-                        if (("打开".equals(time[0]) || "关闭".equals(time[0]) && (time.length ==1 || time.length == 3))) {
-                            closeArticle(time);
-                        } else {
-                            showToast("输入格式错误，请重新输入");
-                        }
+                builder.setPositiveButton(posStr, (dialog, which) ->{
+                    String [] time = edt.getText().toString().split("\\|");
+                    if (("打开".equals(time[0]) || "关闭".equals(time[0]) && (time.length ==1 || time.length == 3))) {
+                        closeArticle(time);
+                    } else {
+                        showToast("输入格式错误，请重新输入");
                     }
                 });
                 startClose();

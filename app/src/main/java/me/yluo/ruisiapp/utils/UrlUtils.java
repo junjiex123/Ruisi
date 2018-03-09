@@ -1,6 +1,7 @@
 package me.yluo.ruisiapp.utils;
 
 import me.yluo.ruisiapp.App;
+import me.yluo.ruisiapp.model.SingleType;
 
 /**
  * Created by free2 on 16-4-1.
@@ -85,8 +86,18 @@ public class UrlUtils {
         return App.getBaseUrl() + "forum.php?mod=post&action=newthread&fid=" + fid + "&mobile=2";
     }
 
-    public static String getDeleteReplyUrl() {
-        return "forum.php?mod=post&action=edit&extra=&editsubmit=yes&mobile=2&geoloc=&handlekey=postform&inajax=1";
+    public static String getDeleteReplyUrl(SingleType type) {
+        if (type == SingleType.CONTENT) {
+            // 主贴
+            return "forum.php?mod=topicadmin&action=moderate&optgroup=3"
+                    + "&modsubmit=yes&mobile=2&handlekey=moderateform&inajax=1";
+        } else if (type == SingleType.COMMENT){
+            // 评论
+            return "forum.php?mod=topicadmin&action=delpost&modsubmit=yes"
+                    + "&modclick=yes&mobile=2&handlekey=topicadminform&inajax=1";
+        } else {
+            return "";
+        }
     }
 
     public static String getUploadImageUrl() {
