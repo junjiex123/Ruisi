@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -268,6 +267,8 @@ public class PostActivity extends BaseActivity
                 break;
                 //TODO 处理点击事件
             case R.id.tv_block:
+                edit_pos = position;
+                showDialog("屏蔽帖子！", "请输入屏蔽或者解除", "确定", position, App.MANAGE_TYPE_BLOCK);
                 break;
             case R.id.tv_close:
                 edit_pos = position;
@@ -643,6 +644,32 @@ public class PostActivity extends BaseActivity
         });
     }
 
+
+    private void startBlock(int position) {
+        String url = "forum.php?mod=topicadmin&action=banpost"
+                + "&fid=" + Fid
+                + "&tid=" + Tid
+                + "&topiclist[]=" + datas.get(position).pid
+                + "&mobile=2&inajax=1";
+        params = null;
+        HttpUtil.get(url, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String tmp = new String(response);
+                int start = tmp.indexOf("<div");
+                int last = tmp.lastIndexOf("</div>") + 6;
+                Document document = Jsoup.parse(tmp.substring(start, last));
+                params = RuisUtils.getForms(document, "topicadminform");
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                super.onFailure(e);
+                showToast("网络错误！请重试");
+            }
+        });
+    }
+
     private void startClose(){
         String url = "";
         if (App.IS_SCHOOL_NET) {
@@ -674,6 +701,32 @@ public class PostActivity extends BaseActivity
         });
     }
 
+    private void blockReply(int position, String s){
+        if (s.equals("屏蔽")) {
+            params.put("banned", "1");
+        } else {
+            params.put("banned", "0");
+        }
+        HttpUtil.post(UrlUtils.getBlockReplyUrl(), params, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                if (res.contains("成功")) {
+                    showToast("帖子操作成功，刷新帖子即可看到效果");
+                } else {
+                    showToast("管理操作失败,我也不知道哪里有问题");
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                super.onFailure(e);
+                super.onFailure(e);
+                showToast("网络错误，操作失败！");
+            }
+        });
+    }
+
     // 打开或者关闭帖子
     private void closeArticle(String [] str){
         if (str.length == 3) {
@@ -692,7 +745,7 @@ public class PostActivity extends BaseActivity
             public void onSuccess(byte[] response) {
                 String res = new String(response);
                 if (res.contains("成功")) {
-                    showToast(str[0] + "帖子操作成功");
+                    showToast(str[0] + "帖子操作成功，刷新帖子即可看到效果");
                 } else {
                     showToast("管理操作失败,我也不知道哪里有问题");
                 }
@@ -706,10 +759,10 @@ public class PostActivity extends BaseActivity
         });
     }
 
-    //TODO 读取删除框的数据
+    // TODO 校园网环境下删除帖子的操作
     private void startDelete(int position){
         String url;
-        // 一下仅仅针对手机版做了测试
+        // 以下仅仅针对手机版做了测试
         if (datas.get(position).type == SingleType.CONTENT) {
             //删除整个帖子
             url = "forum.php?mod=topicadmin&action=moderate&fid=" + Fid
@@ -717,7 +770,6 @@ public class PostActivity extends BaseActivity
                     + Tid + "&mobile=2&inajax=1";
         } else {
             //删除评论
-            //forum.php?mod=topicadmin&action=delpost&fid=72&tid=921699&operation=&optgroup=&page=&topiclist[]=23621280&mobile=2&inajax=1
             url = "forum.php?mod=topicadmin&action=delpost&fid=" + Fid
                     + "&tid=" + Tid+ "&operation=&optgroup=&page=&topiclist[]="
                     + datas.get(position).pid + "&mobile=2&inajax=1";
@@ -730,7 +782,7 @@ public class PostActivity extends BaseActivity
                 int start = tmp.indexOf("<div");
                 int last = tmp.lastIndexOf("</div>") + 6;
                 Document document = Jsoup.parse(tmp.substring(start, last));
-                if (position == 0) {
+                if (datas.get(position).type == SingleType.CONTENT) {
                     params = RuisUtils.getForms(document, "moderateform");
                 } else {
                     params = RuisUtils.getForms(document, "topicadminform");
@@ -747,6 +799,10 @@ public class PostActivity extends BaseActivity
 
     //删除帖子或者回复
     private void removeItem(final int pos, String reason) {
+        if (App.IS_SCHOOL_NET) {
+            showToast("抱歉，校园网环境下暂时不支持删除操作");
+            return;
+        }
         params.put("redirect", "");
         params.put("reason", reason);
         HttpUtil.post(UrlUtils.getDeleteReplyUrl(datas.get(pos).type), params, new ResponseHandler() {
@@ -944,13 +1000,24 @@ public class PostActivity extends BaseActivity
                 startDelete(position);
                 break;
             case App.MANAGE_TYPE_BLOCK:
+                builder.setPositiveButton(posStr, (dialog, which) ->{
+                   if (!edt.getText().toString().equals("")
+                           && (edt.getText().toString().equals("屏蔽")
+                                || edt.getText().toString().equals("解除"))) {
+                       blockReply(position, edt.getText().toString());
+                   } else {
+                       showToast("请输入屏蔽或者解除");
+                   }
+                });
+                startBlock(position);
                 break;
             case App.MANAGE_TYPE_WARN:
                 break;
             case App.MANAGE_TYPE_CLOSE:
                 builder.setPositiveButton(posStr, (dialog, which) ->{
                     String [] time = edt.getText().toString().split("\\|");
-                    if (("打开".equals(time[0]) || "关闭".equals(time[0]) && (time.length ==1 || time.length == 3))) {
+                    if (("打开".equals(time[0]) || "关闭".equals(time[0])
+                            && (time.length ==1 || time.length == 3))) {
                         closeArticle(time);
                     } else {
                         showToast("输入格式错误，请重新输入");
@@ -963,4 +1030,6 @@ public class PostActivity extends BaseActivity
         }
         builder.create().show();
     }
+
+
 }

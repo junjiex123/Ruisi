@@ -107,4 +107,8 @@ public class UrlUtils {
     public static String getCloseArticleUrl() {
         return "forum.php?mod=topicadmin&action=moderate&optgroup=4&modsubmit=yes&mobile=2&handlekey=moderateform&inajax=1";
     }
+
+    public static String getBlockReplyUrl() {
+        return "forum.php?mod=topicadmin&action=banpost&modsubmit=yes&modclick=yes&mobile=2&handlekey=topicadminform&inajax=1";
+    }
 }
