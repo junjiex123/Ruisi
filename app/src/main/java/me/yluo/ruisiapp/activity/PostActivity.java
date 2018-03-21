@@ -60,6 +60,8 @@ import me.yluo.ruisiapp.widget.MyListDivider;
 import me.yluo.ruisiapp.widget.emotioninput.SmileyInputRoot;
 import me.yluo.ruisiapp.widget.htmlview.VoteDialog;
 
+import static me.yluo.ruisiapp.utils.RuisUtils.getManageContent;
+
 /**
  * Created by free2 on 16-3-6.
  * 单篇文章activity
@@ -277,6 +279,8 @@ public class PostActivity extends BaseActivity
                         "提交", position, App.MANAGE_TYPE_CLOSE);
                 break;
             case R.id.tv_warn:
+                edit_pos = position;
+                showDialog("警告用户！", "请输入警告或者解除", "确定", position, App.MANAGE_TYPE_WARN);
                 break;
         }
     }
@@ -655,10 +659,7 @@ public class PostActivity extends BaseActivity
         HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
-                String tmp = new String(response);
-                int start = tmp.indexOf("<div");
-                int last = tmp.lastIndexOf("</div>") + 6;
-                Document document = Jsoup.parse(tmp.substring(start, last));
+                Document document = RuisUtils.getManageContent(response);
                 params = RuisUtils.getForms(document, "topicadminform");
             }
 
@@ -670,12 +671,42 @@ public class PostActivity extends BaseActivity
         });
     }
 
+    private void startWarn(int position) {
+        if (App.IS_SCHOOL_NET) {
+            // computer
+            params = new HashMap<>();
+            params.put("fid", Fid);
+            params.put("page", "1");
+            params.put("tid", Tid);
+            params.put("handlekey", "mods");
+            params.put("topiclist[]", datas.get(position).pid);
+            params.put("reason", " 手机版主题操作");
+        } else {
+            String url = "forum.php?mod=topicadmin&action=warn&fid=" + Fid
+                    + "&tid=" + Tid
+                    +"&operation=&optgroup=&page=&topiclist[]="+datas.get(position).pid + "&mobile=2&inajax=1";
+            //url = forum.php?mod=topicadmin&action=warn&fid=72&tid=922824&handlekey=mods&infloat=yes&nopost=yes&r0.8544855790245922&inajax=1
+            params = null;
+            HttpUtil.get(url, new ResponseHandler() {
+                @Override
+                public void onSuccess(byte[] response) {
+                    Document document = getManageContent(response);
+                    params = RuisUtils.getForms(document, "topicadminform");
+                }
+
+                @Override
+                public void onFailure(Throwable e) {
+                    super.onFailure(e);
+                }
+            });
+        }
+    }
+
     private void startClose(){
         String url = "";
         if (App.IS_SCHOOL_NET) {
             url = "forum.php?mod=topicadmin&action=moderate&fid=" + Fid + "&moderate[]=" + Tid + "&handlekey=mods" +
                     "&infloat=yes&nopost=yes&from=" + Tid + "&inajax=1";
-            //url = "forum.php?mod=topicadmin&action=moderate&optgroup=4&modsubmit=yes&infloat=yes&inajax=1";
         } else {
             url = "forum.php?mod=topicadmin&action=moderate&fid=" + Fid
                     + "&moderate[]=" + Tid + "&from=" + Tid
@@ -685,10 +716,7 @@ public class PostActivity extends BaseActivity
         HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
-                String tmp = new String(response);
-                int start = tmp.indexOf("<div");
-                int last = tmp.lastIndexOf("</div>") + 6;
-                Document document = Jsoup.parse(tmp.substring(start, last));
+                Document document = RuisUtils.getManageContent(response);
                 params = RuisUtils.getForms(document, "moderateform");
                 params.put("redirect", "");
             }
@@ -697,6 +725,31 @@ public class PostActivity extends BaseActivity
             public void onFailure(Throwable e) {
                 super.onFailure(e);
                 showToast("网络错误！请重试");
+            }
+        });
+    }
+
+    private void warnUser(int position, String s){
+        if (s.equals("警告")) {
+            params.put("warned", "1");
+        } else {
+            params.put("warned", "0");
+        }
+        HttpUtil.post(UrlUtils.getWarnUserUrl(), params, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                if (res.contains("成功")) {
+                    showToast("帖子操作成功，刷新帖子即可看到效果");
+                } else {
+                    showToast("管理操作失败,我也不知道哪里有问题");
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                super.onFailure(e);
+                showToast("网络错误，操作失败！");
             }
         });
     }
@@ -720,7 +773,6 @@ public class PostActivity extends BaseActivity
 
             @Override
             public void onFailure(Throwable e) {
-                super.onFailure(e);
                 super.onFailure(e);
                 showToast("网络错误，操作失败！");
             }
@@ -778,10 +830,7 @@ public class PostActivity extends BaseActivity
         HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
-                String tmp = new String(response);
-                int start = tmp.indexOf("<div");
-                int last = tmp.lastIndexOf("</div>") + 6;
-                Document document = Jsoup.parse(tmp.substring(start, last));
+                Document document = RuisUtils.getManageContent(response);
                 if (datas.get(position).type == SingleType.CONTENT) {
                     params = RuisUtils.getForms(document, "moderateform");
                 } else {
@@ -979,7 +1028,6 @@ public class PostActivity extends BaseActivity
     public void showDialog(String title, String message, String posStr,
                            int position, int type){
         final EditText edt = new EditText(this);
-        //TODO 确认窗口以及提交数据,窗口最多可能需要两个输入框
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)
@@ -988,6 +1036,7 @@ public class PostActivity extends BaseActivity
                 .setCancelable(true);
         switch (type){
             case App.MANAGE_TYPE_EDIT:
+                // nothing to do
                 break;
             case App.MANAGE_TYPE_DELETE:
                 builder.setPositiveButton(posStr, (dialog, which) -> {
@@ -1012,6 +1061,16 @@ public class PostActivity extends BaseActivity
                 startBlock(position);
                 break;
             case App.MANAGE_TYPE_WARN:
+                builder.setPositiveButton(posStr, (dialog, which) -> {
+                            if (!edt.getText().toString().equals("")
+                                    && (edt.getText().toString().equals("警告")
+                                    || edt.getText().toString().equals("解除"))) {
+                                warnUser(position, edt.getText().toString());
+                            } else {
+                                showToast("请输入警告或者解除");
+                            }
+                });
+                startWarn(position);
                 break;
             case App.MANAGE_TYPE_CLOSE:
                 builder.setPositiveButton(posStr, (dialog, which) ->{

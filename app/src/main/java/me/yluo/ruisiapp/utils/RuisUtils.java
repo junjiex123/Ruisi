@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -326,5 +327,12 @@ public class RuisUtils {
             }
         }
         return false;
+    }
+
+    public static Document getManageContent(byte[] response){
+        String tmp = new String(response);
+        int start = tmp.indexOf("<div");
+        int last = tmp.lastIndexOf("</div>") + 6;
+        return Jsoup.parse(tmp.substring(start, last));
     }
 }

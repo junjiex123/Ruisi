@@ -111,4 +111,8 @@ public class UrlUtils {
     public static String getBlockReplyUrl() {
         return "forum.php?mod=topicadmin&action=banpost&modsubmit=yes&modclick=yes&mobile=2&handlekey=topicadminform&inajax=1";
     }
+
+    public static String getWarnUserUrl(){
+        return "forum.php?mod=topicadmin&action=warn&modsubmit=yes&modclick=yes&mobile=2&handlekey=topicadminform&inajax=1";
+    }
 }
