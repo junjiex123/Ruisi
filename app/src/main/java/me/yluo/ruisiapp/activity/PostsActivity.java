@@ -325,7 +325,8 @@ public class PostsActivity extends BaseActivity implements
                 //#ajaxid_0\2e 0612111796964776
 
                 String author, authorUrl;
-                Element authorNode = li.selectFirst("tr > td:nth-child(3) > cite > a");
+                //Element authorNode = li.selectFirst("tr > td:nth-child(3) > cite > a");
+                Element authorNode = li.selectFirst("tr > td > cite > a");
                 if (authorNode == null) {
                     author = "未知";
                     authorUrl = "";
@@ -335,26 +336,39 @@ public class PostsActivity extends BaseActivity implements
                 }
 
                 String time, viewcount, replaycount;
-                Element timeNode = li.selectFirst("tr > td:nth-child(3) > em");
+                //Element timeNode = li.selectFirst("tr > td:nth-child(3) > em");
+                Element timeNode = li.selectFirst("tr > td > em");
                 if (timeNode == null) {
                     time = "未知时间";
                 } else {
                     time = timeNode.text();
                 }
 
-                Element viewsNode = li.selectFirst("tr > td:nth-child(4) > em");
+                //Element viewsNode = li.selectFirst("tr > td:nth-child(4) > em");
+                Elements viewsAndReplyNode = li.select("tr").select("td.num");
+                if (viewsAndReplyNode != null) {
+                    // 拿到了查看数量和回复数量
+                    //Element viewsNode = li.selectFirst("tr > td:nth-child(4) > em");
+                    replaycount = viewsAndReplyNode.select("a").first().text();
+                    viewcount = viewsAndReplyNode.select("em").first().text();
+                } else {
+                    viewcount = "0";
+                    replaycount = "0";
+                }
+                /*
                 if (viewsNode == null) {
                     viewcount = "0";
                 } else {
                     viewcount = viewsNode.text();
                 }
 
-                Element replysNode = li.selectFirst("tr > td:nth-child(4) > a");
+                //Element replysNode = li.selectFirst("tr > td:nth-child(4) > a");
+                Element replysNode = li.selectFirst("tr > td > a");
                 if (replysNode == null) {
                     replaycount = "0";
                 } else {
                     replaycount = replysNode.text();
-                }
+                }*/
 
                 String tag = li.select("em a[href^=forum.php?mod=forumdisplay]").text();
                 if (title.length() > 0 && author.length() > 0) {

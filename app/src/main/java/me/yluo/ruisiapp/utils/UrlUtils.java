@@ -89,12 +89,20 @@ public class UrlUtils {
     public static String getDeleteReplyUrl(SingleType type) {
         if (type == SingleType.CONTENT) {
             // 主贴
-            return "forum.php?mod=topicadmin&action=moderate&optgroup=3"
-                    + "&modsubmit=yes&mobile=2&handlekey=moderateform&inajax=1";
+            if (App.IS_SCHOOL_NET) {
+                return "forum.php?mod=topicadmin&action=moderate&optgroup=3&modsubmit=yes&infloat=yes&inajax=1";
+            } else {
+                return "forum.php?mod=topicadmin&action=moderate&optgroup=3"
+                        + "&modsubmit=yes&mobile=2&handlekey=moderateform&inajax=1";
+            }
         } else if (type == SingleType.COMMENT){
             // 评论
-            return "forum.php?mod=topicadmin&action=delpost&modsubmit=yes"
-                    + "&modclick=yes&mobile=2&handlekey=topicadminform&inajax=1";
+            if (App.IS_SCHOOL_NET) {
+                return "forum.php?mod=topicadmin&action=delpost&modsubmit=yes&infloat=yes&modclick=yes&inajax=1";
+            } else {
+                return "forum.php?mod=topicadmin&action=delpost&modsubmit=yes"
+                        + "&modclick=yes&mobile=2&handlekey=topicadminform&inajax=1";
+            }
         } else {
             return "";
         }
