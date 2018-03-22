@@ -89,6 +89,7 @@ public class LoginActivity extends BaseActivity implements InputValidDialog.OnIn
             remPassword.setChecked(true);
             edUsername.setText(shp.getString(App.LOGIN_NAME, ""));
             edPassword.setText(shp.getString(App.LOGIN_PASS, ""));
+            btnLogin.setEnabled(true);
         }
 
         btnLogin.setOnClickListener(v -> startLogin());

@@ -38,6 +38,13 @@ public class DataManager {
      * 清除本应用所有的数据
      */
     public static void cleanApplicationData(Context context, String... filepath) {
+        SharedPreferences perUserInfo = context.getSharedPreferences(App.MY_SHP_NAME,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = perUserInfo.edit();
+        boolean isRemember = perUserInfo.getBoolean(App.IS_REMBER_PASS_USER, false);
+        String userName = perUserInfo.getString(App.LOGIN_NAME, "");
+        String userPass = perUserInfo.getString(App.LOGIN_PASS, "");
+
         cleanInternalCache(context);
         cleanExternalCache(context);
         cleanSharedPreference(context);
@@ -50,11 +57,13 @@ public class DataManager {
         }
         //删除cookie
         HttpUtil.exit();
-        //删除shp
-        SharedPreferences perUserInfo = context.getSharedPreferences(App.MY_SHP_NAME,
-                Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = perUserInfo.edit();
+
+        // 先清理shp数据，然后把之前保存的用户名和密码保存
         editor.clear();
+        editor.apply();
+        editor.putBoolean(App.IS_REMBER_PASS_USER, isRemember);
+        editor.putString(App.LOGIN_NAME, userName);
+        editor.putString(App.LOGIN_PASS, userPass);
         editor.apply();
     }
 
