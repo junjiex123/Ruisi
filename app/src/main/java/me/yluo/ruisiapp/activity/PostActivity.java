@@ -834,47 +834,58 @@ public class PostActivity extends BaseActivity
         });
     }
 
-    // TODO 校园网环境下删除帖子的操作
     private void startDelete(int position) {
-        String url;
-        // 以下仅仅针对手机版做了测试
-        if (datas.get(position).type == SingleType.CONTENT) {
-            //删除整个帖子
-            url = "forum.php?mod=topicadmin&action=moderate&fid=" + fid
-                    + "&moderate[]=" + tid + "&operation=delete&optgroup=3&from="
-                    + tid + "&mobile=2&inajax=1";
+        if (App.IS_SCHOOL_NET) {
+            params = new HashMap<>();
+            params.put("fid", fid);
+            params.put("handlekey", "mods");
+            if (datas.get(position).type == SingleType.CONTENT) {
+                // 主题
+                params.put("moderate[]", tid);
+                params.put("operations[]", "delete");
+            } else {
+                // 评论
+                params.put("topiclist[]", datas.get(position).pid);
+                params.put("tid", tid);
+                params.put("page", (1 + position / 10) + "");
+            }
         } else {
-            //删除评论
-            url = "forum.php?mod=topicadmin&action=delpost&fid=" + fid
-                    + "&tid=" + tid + "&operation=&optgroup=&page=&topiclist[]="
-                    + datas.get(position).pid + "&mobile=2&inajax=1";
-        }
-        params = null;
-        HttpUtil.get(url, new ResponseHandler() {
-            @Override
-            public void onSuccess(byte[] response) {
-                Document document = RuisUtils.getManageContent(response);
-                if (datas.get(position).type == SingleType.CONTENT) {
-                    params = RuisUtils.getForms(document, "moderateform");
-                } else {
-                    params = RuisUtils.getForms(document, "topicadminform");
+            String url;
+            // 以下仅仅针对手机版做了测试
+            if (datas.get(position).type == SingleType.CONTENT) {
+                //删除整个帖子
+                url = "forum.php?mod=topicadmin&action=moderate&fid=" + fid
+                        + "&moderate[]=" + tid + "&operation=delete&optgroup=3&from="
+                        + tid + "&mobile=2&inajax=1";
+            } else {
+                //删除评论
+                url = "forum.php?mod=topicadmin&action=delpost&fid=" + fid
+                        + "&tid=" + tid + "&operation=&optgroup=&page=&topiclist[]="
+                        + datas.get(position).pid + "&mobile=2&inajax=1";
+            }
+            params = null;
+            HttpUtil.get(url, new ResponseHandler() {
+                @Override
+                public void onSuccess(byte[] response) {
+                    Document document = RuisUtils.getManageContent(response);
+                    if (datas.get(position).type == SingleType.CONTENT) {
+                        params = RuisUtils.getForms(document, "moderateform");
+                    } else {
+                        params = RuisUtils.getForms(document, "topicadminform");
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Throwable e) {
-                super.onFailure(e);
-                showToast("网络错误！");
-            }
-        });
+                @Override
+                public void onFailure(Throwable e) {
+                    super.onFailure(e);
+                    showToast("网络错误！");
+                }
+            });
+        }
     }
 
     //删除帖子或者回复
     private void removeItem(final int pos, String reason) {
-        if (App.IS_SCHOOL_NET) {
-            showToast("抱歉，校园网环境下暂时不支持删除操作");
-            return;
-        }
         params.put("redirect", "");
         params.put("reason", reason);
         HttpUtil.post(UrlUtils.getDeleteReplyUrl(datas.get(pos).type), params, new ResponseHandler() {
