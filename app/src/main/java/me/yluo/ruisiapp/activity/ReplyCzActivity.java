@@ -54,8 +54,7 @@ public class ReplyCzActivity extends BaseActivity {
         initToolBar(true, title);
         input = findViewById(R.id.ed_comment);
         MyFriendPicker.attach(this, input);
-        findViewById(R.id.tv_edit).setVisibility(View.GONE);
-        findViewById(R.id.tv_remove).setVisibility(View.GONE);
+        findViewById(R.id.btn_more).setVisibility(View.GONE);
         findViewById(R.id.bt_lable_lz).setVisibility(isLz ? View.VISIBLE : View.GONE);
 
         rootView = findViewById(R.id.root);

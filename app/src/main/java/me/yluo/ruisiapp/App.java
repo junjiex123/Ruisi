@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -171,6 +172,9 @@ public class App extends Application {
         return ret;
     }
 
+    public static boolean showPlainText(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SHOW_PLAIN_TEXT_KEY, false);
+    }
 
     /**
      * config
@@ -183,6 +187,7 @@ public class App extends Application {
     public static final String NOTICE_MESSAGE_REPLY_KEY = "message_notice_reply";
     public static final String NOTICE_MESSAGE_AT_KEY = "message_notice_at";
     public static final String THEME_KEY = "my_theme_key";
+    public static final String SHOW_PLAIN_TEXT_KEY = "setting_show_plain";
     public static final String AUTO_DARK_MODE_KEY = "auto_dark_mode";
     public static final String START_DARK_TIME_KEY = "start_dart_time";
     public static final String END_DARK_TIME_KEY = "end_dark_time";

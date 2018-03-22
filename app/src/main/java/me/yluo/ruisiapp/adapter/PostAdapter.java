@@ -87,34 +87,19 @@ public class PostAdapter extends BaseAdapter {
     //文章内容 楼主ViewHolder
     private class ArticleContentViewHolder extends BaseViewHolder {
         CircleImageView userAvatar;
-        TextView title, postTime, userName, content, btnRemove, btnEdit;
-        TextView btnClose, btnBlock, btnWarn;
+        TextView title, postTime, userName, content, btnMore;
 
         ArticleContentViewHolder(View itemView) {
             super(itemView);
-            btnRemove = itemView.findViewById(R.id.tv_remove);
-            btnEdit = itemView.findViewById(R.id.tv_edit);
+            btnMore = itemView.findViewById(R.id.btn_more);
             title = itemView.findViewById(R.id.article_title);
             userAvatar = itemView.findViewById(R.id.article_user_image);
             userName = itemView.findViewById(R.id.article_username);
             postTime = itemView.findViewById(R.id.article_post_time);
             content = itemView.findViewById(R.id.content);
-
-
-            btnBlock = itemView.findViewById(R.id.tv_block);
-            btnClose = itemView.findViewById(R.id.tv_close);
-            btnWarn = itemView.findViewById(R.id.tv_warn);
-
             userAvatar.setOnClickListener(v -> UserDetailActivity.openWithAnimation(
                     activity, datalist.get(0).username, userAvatar, datalist.get(0).uid));
-
-
-            btnRemove.setOnClickListener(this);
-            btnEdit.setOnClickListener(this);
-
-            btnBlock.setOnClickListener(this);
-            btnClose.setOnClickListener(this);
-            btnWarn.setOnClickListener(this);
+            btnMore.setOnClickListener(this);
         }
 
         @Override
@@ -132,54 +117,36 @@ public class PostAdapter extends BaseAdapter {
             String post_time = "发表于:" + single.postTime;
             postTime.setText(post_time);
             HtmlView.parseHtml(single.content).into(content);
-
-            //判断是不是自己
-            if (App.ISLOGIN(activity) && App.getUid(activity).equals(single.uid)) {
-                btnEdit.setVisibility(View.VISIBLE);
-            } else {
-                // 只能使用INVISIBLE，请勿设置成GONE，否则会对管理界面UI产生一定影响
-                btnEdit.setVisibility(View.INVISIBLE);
-            }
-
-            //如果有管理权限，则显示全部按钮
-            if (single.canManage) {
-                btnEdit.setVisibility(View.VISIBLE);
-                btnWarn.setVisibility(View.VISIBLE);
-                btnBlock.setVisibility(View.VISIBLE);
-                btnClose.setVisibility(View.VISIBLE);
-                btnRemove.setVisibility(View.VISIBLE);
-            }
         }
     }
 
+    // 评论ViewHolder
     private class CommentViewHolder extends BaseViewHolder {
         ImageView avatar;
-        TextView username, index, replyTime, comment, btnRemove, btnEdit, labelLz;
-        View btnReplyCz;
-        TextView btnClose, btnBlock, btnWarn;
+        TextView username, index, replyTime, comment, labelLz;
+        View btnReplyCz, btnMore;
 
         CommentViewHolder(View itemView) {
             super(itemView);
-            btnRemove = itemView.findViewById(R.id.tv_remove);
-            btnEdit = itemView.findViewById(R.id.tv_edit);
+
             avatar = itemView.findViewById(R.id.article_user_image);
             btnReplyCz = itemView.findViewById(R.id.btn_reply_cz);
+            btnMore = itemView.findViewById(R.id.btn_more);
             username = itemView.findViewById(R.id.replay_author);
             index = itemView.findViewById(R.id.replay_index);
             replyTime = itemView.findViewById(R.id.replay_time);
             comment = itemView.findViewById(R.id.html_text);
             labelLz = itemView.findViewById(R.id.bt_lable_lz);
 
-            btnBlock = itemView.findViewById(R.id.tv_block);
-            btnClose = itemView.findViewById(R.id.tv_close);
-            btnWarn = itemView.findViewById(R.id.tv_warn);
-
             comment.setOnLongClickListener(view -> {
                 String user = datalist.get(getAdapterPosition()).username;
                 String content = comment.getText().toString().trim();
                 ClipboardManager cm = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
-                cm.setPrimaryClip(ClipData.newPlainText(null, content));
-                Toast.makeText(activity, "已复制" + user + "的评论", Toast.LENGTH_SHORT).show();
+                if (cm != null) {
+                    cm.setPrimaryClip(ClipData.newPlainText(null, content));
+                    Toast.makeText(activity, "已复制" + user + "的评论", Toast.LENGTH_SHORT).show();
+                }
+
                 return true;
             });
 
@@ -187,13 +154,9 @@ public class PostAdapter extends BaseAdapter {
                     activity, datalist.get(getAdapterPosition()).username,
                     avatar, datalist.get(getAdapterPosition()).uid));
 
-            btnRemove.setOnClickListener(this);
-            btnEdit.setOnClickListener(this);
-            btnReplyCz.setOnClickListener(this);
 
-            btnBlock.setOnClickListener(this);
-            btnClose.setOnClickListener(this);
-            btnWarn.setOnClickListener(this);
+            btnReplyCz.setOnClickListener(this);
+            btnMore.setOnClickListener(this);
         }
 
         //设置listItem的数据
@@ -215,26 +178,8 @@ public class PostAdapter extends BaseAdapter {
                     .into(avatar);
             replyTime.setText(single.postTime);
             index.setText(single.index);
-
             HtmlView.parseHtml(single.content).into(comment);
-
-            btnClose.setVisibility(View.GONE);
-            //判断是不是自己
-            if (App.ISLOGIN(activity) && App.getUid(activity).equals(single.uid)) {
-                btnEdit.setVisibility(View.VISIBLE);
-            } else {
-                btnEdit.setVisibility(View.GONE);
-            }
-
-            //如果有管理权限，则显示除了关闭之外的全部按钮
-            if (single.canManage) {
-                btnWarn.setVisibility(View.VISIBLE);
-                btnBlock.setVisibility(View.VISIBLE);
-                btnRemove.setVisibility(View.VISIBLE);
-                btnEdit.setVisibility(View.VISIBLE);
-            }
         }
-
     }
 
     //header

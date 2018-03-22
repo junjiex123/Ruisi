@@ -17,12 +17,15 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -69,14 +72,14 @@ import static me.yluo.ruisiapp.utils.RuisUtils.getManageContent;
  * 其余是评论
  */
 public class PostActivity extends BaseActivity
-        implements ListItemClickListener, LoadMoreListener.OnLoadMoreListener, View.OnClickListener {
+        implements ListItemClickListener, LoadMoreListener.OnLoadMoreListener, View.OnClickListener, PopupMenu.OnMenuItemClickListener {
 
     private RecyclerView topicList;
     //上一次回复时间
     private long replyTime = 0;
     private int currentPage = 1;
     private int sumPage = 1;
-    private int edit_pos = -1;
+    private int clickPosition = -1;
     private boolean isGetTitle = false;
     private boolean enableLoadMore = false;
     //回复楼主的链接
@@ -84,14 +87,13 @@ public class PostActivity extends BaseActivity
     private PostAdapter adapter;
     private List<SingleArticleData> datas = new ArrayList<>();
     private boolean isSaveToDataBase = false;
-    private String Title, AuthorName, Tid, Fid, RedirectPid = "";
+    private String Title, AuthorName, tid, fid, redirectPid = "";
     private boolean showPlainText = false;
     private EditText input;
     private SmileyInputRoot rootView;
     private ArrayAdapter<String> spinnerAdapter;
     private Spinner spinner;
     private List<String> pageSpinnerDatas = new ArrayList<>();
-
     private Map<String, String> params;
 
     public static void open(Context context, String url, @Nullable String author) {
@@ -108,15 +110,15 @@ public class PostActivity extends BaseActivity
         setContentView(R.layout.activity_post);
         initToolBar(true, "加载中......");
         input = findViewById(R.id.ed_comment);
-        showPlainText = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("setting_show_plain", false);
+        showPlainText = App.showPlainText(this);
         initCommentList();
         initEmotionInput();
         Bundle b = getIntent().getExtras();
         String url = b.getString("url");
         AuthorName = b.getString("author");
-        Tid = GetId.getId("tid=", url);
+        tid = GetId.getId("tid=", url);
         if (url != null && url.contains("redirect")) {
-            RedirectPid = GetId.getId("pid=", url);
+            redirectPid = GetId.getId("pid=", url);
             if (!App.IS_SCHOOL_NET) {
                 url = url + "&mobile=2";
             }
@@ -215,9 +217,9 @@ public class PostActivity extends BaseActivity
         getArticleData(1);
     }
 
-    //文章一页的html 根据页数 Tid
+    //文章一页的html 根据页数 tid
     private void getArticleData(final int page) {
-        String url = UrlUtils.getSingleArticleUrl(Tid, page, false);
+        String url = UrlUtils.getSingleArticleUrl(tid, page, false);
         HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -229,13 +231,12 @@ public class PostActivity extends BaseActivity
             public void onFailure(Throwable e) {
                 if (e != null && e == SyncHttpClient.NeedLoginError) {
                     isLogin();
-                    Toast.makeText(getApplicationContext(), "此贴需要登录", Toast.LENGTH_SHORT).show();
+                    showToast("此贴需要登录才能查看");
                     return;
                 }
                 enableLoadMore = true;
-                e.printStackTrace();
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
-                Toast.makeText(getApplicationContext(), "加载失败(Error -1)", Toast.LENGTH_SHORT).show();
+                showToast("加载失败(Error -1)");
             }
         });
     }
@@ -255,34 +256,56 @@ public class PostActivity extends BaseActivity
             case R.id.need_loading_item:
                 refresh();
                 break;
+            case R.id.btn_more:
+                clickPosition = position;
+                PopupMenu popup = new PopupMenu(this, v);
+                popup.setOnMenuItemClickListener(this);
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.menu_post_more, popup.getMenu());
+
+                //判断是不是自己
+                if (!App.ISLOGIN(this) || !App.getUid(this).equals(datas.get(position).uid)) {
+                    popup.getMenu().removeItem(R.id.tv_edit);
+                }
+
+                //如果有管理权限，则显示除了关闭之外的全部按钮
+                if (!datas.get(position).canManage) {
+                    popup.getMenu().removeGroup(R.id.menu_manege);
+                }
+
+                popup.show();
+                break;
+        }
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        // 更多按钮里面的选项被点击
+        switch (menuItem.getItemId()) {
             case R.id.tv_edit:
-                edit_pos = position;
                 Intent i = new Intent(this, EditActivity.class);
-                i.putExtra("PID", datas.get(position).pid);
-                i.putExtra("TID", Tid);
+                i.putExtra("PID", datas.get(clickPosition).pid);
+                i.putExtra("TID", tid);
                 startActivityForResult(i, 10);
                 break;
             case R.id.tv_remove:
-                edit_pos = position;
-                showDialog("删除帖子!", "请输入删帖理由", "删除",
-                        position, App.MANAGE_TYPE_DELETE);
+                showDialog("删除帖子!", "请输入删帖理由", "删除", clickPosition, App.MANAGE_TYPE_DELETE);
                 break;
-                //TODO 处理点击事件
+            //TODO 处理点击事件
             case R.id.tv_block:
-                edit_pos = position;
-                showDialog("屏蔽帖子！", "请输入屏蔽或者解除", "确定", position, App.MANAGE_TYPE_BLOCK);
+                showDialog("屏蔽帖子！", "请输入屏蔽或者解除", "确定", clickPosition, App.MANAGE_TYPE_BLOCK);
                 break;
             case R.id.tv_close:
-                edit_pos = position;
                 showDialog("打开或者关闭主题", "按照格式\n功能(打开/关闭)|yyyy-MM-dd|hh:mm\n"
                                 + "填写,例:\n关闭|2018-04-03|04:03\n时间不填为永久",
-                        "提交", position, App.MANAGE_TYPE_CLOSE);
+                        "提交", clickPosition, App.MANAGE_TYPE_CLOSE);
                 break;
             case R.id.tv_warn:
-                edit_pos = position;
-                showDialog("警告用户！", "请输入警告或者解除", "确定", position, App.MANAGE_TYPE_WARN);
+                showDialog("警告用户！", "请输入警告或者解除", "确定", clickPosition, App.MANAGE_TYPE_WARN);
                 break;
         }
+
+        return true;
     }
 
     @Override
@@ -294,11 +317,11 @@ public class PostActivity extends BaseActivity
                 Bundle b = data.getExtras();
                 String title = b.getString("TITLE", "");
                 String content = b.getString("CONTENT", "");
-                if (edit_pos == 0 && !TextUtils.isEmpty(title)) {
+                if (clickPosition == 0 && !TextUtils.isEmpty(title)) {
                     datas.get(0).title = title;
                 }
-                datas.get(edit_pos).content = content;
-                adapter.notifyItemChanged(edit_pos);
+                datas.get(clickPosition).content = content;
+                adapter.notifyItemChanged(clickPosition);
             } else if (requestCode == 20) {
                 //回复层主返回
                 replyTime = System.currentTimeMillis();
@@ -324,7 +347,7 @@ public class PostActivity extends BaseActivity
                 }
                 break;
             case R.id.btn_link:
-                String url = UrlUtils.getSingleArticleUrl(Tid, currentPage, false);
+                String url = UrlUtils.getSingleArticleUrl(tid, currentPage, false);
                 ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 cm.setPrimaryClip(ClipData.newPlainText(null, url));
                 Toast.makeText(this, "已复制链接到剪切板", Toast.LENGTH_SHORT).show();
@@ -332,7 +355,7 @@ public class PostActivity extends BaseActivity
             case R.id.btn_share:
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_TEXT, Title + UrlUtils.getSingleArticleUrl(Tid, currentPage, App.IS_SCHOOL_NET));
+                shareIntent.putExtra(Intent.EXTRA_TEXT, Title + UrlUtils.getSingleArticleUrl(tid, currentPage, App.IS_SCHOOL_NET));
                 shareIntent.setType("text/plain");
                 //设置分享列表的标题，并且每次都显示分享列表
                 startActivity(Intent.createChooser(shareIntent, "分享到文章到:"));
@@ -349,7 +372,7 @@ public class PostActivity extends BaseActivity
         private int pageLoad = 1;
         private Context context;
 
-        DealWithArticleData(Context context){
+        DealWithArticleData(Context context) {
             this.context = context;
         }
 
@@ -396,7 +419,7 @@ public class PostActivity extends BaseActivity
                 if (!TextUtils.isEmpty(s)) {
                     replyUrl = s;
                     //获得板块ID用于请求数据
-                    Fid = GetId.getId("fid=", replyUrl);
+                    fid = GetId.getId("fid=", replyUrl);
                 }
             }
 
@@ -445,7 +468,7 @@ public class PostActivity extends BaseActivity
                 // 手机版postTime拿到的原始数据是"管理 收藏 时间"
                 String postTime = userInfo.select("li.grey.rela").text()
                         .replace("收藏", "")
-                        .replace("管理","");
+                        .replace("管理", "");
                 String replyUrl = temp.select(".replybtn").select("input").attr("href");
                 Elements contentels = temp.select(".message");
 
@@ -517,7 +540,7 @@ public class PostActivity extends BaseActivity
                     if (!isSaveToDataBase) {
                         //插入数据库
                         MyDB myDB = new MyDB(PostActivity.this);
-                        myDB.handSingleReadHistory(Tid, Title, AuthorName);
+                        myDB.handSingleReadHistory(tid, Title, AuthorName);
                         isSaveToDataBase = true;
                     }
                 } else {//评论
@@ -602,15 +625,15 @@ public class PostActivity extends BaseActivity
             }
 
             //打开的时候移动到指定楼层
-            if (!TextUtils.isEmpty(RedirectPid)) {
+            if (!TextUtils.isEmpty(redirectPid)) {
                 for (int i = 0; i < datas.size(); i++) {
                     if (!TextUtils.isEmpty(datas.get(i).pid)
-                            && datas.get(i).pid.equals(RedirectPid)) {
+                            && datas.get(i).pid.equals(redirectPid)) {
                         topicList.scrollToPosition(i);
                         break;
                     }
                 }
-                RedirectPid = "";
+                redirectPid = "";
             }
 
             int size = pageSpinnerDatas.size();
@@ -630,7 +653,7 @@ public class PostActivity extends BaseActivity
      * 收藏帖子
      */
     private void starTask(final View v) {
-        final String url = UrlUtils.getStarUrl(Tid);
+        final String url = UrlUtils.getStarUrl(tid);
         Map<String, String> params = new HashMap<>();
         params.put("favoritesubmit", "true");
         HttpUtil.post(url, params, new ResponseHandler() {
@@ -651,8 +674,8 @@ public class PostActivity extends BaseActivity
 
     private void startBlock(int position) {
         String url = "forum.php?mod=topicadmin&action=banpost"
-                + "&fid=" + Fid
-                + "&tid=" + Tid
+                + "&fid=" + fid
+                + "&tid=" + tid
                 + "&topiclist[]=" + datas.get(position).pid
                 + "&mobile=2&inajax=1";
         params = null;
@@ -675,16 +698,16 @@ public class PostActivity extends BaseActivity
         if (App.IS_SCHOOL_NET) {
             // computer
             params = new HashMap<>();
-            params.put("fid", Fid);
+            params.put("fid", fid);
             params.put("page", "1");
-            params.put("tid", Tid);
+            params.put("tid", tid);
             params.put("handlekey", "mods");
             params.put("topiclist[]", datas.get(position).pid);
             params.put("reason", " 手机版主题操作");
         } else {
-            String url = "forum.php?mod=topicadmin&action=warn&fid=" + Fid
-                    + "&tid=" + Tid
-                    +"&operation=&optgroup=&page=&topiclist[]="+datas.get(position).pid + "&mobile=2&inajax=1";
+            String url = "forum.php?mod=topicadmin&action=warn&fid=" + fid
+                    + "&tid=" + tid
+                    + "&operation=&optgroup=&page=&topiclist[]=" + datas.get(position).pid + "&mobile=2&inajax=1";
             //url = forum.php?mod=topicadmin&action=warn&fid=72&tid=922824&handlekey=mods&infloat=yes&nopost=yes&r0.8544855790245922&inajax=1
             params = null;
             HttpUtil.get(url, new ResponseHandler() {
@@ -702,14 +725,14 @@ public class PostActivity extends BaseActivity
         }
     }
 
-    private void startClose(){
+    private void startClose() {
         String url = "";
         if (App.IS_SCHOOL_NET) {
-            url = "forum.php?mod=topicadmin&action=moderate&fid=" + Fid + "&moderate[]=" + Tid + "&handlekey=mods" +
-                    "&infloat=yes&nopost=yes&from=" + Tid + "&inajax=1";
+            url = "forum.php?mod=topicadmin&action=moderate&fid=" + fid + "&moderate[]=" + tid + "&handlekey=mods" +
+                    "&infloat=yes&nopost=yes&from=" + tid + "&inajax=1";
         } else {
-            url = "forum.php?mod=topicadmin&action=moderate&fid=" + Fid
-                    + "&moderate[]=" + Tid + "&from=" + Tid
+            url = "forum.php?mod=topicadmin&action=moderate&fid=" + fid
+                    + "&moderate[]=" + tid + "&from=" + tid
                     + "&optgroup=4&mobile=2";
         }
         params = null;
@@ -729,7 +752,7 @@ public class PostActivity extends BaseActivity
         });
     }
 
-    private void warnUser(int position, String s){
+    private void warnUser(int position, String s) {
         if (s.equals("警告")) {
             params.put("warned", "1");
         } else {
@@ -754,7 +777,7 @@ public class PostActivity extends BaseActivity
         });
     }
 
-    private void blockReply(int position, String s){
+    private void blockReply(int position, String s) {
         if (s.equals("屏蔽")) {
             params.put("banned", "1");
         } else {
@@ -780,7 +803,7 @@ public class PostActivity extends BaseActivity
     }
 
     // 打开或者关闭帖子
-    private void closeArticle(String [] str){
+    private void closeArticle(String[] str) {
         if (str.length == 3) {
             params.put("expirationclose", str[1] + " " + str[2]);
         } else {
@@ -788,7 +811,7 @@ public class PostActivity extends BaseActivity
         }
         if (str[0].equals("打开")) {
             params.put("operations[]", "open");
-        } else if (str[0].equals("关闭")){
+        } else if (str[0].equals("关闭")) {
             params.put("operations[]", "close");
         }
         params.put("reason", "手机版主题操作");
@@ -806,24 +829,24 @@ public class PostActivity extends BaseActivity
             @Override
             public void onFailure(Throwable e) {
                 super.onFailure(e);
-                showToast("网络错误，"+ str[0] + "帖子失败！");
+                showToast("网络错误，" + str[0] + "帖子失败！");
             }
         });
     }
 
     // TODO 校园网环境下删除帖子的操作
-    private void startDelete(int position){
+    private void startDelete(int position) {
         String url;
         // 以下仅仅针对手机版做了测试
         if (datas.get(position).type == SingleType.CONTENT) {
             //删除整个帖子
-            url = "forum.php?mod=topicadmin&action=moderate&fid=" + Fid
-                    + "&moderate[]=" + Tid+ "&operation=delete&optgroup=3&from="
-                    + Tid + "&mobile=2&inajax=1";
+            url = "forum.php?mod=topicadmin&action=moderate&fid=" + fid
+                    + "&moderate[]=" + tid + "&operation=delete&optgroup=3&from="
+                    + tid + "&mobile=2&inajax=1";
         } else {
             //删除评论
-            url = "forum.php?mod=topicadmin&action=delpost&fid=" + Fid
-                    + "&tid=" + Tid+ "&operation=&optgroup=&page=&topiclist[]="
+            url = "forum.php?mod=topicadmin&action=delpost&fid=" + fid
+                    + "&tid=" + tid + "&operation=&optgroup=&page=&topiclist[]="
                     + datas.get(position).pid + "&mobile=2&inajax=1";
         }
         params = null;
@@ -1026,7 +1049,7 @@ public class PostActivity extends BaseActivity
 
     // 管理按钮点击后的确认窗口
     public void showDialog(String title, String message, String posStr,
-                           int position, int type){
+                           int position, int type) {
         final EditText edt = new EditText(this);
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(title)
@@ -1034,7 +1057,7 @@ public class PostActivity extends BaseActivity
                 .setNegativeButton("取消", null)
                 .setView(edt)
                 .setCancelable(true);
-        switch (type){
+        switch (type) {
             case App.MANAGE_TYPE_EDIT:
                 // nothing to do
                 break;
@@ -1049,34 +1072,34 @@ public class PostActivity extends BaseActivity
                 startDelete(position);
                 break;
             case App.MANAGE_TYPE_BLOCK:
-                builder.setPositiveButton(posStr, (dialog, which) ->{
-                   if (!edt.getText().toString().equals("")
-                           && (edt.getText().toString().equals("屏蔽")
-                                || edt.getText().toString().equals("解除"))) {
-                       blockReply(position, edt.getText().toString());
-                   } else {
-                       showToast("请输入屏蔽或者解除");
-                   }
+                builder.setPositiveButton(posStr, (dialog, which) -> {
+                    if (!edt.getText().toString().equals("")
+                            && (edt.getText().toString().equals("屏蔽")
+                            || edt.getText().toString().equals("解除"))) {
+                        blockReply(position, edt.getText().toString());
+                    } else {
+                        showToast("请输入屏蔽或者解除");
+                    }
                 });
                 startBlock(position);
                 break;
             case App.MANAGE_TYPE_WARN:
                 builder.setPositiveButton(posStr, (dialog, which) -> {
-                            if (!edt.getText().toString().equals("")
-                                    && (edt.getText().toString().equals("警告")
-                                    || edt.getText().toString().equals("解除"))) {
-                                warnUser(position, edt.getText().toString());
-                            } else {
-                                showToast("请输入警告或者解除");
-                            }
+                    if (!edt.getText().toString().equals("")
+                            && (edt.getText().toString().equals("警告")
+                            || edt.getText().toString().equals("解除"))) {
+                        warnUser(position, edt.getText().toString());
+                    } else {
+                        showToast("请输入警告或者解除");
+                    }
                 });
                 startWarn(position);
                 break;
             case App.MANAGE_TYPE_CLOSE:
-                builder.setPositiveButton(posStr, (dialog, which) ->{
-                    String [] time = edt.getText().toString().split("\\|");
+                builder.setPositiveButton(posStr, (dialog, which) -> {
+                    String[] time = edt.getText().toString().split("\\|");
                     if (("打开".equals(time[0]) || "关闭".equals(time[0])
-                            && (time.length ==1 || time.length == 3))) {
+                            && (time.length == 1 || time.length == 3))) {
                         closeArticle(time);
                     } else {
                         showToast("输入格式错误，请重新输入");

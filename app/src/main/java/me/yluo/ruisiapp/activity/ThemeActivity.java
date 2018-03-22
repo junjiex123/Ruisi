@@ -59,7 +59,7 @@ public class ThemeActivity extends BaseActivity implements AdapterView.OnItemCli
     private int currentSelect = 0;
     private int currentTheme = THEME_DEFAULT;
 
-    private ColorAdapter adpter;
+    private ColorAdapter adapter;
     private View startView, endView, nightViews;
     private TextView startText, endText;
     private CheckBox auto;
@@ -120,8 +120,8 @@ public class ThemeActivity extends BaseActivity implements AdapterView.OnItemCli
         });
 
         GridView gridView = findViewById(R.id.commons_colors);
-        adpter = new ColorAdapter();
-        gridView.setAdapter(adpter);
+        adapter = new ColorAdapter();
+        gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(this);
 
 
@@ -207,7 +207,7 @@ public class ThemeActivity extends BaseActivity implements AdapterView.OnItemCli
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (currentSelect == position) return;
         currentSelect = position;
-        adpter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
         changeTheme(position);
     }
 

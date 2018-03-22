@@ -60,8 +60,25 @@
         android:clickable="true"
         android:focusable="true"
         android:fontFamily="@font/fontawesome"
+        android:gravity="center"
         android:padding="8dp"
         android:text="&#xf27b;"
+        app:layout_constraintEnd_toStartOf="@+id/btn_more"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/btn_more"
+        style="@style/text_16_sec"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="0dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:fontFamily="@font/fontawesome"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="&#xf142;"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -106,86 +123,5 @@
         app:layout_constraintStart_toStartOf="@+id/replay_author"
         app:layout_constraintTop_toBottomOf="@+id/article_user_image"
         tools:text="在点(110,10)处绘制一个宽和高均为50像素的正方形边框 context.strokeRect(110,10,50,50); //在点(30,10)处绘制一个宽和高均为50像素的正方形边框 " />
-
-    <TextView
-        android:id="@+id/tv_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="0dp"
-        android:layout_marginTop="8dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:padding="8dp"
-        android:text="&#xf044; 编辑"
-        android:fontFamily="@font/fontawesome"
-        android:textColor="@color/colorAuthor"
-        android:textSize="14sp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/html_text" />
-
-    <TextView
-        android:id="@+id/tv_remove"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:fontFamily="@font/fontawesome"
-        android:padding="8dp"
-        android:text="&#xf014; 删除"
-        android:visibility="invisible"
-        android:textColor="@color/colorAuthor"
-        android:textSize="14sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_edit"
-        app:layout_constraintEnd_toStartOf="@+id/tv_edit" />
-
-    <TextView
-        android:id="@+id/tv_block"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:fontFamily="@font/fontawesome"
-        android:padding="8dp"
-        android:text="&#xf070; 屏蔽"
-        android:textColor="@color/colorAuthor"
-        android:textSize="14sp"
-        android:visibility="invisible"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_remove"
-        app:layout_constraintEnd_toStartOf="@+id/tv_remove" />
-
-    <TextView
-        android:id="@+id/tv_warn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:fontFamily="@font/fontawesome"
-        android:padding="8dp"
-        android:text="&#xf071; 警告"
-        android:textColor="@color/colorAuthor"
-        android:textSize="14sp"
-        android:visibility="invisible"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_block"
-        app:layout_constraintEnd_toStartOf="@+id/tv_block" />
-
-    <TextView
-        android:id="@+id/tv_close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:fontFamily="@font/fontawesome"
-        android:padding="8dp"
-        android:textColor="@color/colorAuthor"
-        android:textSize="14sp"
-        android:visibility="invisible"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_warn"
-        app:layout_constraintEnd_toStartOf="@+id/tv_warn"
-        android:text="&#xf05c; 关闭" />
 
 </android.support.constraint.ConstraintLayout>
