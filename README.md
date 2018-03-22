@@ -28,6 +28,7 @@ iOS版见[Ruisi_Ios](https://github.com/freedom10086/Ruisi_Ios)
 
 ### 意见和反馈
 - freedom10086 <2351386755@qq.com>
+- [KingsFish](kingsfish.github.io/about/) <kingsfish95@gmail.com>
 
 ### 参考和用到的开源库和软件：
 
@@ -51,9 +52,9 @@ iOS版见[Ruisi_Ios](https://github.com/freedom10086/Ruisi_Ios)
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
-
+    
        http://www.apache.org/licenses/LICENSE-2.0
-
+    
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.

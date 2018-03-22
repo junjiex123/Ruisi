@@ -24,11 +24,16 @@ public class SingleArticleData implements Parcelable {
     public String content;
     public String title;
 
+    //能否管理
+    public boolean canManage;
+
     //投票
     public VoteData vote;
 
 
-    public SingleArticleData(SingleType type, String title, String uid, String username, String postTime, String index, String replyUrl, String content, String pid) {
+    public SingleArticleData(SingleType type, String title, String uid,
+                             String username, String postTime, String index,
+                             String replyUrl, String content, String pid) {
         this.type = type;
         this.username = username;
         this.postTime = postTime;
@@ -38,6 +43,14 @@ public class SingleArticleData implements Parcelable {
         this.title = title;
         this.pid = pid;
         this.uid = uid;
+    }
+
+    public SingleArticleData(SingleType type, String title, String uid, String username,
+                             String postTime, String index, String replyUrl,
+                             String content, String pid, boolean canManage) {
+        this(type, title, uid, username, postTime, index, replyUrl, content, pid);
+        //TODO 存储数据canManage以及管理功能
+        this.canManage = canManage;
     }
 
     public String getImg() {

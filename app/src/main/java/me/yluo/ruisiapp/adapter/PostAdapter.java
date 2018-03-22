@@ -88,6 +88,7 @@ public class PostAdapter extends BaseAdapter {
     private class ArticleContentViewHolder extends BaseViewHolder {
         CircleImageView userAvatar;
         TextView title, postTime, userName, content, btnRemove, btnEdit;
+        TextView btnClose, btnBlock, btnWarn;
 
         ArticleContentViewHolder(View itemView) {
             super(itemView);
@@ -98,11 +99,22 @@ public class PostAdapter extends BaseAdapter {
             userName = itemView.findViewById(R.id.article_username);
             postTime = itemView.findViewById(R.id.article_post_time);
             content = itemView.findViewById(R.id.content);
+
+
+            btnBlock = itemView.findViewById(R.id.tv_block);
+            btnClose = itemView.findViewById(R.id.tv_close);
+            btnWarn = itemView.findViewById(R.id.tv_warn);
+
             userAvatar.setOnClickListener(v -> UserDetailActivity.openWithAnimation(
                     activity, datalist.get(0).username, userAvatar, datalist.get(0).uid));
 
+
             btnRemove.setOnClickListener(this);
             btnEdit.setOnClickListener(this);
+
+            btnBlock.setOnClickListener(this);
+            btnClose.setOnClickListener(this);
+            btnWarn.setOnClickListener(this);
         }
 
         @Override
@@ -124,14 +136,18 @@ public class PostAdapter extends BaseAdapter {
             //判断是不是自己
             if (App.ISLOGIN(activity) && App.getUid(activity).equals(single.uid)) {
                 btnEdit.setVisibility(View.VISIBLE);
-                if (getItemCount() > 2) {
-                    btnRemove.setVisibility(View.GONE);
-                } else {
-                    btnRemove.setVisibility(View.VISIBLE);
-                }
             } else {
-                btnRemove.setVisibility(View.GONE);
-                btnEdit.setVisibility(View.GONE);
+                // 只能使用INVISIBLE，请勿设置成GONE，否则会对管理界面UI产生一定影响
+                btnEdit.setVisibility(View.INVISIBLE);
+            }
+
+            //如果有管理权限，则显示全部按钮
+            if (single.canManage) {
+                btnEdit.setVisibility(View.VISIBLE);
+                btnWarn.setVisibility(View.VISIBLE);
+                btnBlock.setVisibility(View.VISIBLE);
+                btnClose.setVisibility(View.VISIBLE);
+                btnRemove.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -140,6 +156,7 @@ public class PostAdapter extends BaseAdapter {
         ImageView avatar;
         TextView username, index, replyTime, comment, btnRemove, btnEdit, labelLz;
         View btnReplyCz;
+        TextView btnClose, btnBlock, btnWarn;
 
         CommentViewHolder(View itemView) {
             super(itemView);
@@ -152,6 +169,10 @@ public class PostAdapter extends BaseAdapter {
             replyTime = itemView.findViewById(R.id.replay_time);
             comment = itemView.findViewById(R.id.html_text);
             labelLz = itemView.findViewById(R.id.bt_lable_lz);
+
+            btnBlock = itemView.findViewById(R.id.tv_block);
+            btnClose = itemView.findViewById(R.id.tv_close);
+            btnWarn = itemView.findViewById(R.id.tv_warn);
 
             comment.setOnLongClickListener(view -> {
                 String user = datalist.get(getAdapterPosition()).username;
@@ -169,6 +190,10 @@ public class PostAdapter extends BaseAdapter {
             btnRemove.setOnClickListener(this);
             btnEdit.setOnClickListener(this);
             btnReplyCz.setOnClickListener(this);
+
+            btnBlock.setOnClickListener(this);
+            btnClose.setOnClickListener(this);
+            btnWarn.setOnClickListener(this);
         }
 
         //设置listItem的数据
@@ -193,13 +218,20 @@ public class PostAdapter extends BaseAdapter {
 
             HtmlView.parseHtml(single.content).into(comment);
 
+            btnClose.setVisibility(View.GONE);
             //判断是不是自己
             if (App.ISLOGIN(activity) && App.getUid(activity).equals(single.uid)) {
-                btnRemove.setVisibility(View.VISIBLE);
                 btnEdit.setVisibility(View.VISIBLE);
             } else {
-                btnRemove.setVisibility(View.GONE);
                 btnEdit.setVisibility(View.GONE);
+            }
+
+            //如果有管理权限，则显示除了关闭之外的全部按钮
+            if (single.canManage) {
+                btnWarn.setVisibility(View.VISIBLE);
+                btnBlock.setVisibility(View.VISIBLE);
+                btnRemove.setVisibility(View.VISIBLE);
+                btnEdit.setVisibility(View.VISIBLE);
             }
         }
 

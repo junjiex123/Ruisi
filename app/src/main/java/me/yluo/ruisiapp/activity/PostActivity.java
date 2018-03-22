@@ -53,11 +53,14 @@ import me.yluo.ruisiapp.myhttp.SyncHttpClient;
 import me.yluo.ruisiapp.utils.GetId;
 import me.yluo.ruisiapp.utils.KeyboardUtil;
 import me.yluo.ruisiapp.utils.LinkClickHandler;
+import me.yluo.ruisiapp.utils.RuisUtils;
 import me.yluo.ruisiapp.utils.UrlUtils;
 import me.yluo.ruisiapp.widget.MyFriendPicker;
 import me.yluo.ruisiapp.widget.MyListDivider;
 import me.yluo.ruisiapp.widget.emotioninput.SmileyInputRoot;
 import me.yluo.ruisiapp.widget.htmlview.VoteDialog;
+
+import static me.yluo.ruisiapp.utils.RuisUtils.getManageContent;
 
 /**
  * Created by free2 on 16-3-6.
@@ -81,13 +84,15 @@ public class PostActivity extends BaseActivity
     private PostAdapter adapter;
     private List<SingleArticleData> datas = new ArrayList<>();
     private boolean isSaveToDataBase = false;
-    private String Title, AuthorName, Tid, RedirectPid = "";
+    private String Title, AuthorName, Tid, Fid, RedirectPid = "";
     private boolean showPlainText = false;
     private EditText input;
     private SmileyInputRoot rootView;
     private ArrayAdapter<String> spinnerAdapter;
     private Spinner spinner;
     private List<String> pageSpinnerDatas = new ArrayList<>();
+
+    private Map<String, String> params;
 
     public static void open(Context context, String url, @Nullable String author) {
         Intent intent = new Intent(context, PostActivity.class);
@@ -217,7 +222,7 @@ public class PostActivity extends BaseActivity
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                new DealWithArticleData().execute(res);
+                new DealWithArticleData(PostActivity.this).execute(res);
             }
 
             @Override
@@ -259,14 +264,23 @@ public class PostActivity extends BaseActivity
                 break;
             case R.id.tv_remove:
                 edit_pos = position;
-                new AlertDialog.Builder(this).
-                        setTitle("删除帖子!").
-                        setMessage("你要删除本贴/回复吗？").
-                        setPositiveButton("删除", (dialog, which) -> removeItem(position))
-                        .setNegativeButton("取消", null)
-                        .setCancelable(true)
-                        .create()
-                        .show();
+                showDialog("删除帖子!", "请输入删帖理由", "删除",
+                        position, App.MANAGE_TYPE_DELETE);
+                break;
+                //TODO 处理点击事件
+            case R.id.tv_block:
+                edit_pos = position;
+                showDialog("屏蔽帖子！", "请输入屏蔽或者解除", "确定", position, App.MANAGE_TYPE_BLOCK);
+                break;
+            case R.id.tv_close:
+                edit_pos = position;
+                showDialog("打开或者关闭主题", "按照格式\n功能(打开/关闭)|yyyy-MM-dd|hh:mm\n"
+                                + "填写,例:\n关闭|2018-04-03|04:03\n时间不填为永久",
+                        "提交", position, App.MANAGE_TYPE_CLOSE);
+                break;
+            case R.id.tv_warn:
+                edit_pos = position;
+                showDialog("警告用户！", "请输入警告或者解除", "确定", position, App.MANAGE_TYPE_WARN);
                 break;
         }
     }
@@ -333,6 +347,11 @@ public class PostActivity extends BaseActivity
 
         private String errorText = "";
         private int pageLoad = 1;
+        private Context context;
+
+        DealWithArticleData(Context context){
+            this.context = context;
+        }
 
         @Override
         protected List<SingleArticleData> doInBackground(String... params) {
@@ -374,8 +393,11 @@ public class PostActivity extends BaseActivity
             //获得回复楼主的url
             if (TextUtils.isEmpty(replyUrl)) {
                 String s = elements.select("form#fastpostform").attr("action");
-                if (!TextUtils.isEmpty(s))
+                if (!TextUtils.isEmpty(s)) {
                     replyUrl = s;
+                    //获得板块ID用于请求数据
+                    Fid = GetId.getId("fid=", replyUrl);
+                }
             }
 
             //获取总页数 和当前页数
@@ -396,9 +418,34 @@ public class PostActivity extends BaseActivity
                 String pid = temp.attr("id").substring(3);
                 String uid = GetId.getId("uid=", temp.select("span[class=avatar]").select("img").attr("src"));
                 Elements userInfo = temp.select("ul.authi");
-                String commentIndex = userInfo.select("li.grey").select("em").text();
+                // 手机版commentIndex拿到的原始数据是"楼层 管理"
+                String commentIndex = userInfo.select("li.grey").select("em").first().text();
                 String username = userInfo.select("a[href^=home.php?mod=space&uid=]").text();
-                String postTime = userInfo.select("li.grey.rela").text().replace("收藏", "");
+                boolean canManage = false;
+                // 判别是否对该帖子是否有管理权限
+                if (App.ISLOGIN(context)) {
+                    if (App.IS_SCHOOL_NET) {
+                        // 校园网
+                        Elements es = temp.select("div.plc.cl").select("div.display.pi")
+                                .select("ul.authi").select("li.grey.rela").select("em");
+                        if (es != null && es.size() != 0) {
+                            canManage = es.first()
+                                    .select("a").text().equals("管理");
+
+                        }
+                    } else {
+                        // 校外网
+                        Elements es = userInfo.select("li.grey.rela").select("em");
+                        if (es != null && es.size() != 0) {
+                            canManage = es.first()
+                                    .select("a").text().equals("管理");
+                        }
+                    }
+                }
+                // 手机版postTime拿到的原始数据是"管理 收藏 时间"
+                String postTime = userInfo.select("li.grey.rela").text()
+                        .replace("收藏", "")
+                        .replace("管理","");
                 String replyUrl = temp.select(".replybtn").select("input").attr("href");
                 Elements contentels = temp.select(".message");
 
@@ -464,7 +511,7 @@ public class PostActivity extends BaseActivity
                     }
                     data = new SingleArticleData(SingleType.CONTENT, Title, uid,
                             username, postTime,
-                            commentIndex, replyUrl, contentels.html().trim(), pid);
+                            commentIndex, replyUrl, contentels.html().trim(), pid, canManage);
                     data.vote = d;
                     AuthorName = username;
                     if (!isSaveToDataBase) {
@@ -475,7 +522,8 @@ public class PostActivity extends BaseActivity
                     }
                 } else {//评论
                     data = new SingleArticleData(SingleType.COMMENT, Title, uid,
-                            username, postTime, commentIndex, replyUrl, contentels.html().trim(), pid);
+                            username, postTime, commentIndex, replyUrl,
+                            contentels.html().trim(), pid, canManage);
                 }
                 tepdata.add(data);
             }
@@ -600,20 +648,218 @@ public class PostActivity extends BaseActivity
         });
     }
 
-    //删除帖子或者回复
-    private void removeItem(final int pos) {
-        Map<String, String> params = new HashMap<>();
-        params.put("editsubmit", "yes");
-        //params.put("fid",);
-        params.put("tid", Tid);
-        params.put("pid", datas.get(pos).pid);
-        params.put("delete", "1");
-        HttpUtil.post(UrlUtils.getDeleteReplyUrl(), params, new ResponseHandler() {
+
+    private void startBlock(int position) {
+        String url = "forum.php?mod=topicadmin&action=banpost"
+                + "&fid=" + Fid
+                + "&tid=" + Tid
+                + "&topiclist[]=" + datas.get(position).pid
+                + "&mobile=2&inajax=1";
+        params = null;
+        HttpUtil.get(url, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                Document document = RuisUtils.getManageContent(response);
+                params = RuisUtils.getForms(document, "topicadminform");
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                super.onFailure(e);
+                showToast("网络错误！请重试");
+            }
+        });
+    }
+
+    private void startWarn(int position) {
+        if (App.IS_SCHOOL_NET) {
+            // computer
+            params = new HashMap<>();
+            params.put("fid", Fid);
+            params.put("page", "1");
+            params.put("tid", Tid);
+            params.put("handlekey", "mods");
+            params.put("topiclist[]", datas.get(position).pid);
+            params.put("reason", " 手机版主题操作");
+        } else {
+            String url = "forum.php?mod=topicadmin&action=warn&fid=" + Fid
+                    + "&tid=" + Tid
+                    +"&operation=&optgroup=&page=&topiclist[]="+datas.get(position).pid + "&mobile=2&inajax=1";
+            //url = forum.php?mod=topicadmin&action=warn&fid=72&tid=922824&handlekey=mods&infloat=yes&nopost=yes&r0.8544855790245922&inajax=1
+            params = null;
+            HttpUtil.get(url, new ResponseHandler() {
+                @Override
+                public void onSuccess(byte[] response) {
+                    Document document = getManageContent(response);
+                    params = RuisUtils.getForms(document, "topicadminform");
+                }
+
+                @Override
+                public void onFailure(Throwable e) {
+                    super.onFailure(e);
+                }
+            });
+        }
+    }
+
+    private void startClose(){
+        String url = "";
+        if (App.IS_SCHOOL_NET) {
+            url = "forum.php?mod=topicadmin&action=moderate&fid=" + Fid + "&moderate[]=" + Tid + "&handlekey=mods" +
+                    "&infloat=yes&nopost=yes&from=" + Tid + "&inajax=1";
+        } else {
+            url = "forum.php?mod=topicadmin&action=moderate&fid=" + Fid
+                    + "&moderate[]=" + Tid + "&from=" + Tid
+                    + "&optgroup=4&mobile=2";
+        }
+        params = null;
+        HttpUtil.get(url, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                Document document = RuisUtils.getManageContent(response);
+                params = RuisUtils.getForms(document, "moderateform");
+                params.put("redirect", "");
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                super.onFailure(e);
+                showToast("网络错误！请重试");
+            }
+        });
+    }
+
+    private void warnUser(int position, String s){
+        if (s.equals("警告")) {
+            params.put("warned", "1");
+        } else {
+            params.put("warned", "0");
+        }
+        HttpUtil.post(UrlUtils.getWarnUserUrl(), params, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                Log.e("resoult", res);
-                if (res.contains("主题删除成功")) {
+                if (res.contains("成功")) {
+                    showToast("帖子操作成功，刷新帖子即可看到效果");
+                } else {
+                    showToast("管理操作失败,我也不知道哪里有问题");
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                super.onFailure(e);
+                showToast("网络错误，操作失败！");
+            }
+        });
+    }
+
+    private void blockReply(int position, String s){
+        if (s.equals("屏蔽")) {
+            params.put("banned", "1");
+        } else {
+            params.put("banned", "0");
+        }
+        HttpUtil.post(UrlUtils.getBlockReplyUrl(), params, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                if (res.contains("成功")) {
+                    showToast("帖子操作成功，刷新帖子即可看到效果");
+                } else {
+                    showToast("管理操作失败,我也不知道哪里有问题");
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                super.onFailure(e);
+                showToast("网络错误，操作失败！");
+            }
+        });
+    }
+
+    // 打开或者关闭帖子
+    private void closeArticle(String [] str){
+        if (str.length == 3) {
+            params.put("expirationclose", str[1] + " " + str[2]);
+        } else {
+            params.put("expirationclose", "");
+        }
+        if (str[0].equals("打开")) {
+            params.put("operations[]", "open");
+        } else if (str[0].equals("关闭")){
+            params.put("operations[]", "close");
+        }
+        params.put("reason", "手机版主题操作");
+        HttpUtil.post(UrlUtils.getCloseArticleUrl(), params, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                if (res.contains("成功")) {
+                    showToast(str[0] + "帖子操作成功，刷新帖子即可看到效果");
+                } else {
+                    showToast("管理操作失败,我也不知道哪里有问题");
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                super.onFailure(e);
+                showToast("网络错误，"+ str[0] + "帖子失败！");
+            }
+        });
+    }
+
+    // TODO 校园网环境下删除帖子的操作
+    private void startDelete(int position){
+        String url;
+        // 以下仅仅针对手机版做了测试
+        if (datas.get(position).type == SingleType.CONTENT) {
+            //删除整个帖子
+            url = "forum.php?mod=topicadmin&action=moderate&fid=" + Fid
+                    + "&moderate[]=" + Tid+ "&operation=delete&optgroup=3&from="
+                    + Tid + "&mobile=2&inajax=1";
+        } else {
+            //删除评论
+            url = "forum.php?mod=topicadmin&action=delpost&fid=" + Fid
+                    + "&tid=" + Tid+ "&operation=&optgroup=&page=&topiclist[]="
+                    + datas.get(position).pid + "&mobile=2&inajax=1";
+        }
+        params = null;
+        HttpUtil.get(url, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                Document document = RuisUtils.getManageContent(response);
+                if (datas.get(position).type == SingleType.CONTENT) {
+                    params = RuisUtils.getForms(document, "moderateform");
+                } else {
+                    params = RuisUtils.getForms(document, "topicadminform");
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                super.onFailure(e);
+                showToast("网络错误！");
+            }
+        });
+    }
+
+    //删除帖子或者回复
+    private void removeItem(final int pos, String reason) {
+        if (App.IS_SCHOOL_NET) {
+            showToast("抱歉，校园网环境下暂时不支持删除操作");
+            return;
+        }
+        params.put("redirect", "");
+        params.put("reason", reason);
+        HttpUtil.post(UrlUtils.getDeleteReplyUrl(datas.get(pos).type), params, new ResponseHandler() {
+            @Override
+            public void onSuccess(byte[] response) {
+                String res = new String(response);
+                Log.e("result", res);
+                if (res.contains("成功")) {
                     if (datas.get(pos).type == SingleType.CONTENT) {
                         showToast("主题删除成功");
                         finish();
@@ -777,4 +1023,72 @@ public class PostActivity extends BaseActivity
     public void showReplyKeyboard() {
         KeyboardUtil.showKeyboard(input);
     }
+
+    // 管理按钮点击后的确认窗口
+    public void showDialog(String title, String message, String posStr,
+                           int position, int type){
+        final EditText edt = new EditText(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setNegativeButton("取消", null)
+                .setView(edt)
+                .setCancelable(true);
+        switch (type){
+            case App.MANAGE_TYPE_EDIT:
+                // nothing to do
+                break;
+            case App.MANAGE_TYPE_DELETE:
+                builder.setPositiveButton(posStr, (dialog, which) -> {
+                    if (!edt.getText().toString().equals("")) {
+                        removeItem(position, edt.getText().toString());
+                    } else {
+                        showToast("请输入删帖理由!");
+                    }
+                });
+                startDelete(position);
+                break;
+            case App.MANAGE_TYPE_BLOCK:
+                builder.setPositiveButton(posStr, (dialog, which) ->{
+                   if (!edt.getText().toString().equals("")
+                           && (edt.getText().toString().equals("屏蔽")
+                                || edt.getText().toString().equals("解除"))) {
+                       blockReply(position, edt.getText().toString());
+                   } else {
+                       showToast("请输入屏蔽或者解除");
+                   }
+                });
+                startBlock(position);
+                break;
+            case App.MANAGE_TYPE_WARN:
+                builder.setPositiveButton(posStr, (dialog, which) -> {
+                            if (!edt.getText().toString().equals("")
+                                    && (edt.getText().toString().equals("警告")
+                                    || edt.getText().toString().equals("解除"))) {
+                                warnUser(position, edt.getText().toString());
+                            } else {
+                                showToast("请输入警告或者解除");
+                            }
+                });
+                startWarn(position);
+                break;
+            case App.MANAGE_TYPE_CLOSE:
+                builder.setPositiveButton(posStr, (dialog, which) ->{
+                    String [] time = edt.getText().toString().split("\\|");
+                    if (("打开".equals(time[0]) || "关闭".equals(time[0])
+                            && (time.length ==1 || time.length == 3))) {
+                        closeArticle(time);
+                    } else {
+                        showToast("输入格式错误，请重新输入");
+                    }
+                });
+                startClose();
+                break;
+            default:
+                break;
+        }
+        builder.create().show();
+    }
+
+
 }
