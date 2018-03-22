@@ -264,7 +264,9 @@ public class PostActivity extends BaseActivity
                 inflater.inflate(R.menu.menu_post_more, popup.getMenu());
 
                 //判断是不是自己
-                if (!App.ISLOGIN(this) || !App.getUid(this).equals(datas.get(position).uid)) {
+                if (!datas.get(position).canManage
+                        && (!App.ISLOGIN(this)
+                        || !App.getUid(this).equals(datas.get(position).uid))) {
                     popup.getMenu().removeItem(R.id.tv_edit);
                 }
 

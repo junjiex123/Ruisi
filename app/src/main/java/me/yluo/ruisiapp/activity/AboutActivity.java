@@ -43,7 +43,8 @@ public class AboutActivity extends BaseActivity {
                 "1.到 <a href=\"forum.php?mod=viewthread&tid=" + App.POST_TID + "&mobile=2\">本帖</a> 回复<br />" +
                 "2.本站 <a href=\"home.php?mod=space&uid=252553&do=profile&mobile=2\">@谁用了FREEDOM</a><br />" +
                 "3.本站 <a href=\"home.php?mod=space&uid=261098&do=profile&mobile=2\">@wangfuyang</a><br />" +
-                "4.github提交 <a href=\"https://github.com/freedom10086/Ruisi/issues\">点击这儿<br /></a><br />";
+                "4.本站 <a href=\"home.php?mod=space&uid=260255&do=profile&mobile=2\">@金鲨鱼</a><br />" +
+                "5.github提交 <a href=\"https://github.com/freedom10086/Ruisi/issues\">点击这儿<br /></a><br />";
 
         TextView htmlView = findViewById(R.id.html_text);
         HtmlView.parseHtml(ss).into(htmlView);
