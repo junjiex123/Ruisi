@@ -1,7 +1,13 @@
 package me.yluo.ruisiapp.utils;
 
+import com.alibaba.fastjson.JSON;
+
 import me.yluo.ruisiapp.App;
+import me.yluo.ruisiapp.api.entity.ApiForumList;
+import me.yluo.ruisiapp.api.entity.ApiResult;
 import me.yluo.ruisiapp.model.SingleType;
+import me.yluo.ruisiapp.myhttp.HttpUtil;
+import me.yluo.ruisiapp.myhttp.ResponseHandler;
 
 /**
  * Created by free2 on 16-4-1.
@@ -16,6 +22,10 @@ public class UrlUtils {
         } else {
             return "forum.php?mod=forumdisplay&fid=" + fid + "&page=" + page + "&mobile=2";
         }
+    }
+
+    public static String getArticleListApiUrl(int fid, int page) {
+        return "api/mobile/index.php?version=4&module=forumdisplay&fid="+fid+ "&page=" + page;
     }
 
     public static String getSingleArticleUrl(String tid, int page, boolean isInner) {

@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,11 +17,15 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +40,6 @@ import me.yluo.ruisiapp.database.MyDB;
 import me.yluo.ruisiapp.listener.HidingScrollListener;
 import me.yluo.ruisiapp.listener.LoadMoreListener;
 import me.yluo.ruisiapp.model.ArticleListData;
-import me.yluo.ruisiapp.myhttp.ApiResponseHandler;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.utils.DimmenUtils;
@@ -77,6 +81,9 @@ public class PostsActivity extends BaseActivity implements
             "&filter=digest&digest=1"
     };
     private int currentTabindex = 0;
+
+    private static final Type forumListType = new TypeReference<ApiResult<ApiForumList>>() {
+    }.getType();
 
 
     public static void open(Context context, int fid, String title) {
@@ -218,41 +225,30 @@ public class PostsActivity extends BaseActivity implements
 
     private void getData() {
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
-        String url = UrlUtils.getArticleListUrl(FID, currentPage, true);
+        String url;
         if (!App.IS_SCHOOL_NET) {
-            url = url + UrlUtils.getArticleListUrl(FID, currentPage, false);
+            url = UrlUtils.getArticleListUrl(FID, currentPage, false);
+        } else if (getType() == PostListAdapter.TYPE_IMAGE) {
+            url = UrlUtils.getArticleListUrl(FID, currentPage, true);
+        } else {
+            url = UrlUtils.getArticleListApiUrl(FID, currentPage);
         }
+
         url = url + orders[currentTabindex];
-
-        HttpUtil.get("api/mobile/index.php?version=4&module=forumdisplay&fid=72", new ApiResponseHandler<ApiForumList>() {
-            @Override
-            public void onSuccess(ApiResult<ApiForumList> result) {
-                System.out.println(result.Variables.forum);
-                System.out.println(result.Variables.forum_threadlist);
-
-            }
-
-            @Override
-            public void onFailure(Throwable e) {
-                super.onFailure(e);
-            }
-        });
-
 
         HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
-                String s = new String(response);
                 switch (getType()) {
                     case PostListAdapter.TYPE_IMAGE:
-                        new getImagePosts().execute(s);
+                        new getImagePosts().execute(new String(response));
                         break;
                     case PostListAdapter.TYPE_NORMAL:
-                        new getPostsRs().execute(s);
+                        new getPostsApi().execute(response);
                         break;
                     case PostListAdapter.TYPE_NORMAL_MOBILE:
                         //外网
-                        new getPostsMe().execute(s);
+                        new getPostsMe().execute(new String(response));
                         break;
                 }
             }
@@ -313,10 +309,9 @@ public class PostsActivity extends BaseActivity implements
 
                 String type = "normal";
                 if (li.attr("id").contains("stickthread")) {
-                    type = "置顶";
-                    if (isHideZhiding && type.equals("置顶")) {
+                    if (isHideZhiding)
                         continue;
-                    }
+                    type = "置顶";
                 } else {
                     Element element = li.selectFirst("tr > th > span.xi1");
                     if (element != null && element.text().contains("回帖奖励")) {
@@ -402,6 +397,47 @@ public class PostsActivity extends BaseActivity implements
                 maxPage = currentPage;
             } else {
                 maxPage = GetId.getNumber(page.select("label span").text());
+            }
+
+            return myDB.handReadHistoryList(tempDatas);
+        }
+
+        @Override
+        protected void onPostExecute(List<ArticleListData> dataset) {
+            getDataCompete(dataset);
+        }
+    }
+
+    //校园网状态下解析Api,目前外网不支持API不然就切换到API了
+    private class getPostsApi extends AsyncTask<byte[], Void, List<ArticleListData>> {
+        @Override
+        protected List<ArticleListData> doInBackground(byte[]... params) {
+            ApiResult<ApiForumList> res = JSON.parseObject(params[0], forumListType);
+            List<ForumThreadlist> topics = res.Variables.forum_threadlist;
+            List<ArticleListData> tempDatas = new ArrayList<>();
+            ArticleListData temp;
+
+            for (ForumThreadlist topic : topics) {
+                String type = "normal";
+                if (topic.displayorder == 1) {
+                    if (isHideZhiding) {
+                        continue;
+                    }
+                    type = "置顶";
+                }
+
+                //TODO 金币 投票 关闭
+                //TODO color
+                int color = ContextCompat.getColor(PostsActivity.this, R.color.text_color_pri);
+                temp = new ArticleListData(type, topic.subject, topic.tid, topic.author, topic.authorid,
+                        topic.dateline.replace("&nbsp;", " "), topic.views, topic.replies, color);
+                //if (!TextUtils.isEmpty(tag)) temp.tag = tag;
+                tempDatas.add(temp);
+            }
+
+            maxPage = Integer.MAX_VALUE;
+            if (topics.size() == 0) {
+                maxPage = currentPage;
             }
 
             return myDB.handReadHistoryList(tempDatas);

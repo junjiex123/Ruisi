@@ -15,7 +15,7 @@ public class ForumThreadlist {
     public String lastposter;
     public String views;
     public String replies;
-    public String displayorder;
+    public int displayorder;
     public String digest;
     public String attachment;
     public String recommend_add;

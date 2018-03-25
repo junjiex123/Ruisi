@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
 import me.yluo.ruisiapp.api.entity.ApiResult;
 import me.yluo.ruisiapp.api.entity.Variables;
 
-public abstract class ApiResponseHandler<T extends Variables> extends ResponseHandler {
+public abstract class ApiResponseHandler<T> extends ResponseHandler {
 
     @Override
     public void onSuccess(byte[] response) {
