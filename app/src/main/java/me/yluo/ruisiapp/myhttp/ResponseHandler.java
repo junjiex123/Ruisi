@@ -16,6 +16,7 @@ public abstract class ResponseHandler {
     private static final int MSG_FINISH = 3;
     private static final int MSG_PROGRESS = 4;
     private static final int MSG_START_DOWN = 5;
+
     private Handler handler;
     private Looper looper = null;
 

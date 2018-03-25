@@ -28,10 +28,14 @@ import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.adapter.BaseAdapter;
 import me.yluo.ruisiapp.adapter.PostListAdapter;
+import me.yluo.ruisiapp.api.entity.ApiForumList;
+import me.yluo.ruisiapp.api.entity.ApiResult;
+import me.yluo.ruisiapp.api.entity.ForumThreadlist;
 import me.yluo.ruisiapp.database.MyDB;
 import me.yluo.ruisiapp.listener.HidingScrollListener;
 import me.yluo.ruisiapp.listener.LoadMoreListener;
 import me.yluo.ruisiapp.model.ArticleListData;
+import me.yluo.ruisiapp.myhttp.ApiResponseHandler;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.utils.DimmenUtils;
@@ -219,6 +223,22 @@ public class PostsActivity extends BaseActivity implements
             url = url + UrlUtils.getArticleListUrl(FID, currentPage, false);
         }
         url = url + orders[currentTabindex];
+
+        HttpUtil.get("api/mobile/index.php?version=4&module=forumdisplay&fid=72", new ApiResponseHandler<ApiForumList>() {
+            @Override
+            public void onSuccess(ApiResult<ApiForumList> result) {
+                System.out.println(result.Variables.forum);
+                System.out.println(result.Variables.forum_threadlist);
+
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                super.onFailure(e);
+            }
+        });
+
+
         HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -239,9 +259,7 @@ public class PostsActivity extends BaseActivity implements
 
             @Override
             public void onFailure(Throwable e) {
-                //Toast.makeText(getActivity(), "网络错误！！", Toast.LENGTH_SHORT).show();
                 refreshLayout.postDelayed(() -> refreshLayout.setRefreshing(false), 500);
-
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
             }
         });
