@@ -2,7 +2,7 @@ package me.yluo.ruisiapp.api.entity;
 
 import java.util.List;
 
-public class ApiForumList {
+public class ApiForumIndex {
     public String cookiepre;
     public String auth;
     public String saltkey;
@@ -13,12 +13,11 @@ public class ApiForumList {
     public String ismoderator;
     public String readaccess;
     public Notice notice;
-
-    public Forum forum;
+    public String member_email;
+    public String member_credits;
+    public String setting_bbclosed;
     public Group group;
-
-    public List<ForumThreadlist> forum_threadlist;
-    public List<String> sublist;
-    public int tpp;
-    public int page;
+    
+    public List<Catlist> catlist;
+    public List<Forumlist> forumlist;
 }
