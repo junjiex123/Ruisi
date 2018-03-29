@@ -429,7 +429,8 @@ public class PostsActivity extends BaseActivity implements
                 //TODO 金币 投票 关闭
                 //TODO color
                 int color = ContextCompat.getColor(PostsActivity.this, R.color.text_color_pri);
-                temp = new ArticleListData(type, topic.subject, topic.tid, topic.author, topic.authorid,
+                String url = "forum.php?mod=viewthread&tid="+topic.tid;
+                temp = new ArticleListData(type, topic.subject,url, topic.author, topic.authorid,
                         topic.dateline.replace("&nbsp;", " "), topic.views, topic.replies, color);
                 //if (!TextUtils.isEmpty(tag)) temp.tag = tag;
                 tempDatas.add(temp);

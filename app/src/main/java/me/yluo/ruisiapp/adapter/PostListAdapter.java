@@ -144,12 +144,12 @@ public class PostListAdapter extends BaseAdapter {
         }
 
         void onBtnItemClick() {
-            ArticleListData single_data = DataSet.get(getAdapterPosition());
-            if (!single_data.isRead) {
-                single_data.isRead = true;
+            ArticleListData data = DataSet.get(getAdapterPosition());
+            if (!data.isRead) {
+                data.isRead = true;
                 notifyItemChanged(getAdapterPosition());
             }
-            PostActivity.open(activity, single_data.titleUrl, single_data.author);
+            PostActivity.open(activity, data.titleUrl, data.author);
 
         }
     }

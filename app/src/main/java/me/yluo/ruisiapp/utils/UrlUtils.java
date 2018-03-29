@@ -25,7 +25,11 @@ public class UrlUtils {
     }
 
     public static String getArticleListApiUrl(int fid, int page) {
-        return "api/mobile/index.php?version=4&module=forumdisplay&fid="+fid+ "&page=" + page;
+        return "api/mobile/index.php?version=4&module=forumdisplay&fid=" + fid + "&page=" + page;
+    }
+
+    public static String getArticleApiUrl(String tid, int page, int pageSize) {
+        return "api/mobile/index.php?version=4&module=viewthread&tid=" + tid + "&page=" + page + "&ppp=" + pageSize;
     }
 
     public static String getSingleArticleUrl(String tid, int page, boolean isInner) {
@@ -105,7 +109,7 @@ public class UrlUtils {
                 return "forum.php?mod=topicadmin&action=moderate&optgroup=3"
                         + "&modsubmit=yes&mobile=2&handlekey=moderateform&inajax=1";
             }
-        } else if (type == SingleType.COMMENT){
+        } else if (type == SingleType.COMMENT) {
             // 评论
             if (App.IS_SCHOOL_NET) {
                 return "forum.php?mod=topicadmin&action=delpost&modsubmit=yes&infloat=yes&modclick=yes&inajax=1";
@@ -119,7 +123,7 @@ public class UrlUtils {
     }
 
     public static String getUploadImageUrl() {
-        return  "misc.php?mod=swfupload&operation=upload&type=image&inajax=yes&infloat=yes&simple=2&mobile=2";
+        return "misc.php?mod=swfupload&operation=upload&type=image&inajax=yes&infloat=yes&simple=2&mobile=2";
     }
 
     public static String getCloseArticleUrl() {
@@ -130,7 +134,7 @@ public class UrlUtils {
         return "forum.php?mod=topicadmin&action=banpost&modsubmit=yes&modclick=yes&mobile=2&handlekey=topicadminform&inajax=1";
     }
 
-    public static String getWarnUserUrl(){
+    public static String getWarnUserUrl() {
         return "forum.php?mod=topicadmin&action=warn&modsubmit=yes&modclick=yes&mobile=2&handlekey=topicadminform&inajax=1";
     }
 }

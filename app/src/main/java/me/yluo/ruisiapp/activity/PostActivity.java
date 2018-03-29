@@ -117,6 +117,7 @@ public class PostActivity extends BaseActivity
         String url = b.getString("url");
         AuthorName = b.getString("author");
         tid = GetId.getId("tid=", url);
+
         if (url != null && url.contains("redirect")) {
             redirectPid = GetId.getId("pid=", url);
             if (!App.IS_SCHOOL_NET) {
@@ -219,7 +220,15 @@ public class PostActivity extends BaseActivity
 
     //文章一页的html 根据页数 tid
     private void getArticleData(final int page) {
-        String url = UrlUtils.getSingleArticleUrl(tid, page, false);
+        String url;
+        boolean api = false;
+        if (App.IS_SCHOOL_NET) {
+            api = true;
+            url = UrlUtils.getArticleApiUrl(tid, currentPage, 20);
+        } else {
+            url = UrlUtils.getSingleArticleUrl(tid, page, false);
+        }
+
         HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -649,6 +658,21 @@ public class PostActivity extends BaseActivity
             }
         }
 
+    }
+
+    /**
+     * 处理数据类（API） 后台进程
+     */
+    private class DealWithArticleDataApi extends AsyncTask<byte[], Void, List<SingleArticleData>> {
+        @Override
+        protected List<SingleArticleData> doInBackground(byte[]... params) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<SingleArticleData> dataset) {
+
+        }
     }
 
     /**
