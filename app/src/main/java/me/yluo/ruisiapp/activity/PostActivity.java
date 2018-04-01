@@ -29,12 +29,16 @@ import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +48,9 @@ import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.adapter.BaseAdapter;
 import me.yluo.ruisiapp.adapter.PostAdapter;
+import me.yluo.ruisiapp.api.entity.ApiPostList;
+import me.yluo.ruisiapp.api.entity.ApiResult;
+import me.yluo.ruisiapp.api.entity.Postlist;
 import me.yluo.ruisiapp.database.MyDB;
 import me.yluo.ruisiapp.listener.ListItemClickListener;
 import me.yluo.ruisiapp.listener.LoadMoreListener;
@@ -87,7 +94,7 @@ public class PostActivity extends BaseActivity
     private PostAdapter adapter;
     private List<SingleArticleData> datas = new ArrayList<>();
     private boolean isSaveToDataBase = false;
-    private String Title, AuthorName, tid, fid, redirectPid = "";
+    private String title, authorName, tid, fid, redirectPid = "";
     private boolean showPlainText = false;
     private EditText input;
     private SmileyInputRoot rootView;
@@ -95,6 +102,8 @@ public class PostActivity extends BaseActivity
     private Spinner spinner;
     private List<String> pageSpinnerDatas = new ArrayList<>();
     private Map<String, String> params;
+    private static final Type postListType = new TypeReference<ApiResult<ApiPostList>>() {
+    }.getType();
 
     public static void open(Context context, String url, @Nullable String author) {
         Intent intent = new Intent(context, PostActivity.class);
@@ -115,7 +124,7 @@ public class PostActivity extends BaseActivity
         initEmotionInput();
         Bundle b = getIntent().getExtras();
         String url = b.getString("url");
-        AuthorName = b.getString("author");
+        authorName = b.getString("author");
         tid = GetId.getId("tid=", url);
 
         if (url != null && url.contains("redirect")) {
@@ -221,9 +230,8 @@ public class PostActivity extends BaseActivity
     //文章一页的html 根据页数 tid
     private void getArticleData(final int page) {
         String url;
-        boolean api = false;
+        final boolean api = App.IS_SCHOOL_NET;
         if (App.IS_SCHOOL_NET) {
-            api = true;
             url = UrlUtils.getArticleApiUrl(tid, currentPage, 20);
         } else {
             url = UrlUtils.getSingleArticleUrl(tid, page, false);
@@ -232,8 +240,11 @@ public class PostActivity extends BaseActivity
         HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
-                String res = new String(response);
-                new DealWithArticleData(PostActivity.this).execute(res);
+                //if (api) {
+                //    new DealWithArticleDataApi(PostActivity.this).execute(response);
+                //} else {
+                new DealWithArticleData(PostActivity.this).execute(new String(response));
+                //}
             }
 
             @Override
@@ -366,7 +377,7 @@ public class PostActivity extends BaseActivity
             case R.id.btn_share:
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_TEXT, Title + UrlUtils.getSingleArticleUrl(tid, currentPage, App.IS_SCHOOL_NET));
+                shareIntent.putExtra(Intent.EXTRA_TEXT, title + UrlUtils.getSingleArticleUrl(tid, currentPage, App.IS_SCHOOL_NET));
                 shareIntent.setType("text/plain");
                 //设置分享列表的标题，并且每次都显示分享列表
                 startActivity(Intent.createChooser(shareIntent, "分享到文章到:"));
@@ -397,7 +408,7 @@ public class PostActivity extends BaseActivity
                 if (ih > 0) {
                     int h_start = htmlData.indexOf('\"', ih + 15);
                     int h_end = htmlData.indexOf('\"', h_start + 1);
-                    Title = htmlData.substring(h_start + 1, h_end);
+                    title = htmlData.substring(h_start + 1, h_end);
                     isGetTitle = true;
                 }
             }
@@ -543,19 +554,19 @@ public class PostActivity extends BaseActivity
                                 LinkClickHandler.VOTE_URL + "\">点此投票</a><br>");
                         d = new VoteData(vote.attr("action"), options, maxSelection);
                     }
-                    data = new SingleArticleData(SingleType.CONTENT, Title, uid,
+                    data = new SingleArticleData(SingleType.CONTENT, title, uid,
                             username, postTime,
                             commentIndex, replyUrl, contentels.html().trim(), pid, canManage);
                     data.vote = d;
-                    AuthorName = username;
+                    authorName = username;
                     if (!isSaveToDataBase) {
                         //插入数据库
                         MyDB myDB = new MyDB(PostActivity.this);
-                        myDB.handSingleReadHistory(tid, Title, AuthorName);
+                        myDB.handSingleReadHistory(tid, title, authorName);
                         isSaveToDataBase = true;
                     }
                 } else {//评论
-                    data = new SingleArticleData(SingleType.COMMENT, Title, uid,
+                    data = new SingleArticleData(SingleType.COMMENT, title, uid,
                             username, postTime, commentIndex, replyUrl,
                             contentels.html().trim(), pid, canManage);
                 }
@@ -625,7 +636,7 @@ public class PostActivity extends BaseActivity
 
             if (datas.size() > 0 && (datas.get(0).type != SingleType.CONTENT) &&
                     (datas.get(0).type != SingleType.HEADER)) {
-                datas.add(0, new SingleArticleData(SingleType.HEADER, Title,
+                datas.add(0, new SingleArticleData(SingleType.HEADER, title,
                         null, null, null, null, null, null, null));
             }
             int add = datas.size() - startsize;
@@ -664,9 +675,86 @@ public class PostActivity extends BaseActivity
      * 处理数据类（API） 后台进程
      */
     private class DealWithArticleDataApi extends AsyncTask<byte[], Void, List<SingleArticleData>> {
+
+        private Context context;
+        private String errorText = "";
+        private int pageLoad = 1;
+
+
+        DealWithArticleDataApi(Context context) {
+            this.context = context;
+        }
+
         @Override
         protected List<SingleArticleData> doInBackground(byte[]... params) {
-            return null;
+            ApiResult<ApiPostList> res = JSON.parseObject(params[0], postListType);
+            if (res == null) {
+                errorText = "没有获取到文章内容";
+                return null;
+            }
+            if (!isGetTitle) {
+                title = res.Variables.thread.subject;
+                isGetTitle = true;
+            }
+
+            App.setHash(context, res.Variables.formhash);
+            fid = res.Variables.fid;
+            tid = res.Variables.thread.tid;
+            authorName = res.Variables.thread.author;
+
+
+            //todo replyUrl
+            //获取总页数 和当前页数
+            //todo  pageLoad  sumPage
+            List<Postlist> postlist = res.Variables.postlist;
+            List<SingleArticleData> tempDatas = new ArrayList<>(res.Variables.ppp);
+            int size = postlist.size();
+            for (int i = 0; i < size; i++) {
+                Postlist temp = postlist.get(i);
+                String pid = temp.pid;
+                String uid = temp.authorid;
+
+                //TODO
+                String commentIndex = "1";
+                String username = temp.author;
+
+                //TODO
+                boolean canManage = false;
+
+                String postTime = temp.dateline;
+
+                //TODO
+                String replyUrl = null;
+                String content = temp.message;
+
+                //是否移除所有样式
+                if (showPlainText) {
+                    //TODO
+                }
+
+                SingleArticleData data;
+                if (temp.first == 1) { //内容
+                    data = new SingleArticleData(SingleType.CONTENT, title, uid,
+                            username, postTime,
+                            commentIndex, replyUrl, content, pid, canManage);
+
+                    //TODO vote
+                    //data.vote =
+                    if (!isSaveToDataBase) {
+                        //插入数据库
+                        MyDB myDB = new MyDB(PostActivity.this);
+                        myDB.handSingleReadHistory(tid, title, authorName);
+                        isSaveToDataBase = true;
+                    }
+                } else {
+                    data = new SingleArticleData(SingleType.COMMENT, title, uid,
+                            username, postTime, commentIndex, replyUrl, content, pid, canManage);
+                }
+
+
+                tempDatas.add(data);
+            }
+            return tempDatas;
         }
 
         @Override
