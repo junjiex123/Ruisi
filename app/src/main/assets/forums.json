@@ -73,8 +73,28 @@
       {"name": "其他", "fid": 22, "login": true},
       {"name": "西电", "fid": 557, "login": true},
       {"name": "求种专区", "fid": 165, "login": true},
-      {"name": "新手试种专区", "fid": 534, "login": true},
       {"name": "资源回收站", "fid": 559, "login": true}
+    ]
+  },
+
+  {
+    "name":"试种专区",
+    "gid":11,
+    "login":true,
+    "canPost":false,
+    "forums": [
+      {"name": "电影试种", "fid": 545, "login": true},
+      {"name": "剧集试种", "fid": 544, "login": true},
+      {"name": "音乐试种", "fid": 543, "login": true},
+      {"name": "动漫试种", "fid": 542, "login": true},
+      {"name": "游戏试种", "fid": 541, "login": true},
+      {"name": "综艺试种", "fid": 540, "login": true},
+      {"name": "体育试种", "fid": 539, "login": true},
+      {"name": "软件试种", "fid": 538, "login": true},
+      {"name": "学习试种", "fid": 537, "login": true},
+      {"name": "纪录片试种", "fid": 536, "login": true},
+      {"name": "其他试种", "fid": 535, "login": true},
+      {"name": "西电相关试种", "fid": 562, "login": true}
     ]
   },
 
@@ -92,7 +112,7 @@
       {"name": "发展建议", "fid": 141, "login": false},
       {"name": "邀请码申请", "fid": 137, "login": false},
       {"name": "公告活动", "fid": 94, "login": false},
-      {"name": "站务管理", "fid": 69, "login": true, "manager":"true"}
+      {"name": "站务管理", "fid": 69, "login": true, "manager":true}
     ]
   }
 ]
