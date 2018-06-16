@@ -1,5 +1,4 @@
 package me.yluo.ruisiapp.api.entity;
-import java.util.Date;
 
 public class Thread {
 

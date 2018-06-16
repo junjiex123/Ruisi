@@ -1,13 +1,7 @@
 package me.yluo.ruisiapp.utils;
 
-import com.alibaba.fastjson.JSON;
-
 import me.yluo.ruisiapp.App;
-import me.yluo.ruisiapp.api.entity.ApiForumList;
-import me.yluo.ruisiapp.api.entity.ApiResult;
 import me.yluo.ruisiapp.model.SingleType;
-import me.yluo.ruisiapp.myhttp.HttpUtil;
-import me.yluo.ruisiapp.myhttp.ResponseHandler;
 
 /**
  * Created by free2 on 16-4-1.

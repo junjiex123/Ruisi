@@ -34,14 +34,14 @@ public class PostListAdapter extends BaseAdapter {
     private int size = 0;
 
     //数据
-    private List<ArticleListData> DataSet;
+    private List<ArticleListData> dataSet;
     private int type = 3;
 
     //上下文
     private Activity activity;
 
     public PostListAdapter(Activity activity, List<ArticleListData> data, int type) {
-        DataSet = data;
+        dataSet = data;
         this.activity = activity;
         this.type = type;
         size = DimmenUtils.dip2px(activity, 42);
@@ -50,7 +50,7 @@ public class PostListAdapter extends BaseAdapter {
 
     @Override
     protected int getDataCount() {
-        return DataSet.size();
+        return dataSet.size();
     }
 
     @Override
@@ -84,44 +84,44 @@ public class PostListAdapter extends BaseAdapter {
 
     //校园网环境 帖子列表
     private class NormalViewHolder extends BaseViewHolder {
-        protected TextView article_title;
-        protected TextView post_time;
-        TextView article_type;
-        CircleImageView author_img;
-        TextView author_name;
-        TextView reply_count;
-        TextView view_count;
+        protected TextView articleTitle;
+        protected TextView postTime;
+        TextView articleType;
+        CircleImageView authorImg;
+        TextView authorName;
+        TextView replyCount;
+        TextView viewCount;
 
         //构造
         NormalViewHolder(View v) {
             super(v);
-            article_type = v.findViewById(R.id.article_type);
-            article_title = v.findViewById(R.id.article_title);
-            author_img = v.findViewById(R.id.author_img);
-            author_name = v.findViewById(R.id.author_name);
-            post_time = v.findViewById(R.id.post_time);
-            reply_count = v.findViewById(R.id.reply_count);
-            view_count = v.findViewById(R.id.view_count);
+            articleType = v.findViewById(R.id.article_type);
+            articleTitle = v.findViewById(R.id.article_title);
+            authorImg = v.findViewById(R.id.author_img);
+            authorName = v.findViewById(R.id.author_name);
+            postTime = v.findViewById(R.id.post_time);
+            replyCount = v.findViewById(R.id.reply_count);
+            viewCount = v.findViewById(R.id.view_count);
             v.findViewById(R.id.main_item_btn_item).setOnClickListener(v1 -> onBtnItemClick());
-            author_img.setOnClickListener(v2 -> onBtnAvatarClick());
+            authorImg.setOnClickListener(v2 -> onBtnAvatarClick());
         }
 
         //设置listItem的数据
         @Override
         void setData(int position) {
-            ArticleListData single = DataSet.get(position);
+            ArticleListData single = dataSet.get(position);
             String type = single.type;
             if (TextUtils.isEmpty(type) || !type.equals("normal")) {
-                article_type.setText(type);
-                article_type.setVisibility(View.VISIBLE);
+                articleType.setText(type);
+                articleType.setVisibility(View.VISIBLE);
             } else {
-                article_type.setVisibility(View.GONE);
+                articleType.setVisibility(View.GONE);
             }
 
-            post_time.setText("\uf017 " + single.postTime);
-            view_count.setText("\uf06e " + single.viewCount);
-            reply_count.setText("\uf0e6 " + single.replayCount);
-            author_name.setText("\uf2c0 " + single.author);
+            postTime.setText("\uf017 " + single.postTime);
+            viewCount.setText("\uf06e " + single.viewCount);
+            replyCount.setText("\uf0e6 " + single.replayCount);
+            authorName.setText("\uf2c0 " + single.author);
 
             String imageUrl = UrlUtils.getAvaterurlm(single.authorUrl);
             Picasso.get()
@@ -129,22 +129,22 @@ public class PostListAdapter extends BaseAdapter {
                     .resize(size, size)
                     .placeholder(R.drawable.image_placeholder)
                     .error(R.drawable.image_placeholder)
-                    .into(author_img);
+                    .into(authorImg);
             int color = single.titleColor;
             int readcolor = ContextCompat.getColor(activity, R.color.text_color_sec);
-            article_title.setTextColor(single.isRead ? readcolor : color);
-            article_title.setText(TextUtils.isEmpty(single.tag) ? single.title : "[" + single.tag + "] " + single.title);
+            articleTitle.setTextColor(single.isRead ? readcolor : color);
+            articleTitle.setText(TextUtils.isEmpty(single.tag) ? single.title : "[" + single.tag + "] " + single.title);
 
         }
 
         void onBtnAvatarClick() {
-            String imageUrl = UrlUtils.getAvaterurlb(DataSet.get(getAdapterPosition()).authorUrl);
+            String imageUrl = UrlUtils.getAvaterurlb(dataSet.get(getAdapterPosition()).authorUrl);
             UserDetailActivity.openWithAnimation(
-                    activity, DataSet.get(getAdapterPosition()).author, author_img, imageUrl);
+                    activity, dataSet.get(getAdapterPosition()).author, authorImg, imageUrl);
         }
 
         void onBtnItemClick() {
-            ArticleListData data = DataSet.get(getAdapterPosition());
+            ArticleListData data = dataSet.get(getAdapterPosition());
             if (!data.isRead) {
                 data.isRead = true;
                 notifyItemChanged(getAdapterPosition());
@@ -156,80 +156,80 @@ public class PostListAdapter extends BaseAdapter {
 
     //手机版文章列表
     private class NormalViewHolderMe extends BaseViewHolder {
-        TextView article_title;
-        TextView author_name;
-        TextView is_image;
-        TextView reply_count;
+        TextView articleTitle;
+        TextView authorName;
+        TextView isImage;
+        TextView replyCount;
 
         //构造
         NormalViewHolderMe(View v) {
             super(v);
-            article_title = v.findViewById(R.id.article_title);
-            author_name = v.findViewById(R.id.author_name);
-            is_image = v.findViewById(R.id.is_image);
-            reply_count = v.findViewById(R.id.reply_count);
+            articleTitle = v.findViewById(R.id.article_title);
+            authorName = v.findViewById(R.id.author_name);
+            isImage = v.findViewById(R.id.is_image);
+            replyCount = v.findViewById(R.id.reply_count);
             v.findViewById(R.id.main_item_btn_item).setOnClickListener(v1 -> onBtnItemClick());
         }
 
         //设置listItem的数据
         @Override
         void setData(int position) {
-            ArticleListData single = DataSet.get(position);
+            ArticleListData single = dataSet.get(position);
             int color = single.titleColor;
-            article_title.setTextColor(single.isRead ? 0xff888888 : color);
-            article_title.setText(single.title);
-            author_name.setText("\uf2c0 " + single.author);
-            reply_count.setText("\uf0e6 " + single.replayCount);
-            is_image.setVisibility(single.ishaveImage ? View.VISIBLE : View.GONE);
+            articleTitle.setTextColor(single.isRead ? 0xff888888 : color);
+            articleTitle.setText(single.title);
+            authorName.setText("\uf2c0 " + single.author);
+            replyCount.setText("\uf0e6 " + single.replayCount);
+            isImage.setVisibility(single.ishaveImage ? View.VISIBLE : View.GONE);
         }
 
         void onBtnItemClick() {
-            ArticleListData single_data = DataSet.get(getAdapterPosition());
-            if (!single_data.isRead) {
-                single_data.isRead = true;
+            ArticleListData data = dataSet.get(getAdapterPosition());
+            if (!data.isRead) {
+                data.isRead = true;
                 notifyItemChanged(getAdapterPosition());
             }
-            PostActivity.open(activity, single_data.titleUrl, single_data.author);
+            PostActivity.open(activity, data.titleUrl, data.author);
         }
     }
 
     //校园网环境 图片板块ViewHolder
     private class ImageCardViewHolder extends BaseViewHolder {
 
-        ImageView img_card_image;
-        TextView img_card_title;
-        TextView img_card_author;
-        TextView img_card_like;
+        ImageView imgCardImage;
+        TextView imgCardTitle;
+        TextView imgCardAuthor;
+        TextView imgCardLike;
 
         ImageCardViewHolder(View itemView) {
             super(itemView);
-            img_card_image = itemView.findViewById(R.id.img_card_image);
-            img_card_title = itemView.findViewById(R.id.img_card_title);
-            img_card_author = itemView.findViewById(R.id.img_card_author);
-            img_card_like = itemView.findViewById(R.id.img_card_like);
+            imgCardImage = itemView.findViewById(R.id.img_card_image);
+            imgCardTitle = itemView.findViewById(R.id.img_card_title);
+            imgCardAuthor = itemView.findViewById(R.id.img_card_author);
+            imgCardLike = itemView.findViewById(R.id.img_card_like);
 
             itemView.findViewById(R.id.card_list_item).setOnClickListener(v -> item_click());
         }
 
         void setData(int position) {
-            img_card_author.setText("\uf2c0 " + DataSet.get(position).author);
-            img_card_title.setText(DataSet.get(position).title);
-            img_card_like.setText("\uf08a " + DataSet.get(position).replayCount);
-            if (!TextUtils.isEmpty(DataSet.get(position).imUrl)) {
+            imgCardAuthor.setText("\uf2c0 " + dataSet.get(position).author);
+            imgCardTitle.setText(dataSet.get(position).title);
+            imgCardLike.setText("\uf08a " + dataSet.get(position).replayCount);
+            if (!TextUtils.isEmpty(dataSet.get(position).imUrl)) {
                 Picasso.get()
-                        .load(App.getBaseUrl() + DataSet.get(position).imUrl)
+                        .load(App.getBaseUrl() + dataSet.get(position).imUrl)
                         .placeholder(R.drawable.image_placeholder)
                         .error(R.drawable.image_placeholder)
-                        .into(img_card_image);
+                        .into(imgCardImage);
             } else {
-                img_card_image.setImageResource(R.drawable.image_placeholder);
+                imgCardImage.setImageResource(R.drawable.image_placeholder);
             }
 
         }
 
         void item_click() {
-            ArticleListData single_data = DataSet.get(getAdapterPosition());
-            PostActivity.open(activity, single_data.titleUrl, single_data.author);
+            ArticleListData articleListData = dataSet.get(getAdapterPosition());
+            PostActivity.open(activity, articleListData.titleUrl, articleListData.author);
         }
     }
 
