@@ -62,7 +62,7 @@ public class RuisUtils {
         }
 
         if (f.exists()) {
-            Picasso.with(context.get())
+            Picasso.get()
                     .load(f)
                     .error(R.drawable.image_placeholder)
                     .into(target.get());
@@ -74,7 +74,7 @@ public class RuisUtils {
                     Context c = context.get();
                     if (c == null) return null;
                     try {
-                        b = Picasso.with(c).load(params[0]).get();
+                        b = Picasso.get().load(params[0]).get();
                         FileOutputStream out = new FileOutputStream(f);
                         b.compress(Bitmap.CompressFormat.JPEG, 90, out);
                         out.flush();
@@ -282,7 +282,7 @@ public class RuisUtils {
                     if (!isLogin && forumLogin) {//false true
                         continue;
                     }
-                    if (oo.has("manager") && !isManager(App.getGrade(context))){
+                    if (oo.has("manager") && !isManager(App.getGrade(context))) {
                         // 需要管理权限
                         continue;
                     }
@@ -318,10 +318,10 @@ public class RuisUtils {
         return s;
     }
 
-    public static boolean isManager(String grade){
-        String [] managers = {"管理员","超级版主","版主","游戏补丁更新组",
-                "睿思助理","RS助理","邀请发放专员","轮值超版","美工组","实习版主"};
-        for (String str : managers){
+    public static boolean isManager(String grade) {
+        String[] managers = {"管理员", "超级版主", "版主", "游戏补丁更新组",
+                "睿思助理", "RS助理", "邀请发放专员", "轮值超版", "美工组", "实习版主"};
+        for (String str : managers) {
             if (str.equals(grade)) {
                 return true;
             }
@@ -329,7 +329,7 @@ public class RuisUtils {
         return false;
     }
 
-    public static Document getManageContent(byte[] response){
+    public static Document getManageContent(byte[] response) {
         String tmp = new String(response);
         int start = tmp.indexOf("<div");
         int last = tmp.lastIndexOf("</div>") + 6;

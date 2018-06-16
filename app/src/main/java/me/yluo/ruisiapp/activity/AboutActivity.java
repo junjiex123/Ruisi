@@ -30,7 +30,8 @@ public class AboutActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.transparent));
         }
 
@@ -59,9 +60,9 @@ public class AboutActivity extends BaseActivity {
 
         int versionCode = 0;
         if (info != null) {
-            String version_name = info.versionName;
+            String versionName = info.versionName;
             versionCode = info.versionCode;
-            String a = "当前版本:" + version_name;
+            String a = "当前版本:" + versionName;
             version.setText(a);
         }
 
@@ -84,9 +85,9 @@ public class AboutActivity extends BaseActivity {
             public void onSuccess(byte[] response) {
                 String res = new String(response);
                 int ih = res.indexOf("keywords");
-                int h_start = res.indexOf('\"', ih + 15);
-                int h_end = res.indexOf('\"', h_start + 1);
-                String title = res.substring(h_start + 1, h_end);
+                int hStart = res.indexOf('\"', ih + 15);
+                int hEnd = res.indexOf('\"', hStart + 1);
+                String title = res.substring(hStart + 1, hEnd);
                 if (title.contains("code")) {
                     SharedPreferences.Editor editor = getSharedPreferences(App.MY_SHP_NAME, MODE_PRIVATE).edit();
                     editor.putLong(App.CHECK_UPDATE_KEY, System.currentTimeMillis());

@@ -215,7 +215,7 @@ public class ForumsAdapter extends BaseAdapter {
                 imageView = (CircleImageView) convertView;
             }
 
-            Picasso.with(context)
+            Picasso.get()
                     .load(ds.get(position).imgSrc)
                     .placeholder(R.drawable.image_placeholder)
                     .into(imageView);

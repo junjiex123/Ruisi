@@ -74,7 +74,7 @@ public class FriendAdapter extends BaseAdapter {
             user_name.setText(single.userName);
             user_info.setText(single.info);
             is_online.setVisibility(single.isOnline() ? View.VISIBLE : View.GONE);
-            Picasso.with(context).load(single.imgUrl).placeholder(R.drawable.image_placeholder).into(user_image);
+            Picasso.get().load(single.imgUrl).placeholder(R.drawable.image_placeholder).into(user_image);
             container.setOnLongClickListener(view -> {
                 if (listener != null) {
                     listener.onItemLongClick(container, position);

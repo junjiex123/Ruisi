@@ -28,6 +28,8 @@ import me.yluo.ruisiapp.utils.DimmenUtils;
  * 所有activity的基类
  */
 public class BaseActivity extends AppCompatActivity {
+
+
     //谁用了FREEDOM
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

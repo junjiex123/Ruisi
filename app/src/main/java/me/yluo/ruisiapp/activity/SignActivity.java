@@ -65,16 +65,18 @@ public class SignActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Picasso.with(this).load(UrlUtils.getAvaterurlb(App.getUid(this))).
-                placeholder(R.drawable.image_placeholder).into(userImage);
+        Picasso.get()
+                .load(UrlUtils.getAvaterurlb(App.getUid(this)))
+                .placeholder(R.drawable.image_placeholder)
+                .into(userImage);
     }
 
     //看看是否已经签到
     private void checkState() {
         progressBar.setVisibility(View.VISIBLE);
         Calendar c = Calendar.getInstance();
-        int HOUR_OF_DAY = c.get(Calendar.HOUR_OF_DAY);
-        if (!(7 <= HOUR_OF_DAY && HOUR_OF_DAY < 24)) {
+        int hourOfDay = c.get(Calendar.HOUR_OF_DAY);
+        if (!(7 <= hourOfDay && hourOfDay < 24)) {
             sign_error();
             return;
         }

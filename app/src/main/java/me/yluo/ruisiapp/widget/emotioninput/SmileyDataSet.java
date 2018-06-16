@@ -70,7 +70,8 @@ public class SmileyDataSet {
         View v;
         if (type == SmileyDataSet.TYPE_IMAGE) {
             v = new ImageView(context);
-            Picasso.with(context).load(d.first)
+            Picasso.get()
+                    .load(d.first)
                     .resize(size, size)
                     .into((ImageView) v);
         } else {

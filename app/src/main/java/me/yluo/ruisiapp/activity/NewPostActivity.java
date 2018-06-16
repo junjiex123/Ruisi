@@ -65,7 +65,8 @@ import me.yluo.ruisiapp.widget.emotioninput.EmotionInputHandler;
  * Created by free2 on 16-3-6.
  * 发帖activity
  */
-public class NewPostActivity extends BaseActivity implements View.OnClickListener, InputValidDialog.OnInputValidListener {
+public class NewPostActivity extends BaseActivity implements View.OnClickListener,
+        InputValidDialog.OnInputValidListener {
 
     private EditText edTitle, edContent;
     private MySpinner forumSpinner, typeidSpinner;

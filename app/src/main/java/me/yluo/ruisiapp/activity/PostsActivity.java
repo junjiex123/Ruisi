@@ -109,11 +109,13 @@ public class PostsActivity extends BaseActivity implements
         tab = findViewById(R.id.tab);
 
         refreshLayout = findViewById(R.id.refresh_layout);
-        refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
+        refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light,
+                R.color.blue_light, R.color.orange_light);
         int top = DimmenUtils.dip2px(this, 60);
         refreshLayout.setProgressViewOffset(true, top, top + 60);
 
-        isHideZhiding = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("setting_hide_zhidin", true);
+        isHideZhiding = PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean("setting_hide_zhidin", true);
         if (getType() == PostListAdapter.TYPE_IMAGE) {
             isEnableLoadMore = false;
             mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);

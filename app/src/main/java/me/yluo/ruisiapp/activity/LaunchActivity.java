@@ -25,8 +25,10 @@ import me.yluo.ruisiapp.widget.CircleImageView;
  * 读取相关设置写到{@link App}
  */
 public class LaunchActivity extends BaseActivity {
-    private final static int WAIT_TIME = 350;//最少等待时间ms
-    private TextView launch_text;
+
+    private static final  int WAIT_TIME = 350;//最少等待时间ms
+
+    private TextView launchText;
     private CircleImageView logo;
     private boolean isForeGround = true;
 
@@ -40,7 +42,7 @@ public class LaunchActivity extends BaseActivity {
         App app = (App) getApplication();
         app.regReciever();
 
-        launch_text = findViewById(R.id.app_name);
+        launchText = findViewById(R.id.app_name);
         logo = findViewById(R.id.logo);
         loadUserImg();
         setCopyRight();
@@ -70,10 +72,11 @@ public class LaunchActivity extends BaseActivity {
 
     private void enterHome() {
         if (isForeGround) {
-            ActivityOptionsCompat compat = ActivityOptionsCompat.makeCustomAnimation(this, R.anim.fade_in, R.anim.fade_out);
-            Intent i = new Intent();
-            ActivityCompat.startActivity(this, new Intent(this, HomeActivity.class), compat.toBundle());
-            new Handler().postDelayed(() -> finish(), 305);
+            ActivityOptionsCompat compat = ActivityOptionsCompat.makeCustomAnimation(this,
+                    R.anim.fade_in, R.anim.fade_out);
+            ActivityCompat.startActivity(this,
+                    new Intent(this, HomeActivity.class), compat.toBundle());
+            new Handler().postDelayed(this::finish, 305);
         }
     }
 
@@ -90,7 +93,7 @@ public class LaunchActivity extends BaseActivity {
         super.onStart();
         AlphaAnimation alphaAnimation = new AlphaAnimation(0.4f, 1.0f);
         alphaAnimation.setDuration((long) (WAIT_TIME * 0.85));// 设置动画显示时间
-        launch_text.startAnimation(alphaAnimation);
+        launchText.startAnimation(alphaAnimation);
         logo.startAnimation(alphaAnimation);
     }
 

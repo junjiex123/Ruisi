@@ -72,7 +72,8 @@ import static me.yluo.ruisiapp.utils.RuisUtils.getManageContent;
  * 其余是评论
  */
 public class PostActivity extends BaseActivity
-        implements ListItemClickListener, LoadMoreListener.OnLoadMoreListener, View.OnClickListener, PopupMenu.OnMenuItemClickListener {
+        implements ListItemClickListener, LoadMoreListener.OnLoadMoreListener,
+        View.OnClickListener, PopupMenu.OnMenuItemClickListener {
 
     private RecyclerView topicList;
     //上一次回复时间

@@ -124,7 +124,7 @@ public class PostListAdapter extends BaseAdapter {
             author_name.setText("\uf2c0 " + single.author);
 
             String imageUrl = UrlUtils.getAvaterurlm(single.authorUrl);
-            Picasso.with(activity)
+            Picasso.get()
                     .load(imageUrl)
                     .resize(size, size)
                     .placeholder(R.drawable.image_placeholder)
@@ -216,7 +216,7 @@ public class PostListAdapter extends BaseAdapter {
             img_card_title.setText(DataSet.get(position).title);
             img_card_like.setText("\uf08a " + DataSet.get(position).replayCount);
             if (!TextUtils.isEmpty(DataSet.get(position).imUrl)) {
-                Picasso.with(activity)
+                Picasso.get()
                         .load(App.getBaseUrl() + DataSet.get(position).imUrl)
                         .placeholder(R.drawable.image_placeholder)
                         .error(R.drawable.image_placeholder)

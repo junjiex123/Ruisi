@@ -177,9 +177,9 @@ public class HomeActivity extends BaseActivity
 
     private class MyTimerTask extends TimerTask {
         public void run() {
-            String url_reply = "home.php?mod=space&do=notice&view=mypost&type=post" + (App.IS_SCHOOL_NET ? "" : "&mobile=2");
-            String url_pm = "home.php?mod=space&do=pm&mobile=2";
-            HttpUtil.SyncGet(HomeActivity.this, url_reply, new ResponseHandler() {
+            String urlReply = "home.php?mod=space&do=notice&view=mypost&type=post" + (App.IS_SCHOOL_NET ? "" : "&mobile=2");
+            String urlPm = "home.php?mod=space&do=pm&mobile=2";
+            HttpUtil.SyncGet(HomeActivity.this, urlReply, new ResponseHandler() {
                 @Override
                 public void onSuccess(byte[] response) {
                     dealMessage(true, new String(response));
@@ -192,7 +192,7 @@ public class HomeActivity extends BaseActivity
                 e.printStackTrace();
             }
 
-            HttpUtil.SyncGet(HomeActivity.this, url_pm, new ResponseHandler() {
+            HttpUtil.SyncGet(HomeActivity.this, urlPm, new ResponseHandler() {
                 @Override
                 public void onSuccess(byte[] response) {
                     dealMessage(false, new String(response));
@@ -214,19 +214,19 @@ public class HomeActivity extends BaseActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
-        int version_code = 1;
+        int versionCode = 1;
         if (info != null) {
-            version_code = info.versionCode;
+            versionCode = info.versionCode;
         }
-        final int finalVersion_code = version_code;
+        final int finalVersion_code = versionCode;
         HttpUtil.get(App.CHECK_UPDATE_URL, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
                 int ih = res.indexOf("keywords");
-                int h_start = res.indexOf('\"', ih + 15);
-                int h_end = res.indexOf('\"', h_start + 1);
-                String title = res.substring(h_start + 1, h_end);
+                int hStart = res.indexOf('\"', ih + 15);
+                int hEnd = res.indexOf('\"', hStart + 1);
+                String title = res.substring(hStart + 1, hEnd);
                 if (title.contains("code")) {
                     int st = title.indexOf("code");
                     int code = GetId.getNumber(title.substring(st));
@@ -265,10 +265,10 @@ public class HomeActivity extends BaseActivity
         if (isReply) {
             Elements elemens = document.select(".nts").select("dl.cl");
             if (elemens.size() > 0) {
-                int last_message_id = getSharedPreferences(App.MY_SHP_NAME, MODE_PRIVATE)
+                int lastMessageId = getSharedPreferences(App.MY_SHP_NAME, MODE_PRIVATE)
                         .getInt(App.NOTICE_MESSAGE_REPLY_KEY, 0);
                 int noticeId = Integer.parseInt(elemens.get(0).attr("notice"));
-                ishaveReply = last_message_id < noticeId;
+                ishaveReply = lastMessageId < noticeId;
             }
         } else {
             Elements lists = document.select(".pmbox").select("ul").select("li");
