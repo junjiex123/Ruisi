@@ -42,14 +42,14 @@ public class BaseActivity extends AppCompatActivity {
         int theme = App.getCustomTheme(this);
         int cur = AppCompatDelegate.getDefaultNightMode();
         int to = cur;
-        boolean autoChnage = false;
+        boolean autoChange = false;
 
         //夜间主题
         if (theme == ThemeActivity.THEME_NIGHT) {
             to = AppCompatDelegate.MODE_NIGHT_YES;
         } else {//白天主题
             if (App.isAutoDarkMode(this)) {
-                autoChnage = true;
+                autoChange = true;
                 int[] time = App.getDarkModeTime(this);
                 int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
                 if ((hour >= time[0] || hour < time[1])) {

@@ -69,8 +69,10 @@ public class FrageForums extends BaseLazyFragment implements View.OnClickListene
             public int getSpanSize(int position) {
                 int type = adapter.getItemViewType(position);
                 if (type == ForumsAdapter.TYPE_HEADER || type == ForumsAdapter.TYPE_WATER) {
+                    // 4 / 4 = 1 列
                     return 4;
                 } else {
+                    // 4 / 1 = 4 列
                     return 1;
                 }
             }

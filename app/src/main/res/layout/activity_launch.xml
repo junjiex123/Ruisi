@@ -34,7 +34,7 @@
         android:layout_above="@+id/bbs"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="2dp"
-        android:text="©2016-2017 yluo.me" />
+        android:text="©2016-2018 yluo.me" />
 
     <TextView
         android:id="@+id/bbs"

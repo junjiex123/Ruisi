@@ -71,7 +71,6 @@ public class LaunchActivity extends BaseActivity {
     private void enterHome() {
         if (isForeGround) {
             ActivityOptionsCompat compat = ActivityOptionsCompat.makeCustomAnimation(this, R.anim.fade_in, R.anim.fade_out);
-            Intent i = new Intent();
             ActivityCompat.startActivity(this, new Intent(this, HomeActivity.class), compat.toBundle());
             new Handler().postDelayed(() -> finish(), 305);
         }

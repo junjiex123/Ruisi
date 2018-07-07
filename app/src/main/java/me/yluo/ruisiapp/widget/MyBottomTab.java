@@ -206,7 +206,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         void tabClicked(View v, int position, boolean isChange);
     }
 
-    public void setOnTabChangeListener(OnTabChangeListener linstener) {
-        this.listener = linstener;
+    public void setOnTabChangeListener(OnTabChangeListener listener) {
+        this.listener = listener;
     }
 }
