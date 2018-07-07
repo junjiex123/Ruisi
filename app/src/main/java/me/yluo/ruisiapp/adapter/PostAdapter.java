@@ -108,7 +108,7 @@ public class PostAdapter extends BaseAdapter {
             title.setText(single.title);
             userName.setText(single.username);
             String img_url = UrlUtils.getAvaterurlm(single.getImg());
-            Picasso.with(activity)
+            Picasso.get()
                     .load(img_url)
                     .resize(size, size)
                     .placeholder(R.drawable.image_placeholder)
@@ -169,9 +169,9 @@ public class PostAdapter extends BaseAdapter {
             labelLz.setVisibility(isLz ? View.VISIBLE : View.GONE);
             boolean isReply = single.replyUrlTitle.contains("action=reply");
             btnReplyCz.setVisibility(isReply ? View.VISIBLE : View.GONE);
-            String img_url = UrlUtils.getAvaterurlm(single.getImg());
-            Picasso.with(activity)
-                    .load(img_url)
+            String imgUrl = UrlUtils.getAvaterurlm(single.getImg());
+            Picasso.get()
+                    .load(imgUrl)
                     .resize(size, size)
                     .placeholder(R.drawable.image_placeholder)
                     .error(R.drawable.image_placeholder)

@@ -54,11 +54,11 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
     protected RecyclerView friends;
     private FriendAdapter adapter;
     private List<FriendData> datas, backUpdatas, totalDatas;
-    private int CurrentPage = 1;
+    private int currentPage = 1;
     private boolean isEnableLoadMore = true;
     private boolean isHaveMore = true;
-    private EditText search_input;
-    private CardView search_card;
+    private EditText searchInput;
+    private CardView searchCard;
     private Animator animator;
     //是否在搜索模式中
     private boolean searchMode = false;
@@ -80,17 +80,17 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         friends.setLayoutManager(lm);
         friends.addOnScrollListener(new LoadMoreListener(lm, this, 12));
         friends.setAdapter(adapter);
-        search_input = findViewById(R.id.search_input);
-        search_input.setHint("查找好友");
-        search_card = findViewById(R.id.search_card);
+        searchInput = findViewById(R.id.search_input);
+        searchInput.setHint("查找好友");
+        searchCard = findViewById(R.id.search_card);
         final String url = "home.php?mod=space&do=friend&mobile=2";
         new GetDataTask().execute(url);
-        search_input.setOnEditorActionListener(this);
+        searchInput.setOnEditorActionListener(this);
         addToolbarMenu(R.drawable.ic_search_white_24dp).setOnClickListener(this);
         findViewById(R.id.btn_back).setOnClickListener(this);
         findViewById(R.id.start_search).setOnClickListener(this);
-        search_card.setVisibility(View.INVISIBLE);
-        search_input.addTextChangedListener(this);
+        searchCard.setVisibility(View.INVISIBLE);
+        searchInput.addTextChangedListener(this);
     }
 
     @Override
@@ -98,8 +98,8 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         //加载更多被电击
         if (isEnableLoadMore && isHaveMore && !searchMode) {
             isEnableLoadMore = false;
-            CurrentPage++;
-            String url = "home.php?mod=space&do=friend&mobile=2" + "&page=" + CurrentPage;
+            currentPage++;
+            String url = "home.php?mod=space&do=friend&mobile=2" + "&page=" + currentPage;
             new GetDataTask().execute(url);
         }
     }
@@ -120,10 +120,10 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
                     this, name, imgurl);
             dialogFragment.show(getFragmentManager(), "add");
         } else {
-            new AlertDialog.Builder(this).
-                    setTitle("删除好友").
-                    setMessage("你要删除" + datas.get(position).userName + "吗？").
-                    setPositiveButton("删除", (dialog, which) -> removeFriend(datas.get(position).uid, position))
+            new AlertDialog.Builder(this)
+                    .setTitle("删除好友")
+                    .setMessage("你要删除" + datas.get(position).userName + "吗？")
+                    .setPositiveButton("删除", (dialog, which) -> removeFriend(datas.get(position).uid, position))
                     .setNegativeButton("取消", null)
                     .setCancelable(true)
                     .create()
@@ -178,7 +178,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
     }
 
     private void startSearch() {
-        String str = search_input.getText().toString().trim();
+        String str = searchInput.getText().toString().trim();
         if (TextUtils.isEmpty(str)) {
             Snackbar.make(friends,
                     "请输入要搜索好友的名称！", Snackbar.LENGTH_SHORT).show();
@@ -326,13 +326,13 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
 
 
     private void showSearchView() {
-        search_card.setVisibility(View.VISIBLE);
+        searchCard.setVisibility(View.VISIBLE);
         animator = ViewAnimationUtils.createCircularReveal(
-                search_card,
-                search_card.getWidth(),
+                searchCard,
+                searchCard.getWidth(),
                 0,
                 0,
-                (float) Math.hypot(search_card.getWidth(), search_card.getHeight()));
+                (float) Math.hypot(searchCard.getWidth(), searchCard.getHeight()));
 
         animator.setInterpolator(new AccelerateInterpolator());
         animator.setDuration(260);
@@ -344,7 +344,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                KeyboardUtil.showKeyboard(search_input);
+                KeyboardUtil.showKeyboard(searchInput);
             }
 
             @Override
@@ -363,10 +363,10 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
 
     private void hideSearchView() {
         animator = ViewAnimationUtils.createCircularReveal(
-                search_card,
-                search_card.getWidth(),
+                searchCard,
+                searchCard.getWidth(),
                 0,
-                (float) Math.hypot(search_card.getWidth(), search_card.getHeight()),
+                (float) Math.hypot(searchCard.getWidth(), searchCard.getHeight()),
                 0);
 
         animator.setInterpolator(new DecelerateInterpolator());
@@ -379,7 +379,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                search_card.setVisibility(View.GONE);
+                searchCard.setVisibility(View.GONE);
             }
 
             @Override
@@ -407,7 +407,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
     //监听搜索文字改变
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        String s = search_input.getText().toString().trim();
+        String s = searchInput.getText().toString().trim();
         datas.clear();
         if (TextUtils.isEmpty(s)) {
             datas.addAll(backUpdatas);

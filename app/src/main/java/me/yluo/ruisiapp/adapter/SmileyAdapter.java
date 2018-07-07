@@ -60,7 +60,7 @@ public class SmileyAdapter extends RecyclerView.Adapter<SmileyAdapter.SmileyView
 
 
         private void setSmiley(int position) {
-            Picasso.with(context).load(smileys.get(position).first).into(image);
+            Picasso.get().load(smileys.get(position).first).into(image);
         }
 
 

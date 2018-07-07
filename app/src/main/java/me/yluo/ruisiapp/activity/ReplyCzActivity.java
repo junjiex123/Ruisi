@@ -81,7 +81,7 @@ public class ReplyCzActivity extends BaseActivity {
         } else {
             ImageView imageView = findViewById(R.id.article_user_image);
             String img_url = UrlUtils.getAvaterurlm(data.getImg());
-            Picasso.with(this).load(img_url).placeholder(R.drawable.image_placeholder).into(imageView);
+            Picasso.get().load(img_url).placeholder(R.drawable.image_placeholder).into(imageView);
             ((TextView) findViewById(R.id.replay_author)).setText(data.username);
             ((TextView) findViewById(R.id.replay_index)).setText(data.index);
             ((TextView) findViewById(R.id.replay_time)).setText(data.postTime);

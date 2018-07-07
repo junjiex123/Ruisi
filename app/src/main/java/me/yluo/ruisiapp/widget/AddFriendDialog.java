@@ -57,7 +57,7 @@ public class AddFriendDialog extends DialogFragment {
         TextView textView = view.findViewById(R.id.user_name);
         textView.setText(userName);
         ImageView imageView = view.findViewById(R.id.logo);
-        Picasso.with(getActivity()).load(userImage).placeholder(R.drawable.image_placeholder).into(imageView);
+        Picasso.get().load(userImage).placeholder(R.drawable.image_placeholder).into(imageView);
 
         view.findViewById(R.id.btn_send).setOnClickListener(view1 -> {
             if (checkInput()) {

@@ -33,7 +33,8 @@ import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.widget.InputValidDialog;
 
-public class ChangePasswordActivity extends BaseActivity implements InputValidDialog.OnInputValidListener {
+public class ChangePasswordActivity extends BaseActivity implements
+        InputValidDialog.OnInputValidListener {
 
     private EditText password1, password2, password3;
     private TextInputLayout passwordLayout;
@@ -285,7 +286,8 @@ public class ChangePasswordActivity extends BaseActivity implements InputValidDi
                     }
                     Toast.makeText(ChangePasswordActivity.this, reason, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(ChangePasswordActivity.this, "我也不知道出了什么问题", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChangePasswordActivity.this, "我也不知道出了什么问题",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
 

@@ -113,7 +113,7 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
         username = getIntent().getStringExtra("loginName");
         imageUrl = getIntent().getStringExtra("avatarUrl");
 
-        Picasso.with(this).load(imageUrl).placeholder(R.drawable.image_placeholder).into(imageView);
+        Picasso.get().load(imageUrl).placeholder(R.drawable.image_placeholder).into(imageView);
 
         toolbarLayout.setTitle(username);
         Toolbar mToolbar = findViewById(R.id.toolbar);

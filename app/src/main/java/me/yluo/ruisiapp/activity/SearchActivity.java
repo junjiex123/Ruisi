@@ -64,14 +64,14 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
     private CardView searchCard;
     private Animator animator;
     private TextView navTitle;
-    View main_window;
+    private View mainWindow;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        main_window = findViewById(R.id.main_window);
+        mainWindow = findViewById(R.id.main_window);
         findViewById(R.id.btn_back).setOnClickListener(this);
         RecyclerView listView = findViewById(R.id.recycler_view);
         searchInput = findViewById(R.id.search_input);
@@ -116,7 +116,7 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
     private void start_search_click() {
         String str = searchInput.getText().toString();
         if (TextUtils.isEmpty(str)) {
-            Snackbar.make(main_window, "你还没写内容呢", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(mainWindow, "你还没写内容呢", Snackbar.LENGTH_SHORT).show();
             return;
         } else {
             navTitle.setText("搜索:" + str);
@@ -184,7 +184,7 @@ public class SearchActivity extends BaseActivity implements LoadMoreListener.OnL
         }
         isEnableLoadMore = true;
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
-        Snackbar.make(main_window, erreortext, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mainWindow, erreortext, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

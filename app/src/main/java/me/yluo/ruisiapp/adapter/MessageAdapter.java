@@ -26,16 +26,16 @@ import me.yluo.ruisiapp.widget.CircleImageView;
  */
 public class MessageAdapter extends BaseAdapter {
     protected Activity activity;
-    private List<MessageData> DataSet;
+    private List<MessageData> dataList;
 
     public MessageAdapter(Activity activity, List<MessageData> dataSet) {
-        DataSet = dataSet;
+        dataList = dataSet;
         this.activity = activity;
     }
 
     @Override
     protected int getDataCount() {
-        return DataSet.size();
+        return dataList.size();
     }
 
     @Override
@@ -72,11 +72,11 @@ public class MessageAdapter extends BaseAdapter {
         }
 
         void setData(int position) {
-            MessageData single_data = DataSet.get(position);
+            MessageData single_data = dataList.get(position);
             title.setText(single_data.getTitle());
             time.setText(single_data.getTime());
             String imageUrl = single_data.getauthorImage();
-            Picasso.with(activity).load(imageUrl).placeholder(R.drawable.image_placeholder).into(article_user_image);
+            Picasso.get().load(imageUrl).placeholder(R.drawable.image_placeholder).into(article_user_image);
             reply_content.setText(single_data.getcontent());
             if (single_data.isRead()) {
                 isRead.setVisibility(View.GONE);
@@ -86,26 +86,32 @@ public class MessageAdapter extends BaseAdapter {
         }
 
         void item_click() {
-            MessageData single_data = DataSet.get(getAdapterPosition());
-            if (!single_data.isRead()) {
-                single_data.setRead(true);
+            MessageData messageData = dataList.get(getAdapterPosition());
+            if (!messageData.isRead()) {
+                messageData.setRead(true);
                 notifyItemChanged(getAdapterPosition());
             }
-            if (ListType.MYMESSAGE == single_data.getType()) {//用户消息pm
-                String username = single_data.getTitle().replace("我对 ", "").replace("说:", "").replace(" 对我", "");
-                ChatActivity.open(activity, username, single_data.getTitleUrl());
-                single_data.setRead(true);
-            } else if (ListType.REPLAYME == single_data.getType()) {//回复我的
-                PostActivity.open(activity, single_data.getTitleUrl(), null);
+            if (ListType.MYMESSAGE == messageData.getType()) {//用户消息pm
+                String username = messageData.getTitle()
+                        .replace("我对 ", "")
+                        .replace("说:", "")
+                        .replace(" 对我", "");
+                ChatActivity.open(activity, username, messageData.getTitleUrl());
+                messageData.setRead(true);
+            } else if (ListType.REPLAYME == messageData.getType()) {//回复我的
+                PostActivity.open(activity, messageData.getTitleUrl(), null);
             }
 
         }
 
         void user_click() {
-            MessageData single_data = DataSet.get(getAdapterPosition());
-            String username = single_data.getTitle().replace("我对 ", "").replace("说:", "").replace(" 对我", "").replace(" 回复了我", "");
+            MessageData messageData = dataList.get(getAdapterPosition());
+            String username = messageData.getTitle().replace("我对 ", "")
+                    .replace("说:", "")
+                    .replace(" 对我", "")
+                    .replace(" 回复了我", "");
             UserDetailActivity.openWithAnimation(
-                    activity, username, article_user_image, DataSet.get(getAdapterPosition()).getauthorImage());
+                    activity, username, article_user_image, dataList.get(getAdapterPosition()).getauthorImage());
         }
     }
 

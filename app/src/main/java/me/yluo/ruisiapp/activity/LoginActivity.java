@@ -103,7 +103,8 @@ public class LoginActivity extends BaseActivity implements InputValidDialog.OnIn
         list.add("您最喜欢的餐馆名称");
         list.add("驾驶执照最后四位数字");
 
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, list);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         Spinner questionSpinner = findViewById(R.id.anwser_select);
@@ -207,7 +208,7 @@ public class LoginActivity extends BaseActivity implements InputValidDialog.OnIn
 
     //显示填写验证码框子
     private void showInputValidDialog() {
-        String update = GetId.getId("update=",validImageSrc);
+        String update = GetId.getId("update=", validImageSrc);
         InputValidDialog dialog = InputValidDialog.newInstance(this, seccodehash, update);
         dialog.show(getFragmentManager(), "valid");
     }

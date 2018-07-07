@@ -79,7 +79,8 @@ import static me.yluo.ruisiapp.utils.RuisUtils.getManageContent;
  * 其余是评论
  */
 public class PostActivity extends BaseActivity
-        implements ListItemClickListener, LoadMoreListener.OnLoadMoreListener, View.OnClickListener, PopupMenu.OnMenuItemClickListener {
+        implements ListItemClickListener, LoadMoreListener.OnLoadMoreListener,
+        View.OnClickListener, PopupMenu.OnMenuItemClickListener {
 
     private RecyclerView topicList;
     //上一次回复时间
@@ -231,11 +232,11 @@ public class PostActivity extends BaseActivity
     private void getArticleData(final int page) {
         String url;
         final boolean api = App.IS_SCHOOL_NET;
-        if (App.IS_SCHOOL_NET) {
-            url = UrlUtils.getArticleApiUrl(tid, currentPage, 20);
-        } else {
+        //if (App.IS_SCHOOL_NET) {
+        //    url = UrlUtils.getArticleApiUrl(tid, currentPage, 20);
+        //} else {
             url = UrlUtils.getSingleArticleUrl(tid, page, false);
-        }
+        //}
 
         HttpUtil.get(url, new ResponseHandler() {
             @Override

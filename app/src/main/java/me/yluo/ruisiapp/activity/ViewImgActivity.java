@@ -165,7 +165,8 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT);
                 v.setLayoutParams(params);
-                Picasso.with(ViewImgActivity.this).load(datas.get(position))
+                Picasso.get()
+                        .load(datas.get(position))
                         .placeholder(R.drawable.image_placeholder)
                         .into(v);
                 v.setTag(position);

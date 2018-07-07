@@ -2,6 +2,7 @@ package me.yluo.ruisiapp.widget;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -79,9 +80,7 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
         dotContainer = new LinearLayout(context);
         LayoutParams lp = new LayoutParams(RMP, RWC);
         lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        /**
-         * 在这儿设置圆点位置
-         */
+        // 在这儿设置圆点位置
         lp.addRule(CENTER_HORIZONTAL);
         dotContainer.setLayoutParams(lp);
         dotContainer.setOrientation(LinearLayout.HORIZONTAL);
@@ -212,13 +211,14 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
         }
 
         @Override
-        public Object instantiateItem(ViewGroup container, final int position) {
-            ImageView v = (ImageView) container.findViewWithTag(position);
+        public Object instantiateItem(@NonNull ViewGroup container, final int position) {
+            ImageView v = container.findViewWithTag(position);
             if (v == null) {
                 v = new ImageView(context);
                 v.setLayoutParams(new LayoutParams(RMP, RMP));
                 v.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                Picasso.with(context).load(datas.get(position).getImgurl())
+                Picasso.get()
+                        .load(datas.get(position).getImgurl())
                         .placeholder(R.drawable.image_placeholder)
                         .into(v);
                 if (listener != null) {

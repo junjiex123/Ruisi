@@ -77,7 +77,7 @@ public class ChatListAdapter extends BaseAdapter {
 
         void setData(final int position) {
             final ChatListData single = DataSets.get(position);
-            Picasso.with(context).load(single.getUserImage()).into(avatar);
+            Picasso.get().load(single.getUserImage()).into(avatar);
             time.setText(single.getTime());
 
             HtmlView.parseHtml(single.getContent()).into(content);

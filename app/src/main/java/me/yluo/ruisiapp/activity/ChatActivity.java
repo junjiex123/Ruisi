@@ -87,10 +87,11 @@ public class ChatActivity extends BaseActivity {
         smileyPicker.setListener((str, a) -> handler.insertSmiley(str, a));
 
         findViewById(R.id.btn_emotion).setOnClickListener(view -> {
-            smileyPicker.showAtLocation(view, Gravity.BOTTOM, 32, DimmenUtils.dip2px(ChatActivity.this, 80));
+            smileyPicker.showAtLocation(view, Gravity.BOTTOM, 32,
+                    DimmenUtils.dip2px(ChatActivity.this, 80));
         });
 
-        btnSend.setOnClickListener(view -> send_click());
+        btnSend.setOnClickListener(view -> sendClick());
         getData(true);
     }
 
@@ -181,7 +182,7 @@ public class ChatActivity extends BaseActivity {
         }
     }
 
-    private void send_click() {
+    private void sendClick() {
         String text = input.getText().toString();
         int len = 0;
         try {
