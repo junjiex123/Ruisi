@@ -135,6 +135,13 @@ public class PostActivity extends BaseActivity
         } else if (i.getData() != null) {
             // 浏览器网址跳转
             url = i.getDataString();
+            if (url != null) {
+                if (url.contains("rs.xidian.edu.cn")) {
+                    url = url.substring(App.BASE_URL_RS.length(), url.length());
+                } else {
+                    url = url.substring(App.BASE_URL_ME.length(), url.length());
+                }
+            }
             tid = i.getData().getQueryParameter("tid");
             authorName = "null";
         }
