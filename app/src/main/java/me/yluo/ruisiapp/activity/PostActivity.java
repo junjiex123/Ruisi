@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -123,10 +124,20 @@ public class PostActivity extends BaseActivity
         showPlainText = App.showPlainText(this);
         initCommentList();
         initEmotionInput();
-        Bundle b = getIntent().getExtras();
-        String url = b.getString("url");
-        authorName = b.getString("author");
-        tid = GetId.getId("tid=", url);
+        Intent i = getIntent();
+        String url = "";
+        if (i.getExtras() != null) {
+            // 正常手机睿思 APP 跳转
+            Bundle b = i.getExtras();
+            url = b.getString("url");
+            authorName = b.getString("author");
+            tid = GetId.getId("tid=", url);
+        } else if (i.getData() != null) {
+            // 浏览器网址跳转
+            url = i.getDataString();
+            tid = i.getData().getQueryParameter("tid");
+            authorName = "null";
+        }
 
         if (url != null && url.contains("redirect")) {
             redirectPid = GetId.getId("pid=", url);
