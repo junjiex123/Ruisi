@@ -55,10 +55,12 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data
                     android:scheme="http"
-                    android:host="rs.xidian.edu.cn"/>
+                    android:host="rs.xidian.edu.cn"
+                    android:pathPrefix="/forum.php"/>
                 <data
                     android:scheme="http"
-                    android:host="rsbbs.xidian.edu.cn"/>
+                    android:host="rsbbs.xidian.edu.cn"
+                    android:pathPrefix="/forum.php"/>
             </intent-filter>
         </activity>
         <activity
