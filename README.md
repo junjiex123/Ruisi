@@ -1,4 +1,6 @@
 ## 西电睿思手机客户端
+[![Build Status](https://travis-ci.org/freedom10086/Ruisi.svg?branch=master)](https://travis-ci.org/freedom10086/Ruisi)
+
 西安电子科技大学校园睿思论坛Android客户端。    
 支持夜间模式，支持主题，如有bug，或者新功能建议欢迎提出Issue .
 
