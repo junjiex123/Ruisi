@@ -26,7 +26,6 @@
     "forums": [
       {"name": "文章天地", "fid": 549, "login": false},
       {"name": "心灵花园", "fid": 550, "login": false},
-      {"name": "校园交易", "fid": 110, "login": false},
       {"name": "我是女生", "fid": 108, "login": false},
       {"name": "版聊专区", "fid": 115, "login": false},
       {"name": "缘聚睿思", "fid": 217, "login": false},
@@ -34,7 +33,11 @@
       {"name": "西电问答", "fid": 551, "login": false},
       {"name": "校园活动", "fid": 157, "login": false},
       {"name": "我要毕业啦", "fid": 552, "login": false},
-      {"name": "就业招聘", "fid": 554, "login": false}
+      {"name": "就业招聘", "fid": 554, "login": false},
+      {"name": "广告代理区", "fid": 546, "login": false},
+      {"name": "拼单专区", "fid": 568, "login": false},
+      {"name": "普通交易区", "fid": 110, "login": false},
+      {"name": "房屋租赁区", "fid": 565, "login": false}
     ]
   },
 

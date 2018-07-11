@@ -126,13 +126,7 @@ public class PostActivity extends BaseActivity
         initEmotionInput();
         Intent i = getIntent();
         String url = "";
-        if (i.getExtras() != null) {
-            // 正常手机睿思 APP 跳转
-            Bundle b = i.getExtras();
-            url = b.getString("url");
-            authorName = b.getString("author");
-            tid = GetId.getId("tid=", url);
-        } else if (i.getData() != null) {
+        if (i.getData() != null) {
             // 浏览器网址跳转
             url = i.getDataString();
             if (url != null) {
@@ -141,9 +135,16 @@ public class PostActivity extends BaseActivity
                 } else {
                     url = url.substring(App.BASE_URL_ME.length(), url.length());
                 }
+                Log.i("PostActivity", "浏览器跳转网址：" + url);
             }
             tid = i.getData().getQueryParameter("tid");
             authorName = "null";
+        } else if (i.getExtras() != null) {
+            // 正常手机睿思 APP 跳转
+            Bundle b = i.getExtras();
+            url = b.getString("url");
+            authorName = b.getString("author");
+            tid = GetId.getId("tid=", url);
         }
 
         if (url != null && url.contains("redirect")) {

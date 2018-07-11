@@ -38,7 +38,7 @@ import me.yluo.ruisiapp.widget.CircleImageView;
 
 /**
  * Created by free2 on 16-3-19.
- * 板块列表fragemnt
+ * 板块列表fragment
  */
 public class FrageForums extends BaseLazyFragment implements View.OnClickListener {
     private ForumsAdapter adapter = null;
