@@ -169,6 +169,9 @@ public class LoginActivity extends BaseActivity implements InputValidDialog.OnIn
             }
         });
 
+        findViewById(R.id.btn_forget_password).setOnClickListener(v ->
+                startActivity(new Intent(LoginActivity.this, ForgetPasswordActivity.class)));
+
         loadData();
     }
 

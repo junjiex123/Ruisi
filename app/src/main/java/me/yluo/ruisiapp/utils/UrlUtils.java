@@ -131,4 +131,8 @@ public class UrlUtils {
     public static String getWarnUserUrl() {
         return "forum.php?mod=topicadmin&action=warn&modsubmit=yes&modclick=yes&mobile=2&handlekey=topicadminform&inajax=1";
     }
+
+    public static String getForgetPasswordUrl() {
+        return "member.php?mod=lostpasswd&lostpwsubmit=yes&inajax=1&mobile=2";
+    }
 }

@@ -26,7 +26,7 @@ import me.yluo.ruisiapp.widget.CircleImageView;
  */
 public class LaunchActivity extends BaseActivity {
 
-    private static final  int WAIT_TIME = 350;//最少等待时间ms
+    private static final int WAIT_TIME = 350;//最少等待时间ms
 
     private TextView launchText;
     private CircleImageView logo;

@@ -34,15 +34,15 @@
             android:name=".activity.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".activity.PostsActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activity.AboutActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activity.PostActivity"
             android:exported="true"
@@ -50,23 +50,26 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
-                    android:scheme="http"
                     android:host="rs.xidian.edu.cn"
-                    android:pathPrefix="/forum.php"/>
+                    android:pathPrefix="/forum.php"
+                    android:scheme="http" />
                 <data
-                    android:scheme="http"
                     android:host="rsbbs.xidian.edu.cn"
-                    android:pathPrefix="/forum.php"/>
+                    android:pathPrefix="/forum.php"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.UserDetailActivity"
             android:label="用户信息"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activity.LoginActivity"
             android:label="登陆手机睿思"
@@ -82,7 +85,7 @@
         <activity
             android:name=".activity.NewPostActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activity.SearchActivity"
             android:screenOrientation="portrait" />
@@ -96,13 +99,15 @@
             android:screenOrientation="portrait" />
 
         <service android:name=".downloadfile.DownloadService" />
+
         <activity android:name=".activity.FragementActivity" />
         <activity android:name=".activity.FriendActivity" />
         <activity android:name=".activity.ViewImgActivity" />
         <activity android:name=".activity.SettingActivity" />
         <activity android:name=".activity.ReplyCzActivity" />
         <activity android:name=".activity.ThemeActivity" />
-        <activity android:name=".activity.ChangePasswordActivity"/>
+        <activity android:name=".activity.ChangePasswordActivity" />
+        <activity android:name=".activity.ForgetPasswordActivity"></activity>
     </application>
 
 </manifest>
