@@ -39,7 +39,7 @@ public class UrlUtils {
 
     }
 
-    public static String getAddFrirndUrl(String uid) {
+    public static String getAddFriendUrl(String uid) {
         if (App.IS_SCHOOL_NET) {
             return "home.php?mod=spacecp&ac=friend&op=add&uid=" + uid + "&inajax=1";
         } else {

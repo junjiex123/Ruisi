@@ -83,6 +83,7 @@ public class PostActivity extends BaseActivity
         implements ListItemClickListener, LoadMoreListener.OnLoadMoreListener,
         View.OnClickListener, PopupMenu.OnMenuItemClickListener {
 
+    public static final String TAG = "PostActivity";
     private RecyclerView topicList;
     //上一次回复时间
     private long replyTime = 0;
@@ -254,7 +255,7 @@ public class PostActivity extends BaseActivity
         //if (App.IS_SCHOOL_NET) {
         //    url = UrlUtils.getArticleApiUrl(tid, currentPage, 20);
         //} else {
-            url = UrlUtils.getSingleArticleUrl(tid, page, false);
+        url = UrlUtils.getSingleArticleUrl(tid, page, false);
         //}
 
         HttpUtil.get(url, new ResponseHandler() {
@@ -513,7 +514,23 @@ public class PostActivity extends BaseActivity
                         .replace("管理", "");
                 String replyUrl = temp.select(".replybtn").select("input").attr("href");
                 Elements contentels = temp.select(".message");
-
+                // 处理未点击添加到帖子里的图片
+                if (false) {
+                    // 校园网环境下是“mbn savephotop”，目前并没有使用校内地址进行抓取
+                    Elements othImgs = temp.select("div.mbn.savephotop");
+                } else {
+                    // 外网环境下是“img_list cl vm”
+                    Elements otherImgs = temp.select("a.orange");
+                    StringBuilder sb = new StringBuilder();
+                    for (int j = 0; j < otherImgs.size(); j++) {
+                        String a = otherImgs.get(j).removeClass("error_text").html();
+                        if (a.contains("fixwr")){
+                            sb.append(a.replace("fixwr", "fixnone"));
+                            sb.append("<br>");
+                        }
+                    }
+                    contentels.html(contentels.html() + sb.toString());
+                }
                 //去除script
                 contentels.select("script").remove();
 

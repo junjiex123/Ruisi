@@ -142,7 +142,7 @@ public class FriendActivity extends BaseActivity implements LoadMoreListener.OnL
         paras.put("note", mes);
         paras.put("gid", "1");
         paras.put("addsubmit_btn", "true");
-        HttpUtil.post(UrlUtils.getAddFrirndUrl(uid), paras, new ResponseHandler() {
+        HttpUtil.post(UrlUtils.getAddFriendUrl(uid), paras, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
