@@ -233,7 +233,7 @@ public class PostsActivity extends BaseActivity implements
         } else if (getType() == PostListAdapter.TYPE_IMAGE) {
             url = UrlUtils.getArticleListUrl(FID, currentPage, true);
         } else {
-            url = UrlUtils.getArticleListApiUrl(FID, currentPage);
+            url = UrlUtils.getArticleListUrl(FID, currentPage, true);
         }
 
         url = url + orders[currentTabindex];
@@ -246,7 +246,7 @@ public class PostsActivity extends BaseActivity implements
                         new getImagePosts().execute(new String(response));
                         break;
                     case PostListAdapter.TYPE_NORMAL:
-                        new getPostsApi().execute(response);
+                        new getPostsRs().execute(new String(response));
                         break;
                     case PostListAdapter.TYPE_NORMAL_MOBILE:
                         //外网
