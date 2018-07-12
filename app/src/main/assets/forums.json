@@ -34,6 +34,7 @@
       {"name": "校园活动", "fid": 157, "login": false},
       {"name": "我要毕业啦", "fid": 552, "login": false},
       {"name": "就业招聘", "fid": 554, "login": false},
+      {"name": "校园交易区", "fid": 106, "login": false},
       {"name": "广告代理区", "fid": 546, "login": false},
       {"name": "拼单专区", "fid": 568, "login": false},
       {"name": "普通交易区", "fid": 110, "login": false},
