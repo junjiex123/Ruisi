@@ -582,6 +582,7 @@ public class PostsActivity extends BaseActivity implements
     }
 
     private void getDataCompete(List<ArticleListData> dataset) {
+        /*
         Log.i(TAG, datas.size() + "");
         if (datas.size() == 0 && dataset.size() == 0) {
             // 主板块没有帖子数据，切换成默认的第一个子版块
@@ -594,16 +595,17 @@ public class PostsActivity extends BaseActivity implements
                     break;
                 default:
                     // 其他板块，默认切换成第一个子版块
-                    if (subForums.size() != 0) {
-                        FID = subForums.get(0).fid;
-                        TITLE = subForums.get(0).name;
+                    if (subForums.size() > 1) {
+                        FID = subForums.get(1).fid;
+                        TITLE = subForums.get(1).name;
                         setTitle(TITLE);
                     }
+                    break;
             }
             // 有子版块，设置标题可点击，并重新获取数据
             getData();
             return;
-        }
+        }*/
         setSubForums();
 
         btnRefresh.show();
