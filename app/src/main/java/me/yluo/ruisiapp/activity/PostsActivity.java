@@ -182,6 +182,9 @@ public class PostsActivity extends BaseActivity implements
         refreshLayout.setRefreshing(true);
         refreshLayout.setOnRefreshListener(this::refresh);
 
+        subForums = new ArrayList<>();
+        subForums.add(new Forum(FID, TITLE));
+
         //隐藏按钮
         mRecyclerView.addOnScrollListener(new HidingScrollListener(getResources().getDimensionPixelSize(R.dimen.toolbarHeight)) {
             @Override
@@ -315,17 +318,18 @@ public class PostsActivity extends BaseActivity implements
 
             // 解析子版块
             String classes = "#subforum_" + FID;
-            Elements subs = document.select(classes);
-            if (subs.size() != 0) {
-                subForums = new ArrayList<>();
-                subs = subs.select("tr");
-                for (int i = 0; i < subs.size() - 1; i ++) {
-                    Element forum = subs.get(i);
-                    Element a = forum.selectFirst("tr > td > h2 > a");
-                    String link = a.attr("href");
-                    int fid = Integer.valueOf(GetId.getId("fid=", link));
-                    String title = a.text();
-                    subForums.add(new Forum(fid, title));
+            if (subForums.size() == 1) {
+                Elements subs = document.select(classes);
+                if (subs.size() != 0) {
+                    subs = subs.select("tr");
+                    for (int i = 0; i < subs.size() - 1; i ++) {
+                        Element forum = subs.get(i);
+                        Element a = forum.selectFirst("tr > td > h2 > a");
+                        String link = a.attr("href");
+                        int fid = Integer.valueOf(GetId.getId("fid=", link));
+                        String title = a.text();
+                        subForums.add(new Forum(fid, title));
+                    }
                 }
             }
 
@@ -578,9 +582,9 @@ public class PostsActivity extends BaseActivity implements
     }
 
     private void getDataCompete(List<ArticleListData> dataset) {
-        Log.i(TAG, adapter.getItemCount() + "");
+        Log.i(TAG, datas.size() + "");
         if (datas.size() == 0 && dataset.size() == 0) {
-            // 该板块没有帖子数据，切换成默认的第一个子版块
+            // 主板块没有帖子数据，切换成默认的第一个子版块
             switch (FID) {
                 case 106:
                     // 校园交易区，切换成普通交易区
@@ -597,10 +601,10 @@ public class PostsActivity extends BaseActivity implements
                     }
             }
             // 有子版块，设置标题可点击，并重新获取数据
-            setSubForums();
             getData();
             return;
         }
+        setSubForums();
 
         btnRefresh.show();
         if (currentPage == 1) {
@@ -625,11 +629,11 @@ public class PostsActivity extends BaseActivity implements
         View toolbar = findViewById(R.id.myToolBar);
         if (toolbar != null) {
             TextView title = toolbar.findViewById(R.id.title);
-            title.setText(TITLE + "﹀");
             title.setOnClickListener(view -> {
                 MySpinner spinner = new MySpinner(PostsActivity.this);
                 spinner.setData(subForums);
                 spinner.setListener((pos, v) -> {
+                    Log.i(TAG, "current:" + FID + ",clicked " + pos + ", clicked fid:" + subForums.get(pos).fid);
                     if (subForums.get(pos).fid == FID) {
                         return;
                     }
@@ -637,9 +641,11 @@ public class PostsActivity extends BaseActivity implements
                     FID = subForums.get(pos).fid;
                     TITLE = subForums.get(pos).name;
                     setTitle(TITLE);
-                    getData();
+                    datas.clear();
+                    adapter.notifyDataSetChanged();
+                    refresh();
                 });
-                // TODO show spinner
+                spinner.showAsDropDown(title);
             });
         }
     }

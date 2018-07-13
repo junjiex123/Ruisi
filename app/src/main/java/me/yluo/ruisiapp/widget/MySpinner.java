@@ -67,7 +67,7 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> arg0, View view, int pos, long arg3) {
         dismiss();
-        if (listener != null && currentSelect != pos) {
+        if (listener != null) {
             currentSelect = pos;
             listener.onItemSelectChanged(pos, view);
         }
