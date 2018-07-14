@@ -14,8 +14,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
@@ -40,12 +43,15 @@ import me.yluo.ruisiapp.database.MyDB;
 import me.yluo.ruisiapp.listener.HidingScrollListener;
 import me.yluo.ruisiapp.listener.LoadMoreListener;
 import me.yluo.ruisiapp.model.ArticleListData;
+import me.yluo.ruisiapp.model.Forum;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.utils.DimmenUtils;
 import me.yluo.ruisiapp.utils.GetId;
 import me.yluo.ruisiapp.utils.UrlUtils;
 import me.yluo.ruisiapp.widget.MyListDivider;
+import me.yluo.ruisiapp.widget.MySpinner;
+import me.yluo.ruisiapp.widget.htmlview.spann.Li;
 
 /**
  * 一般文章列表
@@ -69,6 +75,9 @@ public class PostsActivity extends BaseActivity implements
     RecyclerView.LayoutManager mLayoutManager;
     private TabLayout tab;
 
+    // 子板
+    private ArrayList<Forum> subForums;
+    public static final String TAG = "PostsActivity";
     boolean isHideZhiding = false;
     //一般板块/图片板块/手机板块数据列表
     private List<ArticleListData> datas;
@@ -174,6 +183,9 @@ public class PostsActivity extends BaseActivity implements
         refreshLayout.setRefreshing(true);
         refreshLayout.setOnRefreshListener(this::refresh);
 
+        subForums = new ArrayList<>();
+        subForums.add(new Forum(FID, TITLE));
+
         //隐藏按钮
         mRecyclerView.addOnScrollListener(new HidingScrollListener(getResources().getDimensionPixelSize(R.dimen.toolbarHeight)) {
             @Override
@@ -237,7 +249,6 @@ public class PostsActivity extends BaseActivity implements
         }
 
         url = url + orders[currentTabindex];
-
         HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
@@ -305,6 +316,24 @@ public class PostsActivity extends BaseActivity implements
             String res = params[0];
             List<ArticleListData> tempDatas = new ArrayList<>();
             Document document = Jsoup.parse(res);
+
+            // 解析子版块
+            String classes = "#subforum_" + FID;
+            if (subForums.size() == 1) {
+                Elements subs = document.select(classes);
+                if (subs.size() != 0) {
+                    subs = subs.select("tr");
+                    for (int i = 0; i < subs.size() - 1; i ++) {
+                        Element forum = subs.get(i);
+                        Element a = forum.selectFirst("tr > td > h2 > a");
+                        String link = a.attr("href");
+                        int fid = Integer.valueOf(GetId.getId("fid=", link));
+                        String title = a.text();
+                        subForums.add(new Forum(fid, title));
+                    }
+                }
+            }
+
             Elements list = document.select("#threadlist tbody");
             ArticleListData temp;
             for (Element li : list) {
@@ -462,10 +491,30 @@ public class PostsActivity extends BaseActivity implements
             String res = params[0];
             List<ArticleListData> dataset = new ArrayList<>();
             Document doc = Jsoup.parse(res);
+
+            // 解析子版块
+            Elements subs = doc.select("#subname_list");
+            if (subs.size() != 0) {
+                subForums = new ArrayList<>();
+                subs = subs.select("li");
+                for (int i = 0; i < subs.size(); i++) {
+                    Element a = subs.get(i).selectFirst("li > a");
+                    String link = a.attr("href");
+                    int fid = Integer.valueOf(GetId.getId("fid=", link));
+                    String title = a.text();
+                    subForums.add(new Forum(fid, title));
+                    Log.i(TAG, "fid:" + fid + ",title:" + title);
+                }
+            }
+
+
             Elements body = doc.select("div[class=threadlist]"); // 具有 href 属性的链接
             ArticleListData temp;
             Elements links = body.select("li");
             for (Element src : links) {
+                if (src.select("a").size() == 0) {
+                    continue;
+                }
                 String url = src.select("a").attr("href");
                 int titleColor = GetId.getColor(PostsActivity.this, src.select("a").attr("style"));
                 String author = src.select(".by").text();
@@ -534,6 +583,32 @@ public class PostsActivity extends BaseActivity implements
     }
 
     private void getDataCompete(List<ArticleListData> dataset) {
+        /*
+        Log.i(TAG, datas.size() + "");
+        if (datas.size() == 0 && dataset.size() == 0) {
+            // 主板块没有帖子数据，切换成默认的第一个子版块
+            switch (FID) {
+                case 106:
+                    // 校园交易区，切换成普通交易区
+                    FID = 110;
+                    TITLE = "普通交易区";
+                    setTitle(TITLE);
+                    break;
+                default:
+                    // 其他板块，默认切换成第一个子版块
+                    if (subForums.size() > 1) {
+                        FID = subForums.get(1).fid;
+                        TITLE = subForums.get(1).name;
+                        setTitle(TITLE);
+                    }
+                    break;
+            }
+            // 有子版块，设置标题可点击，并重新获取数据
+            getData();
+            return;
+        }*/
+        setSubForums();
+
         btnRefresh.show();
         if (currentPage == 1) {
             datas.clear();
@@ -552,4 +627,38 @@ public class PostsActivity extends BaseActivity implements
         isEnableLoadMore = true;
         refreshLayout.postDelayed(() -> refreshLayout.setRefreshing(false), 500);
     }
+
+    private void setSubForums(){
+        View toolbar = findViewById(R.id.myToolBar);
+        if (toolbar != null) {
+            TextView title = toolbar.findViewById(R.id.title);
+            title.setOnClickListener(listener);
+            ImageView arrow = toolbar.findViewById(R.id.arrow);
+            arrow.setVisibility(View.VISIBLE);
+            arrow.setOnClickListener(listener);
+        }
+
+    }
+
+    private View.OnClickListener listener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            MySpinner spinner = new MySpinner(PostsActivity.this);
+            spinner.setData(subForums);
+            spinner.setListener((pos, v) -> {
+                Log.i(TAG, "current:" + FID + ",clicked " + pos + ", clicked fid:" + subForums.get(pos).fid);
+                if (subForums.get(pos).fid == FID) {
+                    return;
+                }
+                spinner.dismiss();
+                FID = subForums.get(pos).fid;
+                TITLE = subForums.get(pos).name;
+                setTitle(TITLE);
+                datas.clear();
+                adapter.notifyDataSetChanged();
+                refresh();
+            });
+            spinner.showAsDropDown(view);
+        }
+    };
 }

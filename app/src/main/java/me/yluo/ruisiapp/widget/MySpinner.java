@@ -3,6 +3,7 @@ package me.yluo.ruisiapp.widget;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -67,7 +68,7 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> arg0, View view, int pos, long arg3) {
         dismiss();
-        if (listener != null && currentSelect != pos) {
+        if (listener != null) {
             currentSelect = pos;
             listener.onItemSelectChanged(pos, view);
         }
@@ -111,6 +112,7 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
             v.setTag(i);
             v.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             v.setText(datas.get(i).name);
+            v.setGravity(Gravity.CENTER);
             v.setLayoutParams(new AbsListView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
             //textView.setTextColor(COLOR_UNSELECT);
             int padding1 = DimmenUtils.dip2px(mContext, 8);
