@@ -38,7 +38,7 @@ public abstract class BaseFragment extends Fragment {
             titles.setText(title);
             ImageView i = toolBar.findViewById(R.id.logo);
             if (isCloseAble) {
-                i.setImageResource(R.drawable.ic_arraw_back_white);
+                i.setImageResource(R.drawable.ic_arrow_back_white);
                 i.setOnClickListener(view -> getActivity().finish());
             } else {
                 i.setVisibility(View.GONE);

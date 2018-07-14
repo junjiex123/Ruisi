@@ -24,7 +24,7 @@
             android:clickable="true"
             android:contentDescription="返回"
             android:padding="11dp"
-            android:src="@drawable/ic_arraw_back_white"
+            android:src="@drawable/ic_arrow_back_white"
             android:tint="@color/colorDisableHintIcon" />
 
         <EditText

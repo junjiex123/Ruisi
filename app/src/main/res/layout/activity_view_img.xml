@@ -25,7 +25,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:padding="13dp"
-            android:src="@drawable/ic_arraw_back_white" />
+            android:src="@drawable/ic_arrow_back_white" />
 
         <TextView
             android:id="@+id/title"

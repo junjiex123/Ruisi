@@ -17,6 +17,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -631,24 +632,33 @@ public class PostsActivity extends BaseActivity implements
         View toolbar = findViewById(R.id.myToolBar);
         if (toolbar != null) {
             TextView title = toolbar.findViewById(R.id.title);
-            title.setOnClickListener(view -> {
-                MySpinner spinner = new MySpinner(PostsActivity.this);
-                spinner.setData(subForums);
-                spinner.setListener((pos, v) -> {
-                    Log.i(TAG, "current:" + FID + ",clicked " + pos + ", clicked fid:" + subForums.get(pos).fid);
-                    if (subForums.get(pos).fid == FID) {
-                        return;
-                    }
-                    spinner.dismiss();
-                    FID = subForums.get(pos).fid;
-                    TITLE = subForums.get(pos).name;
-                    setTitle(TITLE);
-                    datas.clear();
-                    adapter.notifyDataSetChanged();
-                    refresh();
-                });
-                spinner.showAsDropDown(title);
-            });
+            title.setOnClickListener(listener);
+            ImageView arrow = toolbar.findViewById(R.id.arrow);
+            arrow.setVisibility(View.VISIBLE);
+            arrow.setOnClickListener(listener);
         }
+
     }
+
+    private View.OnClickListener listener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            MySpinner spinner = new MySpinner(PostsActivity.this);
+            spinner.setData(subForums);
+            spinner.setListener((pos, v) -> {
+                Log.i(TAG, "current:" + FID + ",clicked " + pos + ", clicked fid:" + subForums.get(pos).fid);
+                if (subForums.get(pos).fid == FID) {
+                    return;
+                }
+                spinner.dismiss();
+                FID = subForums.get(pos).fid;
+                TITLE = subForums.get(pos).name;
+                setTitle(TITLE);
+                datas.clear();
+                adapter.notifyDataSetChanged();
+                refresh();
+            });
+            spinner.showAsDropDown(view);
+        }
+    };
 }

@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
@@ -12,6 +14,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -134,18 +137,20 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void addToolbarView(View v) {
-        FrameLayout toolbar = findViewById(R.id.myToolBar);
+        ConstraintLayout toolbar = findViewById(R.id.myToolBar);
         if (toolbar != null) {
-            FrameLayout.LayoutParams pls = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            ConstraintLayout.LayoutParams pls = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
             v.setLayoutParams(pls);
             int padding = DimmenUtils.dip2px(this, 12);
             v.setPadding(padding, padding, padding, padding);
             pls.setMarginEnd(padding);
-            pls.gravity = Gravity.END;
+            pls.bottomToBottom = ConstraintSet.PARENT_ID;
+            pls.topToTop = ConstraintSet.PARENT_ID;
+            pls.endToEnd = ConstraintSet.PARENT_ID;
+            //pls.gravity = Gravity.END;
             toolbar.addView(v);
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

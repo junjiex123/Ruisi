@@ -1,42 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/myToolBar"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/toolbarHeight"
     android:background="?android:attr/colorPrimary"
-    android:elevation="4dp">
+    android:elevation="4dp"
+    android:id="@+id/myToolBar"
+    android:layout_height="@dimen/toolbarHeight">
 
     <ImageView
         android:id="@+id/logo"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_marginBottom="1dp"
+        android:layout_marginTop="1dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true"
         android:padding="13dp"
-        android:src="@drawable/ic_arraw_back_white" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_arrow_back_white" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
         android:gravity="center"
         android:maxEms="10"
+        android:clickable="true"
+        android:focusable="true"
         android:text="@string/app_name"
         android:textColor="@color/white"
         android:textSize="17sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/menu"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_gravity="end"
+        android:layout_marginBottom="1dp"
+        android:layout_marginTop="1dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true"
         android:padding="13dp"
         android:src="@drawable/ic_search_white_24dp"
-        android:visibility="invisible" />
-</FrameLayout>
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/arrow"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/title"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp" />
+</android.support.constraint.ConstraintLayout>
