@@ -11,7 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import me.yluo.ruisiapp.R;
-import me.yluo.ruisiapp.utils.DimmenUtils;
+import me.yluo.ruisiapp.utils.DimenUtils;
 import me.yluo.ruisiapp.utils.KeyboardUtil;
 
 
@@ -34,7 +34,7 @@ public class SmileyContainer extends FrameLayout {
 
     private void init() {
         savedHeight = KeyBoardHeightPreference.get(getContext(), 200);
-        setElevation(DimmenUtils.dip2px(getContext(), 4));
+        setElevation(DimenUtils.dip2px(getContext(), 4));
         setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, savedHeight));
         setBackgroundResource(R.color.bg_secondary);

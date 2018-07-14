@@ -52,7 +52,7 @@ import me.yluo.ruisiapp.model.Forum;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.myhttp.UploadImageResponseHandler;
-import me.yluo.ruisiapp.utils.DimmenUtils;
+import me.yluo.ruisiapp.utils.DimenUtils;
 import me.yluo.ruisiapp.utils.RuisUtils;
 import me.yluo.ruisiapp.utils.UrlUtils;
 import me.yluo.ruisiapp.widget.InputValidDialog;
@@ -69,7 +69,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         InputValidDialog.OnInputValidListener {
 
     private EditText edTitle, edContent;
-    private MySpinner forumSpinner, typeidSpinner;
+    private MySpinner<Forum> forumSpinner, typeidSpinner;
     private MyColorPicker myColorPicker;
     private MySmileyPicker smileyPicker;
     private TextView tvSelectForum, tvSelectType;
@@ -114,8 +114,8 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         addToolbarMenu(R.drawable.ic_send_white_24dp).setOnClickListener(this);
         myColorPicker = new MyColorPicker(this);
         smileyPicker = new MySmileyPicker(this);
-        forumSpinner = new MySpinner(this);
-        typeidSpinner = new MySpinner(this);
+        forumSpinner = new MySpinner<>(this);
+        typeidSpinner = new MySpinner<>(this);
         typeIdContainer = findViewById(R.id.type_id_container);
         typeIdContainer.setVisibility(View.GONE);
         tvSelectForum = findViewById(R.id.tv_select_forum);
@@ -523,7 +523,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
                         public void onSuccess(String aid) {
                             Log.v("===", "upload success aid:" + aid);
                             handler.insertImage(aid, new BitmapDrawable(getResources(), returnBitmap),
-                                    edContent.getWidth() - DimmenUtils.dip2px(NewPostActivity.this, 16));
+                                    edContent.getWidth() - DimenUtils.dip2px(NewPostActivity.this, 16));
                         }
 
                         @Override

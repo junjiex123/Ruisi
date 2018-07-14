@@ -10,12 +10,9 @@ import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +21,7 @@ import java.util.Calendar;
 
 import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
-import me.yluo.ruisiapp.utils.DimmenUtils;
+import me.yluo.ruisiapp.utils.DimenUtils;
 
 /**
  * Created by free2 on 16-4-11.
@@ -141,7 +138,7 @@ public class BaseActivity extends AppCompatActivity {
         if (toolbar != null) {
             ConstraintLayout.LayoutParams pls = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
             v.setLayoutParams(pls);
-            int padding = DimmenUtils.dip2px(this, 12);
+            int padding = DimenUtils.dip2px(this, 12);
             v.setPadding(padding, padding, padding, padding);
             pls.setMarginEnd(padding);
             pls.bottomToBottom = ConstraintSet.PARENT_ID;

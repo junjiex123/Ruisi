@@ -1,5 +1,7 @@
 package me.yluo.ruisiapp.model;
 
+import android.text.TextUtils;
+
 /**
  * Created by yangluo on 2017/3/23.
  * 一个小的板块
@@ -22,5 +24,10 @@ public class Forum {
         this.name = name;
         this.fid = fid;
         this.login = login;
+    }
+
+    @Override
+    public String toString() {
+        return TextUtils.isEmpty(name) ? "未知板块" : name;
     }
 }

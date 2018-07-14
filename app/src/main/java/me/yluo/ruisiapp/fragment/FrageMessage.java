@@ -8,6 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,16 +109,24 @@ public class FrageMessage extends BaseLazyFragment implements LoadMoreListener.O
     @Override
     public void onFirstUserVisible() {
         updateBatch();
-        getData(false);
+        if (App.ISLOGIN(getContext())) {
+            getData(false);
+        } else {
+            setNeedLoginState();
+        }
     }
 
     @Override
     public void onUserVisible() {
+        Log.d("FrageMessage", "last:" + lastLoginState + " now:"+App.ISLOGIN(getActivity()));
         if (lastLoginState != App.ISLOGIN(getActivity())) {
-            getData(true);
             lastLoginState = !lastLoginState;
-            if (lastLoginState) {
+            Log.d("FrageMessage", "登陆状态改变新状态:" + lastLoginState);
+            if (lastLoginState) { //变为登陆
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
+                getData(true);
+            } else {
+                setNeedLoginState();
             }
         }
         updateBatch();
@@ -141,14 +150,6 @@ public class FrageMessage extends BaseLazyFragment implements LoadMoreListener.O
     }
 
     private void getData(boolean needRefresh) {
-        lastLoginState = App.ISLOGIN(getActivity());
-        //记录上次已读消息游标
-        if (!App.ISLOGIN(getActivity())) {
-            adapter.changeLoadMoreState(BaseAdapter.STATE_NEED_LOGIN);
-            refreshLayout.setRefreshing(false);
-            return;
-        }
-
         if (needRefresh) {
             datas.clear();
             adapter.notifyDataSetChanged();
@@ -226,6 +227,15 @@ public class FrageMessage extends BaseLazyFragment implements LoadMoreListener.O
         if (index == 1) isHavePm = haveUnRead;
         if (index == 2) isHaveAt = haveUnRead;
         updateBatch();
+    }
+
+    private void setNeedLoginState() {
+        datas.clear();
+        adapter.changeLoadMoreState(BaseAdapter.STATE_NEED_LOGIN);
+        refreshLayout.setRefreshing(false);
+        adapter.notifyDataSetChanged();
+        totalPage = 1;
+        currentPage = 1;
     }
 
     @Override

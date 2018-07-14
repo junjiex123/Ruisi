@@ -17,16 +17,15 @@ import android.widget.TextView;
 import java.util.List;
 
 import me.yluo.ruisiapp.R;
-import me.yluo.ruisiapp.model.Forum;
-import me.yluo.ruisiapp.utils.DimmenUtils;
+import me.yluo.ruisiapp.utils.DimenUtils;
 
 
-public class MySpinner extends PopupWindow implements AdapterView.OnItemClickListener {
+public class MySpinner<T> extends PopupWindow implements AdapterView.OnItemClickListener {
 
     private Context mContext;
     private ListView listView;
     private OnItemSelectListener listener;
-    private MySpinnerListAdapter adapter;
+    private MySpinnerListAdapter<T> adapter;
 
     private int currentSelect = 0;
 
@@ -39,9 +38,11 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
 
     private void init() {
         listView = new ListView(mContext);
-        listView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        listView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
         listView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.bg_secondary));
         listView.setOnItemClickListener(this);
+
         setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
 
@@ -51,24 +52,26 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
         setContentView(listView);
     }
 
-    public void setData(List<Forum> datas) {
-        adapter = new MySpinnerListAdapter(datas, mContext);
+    public void setData(List<T> datas) {
+        adapter = new MySpinnerListAdapter<>(mContext, datas);
         listView.setAdapter(adapter);
+    }
+
+    public T getSelectItem() {
+        if (currentSelect > adapter.getCount() -1) {
+            return null;
+        }
+        return adapter.getItem(currentSelect);
     }
 
     public void setListener(OnItemSelectListener listener) {
         this.listener = listener;
     }
 
-    public int getSelectFid() {
-        return ((Forum) adapter.getItem(currentSelect)).fid;
-    }
-
-
     @Override
     public void onItemClick(AdapterView<?> arg0, View view, int pos, long arg3) {
         dismiss();
-        if (listener != null) {
+        if (listener != null && currentSelect != pos) {
             currentSelect = pos;
             listener.onItemSelectChanged(pos, view);
         }
@@ -79,13 +82,13 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
         void onItemSelectChanged(int pos, View v);
     }
 
-    private class MySpinnerListAdapter extends BaseAdapter {
+    private static class MySpinnerListAdapter<T> extends BaseAdapter {
 
-        private List<Forum> datas;
+        private List<T> datas;
         private Context context;
 
 
-        MySpinnerListAdapter(List<Forum> datas, Context context) {
+        MySpinnerListAdapter(Context context, List<T> datas) {
             this.datas = datas;
             this.context = context;
         }
@@ -97,7 +100,7 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
         }
 
         @Override
-        public Object getItem(int i) {
+        public T getItem(int i) {
             return datas.get(i);
         }
 
@@ -111,12 +114,13 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
             TextView v = new TextView(context);
             v.setTag(i);
             v.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            v.setText(datas.get(i).name);
+            v.setText(datas.get(i).toString());
             v.setGravity(Gravity.CENTER);
-            v.setLayoutParams(new AbsListView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+            v.setLayoutParams(new AbsListView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT, 1));
             //textView.setTextColor(COLOR_UNSELECT);
-            int padding1 = DimmenUtils.dip2px(mContext, 8);
-            int padding2 = DimmenUtils.dip2px(mContext, 6);
+            int padding1 = DimenUtils.dip2px(context, 8);
+            int padding2 = DimenUtils.dip2px(context, 6);
 
             v.setPadding(padding1, padding2, padding1, padding2);
             return v;

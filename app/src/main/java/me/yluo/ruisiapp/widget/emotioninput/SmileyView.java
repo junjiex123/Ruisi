@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.yluo.ruisiapp.R;
-import me.yluo.ruisiapp.utils.DimmenUtils;
+import me.yluo.ruisiapp.utils.DimenUtils;
 
 
 public class SmileyView extends LinearLayout
@@ -63,8 +63,8 @@ public class SmileyView extends LinearLayout
 
     private void init(Context context) {
         this.context = context;
-        setElevation(DimmenUtils.dip2px(context, 4));
-        SIZE_8 = DimmenUtils.dip2px(context, 8);
+        setElevation(DimenUtils.dip2px(context, 4));
+        SIZE_8 = DimenUtils.dip2px(context, 8);
         setOrientation(VERTICAL);
         COLOR_TAB = ContextCompat.getColor(context, R.color.bg_primary);
         COLOR_TAB_SEL = ContextCompat.getColor(context, R.color.bg_secondary);
@@ -77,7 +77,7 @@ public class SmileyView extends LinearLayout
 
         dotContainer = new LinearLayout(context);
         dotContainer.setOrientation(LinearLayout.HORIZONTAL);
-        dotContainer.setLayoutParams(new LayoutParams(LMP, DimmenUtils.dip2px(context, 16)));
+        dotContainer.setLayoutParams(new LayoutParams(LMP, DimenUtils.dip2px(context, 16)));
         dotContainer.setGravity(Gravity.CENTER_HORIZONTAL);
         addView(dotContainer);
 
@@ -85,7 +85,7 @@ public class SmileyView extends LinearLayout
         tabContainer.setOrientation(LinearLayout.HORIZONTAL);
         tabContainer.setGravity(Gravity.CENTER_VERTICAL);
         tabContainer.setBackgroundColor(ContextCompat.getColor(context, R.color.bg_primary));
-        tabContainer.setLayoutParams(new LayoutParams(LMP, DimmenUtils.dip2px(context, 36)));
+        tabContainer.setLayoutParams(new LayoutParams(LMP, DimenUtils.dip2px(context, 36)));
         addView(tabContainer);
     }
 
@@ -94,8 +94,8 @@ public class SmileyView extends LinearLayout
         super.onLayout(changed, l, t, r, b);
         if (!isInitSize) {
             isInitSize = true;
-            int width = DimmenUtils.px2dip(context, r - l);
-            int height = DimmenUtils.px2dip(context, b - t);
+            int width = DimenUtils.px2dip(context, r - l);
+            int height = DimenUtils.px2dip(context, b - t);
             if (width / 60 > 0) {
                 COLOUM_COUNT = width / 60;
             }

@@ -8,7 +8,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import me.yluo.ruisiapp.R;
-import me.yluo.ruisiapp.utils.DimmenUtils;
+import me.yluo.ruisiapp.utils.DimenUtils;
 
 
 public class SmileyInputRoot extends LinearLayout {
@@ -83,7 +83,7 @@ public class SmileyInputRoot extends LinearLayout {
         mOldHeight = height;
 
         // 检测到布局变化非键盘引起
-        if (Math.abs(offset) < DimmenUtils.dip2px(getContext(), 180)) {
+        if (Math.abs(offset) < DimenUtils.dip2px(getContext(), 180)) {
             return;
         }
 

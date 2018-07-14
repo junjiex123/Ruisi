@@ -3,7 +3,7 @@ package me.yluo.ruisiapp.widget.emotioninput;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import me.yluo.ruisiapp.utils.DimmenUtils;
+import me.yluo.ruisiapp.utils.DimenUtils;
 
 
 /**
@@ -34,7 +34,7 @@ class KeyBoardHeightPreference {
     }
 
     public static int get(final Context context, int defaultHeight) {
-        defaultHeight = DimmenUtils.dip2px(context, defaultHeight);
+        defaultHeight = DimenUtils.dip2px(context, defaultHeight);
         return with(context).getInt(KEY_KEYBOARD_HEIGHT, defaultHeight);
     }
 

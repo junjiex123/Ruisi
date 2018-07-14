@@ -46,12 +46,11 @@ import me.yluo.ruisiapp.model.ArticleListData;
 import me.yluo.ruisiapp.model.Forum;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
-import me.yluo.ruisiapp.utils.DimmenUtils;
+import me.yluo.ruisiapp.utils.DimenUtils;
 import me.yluo.ruisiapp.utils.GetId;
 import me.yluo.ruisiapp.utils.UrlUtils;
 import me.yluo.ruisiapp.widget.MyListDivider;
 import me.yluo.ruisiapp.widget.MySpinner;
-import me.yluo.ruisiapp.widget.htmlview.spann.Li;
 
 /**
  * 一般文章列表
@@ -61,6 +60,8 @@ import me.yluo.ruisiapp.widget.htmlview.spann.Li;
  */
 public class PostsActivity extends BaseActivity implements
         LoadMoreListener.OnLoadMoreListener, View.OnClickListener {
+
+    public static final String TAG = "PostsActivity";
 
     private int FID = 72;
     private String TITLE;
@@ -77,7 +78,6 @@ public class PostsActivity extends BaseActivity implements
 
     // 子板
     private ArrayList<Forum> subForums;
-    public static final String TAG = "PostsActivity";
     boolean isHideZhiding = false;
     //一般板块/图片板块/手机板块数据列表
     private List<ArticleListData> datas;
@@ -105,6 +105,7 @@ public class PostsActivity extends BaseActivity implements
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        subForums = new ArrayList<>();
         datas = new ArrayList<>();
         setContentView(R.layout.activity_posts);
         if (getIntent().getExtras() != null) {
@@ -120,7 +121,7 @@ public class PostsActivity extends BaseActivity implements
         refreshLayout = findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light,
                 R.color.blue_light, R.color.orange_light);
-        int top = DimmenUtils.dip2px(this, 60);
+        int top = DimenUtils.dip2px(this, 60);
         refreshLayout.setProgressViewOffset(true, top, top + 60);
 
         isHideZhiding = PreferenceManager.getDefaultSharedPreferences(this)
@@ -183,14 +184,11 @@ public class PostsActivity extends BaseActivity implements
         refreshLayout.setRefreshing(true);
         refreshLayout.setOnRefreshListener(this::refresh);
 
-        subForums = new ArrayList<>();
-        subForums.add(new Forum(FID, TITLE));
-
         //隐藏按钮
         mRecyclerView.addOnScrollListener(new HidingScrollListener(getResources().getDimensionPixelSize(R.dimen.toolbarHeight)) {
             @Override
             public void onHide() {
-                int distanceToScroll = btnRefresh.getHeight() + DimmenUtils.dip2px(PostsActivity.this, 16);
+                int distanceToScroll = btnRefresh.getHeight() + DimenUtils.dip2px(PostsActivity.this, 16);
                 btnRefresh.animate().translationY(distanceToScroll).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
 
                 //隐藏toolbar
@@ -318,12 +316,10 @@ public class PostsActivity extends BaseActivity implements
             Document document = Jsoup.parse(res);
 
             // 解析子版块
-            String classes = "#subforum_" + FID;
-            if (subForums.size() == 1) {
-                Elements subs = document.select(classes);
-                if (subs.size() != 0) {
-                    subs = subs.select("tr");
-                    for (int i = 0; i < subs.size() - 1; i ++) {
+            if ((currentPage == 1 || datas.size() == 0) && subForums.size() == 0) {
+                Elements subs = document.select("#subforum_" + FID + " tr");
+                if (subs.size() > 0) {
+                    for (int i = 0; i < subs.size() - 1; i++) {
                         Element forum = subs.get(i);
                         Element a = forum.selectFirst("tr > td > h2 > a");
                         String link = a.attr("href");
@@ -460,8 +456,8 @@ public class PostsActivity extends BaseActivity implements
                 //TODO 金币 投票 关闭
                 //TODO color
                 int color = ContextCompat.getColor(PostsActivity.this, R.color.text_color_pri);
-                String url = "forum.php?mod=viewthread&tid="+topic.tid;
-                temp = new ArticleListData(type, topic.subject,url, topic.author, topic.authorid,
+                String url = "forum.php?mod=viewthread&tid=" + topic.tid;
+                temp = new ArticleListData(type, topic.subject, url, topic.author, topic.authorid,
                         topic.dateline.replace("&nbsp;", " "), topic.views, topic.replies, color);
                 //if (!TextUtils.isEmpty(tag)) temp.tag = tag;
                 tempDatas.add(temp);
@@ -487,26 +483,23 @@ public class PostsActivity extends BaseActivity implements
     private class getPostsMe extends AsyncTask<String, Void, List<ArticleListData>> {
         @Override
         protected List<ArticleListData> doInBackground(String... params) {
-            //chiphell
             String res = params[0];
             List<ArticleListData> dataset = new ArrayList<>();
             Document doc = Jsoup.parse(res);
 
             // 解析子版块
-            Elements subs = doc.select("#subname_list");
-            if (subs.size() != 0) {
-                subForums = new ArrayList<>();
-                subs = subs.select("li");
-                for (int i = 0; i < subs.size(); i++) {
-                    Element a = subs.get(i).selectFirst("li > a");
-                    String link = a.attr("href");
-                    int fid = Integer.valueOf(GetId.getId("fid=", link));
-                    String title = a.text();
+            if ((currentPage == 1 || datas.size() == 0) && subForums.size() == 0) {
+                Elements subs = doc.select("#subname_list > ul > li > a");
+                for (Element sub : subs) {
+                    String link = sub.attr("href");
+                    String id = GetId.getId("fid=", link);
+                    if (TextUtils.isEmpty(id)) continue;
+                    int fid = Integer.valueOf(id);
+                    String title = sub.text();
                     subForums.add(new Forum(fid, title));
-                    Log.i(TAG, "fid:" + fid + ",title:" + title);
+                    Log.i(TAG, "find subforum fid:" + fid + ",title:" + title);
                 }
             }
-
 
             Elements body = doc.select("div[class=threadlist]"); // 具有 href 属性的链接
             ArticleListData temp;
@@ -583,31 +576,18 @@ public class PostsActivity extends BaseActivity implements
     }
 
     private void getDataCompete(List<ArticleListData> dataset) {
-        /*
-        Log.i(TAG, datas.size() + "");
-        if (datas.size() == 0 && dataset.size() == 0) {
-            // 主板块没有帖子数据，切换成默认的第一个子版块
-            switch (FID) {
-                case 106:
-                    // 校园交易区，切换成普通交易区
-                    FID = 110;
-                    TITLE = "普通交易区";
-                    setTitle(TITLE);
-                    break;
-                default:
-                    // 其他板块，默认切换成第一个子版块
-                    if (subForums.size() > 1) {
-                        FID = subForums.get(1).fid;
-                        TITLE = subForums.get(1).name;
-                        setTitle(TITLE);
-                    }
-                    break;
+        if (subForums.size() > 0) {
+            //没有数据有子版块切换到第一个
+            if (datas.size() == 0 && dataset.size() == 0 && currentPage == 1) {
+                FID = subForums.get(0).fid;
+                TITLE = subForums.get(0).name;
+                setTitle(TITLE);
+                getData();
+                return;
             }
-            // 有子版块，设置标题可点击，并重新获取数据
-            getData();
-            return;
-        }*/
-        setSubForums();
+
+            setSubForums();
+        }
 
         btnRefresh.show();
         if (currentPage == 1) {
@@ -628,37 +608,43 @@ public class PostsActivity extends BaseActivity implements
         refreshLayout.postDelayed(() -> refreshLayout.setRefreshing(false), 500);
     }
 
-    private void setSubForums(){
+    private void setSubForums() {
         View toolbar = findViewById(R.id.myToolBar);
         if (toolbar != null) {
-            TextView title = toolbar.findViewById(R.id.title);
-            title.setOnClickListener(listener);
             ImageView arrow = toolbar.findViewById(R.id.arrow);
+            if (arrow.getVisibility() == View.VISIBLE) {
+                return;
+            }
+            TextView title = toolbar.findViewById(R.id.title);
+            title.setOnClickListener(changeSubForumClickListener);
             arrow.setVisibility(View.VISIBLE);
-            arrow.setOnClickListener(listener);
+            arrow.setOnClickListener(changeSubForumClickListener);
         }
-
     }
 
-    private View.OnClickListener listener = new View.OnClickListener() {
+    private final View.OnClickListener changeSubForumClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            MySpinner spinner = new MySpinner(PostsActivity.this);
+            MySpinner<Forum> spinner = new MySpinner<>(view.getContext());
             spinner.setData(subForums);
             spinner.setListener((pos, v) -> {
                 Log.i(TAG, "current:" + FID + ",clicked " + pos + ", clicked fid:" + subForums.get(pos).fid);
                 if (subForums.get(pos).fid == FID) {
                     return;
                 }
-                spinner.dismiss();
                 FID = subForums.get(pos).fid;
                 TITLE = subForums.get(pos).name;
                 setTitle(TITLE);
-                datas.clear();
-                adapter.notifyDataSetChanged();
+                spinner.dismiss();
                 refresh();
             });
-            spinner.showAsDropDown(view);
+
+            int width = (int) Math.min(DimenUtils.getScreenWidth() * 0.6,
+                    DimenUtils.dip2px(view.getResources(), 200));
+            spinner.setWidth(width);
+            int offset = (int) (view.getX() + view.getWidth() / 2) - DimenUtils.getScreenWidth() / 2;
+            spinner.showAsDropDown(view, -(width - view.getWidth()) / 2 - offset,
+                    DimenUtils.dip2px(view.getResources(), 3));
         }
     };
 }

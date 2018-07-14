@@ -25,7 +25,7 @@ import me.yluo.ruisiapp.model.Category;
 import me.yluo.ruisiapp.model.Forum;
 import me.yluo.ruisiapp.model.ForumListData;
 import me.yluo.ruisiapp.model.WaterData;
-import me.yluo.ruisiapp.utils.DimmenUtils;
+import me.yluo.ruisiapp.utils.DimenUtils;
 import me.yluo.ruisiapp.utils.RuisUtils;
 import me.yluo.ruisiapp.widget.CircleImageView;
 
@@ -36,8 +36,8 @@ import me.yluo.ruisiapp.widget.CircleImageView;
 public class ForumsAdapter extends BaseAdapter {
 
     protected Context context;
-    List<ForumListData> datas = new ArrayList<>();
-    List<WaterData> ds = new ArrayList<>();
+    private List<ForumListData> datas = new ArrayList<>();
+    private List<WaterData> ds = new ArrayList<>();
 
     public static final int TYPE_HEADER = 0;
     public static final int TYPE_NORMAL = 1;
@@ -54,6 +54,7 @@ public class ForumsAdapter extends BaseAdapter {
             ds = new ArrayList<>();
         }
 
+        datas = new ArrayList<>(ds.size() * 4);
         for (Category c : ds) {
             datas.add(new ForumListData(true, c.name, c.gid));
             for (Forum f : c.forums) {
@@ -124,7 +125,7 @@ public class ForumsAdapter extends BaseAdapter {
             super(itemView);
             img = itemView.findViewById(R.id.img);
             title = itemView.findViewById(R.id.title);
-            size = DimmenUtils.dip2px(context, 42);
+            size = DimenUtils.dip2px(context, 42);
         }
 
         @Override
@@ -149,7 +150,7 @@ public class ForumsAdapter extends BaseAdapter {
         WaterHolder(View itemView) {
             super(itemView);
             GridView g = (GridView) itemView;
-            int p12 = DimmenUtils.dip2px(context, 12);
+            int p12 = DimenUtils.dip2px(context, 12);
             g.setVerticalSpacing(p12);
             g.setHorizontalSpacing(p12);
 

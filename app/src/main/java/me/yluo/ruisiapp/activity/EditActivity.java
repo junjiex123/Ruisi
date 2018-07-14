@@ -19,7 +19,6 @@ import android.widget.Toast;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Entities;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
@@ -44,10 +43,10 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
 
     private EditText edTitle, edContent;
     private ProgressDialog dialog;
-    private MySpinner typeidSpinner;
     private MyColorPicker myColorPicker;
     private MySmileyPicker smileyPicker;
     private TextView tvSelectType;
+    private MySpinner<Forum> typeidSpinner;
     private List<Forum> typeiddatas = new ArrayList<>();
     private View typeIdContainer;
     private int typeId;
@@ -70,7 +69,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
         myColorPicker = new MyColorPicker(this);
         smileyPicker = new MySmileyPicker(this);
         initToolBar(true, "编辑帖子");
-        typeidSpinner = new MySpinner(this);
+        typeidSpinner = new MySpinner<>(this);
 
 
         View btnDone = addToolbarMenu(R.drawable.ic_done_black_24dp);

@@ -11,7 +11,7 @@ import android.widget.GridView;
 import android.widget.PopupWindow;
 
 import me.yluo.ruisiapp.R;
-import me.yluo.ruisiapp.utils.DimmenUtils;
+import me.yluo.ruisiapp.utils.DimenUtils;
 import me.yluo.ruisiapp.utils.GetId;
 
 /**
@@ -49,10 +49,10 @@ public class MyColorPicker extends PopupWindow implements AdapterView.OnItemClic
         gridView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         gridView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
         gridView.setNumColumns(8);
-        gridView.setPadding(DimmenUtils.dip2px(mContext, 8), DimmenUtils.dip2px(mContext, 12), DimmenUtils.dip2px(mContext, 8), DimmenUtils.dip2px(mContext, 12));
+        gridView.setPadding(DimenUtils.dip2px(mContext, 8), DimenUtils.dip2px(mContext, 12), DimenUtils.dip2px(mContext, 8), DimenUtils.dip2px(mContext, 12));
         gridView.setGravity(Gravity.CENTER);
-        gridView.setHorizontalSpacing(DimmenUtils.dip2px(mContext, 4));
-        gridView.setVerticalSpacing(DimmenUtils.dip2px(mContext, 12));
+        gridView.setHorizontalSpacing(DimenUtils.dip2px(mContext, 4));
+        gridView.setVerticalSpacing(DimenUtils.dip2px(mContext, 12));
         gridView.setOnItemClickListener(this);
 
         setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -104,7 +104,7 @@ public class MyColorPicker extends PopupWindow implements AdapterView.OnItemClic
         public View getView(int i, View convertView, ViewGroup viewGroup) {
             View colorView;
             colorView = new View(mContext);
-            colorView.setLayoutParams(new GridView.LayoutParams(DimmenUtils.dip2px(mContext, 20), DimmenUtils.dip2px(mContext, 20)));//设置ImageView对象布局
+            colorView.setLayoutParams(new GridView.LayoutParams(DimenUtils.dip2px(mContext, 20), DimenUtils.dip2px(mContext, 20)));//设置ImageView对象布局
             colorView.setPadding(4, 4, 4, 4);//设置间距
             int color = GetId.getColor(mContext, colorDatas[i][1]);
             colorView.setBackgroundColor(color);

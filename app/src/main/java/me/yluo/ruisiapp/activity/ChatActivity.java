@@ -30,7 +30,7 @@ import me.yluo.ruisiapp.model.ChatListData;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.myhttp.TextResponseHandler;
-import me.yluo.ruisiapp.utils.DimmenUtils;
+import me.yluo.ruisiapp.utils.DimenUtils;
 import me.yluo.ruisiapp.utils.GetId;
 import me.yluo.ruisiapp.utils.KeyboardUtil;
 import me.yluo.ruisiapp.utils.UrlUtils;
@@ -88,7 +88,7 @@ public class ChatActivity extends BaseActivity {
 
         findViewById(R.id.btn_emotion).setOnClickListener(view -> {
             smileyPicker.showAtLocation(view, Gravity.BOTTOM, 32,
-                    DimmenUtils.dip2px(ChatActivity.this, 80));
+                    DimenUtils.dip2px(ChatActivity.this, 80));
         });
 
         btnSend.setOnClickListener(view -> sendClick());

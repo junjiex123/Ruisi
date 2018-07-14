@@ -40,6 +40,7 @@ public class DataManager {
     public static void cleanApplicationData(Context context, String... filepath) {
         SharedPreferences perUserInfo = context.getSharedPreferences(App.MY_SHP_NAME,
                 Context.MODE_PRIVATE);
+
         SharedPreferences.Editor editor = perUserInfo.edit();
         boolean isRemember = perUserInfo.getBoolean(App.IS_REMBER_PASS_USER, false);
         String userName = perUserInfo.getString(App.LOGIN_NAME, "");

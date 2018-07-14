@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import me.yluo.ruisiapp.R;
-import me.yluo.ruisiapp.utils.DimmenUtils;
+import me.yluo.ruisiapp.utils.DimenUtils;
 
 /**
  * Created by free2 on 16-7-18.
@@ -84,19 +84,19 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         //COLOR_SELECT = ContextCompat.getColor(context, R.color.colorAccent);
         COLOR_SELECT = ThemeUtil.getThemeColor(context, R.attr.colorAccent);
         COLOR_UNSELECT = ContextCompat.getColor(context, R.color.colorDisableHintIcon);
-        SIZE_2 = DimmenUtils.dip2px(context, SIZE_2);
-        SIZE_ICON = DimmenUtils.dip2px(context, SIZE_ICON);
-        BADGE_SIZE = DimmenUtils.dip2px(context, 3);
+        SIZE_2 = DimenUtils.dip2px(context, SIZE_2);
+        SIZE_ICON = DimenUtils.dip2px(context, SIZE_ICON);
+        BADGE_SIZE = DimenUtils.dip2px(context, 3);
         int[] attrs = new int[]{R.attr.selectableItemBackgroundBorderless};
         TypedArray typedArray = context.obtainStyledAttributes(attrs);
         CLICK_BG_RES = typedArray.getResourceId(0, 0);
         typedArray.recycle();
 
         setOrientation(LinearLayout.HORIZONTAL);// 水平布局
-        setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, DimmenUtils.dip2px(context, 56)));
+        setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, DimenUtils.dip2px(context, 56)));
         setBackgroundResource(R.color.bg_primary);
         //4dp飘起
-        setElevation(DimmenUtils.dip2px(context, 4));
+        setElevation(DimenUtils.dip2px(context, 4));
 
         LayoutParams p = new LayoutParams(LayoutParams.MATCH_PARENT,
                 LayoutParams.MATCH_PARENT, 1);

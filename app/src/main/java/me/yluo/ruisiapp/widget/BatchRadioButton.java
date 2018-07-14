@@ -6,7 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 
-import me.yluo.ruisiapp.utils.DimmenUtils;
+import me.yluo.ruisiapp.utils.DimenUtils;
 
 
 public class BatchRadioButton extends android.support.v7.widget.AppCompatRadioButton {
@@ -32,7 +32,7 @@ public class BatchRadioButton extends android.support.v7.widget.AppCompatRadioBu
 
 
     private void init(Context context) {
-        BADGE_SIZE = DimmenUtils.dip2px(context, 3);
+        BADGE_SIZE = DimenUtils.dip2px(context, 3);
 
         paint_badge.setColor(Color.WHITE);
         paint_badge.setStyle(Paint.Style.FILL);

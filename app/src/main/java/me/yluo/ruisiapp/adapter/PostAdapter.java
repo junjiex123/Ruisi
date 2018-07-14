@@ -20,7 +20,7 @@ import me.yluo.ruisiapp.activity.UserDetailActivity;
 import me.yluo.ruisiapp.listener.ListItemClickListener;
 import me.yluo.ruisiapp.model.SingleArticleData;
 import me.yluo.ruisiapp.model.SingleType;
-import me.yluo.ruisiapp.utils.DimmenUtils;
+import me.yluo.ruisiapp.utils.DimenUtils;
 import me.yluo.ruisiapp.utils.UrlUtils;
 import me.yluo.ruisiapp.widget.CircleImageView;
 import me.yluo.ruisiapp.widget.htmlview.HtmlView;
@@ -49,7 +49,7 @@ public class PostAdapter extends BaseAdapter {
 
         this.datalist = datalist;
         this.activity = activity;
-        size = DimmenUtils.dip2px(activity, 42);
+        size = DimenUtils.dip2px(activity, 42);
         setItemListener(itemListener);
     }
 

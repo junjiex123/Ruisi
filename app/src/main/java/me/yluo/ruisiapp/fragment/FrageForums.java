@@ -93,12 +93,13 @@ public class FrageForums extends BaseLazyFragment implements View.OnClickListene
     @Override
     public void onUserVisible() {
         Log.d("=========", lastLoginState + "");
-        Log.d("=========", App.ISLOGIN(getActivity()) + "");
+        Log.d("=========", "是否是登陆状态:" + App.ISLOGIN(getActivity()) + "");
         Log.d("=========", "是否是校园网:" + App.IS_SCHOOL_NET);
 
         if (lastLoginState != App.ISLOGIN(getActivity())) {
+            Log.d("=========", "登陆状态改变 " + lastLoginState + " >" + !lastLoginState);
             lastLoginState = !lastLoginState;
-            initForums(App.ISLOGIN(getActivity()));
+            initForums(lastLoginState);
             initAvatar();
         }
     }
@@ -128,6 +129,7 @@ public class FrageForums extends BaseLazyFragment implements View.OnClickListene
 
     void initForums(boolean loginstate) {
         new GetForumList().execute(loginstate);
+
         if (App.IS_SCHOOL_NET) { //是校园网
             String url = App.BASE_URL_RS + "forum.php";
             HttpUtil.get(url, new ResponseHandler() {
@@ -184,6 +186,7 @@ public class FrageForums extends BaseLazyFragment implements View.OnClickListene
     private class GetForumList extends AsyncTask<Boolean, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Boolean... params) {
+            Log.d("=========", "载入板块列表:" + params[0]);
             forumDatas = RuisUtils.getForums(getActivity(), params[0]);
             return true;
         }
@@ -194,8 +197,8 @@ public class FrageForums extends BaseLazyFragment implements View.OnClickListene
                 Toast.makeText(getActivity(), "获取板块列表失败", Toast.LENGTH_LONG).show();
             }
 
-            adapter.notifyDataSetChanged();
             adapter.setDatas(forumDatas);
+            adapter.notifyDataSetChanged();
         }
     }
 }

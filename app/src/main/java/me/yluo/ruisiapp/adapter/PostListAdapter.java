@@ -18,7 +18,7 @@ import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.activity.PostActivity;
 import me.yluo.ruisiapp.activity.UserDetailActivity;
 import me.yluo.ruisiapp.model.ArticleListData;
-import me.yluo.ruisiapp.utils.DimmenUtils;
+import me.yluo.ruisiapp.utils.DimenUtils;
 import me.yluo.ruisiapp.utils.UrlUtils;
 import me.yluo.ruisiapp.widget.CircleImageView;
 
@@ -44,7 +44,7 @@ public class PostListAdapter extends BaseAdapter {
         dataSet = data;
         this.activity = activity;
         this.type = type;
-        size = DimmenUtils.dip2px(activity, 42);
+        size = DimenUtils.dip2px(activity, 42);
     }
 
 

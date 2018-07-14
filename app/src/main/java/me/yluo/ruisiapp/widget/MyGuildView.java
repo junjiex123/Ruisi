@@ -24,7 +24,7 @@ import java.util.List;
 
 import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.model.GalleryData;
-import me.yluo.ruisiapp.utils.DimmenUtils;
+import me.yluo.ruisiapp.utils.DimenUtils;
 
 /**
  * 图片轮流展示的view
@@ -64,9 +64,9 @@ public class MyGuildView extends RelativeLayout implements ViewPager.OnPageChang
 
     private void init(Context context) {
         this.context = context;
-        dotMargine = DimmenUtils.dip2px(context, 2);
-        containerPaddingTB = DimmenUtils.dip2px(context, 8);
-        containerPaddingLR = DimmenUtils.dip2px(context, 12);
+        dotMargine = DimenUtils.dip2px(context, 2);
+        containerPaddingTB = DimenUtils.dip2px(context, 8);
+        containerPaddingLR = DimenUtils.dip2px(context, 12);
 
         dotImageResourseId = R.drawable.dot_bg;
         viewPager = new ViewPager(context);

@@ -9,7 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import me.yluo.ruisiapp.utils.DimmenUtils;
+import me.yluo.ruisiapp.utils.DimenUtils;
 
 /**
  * Created by yang on 2016/12/10.
@@ -35,7 +35,7 @@ public class MyListDivider extends RecyclerView.ItemDecoration {
         this.mDivider = ta.getDrawable(0);
         ta.recycle();
         mOrientation = orientation;
-        SIZE_PADDING = DimmenUtils.dip2px(context, 12);
+        SIZE_PADDING = DimenUtils.dip2px(context, 12);
     }
 
     @Override
