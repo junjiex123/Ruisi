@@ -27,7 +27,7 @@ public class MySpinner<T> extends PopupWindow implements AdapterView.OnItemClick
     private OnItemSelectListener listener;
     private MySpinnerListAdapter<T> adapter;
 
-    private int currentSelect = 0;
+    private int currentSelect = -1;
 
     public MySpinner(Context context) {
         super(context);
@@ -58,7 +58,7 @@ public class MySpinner<T> extends PopupWindow implements AdapterView.OnItemClick
     }
 
     public T getSelectItem() {
-        if (currentSelect > adapter.getCount() -1) {
+        if (currentSelect > adapter.getCount() - 1 || currentSelect < 0) {
             return null;
         }
         return adapter.getItem(currentSelect);
