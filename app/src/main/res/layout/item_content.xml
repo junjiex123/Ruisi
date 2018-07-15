@@ -22,8 +22,8 @@
 
     <me.yluo.ruisiapp.widget.CircleImageView
         android:id="@+id/article_user_image"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_below="@+id/article_title"
         android:layout_marginStart="12dp"
         android:scaleType="centerCrop"
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/article_user_image"
         android:layout_marginStart="6dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="2dp"
         android:layout_toEndOf="@+id/article_user_image"
         android:textColor="@color/colorAuthor"
         android:textSize="14sp"
