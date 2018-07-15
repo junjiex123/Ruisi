@@ -40,13 +40,15 @@ public class MySpinner<T> extends PopupWindow implements AdapterView.OnItemClick
         listView = new ListView(mContext);
         listView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
-        listView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.bg_secondary));
+        listView.setDivider(null);
+        listView.setDividerHeight(0);
         listView.setOnItemClickListener(this);
 
         setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
 
         setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.my_spinner_bg));
+        setElevation(DimenUtils.dip2px(mContext, 4));
 
         setFocusable(true);
         setContentView(listView);
@@ -82,7 +84,7 @@ public class MySpinner<T> extends PopupWindow implements AdapterView.OnItemClick
         void onItemSelectChanged(int pos, View v);
     }
 
-    private static class MySpinnerListAdapter<T> extends BaseAdapter {
+    private class MySpinnerListAdapter<T> extends BaseAdapter {
 
         private List<T> datas;
         private Context context;
@@ -113,16 +115,16 @@ public class MySpinner<T> extends PopupWindow implements AdapterView.OnItemClick
         public View getView(int i, View convertView, ViewGroup viewGroup) {
             TextView v = new TextView(context);
             v.setTag(i);
+            v.setTextColor(ContextCompat.getColor(context, R.color.text_color_pri));
             v.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             v.setText(datas.get(i).toString());
             v.setGravity(Gravity.CENTER);
             v.setLayoutParams(new AbsListView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT, 1));
-            //textView.setTextColor(COLOR_UNSELECT);
-            int padding1 = DimenUtils.dip2px(context, 8);
-            int padding2 = DimenUtils.dip2px(context, 6);
+            int hPadding = DimenUtils.dip2px(context, 8);
+            int vPadding = DimenUtils.dip2px(context, 8);
 
-            v.setPadding(padding1, padding2, padding1, padding2);
+            v.setPadding(hPadding, vPadding, hPadding, vPadding);
             return v;
         }
     }
