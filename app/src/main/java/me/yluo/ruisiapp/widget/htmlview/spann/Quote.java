@@ -19,7 +19,6 @@ public class Quote extends CharacterStyle implements LeadingMarginSpan, LineHeig
     private static final float STRIPE_WIDTH = HtmlView.FONT_SIZE / 5;
     private static final float GAP_WIDTH = HtmlView.FONT_SIZE * 0.6f;
     private static final int TEXT_COLOR = 0xff777777;
-    private static final float LINE_HEIGHT = 1.25f / HtmlView.LINE_HEIGHT;
 
     public Quote() {
     }
@@ -59,9 +58,9 @@ public class Quote extends CharacterStyle implements LeadingMarginSpan, LineHeig
 
     @Override
     public void chooseHeight(CharSequence text, int start, int end, int spanstartv, int v, Paint.FontMetricsInt fm) {
-        fm.ascent *= LINE_HEIGHT;
-        fm.descent *= LINE_HEIGHT;
-        fm.top *= LINE_HEIGHT;
-        fm.bottom *= LINE_HEIGHT;
+//        fm.ascent *= LINE_HEIGHT;
+//        fm.descent *= LINE_HEIGHT;
+//        fm.top *= LINE_HEIGHT;
+//        fm.bottom *= LINE_HEIGHT;
     }
 }
