@@ -576,14 +576,26 @@ public class PostsActivity extends BaseActivity implements
     }
 
     private void getDataCompete(List<ArticleListData> dataset) {
-        if (subForums.size() > 0) {
+        if (subForums.size() > 0 && currentPage == 1) {
+            int subForumIndex = -1;
+            for (int i = 0; i < subForums.size(); i++) {
+                if (subForums.get(i).fid == FID) {
+                    subForumIndex = i;
+                    break;
+                }
+            }
+
             //没有数据有子版块切换到第一个
-            if (datas.size() == 0 && dataset.size() == 0 && currentPage == 1) {
+            if (dataset.size() == 0 && subForumIndex == -1) {
                 FID = subForums.get(0).fid;
                 TITLE = subForums.get(0).name;
                 setTitle(TITLE);
                 getData();
                 return;
+                // 有子版块 且父板块帖子不为空
+                // 添加父板块
+            } else if (dataset.size() > 0 && subForumIndex == -1) {
+                subForums.add(0, new Forum(FID, TITLE));
             }
 
             setSubForums();
