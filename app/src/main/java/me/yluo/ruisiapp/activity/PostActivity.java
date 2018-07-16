@@ -6,7 +6,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -22,12 +21,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -53,6 +50,7 @@ import me.yluo.ruisiapp.api.entity.ApiPostList;
 import me.yluo.ruisiapp.api.entity.ApiResult;
 import me.yluo.ruisiapp.api.entity.Postlist;
 import me.yluo.ruisiapp.database.MyDB;
+import me.yluo.ruisiapp.listener.HidingScrollListener;
 import me.yluo.ruisiapp.listener.ListItemClickListener;
 import me.yluo.ruisiapp.listener.LoadMoreListener;
 import me.yluo.ruisiapp.model.SingleArticleData;
@@ -61,6 +59,7 @@ import me.yluo.ruisiapp.model.VoteData;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.myhttp.SyncHttpClient;
+import me.yluo.ruisiapp.utils.DimenUtils;
 import me.yluo.ruisiapp.utils.GetId;
 import me.yluo.ruisiapp.utils.KeyboardUtil;
 import me.yluo.ruisiapp.utils.LinkClickHandler;
@@ -85,6 +84,10 @@ public class PostActivity extends BaseActivity
 
     public static final String TAG = "PostActivity";
     private RecyclerView topicList;
+    private View pageView;
+    private TextView pageTextView;
+    private View replyView;
+
     //上一次回复时间
     private long replyTime = 0;
     private int currentPage = 1;
@@ -101,9 +104,6 @@ public class PostActivity extends BaseActivity
     private boolean showPlainText = false;
     private EditText input;
     private SmileyInputRoot rootView;
-    private ArrayAdapter<String> spinnerAdapter;
-    private Spinner spinner;
-    private List<String> pageSpinnerDatas = new ArrayList<>();
     private Map<String, String> params;
     private static final Type postListType = new TypeReference<ApiResult<ApiPostList>>() {
     }.getType();
@@ -122,6 +122,8 @@ public class PostActivity extends BaseActivity
         setContentView(R.layout.activity_post);
         initToolBar(true, "加载中......");
         input = findViewById(R.id.ed_comment);
+        pageView = findViewById(R.id.pageView);
+        replyView = findViewById(R.id.comment_view);
         showPlainText = App.showPlainText(this);
         initCommentList();
         initEmotionInput();
@@ -163,8 +165,6 @@ public class PostActivity extends BaseActivity
         } else {
             firstGetData(1);
         }
-
-        initSpinner();
     }
 
     private void initCommentList() {
@@ -194,34 +194,31 @@ public class PostActivity extends BaseActivity
             return false;
         });
 
-        MyFriendPicker.attach(this, input);
-        findViewById(R.id.btn_star).setOnClickListener(this);
-        findViewById(R.id.btn_link).setOnClickListener(this);
-        findViewById(R.id.btn_share).setOnClickListener(this);
-    }
-
-    private void initSpinner() {
-        spinner = new Spinner(this);
-        spinnerAdapter = new ArrayAdapter<>(this, R.layout.my_post_spinner_item, pageSpinnerDatas);
-        pageSpinnerDatas.add("第1页");
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(spinnerAdapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        //监听滑动事件
+        topicList.addOnScrollListener(new HidingScrollListener(DimenUtils.dip2px(PostActivity.this, 32)) {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
-                if (pos + 1 != currentPage) {
-                    jumpPage(pos + 1);
-                }
+            public void onHide() {
+                pageView.setVisibility(View.VISIBLE);
+                replyView.setVisibility(View.GONE);
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+            public void onShow() {
+                pageView.setVisibility(View.GONE);
+                replyView.setVisibility(View.VISIBLE);
             }
         });
 
+        MyFriendPicker.attach(this, input);
 
-        addToolbarView(spinner);
+        pageTextView = findViewById(R.id.pageText);
+        pageTextView.setOnClickListener(this);
+
+        findViewById(R.id.btn_star).setOnClickListener(this);
+        findViewById(R.id.btn_link).setOnClickListener(this);
+        findViewById(R.id.btn_share).setOnClickListener(this);
+        findViewById(R.id.btn_pre_page).setOnClickListener(this);
+        findViewById(R.id.btn_next_page).setOnClickListener(this);
     }
 
     private void firstGetData(int page) {
@@ -403,6 +400,19 @@ public class PostActivity extends BaseActivity
                 //设置分享列表的标题，并且每次都显示分享列表
                 startActivity(Intent.createChooser(shareIntent, "分享到文章到:"));
                 break;
+            case R.id.btn_pre_page:
+                if (currentPage > 1) {
+                    jumpPage(currentPage - 1);
+                }
+                break;
+            case R.id.btn_next_page:
+                if (currentPage < sumPage) {
+                    jumpPage(currentPage + 1);
+                }
+                break;
+            case R.id.pageText:
+                //TODO show change page dialog
+                break;
         }
     }
 
@@ -524,7 +534,7 @@ public class PostActivity extends BaseActivity
                     StringBuilder sb = new StringBuilder();
                     for (int j = 0; j < otherImgs.size(); j++) {
                         String a = otherImgs.get(j).removeClass("error_text").html();
-                        if (a.contains("fixwr")){
+                        if (a.contains("fixwr")) {
                             sb.append(a.replace("fixwr", "fixnone"));
                             sb.append("<br>");
                         }
@@ -621,7 +631,6 @@ public class PostActivity extends BaseActivity
 
             if (pageLoad != currentPage) {
                 currentPage = pageLoad;
-                spinner.setSelection(currentPage - 1);
             }
 
             if (!TextUtils.isEmpty(errorText)) {
@@ -695,15 +704,7 @@ public class PostActivity extends BaseActivity
                 redirectPid = "";
             }
 
-            int size = pageSpinnerDatas.size();
-            if (sumPage != size) {
-                pageSpinnerDatas.clear();
-                for (int i = 1; i <= sumPage; i++) {
-                    pageSpinnerDatas.add("第" + i + "页");
-                }
-                spinnerAdapter.notifyDataSetChanged();
-                spinner.setSelection(currentPage - 1);
-            }
+            pageTextView.setText(currentPage + " / " + sumPage + "页");
         }
 
     }
