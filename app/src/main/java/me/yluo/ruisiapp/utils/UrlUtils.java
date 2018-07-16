@@ -10,7 +10,7 @@ import me.yluo.ruisiapp.model.SingleType;
 public class UrlUtils {
 
 
-    public static String getArticleListUrl(int fid, int page, boolean isInner) {
+    public static String getPostsUrl(int fid, int page, boolean isInner) {
         if (isInner) {
             return "forum.php?mod=forumdisplay&fid=" + fid + "&page=" + page;
         } else {

@@ -14,15 +14,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tab"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@color/bg_secondary"
-        android:elevation="2dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/myToolBar" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout"
@@ -34,7 +25,6 @@
         app:layout_constraintTop_toBottomOf="@+id/myToolBar">
 
         <android.support.v7.widget.RecyclerView
-            android:paddingTop="@dimen/toolbarHeight"
             android:clipToPadding="false"
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"

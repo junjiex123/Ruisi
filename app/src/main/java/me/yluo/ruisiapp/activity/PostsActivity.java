@@ -68,13 +68,11 @@ public class PostsActivity extends BaseActivity implements
     protected SwipeRefreshLayout refreshLayout;
     FloatingActionButton btnRefresh;
     RecyclerView mRecyclerView;
-    private View myToolbar;
     //当前页数
     int currentPage = 1;
     int maxPage = 1;
     boolean isEnableLoadMore = false;
     RecyclerView.LayoutManager mLayoutManager;
-    private TabLayout tab;
 
     // 子板
     private ArrayList<Forum> subForums;
@@ -83,13 +81,6 @@ public class PostsActivity extends BaseActivity implements
     private List<ArticleListData> datas;
     private PostListAdapter adapter;
     private MyDB myDB = null;
-    private final String[] orders = new String[]{
-            "&filter=lastpost&orderby=lastpost",
-            "&filter=heat&orderby=heats",
-            "&filter=hot",
-            "&filter=digest&digest=1"
-    };
-    private int currentTabindex = 0;
 
     private static final Type forumListType = new TypeReference<ApiResult<ApiForumList>>() {
     }.getType();
@@ -113,10 +104,8 @@ public class PostsActivity extends BaseActivity implements
             TITLE = getIntent().getExtras().getString("TITLE");
         }
         initToolBar(true, TITLE);
-        myToolbar = findViewById(R.id.myToolBar);
         btnRefresh = findViewById(R.id.btn);
         mRecyclerView = findViewById(R.id.recycler_view);
-        tab = findViewById(R.id.tab);
 
         refreshLayout = findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light,
@@ -138,11 +127,6 @@ public class PostsActivity extends BaseActivity implements
             mRecyclerView.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 8));
             addToolbarMenu(R.drawable.ic_edit).setOnClickListener(this);
         }
-
-        tab.addTab(tab.newTab().setText("最新"));
-        tab.addTab(tab.newTab().setText("热门"));
-        tab.addTab(tab.newTab().setText("热帖"));
-        tab.addTab(tab.newTab().setText("精华"));
 
         adapter = new PostListAdapter(this, datas, getType());
         if (getType() == PostListAdapter.TYPE_IMAGE) {
@@ -191,37 +175,11 @@ public class PostsActivity extends BaseActivity implements
                 int distanceToScroll = btnRefresh.getHeight() + DimenUtils.dip2px(PostsActivity.this, 16);
                 btnRefresh.animate().translationY(distanceToScroll).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
 
-                //隐藏toolbar
-                myToolbar.animate().translationY(-myToolbar.getHeight()).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
-                tab.animate().translationY(-myToolbar.getHeight()).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
             }
 
             @Override
             public void onShow() {
                 btnRefresh.animate().translationY(0).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
-
-                //显示toolbar
-                myToolbar.animate().translationY(0).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
-                tab.animate().translationY(0).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
-            }
-        });
-
-
-        tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                currentTabindex = tab.getPosition();
-                refresh();
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                mRecyclerView.scrollToPosition(0);
             }
         });
     }
@@ -239,14 +197,13 @@ public class PostsActivity extends BaseActivity implements
         adapter.changeLoadMoreState(BaseAdapter.STATE_LOADING);
         String url;
         if (!App.IS_SCHOOL_NET) {
-            url = UrlUtils.getArticleListUrl(FID, currentPage, false);
+            url = UrlUtils.getPostsUrl(FID, currentPage, false);
         } else if (getType() == PostListAdapter.TYPE_IMAGE) {
-            url = UrlUtils.getArticleListUrl(FID, currentPage, true);
+            url = UrlUtils.getPostsUrl(FID, currentPage, true);
         } else {
-            url = UrlUtils.getArticleListUrl(FID, currentPage, true);
+            url = UrlUtils.getPostsUrl(FID, currentPage, true);
         }
 
-        url = url + orders[currentTabindex];
         HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
