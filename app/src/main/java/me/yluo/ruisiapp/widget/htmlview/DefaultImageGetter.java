@@ -277,7 +277,7 @@ public class DefaultImageGetter implements ImageGetter {
         } else if (souce.startsWith(SMILEY_PREFIX)) {
             colorDrawable.setBounds(0, 0, smileySize, smileySize);
         } else {
-            colorDrawable.setBounds(0, 0, (int) (maxWidth / 2.0f), (int) (maxWidth / 4.0f));
+            colorDrawable.setBounds(0, 0, (int) (maxWidth / 4.0f), (int) (maxWidth / 6.0f));
         }
 
         return colorDrawable;

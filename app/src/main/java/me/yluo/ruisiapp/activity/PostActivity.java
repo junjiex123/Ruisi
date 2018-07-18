@@ -73,7 +73,7 @@ import me.yluo.ruisiapp.widget.htmlview.VoteDialog;
 import static me.yluo.ruisiapp.utils.RuisUtils.getManageContent;
 
 /**
- * Created by free2 on 16-3-6.
+ * Created by yang on 16-3-6.
  * 单篇文章activity
  * 一楼是楼主
  * 其余是评论
@@ -92,6 +92,7 @@ public class PostActivity extends BaseActivity
     private long replyTime = 0;
     private int currentPage = 1;
     private int sumPage = 1;
+    private int pageViewCurrentPage = 1;
     private int clickPosition = -1;
     private boolean isGetTitle = false;
     private boolean enableLoadMore = false;
@@ -185,6 +186,9 @@ public class PostActivity extends BaseActivity
         rootView = findViewById(R.id.root);
         rootView.initSmiley(input, smileyBtn, btnSend);
         rootView.setMoreView(LayoutInflater.from(this).inflate(R.layout.my_smiley_menu, null), btnMore);
+        pageTextView = findViewById(R.id.pageText);
+        pageTextView.setOnClickListener(this);
+
 
         topicList.setOnTouchListener((view, motionEvent) -> {
             if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
@@ -195,6 +199,7 @@ public class PostActivity extends BaseActivity
         });
 
         //监听滑动事件
+        //滚动更新页码
         topicList.addOnScrollListener(new HidingScrollListener(DimenUtils.dip2px(PostActivity.this, 32)) {
             @Override
             public void onHide() {
@@ -209,10 +214,30 @@ public class PostActivity extends BaseActivity
             }
         });
 
-        MyFriendPicker.attach(this, input);
+        topicList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
 
-        pageTextView = findViewById(R.id.pageText);
-        pageTextView.setOnClickListener(this);
+                if (dy > 0) {
+                    int position = ((LinearLayoutManager) topicList.getLayoutManager())
+                            .findLastVisibleItemPosition();
+                    if (position > datas.size()) {
+                        // loading more showing loading...
+                        return;
+                    }
+
+                    pageViewCurrentPage = datas.get(position).page;
+                    String newPageText = pageViewCurrentPage + " / " + sumPage + "页";
+                    if (!newPageText.contentEquals(pageTextView.getText())) {
+                        pageTextView.setText(newPageText);
+                    }
+                }
+            }
+        });
+
+
+        MyFriendPicker.attach(this, input);
 
         findViewById(R.id.btn_star).setOnClickListener(this);
         findViewById(R.id.btn_link).setOnClickListener(this);
@@ -602,8 +627,8 @@ public class PostActivity extends BaseActivity
                         d = new VoteData(vote.attr("action"), options, maxSelection);
                     }
                     data = new SingleArticleData(SingleType.CONTENT, title, uid,
-                            username, postTime,
-                            commentIndex, replyUrl, contentels.html().trim(), pid, canManage);
+                            username, postTime, commentIndex, replyUrl, contentels.html().trim(),
+                            pid, pageLoad, canManage);
                     data.vote = d;
                     authorName = username;
                     if (!isSaveToDataBase) {
@@ -615,7 +640,7 @@ public class PostActivity extends BaseActivity
                 } else {//评论
                     data = new SingleArticleData(SingleType.COMMENT, title, uid,
                             username, postTime, commentIndex, replyUrl,
-                            contentels.html().trim(), pid, canManage);
+                            contentels.html().trim(), pid, pageLoad, canManage);
                 }
                 tepdata.add(data);
             }
@@ -683,7 +708,8 @@ public class PostActivity extends BaseActivity
             if (datas.size() > 0 && (datas.get(0).type != SingleType.CONTENT) &&
                     (datas.get(0).type != SingleType.HEADER)) {
                 datas.add(0, new SingleArticleData(SingleType.HEADER, title,
-                        null, null, null, null, null, null, null));
+                        null, null, null, null, null,
+                        null, null, pageLoad));
             }
             int add = datas.size() - startsize;
             if (startsize == 0) {
@@ -774,7 +800,7 @@ public class PostActivity extends BaseActivity
                 if (temp.first == 1) { //内容
                     data = new SingleArticleData(SingleType.CONTENT, title, uid,
                             username, postTime,
-                            commentIndex, replyUrl, content, pid, canManage);
+                            commentIndex, replyUrl, content, pid, pageLoad, canManage);
 
                     //TODO vote
                     //data.vote =
@@ -786,7 +812,8 @@ public class PostActivity extends BaseActivity
                     }
                 } else {
                     data = new SingleArticleData(SingleType.COMMENT, title, uid,
-                            username, postTime, commentIndex, replyUrl, content, pid, canManage);
+                            username, postTime, commentIndex, replyUrl, content, pid,
+                            pageLoad, canManage);
                 }
 
 
@@ -1103,7 +1130,6 @@ public class PostActivity extends BaseActivity
             }
         });
     }
-
 
     public static String getPreparedReply(Context context, String text) {
         int len = 0;

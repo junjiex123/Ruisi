@@ -21,7 +21,7 @@ public class AttrParser {
     static {
         sColorMap = new Hashtable<>();
         sColorMap.put("aqua", 0xFF00FFFF);
-        sColorMap.put("black", 0xFF000000);
+        sColorMap.put("black", COLOR_NONE); // 0xFF000000 -> COLOR_NONE 去掉黑色不然在夜间模式有bug
         sColorMap.put("blue", 0xFF0000FF);
         sColorMap.put("darkgrey", 0xFFA9A9A9);
         sColorMap.put("fuchsia", 0xFFFF00FF);
@@ -261,6 +261,11 @@ public class AttrParser {
         if (color.charAt(start) == '#') {
             if (end - start == 9) start += 2;
             if (end - start == 7) {
+                String colorText = color.substring(start + 1, end);
+                if (colorText.equals("000000") || colorText.equalsIgnoreCase("FF000000")) {
+                    //修复夜间模式黑色颜色值看不清
+                    return COLOR_NONE;
+                }
                 int colorInt = Integer.parseInt(color.substring(start + 1, end), 16);
                 return (colorInt | 0xff000000);
             }
