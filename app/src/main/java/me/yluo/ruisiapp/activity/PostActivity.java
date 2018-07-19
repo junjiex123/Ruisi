@@ -222,7 +222,7 @@ public class PostActivity extends BaseActivity
                 if (dy > 0) {
                     int position = ((LinearLayoutManager) topicList.getLayoutManager())
                             .findLastVisibleItemPosition();
-                    if (position > datas.size()) {
+                    if (position >= datas.size()) {
                         // loading more showing loading...
                         return;
                     }
