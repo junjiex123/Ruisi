@@ -18,7 +18,7 @@ public class Code extends CharacterStyle {
 
     @Override
     public void updateDrawState(TextPaint tp) {
-        tp.bgColor = BG_COLOR;
+        //tp.bgColor = BG_COLOR;
         tp.setTextSize(tp.getTextSize() * FONT_SIZE);
         tp.setTypeface(Typeface.MONOSPACE);
     }
