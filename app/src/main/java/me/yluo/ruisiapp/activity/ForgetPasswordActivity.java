@@ -41,7 +41,7 @@ public class ForgetPasswordActivity extends BaseActivity {
         btnSubmit = findViewById(R.id.btn_submit);
         emailTextInput = findViewById(R.id.email_input);
         TextView infoView = findViewById(R.id.info_view);
-        infoView.setText("外网用户无妨访问邮件里面的找回密码链接，需要将域名修改为外网域名"
+        infoView.setText("外网用户无法访问邮件里面的找回密码链接，需要将域名修改为外网域名"
                 + App.BASE_URL_ME
                 + "并加上尾缀&mobile=2\n举例:原始链接[http://rs.xidian.edu.cn/xxx]\n修改后:["
                 + App.BASE_URL_ME + "xxx&mobile=2]");
