@@ -17,6 +17,7 @@ import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
+import me.yluo.ruisiapp.utils.RuisUtils;
 import me.yluo.ruisiapp.utils.UrlUtils;
 
 /**
@@ -41,10 +42,14 @@ public class ForgetPasswordActivity extends BaseActivity {
         btnSubmit = findViewById(R.id.btn_submit);
         emailTextInput = findViewById(R.id.email_input);
         TextView infoView = findViewById(R.id.info_view);
-        infoView.setText("外网用户无妨访问邮件里面的找回密码链接，需要将域名修改为外网域名"
-                + App.BASE_URL_ME
-                + "并加上尾缀&mobile=2\n举例:原始链接[http://rs.xidian.edu.cn/xxx]\n修改后:["
-                + App.BASE_URL_ME + "xxx&mobile=2]");
+
+        String urlReplace = App.BASE_URL_ME.replace("http://", "");
+        urlReplace = urlReplace.substring(0, urlReplace.lastIndexOf("/"));
+
+        infoView.setText("注意: 外网用户无法访问邮件里面的找回密码链接，需要将域名修改为外网域名["
+                + urlReplace
+                + "]并加上尾缀[&mobile=2]\n举例: 原始链接[http://rs.xidian.edu.cn/xxx]\n" +
+                "修改后: [" + App.BASE_URL_ME + "xxx&mobile=2]");
 
         btnSubmit.setOnClickListener(v -> submit());
         edEmail.addTextChangedListener(new TextWatcher() {
@@ -89,13 +94,12 @@ public class ForgetPasswordActivity extends BaseActivity {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
+                String errorText;
+
                 if (res.contains("取回密码的方法已通过")) {
                     showLongToast("取回密码的方法已通过 Email 发送到您的信箱中，请尽快修改您的密码");
-                } else if (res.contains("class=\"jump_c\"")) {
-                    int start = res.indexOf("<p>", res.indexOf("class=\"jump_c\"")) + 3;
-                    int end = res.indexOf("</p>", start);
-                    String reason = res.substring(start, end);
-                    emailTextInput.setError(reason);
+                } else if ((errorText = RuisUtils.getErrorText(res)) != null) {
+                    emailTextInput.setError(errorText);
                 } else {
                     emailTextInput.setError("账号或者密码错误");
                 }

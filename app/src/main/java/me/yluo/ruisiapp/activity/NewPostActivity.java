@@ -13,6 +13,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -47,7 +48,6 @@ import java.util.Map;
 
 import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
-import me.yluo.ruisiapp.model.Category;
 import me.yluo.ruisiapp.model.Forum;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
@@ -64,15 +64,16 @@ import me.yluo.ruisiapp.widget.emotioninput.EmotionInputHandler;
 /**
  * Created by free2 on 16-3-6.
  * 发帖activity
+ * 参数：FID TITLE
  */
 public class NewPostActivity extends BaseActivity implements View.OnClickListener,
         InputValidDialog.OnInputValidListener {
 
     private EditText edTitle, edContent;
-    private MySpinner<Forum> forumSpinner, typeidSpinner;
+    private MySpinner<Forum> typeidSpinner;
     private MyColorPicker myColorPicker;
     private MySmileyPicker smileyPicker;
-    private TextView tvSelectForum, tvSelectType;
+    private TextView tvSelectType;
 
     private View typeIdContainer;
     private EmotionInputHandler handler;
@@ -105,52 +106,35 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_topic);
-        initToolBar(true, "发表新帖");
+
         if (getIntent().getExtras() != null) {
             fid = getIntent().getExtras().getInt("FID");
             title = getIntent().getExtras().getString("TITLE");
         }
 
+        if (!TextUtils.isEmpty(title)) {
+            title = "发表新帖-" + title;
+        }
+
+        initToolBar(true, "发表新帖");
+
         addToolbarMenu(R.drawable.ic_send_white_24dp).setOnClickListener(this);
         myColorPicker = new MyColorPicker(this);
         smileyPicker = new MySmileyPicker(this);
-        forumSpinner = new MySpinner<>(this);
         typeidSpinner = new MySpinner<>(this);
         typeIdContainer = findViewById(R.id.type_id_container);
         typeIdContainer.setVisibility(View.GONE);
-        tvSelectForum = findViewById(R.id.tv_select_forum);
         tvSelectType = findViewById(R.id.tv_select_type);
-        tvSelectForum.setOnClickListener(this);
 
         tvSelectType.setOnClickListener(this);
         edTitle = findViewById(R.id.ed_title);
         edContent = findViewById(R.id.ed_content);
 
-        List<Category> categories = RuisUtils.getForums(this, true);
-        if (categories == null) {
-            showLongToast("读取板块列表出错,请确保assets目录有forums.json文件");
-            finish();
+        if (fid <= 0) {
+            showToast("缺少必要参数无法发帖");
+            new Handler().postDelayed(() -> finish(), 500);
             return;
         }
-
-        for (Category c : categories) {
-            if (c.canPost) {
-                datas.addAll(c.forums);
-            }
-        }
-
-        if (TextUtils.isEmpty(title) || fid <= 0) {
-            title = datas.get(0).name;
-            fid = datas.get(0).fid;
-        }
-
-        tvSelectForum.setText(title);
-        forumSpinner.setData(datas);
-        forumSpinner.setListener((pos, v) -> {
-            fid = datas.get(pos).fid;
-            tvSelectForum.setText(datas.get(pos).name);
-            switchFid(fid);
-        });
 
         typeidSpinner.setListener((pos, v) -> {
             typeId = typeiddatas.get(pos).fid;
@@ -208,7 +192,7 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             return true;
         });
 
-        switchFid(fid);
+        loadTypeIds(fid);
         checkValid();
     }
 
@@ -295,16 +279,13 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                //Log.e("==========", res);
-                if (res.contains("class=\"jump_c\"")) {
-                    int start = res.indexOf("<p>", res.indexOf("class=\"jump_c\"")) + 3;
-                    int end = res.indexOf("</p>", start);
-                    String reason = res.substring(start, end);
-                    if ("抱歉，验证码填写错误".equals(reason)) {
+                String errorText = RuisUtils.getErrorText(res);
+                if (errorText != null) {
+                    if ("抱歉，验证码填写错误".equals(errorText)) {
                         showInputValidDialog();
-                        reason = "抱歉，验证码填写错误";
+                        errorText = "抱歉，验证码填写错误";
                     }
-                    postFail(reason);
+                    postFail(errorText);
                 } else {
                     postSuccess();
                 }
@@ -407,11 +388,6 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
                 }
                 edContent.getText().delete(start, end);
                 break;
-            case R.id.tv_select_forum:
-                forumSpinner.setWidth(view.getWidth());
-                //MySpinner.setWidth(mTView.getWidth());
-                forumSpinner.showAsDropDown(view, 0, 15);
-                break;
             case R.id.tv_select_type:
                 typeidSpinner.setData(typeiddatas);
                 typeidSpinner.setWidth(view.getWidth());
@@ -420,14 +396,24 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
 
     }
 
-    private void switchFid(int fid) {
+    private void loadTypeIds(int fid) {
         typeiddatas.clear();
         typeId = 0;
         String url = "forum.php?mod=post&action=newthread&fid=" + fid + "&mobile=2";
         HttpUtil.get(url, new ResponseHandler() {
             @Override
             public void onSuccess(byte[] response) {
-                Document document = Jsoup.parse(new String(response));
+                String res = new String(response);
+                String errorText = RuisUtils.getErrorText(res);
+
+                if (errorText != null) {
+                    Log.e("==", errorText);
+                    showToast(errorText);
+                    new Handler().postDelayed(() -> finish(), 500);
+                    return;
+                }
+
+                Document document = Jsoup.parse(res);
                 Elements types = document.select("#typeid").select("option");
                 for (Element e : types) {
                     typeiddatas.add(new Forum(Integer.parseInt(e.attr("value")), e.text()));
@@ -443,13 +429,12 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
 
                 //检查是否能上传图片
                 //uploadformdata:{uid:"252553", hash:"fe626ed21ff334263dfe552cd9a4c209"},
-                String res = new String(response);
                 int index = res.indexOf("uploadformdata:");
                 if (index > 0) {
                     int start = res.indexOf("hash", index) + 6;
                     int end = res.indexOf("\"", start + 5);
                     uploadHash = res.substring(start, end);
-                    Log.v("===", "uploadhash:" + uploadHash);
+                    Log.d("===", "uploadhash:" + uploadHash);
                 }
             }
         });

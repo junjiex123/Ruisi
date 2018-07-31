@@ -469,9 +469,11 @@ public class PostActivity extends BaseActivity
                 }
             }
 
-            Document doc = Jsoup.parse(htmlData.substring(
+            String content = htmlData.substring(
                     htmlData.indexOf("<body"),
-                    htmlData.lastIndexOf("</body>") + 7));
+                    htmlData.lastIndexOf("</body>") + 7);
+
+            Document doc = Jsoup.parse(content);
 
             Elements as = doc.select(".footer a");
             if (as.size() > 1) {
@@ -483,10 +485,9 @@ public class PostActivity extends BaseActivity
             //判断错误
             Elements elements = doc.select(".postlist");
             if (elements.size() <= 0) {
-                //有可能没有列表处理错误
-                errorText = doc.select(".jump_c").text();
+                errorText = RuisUtils.getErrorText(content);
                 if (TextUtils.isEmpty(errorText)) {
-                    errorText = "network error  !!!";
+                    errorText = "暂无数据...";
                 }
                 return tepdata;
             }

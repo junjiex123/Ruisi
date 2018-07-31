@@ -137,6 +137,25 @@ public class RuisUtils {
         }
     }
 
+    /**
+     * 从返回结果中获得报错文字
+     * eg:
+     * <div class="jump_c">
+     * <p>本版块禁止发帖</p>
+     * <p><a class="grey" href="javascript:history.back();">[ 点击这里返回上一页 ]</a></p>
+     * </div>
+     * 提取：本版块禁止发帖
+     */
+    public static String getErrorText(String res) {
+        if (res.contains("class=\"jump_c\"")) {
+            int start = res.indexOf("<p>", res.indexOf("class=\"jump_c\"")) + 3;
+            int end = res.indexOf("</p>", start);
+            return res.substring(start, end);
+        }
+
+        return null;
+    }
+
 
     //获得到下一等级的积分
     public static int getNextLevel(int a) {
