@@ -31,6 +31,7 @@ import me.yluo.ruisiapp.App;
 import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
+import me.yluo.ruisiapp.utils.RuisUtils;
 import me.yluo.ruisiapp.widget.InputValidDialog;
 
 public class ChangePasswordActivity extends BaseActivity implements
@@ -270,6 +271,8 @@ public class ChangePasswordActivity extends BaseActivity implements
             public void onSuccess(byte[] response) {
                 dialog.dismiss();
                 String res = new String(response);
+                String reason;
+
                 if (res.contains("个人资料保存成功")) {
                     showLongToast("修改密码成功 请重新登陆");
                     //DataManager.cleanApplicationData(ChangePasswordActivity.this);
@@ -277,10 +280,7 @@ public class ChangePasswordActivity extends BaseActivity implements
                     HttpUtil.exit();
                     finish();
                     startActivity(new Intent(ChangePasswordActivity.this, LoginActivity.class));
-                } else if (res.contains("class=\"jump_c\"")) {
-                    int start = res.indexOf("<p>", res.indexOf("class=\"jump_c\"")) + 3;
-                    int end = res.indexOf("</p>", start);
-                    String reason = res.substring(start, end);
+                } else if ((reason = RuisUtils.getErrorText(res)) != null) {
                     if ("抱歉，验证码填写错误".equals(reason)) {
                         showInputValidDialog();
                     }

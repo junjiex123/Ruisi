@@ -41,7 +41,10 @@ public class LinkClickHandler {
             String imageUrl = UrlUtils.getAvaterurlb(url);
             UserDetailActivity.open(context, "name", imageUrl, "");
         } else if (url.contains("forum.php?mod=post&action=newthread")) { //发帖链接
-            context.startActivity(new Intent(context, NewPostActivity.class));
+            int fid = GetId.getFroumFid(url);
+            Intent i = new Intent(context, NewPostActivity.class);
+            i.putExtra("FID", fid);
+            context.startActivity(i);
         } else if (url.contains("member.php?mod=logging&action=login")) {//登陆
             LoginActivity.open(context);
         } else if (url.contains("forum.php?mod=forumdisplay&fid=")) {
@@ -101,7 +104,7 @@ public class LinkClickHandler {
             CustomTabsIntent customTabsIntent = builder.build();
             String packageName = TabsHelper.getPackageNameToUse(context);
             if (packageName == null) { // 不支持 chrometabs
-                Log.d("link click","not support chrome tabs");
+                Log.d("link click", "not support chrome tabs");
                 IntentUtils.openBroswer(context, url);
             } else {
                 customTabsIntent.intent.setPackage(packageName);

@@ -111,11 +111,6 @@ public class GetId {
         if (TextUtils.isEmpty(fid)) {
             return -1;
         } else {
-            if (fid.equals("106")) {
-                fid = "110";
-            } else if (fid.equals("553")) {
-                fid = "554";
-            }
             return Integer.parseInt(fid);
         }
     }

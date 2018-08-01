@@ -1,5 +1,6 @@
 package me.yluo.ruisiapp.activity;
 
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -8,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -65,6 +67,7 @@ import me.yluo.ruisiapp.utils.KeyboardUtil;
 import me.yluo.ruisiapp.utils.LinkClickHandler;
 import me.yluo.ruisiapp.utils.RuisUtils;
 import me.yluo.ruisiapp.utils.UrlUtils;
+import me.yluo.ruisiapp.widget.ArticleJumpDialog;
 import me.yluo.ruisiapp.widget.MyFriendPicker;
 import me.yluo.ruisiapp.widget.MyListDivider;
 import me.yluo.ruisiapp.widget.emotioninput.SmileyInputRoot;
@@ -80,11 +83,10 @@ import static me.yluo.ruisiapp.utils.RuisUtils.getManageContent;
  */
 public class PostActivity extends BaseActivity
         implements ListItemClickListener, LoadMoreListener.OnLoadMoreListener,
-        View.OnClickListener, PopupMenu.OnMenuItemClickListener {
+        View.OnClickListener, PopupMenu.OnMenuItemClickListener, ArticleJumpDialog.JumpDialogListener {
 
-    public static final String TAG = "PostActivity";
     private RecyclerView topicList;
-    private View pageView;
+    private View pageView, toolBar;
     private TextView pageTextView;
     private View replyView;
 
@@ -122,8 +124,10 @@ public class PostActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
         initToolBar(true, "加载中......");
+
         input = findViewById(R.id.ed_comment);
         pageView = findViewById(R.id.pageView);
+        toolBar = findViewById(R.id.myToolBar);
         replyView = findViewById(R.id.comment_view);
         showPlainText = App.showPlainText(this);
         initCommentList();
@@ -152,6 +156,7 @@ public class PostActivity extends BaseActivity
         }
 
         if (url != null && url.contains("redirect")) {
+            //处理重定向 一般是跳到指定的页数
             redirectPid = GetId.getId("pid=", url);
             if (!App.IS_SCHOOL_NET) {
                 url = url + "&mobile=2";
@@ -160,12 +165,19 @@ public class PostActivity extends BaseActivity
                 @Override
                 public void onSuccess(byte[] response) {
                     int page = GetId.getPage(new String(response));
-                    firstGetData(page);
+                    getArticleData(page);
+                }
+
+                @Override
+                public void onFailure(Throwable e) {
+                    getArticleData(1);
                 }
             });
         } else {
-            firstGetData(1);
+            getArticleData(1);
         }
+
+        addToolbarMenu(R.drawable.ic_refresh_24dp).setOnClickListener(v -> refresh());
     }
 
     private void initCommentList() {
@@ -205,12 +217,18 @@ public class PostActivity extends BaseActivity
             public void onHide() {
                 pageView.setVisibility(View.VISIBLE);
                 replyView.setVisibility(View.GONE);
+
+                //隐藏toolbar
+                //toolBar.animate().translationY(-toolBar.getHeight()).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
             }
 
             @Override
             public void onShow() {
                 pageView.setVisibility(View.GONE);
                 replyView.setVisibility(View.VISIBLE);
+
+                //显示toolbar
+                //toolBar.animate().translationY(0).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
             }
         });
 
@@ -246,15 +264,17 @@ public class PostActivity extends BaseActivity
         findViewById(R.id.btn_next_page).setOnClickListener(this);
     }
 
-    private void firstGetData(int page) {
-        getArticleData(page);
-    }
-
     @Override
     public void onLoadMore() {
-        //加载更多被电击
+        //触发加载更多
         if (enableLoadMore) {
             enableLoadMore = false;
+
+            if (datas.size() > 0) {
+                currentPage = datas.get(datas.size() - 1).page;
+                if (currentPage <= 0) currentPage = 1;
+            }
+
             if (currentPage < sumPage) {
                 currentPage++;
             }
@@ -436,13 +456,23 @@ public class PostActivity extends BaseActivity
                 }
                 break;
             case R.id.pageText:
-                //TODO show change page dialog
+                ArticleJumpDialog dialogFragment = new ArticleJumpDialog();
+                dialogFragment.setCurrentPage(currentPage);
+                dialogFragment.setMaxPage(sumPage);
+                dialogFragment.show(getFragmentManager(), "jump_page");
                 break;
         }
     }
 
+    @Override
+    public void JumpComfirmClick(DialogFragment dialog, int page) {
+        // 翻页弹窗回调
+        jumpPage(page);
+    }
+
     /**
      * 处理数据类 后台进程
+     * 解析文章列表
      */
     private class DealWithArticleData extends AsyncTask<String, Void, List<SingleArticleData>> {
 
@@ -469,9 +499,11 @@ public class PostActivity extends BaseActivity
                 }
             }
 
-            Document doc = Jsoup.parse(htmlData.substring(
+            String content = htmlData.substring(
                     htmlData.indexOf("<body"),
-                    htmlData.lastIndexOf("</body>") + 7));
+                    htmlData.lastIndexOf("</body>") + 7);
+
+            Document doc = Jsoup.parse(content);
 
             Elements as = doc.select(".footer a");
             if (as.size() > 1) {
@@ -483,10 +515,9 @@ public class PostActivity extends BaseActivity
             //判断错误
             Elements elements = doc.select(".postlist");
             if (elements.size() <= 0) {
-                //有可能没有列表处理错误
-                errorText = doc.select(".jump_c").text();
+                errorText = RuisUtils.getErrorText(content);
                 if (TextUtils.isEmpty(errorText)) {
-                    errorText = "network error  !!!";
+                    errorText = "暂无数据...";
                 }
                 return tepdata;
             }
@@ -650,6 +681,14 @@ public class PostActivity extends BaseActivity
         @Override
         protected void onPostExecute(List<SingleArticleData> tepdata) {
             enableLoadMore = true;
+            if (!TextUtils.isEmpty(errorText)) {
+                Toast.makeText(PostActivity.this, errorText, Toast.LENGTH_SHORT).show();
+                adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
+                setTitle("加载失败");
+                new Handler().postDelayed(() -> finish(), 800);
+                return;
+            }
+
             if (isGetTitle) {
                 setTitle("帖子正文");
             }
@@ -658,11 +697,7 @@ public class PostActivity extends BaseActivity
                 currentPage = pageLoad;
             }
 
-            if (!TextUtils.isEmpty(errorText)) {
-                Toast.makeText(PostActivity.this, errorText, Toast.LENGTH_SHORT).show();
-                adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
-                return;
-            }
+
             if (tepdata.size() == 0) {
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
                 return;
@@ -1186,9 +1221,24 @@ public class PostActivity extends BaseActivity
 
     //跳页
     private void jumpPage(int to) {
-        datas.clear();
-        adapter.notifyDataSetChanged();
-        getArticleData(to);
+        //1 find page
+        int finded = -1;
+        for (int i = 0; i < datas.size(); i++) {
+            if (datas.get(i).page == to) {
+                finded = i;
+                break;
+            }
+        }
+
+        if (finded >= 0) {
+            topicList.scrollToPosition(finded);
+            currentPage = to;
+            pageTextView.setText(currentPage + " / " + sumPage + "页");
+        } else {
+            datas.clear();
+            adapter.notifyDataSetChanged();
+            getArticleData(to);
+        }
     }
 
     private boolean checkInput() {

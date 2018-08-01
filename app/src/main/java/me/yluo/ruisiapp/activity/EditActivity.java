@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -82,7 +81,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
             }
         });
 
-        findViewById(R.id.forum_container).setVisibility(View.GONE);
         typeIdContainer = findViewById(R.id.type_id_container);
         typeIdContainer.setVisibility(View.GONE);
         tvSelectType = findViewById(R.id.tv_select_type);
@@ -189,7 +187,8 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                Log.e("resoult", res);
+                String errorText;
+
                 if (res.contains("帖子编辑成功")) {
                     dialog.dismiss();
                     showToast("帖子编辑成功");
@@ -201,11 +200,8 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
                     i.putExtra("PID", pid);
                     setResult(RESULT_OK, i);
                     EditActivity.this.finish();
-                } else if (res.contains("class=\"jump_c\"")) {
-                    int start = res.indexOf("<p>", res.indexOf("class=\"jump_c\"")) + 3;
-                    int end = res.indexOf("</p>", start);
-                    String reason = res.substring(start, end);
-                    postFail(reason);
+                } else if ((errorText = RuisUtils.getErrorText(res)) != null) {
+                    postFail(errorText);
                 } else {
                     postFail("编辑失败:我也不知道哪儿错了");
                 }

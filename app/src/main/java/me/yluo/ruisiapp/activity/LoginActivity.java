@@ -33,6 +33,7 @@ import me.yluo.ruisiapp.R;
 import me.yluo.ruisiapp.myhttp.HttpUtil;
 import me.yluo.ruisiapp.myhttp.ResponseHandler;
 import me.yluo.ruisiapp.utils.GetId;
+import me.yluo.ruisiapp.utils.RuisUtils;
 import me.yluo.ruisiapp.utils.UrlUtils;
 import me.yluo.ruisiapp.widget.InputValidDialog;
 
@@ -251,12 +252,10 @@ public class LoginActivity extends BaseActivity implements InputValidDialog.OnIn
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
+                String reason;
                 if (res.contains("欢迎您回来")) {
                     loginOk(res);
-                } else if (res.contains("class=\"jump_c\"")) {
-                    int start = res.indexOf("<p>", res.indexOf("class=\"jump_c\"")) + 3;
-                    int end = res.indexOf("</p>", start);
-                    String reason = res.substring(start, end);
+                } else if ((reason = RuisUtils.getErrorText(res)) != null) {
                     if ("抱歉，验证码填写错误".equals(reason)) {
                         showInputValidDialog();
                     } else if (reason.contains("登录失败") && reason.contains("您还可以尝试")) {
