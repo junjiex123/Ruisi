@@ -1,5 +1,6 @@
 package me.yluo.ruisiapp.activity;
 
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -66,6 +67,7 @@ import me.yluo.ruisiapp.utils.KeyboardUtil;
 import me.yluo.ruisiapp.utils.LinkClickHandler;
 import me.yluo.ruisiapp.utils.RuisUtils;
 import me.yluo.ruisiapp.utils.UrlUtils;
+import me.yluo.ruisiapp.widget.ArticleJumpDialog;
 import me.yluo.ruisiapp.widget.MyFriendPicker;
 import me.yluo.ruisiapp.widget.MyListDivider;
 import me.yluo.ruisiapp.widget.emotioninput.SmileyInputRoot;
@@ -81,11 +83,10 @@ import static me.yluo.ruisiapp.utils.RuisUtils.getManageContent;
  */
 public class PostActivity extends BaseActivity
         implements ListItemClickListener, LoadMoreListener.OnLoadMoreListener,
-        View.OnClickListener, PopupMenu.OnMenuItemClickListener {
+        View.OnClickListener, PopupMenu.OnMenuItemClickListener, ArticleJumpDialog.JumpDialogListener {
 
-    public static final String TAG = "PostActivity";
     private RecyclerView topicList;
-    private View pageView;
+    private View pageView, toolBar;
     private TextView pageTextView;
     private View replyView;
 
@@ -123,8 +124,10 @@ public class PostActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
         initToolBar(true, "加载中......");
+
         input = findViewById(R.id.ed_comment);
         pageView = findViewById(R.id.pageView);
+        toolBar = findViewById(R.id.myToolBar);
         replyView = findViewById(R.id.comment_view);
         showPlainText = App.showPlainText(this);
         initCommentList();
@@ -153,6 +156,7 @@ public class PostActivity extends BaseActivity
         }
 
         if (url != null && url.contains("redirect")) {
+            //处理重定向 一般是跳到指定的页数
             redirectPid = GetId.getId("pid=", url);
             if (!App.IS_SCHOOL_NET) {
                 url = url + "&mobile=2";
@@ -161,12 +165,19 @@ public class PostActivity extends BaseActivity
                 @Override
                 public void onSuccess(byte[] response) {
                     int page = GetId.getPage(new String(response));
-                    firstGetData(page);
+                    getArticleData(page);
+                }
+
+                @Override
+                public void onFailure(Throwable e) {
+                    getArticleData(1);
                 }
             });
         } else {
-            firstGetData(1);
+            getArticleData(1);
         }
+
+        addToolbarMenu(R.drawable.ic_refresh_24dp).setOnClickListener(v -> refresh());
     }
 
     private void initCommentList() {
@@ -206,12 +217,18 @@ public class PostActivity extends BaseActivity
             public void onHide() {
                 pageView.setVisibility(View.VISIBLE);
                 replyView.setVisibility(View.GONE);
+
+                //隐藏toolbar
+                //toolBar.animate().translationY(-toolBar.getHeight()).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
             }
 
             @Override
             public void onShow() {
                 pageView.setVisibility(View.GONE);
                 replyView.setVisibility(View.VISIBLE);
+
+                //显示toolbar
+                //toolBar.animate().translationY(0).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
             }
         });
 
@@ -247,15 +264,17 @@ public class PostActivity extends BaseActivity
         findViewById(R.id.btn_next_page).setOnClickListener(this);
     }
 
-    private void firstGetData(int page) {
-        getArticleData(page);
-    }
-
     @Override
     public void onLoadMore() {
-        //加载更多被电击
+        //触发加载更多
         if (enableLoadMore) {
             enableLoadMore = false;
+
+            if (datas.size() > 0) {
+                currentPage = datas.get(datas.size() - 1).page;
+                if (currentPage <= 0) currentPage = 1;
+            }
+
             if (currentPage < sumPage) {
                 currentPage++;
             }
@@ -437,9 +456,18 @@ public class PostActivity extends BaseActivity
                 }
                 break;
             case R.id.pageText:
-                //TODO show change page dialog
+                ArticleJumpDialog dialogFragment = new ArticleJumpDialog();
+                dialogFragment.setCurrentPage(currentPage);
+                dialogFragment.setMaxPage(sumPage);
+                dialogFragment.show(getFragmentManager(), "jump_page");
                 break;
         }
+    }
+
+    @Override
+    public void JumpComfirmClick(DialogFragment dialog, int page) {
+        // 翻页弹窗回调
+        jumpPage(page);
     }
 
     /**
@@ -1193,9 +1221,24 @@ public class PostActivity extends BaseActivity
 
     //跳页
     private void jumpPage(int to) {
-        datas.clear();
-        adapter.notifyDataSetChanged();
-        getArticleData(to);
+        //1 find page
+        int finded = -1;
+        for (int i = 0; i < datas.size(); i++) {
+            if (datas.get(i).page == to) {
+                finded = i;
+                break;
+            }
+        }
+
+        if (finded >= 0) {
+            topicList.scrollToPosition(finded);
+            currentPage = to;
+            pageTextView.setText(currentPage + " / " + sumPage + "页");
+        } else {
+            datas.clear();
+            adapter.notifyDataSetChanged();
+            getArticleData(to);
+        }
     }
 
     private boolean checkInput() {
