@@ -4,6 +4,7 @@ import android.app.TimePickerDialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.View;
@@ -61,7 +62,7 @@ public class ThemeActivity extends BaseActivity implements AdapterView.OnItemCli
 
     private ColorAdapter adapter;
     private View startView, endView, nightViews;
-    private TextView startText, endText;
+    private TextView startText, endText, startTimeLabel, endTimeLabel, autoLabel;
     private CheckBox auto;
 
     @Override
@@ -134,6 +135,9 @@ public class ThemeActivity extends BaseActivity implements AdapterView.OnItemCli
         nightViews = findViewById(R.id.night_views);
         startText = findViewById(R.id.start_time_text);
         endText = findViewById(R.id.end_time_text);
+        autoLabel = findViewById(R.id.tv_auto);
+        startTimeLabel = findViewById(R.id.tv_start_time_label);
+        endTimeLabel = findViewById(R.id.tv_end_time_label);
 
         currentTheme = App.getCustomTheme(this);
         currentSelect = getSelect();
@@ -199,6 +203,12 @@ public class ThemeActivity extends BaseActivity implements AdapterView.OnItemCli
         } else {
             getWindow().setBackgroundDrawable(new ColorDrawable(0xfff5f5f5));
             nightViews.setVisibility(View.VISIBLE);
+            autoLabel.setTextColor(ContextCompat.getColor(this, android.R.color.black));
+            startTimeLabel.setTextColor(ContextCompat.getColor(this, android.R.color.black));
+            endTimeLabel.setTextColor(ContextCompat.getColor(this, android.R.color.black));
+
+            startText.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray));
+            endText.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray));
         }
     }
 
