@@ -112,7 +112,7 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
     public void changeLoadMoreState(int i) {
         this.loadState = i;
         int ii = getItemCount() - 1;
-        if (ii >= 0 && getItemViewType(ii) == TYPE_LOADMORE) {
+        if (ii >= 0 && (getItemViewType(ii) == TYPE_LOADMORE || getItemViewType(ii) == TYPE_NO_DATA)) {
             notifyItemChanged(ii);
         }
     }
@@ -173,7 +173,7 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
                     loadMoreProgress.setVisibility(View.GONE);
                     if (getDataCount() == 0) {
                         loadMoreText.setText(placeHolderText);
-                    }else{
+                    } else {
                         loadMoreText.setText("暂无更多");
                     }
             }

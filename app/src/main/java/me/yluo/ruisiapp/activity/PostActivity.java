@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -443,6 +444,7 @@ public class PostActivity extends BaseActivity
 
     /**
      * 处理数据类 后台进程
+     * 解析文章列表
      */
     private class DealWithArticleData extends AsyncTask<String, Void, List<SingleArticleData>> {
 
@@ -651,6 +653,14 @@ public class PostActivity extends BaseActivity
         @Override
         protected void onPostExecute(List<SingleArticleData> tepdata) {
             enableLoadMore = true;
+            if (!TextUtils.isEmpty(errorText)) {
+                Toast.makeText(PostActivity.this, errorText, Toast.LENGTH_SHORT).show();
+                adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
+                setTitle("加载失败");
+                new Handler().postDelayed(() -> finish(), 800);
+                return;
+            }
+
             if (isGetTitle) {
                 setTitle("帖子正文");
             }
@@ -659,11 +669,7 @@ public class PostActivity extends BaseActivity
                 currentPage = pageLoad;
             }
 
-            if (!TextUtils.isEmpty(errorText)) {
-                Toast.makeText(PostActivity.this, errorText, Toast.LENGTH_SHORT).show();
-                adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_FAIL);
-                return;
-            }
+
             if (tepdata.size() == 0) {
                 adapter.changeLoadMoreState(BaseAdapter.STATE_LOAD_NOTHING);
                 return;
