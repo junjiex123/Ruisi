@@ -367,6 +367,9 @@ public class PostActivity extends BaseActivity
     public boolean onMenuItemClick(MenuItem menuItem) {
         // 更多按钮里面的选项被点击
         switch (menuItem.getItemId()) {
+            case R.id.tv_copy:
+                adapter.copyItem(clickPosition);
+                break;
             case R.id.tv_edit:
                 Intent i = new Intent(this, EditActivity.class);
                 i.putExtra("PID", datas.get(clickPosition).pid);

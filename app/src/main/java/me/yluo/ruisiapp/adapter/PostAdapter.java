@@ -13,6 +13,9 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import java.util.List;
 
 import me.yluo.ruisiapp.R;
@@ -178,6 +181,17 @@ public class PostAdapter extends BaseAdapter {
             replyTime.setText(single.postTime);
             index.setText(single.index);
             HtmlView.parseHtml(single.content).into(comment);
+        }
+    }
+
+    public void copyItem(int position) {
+        String user = datalist.get(position).username;
+        Document document = Jsoup.parse(datalist.get(position).content);
+        String content =  document.text();
+        ClipboardManager cm = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+        if (cm != null) {
+            cm.setPrimaryClip(ClipData.newPlainText(null, content));
+            Toast.makeText(activity, "已复制" + user + "的评论", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -322,7 +322,7 @@ public class SpanConverter implements ParserCallback, ImageGetterCallBack {
 
     private void setSpan(int start, int end, Object span) {
         if (end <= start || end > spannedBuilder.length()) return;
-        spannedBuilder.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannedBuilder.setSpan(span , start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
 

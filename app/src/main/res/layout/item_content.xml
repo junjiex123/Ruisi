@@ -96,7 +96,7 @@
         android:layout_marginTop="8dp"
         android:background="@color/colorDivider" />
 
-    <TextView
+    <me.yluo.ruisiapp.widget.htmlview.SelectFixTextView
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -109,6 +109,7 @@
         android:paddingStart="12dp"
         android:paddingTop="8dp"
         android:textColor="?android:textColorPrimary"
+        android:textIsSelectable="true"
         android:textSize="16sp"
         tools:text="在点(110,10)处绘制一个宽和高均为50像素的正方形边框 context.strokeRect(110,10,50,50); //在点(30,10)处绘制一个宽和高均为50像素的正方形边框 " />
 
