@@ -42,15 +42,10 @@ public class ForgetPasswordActivity extends BaseActivity {
         btnSubmit = findViewById(R.id.btn_submit);
         emailTextInput = findViewById(R.id.email_input);
         TextView infoView = findViewById(R.id.info_view);
-
-        String urlReplace = App.BASE_URL_ME.replace("http://", "");
-        urlReplace = urlReplace.substring(0, urlReplace.lastIndexOf("/"));
-
-        infoView.setText("注意: 外网用户无法访问邮件里面的找回密码链接，需要将域名修改为外网域名["
-                + urlReplace
-                + "]并加上尾缀[&mobile=2]\n举例: 原始链接[http://rs.xidian.edu.cn/xxx]\n" +
-                "修改后: [" + App.BASE_URL_ME + "xxx&mobile=2]");
-
+        infoView.setText("外网用户无法访问邮件里面的找回密码链接，需要将域名修改为外网域名"
+                + App.BASE_URL_ME
+                + "并加上尾缀&mobile=2\n举例:原始链接[http://rs.xidian.edu.cn/xxx]\n修改后:["
+                + App.BASE_URL_ME + "xxx&mobile=2]");
         btnSubmit.setOnClickListener(v -> submit());
         edEmail.addTextChangedListener(new TextWatcher() {
             @Override
