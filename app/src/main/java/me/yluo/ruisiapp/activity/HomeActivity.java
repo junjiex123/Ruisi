@@ -64,6 +64,12 @@ public class HomeActivity extends BaseActivity
     private ViewPager viewPager;
     private List<BaseLazyFragment> fragments = new ArrayList<>();
 
+    private static final int MSG_HAVE_REPLY = 1;
+    private static final int MSG_NO_REPLY = 2;
+    private static final int MSG_HAVE_PM = 3;
+    private static final int MSG_NO_PM = 4;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,7 +157,7 @@ public class HomeActivity extends BaseActivity
 
     private void switchTab(int pos) {
         if (pos == 2) {
-            bottomTab.setMessage(false);
+            bottomTab.clearMsg();
             bottomTab.invalidate();
         }
         viewPager.setCurrentItem(pos, false);
@@ -277,10 +283,18 @@ public class HomeActivity extends BaseActivity
             }
         }
 
-        if (ishaveReply || ishavePm) {
-            messageHandler.sendEmptyMessage(0);
+        if (isReply) {
+            if (ishaveReply) {
+                messageHandler.sendEmptyMessage(MSG_HAVE_REPLY);
+            } else {
+                messageHandler.sendEmptyMessage(MSG_NO_REPLY);
+            }
         } else {
-            messageHandler.sendEmptyMessage(-1);
+            if (ishavePm) {
+                messageHandler.sendEmptyMessage(MSG_HAVE_PM);
+            } else {
+                messageHandler.sendEmptyMessage(MSG_NO_PM);
+            }
         }
     }
 
@@ -300,15 +314,23 @@ public class HomeActivity extends BaseActivity
             MyBottomTab t = mytab.get();
             HomeActivity a = act.get();
             switch (msg.what) {
-                //-1 - 无消息 0-有
-                case -1:
-                    Log.d("message", "无未读消息");
-                    t.setMessage(false);
-                    break;
-                case 0:
+                case MSG_HAVE_REPLY:
+                    Log.d("message", "有新回复");
                     a.mkNotify();
-                    Log.d("message", "有未读消息");
-                    t.setMessage(true);
+                    t.setHaveReply(true);
+                    break;
+                case MSG_NO_REPLY:
+                    Log.d("message", "无新回复");
+                    t.setHaveReply(false);
+                    break;
+                case MSG_HAVE_PM:
+                    Log.d("message", "有新pm");
+                    a.mkNotify();
+                    t.setHavePm(true);
+                    break;
+                case MSG_NO_PM:
+                    Log.d("message", "无新pm");
+                    t.setHavePm(false);
                     break;
             }
         }

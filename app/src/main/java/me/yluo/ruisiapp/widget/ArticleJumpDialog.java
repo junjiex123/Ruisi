@@ -52,8 +52,6 @@ public class ArticleJumpDialog extends DialogFragment {
                 dialogListener.JumpComfirmClick(ArticleJumpDialog.this, selectPage);
                 ArticleJumpDialog.this.getDialog().cancel();
             }
-
-
         });
 
         btn_cancel.setOnClickListener(view12 -> dismiss());

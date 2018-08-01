@@ -36,7 +36,9 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
 
     private String[] tab_names = {"板块", "看贴", "消息", "个人"};
     private OnTabChangeListener listener;
-    private boolean ishaveMessage = false;
+
+    private boolean isHaveReply = false;
+    private boolean isHavePm = false;
 
     //遵循md 设计规范
     private int SIZE_2 = 2;
@@ -58,12 +60,20 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         init();
     }
 
-    public void setMessage(boolean b) {
-        if (b != ishaveMessage) {
-            ishaveMessage = b;
-            drawableStateChanged();
-            refreshDrawableState();
-        }
+    public void setHaveReply(boolean b) {
+        isHaveReply = b;
+        invalidate();
+    }
+
+    public void setHavePm(boolean b) {
+        isHavePm = b;
+        invalidate();
+    }
+
+    public void clearMsg() {
+        isHaveReply = false;
+        isHavePm = false;
+        invalidate();
     }
 
     public void setSelect(int pos) {
@@ -190,7 +200,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (ishaveMessage) {
+        if (isHavePm || isHaveReply) {
             int len = getWidth();
             int end = len / 4 * 3;
             int start = len / 2;
