@@ -271,7 +271,7 @@ public class DefaultImageGetter implements ImageGetter {
 
 
     private Drawable getPlaceHolder(String souce) {
-        ColorDrawable colorDrawable = new ColorDrawable(0xffcccccc);
+        ColorDrawable colorDrawable = new ColorDrawable(0x00000000);
         if (souce == null || souce.isEmpty()) {
             colorDrawable.setBounds(0, 0, 120, 120);
         } else if (souce.startsWith(SMILEY_PREFIX)) {

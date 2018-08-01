@@ -7,7 +7,6 @@ import com.alibaba.fastjson.TypeReference;
 import java.lang.reflect.Type;
 
 import me.yluo.ruisiapp.api.entity.ApiResult;
-import me.yluo.ruisiapp.api.entity.Variables;
 
 public abstract class ApiResponseHandler<T> extends ResponseHandler {
 

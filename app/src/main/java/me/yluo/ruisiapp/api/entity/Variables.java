@@ -1,7 +1,5 @@
 package me.yluo.ruisiapp.api.entity;
 
-import java.util.List;
-
 public class Variables {
 
     public String cookiepre;

@@ -1,6 +1,5 @@
 package me.yluo.ruisiapp.api.entity;
 
-import java.util.Date;
 import java.util.List;
 
 public class ForumThreadlist {

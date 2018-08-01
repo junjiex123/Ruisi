@@ -1,15 +1,23 @@
 package me.yluo.ruisiapp.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,6 +30,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +76,22 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
         pager.addOnPageChangeListener(this);
         adapter = new MyAdapter();
         pager.setAdapter(adapter);
+
+        findViewById(R.id.btn_save).setOnClickListener(v -> {
+            if (currentPosition < 0) return;
+
+            if (ContextCompat.checkSelfPermission(ViewImgActivity.this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(ViewImgActivity.this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        100);
+            } else {
+                saveToGallery(datas.get(currentPosition));
+            }
+        });
+
 
         Bundle b = getIntent().getExtras();
         String url = b.getString("url");
@@ -125,8 +150,11 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
         }
     }
 
+    private int currentPosition = -1;
+
     private void changeIndex(int pos) {
         index.setText((pos + 1) + "/" + datas.size());
+        currentPosition = pos;
     }
 
 
@@ -155,8 +183,9 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
             return datas == null ? 0 : datas.size();
         }
 
+        @NonNull
         @Override
-        public Object instantiateItem(ViewGroup container, final int position) {
+        public Object instantiateItem(@NonNull ViewGroup container, final int position) {
             ScaleImageView v = container.findViewWithTag(position);
             if (v == null) {
                 v = new ScaleImageView(ViewImgActivity.this);
@@ -177,18 +206,71 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
 
 
         @Override
-        public boolean isViewFromObject(View view, Object object) {
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
             return view == object;
         }
 
         @Override
-        public int getItemPosition(Object object) {
+        public int getItemPosition(@NonNull Object object) {
             return POSITION_NONE;
         }
 
 
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+        }
+    }
+
+    private void saveToGallery(String url) {
+        new AsyncTask<Void, Void, Boolean>() {
+
+            @Override
+            protected Boolean doInBackground(Void... voids) {
+                Bitmap bitmap = null;
+                try {
+                    bitmap = Picasso.get().load(url).get();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+
+                // Save image to gallery
+                String savedImageURL = MediaStore.Images.Media.insertImage(
+                        getContentResolver(),
+                        bitmap,
+                        "IMAGE_" + System.currentTimeMillis(),
+                        null
+                );
+
+                Log.d("===", "saved " + savedImageURL);
+                return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+                super.onPostExecute(aBoolean);
+                if (aBoolean) {
+                    showToast("保存图片成功");
+                } else {
+                    showToast("保存图片失败");
+                }
+
+            }
+        }.execute();
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 100: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    saveToGallery(datas.get(currentPosition));
+                } else {
+                    showToast("你拒绝了保存到相册的权限，无法保存");
+                }
+            }
         }
     }
 }
