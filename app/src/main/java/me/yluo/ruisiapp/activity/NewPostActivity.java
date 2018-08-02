@@ -113,10 +113,12 @@ public class NewPostActivity extends BaseActivity implements View.OnClickListene
         }
 
         if (!TextUtils.isEmpty(title)) {
-            title = "发表新帖-" + title;
+            title = "发帖-" + title;
+        } else {
+            title = "发表新帖";
         }
 
-        initToolBar(true, "发表新帖");
+        initToolBar(true, title);
 
         addToolbarMenu(R.drawable.ic_send_white_24dp).setOnClickListener(this);
         myColorPicker = new MyColorPicker(this);

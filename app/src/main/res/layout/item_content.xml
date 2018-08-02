@@ -96,7 +96,7 @@
         android:layout_marginTop="8dp"
         android:background="@color/colorDivider" />
 
-    <me.yluo.ruisiapp.widget.htmlview.SelectFixTextView
+    <TextView
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
