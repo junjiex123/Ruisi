@@ -90,9 +90,12 @@ public class ReplyCzActivity extends BaseActivity {
             HtmlView.parseHtml(data.content).into(t);
             input.setHint("回复: " + data.username);
 
-            imageView.setOnClickListener(v -> UserDetailActivity.openWithAnimation(
-                    this, data.username,
-                    imageView, data.uid));
+            imageView.setOnClickListener(v -> {
+                if (data.uid > 0)
+                    UserDetailActivity.openWithAnimation(
+                            this, data.username,
+                            imageView, data.uid);
+            });
 
         }
 

@@ -15,7 +15,7 @@ public class SingleArticleData implements Parcelable {
     public SingleType type;
     public String username;
     public String postTime;
-    public String uid;
+    public int uid;
     public String pid;
     //楼层
     public String index;
@@ -34,7 +34,7 @@ public class SingleArticleData implements Parcelable {
     public int page;
 
 
-    public SingleArticleData(SingleType type, String title, String uid,
+    public SingleArticleData(SingleType type, String title, int uid,
                              String username, String postTime, String index,
                              String replyUrl, String content, String pid,
                              int page) {
@@ -50,7 +50,7 @@ public class SingleArticleData implements Parcelable {
         this.page = page;
     }
 
-    public SingleArticleData(SingleType type, String title, String uid, String username,
+    public SingleArticleData(SingleType type, String title, int uid, String username,
                              String postTime, String index, String replyUrl,
                              String content, String pid, int page, boolean canManage) {
         this(type, title, uid, username, postTime, index, replyUrl, content, pid, page);
@@ -59,7 +59,7 @@ public class SingleArticleData implements Parcelable {
     }
 
     public String getImg() {
-        return UrlUtils.getAvaterurlm(uid);
+        return UrlUtils.getAvaterurlm(String.valueOf(uid));
     }
 
     @Override
@@ -72,7 +72,7 @@ public class SingleArticleData implements Parcelable {
         dest.writeInt(this.type == null ? -1 : this.type.ordinal());
         dest.writeString(this.username);
         dest.writeString(this.postTime);
-        dest.writeString(this.uid);
+        dest.writeInt(this.uid);
         dest.writeString(this.pid);
         dest.writeString(this.index);
         dest.writeString(this.replyUrlTitle);
@@ -85,7 +85,7 @@ public class SingleArticleData implements Parcelable {
         this.type = tmpType == -1 ? null : SingleType.values()[tmpType];
         this.username = in.readString();
         this.postTime = in.readString();
-        this.uid = in.readString();
+        this.uid = in.readInt();
         this.pid = in.readString();
         this.index = in.readString();
         this.replyUrlTitle = in.readString();

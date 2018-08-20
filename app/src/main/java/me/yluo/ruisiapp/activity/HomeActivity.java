@@ -241,10 +241,10 @@ public class HomeActivity extends BaseActivity
                         editor.putLong(App.CHECK_UPDATE_KEY, System.currentTimeMillis());
                         editor.apply();
                         isNeedCheckUpdate = false;
-                        new AlertDialog.Builder(HomeActivity.this).
-                                setTitle("检测到新版本").
-                                setMessage(title).
-                                setPositiveButton("查看", (dialog, which) -> PostActivity.open(HomeActivity.this, App.CHECK_UPDATE_URL, "谁用了FREEDOM"))
+                        new AlertDialog.Builder(HomeActivity.this)
+                                .setTitle("检测到新版本")
+                                .setMessage(title)
+                                .setPositiveButton("查看", (dialog, which) -> PostActivity.open(HomeActivity.this, App.CHECK_UPDATE_URL, "谁用了FREEDOM"))
                                 .setNegativeButton("取消", null)
                                 .setCancelable(true)
                                 .create()

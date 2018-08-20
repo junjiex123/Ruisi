@@ -331,7 +331,7 @@ public class PostActivity extends BaseActivity
                 if (isLogin()) {
                     SingleArticleData single = datas.get(position);
                     Intent i = new Intent(PostActivity.this, ReplyCzActivity.class);
-                    i.putExtra("islz", single.uid.equals(datas.get(0).uid));
+                    i.putExtra("islz", single.uid == datas.get(0).uid);
                     i.putExtra("data", single);
                     startActivityForResult(i, 20);
                 }
@@ -551,11 +551,15 @@ public class PostActivity extends BaseActivity
             for (int i = 0; i < size; i++) {
                 Element temp = postlist.get(i);
                 String pid = temp.attr("id").substring(3);
-                String uid = GetId.getId("uid=", temp.select("span[class=avatar]").select("img").attr("src"));
+                int uid = Integer.parseInt(GetId.getId("uid=", temp.select("span[class=avatar]").select("img").attr("src")));
                 Elements userInfo = temp.select("ul.authi");
                 // 手机版commentIndex拿到的原始数据是"楼层 管理"
                 String commentIndex = userInfo.select("li.grey").select("em").first().text();
                 String username = userInfo.select("a[href^=home.php?mod=space&uid=]").text();
+                if (TextUtils.isEmpty(username) || uid == 0) {
+                    // 匿名的情况
+                    username = userInfo.select("li.grey").select("b").first().text();
+                }
                 boolean canManage = false;
                 // 判别是否对该帖子是否有管理权限
                 if (App.ISLOGIN(context)) {
@@ -746,7 +750,7 @@ public class PostActivity extends BaseActivity
             if (datas.size() > 0 && (datas.get(0).type != SingleType.CONTENT) &&
                     (datas.get(0).type != SingleType.HEADER)) {
                 datas.add(0, new SingleArticleData(SingleType.HEADER, title,
-                        null, null, null, null, null,
+                        0, null, null, null, null,
                         null, null, pageLoad));
             }
             int add = datas.size() - startsize;
@@ -814,7 +818,7 @@ public class PostActivity extends BaseActivity
             for (int i = 0; i < size; i++) {
                 Postlist temp = postlist.get(i);
                 String pid = temp.pid;
-                String uid = temp.authorid;
+                int uid = TextUtils.isDigitsOnly(temp.authorid) ? Integer.parseInt(temp.authorid) : 0;
 
                 //TODO
                 String commentIndex = "1";
@@ -1109,7 +1113,7 @@ public class PostActivity extends BaseActivity
             @Override
             public void onSuccess(byte[] response) {
                 String res = new String(response);
-                Log.e("result", res);
+                //Log.e("result", res);
                 if (res.contains("成功")) {
                     if (datas.get(pos).type == SingleType.CONTENT) {
                         showToast("主题删除成功");

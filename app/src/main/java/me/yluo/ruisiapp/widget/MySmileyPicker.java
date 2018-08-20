@@ -132,7 +132,7 @@ public class MySmileyPicker extends PopupWindow {
         for (String aSmileyArray : smileyArray) {
             String path = smiley_dir + aSmileyArray.split(",")[0];
             String name = aSmileyArray.split(",")[1];
-            Log.e("TAG", "" + name);
+            //Log.e("TAG", "" + name);
             smileys.add(new Pair<>(path, name));
         }
     }

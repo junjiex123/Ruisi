@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,8 +101,12 @@ public class PostAdapter extends BaseAdapter {
             userName = itemView.findViewById(R.id.article_username);
             postTime = itemView.findViewById(R.id.article_post_time);
             content = itemView.findViewById(R.id.content);
-            userAvatar.setOnClickListener(v -> UserDetailActivity.openWithAnimation(
-                    activity, datalist.get(0).username, userAvatar, datalist.get(0).uid));
+            userAvatar.setOnClickListener(v -> {
+                if (datalist.get(0).uid > 0) {
+                    UserDetailActivity.openWithAnimation(
+                            activity, datalist.get(0).username, userAvatar, datalist.get(0).uid);
+                }
+            });
             btnMore.setOnClickListener(this);
         }
 
@@ -152,9 +158,13 @@ public class PostAdapter extends BaseAdapter {
                 return true;
             });
 
-            avatar.setOnClickListener(v -> UserDetailActivity.openWithAnimation(
-                    activity, datalist.get(getAdapterPosition()).username,
-                    avatar, datalist.get(getAdapterPosition()).uid));
+            avatar.setOnClickListener(v -> {
+                if (datalist.get(getAdapterPosition()).uid > 0) {
+                    UserDetailActivity.openWithAnimation(
+                            activity, datalist.get(getAdapterPosition()).username,
+                            avatar, datalist.get(getAdapterPosition()).uid);
+                }
+            });
 
 
             btnReplyCz.setOnClickListener(this);
@@ -187,7 +197,7 @@ public class PostAdapter extends BaseAdapter {
     public void copyItem(int position) {
         String user = datalist.get(position).username;
         Document document = Jsoup.parse(datalist.get(position).content);
-        String content =  document.text();
+        String content = document.text();
         ClipboardManager cm = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
         if (cm != null) {
             cm.setPrimaryClip(ClipData.newPlainText(null, content));

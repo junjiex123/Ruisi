@@ -72,13 +72,17 @@ public class UserDetailActivity extends BaseActivity implements AddFriendDialog.
     private String imageUrl = "";
     private static boolean needAnimate = false;
 
-    public static void openWithAnimation(Activity activity, String username, ImageView imgAvatar, String uid) {
+    public static void openWithAnimation(Activity activity, String username, ImageView imgAvatar, String avatarUrl) {
         Intent intent = new Intent(activity, UserDetailActivity.class);
         intent.putExtra("loginName", username);
-        intent.putExtra("avatarUrl", UrlUtils.getAvaterurlm(uid));
+        intent.putExtra("avatarUrl", UrlUtils.getAvaterurlm(avatarUrl));
         needAnimate = true;
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, imgAvatar, NAME_IMG_AVATAR);
         ActivityCompat.startActivity(activity, intent, options.toBundle());
+    }
+
+    public static void openWithAnimation(Activity activity, String username, ImageView imgAvatar, int uid) {
+        openWithAnimation(activity, username, imgAvatar, String.valueOf(uid));
     }
 
     public static void open(Context context, String username, String avatarUrl, String uid) {
