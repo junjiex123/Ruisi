@@ -2,6 +2,7 @@ package me.yluo.ruisiapp.widget;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -25,6 +26,7 @@ import me.yluo.ruisiapp.utils.GetId;
 import me.yluo.ruisiapp.utils.KeyboardUtil;
 import me.yluo.ruisiapp.utils.UrlUtils;
 import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifIOException;
 import pl.droidsonroids.gif.GifImageView;
 
 /**
@@ -180,6 +182,9 @@ public class InputValidDialog extends DialogFragment {
                 try {
                     GifDrawable drawable = new GifDrawable(response);
                     gifImageView.setImageDrawable(drawable);
+                } catch (GifIOException e1) {
+                    // not gif format
+                    gifImageView.setImageBitmap(BitmapFactory.decodeByteArray(response, 0, response.length));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

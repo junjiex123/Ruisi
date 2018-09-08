@@ -45,7 +45,8 @@ public class AboutActivity extends BaseActivity {
                 "2.本站 <a href=\"home.php?mod=space&uid=252553&do=profile&mobile=2\">@谁用了FREEDOM</a><br />" +
                 "3.本站 <a href=\"home.php?mod=space&uid=261098&do=profile&mobile=2\">@wangfuyang</a><br />" +
                 "4.本站 <a href=\"home.php?mod=space&uid=260255&do=profile&mobile=2\">@金鲨鱼</a><br />" +
-                "5.github提交 <a href=\"https://github.com/freedom10086/Ruisi/issues\">点击这儿<br /></a><br />";
+                "5.github提交 <a href=\"https://github.com/freedom10086/Ruisi/issues\">点击这儿<br /></a><br /><br />" +
+                "<b>下载地址: <a href=\"https://www.coolapk.com/apk/149321\">库安</a></b><br />";
 
         TextView htmlView = findViewById(R.id.html_text);
         HtmlView.parseHtml(ss).into(htmlView);

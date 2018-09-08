@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
@@ -324,12 +325,16 @@ public class LoginActivity extends BaseActivity implements InputValidDialog.OnIn
         showToast("欢迎你" + name + "登陆成功");
         Log.d("login result", "grade " + grade + " uid " + uid + " name " + name + " hash " + hash);
 
-        Intent intent = new Intent();
-        intent.putExtra("status", "ok");
-        //设置返回数据
-        LoginActivity.this.setResult(RESULT_OK, intent);
+        new Handler().postDelayed(() -> {
+            Intent intent = new Intent();
+            intent.putExtra("status", "ok");
+            //设置返回数据
+            LoginActivity.this.setResult(RESULT_OK, intent);
 
-        finish();
+            finish();
+        }, 500);
+
+
     }
 
     private void passwordOrUsernameErr() {

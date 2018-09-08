@@ -136,7 +136,7 @@ public class ViewImgActivity extends BaseActivity implements ViewPager.OnPageCha
                 }
                 adapter.notifyDataSetChanged();
                 changeIndex(position);
-                pager.setCurrentItem(position);
+                pager.setCurrentItem(position, false);
             }
         });
     }
